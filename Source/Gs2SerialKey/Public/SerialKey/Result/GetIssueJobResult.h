@@ -1,0 +1,44 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "../Model/IssueJob.h"
+
+namespace Gs2::SerialKey::Result
+{
+    class GS2SERIALKEY_API FGetIssueJobResult final : public TSharedFromThis<FGetIssueJobResult>
+    {
+        TSharedPtr<Model::FIssueJob> ItemValue;
+        
+    public:
+        
+        FGetIssueJobResult();
+        FGetIssueJobResult(
+            const FGetIssueJobResult& From
+        );
+        ~FGetIssueJobResult() = default;
+
+        TSharedPtr<FGetIssueJobResult> WithItem(const TSharedPtr<Model::FIssueJob> Item);
+
+        TSharedPtr<Model::FIssueJob> GetItem() const;
+
+        static TSharedPtr<FGetIssueJobResult> FromJson(const TSharedPtr<FJsonObject> Data);
+        TSharedPtr<FJsonObject> ToJson() const;
+    };
+    typedef TSharedPtr<FGetIssueJobResult, ESPMode::ThreadSafe> FGetIssueJobResultPtr;
+}

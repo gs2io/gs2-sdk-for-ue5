@@ -1,0 +1,44 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#pragma once
+
+#include "CoreMinimal.h"
+
+#include "Core/Gs2Core.h"
+#include "Matchmaking/Request/CancelMatchmakingRequest.h"
+#include "Matchmaking/Result/CancelMatchmakingResult.h"
+
+namespace Gs2::Matchmaking::Task::WebSocket
+{
+    class GS2MATCHMAKING_API FCancelMatchmakingTask final : public Gs2::Core::Util::TGs2Future<Result::FCancelMatchmakingResult>
+    {
+        Core::Net::WebSocket::FGs2WebSocketSessionPtr Session;
+        Request::FCancelMatchmakingRequestPtr Request;
+    public:
+        explicit FCancelMatchmakingTask(
+            const Core::Net::WebSocket::FGs2WebSocketSessionPtr Session,
+            const Request::FCancelMatchmakingRequestPtr Request
+        );
+        FCancelMatchmakingTask(
+            const FCancelMatchmakingTask& From
+        );
+        virtual ~FCancelMatchmakingTask() override = default;
+
+        virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FCancelMatchmakingResultPtr> Result) override;
+    };
+    typedef TSharedPtr<FCancelMatchmakingTask, ESPMode::ThreadSafe> FCancelMatchmakingTaskPtr;
+}

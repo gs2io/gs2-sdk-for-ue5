@@ -1,0 +1,67 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "../Model/Reward.h"
+#include "../Model/Config.h"
+
+namespace Gs2::Quest::Request
+{
+    class FEndByUserIdRequest;
+
+    class GS2QUEST_API FEndByUserIdRequest final : public TSharedFromThis<FEndByUserIdRequest>
+    {
+        TOptional<FString> ContextStackValue;
+        TOptional<FString> NamespaceNameValue;
+        TOptional<FString> UserIdValue;
+        TOptional<FString> TransactionIdValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FReward>>> RewardsValue;
+        TOptional<bool> IsCompleteValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> DuplicationAvoiderValue;
+        
+    public:
+        
+        FEndByUserIdRequest();
+        FEndByUserIdRequest(
+            const FEndByUserIdRequest& From
+        );
+        ~FEndByUserIdRequest() = default;
+
+        TSharedPtr<FEndByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
+        TSharedPtr<FEndByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FEndByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FEndByUserIdRequest> WithTransactionId(const TOptional<FString> TransactionId);
+        TSharedPtr<FEndByUserIdRequest> WithRewards(const TSharedPtr<TArray<TSharedPtr<Model::FReward>>> Rewards);
+        TSharedPtr<FEndByUserIdRequest> WithIsComplete(const TOptional<bool> IsComplete);
+        TSharedPtr<FEndByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FEndByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
+
+        TOptional<FString> GetContextStack() const;
+        TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTransactionId() const;TSharedPtr<TArray<TSharedPtr<Model::FReward>>> GetRewards() const;
+        TOptional<bool> GetIsComplete() const;
+        FString GetIsCompleteString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetDuplicationAvoider() const;
+
+        static TSharedPtr<FEndByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
+        TSharedPtr<FJsonObject> ToJson() const;
+    };
+    typedef TSharedPtr<FEndByUserIdRequest, ESPMode::ThreadSafe> FEndByUserIdRequestPtr;
+}

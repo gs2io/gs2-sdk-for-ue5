@@ -1,0 +1,353 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#if defined(_MSC_VER)
+#pragma warning (push)
+#pragma warning (disable: 4458) // Declaration hides class member
+#elif defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshadow" // declaration shadows a field of
+#endif
+
+#include "Gateway/Domain/Model/FirebaseTokenAccessToken.h"
+#include "Gateway/Domain/Model/FirebaseToken.h"
+#include "Gateway/Domain/Model/Namespace.h"
+#include "Gateway/Domain/Model/WebSocketSession.h"
+#include "Gateway/Domain/Model/WebSocketSessionAccessToken.h"
+#include "Gateway/Domain/Model/FirebaseToken.h"
+#include "Gateway/Domain/Model/FirebaseTokenAccessToken.h"
+#include "Gateway/Domain/Model/User.h"
+#include "Gateway/Domain/Model/UserAccessToken.h"
+
+#include "Core/Domain/Model/AutoStampSheetDomain.h"
+#include "Core/Domain/Model/StampSheetDomain.h"
+
+namespace Gs2::Gateway::Domain::Model
+{
+
+    FFirebaseTokenAccessTokenDomain::FFirebaseTokenAccessTokenDomain(
+        const Core::Domain::FCacheDatabasePtr Cache,
+        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
+        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
+        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr Wssession,
+        const TOptional<FString> NamespaceName,
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        // ReSharper disable once CppMemberInitializersOrder
+    ):
+        Cache(Cache),
+        JobQueueDomain(JobQueueDomain),
+        StampSheetConfiguration(StampSheetConfiguration),
+        Session(Session),
+        Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Session)),
+        Wssession(Wssession),
+        Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Wssession)),
+        NamespaceName(NamespaceName),
+        AccessToken(AccessToken),
+        ParentKey(Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
+            NamespaceName,
+            UserId(),
+            "FirebaseToken"
+        ))
+    {
+    }
+
+    FFirebaseTokenAccessTokenDomain::FFirebaseTokenAccessTokenDomain(
+        const FFirebaseTokenAccessTokenDomain& From
+    ):
+        Cache(From.Cache),
+        JobQueueDomain(From.JobQueueDomain),
+        StampSheetConfiguration(From.StampSheetConfiguration),
+        Session(From.Session),
+        Client(From.Client)
+    {
+
+    }
+
+    FFirebaseTokenAccessTokenDomain::FSetTask::FSetTask(
+        const TSharedPtr<FFirebaseTokenAccessTokenDomain> Self,
+        const Request::FSetFirebaseTokenRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FFirebaseTokenAccessTokenDomain::FSetTask::FSetTask(
+        const FSetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFirebaseTokenAccessTokenDomain::FSetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->SetFirebaseToken(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "FirebaseToken"
+                );
+                const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
+                );
+                Self->Cache->Put<Gs2::Gateway::Model::FFirebaseToken>(
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFirebaseTokenAccessTokenDomain::FSetTask>> FFirebaseTokenAccessTokenDomain::Set(
+        Request::FSetFirebaseTokenRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSetTask>>(this->AsShared(), Request);
+    }
+
+    FFirebaseTokenAccessTokenDomain::FGetTask::FGetTask(
+        const TSharedPtr<FFirebaseTokenAccessTokenDomain> Self,
+        const Request::FGetFirebaseTokenRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FFirebaseTokenAccessTokenDomain::FGetTask::FGetTask(
+        const FGetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFirebaseTokenAccessTokenDomain::FGetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Gateway::Model::FFirebaseToken>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->GetFirebaseToken(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "FirebaseToken"
+                );
+                const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
+                );
+                Self->Cache->Put<Gs2::Gateway::Model::FFirebaseToken>(
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFirebaseTokenAccessTokenDomain::FGetTask>> FFirebaseTokenAccessTokenDomain::Get(
+        Request::FGetFirebaseTokenRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
+    }
+
+    FFirebaseTokenAccessTokenDomain::FDeleteTask::FDeleteTask(
+        const TSharedPtr<FFirebaseTokenAccessTokenDomain> Self,
+        const Request::FDeleteFirebaseTokenRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FFirebaseTokenAccessTokenDomain::FDeleteTask::FDeleteTask(
+        const FDeleteTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFirebaseTokenAccessTokenDomain::FDeleteTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DeleteFirebaseToken(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "FirebaseToken"
+                );
+                const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
+                );
+                Self->Cache->Delete<Gs2::Gateway::Model::FFirebaseToken>(ParentKey, Key);
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFirebaseTokenAccessTokenDomain::FDeleteTask>> FFirebaseTokenAccessTokenDomain::Delete(
+        Request::FDeleteFirebaseTokenRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
+    }
+
+    FString FFirebaseTokenAccessTokenDomain::CreateCacheParentKey(
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        FString ChildType
+    )
+    {
+        return FString() +
+            (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
+            (UserId.IsSet() ? *UserId : "null") + ":" +
+            ChildType;
+    }
+
+    FString FFirebaseTokenAccessTokenDomain::CreateCacheKey(
+    )
+    {
+        return "Singleton";
+    }
+
+    FFirebaseTokenAccessTokenDomain::FModelTask::FModelTask(
+        const TSharedPtr<FFirebaseTokenAccessTokenDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    FFirebaseTokenAccessTokenDomain::FModelTask::FModelTask(
+        const FModelTask& From
+    ): TGs2Future(From), Self(From.Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFirebaseTokenAccessTokenDomain::FModelTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Gateway::Model::FFirebaseToken>> Result
+    )
+    {
+        // ReSharper disable once CppLocalVariableMayBeConst
+        auto Value = Self->Cache->Get<Gs2::Gateway::Model::FFirebaseToken>(
+            Self->ParentKey,
+            Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
+            )
+        );
+        if (Value == nullptr) {
+            const auto Future = Self->Get(
+                MakeShared<Gs2::Gateway::Request::FGetFirebaseTokenRequest>()
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                {
+                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "firebaseToken")
+                    {
+                        Self->Cache->Delete<Gs2::Gateway::Model::FFirebaseToken>(
+                            Self->ParentKey,
+                            Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
+                            )
+                        );
+                    }
+                    else
+                    {
+                        return Future->GetTask().Error();
+                    }
+                }
+                else
+                {
+                    return Future->GetTask().Error();
+                }
+            }
+            Value = Self->Cache->Get<Gs2::Gateway::Model::FFirebaseToken>(
+                Self->ParentKey,
+                Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
+                )
+            );
+            Future->EnsureCompletion();
+        }
+        *Result = Value;
+
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFirebaseTokenAccessTokenDomain::FModelTask>> FFirebaseTokenAccessTokenDomain::Model() {
+        return Gs2::Core::Util::New<FAsyncTask<FFirebaseTokenAccessTokenDomain::FModelTask>>(this->AsShared());
+    }
+}
+
+#if defined(_MSC_VER)
+#pragma warning (pop)
+#elif defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+

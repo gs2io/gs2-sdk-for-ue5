@@ -1,0 +1,330 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#if defined(_MSC_VER)
+#pragma warning (push)
+#pragma warning (disable: 4458) // Declaration hides class member
+#elif defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshadow" // declaration shadows a field of
+#endif
+
+#include "Identifier/Domain/Model/SecurityPolicy.h"
+#include "Identifier/Domain/Model/User.h"
+#include "Identifier/Domain/Model/SecurityPolicy.h"
+#include "Identifier/Domain/Model/Identifier.h"
+#include "Identifier/Domain/Model/Password.h"
+#include "Identifier/Domain/Model/AttachSecurityPolicy.h"
+
+#include "Core/Domain/Model/AutoStampSheetDomain.h"
+#include "Core/Domain/Model/StampSheetDomain.h"
+
+namespace Gs2::Identifier::Domain::Model
+{
+
+    FSecurityPolicyDomain::FSecurityPolicyDomain(
+        const Core::Domain::FCacheDatabasePtr Cache,
+        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
+        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
+        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const TOptional<FString> SecurityPolicyName
+        // ReSharper disable once CppMemberInitializersOrder
+    ):
+        Cache(Cache),
+        JobQueueDomain(JobQueueDomain),
+        StampSheetConfiguration(StampSheetConfiguration),
+        Session(Session),
+        Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Session)),
+        SecurityPolicyName(SecurityPolicyName),
+        ParentKey("identifier:SecurityPolicy")
+    {
+    }
+
+    FSecurityPolicyDomain::FSecurityPolicyDomain(
+        const FSecurityPolicyDomain& From
+    ):
+        Cache(From.Cache),
+        JobQueueDomain(From.JobQueueDomain),
+        StampSheetConfiguration(From.StampSheetConfiguration),
+        Session(From.Session),
+        Client(From.Client)
+    {
+
+    }
+
+    FSecurityPolicyDomain::FUpdateTask::FUpdateTask(
+        const TSharedPtr<FSecurityPolicyDomain> Self,
+        const Request::FUpdateSecurityPolicyRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FSecurityPolicyDomain::FUpdateTask::FUpdateTask(
+        const FUpdateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSecurityPolicyDomain::FUpdateTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>> Result
+    )
+    {
+        Request
+            ->WithSecurityPolicyName(Self->SecurityPolicyName);
+        const auto Future = Self->Client->UpdateSecurityPolicy(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            {
+                const auto ParentKey = FString("identifier:SecurityPolicy");
+                const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Put<Gs2::Identifier::Model::FSecurityPolicy>(
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSecurityPolicyDomain::FUpdateTask>> FSecurityPolicyDomain::Update(
+        Request::FUpdateSecurityPolicyRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FUpdateTask>>(this->AsShared(), Request);
+    }
+
+    FSecurityPolicyDomain::FGetTask::FGetTask(
+        const TSharedPtr<FSecurityPolicyDomain> Self,
+        const Request::FGetSecurityPolicyRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FSecurityPolicyDomain::FGetTask::FGetTask(
+        const FGetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSecurityPolicyDomain::FGetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FSecurityPolicy>> Result
+    )
+    {
+        Request
+            ->WithSecurityPolicyName(Self->SecurityPolicyName);
+        const auto Future = Self->Client->GetSecurityPolicy(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            {
+                const auto ParentKey = FString("identifier:SecurityPolicy");
+                const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Put<Gs2::Identifier::Model::FSecurityPolicy>(
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSecurityPolicyDomain::FGetTask>> FSecurityPolicyDomain::Get(
+        Request::FGetSecurityPolicyRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
+    }
+
+    FSecurityPolicyDomain::FDeleteTask::FDeleteTask(
+        const TSharedPtr<FSecurityPolicyDomain> Self,
+        const Request::FDeleteSecurityPolicyRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FSecurityPolicyDomain::FDeleteTask::FDeleteTask(
+        const FDeleteTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSecurityPolicyDomain::FDeleteTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>> Result
+    )
+    {
+        Request
+            ->WithSecurityPolicyName(Self->SecurityPolicyName);
+        const auto Future = Self->Client->DeleteSecurityPolicy(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            {
+                const auto ParentKey = FString("identifier:SecurityPolicy");
+                const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Delete<Gs2::Identifier::Model::FSecurityPolicy>(ParentKey, Key);
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSecurityPolicyDomain::FDeleteTask>> FSecurityPolicyDomain::Delete(
+        Request::FDeleteSecurityPolicyRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
+    }
+
+    FString FSecurityPolicyDomain::CreateCacheParentKey(
+        TOptional<FString> SecurityPolicyName,
+        FString ChildType
+    )
+    {
+        return FString() +
+            (SecurityPolicyName.IsSet() ? *SecurityPolicyName : "null") + ":" +
+            ChildType;
+    }
+
+    FString FSecurityPolicyDomain::CreateCacheKey(
+        TOptional<FString> SecurityPolicyName
+    )
+    {
+        return FString() +
+            (SecurityPolicyName.IsSet() ? *SecurityPolicyName : "null");
+    }
+
+    FSecurityPolicyDomain::FModelTask::FModelTask(
+        const TSharedPtr<FSecurityPolicyDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    FSecurityPolicyDomain::FModelTask::FModelTask(
+        const FModelTask& From
+    ): TGs2Future(From), Self(From.Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSecurityPolicyDomain::FModelTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FSecurityPolicy>> Result
+    )
+    {
+        const auto ParentKey = FString("identifier:SecurityPolicy");
+        // ReSharper disable once CppLocalVariableMayBeConst
+        auto Value = Self->Cache->Get<Gs2::Identifier::Model::FSecurityPolicy>(
+            Self->ParentKey,
+            Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                Self->SecurityPolicyName
+            )
+        );
+        if (Value == nullptr) {
+            const auto Future = Self->Get(
+                MakeShared<Gs2::Identifier::Request::FGetSecurityPolicyRequest>()
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                {
+                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "securityPolicy")
+                    {
+                        Self->Cache->Delete<Gs2::Identifier::Model::FSecurityPolicy>(
+                            Self->ParentKey,
+                            Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                                Self->SecurityPolicyName
+                            )
+                        );
+                    }
+                    else
+                    {
+                        return Future->GetTask().Error();
+                    }
+                }
+                else
+                {
+                    return Future->GetTask().Error();
+                }
+            }
+            Value = Self->Cache->Get<Gs2::Identifier::Model::FSecurityPolicy>(
+                Self->ParentKey,
+                Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                    Self->SecurityPolicyName
+                )
+            );
+            Future->EnsureCompletion();
+        }
+        *Result = Value;
+
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSecurityPolicyDomain::FModelTask>> FSecurityPolicyDomain::Model() {
+        return Gs2::Core::Util::New<FAsyncTask<FSecurityPolicyDomain::FModelTask>>(this->AsShared());
+    }
+}
+
+#if defined(_MSC_VER)
+#pragma warning (pop)
+#elif defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+
