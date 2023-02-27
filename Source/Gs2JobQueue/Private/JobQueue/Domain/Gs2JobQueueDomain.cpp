@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -340,18 +342,18 @@ namespace Gs2::JobQueue::Domain
                     {
                         return Future->GetTask().Error();
                     }
-                    const auto Result = Future->GetTask().Result();
-                    if (Result != nullptr)
+                    const auto Result2 = Future->GetTask().Result();
+                    if (Result2 != nullptr)
                     {
                         Self->JobQueueDomain->OnExecutedEvent().Broadcast(
                             MakeShared<Gs2::JobQueue::Model::FJob>()
-                                ->WithScriptId(Result->GetItem()->GetScriptId())
-                                ->WithArgs(Result->GetItem()->GetArgs()),
+                                ->WithScriptId(Result2->GetItem()->GetScriptId())
+                                ->WithArgs(Result2->GetItem()->GetArgs()),
                             MakeShared<Gs2::JobQueue::Model::FJobResultBody>()
-                                ->WithTryNumber(Result->GetItem()->GetTryNumber())
-                                ->WithStatusCode(Result->GetItem()->GetStatusCode())
-                                ->WithResult(Result->GetItem()->GetResult())
-                                ->WithTryAt(Result->GetItem()->GetTryAt())
+                                ->WithTryNumber(Result2->GetItem()->GetTryNumber())
+                                ->WithStatusCode(Result2->GetItem()->GetStatusCode())
+                                ->WithResult(Result2->GetItem()->GetResult())
+                                ->WithTryAt(Result2->GetItem()->GetTryAt())
                         );
                     }
                     Future->EnsureCompletion();

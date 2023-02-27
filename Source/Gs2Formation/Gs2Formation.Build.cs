@@ -16,7 +16,7 @@ public class Gs2Formation : ModuleRules
 			"WebSockets",
 			"Json",
 			"JsonUtilities",
-			"Gs2",
+			"Gs2Core",
 			"Gs2Auth",
 			"Gs2Distributor",
 			"Gs2JobQueue",

@@ -16,7 +16,7 @@ public class Gs2Lock : ModuleRules
 			"WebSockets",
 			"Json",
 			"JsonUtilities",
-			"Gs2",
+			"Gs2Core",
 			"Gs2Auth",
 		});
 	}

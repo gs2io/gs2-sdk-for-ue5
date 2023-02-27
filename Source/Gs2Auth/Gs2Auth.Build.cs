@@ -16,7 +16,7 @@ public class Gs2Auth : ModuleRules
 			"WebSockets",
 			"Json",
 			"JsonUtilities",
-			"Gs2"
+			"Gs2Core"
 		});
 		
 		PublicIncludePathModuleNames.AddRange(new [] {

@@ -16,7 +16,7 @@ public class Gs2Domain : ModuleRules
 			"WebSockets",
 			"Json",
 			"JsonUtilities",
-			"Gs2",
+			"Gs2Core",
 			"Gs2Account",
 			"Gs2Auth",
 			"Gs2Chat",

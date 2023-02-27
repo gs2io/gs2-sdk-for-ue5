@@ -97,7 +97,7 @@ namespace Gs2::UE5::Util
                 ->WithUserId((*AuthenticationResult)->GetUserId())
                 ->WithExpire((*AuthenticationResult)->GetExpire());
         }
-        if (GatewaySetting != nullptr)
+        if (GatewaySetting != nullptr && AccessTokenValue != nullptr)
         {
             {
                 const auto GatewayClient = Gateway::FGs2GatewayWebSocketClient(WebSocketSession);
@@ -114,7 +114,7 @@ namespace Gs2::UE5::Util
                 }
             }
         }
-        if (VersionSetting != nullptr)
+        if (VersionSetting != nullptr && AccessTokenValue != nullptr)
         {
             {
                 const auto VersionClient = Gs2::Version::FGs2VersionRestClient(RestSession);

@@ -16,7 +16,7 @@ public class Gs2Key : ModuleRules
 			"WebSockets",
 			"Json",
 			"JsonUtilities",
-			"Gs2"
+			"Gs2Core",
 		});
 	}
 }

@@ -16,7 +16,7 @@ public class Gs2Identifier : ModuleRules
 			"WebSockets",
 			"Json",
 			"JsonUtilities",
-			"Gs2"
+			"Gs2Core",
 		});
 	}
 }

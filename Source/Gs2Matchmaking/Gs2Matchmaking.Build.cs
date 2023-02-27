@@ -16,7 +16,7 @@ public class Gs2Matchmaking : ModuleRules
 			"WebSockets",
 			"Json",
 			"JsonUtilities",
-			"Gs2",
+			"Gs2Core",
 			"Gs2Auth",
 		});
 	}
