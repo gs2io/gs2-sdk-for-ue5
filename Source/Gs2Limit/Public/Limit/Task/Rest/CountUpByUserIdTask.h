@@ -39,6 +39,8 @@ namespace Gs2::Limit::Task::Rest
         virtual ~FCountUpByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FCountUpByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FCountUpByUserIdTask, ESPMode::ThreadSafe> FCountUpByUserIdTaskPtr;
 }

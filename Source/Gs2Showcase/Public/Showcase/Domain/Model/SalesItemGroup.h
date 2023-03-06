@@ -51,6 +51,8 @@ namespace Gs2::Showcase::Domain::Model
 
         public:
         TOptional<FString> NamespaceName;
+        TOptional<FString> UserId;
+        TOptional<FString> ShowcaseName;
         TOptional<FString> DisplayItemId;
     private:
 
@@ -64,6 +66,8 @@ namespace Gs2::Showcase::Domain::Model
             const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
             const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
             const TOptional<FString> NamespaceName,
+            const TOptional<FString> UserId,
+            const TOptional<FString> ShowcaseName,
             const TOptional<FString> DisplayItemId
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -74,6 +78,8 @@ namespace Gs2::Showcase::Domain::Model
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
+            TOptional<FString> UserId,
+            TOptional<FString> ShowcaseName,
             TOptional<FString> DisplayItemId,
             FString ChildType
         );

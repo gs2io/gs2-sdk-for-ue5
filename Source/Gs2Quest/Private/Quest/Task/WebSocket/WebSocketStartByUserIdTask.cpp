@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Quest/Error/InProgressError.h"
 
 namespace Gs2::Quest::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Quest::Task::WebSocket
         *Result = Result::FStartByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FStartByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "quest.progress.exists") {
+            TGs2Future<Result::FStartByUserIdResult>::OnError(MakeShared<Quest::Error::FInProgressError>(Error));
+        }
+        else {
+            TGs2Future<Result::FStartByUserIdResult>::OnError(Error);
+        }
     }
 }

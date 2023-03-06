@@ -38,7 +38,7 @@ namespace Gs2::Deploy::Task::Rest
         );
         virtual ~FUpdateStackFromGitHubTask() override = default;
 
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FUpdateStackFromGitHubResultPtr> Result) override;
+        virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FUpdateStackFromGitHubResultPtr> Result) override;
     };
     typedef TSharedPtr<FUpdateStackFromGitHubTask, ESPMode::ThreadSafe> FUpdateStackFromGitHubTaskPtr;
 }

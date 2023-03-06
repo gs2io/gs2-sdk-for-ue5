@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Chat/Error/NoAccessPrivilegesError.h"
 
 namespace Gs2::Chat::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Chat::Task::WebSocket
         *Result = Result::FCreateRoomResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FCreateRoomTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "room.allowUserIds.notInclude") {
+            TGs2Future<Result::FCreateRoomResult>::OnError(MakeShared<Chat::Error::FNoAccessPrivilegesError>(Error));
+        }
+        else {
+            TGs2Future<Result::FCreateRoomResult>::OnError(Error);
+        }
     }
 }

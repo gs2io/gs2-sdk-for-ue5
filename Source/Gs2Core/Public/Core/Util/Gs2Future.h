@@ -23,7 +23,7 @@
 namespace Gs2::Core::Util
 {
     template <class TResult>
-    class TGs2Future :
+    class GS2CORE_API TGs2Future :
         public FNonAbandonableTask
     {
         friend class FAutoDeleteAsyncTask<TGs2Future>;
@@ -108,7 +108,7 @@ namespace Gs2::Core::Util
 
     protected:
         
-        void OnError(Model::FGs2ErrorPtr Error)
+        virtual void OnError(Model::FGs2ErrorPtr Error)
         {
             FGs2Ticker::EntryInvokeFromGameThreads([=]
             {
@@ -118,7 +118,7 @@ namespace Gs2::Core::Util
             this->ErrorValue = Error;
         }
     
-        void OnComplete(TSharedPtr<TResult> Result)
+        virtual void OnComplete(TSharedPtr<TResult> Result)
         {
             FGs2Ticker::EntryInvokeFromGameThreads([=]
             {

@@ -38,7 +38,7 @@ namespace Gs2::Deploy::Task::WebSocket
         );
         virtual ~FGetOutputTask() override = default;
 
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FGetOutputResultPtr> Result) override;
+        virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FGetOutputResultPtr> Result) override;
     };
     typedef TSharedPtr<FGetOutputTask, ESPMode::ThreadSafe> FGetOutputTaskPtr;
 }

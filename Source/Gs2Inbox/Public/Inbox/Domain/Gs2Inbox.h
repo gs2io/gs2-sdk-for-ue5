@@ -43,13 +43,16 @@
 #include "Inbox/Domain/Iterator/DescribeGlobalMessagesIterator.h"
 
 // Notification
+#include "Inbox/Model/ReceiveNotification.h"
 
 namespace Gs2::Inbox::Domain
 {
+    DECLARE_EVENT_OneParam(FGs2InboxDomain, FReceiveNotificationEvent, Gs2::Inbox::Model::FReceiveNotificationPtr);
 
     class GS2INBOX_API FGs2InboxDomain:
         public TSharedFromThis<FGs2InboxDomain>
     {
+        FReceiveNotificationEvent ReceiveNotificationEvent;
         Core::Domain::FCacheDatabasePtr Cache;
         Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
         Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
@@ -125,6 +128,7 @@ namespace Gs2::Inbox::Domain
             const Gs2::JobQueue::Model::FJobPtr Job,
             const Gs2::JobQueue::Model::FJobResultBodyPtr Result
         );
+        FReceiveNotificationEvent& OnReceiveNotification();
 
         void HandleNotification(
             const FString Action,

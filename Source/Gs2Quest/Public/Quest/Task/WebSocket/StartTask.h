@@ -39,6 +39,8 @@ namespace Gs2::Quest::Task::WebSocket
         virtual ~FStartTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FStartResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FStartTask, ESPMode::ThreadSafe> FStartTaskPtr;
 }

@@ -53,12 +53,14 @@
 #include "Matchmaking/Model/JoinNotification.h"
 #include "Matchmaking/Model/LeaveNotification.h"
 #include "Matchmaking/Model/CompleteNotification.h"
+#include "Matchmaking/Model/ChangeRatingNotification.h"
 
 namespace Gs2::Matchmaking::Domain
 {
     DECLARE_EVENT_OneParam(FGs2MatchmakingDomain, FJoinNotificationEvent, Gs2::Matchmaking::Model::FJoinNotificationPtr);
     DECLARE_EVENT_OneParam(FGs2MatchmakingDomain, FLeaveNotificationEvent, Gs2::Matchmaking::Model::FLeaveNotificationPtr);
     DECLARE_EVENT_OneParam(FGs2MatchmakingDomain, FCompleteNotificationEvent, Gs2::Matchmaking::Model::FCompleteNotificationPtr);
+    DECLARE_EVENT_OneParam(FGs2MatchmakingDomain, FChangeRatingNotificationEvent, Gs2::Matchmaking::Model::FChangeRatingNotificationPtr);
 
     class GS2MATCHMAKING_API FGs2MatchmakingDomain:
         public TSharedFromThis<FGs2MatchmakingDomain>
@@ -66,6 +68,7 @@ namespace Gs2::Matchmaking::Domain
         FJoinNotificationEvent JoinNotificationEvent;
         FLeaveNotificationEvent LeaveNotificationEvent;
         FCompleteNotificationEvent CompleteNotificationEvent;
+        FChangeRatingNotificationEvent ChangeRatingNotificationEvent;
         Core::Domain::FCacheDatabasePtr Cache;
         Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
         Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
@@ -144,6 +147,7 @@ namespace Gs2::Matchmaking::Domain
         FJoinNotificationEvent& OnJoinNotification();
         FLeaveNotificationEvent& OnLeaveNotification();
         FCompleteNotificationEvent& OnCompleteNotification();
+        FChangeRatingNotificationEvent& OnChangeRatingNotification();
 
         void HandleNotification(
             const FString Action,

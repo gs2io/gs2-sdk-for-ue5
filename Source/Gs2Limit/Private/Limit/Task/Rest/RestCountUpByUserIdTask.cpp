@@ -21,6 +21,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Limit/Error/OverflowError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Limit::Task::Rest
@@ -150,5 +151,15 @@ namespace Gs2::Limit::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FCountUpByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "limit.counter.overflow") {
+            TGs2Future<Result::FCountUpByUserIdResult>::OnError(MakeShared<Limit::Error::FOverflowError>(Error));
+        }
+        else {
+            TGs2Future<Result::FCountUpByUserIdResult>::OnError(Error);
+        }
     }
 }

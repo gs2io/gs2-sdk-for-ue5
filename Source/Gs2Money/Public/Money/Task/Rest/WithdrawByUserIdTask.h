@@ -39,6 +39,8 @@ namespace Gs2::Money::Task::Rest
         virtual ~FWithdrawByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FWithdrawByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FWithdrawByUserIdTask, ESPMode::ThreadSafe> FWithdrawByUserIdTaskPtr;
 }

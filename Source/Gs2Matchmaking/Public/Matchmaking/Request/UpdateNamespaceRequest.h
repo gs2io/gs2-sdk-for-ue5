@@ -41,6 +41,7 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<Model::FNotificationSetting> JoinNotificationValue;
         TSharedPtr<Model::FNotificationSetting> LeaveNotificationValue;
         TSharedPtr<Model::FNotificationSetting> CompleteNotificationValue;
+        TSharedPtr<Model::FNotificationSetting> ChangeRatingNotificationValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -65,6 +66,7 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FUpdateNamespaceRequest> WithJoinNotification(const TSharedPtr<Model::FNotificationSetting> JoinNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithLeaveNotification(const TSharedPtr<Model::FNotificationSetting> LeaveNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithCompleteNotification(const TSharedPtr<Model::FNotificationSetting> CompleteNotification);
+        TSharedPtr<FUpdateNamespaceRequest> WithChangeRatingNotification(const TSharedPtr<Model::FNotificationSetting> ChangeRatingNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -82,6 +84,7 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<Model::FNotificationSetting> GetJoinNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetLeaveNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetCompleteNotification() const;
+        TSharedPtr<Model::FNotificationSetting> GetChangeRatingNotification() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

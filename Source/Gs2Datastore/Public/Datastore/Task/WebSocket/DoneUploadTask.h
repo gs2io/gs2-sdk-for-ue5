@@ -39,6 +39,8 @@ namespace Gs2::Datastore::Task::WebSocket
         virtual ~FDoneUploadTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FDoneUploadResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FDoneUploadTask, ESPMode::ThreadSafe> FDoneUploadTaskPtr;
 }

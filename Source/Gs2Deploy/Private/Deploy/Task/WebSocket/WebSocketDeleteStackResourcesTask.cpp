@@ -36,7 +36,7 @@ namespace Gs2::Deploy::Task::WebSocket
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FDeleteStackResourcesTask::Action(
+    Core::Model::FGs2ErrorPtr FDeleteStackResourcesTask::Action(
         const TSharedPtr<Result::FDeleteStackResourcesResultPtr> Result
     )
     {

@@ -38,7 +38,7 @@ namespace Gs2::Deploy::Task::WebSocket
         );
         virtual ~FValidateTask() override = default;
 
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FValidateResultPtr> Result) override;
+        virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FValidateResultPtr> Result) override;
     };
     typedef TSharedPtr<FValidateTask, ESPMode::ThreadSafe> FValidateTaskPtr;
 }

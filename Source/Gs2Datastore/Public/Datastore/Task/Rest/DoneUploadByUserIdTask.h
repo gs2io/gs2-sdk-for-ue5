@@ -39,6 +39,8 @@ namespace Gs2::Datastore::Task::Rest
         virtual ~FDoneUploadByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FDoneUploadByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FDoneUploadByUserIdTask, ESPMode::ThreadSafe> FDoneUploadByUserIdTaskPtr;
 }

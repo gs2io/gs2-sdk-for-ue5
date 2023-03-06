@@ -39,6 +39,8 @@ namespace Gs2::JobQueue::Task::Rest
         virtual ~FRunTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FRunResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FRunTask, ESPMode::ThreadSafe> FRunTaskPtr;
 }

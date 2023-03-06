@@ -21,6 +21,8 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "SerialKey/Error/AlreadyUsedError.h"
+#include "SerialKey/Error/CodeNotFoundError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::SerialKey::Task::Rest
@@ -135,5 +137,18 @@ namespace Gs2::SerialKey::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FUseTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "code.status.invalid") {
+            TGs2Future<Result::FUseResult>::OnError(MakeShared<SerialKey::Error::FAlreadyUsedError>(Error));
+        }
+        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "code.code.notFound") {
+            TGs2Future<Result::FUseResult>::OnError(MakeShared<SerialKey::Error::FCodeNotFoundError>(Error));
+        }
+        else {
+            TGs2Future<Result::FUseResult>::OnError(Error);
+        }
     }
 }

@@ -39,6 +39,8 @@ namespace Gs2::Chat::Task::WebSocket
         virtual ~FDeleteRoomTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FDeleteRoomResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FDeleteRoomTask, ESPMode::ThreadSafe> FDeleteRoomTaskPtr;
 }

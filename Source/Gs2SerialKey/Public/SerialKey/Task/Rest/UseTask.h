@@ -39,6 +39,8 @@ namespace Gs2::SerialKey::Task::Rest
         virtual ~FUseTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FUseResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FUseTask, ESPMode::ThreadSafe> FUseTaskPtr;
 }
