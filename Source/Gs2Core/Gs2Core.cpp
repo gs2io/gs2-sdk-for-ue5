@@ -7,13 +7,18 @@
 #include "Editor.h"
 #endif
 
+#include "WebSocketsModule.h"
+
 class FGs2Module : public FDefaultGameModuleImpl
 {
 public:
 	virtual void StartupModule()
 	{
 		Gs2TickerObject = new FGs2Ticker();
+
+		FModuleManager::LoadModuleChecked<FWebSocketsModule>("WebSockets");
 	}
+
 	virtual void ShutdownModule()
 	{
 		delete Gs2TickerObject;
