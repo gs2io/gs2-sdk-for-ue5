@@ -33,6 +33,7 @@
 #include "Showcase/Domain/Model/ShowcaseAccessToken.h"
 #include "Showcase/Domain/Model/User.h"
 #include "Showcase/Domain/Model/UserAccessToken.h"
+#include "Showcase/Domain/Model/DisplayItem.h"
 
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
