@@ -202,6 +202,15 @@ namespace Gs2::Matchmaking::Domain
             }
             CompleteNotificationEvent.Broadcast(Gs2::Matchmaking::Model::FCompleteNotification::FromJson(PayloadJson));
         }
+        if (Action == "ChangeRating") {
+            TSharedPtr<FJsonObject> PayloadJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+                !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
+            {
+                return;
+            }
+            ChangeRatingNotificationEvent.Broadcast(Gs2::Matchmaking::Model::FChangeRatingNotification::FromJson(PayloadJson));
+        }
     }
 
     FJoinNotificationEvent& FGs2MatchmakingDomain::OnJoinNotification()
@@ -217,6 +226,11 @@ namespace Gs2::Matchmaking::Domain
     FCompleteNotificationEvent& FGs2MatchmakingDomain::OnCompleteNotification()
     {
         return CompleteNotificationEvent;
+    }
+
+    FChangeRatingNotificationEvent& FGs2MatchmakingDomain::OnChangeRatingNotification()
+    {
+        return ChangeRatingNotificationEvent;
     }
 }
 

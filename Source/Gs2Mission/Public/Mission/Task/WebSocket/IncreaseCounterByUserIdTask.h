@@ -39,6 +39,8 @@ namespace Gs2::Mission::Task::WebSocket
         virtual ~FIncreaseCounterByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FIncreaseCounterByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FIncreaseCounterByUserIdTask, ESPMode::ThreadSafe> FIncreaseCounterByUserIdTaskPtr;
 }

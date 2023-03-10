@@ -21,6 +21,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Quest/Error/InProgressError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Quest::Task::Rest
@@ -154,5 +155,15 @@ namespace Gs2::Quest::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FStartTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "quest.progress.exists") {
+            TGs2Future<Result::FStartResult>::OnError(MakeShared<Quest::Error::FInProgressError>(Error));
+        }
+        else {
+            TGs2Future<Result::FStartResult>::OnError(Error);
+        }
     }
 }

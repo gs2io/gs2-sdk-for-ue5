@@ -39,6 +39,8 @@ namespace Gs2::Money::Task::WebSocket
         virtual ~FRecordReceiptTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FRecordReceiptResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FRecordReceiptTask, ESPMode::ThreadSafe> FRecordReceiptTaskPtr;
 }

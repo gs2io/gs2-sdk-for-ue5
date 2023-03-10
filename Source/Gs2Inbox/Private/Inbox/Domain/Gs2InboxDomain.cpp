@@ -281,6 +281,20 @@ namespace Gs2::Inbox::Domain
         const FString Action,
         const FString Payload
     ) {
+        if (Action == "Receive") {
+            TSharedPtr<FJsonObject> PayloadJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+                !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
+            {
+                return;
+            }
+            ReceiveNotificationEvent.Broadcast(Gs2::Inbox::Model::FReceiveNotification::FromJson(PayloadJson));
+        }
+    }
+
+    FReceiveNotificationEvent& FGs2InboxDomain::OnReceiveNotification()
+    {
+        return ReceiveNotificationEvent;
     }
 }
 

@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Datastore/Error/InvalidStatusError.h"
 
 namespace Gs2::Datastore::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Datastore::Task::WebSocket
         *Result = Result::FDeleteDataObjectByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FDeleteDataObjectByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "dataObject.status.invalid") {
+            TGs2Future<Result::FDeleteDataObjectByUserIdResult>::OnError(MakeShared<Datastore::Error::FInvalidStatusError>(Error));
+        }
+        else {
+            TGs2Future<Result::FDeleteDataObjectByUserIdResult>::OnError(Error);
+        }
     }
 }

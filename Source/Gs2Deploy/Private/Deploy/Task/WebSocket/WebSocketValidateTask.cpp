@@ -36,7 +36,7 @@ namespace Gs2::Deploy::Task::WebSocket
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FValidateTask::Action(
+    Core::Model::FGs2ErrorPtr FValidateTask::Action(
         const TSharedPtr<Result::FValidateResultPtr> Result
     )
     {

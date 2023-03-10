@@ -39,6 +39,8 @@ namespace Gs2::Money::Task::Rest
         virtual ~FDepositByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FDepositByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FDepositByUserIdTask, ESPMode::ThreadSafe> FDepositByUserIdTaskPtr;
 }

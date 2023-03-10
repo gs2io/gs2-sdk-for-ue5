@@ -66,7 +66,8 @@ void UGs2MatchmakingDoMatchmakingAsyncFunction::Activate()
     auto Detail = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
     Detail->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(
         "gathering",
-        "matchmaking.gathering.gathering.error.notFound"
+        "matchmaking.gathering.gathering.error.notFound",
+        ""
     ));
     ReturnError.Value = MakeShared<Gs2::Core::Model::FNotFoundError>(
         Detail

@@ -38,7 +38,7 @@ namespace Gs2::Deploy::Task::Rest
         );
         virtual ~FForceDeleteStackTask() override = default;
 
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FForceDeleteStackResultPtr> Result) override;
+        virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FForceDeleteStackResultPtr> Result) override;
     };
     typedef TSharedPtr<FForceDeleteStackTask, ESPMode::ThreadSafe> FForceDeleteStackTaskPtr;
 }

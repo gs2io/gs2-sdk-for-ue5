@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Inventory/Error/ConflictError.h"
 
 namespace Gs2::Inventory::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Inventory::Task::WebSocket
         *Result = Result::FAcquireItemSetByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FAcquireItemSetByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "itemSet.operation.conflict") {
+            TGs2Future<Result::FAcquireItemSetByUserIdResult>::OnError(MakeShared<Inventory::Error::FConflictError>(Error));
+        }
+        else {
+            TGs2Future<Result::FAcquireItemSetByUserIdResult>::OnError(Error);
+        }
     }
 }

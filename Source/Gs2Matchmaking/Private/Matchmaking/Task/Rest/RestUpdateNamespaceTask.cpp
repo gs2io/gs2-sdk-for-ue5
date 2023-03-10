@@ -132,6 +132,10 @@ namespace Gs2::Matchmaking::Task::Rest
             {
                 JsonRootObject->SetObjectField("completeNotification", this->Request->GetCompleteNotification()->ToJson());
             }
+            if (this->Request->GetChangeRatingNotification() != nullptr && this->Request->GetChangeRatingNotification().IsValid())
+            {
+                JsonRootObject->SetObjectField("changeRatingNotification", this->Request->GetChangeRatingNotification()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

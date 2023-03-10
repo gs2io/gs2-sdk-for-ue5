@@ -39,6 +39,7 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FNotificationSetting> JoinNotificationValue;
         TSharedPtr<FNotificationSetting> LeaveNotificationValue;
         TSharedPtr<FNotificationSetting> CompleteNotificationValue;
+        TSharedPtr<FNotificationSetting> ChangeRatingNotificationValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -64,6 +65,7 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FNamespace> WithJoinNotification(const TSharedPtr<FNotificationSetting> JoinNotification);
         TSharedPtr<FNamespace> WithLeaveNotification(const TSharedPtr<FNotificationSetting> LeaveNotification);
         TSharedPtr<FNamespace> WithCompleteNotification(const TSharedPtr<FNotificationSetting> CompleteNotification);
+        TSharedPtr<FNamespace> WithChangeRatingNotification(const TSharedPtr<FNotificationSetting> ChangeRatingNotification);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -83,6 +85,7 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FNotificationSetting> GetJoinNotification() const;
         TSharedPtr<FNotificationSetting> GetLeaveNotification() const;
         TSharedPtr<FNotificationSetting> GetCompleteNotification() const;
+        TSharedPtr<FNotificationSetting> GetChangeRatingNotification() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

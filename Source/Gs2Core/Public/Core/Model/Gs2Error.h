@@ -23,6 +23,7 @@
 typedef FString FGs2ErrorType;
 typedef FString FGs2ErrorComponent;
 typedef FString FGs2ErrorMessage;
+typedef FString FGs2ErrorCode;
 
 namespace Gs2::Core::Model
 {
@@ -30,11 +31,13 @@ namespace Gs2::Core::Model
     {
         const FGs2ErrorComponent ComponentValue;
         const FGs2ErrorMessage MessageValue;
+        const FGs2ErrorCode CodeValue;
 
     public:
         FGs2ErrorDetail(
             const FGs2ErrorComponent ComponentValue,
-            const FGs2ErrorMessage MessageValue
+            const FGs2ErrorMessage MessageValue,
+            const FGs2ErrorCode CodeValue
         );
         FGs2ErrorDetail(
             const FGs2ErrorDetail& From
@@ -44,9 +47,11 @@ namespace Gs2::Core::Model
 
         FGs2ErrorComponent Component() const;
         FGs2ErrorMessage Message() const;
+        FGs2ErrorCode Code() const;
 
         FGs2ErrorComponent GetComponent() const;
         FGs2ErrorMessage GetMessage() const;
+        FGs2ErrorCode GetCode() const;
 
         static TSharedPtr<FGs2ErrorDetail> FromJson(TSharedPtr<FJsonValue> Object);
         FString String() const;

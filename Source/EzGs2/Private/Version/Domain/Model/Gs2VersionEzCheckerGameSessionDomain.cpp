@@ -29,8 +29,10 @@ namespace Gs2::UE5::Version::Domain::Model
         return [&]{
             auto Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Version::Model::FEzStatus>>>();
             for (auto Value : *Domain->Warnings) {
-                Gs2::UE5::Version::Model::FEzStatus::FromModel(
-                    Value
+                Result->Add(
+                    Gs2::UE5::Version::Model::FEzStatus::FromModel(
+                        Value
+                    )
                 );
             }
             return Result;
@@ -42,8 +44,10 @@ namespace Gs2::UE5::Version::Domain::Model
         return [&]{
             auto Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Version::Model::FEzStatus>>>();
             for (auto Value : *Domain->Errors) {
-                Gs2::UE5::Version::Model::FEzStatus::FromModel(
-                    Value
+                Result->Add(
+                    Gs2::UE5::Version::Model::FEzStatus::FromModel(
+                        Value
+                    )
                 );
             }
             return Result;

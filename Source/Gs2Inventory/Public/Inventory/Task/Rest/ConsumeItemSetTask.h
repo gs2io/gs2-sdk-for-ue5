@@ -39,6 +39,8 @@ namespace Gs2::Inventory::Task::Rest
         virtual ~FConsumeItemSetTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FConsumeItemSetResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FConsumeItemSetTask, ESPMode::ThreadSafe> FConsumeItemSetTaskPtr;
 }

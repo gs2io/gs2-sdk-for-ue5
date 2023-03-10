@@ -39,6 +39,8 @@ namespace Gs2::Lottery::Task::Rest
         virtual ~FDrawByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FDrawByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FDrawByUserIdTask, ESPMode::ThreadSafe> FDrawByUserIdTaskPtr;
 }

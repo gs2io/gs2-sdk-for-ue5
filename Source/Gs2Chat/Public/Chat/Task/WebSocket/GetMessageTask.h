@@ -39,6 +39,8 @@ namespace Gs2::Chat::Task::WebSocket
         virtual ~FGetMessageTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FGetMessageResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FGetMessageTask, ESPMode::ThreadSafe> FGetMessageTaskPtr;
 }
