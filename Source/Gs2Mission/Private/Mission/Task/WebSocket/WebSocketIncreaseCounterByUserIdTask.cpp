@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Mission/Error/ConflictError.h"
 
 namespace Gs2::Mission::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Mission::Task::WebSocket
         *Result = Result::FIncreaseCounterByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FIncreaseCounterByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "counter.increase.conflict") {
+            TGs2Future<Result::FIncreaseCounterByUserIdResult>::OnError(MakeShared<Mission::Error::FConflictError>(Error));
+        }
+        else {
+            TGs2Future<Result::FIncreaseCounterByUserIdResult>::OnError(Error);
+        }
     }
 }

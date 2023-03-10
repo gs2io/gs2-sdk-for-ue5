@@ -23,7 +23,6 @@
 #endif
 
 #include "Showcase/Domain/Model/SalesItem.h"
-#include "Showcase/Domain/Model/DisplayItem.h"
 #include "Showcase/Domain/Model/Namespace.h"
 #include "Showcase/Domain/Model/SalesItemMaster.h"
 #include "Showcase/Domain/Model/SalesItemGroupMaster.h"
@@ -46,6 +45,8 @@ namespace Gs2::Showcase::Domain::Model
         const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
         const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<FString> ShowcaseName,
         const TOptional<FString> DisplayItemId
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -55,9 +56,13 @@ namespace Gs2::Showcase::Domain::Model
         Session(Session),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Session)),
         NamespaceName(NamespaceName),
+        UserId(UserId),
+        ShowcaseName(ShowcaseName),
         DisplayItemId(DisplayItemId),
         ParentKey(Gs2::Showcase::Domain::Model::FDisplayItemDomain::CreateCacheParentKey(
             NamespaceName,
+            UserId,
+            ShowcaseName,
             DisplayItemId,
             "SalesItem"
         ))
@@ -78,12 +83,16 @@ namespace Gs2::Showcase::Domain::Model
 
     FString FSalesItemDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<FString> ShowcaseName,
         TOptional<FString> DisplayItemId,
         FString ChildType
     )
     {
         return FString() +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
+            (UserId.IsSet() ? *UserId : "null") + ":" +
+            (ShowcaseName.IsSet() ? *ShowcaseName : "null") + ":" +
             (DisplayItemId.IsSet() ? *DisplayItemId : "null") + ":" +
             ChildType;
     }

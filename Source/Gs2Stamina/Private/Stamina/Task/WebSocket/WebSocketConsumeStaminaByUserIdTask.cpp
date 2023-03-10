@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Stamina/Error/InsufficientError.h"
 
 namespace Gs2::Stamina::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Stamina::Task::WebSocket
         *Result = Result::FConsumeStaminaByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FConsumeStaminaByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "stamina.stamina.insufficient") {
+            TGs2Future<Result::FConsumeStaminaByUserIdResult>::OnError(MakeShared<Stamina::Error::FInsufficientError>(Error));
+        }
+        else {
+            TGs2Future<Result::FConsumeStaminaByUserIdResult>::OnError(Error);
+        }
     }
 }

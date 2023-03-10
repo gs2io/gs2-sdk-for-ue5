@@ -39,6 +39,8 @@ namespace Gs2::Datastore::Task::WebSocket
         virtual ~FDeleteDataObjectByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FDeleteDataObjectByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FDeleteDataObjectByUserIdTask, ESPMode::ThreadSafe> FDeleteDataObjectByUserIdTaskPtr;
 }

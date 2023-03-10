@@ -109,7 +109,8 @@ namespace Gs2::Core::Net::WebSocket::Task
         auto Detail = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
         Detail->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(
             "unknown",
-            Message
+            Message,
+            ""
         ));
         return MakeShared<FWebSocketResult>(
             RequestId,

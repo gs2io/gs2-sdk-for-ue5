@@ -36,7 +36,7 @@ namespace Gs2::Deploy::Task::WebSocket
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FGetResourceTask::Action(
+    Core::Model::FGs2ErrorPtr FGetResourceTask::Action(
         const TSharedPtr<Result::FGetResourceResultPtr> Result
     )
     {

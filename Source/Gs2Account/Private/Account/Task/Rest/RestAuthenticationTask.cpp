@@ -21,6 +21,8 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Account/Error/PasswordIncorrectError.h"
+#include "Account/Error/BannedInfinityError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Account::Task::Rest
@@ -136,5 +138,18 @@ namespace Gs2::Account::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FAuthenticationTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "account.password.invalid") {
+            TGs2Future<Result::FAuthenticationResult>::OnError(MakeShared<Account::Error::FPasswordIncorrectError>(Error));
+        }
+        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "account.banned.infinity") {
+            TGs2Future<Result::FAuthenticationResult>::OnError(MakeShared<Account::Error::FBannedInfinityError>(Error));
+        }
+        else {
+            TGs2Future<Result::FAuthenticationResult>::OnError(Error);
+        }
     }
 }

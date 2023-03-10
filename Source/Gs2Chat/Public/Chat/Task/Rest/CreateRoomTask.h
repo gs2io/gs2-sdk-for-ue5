@@ -39,6 +39,8 @@ namespace Gs2::Chat::Task::Rest
         virtual ~FCreateRoomTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FCreateRoomResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FCreateRoomTask, ESPMode::ThreadSafe> FCreateRoomTaskPtr;
 }

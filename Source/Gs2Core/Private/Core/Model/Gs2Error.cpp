@@ -21,11 +21,13 @@
 namespace Gs2::Core::Model
 {
     FGs2ErrorDetail::FGs2ErrorDetail(
-     const FGs2ErrorComponent ComponentValue,
-     const FGs2ErrorMessage MessageValue
+        const FGs2ErrorComponent ComponentValue,
+        const FGs2ErrorMessage MessageValue,
+        const FGs2ErrorCode CodeValue
     ):
         ComponentValue(ComponentValue),
-        MessageValue(MessageValue)
+        MessageValue(MessageValue),
+        CodeValue(CodeValue)
     {
             
     }
@@ -33,8 +35,9 @@ namespace Gs2::Core::Model
     FGs2ErrorDetail::FGs2ErrorDetail(
         const FGs2ErrorDetail& From
     ):
-         ComponentValue(From.ComponentValue),
-         MessageValue(From.MessageValue)
+        ComponentValue(From.ComponentValue),
+        MessageValue(From.MessageValue),
+        CodeValue(From.CodeValue)
     {
     }
 
@@ -48,6 +51,11 @@ namespace Gs2::Core::Model
         return MessageValue;
     }
 
+    FGs2ErrorCode FGs2ErrorDetail::Code() const
+    {
+        return CodeValue;
+    }
+
     FGs2ErrorComponent FGs2ErrorDetail::GetComponent() const
     {
         return ComponentValue;
@@ -56,6 +64,11 @@ namespace Gs2::Core::Model
     FGs2ErrorMessage FGs2ErrorDetail::GetMessage() const
     {
         return MessageValue;
+    }
+
+    FGs2ErrorCode FGs2ErrorDetail::GetCode() const
+    {
+        return CodeValue;
     }
 
     TSharedPtr<FGs2Error> FGs2Error::FromResponse(int32 ResponseCode, FString Response)
@@ -82,7 +95,8 @@ namespace Gs2::Core::Model
     {
         return MakeShared<FGs2ErrorDetail>(
             Object->AsObject()->GetStringField("component"),
-            Object->AsObject()->GetStringField("message")
+            Object->AsObject()->GetStringField("message"),
+            Object->AsObject()->GetStringField("code")
         );
     }
 
@@ -91,6 +105,7 @@ namespace Gs2::Core::Model
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         JsonRootObject->SetStringField("component", ComponentValue);
         JsonRootObject->SetStringField("message", MessageValue);
+        JsonRootObject->SetStringField("code", CodeValue);
         FString Body;
         const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
         FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
@@ -117,7 +132,8 @@ namespace Gs2::Core::Model
             const auto Error = FGs2ErrorDetail::FromJson(Object);
             Errors->Add(MakeShared<FGs2ErrorDetail>(
                 Error->Component(),
-                Error->Message()
+                Error->Message(),
+                Error->Code()
             ));
         }
         switch (StatusCode)

@@ -21,6 +21,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "JobQueue/Error/ConflictError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::JobQueue::Task::Rest
@@ -132,5 +133,15 @@ namespace Gs2::JobQueue::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FRunByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "jobQueue.execution.conflict") {
+            TGs2Future<Result::FRunByUserIdResult>::OnError(MakeShared<JobQueue::Error::FConflictError>(Error));
+        }
+        else {
+            TGs2Future<Result::FRunByUserIdResult>::OnError(Error);
+        }
     }
 }

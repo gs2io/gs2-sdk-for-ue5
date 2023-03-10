@@ -21,6 +21,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Chat/Error/NoAccessPrivilegesError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Chat::Task::Rest
@@ -152,5 +153,15 @@ namespace Gs2::Chat::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FCreateRoomTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "room.allowUserIds.notInclude") {
+            TGs2Future<Result::FCreateRoomResult>::OnError(MakeShared<Chat::Error::FNoAccessPrivilegesError>(Error));
+        }
+        else {
+            TGs2Future<Result::FCreateRoomResult>::OnError(Error);
+        }
     }
 }

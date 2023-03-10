@@ -39,6 +39,8 @@ namespace Gs2::Stamina::Task::Rest
         virtual ~FConsumeStaminaByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FConsumeStaminaByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FConsumeStaminaByUserIdTask, ESPMode::ThreadSafe> FConsumeStaminaByUserIdTaskPtr;
 }

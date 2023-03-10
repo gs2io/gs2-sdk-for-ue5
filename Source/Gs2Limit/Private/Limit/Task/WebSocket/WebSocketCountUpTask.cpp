@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Limit/Error/OverflowError.h"
 
 namespace Gs2::Limit::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Limit::Task::WebSocket
         *Result = Result::FCountUpResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FCountUpTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "limit.counter.overflow") {
+            TGs2Future<Result::FCountUpResult>::OnError(MakeShared<Limit::Error::FOverflowError>(Error));
+        }
+        else {
+            TGs2Future<Result::FCountUpResult>::OnError(Error);
+        }
     }
 }

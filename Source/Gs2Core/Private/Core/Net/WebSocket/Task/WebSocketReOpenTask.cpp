@@ -42,7 +42,8 @@ namespace Gs2::Core::Net::WebSocket::Task
             auto Detail = MakeShared<TArray<Model::FGs2ErrorDetailPtr>>();
             Detail->Add(MakeShared<Model::FGs2ErrorDetail>(
                 "session",
-                "failed"
+                "failed",
+                ""
             ));
             return MakeShared<Model::FSessionNotOpenError>(Detail);
         }

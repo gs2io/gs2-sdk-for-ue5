@@ -39,6 +39,8 @@ namespace Gs2::Account::Task::WebSocket
         virtual ~FUpdateTakeOverByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FUpdateTakeOverByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FUpdateTakeOverByUserIdTask, ESPMode::ThreadSafe> FUpdateTakeOverByUserIdTaskPtr;
 }

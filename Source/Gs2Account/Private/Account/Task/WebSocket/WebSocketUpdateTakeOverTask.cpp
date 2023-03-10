@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Account/Error/PasswordIncorrectError.h"
 
 namespace Gs2::Account::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Account::Task::WebSocket
         *Result = Result::FUpdateTakeOverResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FUpdateTakeOverTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "account.password.invalid") {
+            TGs2Future<Result::FUpdateTakeOverResult>::OnError(MakeShared<Account::Error::FPasswordIncorrectError>(Error));
+        }
+        else {
+            TGs2Future<Result::FUpdateTakeOverResult>::OnError(Error);
+        }
     }
 }

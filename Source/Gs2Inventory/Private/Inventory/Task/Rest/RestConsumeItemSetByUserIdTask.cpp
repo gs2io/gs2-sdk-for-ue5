@@ -21,6 +21,8 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Inventory/Error/ConflictError.h"
+#include "Inventory/Error/InsufficientError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Inventory::Task::Rest
@@ -150,5 +152,18 @@ namespace Gs2::Inventory::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FConsumeItemSetByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "itemSet.operation.conflict") {
+            TGs2Future<Result::FConsumeItemSetByUserIdResult>::OnError(MakeShared<Inventory::Error::FConflictError>(Error));
+        }
+        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "itemSet.count.insufficient") {
+            TGs2Future<Result::FConsumeItemSetByUserIdResult>::OnError(MakeShared<Inventory::Error::FInsufficientError>(Error));
+        }
+        else {
+            TGs2Future<Result::FConsumeItemSetByUserIdResult>::OnError(Error);
+        }
     }
 }
