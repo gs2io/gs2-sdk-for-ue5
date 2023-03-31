@@ -59,6 +59,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
         const auto Future = Self->Domain->PutScore(
             MakeShared<Gs2::Ranking::Request::FPutScoreRequest>()
                 ->WithScore(Score)
+                ->WithMetadata(Metadata)
+                ->WithAccessToken(Self->Domain->AccessToken->GetToken())
         );
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())

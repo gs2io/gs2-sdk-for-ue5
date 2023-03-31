@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -103,7 +105,6 @@ namespace Gs2::Ranking::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithScorerUserId(Self->UserId())
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCategoryName(Self->CategoryName);
         const auto Future = Self->Client->GetRanking(
@@ -265,9 +266,14 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FRanking>> Result
     )
     {
+        const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            ScorerUserId,
+            "Ranking"
+        );
         // ReSharper disable once CppLocalVariableMayBeConst
         auto Value = Self->Cache->Get<Gs2::Ranking::Model::FRanking>(
-            Self->ParentKey,
+            ParentKey,
             Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
                 Self->CategoryName
             )
@@ -285,7 +291,7 @@ namespace Gs2::Ranking::Domain::Model
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "ranking")
                     {
                         Self->Cache->Delete<Gs2::Ranking::Model::FRanking>(
-                            Self->ParentKey,
+                            ParentKey,
                             Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
                                 Self->CategoryName
                             )
@@ -302,7 +308,7 @@ namespace Gs2::Ranking::Domain::Model
                 }
             }
             Value = Self->Cache->Get<Gs2::Ranking::Model::FRanking>(
-                Self->ParentKey,
+                ParentKey,
                 Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
                     Self->CategoryName
                 )
