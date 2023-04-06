@@ -95,18 +95,6 @@ namespace Gs2::Gateway::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomain>> Result
     )
     {
-        const auto Future2 = Self->Model();
-        Future2->StartSynchronousTask();
-        if (Future2->GetTask().IsError())
-        {
-            return Future2->GetTask().Error();
-        }
-        const auto Model = Future2->GetTask().Result();
-        Future2->EnsureCompletion();
-        if (!Model.IsValid())
-        {
-            return nullptr;
-        }
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
