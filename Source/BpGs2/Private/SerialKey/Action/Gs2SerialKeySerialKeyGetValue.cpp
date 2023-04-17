@@ -26,22 +26,23 @@ UGs2SerialKeySerialKeyGetValueAsyncFunction::UGs2SerialKeySerialKeyGetValueAsync
 
 UGs2SerialKeySerialKeyGetValueAsyncFunction* UGs2SerialKeySerialKeyGetValueAsyncFunction::SerialKeyGetValue(
     UObject* WorldContextObject,
-    FGs2SerialKeySerialKey SerialKey
+    FGs2SerialKeyUser User
 )
 {
     UGs2SerialKeySerialKeyGetValueAsyncFunction* Action = NewObject<UGs2SerialKeySerialKeyGetValueAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (SerialKey.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeySerialKeyGetValueAsyncFunction::SerialKeyGetValue] SerialKey parameter specification is missing."))
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeySerialKeyGetValueAsyncFunction::SerialKeyGetValue] User parameter specification is missing."))
         return Action;
     }
-    Action->SerialKey = SerialKey;
+    Action->User = User;
     return Action;
 }
 
 void UGs2SerialKeySerialKeyGetValueAsyncFunction::Activate()
 {
-    auto Future = SerialKey.Value->Model(
+    auto Future = User.Value->Model(
+        Code
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {

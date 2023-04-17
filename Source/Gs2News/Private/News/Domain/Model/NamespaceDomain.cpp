@@ -24,6 +24,8 @@
 
 #include "News/Domain/Model/Namespace.h"
 #include "News/Domain/Model/Namespace.h"
+#include "News/Domain/Model/Progress.h"
+#include "News/Domain/Model/Output.h"
 #include "News/Domain/Model/CurrentNewsMaster.h"
 #include "News/Domain/Model/SetCookieRequestEntry.h"
 #include "News/Domain/Model/NewsAccessToken.h"
@@ -290,6 +292,30 @@ namespace Gs2::News::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName
+        );
+    }
+
+    Gs2::News::Domain::Iterator::FDescribeProgressesIteratorPtr FNamespaceDomain::Progresses(
+    ) const
+    {
+        return MakeShared<Gs2::News::Domain::Iterator::FDescribeProgressesIterator>(
+            Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    TSharedPtr<Gs2::News::Domain::Model::FProgressDomain> FNamespaceDomain::Progress(
+        const FString UploadToken
+    ) const
+    {
+        return MakeShared<Gs2::News::Domain::Model::FProgressDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            UploadToken
         );
     }
 

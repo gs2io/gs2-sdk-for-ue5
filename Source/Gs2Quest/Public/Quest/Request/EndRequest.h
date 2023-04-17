@@ -29,7 +29,6 @@ namespace Gs2::Quest::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
-        TOptional<FString> TransactionIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FReward>>> RewardsValue;
         TOptional<bool> IsCompleteValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
@@ -46,7 +45,6 @@ namespace Gs2::Quest::Request
         TSharedPtr<FEndRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FEndRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FEndRequest> WithAccessToken(const TOptional<FString> AccessToken);
-        TSharedPtr<FEndRequest> WithTransactionId(const TOptional<FString> TransactionId);
         TSharedPtr<FEndRequest> WithRewards(const TSharedPtr<TArray<TSharedPtr<Model::FReward>>> Rewards);
         TSharedPtr<FEndRequest> WithIsComplete(const TOptional<bool> IsComplete);
         TSharedPtr<FEndRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
@@ -54,8 +52,7 @@ namespace Gs2::Quest::Request
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
-        TOptional<FString> GetAccessToken() const;
-        TOptional<FString> GetTransactionId() const;TSharedPtr<TArray<TSharedPtr<Model::FReward>>> GetRewards() const;
+        TOptional<FString> GetAccessToken() const;TSharedPtr<TArray<TSharedPtr<Model::FReward>>> GetRewards() const;
         TOptional<bool> GetIsComplete() const;
         FString GetIsCompleteString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
         TOptional<FString> GetDuplicationAvoider() const;

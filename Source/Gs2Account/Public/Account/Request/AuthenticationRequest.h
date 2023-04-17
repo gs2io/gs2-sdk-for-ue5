@@ -29,6 +29,7 @@ namespace Gs2::Account::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> KeyIdValue;
         TOptional<FString> PasswordValue;
+        TOptional<FString> DuplicationAvoiderValue;
         
     public:
         
@@ -43,12 +44,14 @@ namespace Gs2::Account::Request
         TSharedPtr<FAuthenticationRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FAuthenticationRequest> WithKeyId(const TOptional<FString> KeyId);
         TSharedPtr<FAuthenticationRequest> WithPassword(const TOptional<FString> Password);
+        TSharedPtr<FAuthenticationRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetKeyId() const;
         TOptional<FString> GetPassword() const;
+        TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAuthenticationRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

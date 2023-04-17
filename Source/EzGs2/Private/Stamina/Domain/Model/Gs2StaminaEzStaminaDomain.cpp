@@ -19,7 +19,7 @@
 namespace Gs2::UE5::Stamina::Domain::Model
 {
 
-    TOptional<int64> FEzStaminaDomain::OverflowValue() const
+    TOptional<int32> FEzStaminaDomain::OverflowValue() const
     {
         return Domain->OverflowValue;
     }

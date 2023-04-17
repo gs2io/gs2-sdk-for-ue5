@@ -38,7 +38,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
         Gs2::UE5::Util::FProfilePtr ProfileValue;
 
         public:
-        TOptional<int64> OverflowValue() const;
+        TOptional<int32> OverflowValue() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

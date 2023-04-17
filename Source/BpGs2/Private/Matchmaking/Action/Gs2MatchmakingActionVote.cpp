@@ -29,6 +29,7 @@ UGs2MatchmakingVoteAsyncFunction* UGs2MatchmakingVoteAsyncFunction::Vote(
     FGs2MatchmakingNamespace Namespace,
     FString BallotBody,
     FString BallotSignature,
+    FString KeyId,
     TArray<FGs2MatchmakingGameResult> GameResults
 )
 {
@@ -42,6 +43,7 @@ UGs2MatchmakingVoteAsyncFunction* UGs2MatchmakingVoteAsyncFunction::Vote(
     Action->BallotBody = BallotBody;
     Action->BallotSignature = BallotSignature;
     Action->GameResults = GameResults;
+    Action->KeyId = KeyId;
     return Action;
 }
 
@@ -55,6 +57,7 @@ void UGs2MatchmakingVoteAsyncFunction::Activate()
     auto Future = Namespace.Value->Vote(
         BallotBody,
         BallotSignature,
+        KeyId,
         [&]
         {
             TArray<Gs2::UE5::Matchmaking::Model::FEzGameResultPtr> r;

@@ -22,12 +22,16 @@
 #include "Auth/Gs2Auth.h"
 #include "News/Gs2News.h"
 #include "News/Domain/Iterator/DescribeNamespacesIterator.h"
+#include "News/Domain/Iterator/DescribeProgressesIterator.h"
+#include "News/Domain/Iterator/DescribeOutputsIterator.h"
 #include "News/Domain/Iterator/DescribeNewsIterator.h"
 #include "News/Domain/Iterator/DescribeNewsByUserIdIterator.h"
 
 namespace Gs2::News::Domain::Model
 {
     class FNamespaceDomain;
+    class FProgressDomain;
+    class FOutputDomain;
     class FCurrentNewsMasterDomain;
     class FNewsDomain;
     class FNewsAccessTokenDomain;

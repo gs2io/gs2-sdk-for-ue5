@@ -46,13 +46,65 @@ namespace Gs2::UE5::SerialKey::Domain::Model
 
     }
 
+    FEzUserDomain::FGetTask::FGetTask(
+        TSharedPtr<FEzUserDomain> Self,
+        FString Code
+    ): Self(Self), Code(Code)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserDomain::FGetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::SerialKey::Model::FEzSerialKey>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FGetTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->GetSerialKey(
+                    MakeShared<Gs2::SerialKey::Request::FGetSerialKeyRequest>()
+                        ->WithCode(Code)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = Gs2::UE5::SerialKey::Model::FEzSerialKey::FromModel(
+                    Task->GetTask().Result()
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzUserDomain::FGetTask>> FEzUserDomain::Get(
+        FString Code
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(
+            this->AsShared(),
+            Code
+        );
+    }
+
     Gs2::UE5::SerialKey::Domain::Model::FEzSerialKeyDomainPtr FEzUserDomain::SerialKey(
-        const FString Code
+        const FString SerialKeyCode
     ) const
     {
         return MakeShared<Gs2::UE5::SerialKey::Domain::Model::FEzSerialKeyDomain>(
             Domain->SerialKey(
-                Code
+                SerialKeyCode
             ),
             ProfileValue
         );

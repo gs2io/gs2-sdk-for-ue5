@@ -30,6 +30,14 @@
 #include "Task/WebSocket/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
+#include "Request/DescribeProgressesRequest.h"
+#include "Task/WebSocket/DescribeProgressesTask.h"
+#include "Request/GetProgressRequest.h"
+#include "Task/WebSocket/GetProgressTask.h"
+#include "Request/DescribeOutputsRequest.h"
+#include "Task/WebSocket/DescribeOutputsTask.h"
+#include "Request/GetOutputRequest.h"
+#include "Task/WebSocket/GetOutputTask.h"
 #include "Request/PrepareUpdateCurrentNewsMasterRequest.h"
 #include "Task/WebSocket/PrepareUpdateCurrentNewsMasterTask.h"
 #include "Request/UpdateCurrentNewsMasterRequest.h"
@@ -78,6 +86,22 @@ namespace Gs2::News
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeProgressesTask>> DescribeProgresses(
+            const Request::FDescribeProgressesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetProgressTask>> GetProgress(
+            const Request::FGetProgressRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeOutputsTask>> DescribeOutputs(
+            const Request::FDescribeOutputsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetOutputTask>> GetOutput(
+            const Request::FGetOutputRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FPrepareUpdateCurrentNewsMasterTask>> PrepareUpdateCurrentNewsMaster(

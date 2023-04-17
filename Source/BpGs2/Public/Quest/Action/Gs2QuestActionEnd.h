@@ -20,7 +20,7 @@
 #include "BpGs2/Public/Quest/Model/Gs2QuestProgress.h"
 #include "BpGs2/Public/Quest/Model/Gs2QuestReward.h"
 #include "BpGs2/Public/Quest/Model/Gs2QuestConfig.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestProgress.h"
+#include "BpGs2/Public/Quest/Model/Gs2QuestUser.h"
 #include "BpGs2/Public/Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2QuestActionEnd.generated.h"
@@ -34,7 +34,7 @@ class BPGS2_API UGs2QuestEndAsyncFunction : public UBlueprintAsyncActionBase
 {
     GENERATED_BODY()
 
-    FGs2QuestOwnProgress Progress;
+    FGs2QuestOwnUser User;
     bool IsComplete;
     TArray<FGs2QuestReward> Rewards;
     TArray<FGs2QuestConfig> Config;
@@ -52,7 +52,7 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Quest::Progress::Action::End", Category="Game Server Services|GS2-Quest|Namespace|User|Progress|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2QuestEndAsyncFunction* End(
         UObject* WorldContextObject,
-        FGs2QuestOwnProgress Progress,
+        FGs2QuestOwnUser User,
         bool IsComplete,
         TArray<FGs2QuestReward> Rewards,
         TArray<FGs2QuestConfig> Config

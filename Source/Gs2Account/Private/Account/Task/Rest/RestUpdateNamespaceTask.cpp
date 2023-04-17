@@ -92,10 +92,6 @@ namespace Gs2::Account::Task::Rest
             {
                 JsonRootObject->SetBoolField("changePasswordIfTakeOver", this->Request->GetChangePasswordIfTakeOver().GetValue());
             }
-            if (this->Request->GetDifferentUserIdForLoginAndDataRetention().IsSet())
-            {
-                JsonRootObject->SetBoolField("differentUserIdForLoginAndDataRetention", this->Request->GetDifferentUserIdForLoginAndDataRetention().GetValue());
-            }
             if (this->Request->GetCreateAccountScript() != nullptr && this->Request->GetCreateAccountScript().IsValid())
             {
                 JsonRootObject->SetObjectField("createAccountScript", this->Request->GetCreateAccountScript()->ToJson());

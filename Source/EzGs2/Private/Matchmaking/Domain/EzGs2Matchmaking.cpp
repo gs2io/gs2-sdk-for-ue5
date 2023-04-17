@@ -52,4 +52,9 @@ namespace Gs2::UE5::Matchmaking::Domain
     {
         return CompleteNotificationEvent;
     }
+
+    FChangeRatingNotificationEvent& FEzGs2Matchmaking::OnChangeRatingNotification()
+    {
+        return ChangeRatingNotificationEvent;
+    }
 }

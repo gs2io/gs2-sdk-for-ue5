@@ -22,12 +22,16 @@
 #include "Auth/Gs2Auth.h"
 #include "News/Gs2News.h"
 #include "News/Domain/Iterator/DescribeNamespacesIterator.h"
+#include "News/Domain/Iterator/DescribeProgressesIterator.h"
+#include "News/Domain/Iterator/DescribeOutputsIterator.h"
 #include "News/Domain/Iterator/DescribeNewsIterator.h"
 #include "News/Domain/Iterator/DescribeNewsByUserIdIterator.h"
 
 namespace Gs2::News::Domain::Model
 {
     class FNamespaceDomain;
+    class FProgressDomain;
+    class FOutputDomain;
     class FCurrentNewsMasterDomain;
     class FNewsDomain;
     class FNewsAccessTokenDomain;
@@ -46,9 +50,14 @@ namespace Gs2::News::Domain::Model
 
         public:
         TOptional<FString> Status;
+        TOptional<FString> NextPageToken;
         TOptional<FString> GetStatus() const
         {
             return Status;
+        }
+        TOptional<FString> GetNextPageToken() const
+        {
+            return NextPageToken;
         }
         TOptional<FString> NamespaceName;
     private:
@@ -175,6 +184,13 @@ namespace Gs2::News::Domain::Model
         );
 
         TSharedPtr<Gs2::News::Domain::Model::FCurrentNewsMasterDomain> CurrentNewsMaster(
+        ) const;
+
+        Gs2::News::Domain::Iterator::FDescribeProgressesIteratorPtr Progresses(
+        ) const;
+
+        TSharedPtr<Gs2::News::Domain::Model::FProgressDomain> Progress(
+            const FString UploadToken
         ) const;
 
         TSharedPtr<Gs2::News::Domain::Model::FUserDomain> User(

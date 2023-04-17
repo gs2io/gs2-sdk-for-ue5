@@ -47,12 +47,12 @@ namespace Gs2::UE5::SerialKey::Domain::Model
     }
 
     Gs2::UE5::SerialKey::Domain::Model::FEzSerialKeyGameSessionDomainPtr FEzUserGameSessionDomain::SerialKey(
-        const FString Code
+        const FString SerialKeyCode
     ) const
     {
         return MakeShared<Gs2::UE5::SerialKey::Domain::Model::FEzSerialKeyGameSessionDomain>(
             Domain->SerialKey(
-                Code
+                SerialKeyCode
             ),
             ProfileValue
         );

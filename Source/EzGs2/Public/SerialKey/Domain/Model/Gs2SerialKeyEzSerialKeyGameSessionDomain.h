@@ -37,7 +37,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         TOptional<FString> Url() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
-        TOptional<FString> Code() const;
+        TOptional<FString> SerialKeyCode() const;
 
         FEzSerialKeyGameSessionDomain(
             Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomainPtr Domain,
@@ -49,10 +49,12 @@ namespace Gs2::UE5::SerialKey::Domain::Model
             public TSharedFromThis<FUseSerialCodeTask>
         {
             TSharedPtr<FEzSerialKeyGameSessionDomain> Self;
+            FString Code;
 
         public:
             explicit FUseSerialCodeTask(
-                TSharedPtr<FEzSerialKeyGameSessionDomain> Self
+                TSharedPtr<FEzSerialKeyGameSessionDomain> Self,
+                FString Code
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -62,6 +64,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         friend FUseSerialCodeTask;
 
         TSharedPtr<FAsyncTask<FUseSerialCodeTask>> UseSerialCode(
+            FString Code
         );
 
         class FModelTask :

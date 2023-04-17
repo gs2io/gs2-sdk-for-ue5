@@ -46,7 +46,7 @@ namespace Gs2::SerialKey::Domain::Model
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> Code
+        const TOptional<FString> SerialKeyCode
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -56,7 +56,7 @@ namespace Gs2::SerialKey::Domain::Model
         Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Session)),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        Code(Code),
+        SerialKeyCode(SerialKeyCode),
         ParentKey(Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
@@ -75,84 +75,6 @@ namespace Gs2::SerialKey::Domain::Model
         Client(From.Client)
     {
 
-    }
-
-    FSerialKeyDomain::FGetTask::FGetTask(
-        const TSharedPtr<FSerialKeyDomain> Self,
-        const Request::FGetSerialKeyRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FSerialKeyDomain::FGetTask::FGetTask(
-        const FGetTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FSerialKeyDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::SerialKey::Model::FSerialKey>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithCode(Self->Code);
-        const auto Future = Self->Client->GetSerialKey(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "SerialKey"
-                );
-                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCode()
-                );
-                Self->Cache->Put<Gs2::SerialKey::Model::FSerialKey>(
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetCampaignModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "CampaignModel"
-                );
-                const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
-                    ResultModel->GetCampaignModel()->GetName()
-                );
-                Self->Cache->Put<Gs2::SerialKey::Model::FCampaignModel>(
-                    ParentKey,
-                    Key,
-                    ResultModel->GetCampaignModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        *Result = ResultModel->GetItem();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FSerialKeyDomain::FGetTask>> FSerialKeyDomain::Get(
-        Request::FGetSerialKeyRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
     FSerialKeyDomain::FUseTask::FUseTask(
@@ -175,8 +97,7 @@ namespace Gs2::SerialKey::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithCode(Self->Code);
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UseByUserId(
             Request
         );
@@ -239,23 +160,23 @@ namespace Gs2::SerialKey::Domain::Model
     FString FSerialKeyDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
-        TOptional<FString> Code,
+        TOptional<FString> SerialKeyCode,
         FString ChildType
     )
     {
         return FString() +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
-            (Code.IsSet() ? *Code : "null") + ":" +
+            (SerialKeyCode.IsSet() ? *SerialKeyCode : "null") + ":" +
             ChildType;
     }
 
     FString FSerialKeyDomain::CreateCacheKey(
-        TOptional<FString> Code
+        TOptional<FString> SerialKeyCode
     )
     {
         return FString() +
-            (Code.IsSet() ? *Code : "null");
+            (SerialKeyCode.IsSet() ? *SerialKeyCode : "null");
     }
 
     FSerialKeyDomain::FModelTask::FModelTask(
@@ -280,7 +201,7 @@ namespace Gs2::SerialKey::Domain::Model
         auto Value = Self->Cache->Get<Gs2::SerialKey::Model::FSerialKey>(
             Self->ParentKey,
             Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                Self->Code
+                Self->SerialKeyCode
             )
         );
         if (Value == nullptr) {
@@ -297,7 +218,7 @@ namespace Gs2::SerialKey::Domain::Model
                         Self->Cache->Delete<Gs2::SerialKey::Model::FSerialKey>(
                             Self->ParentKey,
                             Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                                Self->Code
+                                Self->SerialKeyCode
                             )
                         );
                     }
@@ -314,7 +235,7 @@ namespace Gs2::SerialKey::Domain::Model
             Value = Self->Cache->Get<Gs2::SerialKey::Model::FSerialKey>(
                 Self->ParentKey,
                 Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                    Self->Code
+                    Self->SerialKeyCode
                 )
             );
             Future->EnsureCompletion();

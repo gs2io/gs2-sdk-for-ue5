@@ -56,6 +56,14 @@ namespace Gs2::Account::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDeleteAccountRequest> FDeleteAccountRequest::WithDuplicationAvoider(
+        const TOptional<FString> DuplicationAvoider
+    )
+    {
+        this->DuplicationAvoiderValue = DuplicationAvoider;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FDeleteAccountRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -69,6 +77,11 @@ namespace Gs2::Account::Request
     TOptional<FString> FDeleteAccountRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FDeleteAccountRequest::GetDuplicationAvoider() const
+    {
+        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FDeleteAccountRequest> FDeleteAccountRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -95,7 +108,8 @@ namespace Gs2::Account::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FDeleteAccountRequest::ToJson() const
@@ -112,6 +126,10 @@ namespace Gs2::Account::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (DuplicationAvoiderValue.IsSet())
+        {
+            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

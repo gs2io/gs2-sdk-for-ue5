@@ -116,6 +116,10 @@ namespace Gs2::Ranking::Task::Rest
             {
                 JsonRootObject->SetBoolField("uniqueByUserId", this->Request->GetUniqueByUserId().GetValue());
             }
+            if (this->Request->GetSum().IsSet())
+            {
+                JsonRootObject->SetBoolField("sum", this->Request->GetSum().GetValue());
+            }
             if (this->Request->GetCalculateFixedTimingHour().IsSet())
             {
                 JsonRootObject->SetNumberField("calculateFixedTimingHour", this->Request->GetCalculateFixedTimingHour().GetValue());
@@ -135,6 +139,15 @@ namespace Gs2::Ranking::Task::Rest
             if (this->Request->GetAccessPeriodEventId().IsSet())
             {
                 JsonRootObject->SetStringField("accessPeriodEventId", this->Request->GetAccessPeriodEventId().GetValue());
+            }
+            if (this->Request->GetIgnoreUserIds() != nullptr && this->Request->GetIgnoreUserIds().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetIgnoreUserIds())
+                {
+                    v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
+                }
+                JsonRootObject->SetArrayField("ignoreUserIds", v);
             }
             if (this->Request->GetGeneration().IsSet())
             {

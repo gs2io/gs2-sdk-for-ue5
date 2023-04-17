@@ -30,7 +30,6 @@ namespace Gs2::Account::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TOptional<bool> ChangePasswordIfTakeOverValue;
-        TOptional<bool> DifferentUserIdForLoginAndDataRetentionValue;
         TSharedPtr<Model::FScriptSetting> CreateAccountScriptValue;
         TSharedPtr<Model::FScriptSetting> AuthenticationScriptValue;
         TSharedPtr<Model::FScriptSetting> CreateTakeOverScriptValue;
@@ -49,7 +48,6 @@ namespace Gs2::Account::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithChangePasswordIfTakeOver(const TOptional<bool> ChangePasswordIfTakeOver);
-        TSharedPtr<FUpdateNamespaceRequest> WithDifferentUserIdForLoginAndDataRetention(const TOptional<bool> DifferentUserIdForLoginAndDataRetention);
         TSharedPtr<FUpdateNamespaceRequest> WithCreateAccountScript(const TSharedPtr<Model::FScriptSetting> CreateAccountScript);
         TSharedPtr<FUpdateNamespaceRequest> WithAuthenticationScript(const TSharedPtr<Model::FScriptSetting> AuthenticationScript);
         TSharedPtr<FUpdateNamespaceRequest> WithCreateTakeOverScript(const TSharedPtr<Model::FScriptSetting> CreateTakeOverScript);
@@ -61,8 +59,6 @@ namespace Gs2::Account::Request
         TOptional<FString> GetDescription() const;
         TOptional<bool> GetChangePasswordIfTakeOver() const;
         FString GetChangePasswordIfTakeOverString() const;
-        TOptional<bool> GetDifferentUserIdForLoginAndDataRetention() const;
-        FString GetDifferentUserIdForLoginAndDataRetentionString() const;
         TSharedPtr<Model::FScriptSetting> GetCreateAccountScript() const;
         TSharedPtr<Model::FScriptSetting> GetAuthenticationScript() const;
         TSharedPtr<Model::FScriptSetting> GetCreateTakeOverScript() const;

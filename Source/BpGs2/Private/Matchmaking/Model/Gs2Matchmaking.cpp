@@ -23,7 +23,8 @@ FGs2Matchmaking UGs2MatchmakingFunctionLibrary::Service(
     FGs2Client Client,
     FBpMatchmakingJoinNotificationEvent JoinNotification,
     FBpMatchmakingLeaveNotificationEvent LeaveNotification,
-    FBpMatchmakingCompleteNotificationEvent CompleteNotification
+    FBpMatchmakingCompleteNotificationEvent CompleteNotification,
+    FBpMatchmakingChangeRatingNotificationEvent ChangeRatingNotification
 )
 {
     FGs2Matchmaking Return;
@@ -42,6 +43,10 @@ FGs2Matchmaking UGs2MatchmakingFunctionLibrary::Service(
     Client.Value->Matchmaking->OnCompleteNotification().AddLambda([&CompleteNotification](auto Notification)
     {
         CompleteNotification.Value.Execute(EzCompleteNotificationToFGs2MatchmakingCompleteNotification(Notification));
+    });
+    Client.Value->Matchmaking->OnChangeRatingNotification().AddLambda([&ChangeRatingNotification](auto Notification)
+    {
+        ChangeRatingNotification.Value.Execute(EzChangeRatingNotificationToFGs2MatchmakingChangeRatingNotification(Notification));
     });
     Return.Value = Client.Value->Matchmaking;
     return Return;

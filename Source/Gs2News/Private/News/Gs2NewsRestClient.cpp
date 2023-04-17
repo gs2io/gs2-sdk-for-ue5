@@ -73,6 +73,42 @@ namespace Gs2::News
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeProgressesTask>> FGs2NewsRestClient::DescribeProgresses(
+        const Request::FDescribeProgressesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeProgressesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetProgressTask>> FGs2NewsRestClient::GetProgress(
+        const Request::FGetProgressRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetProgressTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeOutputsTask>> FGs2NewsRestClient::DescribeOutputs(
+        const Request::FDescribeOutputsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeOutputsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetOutputTask>> FGs2NewsRestClient::GetOutput(
+        const Request::FGetOutputRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetOutputTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FPrepareUpdateCurrentNewsMasterTask>> FGs2NewsRestClient::PrepareUpdateCurrentNewsMaster(
         const Request::FPrepareUpdateCurrentNewsMasterRequestPtr Request) const
     {

@@ -73,6 +73,42 @@ namespace Gs2::News
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeProgressesTask>> FGs2NewsWebSocketClient::DescribeProgresses(
+        const Request::FDescribeProgressesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeProgressesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetProgressTask>> FGs2NewsWebSocketClient::GetProgress(
+        const Request::FGetProgressRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetProgressTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeOutputsTask>> FGs2NewsWebSocketClient::DescribeOutputs(
+        const Request::FDescribeOutputsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeOutputsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetOutputTask>> FGs2NewsWebSocketClient::GetOutput(
+        const Request::FGetOutputRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetOutputTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FPrepareUpdateCurrentNewsMasterTask>> FGs2NewsWebSocketClient::PrepareUpdateCurrentNewsMaster(
         const Request::FPrepareUpdateCurrentNewsMasterRequestPtr Request) const
     {

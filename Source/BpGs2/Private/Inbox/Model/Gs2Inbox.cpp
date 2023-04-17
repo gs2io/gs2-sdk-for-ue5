@@ -19,7 +19,8 @@
 #include "Core/BpGs2Constant.h"
 
 FGs2Inbox UGs2InboxFunctionLibrary::Service(
-    FGs2Client Client
+    FGs2Client Client,
+    FBpInboxReceiveNotificationEvent ReceiveNotification
 )
 {
     FGs2Inbox Return;
@@ -27,6 +28,10 @@ FGs2Inbox UGs2InboxFunctionLibrary::Service(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2InboxFunctionLibrary::Service] Client parameter specification is missing."))
         return Return;
     }
+    Client.Value->Inbox->OnReceiveNotification().AddLambda([&ReceiveNotification](auto Notification)
+    {
+        ReceiveNotification.Value.Execute(EzReceiveNotificationToFGs2InboxReceiveNotification(Notification));
+    });
     Return.Value = Client.Value->Inbox;
     return Return;
 }

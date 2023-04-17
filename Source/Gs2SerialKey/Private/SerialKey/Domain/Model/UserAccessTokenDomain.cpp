@@ -76,7 +76,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomain> FUserAccessTokenDomain::SerialKey(
-        const FString Code
+        const FString SerialKeyCode
     ) const
     {
         return MakeShared<Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomain>(
@@ -86,7 +86,7 @@ namespace Gs2::SerialKey::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            Code
+            SerialKeyCode
         );
     }
 

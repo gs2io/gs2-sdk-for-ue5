@@ -23,12 +23,15 @@
 
 namespace Gs2::UE5::Inbox::Domain
 {
+    DECLARE_EVENT_OneParam(Gs2Inbox, FReceiveNotificationEvent, Gs2::Inbox::Model::FReceiveNotificationPtr);
+    typedef TSharedPtr<FReceiveNotificationEvent> FReceiveNotificationEventPtr;
 
     class EZGS2_API FEzGs2Inbox {
         Gs2::Inbox::Domain::FGs2InboxDomainPtr Domain;
         Gs2::UE5::Util::FProfilePtr ProfileValue;
 
         public:
+        FReceiveNotificationEvent ReceiveNotificationEvent;
 
         FEzGs2Inbox(
             Gs2::Inbox::Domain::FGs2InboxDomainPtr Domain,
@@ -38,6 +41,8 @@ namespace Gs2::UE5::Inbox::Domain
         Gs2::UE5::Inbox::Domain::Model::FEzNamespaceDomainPtr Namespace(
             const FString NamespaceName
         ) const;
+
+        FReceiveNotificationEvent& OnReceiveNotification();
     };
     typedef TSharedPtr<FEzGs2Inbox> FEzGs2InboxPtr;
 }

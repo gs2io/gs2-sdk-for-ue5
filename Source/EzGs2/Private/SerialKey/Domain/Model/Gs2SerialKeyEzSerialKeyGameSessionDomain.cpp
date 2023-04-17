@@ -34,9 +34,9 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         return Domain->UserId();
     }
 
-    TOptional<FString> FEzSerialKeyGameSessionDomain::Code() const
+    TOptional<FString> FEzSerialKeyGameSessionDomain::SerialKeyCode() const
     {
-        return Domain->Code;
+        return Domain->SerialKeyCode;
     }
 
     FEzSerialKeyGameSessionDomain::FEzSerialKeyGameSessionDomain(
@@ -47,8 +47,9 @@ namespace Gs2::UE5::SerialKey::Domain::Model
     }
 
     FEzSerialKeyGameSessionDomain::FUseSerialCodeTask::FUseSerialCodeTask(
-        TSharedPtr<FEzSerialKeyGameSessionDomain> Self
-    ): Self(Self)
+        TSharedPtr<FEzSerialKeyGameSessionDomain> Self,
+        FString Code
+    ): Self(Self), Code(Code)
     {
 
     }
@@ -61,6 +62,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Use(
                     MakeShared<Gs2::SerialKey::Request::FUseRequest>()
+                        ->WithCode(Code)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -88,10 +90,12 @@ namespace Gs2::UE5::SerialKey::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzSerialKeyGameSessionDomain::FUseSerialCodeTask>> FEzSerialKeyGameSessionDomain::UseSerialCode(
+        FString Code
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FUseSerialCodeTask>>(
-            this->AsShared()
+            this->AsShared(),
+            Code
         );
     }
 

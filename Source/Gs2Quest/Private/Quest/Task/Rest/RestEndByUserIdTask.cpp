@@ -89,10 +89,6 @@ namespace Gs2::Quest::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetTransactionId().IsSet())
-            {
-                JsonRootObject->SetStringField("transactionId", this->Request->GetTransactionId().GetValue());
-            }
             if (this->Request->GetRewards() != nullptr && this->Request->GetRewards().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

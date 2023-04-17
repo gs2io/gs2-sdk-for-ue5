@@ -134,6 +134,39 @@ struct FBpMatchmakingCompleteNotificationEvent
     FEzMatchmakingCompleteNotificationEvent Value;
 };
 
+USTRUCT(BlueprintType)
+struct FGs2MatchmakingChangeRatingNotification
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString NamespaceName = "";
+    UPROPERTY(BlueprintReadWrite)
+    float RateValue = 0;
+};
+
+inline FGs2MatchmakingChangeRatingNotification EzChangeRatingNotificationToFGs2MatchmakingChangeRatingNotification(
+    const Gs2::Matchmaking::Model::FChangeRatingNotificationPtr Model
+)
+{
+    FGs2MatchmakingChangeRatingNotification Value;
+    Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.RateValue = Model->GetRateValue() ? *Model->GetRateValue() : 0;
+    return Value;
+}
+
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_DELEGATE_OneParam(FEzMatchmakingChangeRatingNotificationEvent, FGs2MatchmakingChangeRatingNotification, Notification);
+
+USTRUCT(BlueprintType)
+struct FBpMatchmakingChangeRatingNotificationEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FEzMatchmakingChangeRatingNotificationEvent Value;
+};
+
 UCLASS()
 class BPGS2_API UGs2MatchmakingFunctionLibrary : public UBlueprintFunctionLibrary
 {
@@ -145,7 +178,8 @@ public:
         FGs2Client Client,
         FBpMatchmakingJoinNotificationEvent JoinNotification,
         FBpMatchmakingLeaveNotificationEvent LeaveNotification,
-        FBpMatchmakingCompleteNotificationEvent CompleteNotification
+        FBpMatchmakingCompleteNotificationEvent CompleteNotification,
+        FBpMatchmakingChangeRatingNotificationEvent ChangeRatingNotification
     );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Matchmaking::Namespace", Category="Game Server Services|GS2-Matchmaking|Namespace", meta=(WorldContext="WorldContextObject"))

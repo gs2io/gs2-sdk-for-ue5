@@ -45,12 +45,12 @@ class BPGS2_API UGs2SerialKeyUserFunctionLibrary : public UBlueprintFunctionLibr
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::SerialKey::SerialKey", Category="Game Server Services|GS2-SerialKey|Namespace|User|SerialKey", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="SerialKey") FGs2SerialKeySerialKey SerialKey(
         FGs2SerialKeyUser User,
-        FString Code
+        FString SerialKeyCode
     );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::SerialKey::OwnSerialKey", Category="Game Server Services|GS2-SerialKey|Namespace|User|SerialKey", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="SerialKey") FGs2SerialKeyOwnSerialKey OwnSerialKey(
         FGs2SerialKeyOwnUser User,
-        FString Code
+        FString SerialKeyCode
     );
 };

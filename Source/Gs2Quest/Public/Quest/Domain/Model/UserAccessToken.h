@@ -119,6 +119,32 @@ namespace Gs2::Quest::Domain::Model
             Request::FStartRequestPtr Request
         );
 
+        class GS2QUEST_API FEndTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FUserAccessTokenDomain>,
+            public TSharedFromThis<FEndTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const Request::FEndRequestPtr Request;
+        public:
+            explicit FEndTask(
+                const TSharedPtr<FUserAccessTokenDomain> Self,
+                const Request::FEndRequestPtr Request
+            );
+
+            FEndTask(
+                const FEndTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FUserAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FEndTask;
+
+        TSharedPtr<FAsyncTask<FEndTask>> End(
+            Request::FEndRequestPtr Request
+        );
+
         class GS2QUEST_API FDeleteProgressTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>,
             public TSharedFromThis<FDeleteProgressTask>

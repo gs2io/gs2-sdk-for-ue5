@@ -65,7 +65,7 @@ namespace Gs2::SerialKey::Model
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
         static TOptional<FString> GetNamespaceNameFromGrn(const FString Grn);
-        static TOptional<FString> GetCodeFromGrn(const FString Grn);
+        static TOptional<FString> GetSerialKeyCodeFromGrn(const FString Grn);
 
         static TSharedPtr<FSerialKey> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

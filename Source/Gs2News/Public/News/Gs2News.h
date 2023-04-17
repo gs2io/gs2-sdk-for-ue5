@@ -18,6 +18,10 @@
 
 // Model
 #include "Model/Namespace.h"
+#include "Model/Progress.h"
+#include "Model/Output.h"
+#include "Model/View.h"
+#include "Model/Content.h"
 #include "Model/News.h"
 #include "Model/SetCookieRequestEntry.h"
 #include "Model/LogSetting.h"
@@ -58,6 +62,30 @@
 #include "Result/DeleteNamespaceResult.h"
 #include "Task/Rest/DeleteNamespaceTask.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
+
+// DescribeProgresses
+#include "Request/DescribeProgressesRequest.h"
+#include "Result/DescribeProgressesResult.h"
+#include "Task/Rest/DescribeProgressesTask.h"
+#include "Task/WebSocket/DescribeProgressesTask.h"
+
+// GetProgress
+#include "Request/GetProgressRequest.h"
+#include "Result/GetProgressResult.h"
+#include "Task/Rest/GetProgressTask.h"
+#include "Task/WebSocket/GetProgressTask.h"
+
+// DescribeOutputs
+#include "Request/DescribeOutputsRequest.h"
+#include "Result/DescribeOutputsResult.h"
+#include "Task/Rest/DescribeOutputsTask.h"
+#include "Task/WebSocket/DescribeOutputsTask.h"
+
+// GetOutput
+#include "Request/GetOutputRequest.h"
+#include "Result/GetOutputResult.h"
+#include "Task/Rest/GetOutputTask.h"
+#include "Task/WebSocket/GetOutputTask.h"
 
 // PrepareUpdateCurrentNewsMaster
 #include "Request/PrepareUpdateCurrentNewsMasterRequest.h"

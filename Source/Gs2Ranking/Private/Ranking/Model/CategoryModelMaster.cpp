@@ -28,11 +28,13 @@ namespace Gs2::Ranking::Model
         OrderDirectionValue(TOptional<FString>()),
         ScopeValue(TOptional<FString>()),
         UniqueByUserIdValue(TOptional<bool>()),
+        SumValue(TOptional<bool>()),
         CalculateFixedTimingHourValue(TOptional<int32>()),
         CalculateFixedTimingMinuteValue(TOptional<int32>()),
         CalculateIntervalMinutesValue(TOptional<int32>()),
         EntryPeriodEventIdValue(TOptional<FString>()),
         AccessPeriodEventIdValue(TOptional<FString>()),
+        IgnoreUserIdsValue(nullptr),
         GenerationValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>())
@@ -51,11 +53,13 @@ namespace Gs2::Ranking::Model
         OrderDirectionValue(From.OrderDirectionValue),
         ScopeValue(From.ScopeValue),
         UniqueByUserIdValue(From.UniqueByUserIdValue),
+        SumValue(From.SumValue),
         CalculateFixedTimingHourValue(From.CalculateFixedTimingHourValue),
         CalculateFixedTimingMinuteValue(From.CalculateFixedTimingMinuteValue),
         CalculateIntervalMinutesValue(From.CalculateIntervalMinutesValue),
         EntryPeriodEventIdValue(From.EntryPeriodEventIdValue),
         AccessPeriodEventIdValue(From.AccessPeriodEventIdValue),
+        IgnoreUserIdsValue(From.IgnoreUserIdsValue),
         GenerationValue(From.GenerationValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue)
@@ -134,6 +138,14 @@ namespace Gs2::Ranking::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FCategoryModelMaster> FCategoryModelMaster::WithSum(
+        const TOptional<bool> Sum
+    )
+    {
+        this->SumValue = Sum;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCategoryModelMaster> FCategoryModelMaster::WithCalculateFixedTimingHour(
         const TOptional<int32> CalculateFixedTimingHour
     )
@@ -171,6 +183,14 @@ namespace Gs2::Ranking::Model
     )
     {
         this->AccessPeriodEventIdValue = AccessPeriodEventId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCategoryModelMaster> FCategoryModelMaster::WithIgnoreUserIds(
+        const TSharedPtr<TArray<FString>> IgnoreUserIds
+    )
+    {
+        this->IgnoreUserIdsValue = IgnoreUserIds;
         return SharedThis(this);
     }
 
@@ -260,6 +280,19 @@ namespace Gs2::Ranking::Model
         }
         return FString(UniqueByUserIdValue.GetValue() ? "true" : "false");
     }
+    TOptional<bool> FCategoryModelMaster::GetSum() const
+    {
+        return SumValue;
+    }
+
+    FString FCategoryModelMaster::GetSumString() const
+    {
+        if (!SumValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(SumValue.GetValue() ? "true" : "false");
+    }
     TOptional<int32> FCategoryModelMaster::GetCalculateFixedTimingHour() const
     {
         return CalculateFixedTimingHourValue;
@@ -306,6 +339,10 @@ namespace Gs2::Ranking::Model
     TOptional<FString> FCategoryModelMaster::GetAccessPeriodEventId() const
     {
         return AccessPeriodEventIdValue;
+    }
+    TSharedPtr<TArray<FString>> FCategoryModelMaster::GetIgnoreUserIds() const
+    {
+        return IgnoreUserIdsValue;
     }
     TOptional<FString> FCategoryModelMaster::GetGeneration() const
     {
@@ -469,6 +506,15 @@ namespace Gs2::Ranking::Model
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
+            ->WithSum(Data->HasField("sum") ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField("sum", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
             ->WithCalculateFixedTimingHour(Data->HasField("calculateFixedTimingHour") ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -514,6 +560,18 @@ namespace Gs2::Ranking::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithIgnoreUserIds(Data->HasField("ignoreUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+                {
+                    auto v = MakeShared<TArray<FString>>();
+                    if (!Data->HasTypedField<EJson::Null>("ignoreUserIds") && Data->HasTypedField<EJson::Array>("ignoreUserIds"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("ignoreUserIds"))
+                        {
+                            v->Add(JsonObjectValue->AsString());
+                        }
+                    }
+                    return v;
+                 }() : nullptr)
             ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
                 {
                     FString v;
@@ -582,6 +640,10 @@ namespace Gs2::Ranking::Model
         {
             JsonRootObject->SetBoolField("uniqueByUserId", UniqueByUserIdValue.GetValue());
         }
+        if (SumValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("sum", SumValue.GetValue());
+        }
         if (CalculateFixedTimingHourValue.IsSet())
         {
             JsonRootObject->SetNumberField("calculateFixedTimingHour", CalculateFixedTimingHourValue.GetValue());
@@ -601,6 +663,15 @@ namespace Gs2::Ranking::Model
         if (AccessPeriodEventIdValue.IsSet())
         {
             JsonRootObject->SetStringField("accessPeriodEventId", AccessPeriodEventIdValue.GetValue());
+        }
+        if (IgnoreUserIdsValue != nullptr && IgnoreUserIdsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *IgnoreUserIdsValue)
+            {
+                v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
+            }
+            JsonRootObject->SetArrayField("ignoreUserIds", v);
         }
         if (GenerationValue.IsSet())
         {

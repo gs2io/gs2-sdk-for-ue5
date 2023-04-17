@@ -21,7 +21,7 @@ namespace Gs2::Stamina::Result
     FRecoverStaminaByUserIdResult::FRecoverStaminaByUserIdResult():
         ItemValue(nullptr),
         StaminaModelValue(nullptr),
-        OverflowValueValue(TOptional<int64>())
+        OverflowValueValue(TOptional<int32>())
     {
     }
 
@@ -51,7 +51,7 @@ namespace Gs2::Stamina::Result
     }
 
     TSharedPtr<FRecoverStaminaByUserIdResult> FRecoverStaminaByUserIdResult::WithOverflowValue(
-        const TOptional<int64> OverflowValue
+        const TOptional<int32> OverflowValue
     )
     {
         this->OverflowValueValue = OverflowValue;
@@ -76,7 +76,7 @@ namespace Gs2::Stamina::Result
         return StaminaModelValue;
     }
 
-    TOptional<int64> FRecoverStaminaByUserIdResult::GetOverflowValue() const
+    TOptional<int32> FRecoverStaminaByUserIdResult::GetOverflowValue() const
     {
         return OverflowValueValue;
     }
@@ -87,7 +87,7 @@ namespace Gs2::Stamina::Result
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%lld"), OverflowValueValue.GetValue());
+        return FString::Printf(TEXT("%ld"), OverflowValueValue.GetValue());
     }
 
     TSharedPtr<FRecoverStaminaByUserIdResult> FRecoverStaminaByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -112,15 +112,15 @@ namespace Gs2::Stamina::Result
                     }
                     return Model::FStaminaModel::FromJson(Data->GetObjectField("staminaModel"));
                  }() : nullptr)
-            ->WithOverflowValue(Data->HasField("overflowValue") ? [Data]() -> TOptional<int64>
+            ->WithOverflowValue(Data->HasField("overflowValue") ? [Data]() -> TOptional<int32>
                 {
-                    int64 v;
+                    int32 v;
                     if (Data->TryGetNumberField("overflowValue", v))
                     {
                         return TOptional(v);
                     }
-                    return TOptional<int64>();
-                }() : TOptional<int64>());
+                    return TOptional<int32>();
+                }() : TOptional<int32>());
     }
 
     TSharedPtr<FJsonObject> FRecoverStaminaByUserIdResult::ToJson() const
@@ -136,7 +136,7 @@ namespace Gs2::Stamina::Result
         }
         if (OverflowValueValue.IsSet())
         {
-            JsonRootObject->SetStringField("overflowValue", FString::Printf(TEXT("%lld"), OverflowValueValue.GetValue()));
+            JsonRootObject->SetNumberField("overflowValue", OverflowValueValue.GetValue());
         }
         return JsonRootObject;
     }

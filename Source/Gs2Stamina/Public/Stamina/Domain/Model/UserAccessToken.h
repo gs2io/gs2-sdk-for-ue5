@@ -54,9 +54,9 @@ namespace Gs2::Stamina::Domain::Model
         Gs2::Stamina::FGs2StaminaRestClientPtr Client;
 
         public:
-        TOptional<int64> OverflowValue;
+        TOptional<int32> OverflowValue;
         TOptional<FString> NextPageToken;
-        TOptional<int64> GetOverflowValue() const
+        TOptional<int32> GetOverflowValue() const
         {
             return OverflowValue;
         }

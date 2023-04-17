@@ -31,11 +31,13 @@ namespace Gs2::Ranking::Model
         TOptional<FString> OrderDirectionValue;
         TOptional<FString> ScopeValue;
         TOptional<bool> UniqueByUserIdValue;
+        TOptional<bool> SumValue;
         TOptional<int32> CalculateFixedTimingHourValue;
         TOptional<int32> CalculateFixedTimingMinuteValue;
         TOptional<int32> CalculateIntervalMinutesValue;
         TOptional<FString> EntryPeriodEventIdValue;
         TOptional<FString> AccessPeriodEventIdValue;
+        TSharedPtr<TArray<FString>> IgnoreUserIdsValue;
         TOptional<FString> GenerationValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -56,11 +58,13 @@ namespace Gs2::Ranking::Model
         TSharedPtr<FCategoryModelMaster> WithOrderDirection(const TOptional<FString> OrderDirection);
         TSharedPtr<FCategoryModelMaster> WithScope(const TOptional<FString> Scope);
         TSharedPtr<FCategoryModelMaster> WithUniqueByUserId(const TOptional<bool> UniqueByUserId);
+        TSharedPtr<FCategoryModelMaster> WithSum(const TOptional<bool> Sum);
         TSharedPtr<FCategoryModelMaster> WithCalculateFixedTimingHour(const TOptional<int32> CalculateFixedTimingHour);
         TSharedPtr<FCategoryModelMaster> WithCalculateFixedTimingMinute(const TOptional<int32> CalculateFixedTimingMinute);
         TSharedPtr<FCategoryModelMaster> WithCalculateIntervalMinutes(const TOptional<int32> CalculateIntervalMinutes);
         TSharedPtr<FCategoryModelMaster> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FCategoryModelMaster> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
+        TSharedPtr<FCategoryModelMaster> WithIgnoreUserIds(const TSharedPtr<TArray<FString>> IgnoreUserIds);
         TSharedPtr<FCategoryModelMaster> WithGeneration(const TOptional<FString> Generation);
         TSharedPtr<FCategoryModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FCategoryModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -77,6 +81,8 @@ namespace Gs2::Ranking::Model
         TOptional<FString> GetScope() const;
         TOptional<bool> GetUniqueByUserId() const;
         FString GetUniqueByUserIdString() const;
+        TOptional<bool> GetSum() const;
+        FString GetSumString() const;
         TOptional<int32> GetCalculateFixedTimingHour() const;
         FString GetCalculateFixedTimingHourString() const;
         TOptional<int32> GetCalculateFixedTimingMinute() const;
@@ -85,6 +91,7 @@ namespace Gs2::Ranking::Model
         FString GetCalculateIntervalMinutesString() const;
         TOptional<FString> GetEntryPeriodEventId() const;
         TOptional<FString> GetAccessPeriodEventId() const;
+        TSharedPtr<TArray<FString>> GetIgnoreUserIds() const;
         TOptional<FString> GetGeneration() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

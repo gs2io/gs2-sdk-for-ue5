@@ -120,6 +120,83 @@ namespace Gs2::SerialKey::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDownloadSerialCodesTask>>(this->AsShared(), Request);
     }
 
+    FUserDomain::FGetSerialKeyTask::FGetSerialKeyTask(
+        const TSharedPtr<FUserDomain> Self,
+        const Request::FGetSerialKeyRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FGetSerialKeyTask::FGetSerialKeyTask(
+        const FGetSerialKeyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FGetSerialKeyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::SerialKey::Model::FSerialKey>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->GetSerialKey(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "SerialKey"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCode()
+                );
+                Self->Cache->Put<Gs2::SerialKey::Model::FSerialKey>(
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetCampaignModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "CampaignModel"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
+                    ResultModel->GetCampaignModel()->GetName()
+                );
+                Self->Cache->Put<Gs2::SerialKey::Model::FCampaignModel>(
+                    ParentKey,
+                    Key,
+                    ResultModel->GetCampaignModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FGetSerialKeyTask>> FUserDomain::GetSerialKey(
+        Request::FGetSerialKeyRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetSerialKeyTask>>(this->AsShared(), Request);
+    }
+
     Gs2::SerialKey::Domain::Iterator::FDescribeSerialKeysIteratorPtr FUserDomain::SerialKeys(
         const FString CampaignModelName,
         const TOptional<FString> IssueJobName
@@ -135,7 +212,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain> FUserDomain::SerialKey(
-        const FString Code
+        const FString SerialKeyCode
     ) const
     {
         return MakeShared<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>(
@@ -145,7 +222,7 @@ namespace Gs2::SerialKey::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            Code
+            SerialKeyCode
         );
     }
 

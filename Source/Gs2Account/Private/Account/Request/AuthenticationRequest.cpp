@@ -76,6 +76,14 @@ namespace Gs2::Account::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FAuthenticationRequest> FAuthenticationRequest::WithDuplicationAvoider(
+        const TOptional<FString> DuplicationAvoider
+    )
+    {
+        this->DuplicationAvoiderValue = DuplicationAvoider;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FAuthenticationRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -99,6 +107,11 @@ namespace Gs2::Account::Request
     TOptional<FString> FAuthenticationRequest::GetPassword() const
     {
         return PasswordValue;
+    }
+
+    TOptional<FString> FAuthenticationRequest::GetDuplicationAvoider() const
+    {
+        return DuplicationAvoiderValue;
     }
 
     TSharedPtr<FAuthenticationRequest> FAuthenticationRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -143,7 +156,8 @@ namespace Gs2::Account::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+          ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FAuthenticationRequest::ToJson() const
@@ -168,6 +182,10 @@ namespace Gs2::Account::Request
         if (PasswordValue.IsSet())
         {
             JsonRootObject->SetStringField("password", PasswordValue.GetValue());
+        }
+        if (DuplicationAvoiderValue.IsSet())
+        {
+            JsonRootObject->SetStringField("duplicationAvoider", DuplicationAvoiderValue.GetValue());
         }
         return JsonRootObject;
     }

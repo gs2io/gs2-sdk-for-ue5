@@ -281,6 +281,13 @@ namespace Gs2::Deploy::Domain::Model
             Request::FDeleteStackEntityRequestPtr Request
         );
 
+        Gs2::Deploy::Domain::Iterator::FDescribeResourcesIteratorPtr Resources(
+        ) const;
+
+        TSharedPtr<Gs2::Deploy::Domain::Model::FResourceDomain> Resource(
+            const FString ResourceName
+        ) const;
+
         Gs2::Deploy::Domain::Iterator::FDescribeEventsIteratorPtr Events(
         ) const;
 
@@ -293,13 +300,6 @@ namespace Gs2::Deploy::Domain::Model
 
         TSharedPtr<Gs2::Deploy::Domain::Model::FOutputDomain> Output(
             const FString OutputName
-        ) const;
-
-        Gs2::Deploy::Domain::Iterator::FDescribeResourcesIteratorPtr Resources(
-        ) const;
-
-        TSharedPtr<Gs2::Deploy::Domain::Model::FResourceDomain> Resource(
-            const FString ResourceName
         ) const;
 
         static FString CreateCacheParentKey(

@@ -45,8 +45,9 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         TSharedPtr<FEzNamespaceDomain> Self,
         FString BallotBody,
         FString BallotSignature,
+        FString KeyId,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults
-    ): Self(Self), BallotBody(BallotBody), BallotSignature(BallotSignature), GameResults(GameResults)
+    ): Self(Self), BallotBody(BallotBody), BallotSignature(BallotSignature), KeyId(KeyId), GameResults(GameResults)
     {
 
     }
@@ -71,6 +72,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                             }
                             return Arr;
                         }())
+                        ->WithKeyId(KeyId)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -100,6 +102,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
     TSharedPtr<FAsyncTask<FEzNamespaceDomain::FVoteTask>> FEzNamespaceDomain::Vote(
         FString BallotBody,
         FString BallotSignature,
+        FString KeyId,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults
     )
     {
@@ -107,15 +110,17 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             this->AsShared(),
             BallotBody,
             BallotSignature,
+            KeyId,
             GameResults
         );
     }
 
     FEzNamespaceDomain::FVoteMultipleTask::FVoteMultipleTask(
         TSharedPtr<FEzNamespaceDomain> Self,
+        FString KeyId,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzSignedBallot>>> SignedBallots,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults
-    ): Self(Self), SignedBallots(SignedBallots), GameResults(GameResults)
+    ): Self(Self), KeyId(KeyId), SignedBallots(SignedBallots), GameResults(GameResults)
     {
 
     }
@@ -148,6 +153,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                             }
                             return Arr;
                         }())
+                        ->WithKeyId(KeyId)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -175,12 +181,14 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzNamespaceDomain::FVoteMultipleTask>> FEzNamespaceDomain::VoteMultiple(
+        FString KeyId,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzSignedBallot>>> SignedBallots,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FVoteMultipleTask>>(
             this->AsShared(),
+            KeyId,
             SignedBallots,
             GameResults
         );

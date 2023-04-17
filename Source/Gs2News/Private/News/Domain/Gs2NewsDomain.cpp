@@ -26,6 +26,8 @@
 
 #include "News/Domain/Gs2News.h"
 #include "News/Domain/Model/Namespace.h"
+#include "News/Domain/Model/Progress.h"
+#include "News/Domain/Model/Output.h"
 #include "News/Domain/Model/CurrentNewsMaster.h"
 #include "News/Domain/Model/News.h"
 #include "News/Domain/Model/User.h"

@@ -34,9 +34,9 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         return Domain->UserId;
     }
 
-    TOptional<FString> FEzSerialKeyDomain::Code() const
+    TOptional<FString> FEzSerialKeyDomain::SerialKeyCode() const
     {
-        return Domain->Code;
+        return Domain->SerialKeyCode;
     }
 
     FEzSerialKeyDomain::FEzSerialKeyDomain(
@@ -44,54 +44,6 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         Gs2::UE5::Util::FProfilePtr Profile
     ): Domain(Domain), ProfileValue(Profile) {
 
-    }
-
-    FEzSerialKeyDomain::FGetTask::FGetTask(
-        TSharedPtr<FEzSerialKeyDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzSerialKeyDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::SerialKey::Model::FEzSerialKey>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::SerialKey::Request::FGetSerialKeyRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::SerialKey::Model::FEzSerialKey::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzSerialKeyDomain::FGetTask>> FEzSerialKeyDomain::Get(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(
-            this->AsShared()
-        );
     }
 
     FEzSerialKeyDomain::FModelTask::FModelTask(

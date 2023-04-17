@@ -26,7 +26,7 @@ namespace Gs2::Stamina::Result
     {
         TSharedPtr<Model::FStamina> ItemValue;
         TSharedPtr<Model::FStaminaModel> StaminaModelValue;
-        TOptional<int64> OverflowValueValue;
+        TOptional<int32> OverflowValueValue;
         
     public:
         
@@ -38,11 +38,11 @@ namespace Gs2::Stamina::Result
 
         TSharedPtr<FRecoverStaminaByStampSheetResult> WithItem(const TSharedPtr<Model::FStamina> Item);
         TSharedPtr<FRecoverStaminaByStampSheetResult> WithStaminaModel(const TSharedPtr<Model::FStaminaModel> StaminaModel);
-        TSharedPtr<FRecoverStaminaByStampSheetResult> WithOverflowValue(const TOptional<int64> OverflowValue);
+        TSharedPtr<FRecoverStaminaByStampSheetResult> WithOverflowValue(const TOptional<int32> OverflowValue);
 
         TSharedPtr<Model::FStamina> GetItem() const;
         TSharedPtr<Model::FStaminaModel> GetStaminaModel() const;
-        TOptional<int64> GetOverflowValue() const;
+        TOptional<int32> GetOverflowValue() const;
         FString GetOverflowValueString() const;
 
         static TSharedPtr<FRecoverStaminaByStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);

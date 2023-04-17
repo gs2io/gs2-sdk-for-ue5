@@ -26,14 +26,14 @@ namespace Gs2::UE5::Enhance::Model
         TOptional<FString> NameValue;
         TOptional<FString> RateNameValue;
         TOptional<FString> PropertyIdValue;
-        TOptional<int32> ExperienceValueValue;
+        TOptional<int64> ExperienceValueValue;
         TOptional<float> RateValue;
 
 	public:
         TSharedPtr<FEzProgress> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzProgress> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FEzProgress> WithPropertyId(const TOptional<FString> PropertyId);
-        TSharedPtr<FEzProgress> WithExperienceValue(const TOptional<int32> ExperienceValue);
+        TSharedPtr<FEzProgress> WithExperienceValue(const TOptional<int64> ExperienceValue);
         TSharedPtr<FEzProgress> WithRate(const TOptional<float> Rate);
 
         TOptional<FString> GetName() const;
@@ -42,7 +42,7 @@ namespace Gs2::UE5::Enhance::Model
 
         TOptional<FString> GetPropertyId() const;
 
-        TOptional<int32> GetExperienceValue() const;
+        TOptional<int64> GetExperienceValue() const;
         FString GetExperienceValueString() const;
 
         TOptional<float> GetRate() const;

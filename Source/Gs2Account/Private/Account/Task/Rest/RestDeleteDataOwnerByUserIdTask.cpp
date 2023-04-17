@@ -95,6 +95,10 @@ namespace Gs2::Account::Task::Rest
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
+            if (this->Request->GetDuplicationAvoider().IsSet())
+            {
+                request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());
+            }
 
             request->ProcessRequest();
             UE_LOG(Gs2Log, Log, TEXT("[%s] %s"), TEXT("DELETE"), ToCStr(Url));

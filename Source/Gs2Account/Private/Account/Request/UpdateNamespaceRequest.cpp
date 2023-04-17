@@ -22,7 +22,6 @@ namespace Gs2::Account::Request
         NamespaceNameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         ChangePasswordIfTakeOverValue(TOptional<bool>()),
-        DifferentUserIdForLoginAndDataRetentionValue(TOptional<bool>()),
         CreateAccountScriptValue(nullptr),
         AuthenticationScriptValue(nullptr),
         CreateTakeOverScriptValue(nullptr),
@@ -37,7 +36,6 @@ namespace Gs2::Account::Request
         NamespaceNameValue(From.NamespaceNameValue),
         DescriptionValue(From.DescriptionValue),
         ChangePasswordIfTakeOverValue(From.ChangePasswordIfTakeOverValue),
-        DifferentUserIdForLoginAndDataRetentionValue(From.DifferentUserIdForLoginAndDataRetentionValue),
         CreateAccountScriptValue(From.CreateAccountScriptValue),
         AuthenticationScriptValue(From.AuthenticationScriptValue),
         CreateTakeOverScriptValue(From.CreateTakeOverScriptValue),
@@ -75,14 +73,6 @@ namespace Gs2::Account::Request
     )
     {
         this->ChangePasswordIfTakeOverValue = ChangePasswordIfTakeOver;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithDifferentUserIdForLoginAndDataRetention(
-        const TOptional<bool> DifferentUserIdForLoginAndDataRetention
-    )
-    {
-        this->DifferentUserIdForLoginAndDataRetentionValue = DifferentUserIdForLoginAndDataRetention;
         return SharedThis(this);
     }
 
@@ -153,20 +143,6 @@ namespace Gs2::Account::Request
             return FString("null");
         }
         return FString(ChangePasswordIfTakeOverValue.GetValue() ? "true" : "false");
-    }
-
-    TOptional<bool> FUpdateNamespaceRequest::GetDifferentUserIdForLoginAndDataRetention() const
-    {
-        return DifferentUserIdForLoginAndDataRetentionValue;
-    }
-
-    FString FUpdateNamespaceRequest::GetDifferentUserIdForLoginAndDataRetentionString() const
-    {
-        if (!DifferentUserIdForLoginAndDataRetentionValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString(DifferentUserIdForLoginAndDataRetentionValue.GetValue() ? "true" : "false");
     }
 
     TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetCreateAccountScript() const
@@ -248,15 +224,6 @@ namespace Gs2::Account::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
-            ->WithDifferentUserIdForLoginAndDataRetention(Data->HasField("differentUserIdForLoginAndDataRetention") ? [Data]() -> TOptional<bool>
-              {
-                  bool v;
-                    if (Data->TryGetBoolField("differentUserIdForLoginAndDataRetention", v))
-                  {
-                        return TOptional(v);
-                  }
-                  return TOptional<bool>();
-              }() : TOptional<bool>())
           ->WithCreateAccountScript(Data->HasField("createAccountScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("createAccountScript"))
@@ -317,10 +284,6 @@ namespace Gs2::Account::Request
         if (ChangePasswordIfTakeOverValue.IsSet())
         {
             JsonRootObject->SetBoolField("changePasswordIfTakeOver", ChangePasswordIfTakeOverValue.GetValue());
-        }
-        if (DifferentUserIdForLoginAndDataRetentionValue.IsSet())
-        {
-            JsonRootObject->SetBoolField("differentUserIdForLoginAndDataRetention", DifferentUserIdForLoginAndDataRetentionValue.GetValue());
         }
         if (CreateAccountScriptValue != nullptr && CreateAccountScriptValue.IsValid())
         {

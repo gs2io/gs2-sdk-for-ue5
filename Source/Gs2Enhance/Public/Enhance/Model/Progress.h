@@ -27,7 +27,7 @@ namespace Gs2::Enhance::Model
         TOptional<FString> RateNameValue;
         TOptional<FString> NameValue;
         TOptional<FString> PropertyIdValue;
-        TOptional<int32> ExperienceValueValue;
+        TOptional<int64> ExperienceValueValue;
         TOptional<float> RateValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -44,7 +44,7 @@ namespace Gs2::Enhance::Model
         TSharedPtr<FProgress> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FProgress> WithName(const TOptional<FString> Name);
         TSharedPtr<FProgress> WithPropertyId(const TOptional<FString> PropertyId);
-        TSharedPtr<FProgress> WithExperienceValue(const TOptional<int32> ExperienceValue);
+        TSharedPtr<FProgress> WithExperienceValue(const TOptional<int64> ExperienceValue);
         TSharedPtr<FProgress> WithRate(const TOptional<float> Rate);
         TSharedPtr<FProgress> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FProgress> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -54,7 +54,7 @@ namespace Gs2::Enhance::Model
         TOptional<FString> GetRateName() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetPropertyId() const;
-        TOptional<int32> GetExperienceValue() const;
+        TOptional<int64> GetExperienceValue() const;
         FString GetExperienceValueString() const;
         TOptional<float> GetRate() const;
         FString GetRateString() const;

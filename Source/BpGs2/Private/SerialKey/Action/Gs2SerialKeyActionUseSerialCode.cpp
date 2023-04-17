@@ -26,7 +26,8 @@ UGs2SerialKeyUseSerialCodeAsyncFunction::UGs2SerialKeyUseSerialCodeAsyncFunction
 
 UGs2SerialKeyUseSerialCodeAsyncFunction* UGs2SerialKeyUseSerialCodeAsyncFunction::UseSerialCode(
     UObject* WorldContextObject,
-    FGs2SerialKeyOwnSerialKey SerialKey
+    FGs2SerialKeyOwnSerialKey SerialKey,
+    FString Code
 )
 {
     UGs2SerialKeyUseSerialCodeAsyncFunction* Action = NewObject<UGs2SerialKeyUseSerialCodeAsyncFunction>();
@@ -36,6 +37,7 @@ UGs2SerialKeyUseSerialCodeAsyncFunction* UGs2SerialKeyUseSerialCodeAsyncFunction
         return Action;
     }
     Action->SerialKey = SerialKey;
+    Action->Code = Code;
     return Action;
 }
 
@@ -47,6 +49,7 @@ void UGs2SerialKeyUseSerialCodeAsyncFunction::Activate()
     }
 
     auto Future = SerialKey.Value->UseSerialCode(
+        Code
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

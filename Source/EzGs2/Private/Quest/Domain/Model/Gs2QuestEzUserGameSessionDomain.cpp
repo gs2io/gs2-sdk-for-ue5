@@ -125,6 +125,85 @@ namespace Gs2::UE5::Quest::Domain::Model
         );
     }
 
+    FEzUserGameSessionDomain::FEndTask::FEndTask(
+        TSharedPtr<FEzUserGameSessionDomain> Self,
+        bool IsComplete,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config
+    ): Self(Self), IsComplete(IsComplete), Rewards(Rewards), Config(Config)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserGameSessionDomain::FEndTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Domain::Model::FEzUserGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FEndTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->End(
+                    MakeShared<Gs2::Quest::Request::FEndRequest>()
+                        ->WithRewards([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Quest::Model::FReward>>>();
+                            if (!Rewards.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *Rewards) {
+                                Arr->Add(Value->ToModel());
+                            }
+                            return Arr;
+                        }())
+                        ->WithIsComplete(IsComplete)
+                        ->WithConfig([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Quest::Model::FConfig>>>();
+                            if (!Config.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *Config) {
+                                Arr->Add(Value->ToModel());
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Quest::Domain::Model::FEzUserGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->ProfileValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FEndTask>> FEzUserGameSessionDomain::End(
+        bool IsComplete,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FEndTask>>(
+            this->AsShared(),
+            IsComplete,
+            Rewards,
+            Config
+        );
+    }
+
     FEzUserGameSessionDomain::FDeleteProgressTask::FDeleteProgressTask(
         TSharedPtr<FEzUserGameSessionDomain> Self
     ): Self(Self)

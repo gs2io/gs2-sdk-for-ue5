@@ -24,6 +24,11 @@ namespace Gs2::UE5::News::Domain::Model
         return Domain->Status;
     }
 
+    TOptional<FString> FEzNamespaceDomain::NextPageToken() const
+    {
+        return Domain->NextPageToken;
+    }
+
     TOptional<FString> FEzNamespaceDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

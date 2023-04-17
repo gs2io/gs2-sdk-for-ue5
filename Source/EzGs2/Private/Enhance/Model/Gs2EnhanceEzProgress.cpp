@@ -44,7 +44,7 @@ namespace Gs2::UE5::Enhance::Model
     }
 
     TSharedPtr<FEzProgress> FEzProgress::WithExperienceValue(
-        const TOptional<int32> ExperienceValue
+        const TOptional<int64> ExperienceValue
     )
     {
         this->ExperienceValueValue = ExperienceValue;
@@ -70,7 +70,7 @@ namespace Gs2::UE5::Enhance::Model
     {
         return PropertyIdValue;
     }
-    TOptional<int32> FEzProgress::GetExperienceValue() const
+    TOptional<int64> FEzProgress::GetExperienceValue() const
     {
         return ExperienceValueValue;
     }
@@ -81,7 +81,7 @@ namespace Gs2::UE5::Enhance::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ExperienceValueValue.GetValue());
+        return FString::Printf(TEXT("%lld"), ExperienceValueValue.GetValue());
     }
     TOptional<float> FEzProgress::GetRate() const
     {

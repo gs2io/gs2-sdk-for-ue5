@@ -33,6 +33,7 @@ class BPGS2_API UGs2SerialKeyUseSerialCodeAsyncFunction : public UBlueprintAsync
     GENERATED_BODY()
 
     FGs2SerialKeyOwnSerialKey SerialKey;
+    FString Code;
 
 public:
 
@@ -47,7 +48,8 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::SerialKey::SerialKey::Action::UseSerialCode", Category="Game Server Services|GS2-SerialKey|Namespace|User|SerialKey|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2SerialKeyUseSerialCodeAsyncFunction* UseSerialCode(
         UObject* WorldContextObject,
-        FGs2SerialKeyOwnSerialKey SerialKey
+        FGs2SerialKeyOwnSerialKey SerialKey,
+        FString Code
     );
 
     virtual void Activate() override;

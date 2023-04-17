@@ -21,7 +21,6 @@ namespace Gs2::Quest::Request
     FEndByUserIdRequest::FEndByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        TransactionIdValue(TOptional<FString>()),
         RewardsValue(nullptr),
         IsCompleteValue(TOptional<bool>()),
         ConfigValue(nullptr)
@@ -33,7 +32,6 @@ namespace Gs2::Quest::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        TransactionIdValue(From.TransactionIdValue),
         RewardsValue(From.RewardsValue),
         IsCompleteValue(From.IsCompleteValue),
         ConfigValue(From.ConfigValue)
@@ -61,14 +59,6 @@ namespace Gs2::Quest::Request
     )
     {
         this->UserIdValue = UserId;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FEndByUserIdRequest> FEndByUserIdRequest::WithTransactionId(
-        const TOptional<FString> TransactionId
-    )
-    {
-        this->TransactionIdValue = TransactionId;
         return SharedThis(this);
     }
 
@@ -117,11 +107,6 @@ namespace Gs2::Quest::Request
     TOptional<FString> FEndByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
-    }
-
-    TOptional<FString> FEndByUserIdRequest::GetTransactionId() const
-    {
-        return TransactionIdValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FReward>>> FEndByUserIdRequest::GetRewards() const
@@ -186,15 +171,6 @@ namespace Gs2::Quest::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
-              {
-                  FString v;
-                    if (Data->TryGetStringField("transactionId", v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
           ->WithRewards(Data->HasField("rewards") ? [Data]() -> TSharedPtr<TArray<Model::FRewardPtr>>
               {
                   auto v = MakeShared<TArray<Model::FRewardPtr>>();
@@ -245,10 +221,6 @@ namespace Gs2::Quest::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
-        }
-        if (TransactionIdValue.IsSet())
-        {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
         }
         if (RewardsValue != nullptr && RewardsValue.IsValid())
         {

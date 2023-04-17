@@ -22,7 +22,7 @@
 
 FGs2SerialKeySerialKey UGs2SerialKeyUserFunctionLibrary::SerialKey(
     FGs2SerialKeyUser User,
-    FString Code
+    FString SerialKeyCode
 )
 {
     FGs2SerialKeySerialKey Return;
@@ -30,19 +30,19 @@ FGs2SerialKeySerialKey UGs2SerialKeyUserFunctionLibrary::SerialKey(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeyUserFunctionLibrary::SerialKey] User parameter specification is missing."))
         return Return;
     }
-    if (Code == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeyUserFunctionLibrary::SerialKey] Code parameter specification is missing."))
+    if (SerialKeyCode == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeyUserFunctionLibrary::SerialKey] SerialKeyCode parameter specification is missing."))
         return Return;
     }
     Return.Value = User.Value->SerialKey(
-        Code
+        SerialKeyCode
     );
     return Return;
 }
 
 FGs2SerialKeyOwnSerialKey UGs2SerialKeyUserFunctionLibrary::OwnSerialKey(
     FGs2SerialKeyOwnUser User,
-    FString Code
+    FString SerialKeyCode
 )
 {
     FGs2SerialKeyOwnSerialKey Return;
@@ -50,12 +50,12 @@ FGs2SerialKeyOwnSerialKey UGs2SerialKeyUserFunctionLibrary::OwnSerialKey(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeyUserFunctionLibrary::OwnSerialKey] User parameter specification is missing."))
         return Return;
     }
-    if (Code == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeyUserFunctionLibrary::OwnSerialKey] Code parameter specification is missing."))
+    if (SerialKeyCode == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeyUserFunctionLibrary::OwnSerialKey] SerialKeyCode parameter specification is missing."))
         return Return;
     }
     Return.Value = User.Value->SerialKey(
-        Code
+        SerialKeyCode
     );
     return Return;
 }

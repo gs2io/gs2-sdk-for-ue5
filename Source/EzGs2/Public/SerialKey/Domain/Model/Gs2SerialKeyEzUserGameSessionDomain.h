@@ -46,7 +46,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         );
 
         Gs2::UE5::SerialKey::Domain::Model::FEzSerialKeyGameSessionDomainPtr SerialKey(
-            const FString Code
+            const FString SerialKeyCode
         ) const;
 
     };

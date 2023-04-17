@@ -30,6 +30,14 @@
 #include "Task/Rest/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/Rest/DeleteNamespaceTask.h"
+#include "Request/DescribeProgressesRequest.h"
+#include "Task/Rest/DescribeProgressesTask.h"
+#include "Request/GetProgressRequest.h"
+#include "Task/Rest/GetProgressTask.h"
+#include "Request/DescribeOutputsRequest.h"
+#include "Task/Rest/DescribeOutputsTask.h"
+#include "Request/GetOutputRequest.h"
+#include "Task/Rest/GetOutputTask.h"
 #include "Request/PrepareUpdateCurrentNewsMasterRequest.h"
 #include "Task/Rest/PrepareUpdateCurrentNewsMasterTask.h"
 #include "Request/UpdateCurrentNewsMasterRequest.h"
@@ -78,6 +86,22 @@ namespace Gs2::News
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeProgressesTask>> DescribeProgresses(
+            const Request::FDescribeProgressesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetProgressTask>> GetProgress(
+            const Request::FGetProgressRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeOutputsTask>> DescribeOutputs(
+            const Request::FDescribeOutputsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetOutputTask>> GetOutput(
+            const Request::FGetOutputRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FPrepareUpdateCurrentNewsMasterTask>> PrepareUpdateCurrentNewsMaster(

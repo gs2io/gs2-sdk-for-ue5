@@ -29,6 +29,39 @@ struct FGs2Inbox
     Gs2::UE5::Inbox::Domain::FEzGs2InboxPtr Value = nullptr;
 };
 
+USTRUCT(BlueprintType)
+struct FGs2InboxReceiveNotification
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString NamespaceName = "";
+    UPROPERTY(BlueprintReadWrite)
+    FString MessageName = "";
+};
+
+inline FGs2InboxReceiveNotification EzReceiveNotificationToFGs2InboxReceiveNotification(
+    const Gs2::Inbox::Model::FReceiveNotificationPtr Model
+)
+{
+    FGs2InboxReceiveNotification Value;
+    Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.MessageName = Model->GetMessageName() ? *Model->GetMessageName() : "";
+    return Value;
+}
+
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_DELEGATE_OneParam(FEzInboxReceiveNotificationEvent, FGs2InboxReceiveNotification, Notification);
+
+USTRUCT(BlueprintType)
+struct FBpInboxReceiveNotificationEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FEzInboxReceiveNotificationEvent Value;
+};
+
 UCLASS()
 class BPGS2_API UGs2InboxFunctionLibrary : public UBlueprintFunctionLibrary
 {
@@ -37,7 +70,8 @@ class BPGS2_API UGs2InboxFunctionLibrary : public UBlueprintFunctionLibrary
 public:
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Inbox::Service", Category="Game Server Services|GS2-Inbox", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Service") FGs2Inbox Service(
-        FGs2Client Client
+        FGs2Client Client,
+        FBpInboxReceiveNotificationEvent ReceiveNotification
     );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Inbox::Namespace", Category="Game Server Services|GS2-Inbox|Namespace", meta=(WorldContext="WorldContextObject"))

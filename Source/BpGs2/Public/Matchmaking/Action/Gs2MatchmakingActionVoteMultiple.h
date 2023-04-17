@@ -35,6 +35,7 @@ class BPGS2_API UGs2MatchmakingVoteMultipleAsyncFunction : public UBlueprintAsyn
     GENERATED_BODY()
 
     FGs2MatchmakingNamespace Namespace;
+    FString KeyId;
     TArray<FGs2MatchmakingSignedBallot> SignedBallots;
     TArray<FGs2MatchmakingGameResult> GameResults;
 
@@ -52,6 +53,7 @@ public:
     static UGs2MatchmakingVoteMultipleAsyncFunction* VoteMultiple(
         UObject* WorldContextObject,
         FGs2MatchmakingNamespace Namespace,
+        FString KeyId,
         TArray<FGs2MatchmakingSignedBallot> SignedBallots,
         TArray<FGs2MatchmakingGameResult> GameResults
     );

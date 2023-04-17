@@ -28,11 +28,13 @@ namespace Gs2::Ranking::Request
         OrderDirectionValue(TOptional<FString>()),
         ScopeValue(TOptional<FString>()),
         UniqueByUserIdValue(TOptional<bool>()),
+        SumValue(TOptional<bool>()),
         CalculateFixedTimingHourValue(TOptional<int32>()),
         CalculateFixedTimingMinuteValue(TOptional<int32>()),
         CalculateIntervalMinutesValue(TOptional<int32>()),
         EntryPeriodEventIdValue(TOptional<FString>()),
         AccessPeriodEventIdValue(TOptional<FString>()),
+        IgnoreUserIdsValue(nullptr),
         GenerationValue(TOptional<FString>())
     {
     }
@@ -49,11 +51,13 @@ namespace Gs2::Ranking::Request
         OrderDirectionValue(From.OrderDirectionValue),
         ScopeValue(From.ScopeValue),
         UniqueByUserIdValue(From.UniqueByUserIdValue),
+        SumValue(From.SumValue),
         CalculateFixedTimingHourValue(From.CalculateFixedTimingHourValue),
         CalculateFixedTimingMinuteValue(From.CalculateFixedTimingMinuteValue),
         CalculateIntervalMinutesValue(From.CalculateIntervalMinutesValue),
         EntryPeriodEventIdValue(From.EntryPeriodEventIdValue),
         AccessPeriodEventIdValue(From.AccessPeriodEventIdValue),
+        IgnoreUserIdsValue(From.IgnoreUserIdsValue),
         GenerationValue(From.GenerationValue)
     {
     }
@@ -138,6 +142,14 @@ namespace Gs2::Ranking::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateCategoryModelMasterRequest> FCreateCategoryModelMasterRequest::WithSum(
+        const TOptional<bool> Sum
+    )
+    {
+        this->SumValue = Sum;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateCategoryModelMasterRequest> FCreateCategoryModelMasterRequest::WithCalculateFixedTimingHour(
         const TOptional<int32> CalculateFixedTimingHour
     )
@@ -175,6 +187,14 @@ namespace Gs2::Ranking::Request
     )
     {
         this->AccessPeriodEventIdValue = AccessPeriodEventId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateCategoryModelMasterRequest> FCreateCategoryModelMasterRequest::WithIgnoreUserIds(
+        const TSharedPtr<TArray<FString>> IgnoreUserIds
+    )
+    {
+        this->IgnoreUserIdsValue = IgnoreUserIds;
         return SharedThis(this);
     }
 
@@ -263,6 +283,20 @@ namespace Gs2::Ranking::Request
         return FString(UniqueByUserIdValue.GetValue() ? "true" : "false");
     }
 
+    TOptional<bool> FCreateCategoryModelMasterRequest::GetSum() const
+    {
+        return SumValue;
+    }
+
+    FString FCreateCategoryModelMasterRequest::GetSumString() const
+    {
+        if (!SumValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(SumValue.GetValue() ? "true" : "false");
+    }
+
     TOptional<int32> FCreateCategoryModelMasterRequest::GetCalculateFixedTimingHour() const
     {
         return CalculateFixedTimingHourValue;
@@ -313,6 +347,15 @@ namespace Gs2::Ranking::Request
     TOptional<FString> FCreateCategoryModelMasterRequest::GetAccessPeriodEventId() const
     {
         return AccessPeriodEventIdValue;
+    }
+
+    TSharedPtr<TArray<FString>> FCreateCategoryModelMasterRequest::GetIgnoreUserIds() const
+    {
+        if (!IgnoreUserIdsValue.IsValid())
+        {
+            return nullptr;
+        }
+        return IgnoreUserIdsValue;
     }
 
     TOptional<FString> FCreateCategoryModelMasterRequest::GetGeneration() const
@@ -408,6 +451,15 @@ namespace Gs2::Ranking::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithSum(Data->HasField("sum") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("sum", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithCalculateFixedTimingHour(Data->HasField("calculateFixedTimingHour") ? [Data]() -> TOptional<int32>
               {
                   int32 v;
@@ -453,6 +505,18 @@ namespace Gs2::Ranking::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithIgnoreUserIds(Data->HasField("ignoreUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
+              {
+                  auto v = MakeShared<TArray<FString>>();
+                  if (!Data->HasTypedField<EJson::Null>("ignoreUserIds") && Data->HasTypedField<EJson::Array>("ignoreUserIds"))
+                  {
+                      for (auto JsonObjectValue : Data->GetArrayField("ignoreUserIds"))
+                      {
+                          v->Add(JsonObjectValue->AsString());
+                      }
+                  }
+                  return v;
+             }() : nullptr)
             ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
               {
                   FString v;
@@ -507,6 +571,10 @@ namespace Gs2::Ranking::Request
         {
             JsonRootObject->SetBoolField("uniqueByUserId", UniqueByUserIdValue.GetValue());
         }
+        if (SumValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("sum", SumValue.GetValue());
+        }
         if (CalculateFixedTimingHourValue.IsSet())
         {
             JsonRootObject->SetNumberField("calculateFixedTimingHour", CalculateFixedTimingHourValue.GetValue());
@@ -526,6 +594,15 @@ namespace Gs2::Ranking::Request
         if (AccessPeriodEventIdValue.IsSet())
         {
             JsonRootObject->SetStringField("accessPeriodEventId", AccessPeriodEventIdValue.GetValue());
+        }
+        if (IgnoreUserIdsValue != nullptr && IgnoreUserIdsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *IgnoreUserIdsValue)
+            {
+                v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
+            }
+            JsonRootObject->SetArrayField("ignoreUserIds", v);
         }
         if (GenerationValue.IsSet())
         {

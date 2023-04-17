@@ -24,7 +24,7 @@ namespace Gs2::Enhance::Model
         RateNameValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
-        ExperienceValueValue(TOptional<int32>()),
+        ExperienceValueValue(TOptional<int64>()),
         RateValue(TOptional<float>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>())
@@ -87,7 +87,7 @@ namespace Gs2::Enhance::Model
     }
 
     TSharedPtr<FProgress> FProgress::WithExperienceValue(
-        const TOptional<int32> ExperienceValue
+        const TOptional<int64> ExperienceValue
     )
     {
         this->ExperienceValueValue = ExperienceValue;
@@ -137,7 +137,7 @@ namespace Gs2::Enhance::Model
     {
         return PropertyIdValue;
     }
-    TOptional<int32> FProgress::GetExperienceValue() const
+    TOptional<int64> FProgress::GetExperienceValue() const
     {
         return ExperienceValueValue;
     }
@@ -148,7 +148,7 @@ namespace Gs2::Enhance::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ExperienceValueValue.GetValue());
+        return FString::Printf(TEXT("%lld"), ExperienceValueValue.GetValue());
     }
     TOptional<float> FProgress::GetRate() const
     {
@@ -285,15 +285,15 @@ namespace Gs2::Enhance::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithExperienceValue(Data->HasField("experienceValue") ? [Data]() -> TOptional<int32>
+            ->WithExperienceValue(Data->HasField("experienceValue") ? [Data]() -> TOptional<int64>
                 {
-                    int32 v;
+                    int64 v;
                     if (Data->TryGetNumberField("experienceValue", v))
                     {
                         return TOptional(v);
                     }
-                    return TOptional<int32>();
-                }() : TOptional<int32>())
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithRate(Data->HasField("rate") ? [Data]() -> TOptional<float>
                 {
                     float v;
@@ -348,7 +348,7 @@ namespace Gs2::Enhance::Model
         }
         if (ExperienceValueValue.IsSet())
         {
-            JsonRootObject->SetNumberField("experienceValue", ExperienceValueValue.GetValue());
+            JsonRootObject->SetStringField("experienceValue", FString::Printf(TEXT("%lld"), ExperienceValueValue.GetValue()));
         }
         if (RateValue.IsSet())
         {

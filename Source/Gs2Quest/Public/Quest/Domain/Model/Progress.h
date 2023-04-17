@@ -113,32 +113,6 @@ namespace Gs2::Quest::Domain::Model
             Request::FGetProgressByUserIdRequestPtr Request
         );
 
-        class GS2QUEST_API FEndTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FProgressDomain>,
-            public TSharedFromThis<FEndTask>
-        {
-            const TSharedPtr<FProgressDomain> Self;
-            const Request::FEndByUserIdRequestPtr Request;
-        public:
-            explicit FEndTask(
-                const TSharedPtr<FProgressDomain> Self,
-                const Request::FEndByUserIdRequestPtr Request
-            );
-
-            FEndTask(
-                const FEndTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain>> Result
-            ) override;
-        };
-        friend FEndTask;
-
-        TSharedPtr<FAsyncTask<FEndTask>> End(
-            Request::FEndByUserIdRequestPtr Request
-        );
-
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

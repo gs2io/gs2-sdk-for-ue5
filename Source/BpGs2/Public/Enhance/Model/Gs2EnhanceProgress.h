@@ -40,7 +40,7 @@ struct FGs2EnhanceProgressValue
     UPROPERTY(BlueprintReadOnly)
     FString PropertyId = "";
     UPROPERTY(BlueprintReadOnly)
-    int32 ExperienceValue = 0;
+    int64 ExperienceValue = 0;
     UPROPERTY(BlueprintReadOnly)
     float Rate = 0;
 };

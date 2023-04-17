@@ -64,6 +64,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             TSharedPtr<FEzNamespaceDomain> Self;
             FString BallotBody;
             FString BallotSignature;
+            FString KeyId;
             TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults;
 
         public:
@@ -71,6 +72,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                 TSharedPtr<FEzNamespaceDomain> Self,
                 FString BallotBody,
                 FString BallotSignature,
+                FString KeyId,
                 TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults = TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>>()
             );
 
@@ -83,6 +85,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FVoteTask>> Vote(
             FString BallotBody,
             FString BallotSignature,
+            FString KeyId,
             TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults = TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>>()
         );
 
@@ -91,12 +94,14 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             public TSharedFromThis<FVoteMultipleTask>
         {
             TSharedPtr<FEzNamespaceDomain> Self;
+            FString KeyId;
             TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzSignedBallot>>> SignedBallots;
             TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults;
 
         public:
             explicit FVoteMultipleTask(
                 TSharedPtr<FEzNamespaceDomain> Self,
+                FString KeyId,
                 TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzSignedBallot>>> SignedBallots = TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzSignedBallot>>>(),
                 TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults = TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>>()
             );
@@ -108,6 +113,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         friend FVoteMultipleTask;
 
         TSharedPtr<FAsyncTask<FVoteMultipleTask>> VoteMultiple(
+            FString KeyId,
             TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzSignedBallot>>> SignedBallots = TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzSignedBallot>>>(),
             TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>> GameResults = TOptional<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGameResult>>>()
         );

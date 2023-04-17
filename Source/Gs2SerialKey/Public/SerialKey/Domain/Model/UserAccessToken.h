@@ -83,7 +83,7 @@ namespace Gs2::SerialKey::Domain::Model
         );
 
         TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomain> SerialKey(
-            const FString Code
+            const FString SerialKeyCode
         ) const;
 
         static FString CreateCacheParentKey(

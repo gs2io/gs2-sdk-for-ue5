@@ -47,8 +47,31 @@ namespace Gs2::UE5::SerialKey::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
+        class FGetTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::SerialKey::Model::FEzSerialKey>,
+            public TSharedFromThis<FGetTask>
+        {
+            TSharedPtr<FEzUserDomain> Self;
+            FString Code;
+
+        public:
+            explicit FGetTask(
+                TSharedPtr<FEzUserDomain> Self,
+                FString Code
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::SerialKey::Model::FEzSerialKey>> Result
+            ) override;
+        };
+        friend FGetTask;
+
+        TSharedPtr<FAsyncTask<FGetTask>> Get(
+            FString Code
+        );
+
         Gs2::UE5::SerialKey::Domain::Model::FEzSerialKeyDomainPtr SerialKey(
-            const FString Code
+            const FString SerialKeyCode
         ) const;
 
     };

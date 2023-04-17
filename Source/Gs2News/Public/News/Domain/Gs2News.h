@@ -25,6 +25,8 @@
 
 // Model
 #include "News/Domain/Model/Namespace.h"
+#include "News/Domain/Model/Progress.h"
+#include "News/Domain/Model/Output.h"
 #include "News/Domain/Model/CurrentNewsMaster.h"
 #include "News/Domain/Model/News.h"
 #include "News/Domain/Model/NewsAccessToken.h"
@@ -35,6 +37,8 @@
 
 // Iterator
 #include "News/Domain/Iterator/DescribeNamespacesIterator.h"
+#include "News/Domain/Iterator/DescribeProgressesIterator.h"
+#include "News/Domain/Iterator/DescribeOutputsIterator.h"
 #include "News/Domain/Iterator/DescribeNewsIterator.h"
 #include "News/Domain/Iterator/DescribeNewsByUserIdIterator.h"
 

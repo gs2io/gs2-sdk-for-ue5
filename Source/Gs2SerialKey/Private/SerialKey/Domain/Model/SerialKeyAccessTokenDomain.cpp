@@ -47,7 +47,7 @@ namespace Gs2::SerialKey::Domain::Model
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-        const TOptional<FString> Code
+        const TOptional<FString> SerialKeyCode
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -57,7 +57,7 @@ namespace Gs2::SerialKey::Domain::Model
         Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Session)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
-        Code(Code),
+        SerialKeyCode(SerialKeyCode),
         ParentKey(Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
@@ -98,8 +98,7 @@ namespace Gs2::SerialKey::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithCode(Self->Code);
+            ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->Use(
             Request
         );
@@ -162,23 +161,23 @@ namespace Gs2::SerialKey::Domain::Model
     FString FSerialKeyAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
-        TOptional<FString> Code,
+        TOptional<FString> SerialKeyCode,
         FString ChildType
     )
     {
         return FString() +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
-            (Code.IsSet() ? *Code : "null") + ":" +
+            (SerialKeyCode.IsSet() ? *SerialKeyCode : "null") + ":" +
             ChildType;
     }
 
     FString FSerialKeyAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> Code
+        TOptional<FString> SerialKeyCode
     )
     {
         return FString() +
-            (Code.IsSet() ? *Code : "null");
+            (SerialKeyCode.IsSet() ? *SerialKeyCode : "null");
     }
 
     FSerialKeyAccessTokenDomain::FModelTask::FModelTask(
@@ -203,7 +202,7 @@ namespace Gs2::SerialKey::Domain::Model
         auto Value = Self->Cache->Get<Gs2::SerialKey::Model::FSerialKey>(
             Self->ParentKey,
             Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                Self->Code
+                Self->SerialKeyCode
             )
         );
         *Result = Value;

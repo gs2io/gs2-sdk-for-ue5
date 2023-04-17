@@ -30,6 +30,8 @@ namespace Gs2::UE5::Matchmaking::Domain
     typedef TSharedPtr<FLeaveNotificationEvent> FLeaveNotificationEventPtr;
     DECLARE_EVENT_OneParam(Gs2Matchmaking, FCompleteNotificationEvent, Gs2::Matchmaking::Model::FCompleteNotificationPtr);
     typedef TSharedPtr<FCompleteNotificationEvent> FCompleteNotificationEventPtr;
+    DECLARE_EVENT_OneParam(Gs2Matchmaking, FChangeRatingNotificationEvent, Gs2::Matchmaking::Model::FChangeRatingNotificationPtr);
+    typedef TSharedPtr<FChangeRatingNotificationEvent> FChangeRatingNotificationEventPtr;
 
     class EZGS2_API FEzGs2Matchmaking {
         Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr Domain;
@@ -39,6 +41,7 @@ namespace Gs2::UE5::Matchmaking::Domain
         FJoinNotificationEvent JoinNotificationEvent;
         FLeaveNotificationEvent LeaveNotificationEvent;
         FCompleteNotificationEvent CompleteNotificationEvent;
+        FChangeRatingNotificationEvent ChangeRatingNotificationEvent;
 
         FEzGs2Matchmaking(
             Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr Domain,
@@ -54,6 +57,8 @@ namespace Gs2::UE5::Matchmaking::Domain
         FLeaveNotificationEvent& OnLeaveNotification();
 
         FCompleteNotificationEvent& OnCompleteNotification();
+
+        FChangeRatingNotificationEvent& OnChangeRatingNotification();
     };
     typedef TSharedPtr<FEzGs2Matchmaking> FEzGs2MatchmakingPtr;
 }

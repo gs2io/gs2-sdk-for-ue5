@@ -56,7 +56,7 @@ namespace Gs2::SerialKey::Domain::Model
         }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
-        TOptional<FString> Code;
+        TOptional<FString> SerialKeyCode;
     private:
 
         FString ParentKey;
@@ -70,38 +70,12 @@ namespace Gs2::SerialKey::Domain::Model
             const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> Code
+            const TOptional<FString> SerialKeyCode
             // ReSharper disable once CppMemberInitializersOrder
         );
 
         FSerialKeyDomain(
             const FSerialKeyDomain& From
-        );
-
-        class GS2SERIALKEY_API FGetTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Model::FSerialKey>,
-            public TSharedFromThis<FGetTask>
-        {
-            const TSharedPtr<FSerialKeyDomain> Self;
-            const Request::FGetSerialKeyRequestPtr Request;
-        public:
-            explicit FGetTask(
-                const TSharedPtr<FSerialKeyDomain> Self,
-                const Request::FGetSerialKeyRequestPtr Request
-            );
-
-            FGetTask(
-                const FGetTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::SerialKey::Model::FSerialKey>> Result
-            ) override;
-        };
-        friend FGetTask;
-
-        TSharedPtr<FAsyncTask<FGetTask>> Get(
-            Request::FGetSerialKeyRequestPtr Request
         );
 
         class GS2SERIALKEY_API FUseTask final :
@@ -133,12 +107,12 @@ namespace Gs2::SerialKey::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
-            TOptional<FString> Code,
+            TOptional<FString> SerialKeyCode,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> Code
+            TOptional<FString> SerialKeyCode
         );
 
         class GS2SERIALKEY_API FModelTask final :

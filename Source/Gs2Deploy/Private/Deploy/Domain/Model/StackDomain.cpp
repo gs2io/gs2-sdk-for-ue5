@@ -499,6 +499,30 @@ namespace Gs2::Deploy::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteEntityTask>>(this->AsShared(), Request);
     }
 
+    Gs2::Deploy::Domain::Iterator::FDescribeResourcesIteratorPtr FStackDomain::Resources(
+    ) const
+    {
+        return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeResourcesIterator>(
+            Cache,
+            Client,
+            StackName
+        );
+    }
+
+    TSharedPtr<Gs2::Deploy::Domain::Model::FResourceDomain> FStackDomain::Resource(
+        const FString ResourceName
+    ) const
+    {
+        return MakeShared<Gs2::Deploy::Domain::Model::FResourceDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            StackName,
+            ResourceName
+        );
+    }
+
     Gs2::Deploy::Domain::Iterator::FDescribeEventsIteratorPtr FStackDomain::Events(
     ) const
     {
@@ -544,30 +568,6 @@ namespace Gs2::Deploy::Domain::Model
             Session,
             StackName,
             OutputName
-        );
-    }
-
-    Gs2::Deploy::Domain::Iterator::FDescribeResourcesIteratorPtr FStackDomain::Resources(
-    ) const
-    {
-        return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeResourcesIterator>(
-            Cache,
-            Client,
-            StackName
-        );
-    }
-
-    TSharedPtr<Gs2::Deploy::Domain::Model::FResourceDomain> FStackDomain::Resource(
-        const FString ResourceName
-    ) const
-    {
-        return MakeShared<Gs2::Deploy::Domain::Model::FResourceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
-            StackName,
-            ResourceName
         );
     }
 

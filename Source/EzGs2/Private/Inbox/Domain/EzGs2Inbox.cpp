@@ -37,4 +37,9 @@ namespace Gs2::UE5::Inbox::Domain
             ProfileValue
         );
     }
+
+    FReceiveNotificationEvent& FEzGs2Inbox::OnReceiveNotification()
+    {
+        return ReceiveNotificationEvent;
+    }
 }

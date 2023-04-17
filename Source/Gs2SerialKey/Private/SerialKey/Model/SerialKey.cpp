@@ -183,7 +183,7 @@ namespace Gs2::SerialKey::Model
 
     TOptional<FString> FSerialKey::GetRegionFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):serialKey:(?<namespaceName>.+):serialKey:(?<code>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):serialKey:(?<namespaceName>.+):serialKey:(?<serialKeyCode>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -194,7 +194,7 @@ namespace Gs2::SerialKey::Model
 
     TOptional<FString> FSerialKey::GetOwnerIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):serialKey:(?<namespaceName>.+):serialKey:(?<code>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):serialKey:(?<namespaceName>.+):serialKey:(?<serialKeyCode>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -205,7 +205,7 @@ namespace Gs2::SerialKey::Model
 
     TOptional<FString> FSerialKey::GetNamespaceNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):serialKey:(?<namespaceName>.+):serialKey:(?<code>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):serialKey:(?<namespaceName>.+):serialKey:(?<serialKeyCode>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -214,9 +214,9 @@ namespace Gs2::SerialKey::Model
         return TOptional<FString>();
     }
 
-    TOptional<FString> FSerialKey::GetCodeFromGrn(const FString Grn)
+    TOptional<FString> FSerialKey::GetSerialKeyCodeFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):serialKey:(?<namespaceName>.+):serialKey:(?<code>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):serialKey:(?<namespaceName>.+):serialKey:(?<serialKeyCode>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
