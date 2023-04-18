@@ -26,7 +26,7 @@ UGs2QuestEndAsyncFunction::UGs2QuestEndAsyncFunction(
 
 UGs2QuestEndAsyncFunction* UGs2QuestEndAsyncFunction::End(
     UObject* WorldContextObject,
-    FGs2QuestOwnUser User,
+    FGs2QuestOwnProgress Progress,
     bool IsComplete,
     TArray<FGs2QuestReward> Rewards,
     TArray<FGs2QuestConfig> Config
@@ -34,11 +34,11 @@ UGs2QuestEndAsyncFunction* UGs2QuestEndAsyncFunction::End(
 {
     UGs2QuestEndAsyncFunction* Action = NewObject<UGs2QuestEndAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestEndAsyncFunction::End] User parameter specification is missing."))
+    if (Progress.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestEndAsyncFunction::End] Progress parameter specification is missing."))
         return Action;
     }
-    Action->User = User;
+    Action->Progress = Progress;
     Action->Rewards = Rewards;
     Action->IsComplete = IsComplete;
     Action->Config = Config;
@@ -47,12 +47,12 @@ UGs2QuestEndAsyncFunction* UGs2QuestEndAsyncFunction::End(
 
 void UGs2QuestEndAsyncFunction::Activate()
 {
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestEndAsyncFunction] User parameter specification is missing."))
+    if (Progress.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestEndAsyncFunction] Progress parameter specification is missing."))
         return;
     }
 
-    auto Future = User.Value->End(
+    auto Future = Progress.Value->End(
         IsComplete,
         [&]
         {

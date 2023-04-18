@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -78,7 +76,7 @@ namespace Gs2::UE5::Quest::Domain::Model
             public TSharedFromThis<FEndTask>
         {
             TSharedPtr<FEzProgressGameSessionDomain> Self;
-            bool IsComplete_;
+            bool IsComplete;
             TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards;
             TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config;
 
@@ -100,6 +98,26 @@ namespace Gs2::UE5::Quest::Domain::Model
             bool IsComplete,
             TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards = TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>>(),
             TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>>()
+        );
+
+        class FDeleteProgressTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>,
+            public TSharedFromThis<FDeleteProgressTask>
+        {
+            TSharedPtr<FEzProgressGameSessionDomain> Self;
+
+        public:
+            explicit FDeleteProgressTask(
+                TSharedPtr<FEzProgressGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>> Result
+            ) override;
+        };
+        friend FDeleteProgressTask;
+
+        TSharedPtr<FAsyncTask<FDeleteProgressTask>> DeleteProgress(
         );
 
         class FModelTask :

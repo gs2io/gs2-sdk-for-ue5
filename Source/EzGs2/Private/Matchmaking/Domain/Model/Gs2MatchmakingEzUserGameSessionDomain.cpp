@@ -67,7 +67,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->CreateGathering(
                     MakeShared<Gs2::Matchmaking::Request::FCreateGatheringRequest>()
-                        ->WithPlayer(Player->ToModel())
+                        ->WithPlayer(Player == nullptr ? nullptr : Player->ToModel())
                         ->WithAttributeRanges([&]{
                             auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Matchmaking::Model::FAttributeRange>>>();
                             if (!AttributeRanges.IsSet()) {
@@ -99,7 +99,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                             return Arr;
                         }())
                         ->WithExpiresAt(ExpiresAt)
-                        ->WithExpiresAtTimeSpan(ExpiresAtTimeSpan->ToModel())
+                        ->WithExpiresAtTimeSpan(ExpiresAtTimeSpan == nullptr ? nullptr : ExpiresAtTimeSpan->ToModel())
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())

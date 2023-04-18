@@ -26,27 +26,27 @@ UGs2QuestDeleteProgressAsyncFunction::UGs2QuestDeleteProgressAsyncFunction(
 
 UGs2QuestDeleteProgressAsyncFunction* UGs2QuestDeleteProgressAsyncFunction::DeleteProgress(
     UObject* WorldContextObject,
-    FGs2QuestOwnUser User
+    FGs2QuestOwnProgress Progress
 )
 {
     UGs2QuestDeleteProgressAsyncFunction* Action = NewObject<UGs2QuestDeleteProgressAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestDeleteProgressAsyncFunction::DeleteProgress] User parameter specification is missing."))
+    if (Progress.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestDeleteProgressAsyncFunction::DeleteProgress] Progress parameter specification is missing."))
         return Action;
     }
-    Action->User = User;
+    Action->Progress = Progress;
     return Action;
 }
 
 void UGs2QuestDeleteProgressAsyncFunction::Activate()
 {
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestDeleteProgressAsyncFunction] User parameter specification is missing."))
+    if (Progress.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestDeleteProgressAsyncFunction] Progress parameter specification is missing."))
         return;
     }
 
-    auto Future = User.Value->DeleteProgress(
+    auto Future = Progress.Value->DeleteProgress(
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

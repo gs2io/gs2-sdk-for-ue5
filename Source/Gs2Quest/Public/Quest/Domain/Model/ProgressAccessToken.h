@@ -114,6 +114,58 @@ namespace Gs2::Quest::Domain::Model
             Request::FGetProgressRequestPtr Request
         );
 
+        class GS2QUEST_API FEndTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>,
+            public TSharedFromThis<FEndTask>
+        {
+            const TSharedPtr<FProgressAccessTokenDomain> Self;
+            const Request::FEndRequestPtr Request;
+        public:
+            explicit FEndTask(
+                const TSharedPtr<FProgressAccessTokenDomain> Self,
+                const Request::FEndRequestPtr Request
+            );
+
+            FEndTask(
+                const FEndTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FEndTask;
+
+        TSharedPtr<FAsyncTask<FEndTask>> End(
+            Request::FEndRequestPtr Request
+        );
+
+        class GS2QUEST_API FDeleteTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>,
+            public TSharedFromThis<FDeleteTask>
+        {
+            const TSharedPtr<FProgressAccessTokenDomain> Self;
+            const Request::FDeleteProgressRequestPtr Request;
+        public:
+            explicit FDeleteTask(
+                const TSharedPtr<FProgressAccessTokenDomain> Self,
+                const Request::FDeleteProgressRequestPtr Request
+            );
+
+            FDeleteTask(
+                const FDeleteTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FDeleteTask;
+
+        TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
+            Request::FDeleteProgressRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

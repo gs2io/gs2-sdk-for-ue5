@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "BpGs2/Public/Quest/Model/Gs2QuestProgress.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestUser.h"
+#include "BpGs2/Public/Quest/Model/Gs2QuestProgress.h"
 #include "BpGs2/Public/Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2QuestActionDeleteProgress.generated.h"
@@ -32,7 +32,7 @@ class BPGS2_API UGs2QuestDeleteProgressAsyncFunction : public UBlueprintAsyncAct
 {
     GENERATED_BODY()
 
-    FGs2QuestOwnUser User;
+    FGs2QuestOwnProgress Progress;
 
 public:
 
@@ -47,7 +47,7 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Quest::Progress::Action::DeleteProgress", Category="Game Server Services|GS2-Quest|Namespace|User|Progress|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2QuestDeleteProgressAsyncFunction* DeleteProgress(
         UObject* WorldContextObject,
-        FGs2QuestOwnUser User
+        FGs2QuestOwnProgress Progress
     );
 
     virtual void Activate() override;

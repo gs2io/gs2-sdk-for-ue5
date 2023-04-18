@@ -22,7 +22,7 @@
 #include "Auth/Domain/Gs2Auth.h"
 #include "Chat/Domain/Gs2Chat.h"
 #include "Datastore/Domain/Gs2Datastore.h"
-//#include "Deploy/Domain/Gs2Deploy.h"
+#include "Deploy/Domain/Gs2Deploy.h"
 #include "Dictionary/Domain/Gs2Dictionary.h"
 #include "Distributor/Domain/Gs2Distributor.h"
 #include "Enhance/Domain/Gs2Enhance.h"
@@ -72,6 +72,7 @@ namespace Gs2::Core::Domain
         const Gs2::Auth::Domain::FGs2AuthDomainPtr Auth;
         const Gs2::Chat::Domain::FGs2ChatDomainPtr Chat;
         const Gs2::Datastore::Domain::FGs2DatastoreDomainPtr Datastore;
+        const Gs2::Deploy::Domain::FGs2DeployDomainPtr Deploy;
         const Gs2::Dictionary::Domain::FGs2DictionaryDomainPtr Dictionary;
         const Gs2::Distributor::Domain::FGs2DistributorDomainPtr Distributor;
         const Gs2::Enhance::Domain::FGs2EnhanceDomainPtr Enhance;

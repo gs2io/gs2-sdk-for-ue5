@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -75,6 +77,84 @@ namespace Gs2::SerialKey::Domain::Model
         Client(From.Client)
     {
 
+    }
+
+    FSerialKeyDomain::FGetTask::FGetTask(
+    const TSharedPtr<FSerialKeyDomain> Self,
+    const Request::FGetSerialKeyRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FSerialKeyDomain::FGetTask::FGetTask(
+        const FGetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSerialKeyDomain::FGetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::SerialKey::Model::FSerialKey>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithCode(Self->SerialKeyCode);
+        const auto Future = Self->Client->GetSerialKey(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "SerialKey"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCode()
+                );
+                Self->Cache->Put<Gs2::SerialKey::Model::FSerialKey>(
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetCampaignModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "CampaignModel"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
+                    ResultModel->GetCampaignModel()->GetName()
+                );
+                Self->Cache->Put<Gs2::SerialKey::Model::FCampaignModel>(
+                    ParentKey,
+                    Key,
+                    ResultModel->GetCampaignModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSerialKeyDomain::FGetTask>> FSerialKeyDomain::Get(
+        Request::FGetSerialKeyRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
     FSerialKeyDomain::FUseTask::FUseTask(

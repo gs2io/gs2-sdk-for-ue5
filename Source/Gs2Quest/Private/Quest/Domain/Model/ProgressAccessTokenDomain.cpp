@@ -173,6 +173,168 @@ namespace Gs2::Quest::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FProgressAccessTokenDomain::FEndTask::FEndTask(
+        const TSharedPtr<FProgressAccessTokenDomain> Self,
+        const Request::FEndRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FProgressAccessTokenDomain::FEndTask::FEndTask(
+        const FEndTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FProgressAccessTokenDomain::FEndTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->End(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Progress"
+                );
+                const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
+                );
+                Self->Cache->Delete<Gs2::Quest::Model::FProgress>(ParentKey, Key);
+            }
+            Self->Cache->Delete<Gs2::Quest::Model::FCompletedQuestList>(
+                Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "CompletedQuestList"
+                ),
+                Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
+                    Gs2::Quest::Model::FQuestModel::GetQuestGroupNameFromGrn(*ResultModel->GetItem()->GetQuestModelId())
+                )
+            );
+            Self->Cache->ClearListCache<Gs2::Quest::Model::FCompletedQuestList>(
+                Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "CompletedQuestList"
+                )
+            );
+        }
+        if (!*ResultModel->GetAutoRunStampSheet())
+        {
+            const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                Self->Cache,
+                Self->JobQueueDomain,
+                Self->Session,
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId(),
+                Self->StampSheetConfiguration
+            );
+            const auto Future3 = StampSheet->Run();
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return MakeShared<Core::Model::FTransactionError<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>(
+                    Future3->GetTask().Error()->GetErrors(),
+                    [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
+                    {
+                        return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                            Self->Cache,
+                            Self->JobQueueDomain,
+                            Self->Session,
+                            *ResultModel->GetStampSheet(),
+                            *ResultModel->GetStampSheetEncryptionKeyId(),
+                            Self->StampSheetConfiguration
+                        )->Run();
+                    }
+                );
+            }
+            Future3->EnsureCompletion();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FProgressAccessTokenDomain::FEndTask>> FProgressAccessTokenDomain::End(
+        Request::FEndRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FEndTask>>(this->AsShared(), Request);
+    }
+
+    FProgressAccessTokenDomain::FDeleteTask::FDeleteTask(
+        const TSharedPtr<FProgressAccessTokenDomain> Self,
+        const Request::FDeleteProgressRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FProgressAccessTokenDomain::FDeleteTask::FDeleteTask(
+        const FDeleteTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FProgressAccessTokenDomain::FDeleteTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DeleteProgress(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Progress"
+                );
+                const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
+                );
+                Self->Cache->Delete<Gs2::Quest::Model::FProgress>(ParentKey, Key);
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FProgressAccessTokenDomain::FDeleteTask>> FProgressAccessTokenDomain::Delete(
+        Request::FDeleteProgressRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
+    }
+
     FString FProgressAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

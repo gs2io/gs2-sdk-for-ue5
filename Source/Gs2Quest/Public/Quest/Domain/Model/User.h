@@ -144,58 +144,6 @@ namespace Gs2::Quest::Domain::Model
             Request::FStartByUserIdRequestPtr Request
         );
 
-        class GS2QUEST_API FEndTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FUserDomain>,
-            public TSharedFromThis<FEndTask>
-        {
-            const TSharedPtr<FUserDomain> Self;
-            const Request::FEndByUserIdRequestPtr Request;
-        public:
-            explicit FEndTask(
-                const TSharedPtr<FUserDomain> Self,
-                const Request::FEndByUserIdRequestPtr Request
-            );
-
-            FEndTask(
-                const FEndTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FUserDomain>> Result
-            ) override;
-        };
-        friend FEndTask;
-
-        TSharedPtr<FAsyncTask<FEndTask>> End(
-            Request::FEndByUserIdRequestPtr Request
-        );
-
-        class GS2QUEST_API FDeleteProgressTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FProgressDomain>,
-            public TSharedFromThis<FDeleteProgressTask>
-        {
-            const TSharedPtr<FUserDomain> Self;
-            const Request::FDeleteProgressByUserIdRequestPtr Request;
-        public:
-            explicit FDeleteProgressTask(
-                const TSharedPtr<FUserDomain> Self,
-                const Request::FDeleteProgressByUserIdRequestPtr Request
-            );
-
-            FDeleteProgressTask(
-                const FDeleteProgressTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain>> Result
-            ) override;
-        };
-        friend FDeleteProgressTask;
-
-        TSharedPtr<FAsyncTask<FDeleteProgressTask>> DeleteProgress(
-            Request::FDeleteProgressByUserIdRequestPtr Request
-        );
-
         Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIteratorPtr Progresses(
         ) const;
 

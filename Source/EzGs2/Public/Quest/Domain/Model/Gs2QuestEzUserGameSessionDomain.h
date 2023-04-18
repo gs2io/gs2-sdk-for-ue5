@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -85,55 +87,6 @@ namespace Gs2::UE5::Quest::Domain::Model
             FString QuestName,
             TOptional<bool> Force = TOptional<bool>(),
             TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>>()
-        );
-
-        class FEndTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Domain::Model::FEzUserGameSessionDomain>,
-            public TSharedFromThis<FEndTask>
-        {
-            TSharedPtr<FEzUserGameSessionDomain> Self;
-            bool IsComplete;
-            TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards;
-            TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config;
-
-        public:
-            explicit FEndTask(
-                TSharedPtr<FEzUserGameSessionDomain> Self,
-                bool IsComplete,
-                TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards = TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>>(),
-                TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>>()
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Domain::Model::FEzUserGameSessionDomain>> Result
-            ) override;
-        };
-        friend FEndTask;
-
-        TSharedPtr<FAsyncTask<FEndTask>> End(
-            bool IsComplete,
-            TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards = TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>>(),
-            TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>>()
-        );
-
-        class FDeleteProgressTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>,
-            public TSharedFromThis<FDeleteProgressTask>
-        {
-            TSharedPtr<FEzUserGameSessionDomain> Self;
-
-        public:
-            explicit FDeleteProgressTask(
-                TSharedPtr<FEzUserGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>> Result
-            ) override;
-        };
-        friend FDeleteProgressTask;
-
-        TSharedPtr<FAsyncTask<FDeleteProgressTask>> DeleteProgress(
         );
 
         Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomainPtr Progress(

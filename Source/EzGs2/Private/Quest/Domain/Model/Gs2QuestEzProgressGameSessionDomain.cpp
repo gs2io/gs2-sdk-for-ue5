@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Quest/Domain/Model/Gs2QuestEzProgressGameSessionDomain.h"
@@ -101,7 +99,7 @@ namespace Gs2::UE5::Quest::Domain::Model
         bool IsComplete,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards,
         TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config
-    ): Self(Self), IsComplete_(IsComplete), Rewards(Rewards), Config(Config)
+    ): Self(Self), IsComplete(IsComplete), Rewards(Rewards), Config(Config)
     {
 
     }
@@ -124,7 +122,7 @@ namespace Gs2::UE5::Quest::Domain::Model
                             }
                             return Arr;
                         }())
-                        ->WithIsComplete(IsComplete_)
+                        ->WithIsComplete(IsComplete)
                         ->WithConfig([&]{
                             auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Quest::Model::FConfig>>>();
                             if (!Config.IsSet()) {
@@ -172,6 +170,55 @@ namespace Gs2::UE5::Quest::Domain::Model
             IsComplete,
             Rewards,
             Config
+        );
+    }
+
+    FEzProgressGameSessionDomain::FDeleteProgressTask::FDeleteProgressTask(
+        TSharedPtr<FEzProgressGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzProgressGameSessionDomain::FDeleteProgressTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FDeleteProgressTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Delete(
+                    MakeShared<Gs2::Quest::Request::FDeleteProgressRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->ProfileValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzProgressGameSessionDomain::FDeleteProgressTask>> FEzProgressGameSessionDomain::DeleteProgress(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteProgressTask>>(
+            this->AsShared()
         );
     }
 
