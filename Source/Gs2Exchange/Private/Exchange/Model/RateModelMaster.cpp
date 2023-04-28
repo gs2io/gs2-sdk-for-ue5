@@ -182,7 +182,7 @@ namespace Gs2::Exchange::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LockTimeValue.GetValue());
+        return FString::Printf(TEXT("%d"), LockTimeValue.GetValue());
     }
     TOptional<bool> FRateModelMaster::GetEnableSkip() const
     {
@@ -329,7 +329,7 @@ namespace Gs2::Exchange::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
             ->WithTimingType(Data->HasField("timingType") ? [Data]() -> TOptional<FString>
                 {
                     FString v;
@@ -368,7 +368,7 @@ namespace Gs2::Exchange::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
             ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
@@ -380,7 +380,7 @@ namespace Gs2::Exchange::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

@@ -69,7 +69,7 @@ namespace Gs2::UE5::Realtime::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), PortValue.GetValue());
+        return FString::Printf(TEXT("%d"), PortValue.GetValue());
     }
     TOptional<FString> FEzRoom::GetEncryptionKey() const
     {

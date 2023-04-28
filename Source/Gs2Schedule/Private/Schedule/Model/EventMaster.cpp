@@ -268,7 +268,7 @@ namespace Gs2::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatBeginDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatBeginDayOfMonthValue.GetValue());
     }
     TOptional<int32> FEventMaster::GetRepeatEndDayOfMonth() const
     {
@@ -281,7 +281,7 @@ namespace Gs2::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatEndDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatEndDayOfMonthValue.GetValue());
     }
     TOptional<FString> FEventMaster::GetRepeatBeginDayOfWeek() const
     {
@@ -302,7 +302,7 @@ namespace Gs2::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatBeginHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatBeginHourValue.GetValue());
     }
     TOptional<int32> FEventMaster::GetRepeatEndHour() const
     {
@@ -315,7 +315,7 @@ namespace Gs2::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatEndHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatEndHourValue.GetValue());
     }
     TOptional<FString> FEventMaster::GetRelativeTriggerName() const
     {
@@ -332,7 +332,7 @@ namespace Gs2::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RelativeDurationValue.GetValue());
+        return FString::Printf(TEXT("%d"), RelativeDurationValue.GetValue());
     }
     TOptional<int64> FEventMaster::GetCreatedAt() const
     {

@@ -177,7 +177,7 @@ namespace Gs2::Exchange::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LockTimeValue.GetValue());
+        return FString::Printf(TEXT("%d"), LockTimeValue.GetValue());
     }
 
     TOptional<bool> FUpdateRateModelMasterRequest::GetEnableSkip() const

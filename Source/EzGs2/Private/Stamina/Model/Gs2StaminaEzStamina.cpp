@@ -89,7 +89,7 @@ namespace Gs2::UE5::Stamina::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), ValueValue.GetValue());
     }
     TOptional<int32> FEzStamina::GetOverflowValue() const
     {
@@ -102,7 +102,7 @@ namespace Gs2::UE5::Stamina::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), OverflowValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), OverflowValueValue.GetValue());
     }
     TOptional<int32> FEzStamina::GetMaxValue() const
     {
@@ -115,7 +115,7 @@ namespace Gs2::UE5::Stamina::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxValueValue.GetValue());
     }
     TOptional<int32> FEzStamina::GetRecoverIntervalMinutes() const
     {
@@ -128,7 +128,7 @@ namespace Gs2::UE5::Stamina::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RecoverIntervalMinutesValue.GetValue());
+        return FString::Printf(TEXT("%d"), RecoverIntervalMinutesValue.GetValue());
     }
     TOptional<int32> FEzStamina::GetRecoverValue() const
     {
@@ -141,7 +141,7 @@ namespace Gs2::UE5::Stamina::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RecoverValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), RecoverValueValue.GetValue());
     }
     TOptional<int64> FEzStamina::GetNextRecoverAt() const
     {

@@ -49,7 +49,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), ValueValue.GetValue());
     }
 
     Gs2::Matchmaking::Model::FAttributePtr FEzAttribute::ToModel() const

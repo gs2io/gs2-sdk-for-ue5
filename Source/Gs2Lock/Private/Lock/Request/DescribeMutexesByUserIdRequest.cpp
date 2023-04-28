@@ -107,7 +107,7 @@ namespace Gs2::Lock::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeMutexesByUserIdRequest> FDescribeMutexesByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)

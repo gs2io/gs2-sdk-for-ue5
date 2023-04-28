@@ -132,7 +132,7 @@ namespace Gs2::Money::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), SlotValue.GetValue());
+        return FString::Printf(TEXT("%d"), SlotValue.GetValue());
     }
 
     TOptional<int64> FDescribeReceiptsRequest::GetBegin() const
@@ -179,7 +179,7 @@ namespace Gs2::Money::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeReceiptsRequest> FDescribeReceiptsRequest::FromJson(const TSharedPtr<FJsonObject> Data)

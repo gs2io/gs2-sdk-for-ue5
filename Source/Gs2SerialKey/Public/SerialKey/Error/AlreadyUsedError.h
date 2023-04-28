@@ -24,9 +24,9 @@ namespace Gs2::SerialKey::Error
 {
     class GS2SERIALKEY_API FAlreadyUsedError : public Core::Model::FBadRequestError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "AlreadyUsed";
 
-    public:
         explicit FAlreadyUsedError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

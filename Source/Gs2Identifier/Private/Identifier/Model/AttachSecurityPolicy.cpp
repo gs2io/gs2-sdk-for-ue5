@@ -127,7 +127,7 @@ namespace Gs2::Identifier::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithAttachedAt(Data->HasField("attachedAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

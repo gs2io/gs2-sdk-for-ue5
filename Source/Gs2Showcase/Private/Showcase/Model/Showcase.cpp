@@ -195,7 +195,7 @@ namespace Gs2::Showcase::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FDisplayItemPtr>>());
     }
 
     TSharedPtr<FJsonObject> FShowcase::ToJson() const

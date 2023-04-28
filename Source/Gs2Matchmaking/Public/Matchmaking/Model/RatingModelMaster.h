@@ -26,6 +26,7 @@ namespace Gs2::Matchmaking::Model
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
         TOptional<FString> DescriptionValue;
+        TOptional<int32> InitialValueValue;
         TOptional<int32> VolatilityValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -41,6 +42,7 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FRatingModelMaster> WithName(const TOptional<FString> Name);
         TSharedPtr<FRatingModelMaster> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FRatingModelMaster> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FRatingModelMaster> WithInitialValue(const TOptional<int32> InitialValue);
         TSharedPtr<FRatingModelMaster> WithVolatility(const TOptional<int32> Volatility);
         TSharedPtr<FRatingModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FRatingModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -49,6 +51,8 @@ namespace Gs2::Matchmaking::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetDescription() const;
+        TOptional<int32> GetInitialValue() const;
+        FString GetInitialValueString() const;
         TOptional<int32> GetVolatility() const;
         FString GetVolatilityString() const;
         TOptional<int64> GetCreatedAt() const;

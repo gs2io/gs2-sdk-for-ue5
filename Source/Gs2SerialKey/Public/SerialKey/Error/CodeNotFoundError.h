@@ -24,9 +24,9 @@ namespace Gs2::SerialKey::Error
 {
     class GS2SERIALKEY_API FCodeNotFoundError : public Core::Model::FNotFoundError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "CodeNotFound";
 
-    public:
         explicit FCodeNotFoundError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

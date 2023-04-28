@@ -61,7 +61,7 @@ namespace Gs2::UE5::Formation::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), CapacityValue.GetValue());
     }
 
     Gs2::Formation::Model::FMoldPtr FEzMold::ToModel() const

@@ -148,7 +148,7 @@ namespace Gs2::Mission::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetDayOfMonthValue.GetValue());
     }
     TOptional<FString> FMissionGroupModel::GetResetDayOfWeek() const
     {
@@ -165,7 +165,7 @@ namespace Gs2::Mission::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
     TOptional<FString> FMissionGroupModel::GetCompleteNotificationNamespaceId() const
     {
@@ -260,7 +260,7 @@ namespace Gs2::Mission::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FMissionTaskModelPtr>>())
             ->WithResetType(Data->HasField("resetType") ? [Data]() -> TOptional<FString>
                 {
                     FString v;

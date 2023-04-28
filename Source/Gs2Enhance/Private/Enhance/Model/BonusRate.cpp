@@ -71,7 +71,7 @@ namespace Gs2::Enhance::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), WeightValue.GetValue());
+        return FString::Printf(TEXT("%d"), WeightValue.GetValue());
     }
 
     TSharedPtr<FBonusRate> FBonusRate::FromJson(const TSharedPtr<FJsonObject> Data)

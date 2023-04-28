@@ -241,7 +241,7 @@ namespace Gs2::Experience::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<int64>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

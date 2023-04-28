@@ -130,7 +130,7 @@ namespace Gs2::Schedule::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TtlValue.GetValue());
+        return FString::Printf(TEXT("%d"), TtlValue.GetValue());
     }
 
     TOptional<FString> FTriggerByUserIdRequest::GetDuplicationAvoider() const

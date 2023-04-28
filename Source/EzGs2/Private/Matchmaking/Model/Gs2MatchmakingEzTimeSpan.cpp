@@ -53,7 +53,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), DaysValue.GetValue());
+        return FString::Printf(TEXT("%d"), DaysValue.GetValue());
     }
     TOptional<int32> FEzTimeSpan::GetHours() const
     {
@@ -66,7 +66,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), HoursValue.GetValue());
+        return FString::Printf(TEXT("%d"), HoursValue.GetValue());
     }
     TOptional<int32> FEzTimeSpan::GetMinutes() const
     {
@@ -79,7 +79,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MinutesValue.GetValue());
+        return FString::Printf(TEXT("%d"), MinutesValue.GetValue());
     }
 
     Gs2::Matchmaking::Model::FTimeSpanPtr FEzTimeSpan::ToModel() const

@@ -101,7 +101,7 @@ namespace Gs2::UE5::Limit::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetDayOfMonthValue.GetValue());
     }
     TOptional<FString> FEzLimitModel::GetResetDayOfWeek() const
     {
@@ -118,7 +118,7 @@ namespace Gs2::UE5::Limit::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
 
     Gs2::Limit::Model::FLimitModelPtr FEzLimitModel::ToModel() const

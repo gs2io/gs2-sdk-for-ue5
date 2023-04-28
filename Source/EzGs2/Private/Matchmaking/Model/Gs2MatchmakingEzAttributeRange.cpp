@@ -57,7 +57,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MinValue.GetValue());
+        return FString::Printf(TEXT("%d"), MinValue.GetValue());
     }
     TOptional<int32> FEzAttributeRange::GetMax() const
     {
@@ -70,7 +70,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxValue.GetValue());
     }
 
     Gs2::Matchmaking::Model::FAttributeRangePtr FEzAttributeRange::ToModel() const

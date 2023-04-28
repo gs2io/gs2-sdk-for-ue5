@@ -88,7 +88,7 @@ namespace Gs2::Matchmaking::Task::Rest
             {
                 JsonRootObject->SetObjectField("player", this->Request->GetPlayer()->ToJson());
             }
-            if (this->Request->GetMatchmakingContextToken().IsSet())
+            if (this->Request->GetMatchmakingContextToken().IsSet() && !this->Request->GetMatchmakingContextToken().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("matchmakingContextToken", this->Request->GetMatchmakingContextToken().GetValue());
             }

@@ -120,7 +120,7 @@ namespace Gs2::Lottery::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), DrawnLimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), DrawnLimitValue.GetValue());
     }
     TOptional<FString> FPrize::GetLimitFailOverPrizeId() const
     {
@@ -141,7 +141,7 @@ namespace Gs2::Lottery::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), WeightValue.GetValue());
+        return FString::Printf(TEXT("%d"), WeightValue.GetValue());
     }
 
     TSharedPtr<FPrize> FPrize::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -179,7 +179,7 @@ namespace Gs2::Lottery::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithDrawnLimit(Data->HasField("drawnLimit") ? [Data]() -> TOptional<int32>
                 {
                     int32 v;

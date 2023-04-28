@@ -120,7 +120,7 @@ namespace Gs2::Account::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TypeValue.GetValue());
+        return FString::Printf(TEXT("%d"), TypeValue.GetValue());
     }
 
     TOptional<FString> FUpdateTakeOverByUserIdRequest::GetOldPassword() const

@@ -115,7 +115,7 @@ namespace Gs2::Formation::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), IndexValue.GetValue());
+        return FString::Printf(TEXT("%d"), IndexValue.GetValue());
     }
 
     TOptional<FString> FDeleteFormByUserIdRequest::GetDuplicationAvoider() const

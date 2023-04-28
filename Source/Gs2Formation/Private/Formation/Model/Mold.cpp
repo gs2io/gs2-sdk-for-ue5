@@ -110,7 +110,7 @@ namespace Gs2::Formation::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), CapacityValue.GetValue());
     }
     TOptional<int64> FMold::GetCreatedAt() const
     {

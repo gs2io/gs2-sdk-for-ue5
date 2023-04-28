@@ -73,7 +73,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), NumberOfPlayerValue.GetValue());
+        return FString::Printf(TEXT("%d"), NumberOfPlayerValue.GetValue());
     }
 
     Gs2::Matchmaking::Model::FBallotPtr FEzBallot::ToModel() const

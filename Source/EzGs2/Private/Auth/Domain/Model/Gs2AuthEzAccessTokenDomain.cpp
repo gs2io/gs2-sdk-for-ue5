@@ -34,6 +34,11 @@ namespace Gs2::UE5::Auth::Domain::Model
         return Domain->Expire;
     }
 
+    TOptional<FString> FEzAccessTokenDomain::Status() const
+    {
+        return Domain->Status;
+    }
+
     FEzAccessTokenDomain::FEzAccessTokenDomain(
         Gs2::Auth::Domain::Model::FAccessTokenDomainPtr Domain,
         Gs2::UE5::Util::FProfilePtr Profile

@@ -53,7 +53,7 @@ namespace Gs2::UE5::Version::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MajorValue.GetValue());
+        return FString::Printf(TEXT("%d"), MajorValue.GetValue());
     }
     TOptional<int32> FEzVersion::GetMinor() const
     {
@@ -66,7 +66,7 @@ namespace Gs2::UE5::Version::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MinorValue.GetValue());
+        return FString::Printf(TEXT("%d"), MinorValue.GetValue());
     }
     TOptional<int32> FEzVersion::GetMicro() const
     {
@@ -79,7 +79,7 @@ namespace Gs2::UE5::Version::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MicroValue.GetValue());
+        return FString::Printf(TEXT("%d"), MicroValue.GetValue());
     }
 
     Gs2::Version::Model::FVersionPtr FEzVersion::ToModel() const

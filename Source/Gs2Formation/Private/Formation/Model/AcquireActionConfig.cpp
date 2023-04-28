@@ -82,7 +82,7 @@ namespace Gs2::Formation::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FConfigPtr>>());
     }
 
     TSharedPtr<FJsonObject> FAcquireActionConfig::ToJson() const

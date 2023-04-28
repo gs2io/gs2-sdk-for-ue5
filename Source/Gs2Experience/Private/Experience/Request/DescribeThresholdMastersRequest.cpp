@@ -92,7 +92,7 @@ namespace Gs2::Experience::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeThresholdMastersRequest> FDescribeThresholdMastersRequest::FromJson(const TSharedPtr<FJsonObject> Data)

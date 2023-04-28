@@ -185,7 +185,7 @@ namespace Gs2::Inventory::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), SortValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), SortValueValue.GetValue());
     }
     TOptional<int64> FItemSet::GetExpiresAt() const
     {
@@ -375,7 +375,7 @@ namespace Gs2::Inventory::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithSortValue(Data->HasField("sortValue") ? [Data]() -> TOptional<int32>
                 {
                     int32 v;

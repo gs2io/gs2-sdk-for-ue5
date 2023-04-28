@@ -23,6 +23,7 @@ namespace Gs2::Matchmaking::Request
         RatingNameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
+        InitialValueValue(TOptional<int32>()),
         VolatilityValue(TOptional<int32>())
     {
     }
@@ -34,6 +35,7 @@ namespace Gs2::Matchmaking::Request
         RatingNameValue(From.RatingNameValue),
         DescriptionValue(From.DescriptionValue),
         MetadataValue(From.MetadataValue),
+        InitialValueValue(From.InitialValueValue),
         VolatilityValue(From.VolatilityValue)
     {
     }
@@ -78,6 +80,14 @@ namespace Gs2::Matchmaking::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateRatingModelMasterRequest> FUpdateRatingModelMasterRequest::WithInitialValue(
+        const TOptional<int32> InitialValue
+    )
+    {
+        this->InitialValueValue = InitialValue;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateRatingModelMasterRequest> FUpdateRatingModelMasterRequest::WithVolatility(
         const TOptional<int32> Volatility
     )
@@ -111,6 +121,20 @@ namespace Gs2::Matchmaking::Request
         return MetadataValue;
     }
 
+    TOptional<int32> FUpdateRatingModelMasterRequest::GetInitialValue() const
+    {
+        return InitialValueValue;
+    }
+
+    FString FUpdateRatingModelMasterRequest::GetInitialValueString() const
+    {
+        if (!InitialValueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), InitialValueValue.GetValue());
+    }
+
     TOptional<int32> FUpdateRatingModelMasterRequest::GetVolatility() const
     {
         return VolatilityValue;
@@ -122,7 +146,7 @@ namespace Gs2::Matchmaking::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), VolatilityValue.GetValue());
+        return FString::Printf(TEXT("%d"), VolatilityValue.GetValue());
     }
 
     TSharedPtr<FUpdateRatingModelMasterRequest> FUpdateRatingModelMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -168,6 +192,15 @@ namespace Gs2::Matchmaking::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithInitialValue(Data->HasField("initialValue") ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField("initialValue", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>())
             ->WithVolatility(Data->HasField("volatility") ? [Data]() -> TOptional<int32>
               {
                   int32 v;
@@ -201,6 +234,10 @@ namespace Gs2::Matchmaking::Request
         if (MetadataValue.IsSet())
         {
             JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+        }
+        if (InitialValueValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("initialValue", InitialValueValue.GetValue());
         }
         if (VolatilityValue.IsSet())
         {

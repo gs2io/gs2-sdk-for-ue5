@@ -81,7 +81,7 @@ namespace Gs2::UE5::Formation::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), InitialMaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), InitialMaxCapacityValue.GetValue());
     }
     TOptional<int32> FEzMoldModel::GetMaxCapacity() const
     {
@@ -94,7 +94,7 @@ namespace Gs2::UE5::Formation::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxCapacityValue.GetValue());
     }
 
     Gs2::Formation::Model::FMoldModelPtr FEzMoldModel::ToModel() const

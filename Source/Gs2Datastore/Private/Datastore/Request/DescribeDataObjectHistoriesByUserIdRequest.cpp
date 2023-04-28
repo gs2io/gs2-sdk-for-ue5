@@ -122,7 +122,7 @@ namespace Gs2::Datastore::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeDataObjectHistoriesByUserIdRequest> FDescribeDataObjectHistoriesByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)

@@ -260,7 +260,7 @@ namespace Gs2::Matchmaking::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAttributeRangePtr>>())
             ->WithCapacityOfRoles(Data->HasField("capacityOfRoles") ? [Data]() -> TSharedPtr<TArray<Model::FCapacityOfRolePtr>>
                 {
                     auto v = MakeShared<TArray<Model::FCapacityOfRolePtr>>();
@@ -272,7 +272,7 @@ namespace Gs2::Matchmaking::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FCapacityOfRolePtr>>())
             ->WithAllowUserIds(Data->HasField("allowUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
@@ -284,7 +284,7 @@ namespace Gs2::Matchmaking::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
                     FString v;

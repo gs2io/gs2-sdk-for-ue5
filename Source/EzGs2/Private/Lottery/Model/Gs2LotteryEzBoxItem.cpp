@@ -57,7 +57,7 @@ namespace Gs2::UE5::Lottery::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RemainingValue.GetValue());
+        return FString::Printf(TEXT("%d"), RemainingValue.GetValue());
     }
     TOptional<int32> FEzBoxItem::GetInitial() const
     {
@@ -70,7 +70,7 @@ namespace Gs2::UE5::Lottery::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), InitialValue.GetValue());
+        return FString::Printf(TEXT("%d"), InitialValue.GetValue());
     }
 
     Gs2::Lottery::Model::FBoxItemPtr FEzBoxItem::ToModel() const

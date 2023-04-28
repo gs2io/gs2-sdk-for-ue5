@@ -120,7 +120,7 @@ namespace Gs2::SerialKey::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), IssuedCountValue.GetValue());
+        return FString::Printf(TEXT("%d"), IssuedCountValue.GetValue());
     }
     TOptional<int32> FIssueJob::GetIssueRequestCount() const
     {
@@ -133,7 +133,7 @@ namespace Gs2::SerialKey::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), IssueRequestCountValue.GetValue());
+        return FString::Printf(TEXT("%d"), IssueRequestCountValue.GetValue());
     }
     TOptional<FString> FIssueJob::GetStatus() const
     {

@@ -90,7 +90,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), NumberOfPlayerValue.GetValue());
+        return FString::Printf(TEXT("%d"), NumberOfPlayerValue.GetValue());
     }
 
     TSharedPtr<FBallot> FBallot::FromJson(const TSharedPtr<FJsonObject> Data)

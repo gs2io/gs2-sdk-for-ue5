@@ -120,7 +120,7 @@ namespace Gs2::Money::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), SlotValue.GetValue());
+        return FString::Printf(TEXT("%d"), SlotValue.GetValue());
     }
 
     TOptional<int32> FWithdrawByUserIdRequest::GetCount() const
@@ -134,7 +134,7 @@ namespace Gs2::Money::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CountValue.GetValue());
+        return FString::Printf(TEXT("%d"), CountValue.GetValue());
     }
 
     TOptional<bool> FWithdrawByUserIdRequest::GetPaidOnly() const

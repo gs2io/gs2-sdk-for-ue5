@@ -131,7 +131,7 @@ namespace Gs2::Friend::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeFollowsByUserIdRequest> FDescribeFollowsByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)

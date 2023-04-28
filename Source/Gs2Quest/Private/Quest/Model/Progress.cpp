@@ -287,7 +287,7 @@ namespace Gs2::Quest::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FRewardPtr>>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
                     FString v;

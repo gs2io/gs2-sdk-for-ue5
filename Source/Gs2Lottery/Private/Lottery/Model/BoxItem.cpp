@@ -72,7 +72,7 @@ namespace Gs2::Lottery::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RemainingValue.GetValue());
+        return FString::Printf(TEXT("%d"), RemainingValue.GetValue());
     }
     TOptional<int32> FBoxItem::GetInitial() const
     {
@@ -85,7 +85,7 @@ namespace Gs2::Lottery::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), InitialValue.GetValue());
+        return FString::Printf(TEXT("%d"), InitialValue.GetValue());
     }
 
     TSharedPtr<FBoxItem> FBoxItem::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -105,7 +105,7 @@ namespace Gs2::Lottery::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithRemaining(Data->HasField("remaining") ? [Data]() -> TOptional<int32>
                 {
                     int32 v;

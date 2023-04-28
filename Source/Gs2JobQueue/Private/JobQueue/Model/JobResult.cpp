@@ -134,7 +134,7 @@ namespace Gs2::JobQueue::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TryNumberValue.GetValue());
+        return FString::Printf(TEXT("%d"), TryNumberValue.GetValue());
     }
     TOptional<int32> FJobResult::GetStatusCode() const
     {
@@ -147,7 +147,7 @@ namespace Gs2::JobQueue::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), StatusCodeValue.GetValue());
+        return FString::Printf(TEXT("%d"), StatusCodeValue.GetValue());
     }
     TOptional<FString> FJobResult::GetResult() const
     {

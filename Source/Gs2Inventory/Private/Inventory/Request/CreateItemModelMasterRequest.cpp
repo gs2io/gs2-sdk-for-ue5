@@ -185,7 +185,7 @@ namespace Gs2::Inventory::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), SortValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), SortValueValue.GetValue());
     }
 
     TSharedPtr<FCreateItemModelMasterRequest> FCreateItemModelMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)

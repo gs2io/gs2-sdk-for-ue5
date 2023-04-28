@@ -24,9 +24,9 @@ namespace Gs2::Datastore::Error
 {
     class GS2DATASTORE_API FInvalidStatusError : public Core::Model::FBadRequestError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "InvalidStatus";
 
-    public:
         explicit FInvalidStatusError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

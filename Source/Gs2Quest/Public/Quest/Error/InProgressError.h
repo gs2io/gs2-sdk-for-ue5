@@ -24,9 +24,9 @@ namespace Gs2::Quest::Error
 {
     class GS2QUEST_API FInProgressError : public Core::Model::FBadRequestError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "InProgress";
 
-    public:
         explicit FInProgressError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

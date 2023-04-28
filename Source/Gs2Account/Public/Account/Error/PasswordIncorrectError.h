@@ -24,9 +24,9 @@ namespace Gs2::Account::Error
 {
     class GS2ACCOUNT_API FPasswordIncorrectError : public Core::Model::FUnauthorizedError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "PasswordIncorrect";
 
-    public:
         explicit FPasswordIncorrectError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

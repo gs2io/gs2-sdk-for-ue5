@@ -135,7 +135,7 @@ namespace Gs2::Chat::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CategoryValue.GetValue());
+        return FString::Printf(TEXT("%d"), CategoryValue.GetValue());
     }
 
     TOptional<FString> FPostByUserIdRequest::GetMetadata() const

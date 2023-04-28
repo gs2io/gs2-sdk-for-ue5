@@ -167,7 +167,7 @@ namespace Gs2::Mission::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetDayOfMonthValue.GetValue());
     }
 
     TOptional<FString> FUpdateMissionGroupModelMasterRequest::GetResetDayOfWeek() const
@@ -186,7 +186,7 @@ namespace Gs2::Mission::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
 
     TOptional<FString> FUpdateMissionGroupModelMasterRequest::GetCompleteNotificationNamespaceId() const

@@ -78,7 +78,7 @@ namespace Gs2::Deploy::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetTemplate().IsSet())
+            if (this->Request->GetTemplate().IsSet() && !this->Request->GetTemplate().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("template", this->Request->GetTemplate().GetValue());
             }

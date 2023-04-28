@@ -61,7 +61,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), VolatilityValue.GetValue());
+        return FString::Printf(TEXT("%d"), VolatilityValue.GetValue());
     }
 
     Gs2::Matchmaking::Model::FRatingModelPtr FEzRatingModel::ToModel() const

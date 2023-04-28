@@ -86,7 +86,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), CapacityValue.GetValue());
     }
     TSharedPtr<TArray<TSharedPtr<Model::FPlayer>>> FCapacityOfRole::GetParticipants() const
     {
@@ -119,7 +119,7 @@ namespace Gs2::Matchmaking::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithCapacity(Data->HasField("capacity") ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -140,7 +140,7 @@ namespace Gs2::Matchmaking::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FPlayerPtr>>());
     }
 
     TSharedPtr<FJsonObject> FCapacityOfRole::ToJson() const

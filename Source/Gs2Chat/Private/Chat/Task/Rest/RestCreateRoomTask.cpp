@@ -85,15 +85,15 @@ namespace Gs2::Chat::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetName().IsSet())
+            if (this->Request->GetName().IsSet() && !this->Request->GetName().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet())
+            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetPassword().IsSet())
+            if (this->Request->GetPassword().IsSet() && !this->Request->GetPassword().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("password", this->Request->GetPassword().GetValue());
             }

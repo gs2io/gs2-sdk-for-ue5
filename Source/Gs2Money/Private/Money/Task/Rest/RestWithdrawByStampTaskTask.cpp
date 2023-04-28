@@ -78,11 +78,11 @@ namespace Gs2::Money::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetStampTask().IsSet())
+            if (this->Request->GetStampTask().IsSet() && !this->Request->GetStampTask().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("stampTask", this->Request->GetStampTask().GetValue());
             }
-            if (this->Request->GetKeyId().IsSet())
+            if (this->Request->GetKeyId().IsSet() && !this->Request->GetKeyId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
             }

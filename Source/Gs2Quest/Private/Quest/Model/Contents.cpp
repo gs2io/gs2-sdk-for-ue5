@@ -76,7 +76,7 @@ namespace Gs2::Quest::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), WeightValue.GetValue());
+        return FString::Printf(TEXT("%d"), WeightValue.GetValue());
     }
 
     TSharedPtr<FContents> FContents::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -105,7 +105,7 @@ namespace Gs2::Quest::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithWeight(Data->HasField("weight") ? [Data]() -> TOptional<int32>
                 {
                     int32 v;

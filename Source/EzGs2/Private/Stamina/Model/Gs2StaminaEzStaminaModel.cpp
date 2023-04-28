@@ -117,7 +117,7 @@ namespace Gs2::UE5::Stamina::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RecoverIntervalMinutesValue.GetValue());
+        return FString::Printf(TEXT("%d"), RecoverIntervalMinutesValue.GetValue());
     }
     TOptional<int32> FEzStaminaModel::GetRecoverValue() const
     {
@@ -130,7 +130,7 @@ namespace Gs2::UE5::Stamina::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RecoverValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), RecoverValueValue.GetValue());
     }
     TOptional<int32> FEzStaminaModel::GetInitialCapacity() const
     {
@@ -143,7 +143,7 @@ namespace Gs2::UE5::Stamina::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), InitialCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), InitialCapacityValue.GetValue());
     }
     TOptional<bool> FEzStaminaModel::GetIsOverflow() const
     {
@@ -169,7 +169,7 @@ namespace Gs2::UE5::Stamina::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxCapacityValue.GetValue());
     }
     TSharedPtr<Gs2::UE5::Stamina::Model::FEzMaxStaminaTable> FEzStaminaModel::GetMaxStaminaTable() const
     {

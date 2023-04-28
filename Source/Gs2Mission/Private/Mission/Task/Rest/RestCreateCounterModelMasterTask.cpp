@@ -84,15 +84,15 @@ namespace Gs2::Mission::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetName().IsSet())
+            if (this->Request->GetName().IsSet() && !this->Request->GetName().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet())
+            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetDescription().IsSet())
+            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
@@ -105,7 +105,7 @@ namespace Gs2::Mission::Task::Rest
                 }
                 JsonRootObject->SetArrayField("scopes", v);
             }
-            if (this->Request->GetChallengePeriodEventId().IsSet())
+            if (this->Request->GetChallengePeriodEventId().IsSet() && !this->Request->GetChallengePeriodEventId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("challengePeriodEventId", this->Request->GetChallengePeriodEventId().GetValue());
             }

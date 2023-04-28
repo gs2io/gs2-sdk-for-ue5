@@ -262,7 +262,7 @@ namespace Gs2::Distributor::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
             ->WithSheetRequest(Data->HasField("sheetRequest") ? [Data]() -> Model::FAcquireActionPtr
                 {
                     if (Data->HasTypedField<EJson::Null>("sheetRequest"))
@@ -282,7 +282,7 @@ namespace Gs2::Distributor::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithSheetResult(Data->HasField("sheetResult") ? [Data]() -> TOptional<FString>
                 {
                     FString v;

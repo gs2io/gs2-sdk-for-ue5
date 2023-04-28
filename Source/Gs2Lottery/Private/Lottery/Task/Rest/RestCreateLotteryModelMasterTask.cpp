@@ -84,31 +84,31 @@ namespace Gs2::Lottery::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetName().IsSet())
+            if (this->Request->GetName().IsSet() && !this->Request->GetName().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
-            if (this->Request->GetDescription().IsSet())
+            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet())
+            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetMode().IsSet())
+            if (this->Request->GetMode().IsSet() && !this->Request->GetMode().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("mode", this->Request->GetMode().GetValue());
             }
-            if (this->Request->GetMethod().IsSet())
+            if (this->Request->GetMethod().IsSet() && !this->Request->GetMethod().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("method", this->Request->GetMethod().GetValue());
             }
-            if (this->Request->GetPrizeTableName().IsSet())
+            if (this->Request->GetPrizeTableName().IsSet() && !this->Request->GetPrizeTableName().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("prizeTableName", this->Request->GetPrizeTableName().GetValue());
             }
-            if (this->Request->GetChoicePrizeTableScriptId().IsSet())
+            if (this->Request->GetChoicePrizeTableScriptId().IsSet() && !this->Request->GetChoicePrizeTableScriptId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("choicePrizeTableScriptId", this->Request->GetChoicePrizeTableScriptId().GetValue());
             }

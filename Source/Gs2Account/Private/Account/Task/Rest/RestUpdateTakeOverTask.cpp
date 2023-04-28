@@ -89,11 +89,11 @@ namespace Gs2::Account::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetOldPassword().IsSet())
+            if (this->Request->GetOldPassword().IsSet() && !this->Request->GetOldPassword().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("oldPassword", this->Request->GetOldPassword().GetValue());
             }
-            if (this->Request->GetPassword().IsSet())
+            if (this->Request->GetPassword().IsSet() && !this->Request->GetPassword().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("password", this->Request->GetPassword().GetValue());
             }

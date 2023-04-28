@@ -82,7 +82,7 @@ namespace Gs2::Experience::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<int64>>());
     }
 
     TSharedPtr<FJsonObject> FThreshold::ToJson() const

@@ -24,9 +24,9 @@ namespace Gs2::Mission::Error
 {
     class GS2MISSION_API FConflictError : public Core::Model::FConflictError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "Conflict";
 
-    public:
         explicit FConflictError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

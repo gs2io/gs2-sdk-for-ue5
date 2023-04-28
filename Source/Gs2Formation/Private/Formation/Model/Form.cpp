@@ -106,7 +106,7 @@ namespace Gs2::Formation::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), IndexValue.GetValue());
+        return FString::Printf(TEXT("%d"), IndexValue.GetValue());
     }
     TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> FForm::GetSlots() const
     {
@@ -249,7 +249,7 @@ namespace Gs2::Formation::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FSlotPtr>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

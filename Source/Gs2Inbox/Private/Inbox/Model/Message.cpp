@@ -307,7 +307,7 @@ namespace Gs2::Inbox::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithReceivedAt(Data->HasField("receivedAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

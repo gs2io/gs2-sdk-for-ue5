@@ -98,7 +98,7 @@ namespace Gs2::Ranking::Task::Rest
             {
                 JsonRootObject->SetStringField("score", FString::Printf(TEXT("%lld"), this->Request->GetScore().GetValue()));
             }
-            if (this->Request->GetMetadata().IsSet())
+            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }

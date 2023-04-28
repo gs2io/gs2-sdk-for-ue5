@@ -107,7 +107,7 @@ namespace Gs2::Matchmaking::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeRatingsByUserIdRequest> FDescribeRatingsByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)

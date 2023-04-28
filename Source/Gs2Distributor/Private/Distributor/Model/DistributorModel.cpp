@@ -195,7 +195,7 @@ namespace Gs2::Distributor::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<FString>>());
     }
 
     TSharedPtr<FJsonObject> FDistributorModel::ToJson() const

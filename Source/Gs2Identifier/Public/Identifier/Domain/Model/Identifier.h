@@ -46,9 +46,14 @@ namespace Gs2::Identifier::Domain::Model
 
         public:
         TOptional<FString> ClientSecret;
+        TOptional<FString> Status;
         TOptional<FString> GetClientSecret() const
         {
             return ClientSecret;
+        }
+        TOptional<FString> GetStatus() const
+        {
+            return Status;
         }
         TOptional<FString> UserName;
         TOptional<FString> ClientId;

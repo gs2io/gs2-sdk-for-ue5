@@ -45,7 +45,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RankValue.GetValue());
+        return FString::Printf(TEXT("%d"), RankValue.GetValue());
     }
     TOptional<FString> FEzGameResult::GetUserId() const
     {

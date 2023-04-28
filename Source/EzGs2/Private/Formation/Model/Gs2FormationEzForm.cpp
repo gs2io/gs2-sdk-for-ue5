@@ -57,7 +57,7 @@ namespace Gs2::UE5::Formation::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), IndexValue.GetValue());
+        return FString::Printf(TEXT("%d"), IndexValue.GetValue());
     }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Formation::Model::FEzSlot>>> FEzForm::GetSlots() const
     {

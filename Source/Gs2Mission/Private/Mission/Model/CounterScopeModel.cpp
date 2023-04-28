@@ -82,7 +82,7 @@ namespace Gs2::Mission::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetDayOfMonthValue.GetValue());
     }
     TOptional<FString> FCounterScopeModel::GetResetDayOfWeek() const
     {
@@ -99,7 +99,7 @@ namespace Gs2::Mission::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
 
     TSharedPtr<FCounterScopeModel> FCounterScopeModel::FromJson(const TSharedPtr<FJsonObject> Data)

@@ -126,7 +126,7 @@ namespace Gs2::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), SlotValue.GetValue());
+        return FString::Printf(TEXT("%d"), SlotValue.GetValue());
     }
     TOptional<int32> FWallet::GetPaid() const
     {
@@ -139,7 +139,7 @@ namespace Gs2::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), PaidValue.GetValue());
+        return FString::Printf(TEXT("%d"), PaidValue.GetValue());
     }
     TOptional<int32> FWallet::GetFree() const
     {
@@ -152,7 +152,7 @@ namespace Gs2::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), FreeValue.GetValue());
+        return FString::Printf(TEXT("%d"), FreeValue.GetValue());
     }
     TSharedPtr<TArray<TSharedPtr<Model::FWalletDetail>>> FWallet::GetDetail() const
     {
@@ -302,7 +302,7 @@ namespace Gs2::Money::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FWalletDetailPtr>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

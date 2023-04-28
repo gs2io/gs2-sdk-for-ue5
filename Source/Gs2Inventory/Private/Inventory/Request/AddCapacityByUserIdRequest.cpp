@@ -115,7 +115,7 @@ namespace Gs2::Inventory::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), AddCapacityValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), AddCapacityValueValue.GetValue());
     }
 
     TOptional<FString> FAddCapacityByUserIdRequest::GetDuplicationAvoider() const

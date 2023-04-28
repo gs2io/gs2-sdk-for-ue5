@@ -115,7 +115,7 @@ namespace Gs2::Stamina::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RecoverValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), RecoverValueValue.GetValue());
     }
 
     TOptional<FString> FSetRecoverValueByUserIdRequest::GetDuplicationAvoider() const

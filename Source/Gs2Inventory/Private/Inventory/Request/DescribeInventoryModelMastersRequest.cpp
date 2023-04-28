@@ -92,7 +92,7 @@ namespace Gs2::Inventory::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeInventoryModelMastersRequest> FDescribeInventoryModelMastersRequest::FromJson(const TSharedPtr<FJsonObject> Data)

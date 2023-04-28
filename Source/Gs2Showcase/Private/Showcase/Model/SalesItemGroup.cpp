@@ -105,7 +105,7 @@ namespace Gs2::Showcase::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FSalesItemPtr>>());
     }
 
     TSharedPtr<FJsonObject> FSalesItemGroup::ToJson() const

@@ -183,7 +183,7 @@ namespace Gs2::UE5::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatBeginDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatBeginDayOfMonthValue.GetValue());
     }
     TOptional<int32> FEzEvent::GetRepeatEndDayOfMonth() const
     {
@@ -196,7 +196,7 @@ namespace Gs2::UE5::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatEndDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatEndDayOfMonthValue.GetValue());
     }
     TOptional<FString> FEzEvent::GetRepeatBeginDayOfWeek() const
     {
@@ -217,7 +217,7 @@ namespace Gs2::UE5::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatBeginHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatBeginHourValue.GetValue());
     }
     TOptional<int32> FEzEvent::GetRepeatEndHour() const
     {
@@ -230,7 +230,7 @@ namespace Gs2::UE5::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatEndHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatEndHourValue.GetValue());
     }
     TOptional<FString> FEzEvent::GetRelativeTriggerName() const
     {
@@ -247,7 +247,7 @@ namespace Gs2::UE5::Schedule::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RelativeDurationValue.GetValue());
+        return FString::Printf(TEXT("%d"), RelativeDurationValue.GetValue());
     }
 
     Gs2::Schedule::Model::FEventPtr FEzEvent::ToModel() const

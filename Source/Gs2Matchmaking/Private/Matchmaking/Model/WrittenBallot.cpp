@@ -81,7 +81,7 @@ namespace Gs2::Matchmaking::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FGameResultPtr>>());
     }
 
     TSharedPtr<FJsonObject> FWrittenBallot::ToJson() const

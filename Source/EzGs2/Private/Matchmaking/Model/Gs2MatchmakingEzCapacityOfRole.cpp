@@ -69,7 +69,7 @@ namespace Gs2::UE5::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), CapacityValue.GetValue());
     }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzPlayer>>> FEzCapacityOfRole::GetParticipants() const
     {

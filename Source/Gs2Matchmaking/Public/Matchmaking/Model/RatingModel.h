@@ -25,6 +25,7 @@ namespace Gs2::Matchmaking::Model
         TOptional<FString> RatingModelIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TOptional<int32> InitialValueValue;
         TOptional<int32> VolatilityValue;
 
     public:
@@ -37,11 +38,14 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FRatingModel> WithRatingModelId(const TOptional<FString> RatingModelId);
         TSharedPtr<FRatingModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FRatingModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FRatingModel> WithInitialValue(const TOptional<int32> InitialValue);
         TSharedPtr<FRatingModel> WithVolatility(const TOptional<int32> Volatility);
 
         TOptional<FString> GetRatingModelId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
+        TOptional<int32> GetInitialValue() const;
+        FString GetInitialValueString() const;
         TOptional<int32> GetVolatility() const;
         FString GetVolatilityString() const;
 

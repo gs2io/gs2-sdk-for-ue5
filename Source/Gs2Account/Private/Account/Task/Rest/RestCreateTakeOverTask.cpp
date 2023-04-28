@@ -88,11 +88,11 @@ namespace Gs2::Account::Task::Rest
             {
                 JsonRootObject->SetNumberField("type", this->Request->GetType().GetValue());
             }
-            if (this->Request->GetUserIdentifier().IsSet())
+            if (this->Request->GetUserIdentifier().IsSet() && !this->Request->GetUserIdentifier().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("userIdentifier", this->Request->GetUserIdentifier().GetValue());
             }
-            if (this->Request->GetPassword().IsSet())
+            if (this->Request->GetPassword().IsSet() && !this->Request->GetPassword().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("password", this->Request->GetPassword().GetValue());
             }

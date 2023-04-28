@@ -91,11 +91,11 @@ namespace Gs2::Account::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetKeyId().IsSet())
+            if (this->Request->GetKeyId().IsSet() && !this->Request->GetKeyId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
             }
-            if (this->Request->GetPassword().IsSet())
+            if (this->Request->GetPassword().IsSet() && !this->Request->GetPassword().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("password", this->Request->GetPassword().GetValue());
             }

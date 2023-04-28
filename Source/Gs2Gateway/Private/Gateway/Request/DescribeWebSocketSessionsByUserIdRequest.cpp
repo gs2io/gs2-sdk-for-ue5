@@ -107,7 +107,7 @@ namespace Gs2::Gateway::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeWebSocketSessionsByUserIdRequest> FDescribeWebSocketSessionsByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)

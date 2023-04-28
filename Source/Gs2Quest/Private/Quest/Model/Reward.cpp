@@ -90,7 +90,7 @@ namespace Gs2::Quest::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), ValueValue.GetValue());
     }
 
     TSharedPtr<FReward> FReward::FromJson(const TSharedPtr<FJsonObject> Data)

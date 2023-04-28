@@ -68,7 +68,7 @@ namespace Gs2::Version::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MajorValue.GetValue());
+        return FString::Printf(TEXT("%d"), MajorValue.GetValue());
     }
     TOptional<int32> FVersion::GetMinor() const
     {
@@ -81,7 +81,7 @@ namespace Gs2::Version::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MinorValue.GetValue());
+        return FString::Printf(TEXT("%d"), MinorValue.GetValue());
     }
     TOptional<int32> FVersion::GetMicro() const
     {
@@ -94,7 +94,7 @@ namespace Gs2::Version::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MicroValue.GetValue());
+        return FString::Printf(TEXT("%d"), MicroValue.GetValue());
     }
 
     TSharedPtr<FVersion> FVersion::FromJson(const TSharedPtr<FJsonObject> Data)

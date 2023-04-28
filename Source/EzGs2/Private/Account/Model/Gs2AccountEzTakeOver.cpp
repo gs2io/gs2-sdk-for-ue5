@@ -65,7 +65,7 @@ namespace Gs2::UE5::Account::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TypeValue.GetValue());
+        return FString::Printf(TEXT("%d"), TypeValue.GetValue());
     }
     TOptional<FString> FEzTakeOver::GetUserIdentifier() const
     {

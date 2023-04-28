@@ -49,7 +49,7 @@ namespace Gs2::UE5::Enhance::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CountValue.GetValue());
+        return FString::Printf(TEXT("%d"), CountValue.GetValue());
     }
 
     Gs2::Enhance::Model::FMaterialPtr FEzMaterial::ToModel() const

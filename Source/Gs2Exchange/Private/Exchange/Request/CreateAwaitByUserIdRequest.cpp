@@ -115,7 +115,7 @@ namespace Gs2::Exchange::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CountValue.GetValue());
+        return FString::Printf(TEXT("%d"), CountValue.GetValue());
     }
 
     TOptional<FString> FCreateAwaitByUserIdRequest::GetDuplicationAvoider() const

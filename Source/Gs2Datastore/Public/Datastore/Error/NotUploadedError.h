@@ -24,9 +24,9 @@ namespace Gs2::Datastore::Error
 {
     class GS2DATASTORE_API FNotUploadedError : public Core::Model::FBadRequestError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "NotUploaded";
 
-    public:
         explicit FNotUploadedError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

@@ -195,7 +195,7 @@ namespace Gs2::Stamina::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<int32>>());
     }
 
     TSharedPtr<FJsonObject> FRecoverValueTable::ToJson() const

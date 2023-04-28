@@ -106,7 +106,7 @@ namespace Gs2::Account::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TypeValue.GetValue());
+        return FString::Printf(TEXT("%d"), TypeValue.GetValue());
     }
     TOptional<FString> FTakeOver::GetUserIdentifier() const
     {

@@ -72,7 +72,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MinValue.GetValue());
+        return FString::Printf(TEXT("%d"), MinValue.GetValue());
     }
     TOptional<int32> FAttributeRange::GetMax() const
     {
@@ -85,7 +85,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxValue.GetValue());
     }
 
     TSharedPtr<FAttributeRange> FAttributeRange::FromJson(const TSharedPtr<FJsonObject> Data)

@@ -178,7 +178,7 @@ namespace Gs2::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), SlotValue.GetValue());
+        return FString::Printf(TEXT("%d"), SlotValue.GetValue());
     }
     TOptional<float> FReceipt::GetPrice() const
     {
@@ -204,7 +204,7 @@ namespace Gs2::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), PaidValue.GetValue());
+        return FString::Printf(TEXT("%d"), PaidValue.GetValue());
     }
     TOptional<int32> FReceipt::GetFree() const
     {
@@ -217,7 +217,7 @@ namespace Gs2::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), FreeValue.GetValue());
+        return FString::Printf(TEXT("%d"), FreeValue.GetValue());
     }
     TOptional<int32> FReceipt::GetTotal() const
     {
@@ -230,7 +230,7 @@ namespace Gs2::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TotalValue.GetValue());
+        return FString::Printf(TEXT("%d"), TotalValue.GetValue());
     }
     TOptional<FString> FReceipt::GetContentsId() const
     {

@@ -130,7 +130,7 @@ namespace Gs2::Realtime::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), PortValue.GetValue());
+        return FString::Printf(TEXT("%d"), PortValue.GetValue());
     }
     TOptional<FString> FRoom::GetEncryptionKey() const
     {
@@ -273,7 +273,7 @@ namespace Gs2::Realtime::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

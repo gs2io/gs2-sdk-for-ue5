@@ -78,15 +78,15 @@ namespace Gs2::Script::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetScriptId().IsSet())
+            if (this->Request->GetScriptId().IsSet() && !this->Request->GetScriptId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("scriptId", this->Request->GetScriptId().GetValue());
             }
-            if (this->Request->GetUserId().IsSet())
+            if (this->Request->GetUserId().IsSet() && !this->Request->GetUserId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("userId", this->Request->GetUserId().GetValue());
             }
-            if (this->Request->GetArgs().IsSet())
+            if (this->Request->GetArgs().IsSet() && !this->Request->GetArgs().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("args", this->Request->GetArgs().GetValue());
             }

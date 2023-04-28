@@ -266,7 +266,7 @@ namespace Gs2::Mission::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithReceivedMissionTaskNames(Data->HasField("receivedMissionTaskNames") ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
@@ -278,7 +278,7 @@ namespace Gs2::Mission::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithNextResetAt(Data->HasField("nextResetAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

@@ -140,7 +140,7 @@ namespace Gs2::Limit::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CountUpValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), CountUpValueValue.GetValue());
     }
 
     TOptional<int32> FCountUpByUserIdRequest::GetMaxValue() const
@@ -154,7 +154,7 @@ namespace Gs2::Limit::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxValueValue.GetValue());
     }
 
     TOptional<FString> FCountUpByUserIdRequest::GetDuplicationAvoider() const

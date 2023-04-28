@@ -147,7 +147,7 @@ namespace Gs2::Formation::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), InitialMaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), InitialMaxCapacityValue.GetValue());
     }
 
     TOptional<int32> FCreateMoldModelMasterRequest::GetMaxCapacity() const
@@ -161,7 +161,7 @@ namespace Gs2::Formation::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxCapacityValue.GetValue());
     }
 
     TSharedPtr<FCreateMoldModelMasterRequest> FCreateMoldModelMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)

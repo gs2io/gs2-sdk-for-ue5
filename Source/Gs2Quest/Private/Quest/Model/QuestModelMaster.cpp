@@ -345,7 +345,7 @@ namespace Gs2::Quest::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FContentsPtr>>())
             ->WithChallengePeriodEventId(Data->HasField("challengePeriodEventId") ? [Data]() -> TOptional<FString>
                 {
                     FString v;
@@ -366,7 +366,7 @@ namespace Gs2::Quest::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithConsumeActions(Data->HasField("consumeActions") ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -378,7 +378,7 @@ namespace Gs2::Quest::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
             ->WithFailedAcquireActions(Data->HasField("failedAcquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
@@ -390,7 +390,7 @@ namespace Gs2::Quest::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithPremiseQuestNames(Data->HasField("premiseQuestNames") ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
@@ -402,7 +402,7 @@ namespace Gs2::Quest::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

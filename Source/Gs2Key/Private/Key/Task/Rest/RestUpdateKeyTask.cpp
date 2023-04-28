@@ -89,7 +89,7 @@ namespace Gs2::Key::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet())
+            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }

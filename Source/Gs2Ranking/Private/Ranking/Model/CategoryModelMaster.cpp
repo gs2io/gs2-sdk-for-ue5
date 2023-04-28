@@ -304,7 +304,7 @@ namespace Gs2::Ranking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CalculateFixedTimingHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), CalculateFixedTimingHourValue.GetValue());
     }
     TOptional<int32> FCategoryModelMaster::GetCalculateFixedTimingMinute() const
     {
@@ -317,7 +317,7 @@ namespace Gs2::Ranking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CalculateFixedTimingMinuteValue.GetValue());
+        return FString::Printf(TEXT("%d"), CalculateFixedTimingMinuteValue.GetValue());
     }
     TOptional<int32> FCategoryModelMaster::GetCalculateIntervalMinutes() const
     {
@@ -330,7 +330,7 @@ namespace Gs2::Ranking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CalculateIntervalMinutesValue.GetValue());
+        return FString::Printf(TEXT("%d"), CalculateIntervalMinutesValue.GetValue());
     }
     TOptional<FString> FCategoryModelMaster::GetEntryPeriodEventId() const
     {
@@ -571,7 +571,7 @@ namespace Gs2::Ranking::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
                 {
                     FString v;

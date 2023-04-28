@@ -220,7 +220,7 @@ namespace Gs2::Ranking::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithSubscribedUserIds(Data->HasField("subscribedUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
@@ -232,7 +232,7 @@ namespace Gs2::Ranking::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

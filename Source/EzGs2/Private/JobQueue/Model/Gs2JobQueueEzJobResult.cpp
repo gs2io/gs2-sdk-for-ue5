@@ -45,7 +45,7 @@ namespace Gs2::UE5::JobQueue::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), StatusCodeValue.GetValue());
+        return FString::Printf(TEXT("%d"), StatusCodeValue.GetValue());
     }
     TOptional<FString> FEzJobResult::GetResult() const
     {

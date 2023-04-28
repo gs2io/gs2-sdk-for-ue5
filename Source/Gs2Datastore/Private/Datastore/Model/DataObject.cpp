@@ -294,7 +294,7 @@ namespace Gs2::Datastore::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithStatus(Data->HasField("status") ? [Data]() -> TOptional<FString>
                 {
                     FString v;

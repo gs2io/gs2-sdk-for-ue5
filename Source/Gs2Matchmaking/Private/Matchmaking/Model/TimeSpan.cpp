@@ -68,7 +68,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), DaysValue.GetValue());
+        return FString::Printf(TEXT("%d"), DaysValue.GetValue());
     }
     TOptional<int32> FTimeSpan::GetHours() const
     {
@@ -81,7 +81,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), HoursValue.GetValue());
+        return FString::Printf(TEXT("%d"), HoursValue.GetValue());
     }
     TOptional<int32> FTimeSpan::GetMinutes() const
     {
@@ -94,7 +94,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MinutesValue.GetValue());
+        return FString::Printf(TEXT("%d"), MinutesValue.GetValue());
     }
 
     TSharedPtr<FTimeSpan> FTimeSpan::FromJson(const TSharedPtr<FJsonObject> Data)

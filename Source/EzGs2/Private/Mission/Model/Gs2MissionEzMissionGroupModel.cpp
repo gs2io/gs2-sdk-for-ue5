@@ -109,7 +109,7 @@ namespace Gs2::UE5::Mission::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetDayOfMonthValue.GetValue());
     }
     TOptional<FString> FEzMissionGroupModel::GetResetDayOfWeek() const
     {
@@ -126,7 +126,7 @@ namespace Gs2::UE5::Mission::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
     TOptional<FString> FEzMissionGroupModel::GetCompleteNotificationNamespaceId() const
     {

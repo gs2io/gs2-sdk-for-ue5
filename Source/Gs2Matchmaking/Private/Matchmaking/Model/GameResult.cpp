@@ -58,7 +58,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RankValue.GetValue());
+        return FString::Printf(TEXT("%d"), RankValue.GetValue());
     }
     TOptional<FString> FGameResult::GetUserId() const
     {

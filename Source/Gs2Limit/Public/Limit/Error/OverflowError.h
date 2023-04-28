@@ -24,9 +24,9 @@ namespace Gs2::Limit::Error
 {
     class GS2LIMIT_API FOverflowError : public Core::Model::FBadRequestError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "Overflow";
 
-    public:
         explicit FOverflowError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

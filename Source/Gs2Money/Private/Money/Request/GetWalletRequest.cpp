@@ -92,7 +92,7 @@ namespace Gs2::Money::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), SlotValue.GetValue());
+        return FString::Printf(TEXT("%d"), SlotValue.GetValue());
     }
 
     TSharedPtr<FGetWalletRequest> FGetWalletRequest::FromJson(const TSharedPtr<FJsonObject> Data)

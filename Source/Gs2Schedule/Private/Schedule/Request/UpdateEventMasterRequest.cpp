@@ -270,7 +270,7 @@ namespace Gs2::Schedule::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatBeginDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatBeginDayOfMonthValue.GetValue());
     }
 
     TOptional<int32> FUpdateEventMasterRequest::GetRepeatEndDayOfMonth() const
@@ -284,7 +284,7 @@ namespace Gs2::Schedule::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatEndDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatEndDayOfMonthValue.GetValue());
     }
 
     TOptional<FString> FUpdateEventMasterRequest::GetRepeatBeginDayOfWeek() const
@@ -308,7 +308,7 @@ namespace Gs2::Schedule::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatBeginHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatBeginHourValue.GetValue());
     }
 
     TOptional<int32> FUpdateEventMasterRequest::GetRepeatEndHour() const
@@ -322,7 +322,7 @@ namespace Gs2::Schedule::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RepeatEndHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), RepeatEndHourValue.GetValue());
     }
 
     TOptional<FString> FUpdateEventMasterRequest::GetRelativeTriggerName() const
@@ -341,7 +341,7 @@ namespace Gs2::Schedule::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RelativeDurationValue.GetValue());
+        return FString::Printf(TEXT("%d"), RelativeDurationValue.GetValue());
     }
 
     TSharedPtr<FUpdateEventMasterRequest> FUpdateEventMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)

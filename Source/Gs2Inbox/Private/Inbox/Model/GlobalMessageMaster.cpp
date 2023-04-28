@@ -232,7 +232,7 @@ namespace Gs2::Inbox::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithExpiresTimeSpan(Data->HasField("expiresTimeSpan") ? [Data]() -> Model::FTimeSpanPtr
                 {
                     if (Data->HasTypedField<EJson::Null>("expiresTimeSpan"))

@@ -145,7 +145,7 @@ namespace Gs2::Stamina::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), ValueValue.GetValue());
     }
 
     TOptional<int32> FUpdateStaminaByUserIdRequest::GetMaxValue() const
@@ -159,7 +159,7 @@ namespace Gs2::Stamina::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxValueValue.GetValue());
     }
 
     TOptional<int32> FUpdateStaminaByUserIdRequest::GetRecoverIntervalMinutes() const
@@ -173,7 +173,7 @@ namespace Gs2::Stamina::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RecoverIntervalMinutesValue.GetValue());
+        return FString::Printf(TEXT("%d"), RecoverIntervalMinutesValue.GetValue());
     }
 
     TOptional<int32> FUpdateStaminaByUserIdRequest::GetRecoverValue() const
@@ -187,7 +187,7 @@ namespace Gs2::Stamina::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RecoverValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), RecoverValueValue.GetValue());
     }
 
     TOptional<FString> FUpdateStaminaByUserIdRequest::GetDuplicationAvoider() const

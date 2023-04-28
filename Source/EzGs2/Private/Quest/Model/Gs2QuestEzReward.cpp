@@ -73,7 +73,7 @@ namespace Gs2::UE5::Quest::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), ValueValue.GetValue());
     }
 
     Gs2::Quest::Model::FRewardPtr FEzReward::ToModel() const

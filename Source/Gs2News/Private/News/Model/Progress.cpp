@@ -106,7 +106,7 @@ namespace Gs2::News::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), GeneratedValue.GetValue());
+        return FString::Printf(TEXT("%d"), GeneratedValue.GetValue());
     }
     TOptional<int32> FProgress::GetPatternCount() const
     {
@@ -119,7 +119,7 @@ namespace Gs2::News::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), PatternCountValue.GetValue());
+        return FString::Printf(TEXT("%d"), PatternCountValue.GetValue());
     }
     TOptional<int64> FProgress::GetCreatedAt() const
     {

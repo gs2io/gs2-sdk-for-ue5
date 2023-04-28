@@ -87,7 +87,7 @@ namespace Gs2::Stamina::Result
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), OverflowValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), OverflowValueValue.GetValue());
     }
 
     TSharedPtr<FRecoverStaminaByStampSheetResult> FRecoverStaminaByStampSheetResult::FromJson(const TSharedPtr<FJsonObject> Data)

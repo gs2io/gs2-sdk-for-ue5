@@ -136,7 +136,7 @@ namespace Gs2::Inventory::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), SortValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), SortValueValue.GetValue());
     }
 
     TOptional<FString> FItemModel::GetRegionFromGrn(const FString Grn)

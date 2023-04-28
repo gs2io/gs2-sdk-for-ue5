@@ -24,9 +24,9 @@ namespace Gs2::Lottery::Error
 {
     class GS2LOTTERY_API FEmptyError : public Core::Model::FBadRequestError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "Empty";
 
-    public:
         explicit FEmptyError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

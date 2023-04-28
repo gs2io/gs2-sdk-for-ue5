@@ -100,7 +100,7 @@ namespace Gs2::Account::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TimeOffsetValue.GetValue());
+        return FString::Printf(TEXT("%d"), TimeOffsetValue.GetValue());
     }
 
     TOptional<FString> FUpdateTimeOffsetRequest::GetDuplicationAvoider() const

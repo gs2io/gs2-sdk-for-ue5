@@ -315,7 +315,7 @@ namespace Gs2::Deploy::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithOutputFields(Data->HasField("outputFields") ? [Data]() -> TSharedPtr<TArray<Model::FOutputFieldPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FOutputFieldPtr>>();
@@ -327,7 +327,7 @@ namespace Gs2::Deploy::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FOutputFieldPtr>>())
             ->WithWorkId(Data->HasField("workId") ? [Data]() -> TOptional<FString>
                 {
                     FString v;

@@ -62,7 +62,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), ValueValue.GetValue());
     }
 
     TSharedPtr<FAttribute> FAttribute::FromJson(const TSharedPtr<FJsonObject> Data)

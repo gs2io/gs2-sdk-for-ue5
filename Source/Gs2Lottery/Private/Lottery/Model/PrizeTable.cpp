@@ -172,7 +172,7 @@ namespace Gs2::Lottery::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FPrizePtr>>());
     }
 
     TSharedPtr<FJsonObject> FPrizeTable::ToJson() const

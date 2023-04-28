@@ -29,6 +29,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> MetadataValue;
+        TOptional<int32> InitialValueValue;
         TOptional<int32> VolatilityValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FCreateRatingModelMasterRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateRatingModelMasterRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateRatingModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FCreateRatingModelMasterRequest> WithInitialValue(const TOptional<int32> InitialValue);
         TSharedPtr<FCreateRatingModelMasterRequest> WithVolatility(const TOptional<int32> Volatility);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,8 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;
+        TOptional<int32> GetInitialValue() const;
+        FString GetInitialValueString() const;
         TOptional<int32> GetVolatility() const;
         FString GetVolatilityString() const;
 

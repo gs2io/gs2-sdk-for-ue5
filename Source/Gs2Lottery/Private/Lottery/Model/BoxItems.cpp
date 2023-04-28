@@ -183,7 +183,7 @@ namespace Gs2::Lottery::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FBoxItemPtr>>());
     }
 
     TSharedPtr<FJsonObject> FBoxItems::ToJson() const

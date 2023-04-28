@@ -58,7 +58,7 @@ namespace Gs2::UE5::MegaField::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     Gs2::MegaField::Model::FScopePtr FEzScope::ToModel() const

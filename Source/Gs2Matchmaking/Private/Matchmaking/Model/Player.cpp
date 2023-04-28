@@ -110,7 +110,7 @@ namespace Gs2::Matchmaking::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAttributePtr>>())
             ->WithRoleName(Data->HasField("roleName") ? [Data]() -> TOptional<FString>
                 {
                     FString v;
@@ -131,7 +131,7 @@ namespace Gs2::Matchmaking::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<FString>>());
     }
 
     TSharedPtr<FJsonObject> FPlayer::ToJson() const

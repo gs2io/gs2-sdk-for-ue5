@@ -173,7 +173,7 @@ namespace Gs2::MegaField::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TOptional<FString> FNearUserIdsRequest::GetDuplicationAvoider() const

@@ -92,7 +92,7 @@ namespace Gs2::Limit::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeLimitModelMastersRequest> FDescribeLimitModelMastersRequest::FromJson(const TSharedPtr<FJsonObject> Data)

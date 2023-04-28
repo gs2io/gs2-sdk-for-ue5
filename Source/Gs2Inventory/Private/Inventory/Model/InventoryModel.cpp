@@ -120,7 +120,7 @@ namespace Gs2::Inventory::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), InitialCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), InitialCapacityValue.GetValue());
     }
     TOptional<int32> FInventoryModel::GetMaxCapacity() const
     {
@@ -133,7 +133,7 @@ namespace Gs2::Inventory::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxCapacityValue.GetValue());
     }
     TOptional<bool> FInventoryModel::GetProtectReferencedItem() const
     {
@@ -268,7 +268,7 @@ namespace Gs2::Inventory::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FItemModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FInventoryModel::ToJson() const

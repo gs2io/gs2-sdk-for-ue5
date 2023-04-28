@@ -110,7 +110,7 @@ namespace Gs2::Formation::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), InitialMaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), InitialMaxCapacityValue.GetValue());
     }
     TOptional<int32> FMoldModel::GetMaxCapacity() const
     {
@@ -123,7 +123,7 @@ namespace Gs2::Formation::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxCapacityValue.GetValue());
     }
     TSharedPtr<FFormModel> FMoldModel::GetFormModel() const
     {

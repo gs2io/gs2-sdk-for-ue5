@@ -144,7 +144,7 @@ namespace Gs2::Inventory::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), InitialCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), InitialCapacityValue.GetValue());
     }
     TOptional<int32> FInventoryModelMaster::GetMaxCapacity() const
     {
@@ -157,7 +157,7 @@ namespace Gs2::Inventory::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxCapacityValue.GetValue());
     }
     TOptional<bool> FInventoryModelMaster::GetProtectReferencedItem() const
     {

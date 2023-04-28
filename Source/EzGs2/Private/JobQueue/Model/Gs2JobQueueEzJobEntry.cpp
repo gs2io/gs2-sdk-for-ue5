@@ -61,7 +61,7 @@ namespace Gs2::UE5::JobQueue::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxTryCountValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxTryCountValue.GetValue());
     }
 
     Gs2::JobQueue::Model::FJobEntryPtr FEzJobEntry::ToModel() const

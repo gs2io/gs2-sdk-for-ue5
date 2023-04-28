@@ -84,15 +84,15 @@ namespace Gs2::Datastore::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetName().IsSet())
+            if (this->Request->GetName().IsSet() && !this->Request->GetName().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
-            if (this->Request->GetContentType().IsSet())
+            if (this->Request->GetContentType().IsSet() && !this->Request->GetContentType().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("contentType", this->Request->GetContentType().GetValue());
             }
-            if (this->Request->GetScope().IsSet())
+            if (this->Request->GetScope().IsSet() && !this->Request->GetScope().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
             }

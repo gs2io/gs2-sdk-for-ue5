@@ -110,7 +110,7 @@ namespace Gs2::Account::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TimeOffsetValue.GetValue());
+        return FString::Printf(TEXT("%d"), TimeOffsetValue.GetValue());
     }
     TOptional<bool> FAccount::GetBanned() const
     {

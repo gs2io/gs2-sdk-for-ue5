@@ -24,9 +24,9 @@ namespace Gs2::Account::Error
 {
     class GS2ACCOUNT_API FBannedInfinityError : public Core::Model::FUnauthorizedError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "BannedInfinity";
 
-    public:
         explicit FBannedInfinityError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

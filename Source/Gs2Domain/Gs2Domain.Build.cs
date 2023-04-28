@@ -21,6 +21,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2Auth",
 			"Gs2Chat",
 			"Gs2Datastore",
+			"Gs2Deploy",
 			"Gs2Dictionary",
 			"Gs2Distributor",
 			"Gs2Enhance",

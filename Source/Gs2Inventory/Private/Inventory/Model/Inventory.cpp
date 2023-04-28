@@ -130,7 +130,7 @@ namespace Gs2::Inventory::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CurrentInventoryCapacityUsageValue.GetValue());
+        return FString::Printf(TEXT("%d"), CurrentInventoryCapacityUsageValue.GetValue());
     }
     TOptional<int32> FInventory::GetCurrentInventoryMaxCapacity() const
     {
@@ -143,7 +143,7 @@ namespace Gs2::Inventory::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CurrentInventoryMaxCapacityValue.GetValue());
+        return FString::Printf(TEXT("%d"), CurrentInventoryMaxCapacityValue.GetValue());
     }
     TOptional<int64> FInventory::GetCreatedAt() const
     {

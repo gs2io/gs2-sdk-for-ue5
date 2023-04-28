@@ -94,15 +94,15 @@ namespace Gs2::Mission::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetMetadata().IsSet())
+            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetDescription().IsSet())
+            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetCounterName().IsSet())
+            if (this->Request->GetCounterName().IsSet() && !this->Request->GetCounterName().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("counterName", this->Request->GetCounterName().GetValue());
             }
@@ -119,11 +119,11 @@ namespace Gs2::Mission::Task::Rest
                 }
                 JsonRootObject->SetArrayField("completeAcquireActions", v);
             }
-            if (this->Request->GetChallengePeriodEventId().IsSet())
+            if (this->Request->GetChallengePeriodEventId().IsSet() && !this->Request->GetChallengePeriodEventId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("challengePeriodEventId", this->Request->GetChallengePeriodEventId().GetValue());
             }
-            if (this->Request->GetPremiseMissionTaskName().IsSet())
+            if (this->Request->GetPremiseMissionTaskName().IsSet() && !this->Request->GetPremiseMissionTaskName().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("premiseMissionTaskName", this->Request->GetPremiseMissionTaskName().GetValue());
             }

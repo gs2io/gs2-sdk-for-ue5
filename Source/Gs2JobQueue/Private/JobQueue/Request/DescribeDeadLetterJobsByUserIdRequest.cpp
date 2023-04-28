@@ -107,7 +107,7 @@ namespace Gs2::JobQueue::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FDescribeDeadLetterJobsByUserIdRequest> FDescribeDeadLetterJobsByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)

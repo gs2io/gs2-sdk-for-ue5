@@ -62,7 +62,7 @@ namespace Gs2::Enhance::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CountValue.GetValue());
+        return FString::Printf(TEXT("%d"), CountValue.GetValue());
     }
 
     TSharedPtr<FMaterial> FMaterial::FromJson(const TSharedPtr<FJsonObject> Data)

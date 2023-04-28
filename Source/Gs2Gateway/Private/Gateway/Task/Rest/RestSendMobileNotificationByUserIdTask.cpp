@@ -89,15 +89,15 @@ namespace Gs2::Gateway::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetSubject().IsSet())
+            if (this->Request->GetSubject().IsSet() && !this->Request->GetSubject().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("subject", this->Request->GetSubject().GetValue());
             }
-            if (this->Request->GetPayload().IsSet())
+            if (this->Request->GetPayload().IsSet() && !this->Request->GetPayload().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("payload", this->Request->GetPayload().GetValue());
             }
-            if (this->Request->GetSound().IsSet())
+            if (this->Request->GetSound().IsSet() && !this->Request->GetSound().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("sound", this->Request->GetSound().GetValue());
             }

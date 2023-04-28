@@ -100,7 +100,7 @@ namespace Gs2::Inventory::Task::Rest
             {
                 JsonRootObject->SetStringField("consumeCount", FString::Printf(TEXT("%lld"), this->Request->GetConsumeCount().GetValue()));
             }
-            if (this->Request->GetItemSetName().IsSet())
+            if (this->Request->GetItemSetName().IsSet() && !this->Request->GetItemSetName().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("itemSetName", this->Request->GetItemSetName().GetValue());
             }

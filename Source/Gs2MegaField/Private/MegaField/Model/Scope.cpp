@@ -85,7 +85,7 @@ namespace Gs2::MegaField::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LimitValue.GetValue());
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
     TSharedPtr<FScope> FScope::FromJson(const TSharedPtr<FJsonObject> Data)

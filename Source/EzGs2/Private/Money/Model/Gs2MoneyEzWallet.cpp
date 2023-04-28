@@ -61,7 +61,7 @@ namespace Gs2::UE5::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), SlotValue.GetValue());
+        return FString::Printf(TEXT("%d"), SlotValue.GetValue());
     }
     TOptional<int32> FEzWallet::GetPaid() const
     {
@@ -74,7 +74,7 @@ namespace Gs2::UE5::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), PaidValue.GetValue());
+        return FString::Printf(TEXT("%d"), PaidValue.GetValue());
     }
     TOptional<int32> FEzWallet::GetFree() const
     {
@@ -87,7 +87,7 @@ namespace Gs2::UE5::Money::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), FreeValue.GetValue());
+        return FString::Printf(TEXT("%d"), FreeValue.GetValue());
     }
     TOptional<int64> FEzWallet::GetUpdatedAt() const
     {

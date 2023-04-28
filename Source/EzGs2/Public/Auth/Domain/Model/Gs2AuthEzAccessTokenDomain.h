@@ -36,6 +36,7 @@ namespace Gs2::UE5::Auth::Domain::Model
         TOptional<FString> Token() const;
         TOptional<FString> UserId() const;
         TOptional<int64> Expire() const;
+        TOptional<FString> Status() const;
 
         FEzAccessTokenDomain(
             Gs2::Auth::Domain::Model::FAccessTokenDomainPtr Domain,

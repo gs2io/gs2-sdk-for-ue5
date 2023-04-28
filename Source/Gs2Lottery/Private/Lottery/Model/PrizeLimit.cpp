@@ -96,7 +96,7 @@ namespace Gs2::Lottery::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), DrawnCountValue.GetValue());
+        return FString::Printf(TEXT("%d"), DrawnCountValue.GetValue());
     }
     TOptional<int64> FPrizeLimit::GetCreatedAt() const
     {

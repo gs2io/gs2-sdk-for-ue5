@@ -96,11 +96,11 @@ namespace Gs2::Chat::Task::Rest
             {
                 JsonRootObject->SetNumberField("category", this->Request->GetCategory().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet())
+            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetPassword().IsSet())
+            if (this->Request->GetPassword().IsSet() && !this->Request->GetPassword().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("password", this->Request->GetPassword().GetValue());
             }

@@ -76,7 +76,7 @@ namespace Gs2::JobQueue::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), MaxTryCountValue.GetValue());
+        return FString::Printf(TEXT("%d"), MaxTryCountValue.GetValue());
     }
 
     TSharedPtr<FJobEntry> FJobEntry::FromJson(const TSharedPtr<FJsonObject> Data)

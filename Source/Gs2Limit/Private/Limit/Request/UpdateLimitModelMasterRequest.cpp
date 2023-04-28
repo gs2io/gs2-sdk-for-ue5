@@ -157,7 +157,7 @@ namespace Gs2::Limit::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetDayOfMonthValue.GetValue());
     }
 
     TOptional<FString> FUpdateLimitModelMasterRequest::GetResetDayOfWeek() const
@@ -176,7 +176,7 @@ namespace Gs2::Limit::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
 
     TSharedPtr<FUpdateLimitModelMasterRequest> FUpdateLimitModelMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)

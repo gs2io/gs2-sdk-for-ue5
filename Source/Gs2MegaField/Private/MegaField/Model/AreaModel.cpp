@@ -172,7 +172,7 @@ namespace Gs2::MegaField::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FLayerModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FAreaModel::ToJson() const

@@ -110,7 +110,7 @@ namespace Gs2::MegaField::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), NumberOfMinEntriesValue.GetValue());
+        return FString::Printf(TEXT("%d"), NumberOfMinEntriesValue.GetValue());
     }
     TOptional<int32> FLayer::GetNumberOfMaxEntries() const
     {
@@ -123,7 +123,7 @@ namespace Gs2::MegaField::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), NumberOfMaxEntriesValue.GetValue());
+        return FString::Printf(TEXT("%d"), NumberOfMaxEntriesValue.GetValue());
     }
     TOptional<int64> FLayer::GetCreatedAt() const
     {

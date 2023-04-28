@@ -78,15 +78,15 @@ namespace Gs2::Experience::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetName().IsSet())
+            if (this->Request->GetName().IsSet() && !this->Request->GetName().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
-            if (this->Request->GetDescription().IsSet())
+            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetExperienceCapScriptId().IsSet())
+            if (this->Request->GetExperienceCapScriptId().IsSet() && !this->Request->GetExperienceCapScriptId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("experienceCapScriptId", this->Request->GetExperienceCapScriptId().GetValue());
             }

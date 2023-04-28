@@ -124,7 +124,7 @@ namespace Gs2::Chat::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CategoryValue.GetValue());
+        return FString::Printf(TEXT("%d"), CategoryValue.GetValue());
     }
     TOptional<FString> FMessage::GetMetadata() const
     {

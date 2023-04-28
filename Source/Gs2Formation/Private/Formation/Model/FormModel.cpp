@@ -172,7 +172,7 @@ namespace Gs2::Formation::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FSlotModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FFormModel::ToJson() const

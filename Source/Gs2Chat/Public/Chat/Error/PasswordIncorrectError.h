@@ -24,9 +24,9 @@ namespace Gs2::Chat::Error
 {
     class GS2CHAT_API FPasswordIncorrectError : public Core::Model::FBadRequestError
     {
+    public:
         inline static const FGs2ErrorType TypeString = "PasswordIncorrect";
 
-    public:
         explicit FPasswordIncorrectError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override

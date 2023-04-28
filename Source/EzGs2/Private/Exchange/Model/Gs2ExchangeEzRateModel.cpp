@@ -89,7 +89,7 @@ namespace Gs2::UE5::Exchange::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), LockTimeValue.GetValue());
+        return FString::Printf(TEXT("%d"), LockTimeValue.GetValue());
     }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConsumeAction>>> FEzRateModel::GetConsumeActions() const
     {

@@ -89,15 +89,15 @@ namespace Gs2::Stamina::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetKeyId().IsSet())
+            if (this->Request->GetKeyId().IsSet() && !this->Request->GetKeyId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
             }
-            if (this->Request->GetSignedStatusBody().IsSet())
+            if (this->Request->GetSignedStatusBody().IsSet() && !this->Request->GetSignedStatusBody().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("signedStatusBody", this->Request->GetSignedStatusBody().GetValue());
             }
-            if (this->Request->GetSignedStatusSignature().IsSet())
+            if (this->Request->GetSignedStatusSignature().IsSet() && !this->Request->GetSignedStatusSignature().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("signedStatusSignature", this->Request->GetSignedStatusSignature().GetValue());
             }

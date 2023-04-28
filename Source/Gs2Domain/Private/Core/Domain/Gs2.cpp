@@ -72,6 +72,7 @@ namespace Gs2::Core::Domain
         Auth(MakeShared<Auth::Domain::FGs2AuthDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Chat(MakeShared<Chat::Domain::FGs2ChatDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Datastore(MakeShared<Datastore::Domain::FGs2DatastoreDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
+        Deploy(MakeShared<Deploy::Domain::FGs2DeployDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Dictionary(MakeShared<Dictionary::Domain::FGs2DictionaryDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Distributor(MakeShared<Distributor::Domain::FGs2DistributorDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Enhance(MakeShared<Enhance::Domain::FGs2EnhanceDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),

@@ -308,7 +308,7 @@ namespace Gs2::Ranking::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CalculateFixedTimingHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), CalculateFixedTimingHourValue.GetValue());
     }
 
     TOptional<int32> FCreateCategoryModelMasterRequest::GetCalculateFixedTimingMinute() const
@@ -322,7 +322,7 @@ namespace Gs2::Ranking::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CalculateFixedTimingMinuteValue.GetValue());
+        return FString::Printf(TEXT("%d"), CalculateFixedTimingMinuteValue.GetValue());
     }
 
     TOptional<int32> FCreateCategoryModelMasterRequest::GetCalculateIntervalMinutes() const
@@ -336,7 +336,7 @@ namespace Gs2::Ranking::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CalculateIntervalMinutesValue.GetValue());
+        return FString::Printf(TEXT("%d"), CalculateIntervalMinutesValue.GetValue());
     }
 
     TOptional<FString> FCreateCategoryModelMasterRequest::GetEntryPeriodEventId() const

@@ -73,7 +73,7 @@ namespace Gs2::News::Model
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FContentPtr>>())
             ->WithRemoveContents(Data->HasField("removeContents") ? [Data]() -> TSharedPtr<TArray<Model::FContentPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FContentPtr>>();
@@ -85,7 +85,7 @@ namespace Gs2::News::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FContentPtr>>());
     }
 
     TSharedPtr<FJsonObject> FView::ToJson() const

@@ -23,6 +23,7 @@ namespace Gs2::Matchmaking::Model
         NameValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        InitialValueValue(TOptional<int32>()),
         VolatilityValue(TOptional<int32>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>())
@@ -36,6 +37,7 @@ namespace Gs2::Matchmaking::Model
         NameValue(From.NameValue),
         MetadataValue(From.MetadataValue),
         DescriptionValue(From.DescriptionValue),
+        InitialValueValue(From.InitialValueValue),
         VolatilityValue(From.VolatilityValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue)
@@ -71,6 +73,14 @@ namespace Gs2::Matchmaking::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FRatingModelMaster> FRatingModelMaster::WithInitialValue(
+        const TOptional<int32> InitialValue
+    )
+    {
+        this->InitialValueValue = InitialValue;
         return SharedThis(this);
     }
 
@@ -113,6 +123,19 @@ namespace Gs2::Matchmaking::Model
     {
         return DescriptionValue;
     }
+    TOptional<int32> FRatingModelMaster::GetInitialValue() const
+    {
+        return InitialValueValue;
+    }
+
+    FString FRatingModelMaster::GetInitialValueString() const
+    {
+        if (!InitialValueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), InitialValueValue.GetValue());
+    }
     TOptional<int32> FRatingModelMaster::GetVolatility() const
     {
         return VolatilityValue;
@@ -124,7 +147,7 @@ namespace Gs2::Matchmaking::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), VolatilityValue.GetValue());
+        return FString::Printf(TEXT("%d"), VolatilityValue.GetValue());
     }
     TOptional<int64> FRatingModelMaster::GetCreatedAt() const
     {
@@ -239,6 +262,15 @@ namespace Gs2::Matchmaking::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithInitialValue(Data->HasField("initialValue") ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField("initialValue", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithVolatility(Data->HasField("volatility") ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -286,6 +318,10 @@ namespace Gs2::Matchmaking::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (InitialValueValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("initialValue", InitialValueValue.GetValue());
         }
         if (VolatilityValue.IsSet())
         {

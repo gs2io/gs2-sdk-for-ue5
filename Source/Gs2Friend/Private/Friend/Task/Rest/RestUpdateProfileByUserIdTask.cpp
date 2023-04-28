@@ -89,15 +89,15 @@ namespace Gs2::Friend::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetPublicProfile().IsSet())
+            if (this->Request->GetPublicProfile().IsSet() && !this->Request->GetPublicProfile().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("publicProfile", this->Request->GetPublicProfile().GetValue());
             }
-            if (this->Request->GetFollowerProfile().IsSet())
+            if (this->Request->GetFollowerProfile().IsSet() && !this->Request->GetFollowerProfile().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("followerProfile", this->Request->GetFollowerProfile().GetValue());
             }
-            if (this->Request->GetFriendProfile().IsSet())
+            if (this->Request->GetFriendProfile().IsSet() && !this->Request->GetFriendProfile().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("friendProfile", this->Request->GetFriendProfile().GetValue());
             }

@@ -115,7 +115,7 @@ namespace Gs2::Stamina::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), RaiseValueValue.GetValue());
+        return FString::Printf(TEXT("%d"), RaiseValueValue.GetValue());
     }
 
     TOptional<FString> FRaiseMaxValueByUserIdRequest::GetDuplicationAvoider() const

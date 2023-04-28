@@ -140,7 +140,7 @@ namespace Gs2::Showcase::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), QuantityValue.GetValue());
+        return FString::Printf(TEXT("%d"), QuantityValue.GetValue());
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> FBuyByUserIdRequest::GetConfig() const

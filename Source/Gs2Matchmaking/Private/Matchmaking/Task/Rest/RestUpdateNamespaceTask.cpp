@@ -84,7 +84,7 @@ namespace Gs2::Matchmaking::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet())
+            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
@@ -92,27 +92,27 @@ namespace Gs2::Matchmaking::Task::Rest
             {
                 JsonRootObject->SetBoolField("enableRating", this->Request->GetEnableRating().GetValue());
             }
-            if (this->Request->GetCreateGatheringTriggerType().IsSet())
+            if (this->Request->GetCreateGatheringTriggerType().IsSet() && !this->Request->GetCreateGatheringTriggerType().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("createGatheringTriggerType", this->Request->GetCreateGatheringTriggerType().GetValue());
             }
-            if (this->Request->GetCreateGatheringTriggerRealtimeNamespaceId().IsSet())
+            if (this->Request->GetCreateGatheringTriggerRealtimeNamespaceId().IsSet() && !this->Request->GetCreateGatheringTriggerRealtimeNamespaceId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("createGatheringTriggerRealtimeNamespaceId", this->Request->GetCreateGatheringTriggerRealtimeNamespaceId().GetValue());
             }
-            if (this->Request->GetCreateGatheringTriggerScriptId().IsSet())
+            if (this->Request->GetCreateGatheringTriggerScriptId().IsSet() && !this->Request->GetCreateGatheringTriggerScriptId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("createGatheringTriggerScriptId", this->Request->GetCreateGatheringTriggerScriptId().GetValue());
             }
-            if (this->Request->GetCompleteMatchmakingTriggerType().IsSet())
+            if (this->Request->GetCompleteMatchmakingTriggerType().IsSet() && !this->Request->GetCompleteMatchmakingTriggerType().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("completeMatchmakingTriggerType", this->Request->GetCompleteMatchmakingTriggerType().GetValue());
             }
-            if (this->Request->GetCompleteMatchmakingTriggerRealtimeNamespaceId().IsSet())
+            if (this->Request->GetCompleteMatchmakingTriggerRealtimeNamespaceId().IsSet() && !this->Request->GetCompleteMatchmakingTriggerRealtimeNamespaceId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("completeMatchmakingTriggerRealtimeNamespaceId", this->Request->GetCompleteMatchmakingTriggerRealtimeNamespaceId().GetValue());
             }
-            if (this->Request->GetCompleteMatchmakingTriggerScriptId().IsSet())
+            if (this->Request->GetCompleteMatchmakingTriggerScriptId().IsSet() && !this->Request->GetCompleteMatchmakingTriggerScriptId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("completeMatchmakingTriggerScriptId", this->Request->GetCompleteMatchmakingTriggerScriptId().GetValue());
             }

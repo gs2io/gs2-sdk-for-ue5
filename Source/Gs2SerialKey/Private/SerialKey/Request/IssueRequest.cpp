@@ -107,7 +107,7 @@ namespace Gs2::SerialKey::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), IssueRequestCountValue.GetValue());
+        return FString::Printf(TEXT("%d"), IssueRequestCountValue.GetValue());
     }
 
     TSharedPtr<FIssueRequest> FIssueRequest::FromJson(const TSharedPtr<FJsonObject> Data)

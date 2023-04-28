@@ -89,7 +89,7 @@ namespace Gs2::Script::Result
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), CodeValue.GetValue());
+        return FString::Printf(TEXT("%d"), CodeValue.GetValue());
     }
 
     TOptional<FString> FDebugInvokeResult::GetResult() const
@@ -108,7 +108,7 @@ namespace Gs2::Script::Result
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ExecuteTimeValue.GetValue());
+        return FString::Printf(TEXT("%d"), ExecuteTimeValue.GetValue());
     }
 
     TOptional<int32> FDebugInvokeResult::GetCharged() const
@@ -122,7 +122,7 @@ namespace Gs2::Script::Result
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ChargedValue.GetValue());
+        return FString::Printf(TEXT("%d"), ChargedValue.GetValue());
     }
 
     TSharedPtr<TArray<FString>> FDebugInvokeResult::GetOutput() const

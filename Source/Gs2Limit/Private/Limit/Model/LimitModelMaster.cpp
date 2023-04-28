@@ -158,7 +158,7 @@ namespace Gs2::Limit::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetDayOfMonthValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetDayOfMonthValue.GetValue());
     }
     TOptional<FString> FLimitModelMaster::GetResetDayOfWeek() const
     {
@@ -175,7 +175,7 @@ namespace Gs2::Limit::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ResetHourValue.GetValue());
+        return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
     }
     TOptional<int64> FLimitModelMaster::GetCreatedAt() const
     {

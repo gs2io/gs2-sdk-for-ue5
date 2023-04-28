@@ -132,7 +132,7 @@ namespace Gs2::Matchmaking::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), NumberOfPlayerValue.GetValue());
+        return FString::Printf(TEXT("%d"), NumberOfPlayerValue.GetValue());
     }
 
     TOptional<FString> FGetBallotByUserIdRequest::GetKeyId() const

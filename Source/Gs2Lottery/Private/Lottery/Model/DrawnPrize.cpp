@@ -82,7 +82,7 @@ namespace Gs2::Lottery::Model
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDrawnPrize::ToJson() const
