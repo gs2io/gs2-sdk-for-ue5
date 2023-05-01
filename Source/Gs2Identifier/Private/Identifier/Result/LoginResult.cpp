@@ -81,7 +81,7 @@ namespace Gs2::Identifier::Result
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), ExpiresInValue.GetValue());
+        return FString::Printf(TEXT("%d"), ExpiresInValue.GetValue());
     }
 
     TSharedPtr<FLoginResult> FLoginResult::FromJson(const TSharedPtr<FJsonObject> Data)
