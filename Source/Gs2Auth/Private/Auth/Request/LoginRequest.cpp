@@ -77,7 +77,7 @@ namespace Gs2::Auth::Request
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TimeOffsetValue.GetValue());
+        return FString::Printf(TEXT("%d"), TimeOffsetValue.GetValue());
     }
 
     TSharedPtr<FLoginRequest> FLoginRequest::FromJson(const TSharedPtr<FJsonObject> Data)

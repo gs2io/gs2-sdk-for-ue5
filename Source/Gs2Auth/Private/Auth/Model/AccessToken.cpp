@@ -99,7 +99,7 @@ namespace Gs2::Auth::Model
         {
             return FString("null");
         }
-        return FString::Printf(TEXT("%ld"), TimeOffsetValue.GetValue());
+        return FString::Printf(TEXT("%d"), TimeOffsetValue.GetValue());
     }
 
     TSharedPtr<FAccessToken> FAccessToken::FromJson(const TSharedPtr<FJsonObject> Data)

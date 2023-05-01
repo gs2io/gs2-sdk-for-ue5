@@ -39,6 +39,7 @@ namespace Gs2::Auth::Domain::Model
         TOptional<FString> Token;
         TOptional<FString> UserId;
         TOptional<int64> Expire;
+        TOptional<FString> Status;
         TOptional<FString> GetToken() const
         {
             return Token;
@@ -50,6 +51,10 @@ namespace Gs2::Auth::Domain::Model
         TOptional<int64> GetExpire() const
         {
             return Expire;
+        }
+        TOptional<FString> GetStatus() const
+        {
+            return Status;
         }
     private:
 
