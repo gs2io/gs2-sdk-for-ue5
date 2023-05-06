@@ -104,6 +104,59 @@ namespace Gs2::UE5::Experience::Domain::Model
         );
     }
 
+    FEzStatusGameSessionDomain::FGetStatusWithSignatureTask::FGetStatusWithSignatureTask(
+        TSharedPtr<FEzStatusGameSessionDomain> Self,
+        FString KeyId
+    ): Self(Self), KeyId(KeyId)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzStatusGameSessionDomain::FGetStatusWithSignatureTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Experience::Domain::Model::FEzStatusGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FGetStatusWithSignatureTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->GetWithSignature(
+                    MakeShared<Gs2::Experience::Request::FGetStatusWithSignatureRequest>()
+                        ->WithKeyId(KeyId)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Experience::Domain::Model::FEzStatusGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->ProfileValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzStatusGameSessionDomain::FGetStatusWithSignatureTask>> FEzStatusGameSessionDomain::GetStatusWithSignature(
+        FString KeyId
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FGetStatusWithSignatureTask>>(
+            this->AsShared(),
+            KeyId
+        );
+    }
+
     FEzStatusGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzStatusGameSessionDomain> Self
     ): Self(Self)

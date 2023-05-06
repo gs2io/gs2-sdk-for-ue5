@@ -68,6 +68,29 @@ namespace Gs2::UE5::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
         );
 
+        class FGetStatusWithSignatureTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Experience::Domain::Model::FEzStatusGameSessionDomain>,
+            public TSharedFromThis<FGetStatusWithSignatureTask>
+        {
+            TSharedPtr<FEzStatusGameSessionDomain> Self;
+            FString KeyId;
+
+        public:
+            explicit FGetStatusWithSignatureTask(
+                TSharedPtr<FEzStatusGameSessionDomain> Self,
+                FString KeyId
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Experience::Domain::Model::FEzStatusGameSessionDomain>> Result
+            ) override;
+        };
+        friend FGetStatusWithSignatureTask;
+
+        TSharedPtr<FAsyncTask<FGetStatusWithSignatureTask>> GetStatusWithSignature(
+            FString KeyId
+        );
+
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Experience::Model::FEzStatus>,
             public TSharedFromThis<FModelTask>
