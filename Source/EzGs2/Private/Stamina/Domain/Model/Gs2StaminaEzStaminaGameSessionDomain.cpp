@@ -147,6 +147,189 @@ namespace Gs2::UE5::Stamina::Domain::Model
         );
     }
 
+    FEzStaminaGameSessionDomain::FSetMaxValueTask::FSetMaxValueTask(
+        TSharedPtr<FEzStaminaGameSessionDomain> Self,
+        FString KeyId,
+        FString SignedStatusBody,
+        FString SignedStatusSignature
+    ): Self(Self), KeyId(KeyId), SignedStatusBody(SignedStatusBody), SignedStatusSignature(SignedStatusSignature)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzStaminaGameSessionDomain::FSetMaxValueTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FSetMaxValueTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->SetMaxValueByStatus(
+                    MakeShared<Gs2::Stamina::Request::FSetMaxValueByStatusRequest>()
+                        ->WithKeyId(KeyId)
+                        ->WithSignedStatusBody(SignedStatusBody)
+                        ->WithSignedStatusSignature(SignedStatusSignature)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->ProfileValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzStaminaGameSessionDomain::FSetMaxValueTask>> FEzStaminaGameSessionDomain::SetMaxValue(
+        FString KeyId,
+        FString SignedStatusBody,
+        FString SignedStatusSignature
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSetMaxValueTask>>(
+            this->AsShared(),
+            KeyId,
+            SignedStatusBody,
+            SignedStatusSignature
+        );
+    }
+
+    FEzStaminaGameSessionDomain::FSetRecoverIntervalTask::FSetRecoverIntervalTask(
+        TSharedPtr<FEzStaminaGameSessionDomain> Self,
+        FString KeyId,
+        FString SignedStatusBody,
+        FString SignedStatusSignature
+    ): Self(Self), KeyId(KeyId), SignedStatusBody(SignedStatusBody), SignedStatusSignature(SignedStatusSignature)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzStaminaGameSessionDomain::FSetRecoverIntervalTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FSetRecoverIntervalTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->SetRecoverIntervalByStatus(
+                    MakeShared<Gs2::Stamina::Request::FSetRecoverIntervalByStatusRequest>()
+                        ->WithKeyId(KeyId)
+                        ->WithSignedStatusBody(SignedStatusBody)
+                        ->WithSignedStatusSignature(SignedStatusSignature)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->ProfileValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzStaminaGameSessionDomain::FSetRecoverIntervalTask>> FEzStaminaGameSessionDomain::SetRecoverInterval(
+        FString KeyId,
+        FString SignedStatusBody,
+        FString SignedStatusSignature
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSetRecoverIntervalTask>>(
+            this->AsShared(),
+            KeyId,
+            SignedStatusBody,
+            SignedStatusSignature
+        );
+    }
+
+    FEzStaminaGameSessionDomain::FSetRecoverValueTask::FSetRecoverValueTask(
+        TSharedPtr<FEzStaminaGameSessionDomain> Self,
+        FString KeyId,
+        FString SignedStatusBody,
+        FString SignedStatusSignature
+    ): Self(Self), KeyId(KeyId), SignedStatusBody(SignedStatusBody), SignedStatusSignature(SignedStatusSignature)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzStaminaGameSessionDomain::FSetRecoverValueTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FSetRecoverValueTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->SetRecoverValueByStatus(
+                    MakeShared<Gs2::Stamina::Request::FSetRecoverValueByStatusRequest>()
+                        ->WithKeyId(KeyId)
+                        ->WithSignedStatusBody(SignedStatusBody)
+                        ->WithSignedStatusSignature(SignedStatusSignature)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->ProfileValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzStaminaGameSessionDomain::FSetRecoverValueTask>> FEzStaminaGameSessionDomain::SetRecoverValue(
+        FString KeyId,
+        FString SignedStatusBody,
+        FString SignedStatusSignature
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSetRecoverValueTask>>(
+            this->AsShared(),
+            KeyId,
+            SignedStatusBody,
+            SignedStatusSignature
+        );
+    }
+
     FEzStaminaGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzStaminaGameSessionDomain> Self
     ): Self(Self)

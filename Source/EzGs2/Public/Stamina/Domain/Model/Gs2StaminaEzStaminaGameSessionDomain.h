@@ -90,6 +90,93 @@ namespace Gs2::UE5::Stamina::Domain::Model
             int32 ConsumeValue
         );
 
+        class FSetMaxValueTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
+            public TSharedFromThis<FSetMaxValueTask>
+        {
+            TSharedPtr<FEzStaminaGameSessionDomain> Self;
+            FString KeyId;
+            FString SignedStatusBody;
+            FString SignedStatusSignature;
+
+        public:
+            explicit FSetMaxValueTask(
+                TSharedPtr<FEzStaminaGameSessionDomain> Self,
+                FString KeyId,
+                FString SignedStatusBody,
+                FString SignedStatusSignature
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
+            ) override;
+        };
+        friend FSetMaxValueTask;
+
+        TSharedPtr<FAsyncTask<FSetMaxValueTask>> SetMaxValue(
+            FString KeyId,
+            FString SignedStatusBody,
+            FString SignedStatusSignature
+        );
+
+        class FSetRecoverIntervalTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
+            public TSharedFromThis<FSetRecoverIntervalTask>
+        {
+            TSharedPtr<FEzStaminaGameSessionDomain> Self;
+            FString KeyId;
+            FString SignedStatusBody;
+            FString SignedStatusSignature;
+
+        public:
+            explicit FSetRecoverIntervalTask(
+                TSharedPtr<FEzStaminaGameSessionDomain> Self,
+                FString KeyId,
+                FString SignedStatusBody,
+                FString SignedStatusSignature
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
+            ) override;
+        };
+        friend FSetRecoverIntervalTask;
+
+        TSharedPtr<FAsyncTask<FSetRecoverIntervalTask>> SetRecoverInterval(
+            FString KeyId,
+            FString SignedStatusBody,
+            FString SignedStatusSignature
+        );
+
+        class FSetRecoverValueTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
+            public TSharedFromThis<FSetRecoverValueTask>
+        {
+            TSharedPtr<FEzStaminaGameSessionDomain> Self;
+            FString KeyId;
+            FString SignedStatusBody;
+            FString SignedStatusSignature;
+
+        public:
+            explicit FSetRecoverValueTask(
+                TSharedPtr<FEzStaminaGameSessionDomain> Self,
+                FString KeyId,
+                FString SignedStatusBody,
+                FString SignedStatusSignature
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
+            ) override;
+        };
+        friend FSetRecoverValueTask;
+
+        TSharedPtr<FAsyncTask<FSetRecoverValueTask>> SetRecoverValue(
+            FString KeyId,
+            FString SignedStatusBody,
+            FString SignedStatusSignature
+        );
+
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Model::FEzStamina>,
             public TSharedFromThis<FModelTask>
