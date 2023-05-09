@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+*
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -213,15 +215,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Matchmaking::Model::FBallot>(
-            Self->ParentKey,
-            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                Self->RatingName,
-                Self->GatheringName,
-                Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
-                Self->KeyId
-            )
-        );
+        TSharedPtr<Gs2::Matchmaking::Model::FBallot> Value = nullptr;
         if (Value == nullptr) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Matchmaking::Request::FGetBallotByUserIdRequest>()
