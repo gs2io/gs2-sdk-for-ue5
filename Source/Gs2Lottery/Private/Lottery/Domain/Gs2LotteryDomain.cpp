@@ -105,7 +105,8 @@ namespace Gs2::Lottery::Domain
                 const auto Key = Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

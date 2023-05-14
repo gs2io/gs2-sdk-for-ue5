@@ -153,7 +153,8 @@ namespace Gs2::Distributor::Domain::Model
                 const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -209,7 +210,8 @@ namespace Gs2::Distributor::Domain::Model
                 const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -267,7 +269,7 @@ namespace Gs2::Distributor::Domain::Model
                 const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Distributor::Model::FNamespace>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Distributor::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -324,7 +326,8 @@ namespace Gs2::Distributor::Domain::Model
                 const auto Key = Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FDistributorModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -506,7 +509,8 @@ namespace Gs2::Distributor::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "namespace")
                     {
-                        Self->Cache->Delete<Gs2::Distributor::Model::FNamespace>(
+                        Self->Cache->Delete(
+                            Gs2::Distributor::Model::FNamespace::TypeName,
                             Self->ParentKey,
                             Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
                                 Self->NamespaceName

@@ -123,7 +123,8 @@ namespace Gs2::News::Domain::Model
                 const auto Key = Gs2::News::Domain::Model::FOutputDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::News::Model::FOutput>(
+                Self->Cache->Put(
+                    Gs2::News::Model::FOutput::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -199,7 +200,8 @@ namespace Gs2::News::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "output")
                     {
-                        Self->Cache->Delete<Gs2::News::Model::FOutput>(
+                        Self->Cache->Delete(
+                            Gs2::News::Model::FOutput::TypeName,
                             Self->ParentKey,
                             Gs2::News::Domain::Model::FOutputDomain::CreateCacheKey(
                                 Self->OutputName

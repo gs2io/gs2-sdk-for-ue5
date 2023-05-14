@@ -128,7 +128,8 @@ namespace Gs2::Lottery::Domain::Model
                 const auto Key = Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetPrizeId()
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FPrizeLimit>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FPrizeLimit::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -251,7 +252,8 @@ namespace Gs2::Lottery::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "prizeLimit")
                     {
-                        Self->Cache->Delete<Gs2::Lottery::Model::FPrizeLimit>(
+                        Self->Cache->Delete(
+                            Gs2::Lottery::Model::FPrizeLimit::TypeName,
                             Self->ParentKey,
                             Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
                                 Self->PrizeId

@@ -113,7 +113,8 @@ namespace Gs2::Distributor::Domain::Model
                 );
                 const auto Key = Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FCurrentDistributorMaster>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FCurrentDistributorMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -174,7 +175,8 @@ namespace Gs2::Distributor::Domain::Model
                 );
                 const auto Key = Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FCurrentDistributorMaster>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FCurrentDistributorMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -233,7 +235,8 @@ namespace Gs2::Distributor::Domain::Model
                 );
                 const auto Key = Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FCurrentDistributorMaster>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FCurrentDistributorMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -294,7 +297,8 @@ namespace Gs2::Distributor::Domain::Model
                 );
                 const auto Key = Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FCurrentDistributorMaster>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FCurrentDistributorMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -365,7 +369,8 @@ namespace Gs2::Distributor::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentDistributorMaster")
                     {
-                        Self->Cache->Delete<Gs2::Distributor::Model::FCurrentDistributorMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Distributor::Model::FCurrentDistributorMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain::CreateCacheKey(
                             )

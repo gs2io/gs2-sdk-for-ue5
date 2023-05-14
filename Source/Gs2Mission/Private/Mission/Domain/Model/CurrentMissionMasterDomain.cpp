@@ -118,7 +118,8 @@ namespace Gs2::Mission::Domain::Model
                 );
                 const auto Key = Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCurrentMissionMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCurrentMissionMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -179,7 +180,8 @@ namespace Gs2::Mission::Domain::Model
                 );
                 const auto Key = Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCurrentMissionMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCurrentMissionMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -238,7 +240,8 @@ namespace Gs2::Mission::Domain::Model
                 );
                 const auto Key = Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCurrentMissionMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCurrentMissionMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -299,7 +302,8 @@ namespace Gs2::Mission::Domain::Model
                 );
                 const auto Key = Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCurrentMissionMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCurrentMissionMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -370,7 +374,8 @@ namespace Gs2::Mission::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentMissionMaster")
                     {
-                        Self->Cache->Delete<Gs2::Mission::Model::FCurrentMissionMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Mission::Model::FCurrentMissionMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain::CreateCacheKey(
                             )

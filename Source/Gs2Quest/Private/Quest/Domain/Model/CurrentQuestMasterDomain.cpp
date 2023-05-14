@@ -116,7 +116,8 @@ namespace Gs2::Quest::Domain::Model
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FCurrentQuestMaster>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FCurrentQuestMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -177,7 +178,8 @@ namespace Gs2::Quest::Domain::Model
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FCurrentQuestMaster>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FCurrentQuestMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -236,7 +238,8 @@ namespace Gs2::Quest::Domain::Model
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FCurrentQuestMaster>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FCurrentQuestMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -297,7 +300,8 @@ namespace Gs2::Quest::Domain::Model
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FCurrentQuestMaster>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FCurrentQuestMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -368,7 +372,8 @@ namespace Gs2::Quest::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentQuestMaster")
                     {
-                        Self->Cache->Delete<Gs2::Quest::Model::FCurrentQuestMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Quest::Model::FCurrentQuestMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain::CreateCacheKey(
                             )

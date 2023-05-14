@@ -56,7 +56,7 @@ void UGs2RankingListOfScoreAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnScores.Add(EzScoreToFGs2RankingScoreValue(v));
+        ReturnScores.Add(EzScoreToFGs2RankingScoreValue(v.Current()));
     }
     OnSuccess.Broadcast(ReturnScores, ReturnError);
 }

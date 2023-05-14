@@ -121,7 +121,8 @@ namespace Gs2::Money::Domain::Model
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                     TOptional<FString>()
                 );
-                Self->Cache->Put<Gs2::Money::Model::FWallet>(
+                Self->Cache->Put(
+                    Gs2::Money::Model::FWallet::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -184,7 +185,8 @@ namespace Gs2::Money::Domain::Model
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                     TOptional<FString>()
                 );
-                Self->Cache->Put<Gs2::Money::Model::FWallet>(
+                Self->Cache->Put(
+                    Gs2::Money::Model::FWallet::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -263,7 +265,8 @@ namespace Gs2::Money::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "wallet")
                     {
-                        Self->Cache->Delete<Gs2::Money::Model::FWallet>(
+                        Self->Cache->Delete(
+                            Gs2::Money::Model::FWallet::TypeName,
                             Self->ParentKey,
                             Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                                 TOptional<FString>()

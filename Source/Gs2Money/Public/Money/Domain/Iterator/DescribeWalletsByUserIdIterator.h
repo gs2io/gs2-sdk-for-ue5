@@ -25,23 +25,15 @@
 namespace Gs2::Money::Domain::Iterator
 {
 
-    class FDescribeWalletsByUserIdIteratorLoadTask;
-
     class GS2MONEY_API FDescribeWalletsByUserIdIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Money::Model::FWallet, FDescribeWalletsByUserIdIteratorLoadTask>
+        public TSharedFromThis<FDescribeWalletsByUserIdIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Money::FGs2MoneyRestClientPtr Client;
-
-        friend FDescribeWalletsByUserIdIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeWalletsByUserIdIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeWalletsByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Money::FGs2MoneyRestClientPtr Client,
@@ -49,67 +41,157 @@ public:
             const TOptional<FString> UserId
         );
 
-        class GS2MONEY_API IteratorImpl
-        {
-            friend FDescribeWalletsByUserIdIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIterator::FNextTask>> Task;
-            Gs2::Money::Model::FWalletPtr Current;
+        class GS2MONEY_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Money::Model::FWallet>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Money::Model::FWallet>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Money::Model::FWalletPtr& operator*() const;
-            Gs2::Money::Model::FWalletPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2MONEY_API FIterator
+        {
+            TSharedRef<FDescribeWalletsByUserIdIterator> Self;
+            TSharedPtr<TArray<Gs2::Money::Model::FWalletPtr>> Range;
+            TOptional<TArray<Gs2::Money::Model::FWalletPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeWalletsByUserIdIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeWalletsByUserIdIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeWalletsByUserIdIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Money::Model::FWalletPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeWalletsByUserIdIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeWalletsByUserIdIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeWalletsByUserIdIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeWalletsByUserIdIterator> FDescribeWalletsByUserIdIteratorPtr;
-
-    class FDescribeWalletsByUserIdIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Money::Model::FWalletPtr>>,
-        public TSharedFromThis<FDescribeWalletsByUserIdIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeWalletsByUserIdIterator> Self;
-
-    public:
-        explicit FDescribeWalletsByUserIdIteratorLoadTask(
-            TSharedPtr<FDescribeWalletsByUserIdIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Money::Model::FWalletPtr>>> Result
-        ) override;
-    };
 }

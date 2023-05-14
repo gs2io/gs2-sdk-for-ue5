@@ -53,7 +53,7 @@ void UGs2FriendListOfFollowUserAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnFollowUsers.Add(EzFollowUserToFGs2FriendFollowUserValue(v));
+        ReturnFollowUsers.Add(EzFollowUserToFGs2FriendFollowUserValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnFollowUsers, ReturnError);
 }

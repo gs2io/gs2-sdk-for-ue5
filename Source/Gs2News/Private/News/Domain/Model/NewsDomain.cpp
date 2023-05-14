@@ -121,7 +121,8 @@ namespace Gs2::News::Domain::Model
                         Item->GetKey(),
                         Item->GetValue()
                     );
-                    Self->Cache->Put<Gs2::News::Model::FSetCookieRequestEntry>(
+                    Self->Cache->Put(
+                        Gs2::News::Model::FSetCookieRequestEntry::TypeName,
                         ParentKey,
                         Key,
                         Item,
@@ -154,7 +155,8 @@ namespace Gs2::News::Domain::Model
                 (*ResultModel->GetItems())[i]->GetKey(),
                 (*ResultModel->GetItems())[i]->GetValue()
             );
-            Self->Cache->Put<Gs2::News::Model::FSetCookieRequestEntry>(
+            Self->Cache->Put(
+                Gs2::News::Model::FSetCookieRequestEntry::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],

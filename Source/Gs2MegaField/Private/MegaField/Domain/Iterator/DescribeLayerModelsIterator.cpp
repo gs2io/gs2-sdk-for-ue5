@@ -31,32 +31,6 @@
 namespace Gs2::MegaField::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeLayerModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::MegaField::Model::FLayerModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeLayerModels(
-            MakeShared<Gs2::MegaField::Request::FDescribeLayerModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithAreaModelName(Self->AreaModelName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeLayerModelsIteratorLoadTask>>
-    FDescribeLayerModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeLayerModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeLayerModelsIterator::FDescribeLayerModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client,
@@ -67,49 +41,114 @@ namespace Gs2::MegaField::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        AreaModelName(AreaModelName),
+        AreaModelName(AreaModelName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeLayerModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::MegaField::Model::FLayerModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeLayerModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeLayerModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::MegaField::Model::FLayerModelPtr& FDescribeLayerModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::MegaField::Model::FLayerModelPtr FDescribeLayerModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeLayerModelsIterator::IteratorImpl& FDescribeLayerModelsIterator::IteratorImpl::operator++()
+    FDescribeLayerModelsIterator::FIterator& FDescribeLayerModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::MegaField::Domain::Model::FAreaModelDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->AreaModelName,
+            "LayerModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::MegaField::Model::FLayerModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::MegaField::Model::FLayerModelPtr>>();
+                *Range = Self->Cache->List<Gs2::MegaField::Model::FLayerModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeLayerModels(
+                MakeShared<Gs2::MegaField::Request::FDescribeLayerModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithAreaModelName(Self->AreaModelName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FLayerModel::TypeName,
+                    ListParentKey,
+                    Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeLayerModelsIterator::IteratorImpl FDescribeLayerModelsIterator::begin()
+    FDescribeLayerModelsIterator::FIterator FDescribeLayerModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeLayerModelsIterator::IteratorImpl FDescribeLayerModelsIterator::end()
+    FDescribeLayerModelsIterator::FIterator FDescribeLayerModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeLayerModelsIterator::FIterator FDescribeLayerModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

@@ -48,7 +48,7 @@ void UGs2MissionListOfMissionTaskModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnMissionTaskModels.Add(EzMissionTaskModelToFGs2MissionMissionTaskModelValue(v));
+        ReturnMissionTaskModels.Add(EzMissionTaskModelToFGs2MissionMissionTaskModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnMissionTaskModels, ReturnError);
 }

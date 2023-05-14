@@ -130,7 +130,8 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Chat::Model::FMessage>(
+                Self->Cache->Put(
+                    Gs2::Chat::Model::FMessage::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -195,7 +196,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Chat::Model::FMessage>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Chat::Model::FMessage::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -270,7 +271,8 @@ namespace Gs2::Chat::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "message")
                     {
-                        Self->Cache->Delete<Gs2::Chat::Model::FMessage>(
+                        Self->Cache->Delete(
+                            Gs2::Chat::Model::FMessage::TypeName,
                             Self->ParentKey,
                             Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
                                 Self->MessageName

@@ -53,7 +53,7 @@ void UGs2RankingListOfSubscribeUserAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnSubscribeUsers.Add(EzSubscribeUserToFGs2RankingSubscribeUserValue(v));
+        ReturnSubscribeUsers.Add(EzSubscribeUserToFGs2RankingSubscribeUserValue(v.Current()));
     }
     OnSuccess.Broadcast(ReturnSubscribeUsers, ReturnError);
 }

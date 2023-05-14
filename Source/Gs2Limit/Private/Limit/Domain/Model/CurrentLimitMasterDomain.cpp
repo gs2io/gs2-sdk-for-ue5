@@ -112,7 +112,8 @@ namespace Gs2::Limit::Domain::Model
                 );
                 const auto Key = Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FCurrentLimitMaster>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -173,7 +174,8 @@ namespace Gs2::Limit::Domain::Model
                 );
                 const auto Key = Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FCurrentLimitMaster>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -232,7 +234,8 @@ namespace Gs2::Limit::Domain::Model
                 );
                 const auto Key = Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FCurrentLimitMaster>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -293,7 +296,8 @@ namespace Gs2::Limit::Domain::Model
                 );
                 const auto Key = Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FCurrentLimitMaster>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -364,7 +368,8 @@ namespace Gs2::Limit::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentLimitMaster")
                     {
-                        Self->Cache->Delete<Gs2::Limit::Model::FCurrentLimitMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
                             )

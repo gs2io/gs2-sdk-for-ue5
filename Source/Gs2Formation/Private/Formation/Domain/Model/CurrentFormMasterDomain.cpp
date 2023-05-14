@@ -118,7 +118,8 @@ namespace Gs2::Formation::Domain::Model
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FCurrentFormMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FCurrentFormMaster>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FCurrentFormMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -179,7 +180,8 @@ namespace Gs2::Formation::Domain::Model
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FCurrentFormMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FCurrentFormMaster>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FCurrentFormMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -238,7 +240,8 @@ namespace Gs2::Formation::Domain::Model
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FCurrentFormMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FCurrentFormMaster>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FCurrentFormMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -299,7 +302,8 @@ namespace Gs2::Formation::Domain::Model
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FCurrentFormMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FCurrentFormMaster>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FCurrentFormMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -370,7 +374,8 @@ namespace Gs2::Formation::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentFormMaster")
                     {
-                        Self->Cache->Delete<Gs2::Formation::Model::FCurrentFormMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Formation::Model::FCurrentFormMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Formation::Domain::Model::FCurrentFormMasterDomain::CreateCacheKey(
                             )

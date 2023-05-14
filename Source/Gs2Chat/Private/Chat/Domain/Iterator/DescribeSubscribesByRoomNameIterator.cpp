@@ -31,35 +31,6 @@
 namespace Gs2::Chat::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeSubscribesByRoomNameIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Chat::Model::FSubscribePtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeSubscribesByRoomName(
-            MakeShared<Gs2::Chat::Request::FDescribeSubscribesByRoomNameRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithRoomName(Self->RoomName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeSubscribesByRoomNameIteratorLoadTask>>
-    FDescribeSubscribesByRoomNameIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeSubscribesByRoomNameIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeSubscribesByRoomNameIterator::FDescribeSubscribesByRoomNameIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Chat::FGs2ChatRestClientPtr Client,
@@ -70,50 +41,88 @@ namespace Gs2::Chat::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        RoomName(RoomName),
+        RoomName(RoomName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeSubscribesByRoomNameIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Chat::Model::FSubscribe>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeSubscribesByRoomNameIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeSubscribesByRoomNameIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Chat::Model::FSubscribePtr& FDescribeSubscribesByRoomNameIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Chat::Model::FSubscribePtr FDescribeSubscribesByRoomNameIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeSubscribesByRoomNameIterator::IteratorImpl& FDescribeSubscribesByRoomNameIterator::IteratorImpl::operator++()
+    FDescribeSubscribesByRoomNameIterator::FIterator& FDescribeSubscribesByRoomNameIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto Future = Self->Client->DescribeSubscribesByRoomName(
+                MakeShared<Gs2::Chat::Request::FDescribeSubscribesByRoomNameRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithRoomName(Self->RoomName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeSubscribesByRoomNameIterator::IteratorImpl FDescribeSubscribesByRoomNameIterator::begin()
+    FDescribeSubscribesByRoomNameIterator::FIterator FDescribeSubscribesByRoomNameIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeSubscribesByRoomNameIterator::IteratorImpl FDescribeSubscribesByRoomNameIterator::end()
+    FDescribeSubscribesByRoomNameIterator::FIterator FDescribeSubscribesByRoomNameIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeSubscribesByRoomNameIterator::FIterator FDescribeSubscribesByRoomNameIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

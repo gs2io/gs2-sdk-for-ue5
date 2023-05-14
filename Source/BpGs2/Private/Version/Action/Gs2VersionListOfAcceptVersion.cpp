@@ -48,7 +48,7 @@ void UGs2VersionListOfAcceptVersionAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnAcceptVersions.Add(EzAcceptVersionToFGs2VersionAcceptVersionValue(v));
+        ReturnAcceptVersions.Add(EzAcceptVersionToFGs2VersionAcceptVersionValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnAcceptVersions, ReturnError);
 }

@@ -31,42 +31,6 @@
 namespace Gs2::Inventory::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeReferenceOfByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Inventory::Model::FReferenceOfEntryPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeReferenceOfByUserId(
-            MakeShared<Gs2::Inventory::Request::FDescribeReferenceOfByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithInventoryName(Self->InventoryName)
-                ->WithUserId(Self->UserId)
-                ->WithItemName(Self->ItemName)
-                ->WithItemSetName(Self->ItemSetName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (!(*Result).IsValid())
-        {
-            *Result = MakeShared<TArray<Inventory::Model::FReferenceOfEntryPtr>>();
-        }
-        for (auto Item : *R->GetItems())
-        {
-            (*Result)->Add(MakeShared<Inventory::Model::FReferenceOfEntry>(Item));
-        }
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeReferenceOfByUserIdIteratorLoadTask>>
-    FDescribeReferenceOfByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeReferenceOfByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeReferenceOfByUserIdIterator::FDescribeReferenceOfByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Inventory::FGs2InventoryRestClientPtr Client,
@@ -83,49 +47,120 @@ namespace Gs2::Inventory::Domain::Iterator
         InventoryName(InventoryName),
         UserId(UserId),
         ItemName(ItemName),
-        ItemSetName(ItemSetName),
+        ItemSetName(ItemSetName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeReferenceOfByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOfEntry>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeReferenceOfByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeReferenceOfByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Inventory::Model::FReferenceOfEntryPtr& FDescribeReferenceOfByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Inventory::Model::FReferenceOfEntryPtr FDescribeReferenceOfByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeReferenceOfByUserIdIterator::IteratorImpl& FDescribeReferenceOfByUserIdIterator::IteratorImpl::operator++()
+    FDescribeReferenceOfByUserIdIterator::FIterator& FDescribeReferenceOfByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = "inventory:String";
+            if (Self->Cache->IsListCached(
+                Gs2::Inventory::Model::FReferenceOfEntry::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Inventory::Model::FReferenceOfEntryPtr>>();
+                *Range = Self->Cache->List<Gs2::Inventory::Model::FReferenceOfEntry>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeReferenceOfByUserId(
+                MakeShared<Gs2::Inventory::Request::FDescribeReferenceOfByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithInventoryName(Self->InventoryName)
+                    ->WithUserId(Self->UserId)
+                    ->WithItemName(Self->ItemName)
+                    ->WithItemSetName(Self->ItemSetName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            if (!Range.IsValid())
+            {
+                Range = MakeShared<TArray<Inventory::Model::FReferenceOfEntryPtr>>();
+            }
+            for (auto Item : *R->GetItems())
+            {
+                Range->Add(MakeShared<Inventory::Model::FReferenceOfEntry>(Item));
+            }
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FReferenceOfEntry::TypeName,
+                    ListParentKey,
+                    Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
+                        Item
+                    ),
+                    MakeShared<FString>(Item),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeReferenceOfByUserIdIterator::IteratorImpl FDescribeReferenceOfByUserIdIterator::begin()
+    FDescribeReferenceOfByUserIdIterator::FIterator FDescribeReferenceOfByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeReferenceOfByUserIdIterator::IteratorImpl FDescribeReferenceOfByUserIdIterator::end()
+    FDescribeReferenceOfByUserIdIterator::FIterator FDescribeReferenceOfByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeReferenceOfByUserIdIterator::FIterator FDescribeReferenceOfByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

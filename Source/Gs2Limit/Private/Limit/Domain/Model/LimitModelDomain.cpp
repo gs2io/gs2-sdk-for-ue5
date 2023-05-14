@@ -116,7 +116,8 @@ namespace Gs2::Limit::Domain::Model
                 const auto Key = Gs2::Limit::Domain::Model::FLimitModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FLimitModel>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FLimitModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -190,7 +191,8 @@ namespace Gs2::Limit::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "limitModel")
                     {
-                        Self->Cache->Delete<Gs2::Limit::Model::FLimitModel>(
+                        Self->Cache->Delete(
+                            Gs2::Limit::Model::FLimitModel::TypeName,
                             Self->ParentKey,
                             Gs2::Limit::Domain::Model::FLimitModelDomain::CreateCacheKey(
                                 Self->LimitName

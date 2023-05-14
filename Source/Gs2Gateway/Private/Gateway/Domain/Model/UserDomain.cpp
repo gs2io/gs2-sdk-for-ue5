@@ -165,7 +165,8 @@ namespace Gs2::Gateway::Domain::Model
                     );
                     const auto Key = Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
                     );
-                    Self->Cache->Put<Gs2::Gateway::Model::FWebSocketSession>(
+                    Self->Cache->Put(
+                        Gs2::Gateway::Model::FWebSocketSession::TypeName,
                         ParentKey,
                         Key,
                         Item,
@@ -195,7 +196,8 @@ namespace Gs2::Gateway::Domain::Model
             );
             const auto Key = Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
             );
-            Self->Cache->Put<Gs2::Gateway::Model::FWebSocketSession>(
+            Self->Cache->Put(
+                Gs2::Gateway::Model::FWebSocketSession::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],

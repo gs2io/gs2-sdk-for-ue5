@@ -101,7 +101,8 @@ namespace Gs2::Inbox::Domain
                 const auto Key = Gs2::Inbox::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -179,7 +180,8 @@ namespace Gs2::Inbox::Domain
                 const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Inbox::Model::FMessage>(
+                Cache->Put(
+                    Gs2::Inbox::Model::FMessage::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -220,8 +222,9 @@ namespace Gs2::Inbox::Domain
                 const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Delete<Gs2::Inbox::Model::FMessage>(ParentKey, Key);
-                Cache->ClearListCache<Gs2::Inbox::Model::FMessage>(
+                Cache->Delete(Gs2::Inbox::Model::FMessage::TypeName, ParentKey, Key);
+                Cache->ClearListCache(
+                    Gs2::Inbox::Model::FMessage::TypeName,
                     ParentKey
                 );
             }
@@ -267,7 +270,8 @@ namespace Gs2::Inbox::Domain
                 const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Inbox::Model::FMessage>(
+                Cache->Put(
+                    Gs2::Inbox::Model::FMessage::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

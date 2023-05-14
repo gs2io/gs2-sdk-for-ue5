@@ -123,7 +123,8 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FInventoryModel>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FInventoryModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -223,7 +224,8 @@ namespace Gs2::Inventory::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "inventoryModel")
                     {
-                        Self->Cache->Delete<Gs2::Inventory::Model::FInventoryModel>(
+                        Self->Cache->Delete(
+                            Gs2::Inventory::Model::FInventoryModel::TypeName,
                             Self->ParentKey,
                             Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheKey(
                                 Self->InventoryName

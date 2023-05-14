@@ -112,7 +112,8 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Deploy::Model::FEvent>(
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FEvent::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -186,7 +187,8 @@ namespace Gs2::Deploy::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "event")
                     {
-                        Self->Cache->Delete<Gs2::Deploy::Model::FEvent>(
+                        Self->Cache->Delete(
+                            Gs2::Deploy::Model::FEvent::TypeName,
                             Self->ParentKey,
                             Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
                                 Self->EventName

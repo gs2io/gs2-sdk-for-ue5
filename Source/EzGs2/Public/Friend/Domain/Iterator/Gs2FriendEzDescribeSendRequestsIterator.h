@@ -24,78 +24,123 @@
 namespace Gs2::UE5::Friend::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeSendRequestsIterator:
-            public TSharedFromThis<FEzDescribeSendRequestsIterator>
+	class EZGS2_API FEzDescribeSendRequestsIterator :
+        public TSharedFromThis<FEzDescribeSendRequestsIterator>
     {
 
-		TSharedPtr<Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator> Iterator;
+		Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeSendRequestsIterator(
-            const Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIteratorPtr Iterator
-        );
+            Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeSendRequestsIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Model::FEzFriendRequest>,
-            public TSharedFromThis<FDescribeSendRequestsIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator::FNextTask>> Task;
+        explicit FEzDescribeSendRequestsIterator(
+            Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeSendRequestsIteratorLoadTask(
-	            const TSharedPtr<Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzFriendRequest>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeSendRequestsIterator;
+		    friend class FEzDescribeSendRequestsIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator::FNextTask>> Task;
-			Gs2::UE5::Friend::Model::FEzFriendRequestPtr Current;
+			Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator::FIterator DomainIterator;
+			Gs2::UE5::Friend::Model::FEzFriendRequestPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeSendRequestsIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Friend::Model::FEzFriendRequestPtr& operator*() const;
-			Gs2::UE5::Friend::Model::FEzFriendRequestPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Friend::Model::FEzFriendRequest::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Friend::Model::FEzFriendRequestPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeSendRequestsIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeSendRequestsIterator> FEzDescribeSendRequestsIteratorPtr;
 }

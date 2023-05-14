@@ -48,7 +48,7 @@ void UGs2RankingListOfCategoryModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnCategoryModels.Add(EzCategoryModelToFGs2RankingCategoryModelValue(v));
+        ReturnCategoryModels.Add(EzCategoryModelToFGs2RankingCategoryModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnCategoryModels, ReturnError);
 }

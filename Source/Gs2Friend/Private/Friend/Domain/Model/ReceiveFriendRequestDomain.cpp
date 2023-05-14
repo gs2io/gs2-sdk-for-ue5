@@ -133,7 +133,8 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Put<Gs2::Friend::Model::FFriendRequest>(
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FFriendRequest::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -196,23 +197,26 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Delete<Gs2::Friend::Model::FFriendRequest>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Friend::Model::FFriendRequest::TypeName, ParentKey, Key);
             }
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FFriendRequest>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
                 Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->FromUserId,
                     "SendFriendRequest"
                 )
             );
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FFriendRequest>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
                 Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
                     "ReceiveFriendRequest"
                 )
             );
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FFriendUser>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
                 Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
@@ -220,7 +224,8 @@ namespace Gs2::Friend::Domain::Model
                     "FriendUser"
                 )
             );
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FFriendUser>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
                 Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
@@ -294,23 +299,26 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Delete<Gs2::Friend::Model::FFriendRequest>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Friend::Model::FFriendRequest::TypeName, ParentKey, Key);
             }
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FFriendRequest>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
                 Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->FromUserId,
                     "SendFriendRequest"
                 )
             );
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FFriendRequest>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
                 Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
                     "ReceiveFriendRequest"
                 )
             );
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FFriendUser>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
                 Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
@@ -318,7 +326,8 @@ namespace Gs2::Friend::Domain::Model
                     "FriendUser"
                 )
             );
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FFriendUser>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
                 Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
@@ -405,7 +414,8 @@ namespace Gs2::Friend::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "friendRequest")
                     {
-                        Self->Cache->Delete<Gs2::Friend::Model::FReceiveFriendRequest>(
+                        Self->Cache->Delete(
+                            Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
                             Self->ParentKey,
                             Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
                                 Self->FromUserId

@@ -116,7 +116,8 @@ namespace Gs2::Limit::Domain::Model
                 const auto Key = Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FLimitModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FLimitModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -177,7 +178,8 @@ namespace Gs2::Limit::Domain::Model
                 const auto Key = Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FLimitModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FLimitModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -240,7 +242,7 @@ namespace Gs2::Limit::Domain::Model
                 const auto Key = Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Limit::Model::FLimitModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Limit::Model::FLimitModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -311,7 +313,8 @@ namespace Gs2::Limit::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "limitModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Limit::Model::FLimitModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Limit::Model::FLimitModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
                                 Self->LimitName

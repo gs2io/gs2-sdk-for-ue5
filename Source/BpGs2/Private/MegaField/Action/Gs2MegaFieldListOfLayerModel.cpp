@@ -48,7 +48,7 @@ void UGs2MegaFieldListOfLayerModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnLayerModels.Add(EzLayerModelToFGs2MegaFieldLayerModelValue(v));
+        ReturnLayerModels.Add(EzLayerModelToFGs2MegaFieldLayerModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnLayerModels, ReturnError);
 }

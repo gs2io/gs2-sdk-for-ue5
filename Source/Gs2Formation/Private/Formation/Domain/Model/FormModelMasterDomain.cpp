@@ -122,7 +122,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FFormModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FFormModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -183,7 +184,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FFormModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FFormModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -246,7 +248,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Formation::Model::FFormModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Formation::Model::FFormModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -317,7 +319,8 @@ namespace Gs2::Formation::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "formModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Formation::Model::FFormModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Formation::Model::FFormModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Formation::Domain::Model::FFormModelMasterDomain::CreateCacheKey(
                                 Self->FormModelName

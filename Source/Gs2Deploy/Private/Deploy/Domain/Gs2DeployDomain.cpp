@@ -97,7 +97,8 @@ namespace Gs2::Deploy::Domain
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Deploy::Model::FStack>(
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -158,7 +159,8 @@ namespace Gs2::Deploy::Domain
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Deploy::Model::FStack>(
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

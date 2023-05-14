@@ -25,25 +25,17 @@
 namespace Gs2::Formation::Domain::Iterator
 {
 
-    class FDescribePropertyFormsIteratorLoadTask;
-
     class GS2FORMATION_API FDescribePropertyFormsIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Formation::Model::FPropertyForm, FDescribePropertyFormsIteratorLoadTask>
+        public TSharedFromThis<FDescribePropertyFormsIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Formation::FGs2FormationRestClientPtr Client;
-
-        friend FDescribePropertyFormsIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribePropertyFormsIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
         const TOptional<FString> FormModelName;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribePropertyFormsIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Formation::FGs2FormationRestClientPtr Client,
@@ -52,67 +44,157 @@ public:
             const TOptional<FString> FormModelName
         );
 
-        class GS2FORMATION_API IteratorImpl
-        {
-            friend FDescribePropertyFormsIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIterator::FNextTask>> Task;
-            Gs2::Formation::Model::FPropertyFormPtr Current;
+        class GS2FORMATION_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Model::FPropertyForm>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FPropertyForm>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Formation::Model::FPropertyFormPtr& operator*() const;
-            Gs2::Formation::Model::FPropertyFormPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2FORMATION_API FIterator
+        {
+            TSharedRef<FDescribePropertyFormsIterator> Self;
+            TSharedPtr<TArray<Gs2::Formation::Model::FPropertyFormPtr>> Range;
+            TOptional<TArray<Gs2::Formation::Model::FPropertyFormPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribePropertyFormsIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribePropertyFormsIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribePropertyFormsIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Formation::Model::FPropertyFormPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribePropertyFormsIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribePropertyFormsIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribePropertyFormsIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribePropertyFormsIterator> FDescribePropertyFormsIteratorPtr;
-
-    class FDescribePropertyFormsIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Formation::Model::FPropertyFormPtr>>,
-        public TSharedFromThis<FDescribePropertyFormsIteratorLoadTask>
-    {
-        TSharedPtr<FDescribePropertyFormsIterator> Self;
-
-    public:
-        explicit FDescribePropertyFormsIteratorLoadTask(
-            TSharedPtr<FDescribePropertyFormsIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Formation::Model::FPropertyFormPtr>>> Result
-        ) override;
-    };
 }

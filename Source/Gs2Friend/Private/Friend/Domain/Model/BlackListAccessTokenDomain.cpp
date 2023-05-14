@@ -130,14 +130,16 @@ namespace Gs2::Friend::Domain::Model
                 );
                 const auto Key = Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Friend::Model::FBlackList>(
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FBlackList::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FBlackListEntry>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FBlackListEntry::TypeName,
                 Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     ResultModel->GetItem()->GetUserId(),
@@ -200,14 +202,16 @@ namespace Gs2::Friend::Domain::Model
                 );
                 const auto Key = Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Friend::Model::FBlackList>(
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FBlackList::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
-            Self->Cache->ClearListCache<Gs2::Friend::Model::FBlackListEntry>(
+            Self->Cache->ClearListCache(
+                Gs2::Friend::Model::FBlackListEntry::TypeName,
                 Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     ResultModel->GetItem()->GetUserId(),

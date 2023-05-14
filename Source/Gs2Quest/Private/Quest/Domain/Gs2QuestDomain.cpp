@@ -103,7 +103,8 @@ namespace Gs2::Quest::Domain
                 const auto Key = Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -180,7 +181,8 @@ namespace Gs2::Quest::Domain
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Cache->Put<Gs2::Quest::Model::FProgress>(
+                Cache->Put(
+                    Gs2::Quest::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -220,7 +222,7 @@ namespace Gs2::Quest::Domain
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Cache->Delete<Gs2::Quest::Model::FProgress>(ParentKey, Key);
+                Cache->Delete(Gs2::Quest::Model::FProgress::TypeName, ParentKey, Key);
             }
         }
     }
@@ -263,7 +265,8 @@ namespace Gs2::Quest::Domain
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Cache->Put<Gs2::Quest::Model::FProgress>(
+                Cache->Put(
+                    Gs2::Quest::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

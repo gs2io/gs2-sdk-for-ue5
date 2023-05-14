@@ -95,7 +95,8 @@ namespace Gs2::Realtime::Domain
                 const auto Key = Gs2::Realtime::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Realtime::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Realtime::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

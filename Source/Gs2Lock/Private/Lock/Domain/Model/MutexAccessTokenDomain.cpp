@@ -119,7 +119,8 @@ namespace Gs2::Lock::Domain::Model
                 const auto Key = Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put<Gs2::Lock::Model::FMutex>(
+                Self->Cache->Put(
+                    Gs2::Lock::Model::FMutex::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -184,7 +185,7 @@ namespace Gs2::Lock::Domain::Model
                 const auto Key = Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Delete<Gs2::Lock::Model::FMutex>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Lock::Model::FMutex::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -244,7 +245,8 @@ namespace Gs2::Lock::Domain::Model
                 const auto Key = Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put<Gs2::Lock::Model::FMutex>(
+                Self->Cache->Put(
+                    Gs2::Lock::Model::FMutex::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -320,7 +322,8 @@ namespace Gs2::Lock::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "mutex")
                     {
-                        Self->Cache->Delete<Gs2::Lock::Model::FMutex>(
+                        Self->Cache->Delete(
+                            Gs2::Lock::Model::FMutex::TypeName,
                             Self->ParentKey,
                             Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
                                 Self->PropertyId

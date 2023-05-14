@@ -119,7 +119,8 @@ namespace Gs2::Inbox::Domain::Model
                 );
                 const auto Key = Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FReceived>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FReceived::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -180,7 +181,8 @@ namespace Gs2::Inbox::Domain::Model
                 );
                 const auto Key = Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FReceived>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FReceived::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -243,7 +245,7 @@ namespace Gs2::Inbox::Domain::Model
                 );
                 const auto Key = Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete<Gs2::Inbox::Model::FReceived>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Inbox::Model::FReceived::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -311,7 +313,8 @@ namespace Gs2::Inbox::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "received")
                     {
-                        Self->Cache->Delete<Gs2::Inbox::Model::FReceived>(
+                        Self->Cache->Delete(
+                            Gs2::Inbox::Model::FReceived::TypeName,
                             Self->ParentKey,
                             Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
                             )

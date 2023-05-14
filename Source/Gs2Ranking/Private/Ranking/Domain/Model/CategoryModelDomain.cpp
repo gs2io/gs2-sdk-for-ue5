@@ -122,7 +122,8 @@ namespace Gs2::Ranking::Domain::Model
                 const auto Key = Gs2::Ranking::Domain::Model::FCategoryModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FCategoryModel>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FCategoryModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -196,7 +197,8 @@ namespace Gs2::Ranking::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "categoryModel")
                     {
-                        Self->Cache->Delete<Gs2::Ranking::Model::FCategoryModel>(
+                        Self->Cache->Delete(
+                            Gs2::Ranking::Model::FCategoryModel::TypeName,
                             Self->ParentKey,
                             Gs2::Ranking::Domain::Model::FCategoryModelDomain::CreateCacheKey(
                                 Self->CategoryName

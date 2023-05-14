@@ -31,36 +31,6 @@
 namespace Gs2::Friend::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeFriendsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Friend::Model::FFriendUserPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeFriends(
-            MakeShared<Gs2::Friend::Request::FDescribeFriendsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                ->WithWithProfile(Self->WithProfile)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeFriendsIteratorLoadTask>>
-    FDescribeFriendsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeFriendsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeFriendsIterator::FDescribeFriendsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
@@ -73,50 +43,121 @@ namespace Gs2::Friend::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
-        WithProfile(WithProfile),
+        WithProfile(WithProfile)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeFriendsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Friend::Model::FFriendUser>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeFriendsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeFriendsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Friend::Model::FFriendUserPtr& FDescribeFriendsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Friend::Model::FFriendUserPtr FDescribeFriendsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeFriendsIterator::IteratorImpl& FDescribeFriendsIterator::IteratorImpl::operator++()
+    FDescribeFriendsIterator::FIterator& FDescribeFriendsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId(),
+            Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
+            "FriendUser"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Friend::Model::FFriendUserPtr>>();
+                *Range = Self->Cache->List<Gs2::Friend::Model::FFriendUser>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeFriends(
+                MakeShared<Gs2::Friend::Request::FDescribeFriendsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+                    ->WithWithProfile(Self->WithProfile)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FFriendUser::TypeName,
+                    ListParentKey,
+                    Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheKey(
+                        Item->GetUserId()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeFriendsIterator::IteratorImpl FDescribeFriendsIterator::begin()
+    FDescribeFriendsIterator::FIterator FDescribeFriendsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeFriendsIterator::IteratorImpl FDescribeFriendsIterator::end()
+    FDescribeFriendsIterator::FIterator FDescribeFriendsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeFriendsIterator::FIterator FDescribeFriendsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

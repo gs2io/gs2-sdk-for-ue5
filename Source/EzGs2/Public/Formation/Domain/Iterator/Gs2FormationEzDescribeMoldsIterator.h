@@ -24,78 +24,123 @@
 namespace Gs2::UE5::Formation::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeMoldsIterator:
-            public TSharedFromThis<FEzDescribeMoldsIterator>
+	class EZGS2_API FEzDescribeMoldsIterator :
+        public TSharedFromThis<FEzDescribeMoldsIterator>
     {
 
-		TSharedPtr<Gs2::Formation::Domain::Iterator::FDescribeMoldsIterator> Iterator;
+		Gs2::Formation::Domain::Iterator::FDescribeMoldsIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeMoldsIterator(
-            const Gs2::Formation::Domain::Iterator::FDescribeMoldsIteratorPtr Iterator
-        );
+            Gs2::Formation::Domain::Iterator::FDescribeMoldsIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeMoldsIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzMold>,
-            public TSharedFromThis<FDescribeMoldsIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Formation::Domain::Iterator::FDescribeMoldsIterator::FNextTask>> Task;
+        explicit FEzDescribeMoldsIterator(
+            Gs2::Formation::Domain::Iterator::FDescribeMoldsIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeMoldsIteratorLoadTask(
-	            const TSharedPtr<Gs2::Formation::Domain::Iterator::FDescribeMoldsIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Model::FEzMold>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeMoldsIterator;
+		    friend class FEzDescribeMoldsIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Formation::Domain::Iterator::FDescribeMoldsIterator::FNextTask>> Task;
-			Gs2::UE5::Formation::Model::FEzMoldPtr Current;
+			Gs2::Formation::Domain::Iterator::FDescribeMoldsIterator::FIterator DomainIterator;
+			Gs2::UE5::Formation::Model::FEzMoldPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Formation::Domain::Iterator::FDescribeMoldsIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Formation::Domain::Iterator::FDescribeMoldsIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeMoldsIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Formation::Model::FEzMoldPtr& operator*() const;
-			Gs2::UE5::Formation::Model::FEzMoldPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Formation::Model::FEzMold::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Formation::Model::FEzMoldPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeMoldsIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeMoldsIterator> FEzDescribeMoldsIteratorPtr;
 }

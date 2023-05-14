@@ -126,7 +126,8 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetQuestGroupName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FCompletedQuestList>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FCompletedQuestList::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -202,7 +203,8 @@ namespace Gs2::Quest::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "completedQuestList")
                     {
-                        Self->Cache->Delete<Gs2::Quest::Model::FCompletedQuestList>(
+                        Self->Cache->Delete(
+                            Gs2::Quest::Model::FCompletedQuestList::TypeName,
                             Self->ParentKey,
                             Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
                                 Self->QuestGroupName

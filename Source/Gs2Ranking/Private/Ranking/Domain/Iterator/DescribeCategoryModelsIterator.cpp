@@ -31,31 +31,6 @@
 namespace Gs2::Ranking::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeCategoryModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Ranking::Model::FCategoryModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeCategoryModels(
-            MakeShared<Gs2::Ranking::Request::FDescribeCategoryModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeCategoryModelsIteratorLoadTask>>
-    FDescribeCategoryModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeCategoryModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeCategoryModelsIterator::FDescribeCategoryModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Ranking::FGs2RankingRestClientPtr Client,
@@ -64,49 +39,112 @@ namespace Gs2::Ranking::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeCategoryModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FCategoryModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeCategoryModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeCategoryModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Ranking::Model::FCategoryModelPtr& FDescribeCategoryModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Ranking::Model::FCategoryModelPtr FDescribeCategoryModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeCategoryModelsIterator::IteratorImpl& FDescribeCategoryModelsIterator::IteratorImpl::operator++()
+    FDescribeCategoryModelsIterator::FIterator& FDescribeCategoryModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "CategoryModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Ranking::Model::FCategoryModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Ranking::Model::FCategoryModelPtr>>();
+                *Range = Self->Cache->List<Gs2::Ranking::Model::FCategoryModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeCategoryModels(
+                MakeShared<Gs2::Ranking::Request::FDescribeCategoryModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FCategoryModel::TypeName,
+                    ListParentKey,
+                    Gs2::Ranking::Domain::Model::FCategoryModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeCategoryModelsIterator::IteratorImpl FDescribeCategoryModelsIterator::begin()
+    FDescribeCategoryModelsIterator::FIterator FDescribeCategoryModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeCategoryModelsIterator::IteratorImpl FDescribeCategoryModelsIterator::end()
+    FDescribeCategoryModelsIterator::FIterator FDescribeCategoryModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeCategoryModelsIterator::FIterator FDescribeCategoryModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

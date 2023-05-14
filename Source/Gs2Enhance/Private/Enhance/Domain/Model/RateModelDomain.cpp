@@ -118,7 +118,8 @@ namespace Gs2::Enhance::Domain::Model
                 const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Enhance::Model::FRateModel>(
+                Self->Cache->Put(
+                    Gs2::Enhance::Model::FRateModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -192,7 +193,8 @@ namespace Gs2::Enhance::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "rateModel")
                     {
-                        Self->Cache->Delete<Gs2::Enhance::Model::FRateModel>(
+                        Self->Cache->Delete(
+                            Gs2::Enhance::Model::FRateModel::TypeName,
                             Self->ParentKey,
                             Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                                 Self->RateName

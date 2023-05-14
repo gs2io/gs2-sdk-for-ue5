@@ -120,7 +120,8 @@ namespace Gs2::Money::Domain::Model
                 const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTransactionId()
                 );
-                Self->Cache->Put<Gs2::Money::Model::FReceipt>(
+                Self->Cache->Put(
+                    Gs2::Money::Model::FReceipt::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

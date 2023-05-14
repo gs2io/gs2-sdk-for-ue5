@@ -147,7 +147,8 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Key::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Key::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -203,7 +204,8 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Key::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Key::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -261,7 +263,7 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Key::Model::FNamespace>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Key::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -318,7 +320,8 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Key::Model::FKey>(
+                Self->Cache->Put(
+                    Gs2::Key::Model::FKey::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -387,7 +390,8 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Key::Model::FGitHubApiKey>(
+                Self->Cache->Put(
+                    Gs2::Key::Model::FGitHubApiKey::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -517,7 +521,8 @@ namespace Gs2::Key::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "namespace")
                     {
-                        Self->Cache->Delete<Gs2::Key::Model::FNamespace>(
+                        Self->Cache->Delete(
+                            Gs2::Key::Model::FNamespace::TypeName,
                             Self->ParentKey,
                             Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheKey(
                                 Self->NamespaceName

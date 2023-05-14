@@ -30,83 +30,119 @@
 namespace Gs2::Identifier::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeSecurityPoliciesIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Identifier::Model::FSecurityPolicyPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeSecurityPolicies(
-            MakeShared<Gs2::Identifier::Request::FDescribeSecurityPoliciesRequest>()
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeSecurityPoliciesIteratorLoadTask>>
-    FDescribeSecurityPoliciesIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeSecurityPoliciesIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeSecurityPoliciesIterator::FDescribeSecurityPoliciesIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Identifier::FGs2IdentifierRestClientPtr Client
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
-        Client(Client),
+        Client(Client)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeSecurityPoliciesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FSecurityPolicy>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeSecurityPoliciesIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeSecurityPoliciesIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Identifier::Model::FSecurityPolicyPtr& FDescribeSecurityPoliciesIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Identifier::Model::FSecurityPolicyPtr FDescribeSecurityPoliciesIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeSecurityPoliciesIterator::IteratorImpl& FDescribeSecurityPoliciesIterator::IteratorImpl::operator++()
+    FDescribeSecurityPoliciesIterator::FIterator& FDescribeSecurityPoliciesIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = "identifier:SecurityPolicy";
+            if (Self->Cache->IsListCached(
+                Gs2::Identifier::Model::FSecurityPolicy::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Identifier::Model::FSecurityPolicyPtr>>();
+                *Range = Self->Cache->List<Gs2::Identifier::Model::FSecurityPolicy>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeSecurityPolicies(
+                MakeShared<Gs2::Identifier::Request::FDescribeSecurityPoliciesRequest>()
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FSecurityPolicy::TypeName,
+                    ListParentKey,
+                    Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeSecurityPoliciesIterator::IteratorImpl FDescribeSecurityPoliciesIterator::begin()
+    FDescribeSecurityPoliciesIterator::FIterator FDescribeSecurityPoliciesIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeSecurityPoliciesIterator::IteratorImpl FDescribeSecurityPoliciesIterator::end()
+    FDescribeSecurityPoliciesIterator::FIterator FDescribeSecurityPoliciesIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeSecurityPoliciesIterator::FIterator FDescribeSecurityPoliciesIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

@@ -25,24 +25,16 @@
 namespace Gs2::Inventory::Domain::Iterator
 {
 
-    class FDescribeInventoriesIteratorLoadTask;
-
     class GS2INVENTORY_API FDescribeInventoriesIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Inventory::Model::FInventory, FDescribeInventoriesIteratorLoadTask>
+        public TSharedFromThis<FDescribeInventoriesIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
-
-        friend FDescribeInventoriesIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeInventoriesIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeInventoriesIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Inventory::FGs2InventoryRestClientPtr Client,
@@ -50,67 +42,157 @@ public:
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
-        class GS2INVENTORY_API IteratorImpl
-        {
-            friend FDescribeInventoriesIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Inventory::Domain::Iterator::FDescribeInventoriesIterator::FNextTask>> Task;
-            Gs2::Inventory::Model::FInventoryPtr Current;
+        class GS2INVENTORY_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Model::FInventory>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Inventory::Domain::Iterator::FDescribeInventoriesIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Inventory::Model::FInventory>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Inventory::Model::FInventoryPtr& operator*() const;
-            Gs2::Inventory::Model::FInventoryPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2INVENTORY_API FIterator
+        {
+            TSharedRef<FDescribeInventoriesIterator> Self;
+            TSharedPtr<TArray<Gs2::Inventory::Model::FInventoryPtr>> Range;
+            TOptional<TArray<Gs2::Inventory::Model::FInventoryPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeInventoriesIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeInventoriesIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeInventoriesIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Inventory::Model::FInventoryPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeInventoriesIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeInventoriesIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeInventoriesIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeInventoriesIterator> FDescribeInventoriesIteratorPtr;
-
-    class FDescribeInventoriesIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Inventory::Model::FInventoryPtr>>,
-        public TSharedFromThis<FDescribeInventoriesIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeInventoriesIterator> Self;
-
-    public:
-        explicit FDescribeInventoriesIteratorLoadTask(
-            TSharedPtr<FDescribeInventoriesIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Inventory::Model::FInventoryPtr>>> Result
-        ) override;
-    };
 }

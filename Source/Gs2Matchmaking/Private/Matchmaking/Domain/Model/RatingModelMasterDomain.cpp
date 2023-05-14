@@ -121,7 +121,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FRatingModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -182,7 +183,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FRatingModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -245,7 +247,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Matchmaking::Model::FRatingModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Matchmaking::Model::FRatingModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -316,7 +318,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "ratingModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Matchmaking::Model::FRatingModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain::CreateCacheKey(
                                 Self->RatingName

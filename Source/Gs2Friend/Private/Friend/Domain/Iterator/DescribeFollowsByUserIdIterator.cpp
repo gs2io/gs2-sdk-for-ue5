@@ -31,36 +31,6 @@
 namespace Gs2::Friend::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeFollowsByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Friend::Model::FFollowUserPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeFollowsByUserId(
-            MakeShared<Gs2::Friend::Request::FDescribeFollowsByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithWithProfile(Self->WithProfile)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeFollowsByUserIdIteratorLoadTask>>
-    FDescribeFollowsByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeFollowsByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeFollowsByUserIdIterator::FDescribeFollowsByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
@@ -73,50 +43,120 @@ namespace Gs2::Friend::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        WithProfile(WithProfile),
+        WithProfile(WithProfile)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeFollowsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Friend::Model::FFollowUser>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeFollowsByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeFollowsByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Friend::Model::FFollowUserPtr& FDescribeFollowsByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Friend::Model::FFollowUserPtr FDescribeFollowsByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeFollowsByUserIdIterator::IteratorImpl& FDescribeFollowsByUserIdIterator::IteratorImpl::operator++()
+    FDescribeFollowsByUserIdIterator::FIterator& FDescribeFollowsByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            FString("FollowUser:") + (Self->WithProfile.IsSet() ? *Self->WithProfile == true ? "True" : "False" : "False")
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Friend::Model::FFollowUser::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Friend::Model::FFollowUserPtr>>();
+                *Range = Self->Cache->List<Gs2::Friend::Model::FFollowUser>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeFollowsByUserId(
+                MakeShared<Gs2::Friend::Request::FDescribeFollowsByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithWithProfile(Self->WithProfile)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FFollowUser::TypeName,
+                    ListParentKey,
+                    Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
+                        Item->GetUserId()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeFollowsByUserIdIterator::IteratorImpl FDescribeFollowsByUserIdIterator::begin()
+    FDescribeFollowsByUserIdIterator::FIterator FDescribeFollowsByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeFollowsByUserIdIterator::IteratorImpl FDescribeFollowsByUserIdIterator::end()
+    FDescribeFollowsByUserIdIterator::FIterator FDescribeFollowsByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeFollowsByUserIdIterator::FIterator FDescribeFollowsByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

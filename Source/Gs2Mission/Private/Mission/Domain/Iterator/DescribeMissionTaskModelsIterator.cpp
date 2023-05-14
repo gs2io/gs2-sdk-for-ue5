@@ -31,32 +31,6 @@
 namespace Gs2::Mission::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeMissionTaskModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Mission::Model::FMissionTaskModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeMissionTaskModels(
-            MakeShared<Gs2::Mission::Request::FDescribeMissionTaskModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithMissionGroupName(Self->MissionGroupName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeMissionTaskModelsIteratorLoadTask>>
-    FDescribeMissionTaskModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeMissionTaskModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeMissionTaskModelsIterator::FDescribeMissionTaskModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Mission::FGs2MissionRestClientPtr Client,
@@ -67,49 +41,114 @@ namespace Gs2::Mission::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        MissionGroupName(MissionGroupName),
+        MissionGroupName(MissionGroupName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeMissionTaskModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Mission::Model::FMissionTaskModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeMissionTaskModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeMissionTaskModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Mission::Model::FMissionTaskModelPtr& FDescribeMissionTaskModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Mission::Model::FMissionTaskModelPtr FDescribeMissionTaskModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeMissionTaskModelsIterator::IteratorImpl& FDescribeMissionTaskModelsIterator::IteratorImpl::operator++()
+    FDescribeMissionTaskModelsIterator::FIterator& FDescribeMissionTaskModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->MissionGroupName,
+            "MissionTaskModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Mission::Model::FMissionTaskModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Mission::Model::FMissionTaskModelPtr>>();
+                *Range = Self->Cache->List<Gs2::Mission::Model::FMissionTaskModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeMissionTaskModels(
+                MakeShared<Gs2::Mission::Request::FDescribeMissionTaskModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithMissionGroupName(Self->MissionGroupName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FMissionTaskModel::TypeName,
+                    ListParentKey,
+                    Gs2::Mission::Domain::Model::FMissionTaskModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeMissionTaskModelsIterator::IteratorImpl FDescribeMissionTaskModelsIterator::begin()
+    FDescribeMissionTaskModelsIterator::FIterator FDescribeMissionTaskModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeMissionTaskModelsIterator::IteratorImpl FDescribeMissionTaskModelsIterator::end()
+    FDescribeMissionTaskModelsIterator::FIterator FDescribeMissionTaskModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeMissionTaskModelsIterator::FIterator FDescribeMissionTaskModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

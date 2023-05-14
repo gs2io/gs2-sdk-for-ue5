@@ -31,34 +31,6 @@
 namespace Gs2::Realtime::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeRoomsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Realtime::Model::FRoomPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeRooms(
-            MakeShared<Gs2::Realtime::Request::FDescribeRoomsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeRoomsIteratorLoadTask>>
-    FDescribeRoomsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeRoomsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeRoomsIterator::FDescribeRoomsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Realtime::FGs2RealtimeRestClientPtr Client,
@@ -67,50 +39,117 @@ namespace Gs2::Realtime::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeRoomsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Realtime::Model::FRoom>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeRoomsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeRoomsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Realtime::Model::FRoomPtr& FDescribeRoomsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Realtime::Model::FRoomPtr FDescribeRoomsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeRoomsIterator::IteratorImpl& FDescribeRoomsIterator::IteratorImpl::operator++()
+    FDescribeRoomsIterator::FIterator& FDescribeRoomsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Realtime::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "Room"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Realtime::Model::FRoom::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Realtime::Model::FRoomPtr>>();
+                *Range = Self->Cache->List<Gs2::Realtime::Model::FRoom>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeRooms(
+                MakeShared<Gs2::Realtime::Request::FDescribeRoomsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Realtime::Model::FRoom::TypeName,
+                    ListParentKey,
+                    Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeRoomsIterator::IteratorImpl FDescribeRoomsIterator::begin()
+    FDescribeRoomsIterator::FIterator FDescribeRoomsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeRoomsIterator::IteratorImpl FDescribeRoomsIterator::end()
+    FDescribeRoomsIterator::FIterator FDescribeRoomsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeRoomsIterator::FIterator FDescribeRoomsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

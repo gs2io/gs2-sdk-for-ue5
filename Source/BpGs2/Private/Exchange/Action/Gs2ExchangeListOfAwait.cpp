@@ -51,7 +51,7 @@ void UGs2ExchangeListOfAwaitAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnAwaits.Add(EzAwaitToFGs2ExchangeAwaitValue(v));
+        ReturnAwaits.Add(EzAwaitToFGs2ExchangeAwaitValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnAwaits, ReturnError);
 }

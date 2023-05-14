@@ -117,7 +117,8 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FShowcaseMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FShowcaseMaster>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FShowcaseMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -178,7 +179,8 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FShowcaseMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FShowcaseMaster>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FShowcaseMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -241,7 +243,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FShowcaseMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Showcase::Model::FShowcaseMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Showcase::Model::FShowcaseMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -312,7 +314,8 @@ namespace Gs2::Showcase::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "showcaseMaster")
                     {
-                        Self->Cache->Delete<Gs2::Showcase::Model::FShowcaseMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Showcase::Model::FShowcaseMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Showcase::Domain::Model::FShowcaseMasterDomain::CreateCacheKey(
                                 Self->ShowcaseName

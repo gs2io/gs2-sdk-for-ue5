@@ -24,78 +24,123 @@
 namespace Gs2::UE5::Inventory::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeInventoryModelsIterator:
-            public TSharedFromThis<FEzDescribeInventoryModelsIterator>
+	class EZGS2_API FEzDescribeInventoryModelsIterator :
+        public TSharedFromThis<FEzDescribeInventoryModelsIterator>
     {
 
-		TSharedPtr<Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIterator> Iterator;
+		Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeInventoryModelsIterator(
-            const Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIteratorPtr Iterator
-        );
+            Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeInventoryModelsIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Model::FEzInventoryModel>,
-            public TSharedFromThis<FDescribeInventoryModelsIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIterator::FNextTask>> Task;
+        explicit FEzDescribeInventoryModelsIterator(
+            Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeInventoryModelsIteratorLoadTask(
-	            const TSharedPtr<Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Model::FEzInventoryModel>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeInventoryModelsIterator;
+		    friend class FEzDescribeInventoryModelsIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIterator::FNextTask>> Task;
-			Gs2::UE5::Inventory::Model::FEzInventoryModelPtr Current;
+			Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIterator::FIterator DomainIterator;
+			Gs2::UE5::Inventory::Model::FEzInventoryModelPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeInventoryModelsIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Inventory::Model::FEzInventoryModelPtr& operator*() const;
-			Gs2::UE5::Inventory::Model::FEzInventoryModelPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Inventory::Model::FEzInventoryModel::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Inventory::Model::FEzInventoryModelPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeInventoryModelsIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeInventoryModelsIterator> FEzDescribeInventoryModelsIteratorPtr;
 }

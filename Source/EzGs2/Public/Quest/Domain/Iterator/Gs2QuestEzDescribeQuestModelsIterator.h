@@ -24,78 +24,123 @@
 namespace Gs2::UE5::Quest::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeQuestModelsIterator:
-            public TSharedFromThis<FEzDescribeQuestModelsIterator>
+	class EZGS2_API FEzDescribeQuestModelsIterator :
+        public TSharedFromThis<FEzDescribeQuestModelsIterator>
     {
 
-		TSharedPtr<Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator> Iterator;
+		Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeQuestModelsIterator(
-            const Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIteratorPtr Iterator
-        );
+            Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeQuestModelsIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Model::FEzQuestModel>,
-            public TSharedFromThis<FDescribeQuestModelsIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator::FNextTask>> Task;
+        explicit FEzDescribeQuestModelsIterator(
+            Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeQuestModelsIteratorLoadTask(
-	            const TSharedPtr<Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Model::FEzQuestModel>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeQuestModelsIterator;
+		    friend class FEzDescribeQuestModelsIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator::FNextTask>> Task;
-			Gs2::UE5::Quest::Model::FEzQuestModelPtr Current;
+			Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator::FIterator DomainIterator;
+			Gs2::UE5::Quest::Model::FEzQuestModelPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeQuestModelsIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Quest::Model::FEzQuestModelPtr& operator*() const;
-			Gs2::UE5::Quest::Model::FEzQuestModelPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Quest::Model::FEzQuestModel::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Quest::Model::FEzQuestModelPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeQuestModelsIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeQuestModelsIterator> FEzDescribeQuestModelsIteratorPtr;
 }

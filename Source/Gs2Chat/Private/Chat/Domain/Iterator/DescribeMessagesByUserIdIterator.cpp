@@ -31,71 +31,6 @@
 namespace Gs2::Chat::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeMessagesByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Chat::Model::FMessagePtr>>> Result)
-    {
-        const auto ListParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            TOptional<FString>("Singleton"),
-            Self->RoomName,
-            "Message"
-        );
-        if (Self->Cache->IsListCached<Gs2::Chat::Model::FMessage>(
-            ListParentKey
-        )) {
-            Self->Result = Self->Cache->List<Gs2::Chat::Model::FMessage>(
-                ListParentKey
-            );
-            Self->Last = true;
-            return nullptr;
-        }
-        const auto Future = Self->Client->DescribeMessagesByUserId(
-            MakeShared<Gs2::Chat::Request::FDescribeMessagesByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithRoomName(Self->RoomName)
-                ->WithPassword(Self->Password)
-                ->WithUserId(Self->UserId)
-                ->WithStartAt(Self->StartAt)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        for (auto Item : *R->GetItems())
-        {
-            Self->Cache->Put(
-                ListParentKey,
-                Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                    Item->GetName()
-                ),
-                Item,
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
-        if ((*Result)->Num() > 0) {
-            Self->StartAt = *(**Result)[(*Result)->Num()-1]->GetCreatedAt() + 1;
-        } else {
-            Self->Last = true;
-        }
-        if (Self->Last) {
-            Self->Cache->SetListCache<Gs2::Chat::Model::FMessage>(
-                ListParentKey
-            );
-        }
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeMessagesByUserIdIteratorLoadTask>>
-    FDescribeMessagesByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeMessagesByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeMessagesByUserIdIterator::FDescribeMessagesByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Chat::FGs2ChatRestClientPtr Client,
@@ -110,50 +45,130 @@ namespace Gs2::Chat::Domain::Iterator
         NamespaceName(NamespaceName),
         RoomName(RoomName),
         Password(Password),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeMessagesByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Chat::Model::FMessage>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeMessagesByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeMessagesByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         StartAt(TOptional<int64>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Chat::Model::FMessagePtr& FDescribeMessagesByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Chat::Model::FMessagePtr FDescribeMessagesByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeMessagesByUserIdIterator::IteratorImpl& FDescribeMessagesByUserIdIterator::IteratorImpl::operator++()
+    FDescribeMessagesByUserIdIterator::FIterator& FDescribeMessagesByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            TOptional<FString>("Singleton"),
+            Self->RoomName,
+            "Message"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Chat::Model::FMessage::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Chat::Model::FMessagePtr>>();
+                *Range = Self->Cache->List<Gs2::Chat::Model::FMessage>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeMessagesByUserId(
+                MakeShared<Gs2::Chat::Request::FDescribeMessagesByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithRoomName(Self->RoomName)
+                    ->WithPassword(Self->Password)
+                    ->WithUserId(Self->UserId)
+                    ->WithStartAt(StartAt)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Chat::Model::FMessage::TypeName,
+                    ListParentKey,
+                    Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            if (Range->Num() > 0) {
+                StartAt = *(*Range)[Range->Num()-1]->GetCreatedAt() + 1;
+            } else {
+                bLast = true;
+            }
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Chat::Model::FMessage::TypeName,
+                    ListParentKey
+                );
+            }
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeMessagesByUserIdIterator::IteratorImpl FDescribeMessagesByUserIdIterator::begin()
+    FDescribeMessagesByUserIdIterator::FIterator FDescribeMessagesByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeMessagesByUserIdIterator::IteratorImpl FDescribeMessagesByUserIdIterator::end()
+    FDescribeMessagesByUserIdIterator::FIterator FDescribeMessagesByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeMessagesByUserIdIterator::FIterator FDescribeMessagesByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

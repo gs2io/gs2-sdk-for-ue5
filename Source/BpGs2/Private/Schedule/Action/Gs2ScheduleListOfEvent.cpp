@@ -48,7 +48,7 @@ void UGs2ScheduleListOfEventAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnEvents.Add(EzEventToFGs2ScheduleEventValue(v));
+        ReturnEvents.Add(EzEventToFGs2ScheduleEventValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnEvents, ReturnError);
 }

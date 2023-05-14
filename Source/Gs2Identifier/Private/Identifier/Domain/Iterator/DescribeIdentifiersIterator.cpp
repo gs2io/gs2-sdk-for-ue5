@@ -31,34 +31,6 @@
 namespace Gs2::Identifier::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeIdentifiersIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Identifier::Model::FIdentifierPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeIdentifiers(
-            MakeShared<Gs2::Identifier::Request::FDescribeIdentifiersRequest>()
-                ->WithUserName(Self->UserName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeIdentifiersIteratorLoadTask>>
-    FDescribeIdentifiersIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeIdentifiersIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeIdentifiersIterator::FDescribeIdentifiersIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Identifier::FGs2IdentifierRestClientPtr Client,
@@ -67,50 +39,117 @@ namespace Gs2::Identifier::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        UserName(UserName),
+        UserName(UserName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeIdentifiersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FIdentifier>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeIdentifiersIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeIdentifiersIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Identifier::Model::FIdentifierPtr& FDescribeIdentifiersIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Identifier::Model::FIdentifierPtr FDescribeIdentifiersIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeIdentifiersIterator::IteratorImpl& FDescribeIdentifiersIterator::IteratorImpl::operator++()
+    FDescribeIdentifiersIterator::FIterator& FDescribeIdentifiersIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->UserName,
+            "Identifier"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Identifier::Model::FIdentifier::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Identifier::Model::FIdentifierPtr>>();
+                *Range = Self->Cache->List<Gs2::Identifier::Model::FIdentifier>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeIdentifiers(
+                MakeShared<Gs2::Identifier::Request::FDescribeIdentifiersRequest>()
+                    ->WithUserName(Self->UserName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FIdentifier::TypeName,
+                    ListParentKey,
+                    Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
+                        Item->GetClientId()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeIdentifiersIterator::IteratorImpl FDescribeIdentifiersIterator::begin()
+    FDescribeIdentifiersIterator::FIterator FDescribeIdentifiersIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeIdentifiersIterator::IteratorImpl FDescribeIdentifiersIterator::end()
+    FDescribeIdentifiersIterator::FIterator FDescribeIdentifiersIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeIdentifiersIterator::FIterator FDescribeIdentifiersIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

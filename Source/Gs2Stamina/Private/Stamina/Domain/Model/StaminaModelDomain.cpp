@@ -119,7 +119,8 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -193,7 +194,8 @@ namespace Gs2::Stamina::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "staminaModel")
                     {
-                        Self->Cache->Delete<Gs2::Stamina::Model::FStaminaModel>(
+                        Self->Cache->Delete(
+                            Gs2::Stamina::Model::FStaminaModel::TypeName,
                             Self->ParentKey,
                             Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                                 Self->StaminaName

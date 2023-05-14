@@ -31,36 +31,6 @@
 namespace Gs2::Limit::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeCountersByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Limit::Model::FCounterPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeCountersByUserId(
-            MakeShared<Gs2::Limit::Request::FDescribeCountersByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithLimitName(Self->LimitName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeCountersByUserIdIteratorLoadTask>>
-    FDescribeCountersByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeCountersByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeCountersByUserIdIterator::FDescribeCountersByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Limit::FGs2LimitRestClientPtr Client,
@@ -73,50 +43,122 @@ namespace Gs2::Limit::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        LimitName(LimitName),
+        LimitName(LimitName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeCountersByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Limit::Model::FCounter>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeCountersByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeCountersByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Limit::Model::FCounterPtr& FDescribeCountersByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Limit::Model::FCounterPtr FDescribeCountersByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeCountersByUserIdIterator::IteratorImpl& FDescribeCountersByUserIdIterator::IteratorImpl::operator++()
+    FDescribeCountersByUserIdIterator::FIterator& FDescribeCountersByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "Counter"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Limit::Model::FCounter::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Limit::Model::FCounterPtr>>();
+                *Range = Self->Cache->List<Gs2::Limit::Model::FCounter>(
+                    ListParentKey
+                );
+                Range->RemoveAll([this](const Gs2::Limit::Model::FCounterPtr& Item) { return Self->LimitName && Item->GetLimitName() == Self->LimitName; });
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeCountersByUserId(
+                MakeShared<Gs2::Limit::Request::FDescribeCountersByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithLimitName(Self->LimitName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FCounter::TypeName,
+                    ListParentKey,
+                    Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
+                        Item->GetLimitName(),
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeCountersByUserIdIterator::IteratorImpl FDescribeCountersByUserIdIterator::begin()
+    FDescribeCountersByUserIdIterator::FIterator FDescribeCountersByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeCountersByUserIdIterator::IteratorImpl FDescribeCountersByUserIdIterator::end()
+    FDescribeCountersByUserIdIterator::FIterator FDescribeCountersByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeCountersByUserIdIterator::FIterator FDescribeCountersByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

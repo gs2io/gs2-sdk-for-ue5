@@ -119,7 +119,8 @@ namespace Gs2::Lottery::Domain::Model
                 );
                 const auto Key = Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FCurrentLotteryMaster>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FCurrentLotteryMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -180,7 +181,8 @@ namespace Gs2::Lottery::Domain::Model
                 );
                 const auto Key = Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FCurrentLotteryMaster>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FCurrentLotteryMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -239,7 +241,8 @@ namespace Gs2::Lottery::Domain::Model
                 );
                 const auto Key = Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FCurrentLotteryMaster>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FCurrentLotteryMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -300,7 +303,8 @@ namespace Gs2::Lottery::Domain::Model
                 );
                 const auto Key = Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FCurrentLotteryMaster>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FCurrentLotteryMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -371,7 +375,8 @@ namespace Gs2::Lottery::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentLotteryMaster")
                     {
-                        Self->Cache->Delete<Gs2::Lottery::Model::FCurrentLotteryMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Lottery::Model::FCurrentLotteryMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain::CreateCacheKey(
                             )

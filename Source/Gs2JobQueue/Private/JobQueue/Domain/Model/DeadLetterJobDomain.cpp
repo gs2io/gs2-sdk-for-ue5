@@ -122,7 +122,8 @@ namespace Gs2::JobQueue::Domain::Model
                 const auto Key = Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::JobQueue::Model::FDeadLetterJob>(
+                Self->Cache->Put(
+                    Gs2::JobQueue::Model::FDeadLetterJob::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -185,7 +186,7 @@ namespace Gs2::JobQueue::Domain::Model
                 const auto Key = Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::JobQueue::Model::FDeadLetterJob>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::JobQueue::Model::FDeadLetterJob::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -258,7 +259,8 @@ namespace Gs2::JobQueue::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "deadLetterJob")
                     {
-                        Self->Cache->Delete<Gs2::JobQueue::Model::FDeadLetterJob>(
+                        Self->Cache->Delete(
+                            Gs2::JobQueue::Model::FDeadLetterJob::TypeName,
                             Self->ParentKey,
                             Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain::CreateCacheKey(
                                 Self->DeadLetterJobName

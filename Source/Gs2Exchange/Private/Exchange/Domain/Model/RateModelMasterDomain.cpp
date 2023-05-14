@@ -118,7 +118,8 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FRateModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FRateModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FRateModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -179,7 +180,8 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FRateModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FRateModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FRateModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -242,7 +244,7 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FRateModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Exchange::Model::FRateModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Exchange::Model::FRateModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -313,7 +315,8 @@ namespace Gs2::Exchange::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "rateModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Exchange::Model::FRateModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Exchange::Model::FRateModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Exchange::Domain::Model::FRateModelMasterDomain::CreateCacheKey(
                                 Self->RateName

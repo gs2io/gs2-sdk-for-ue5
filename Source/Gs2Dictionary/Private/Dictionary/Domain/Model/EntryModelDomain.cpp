@@ -116,7 +116,8 @@ namespace Gs2::Dictionary::Domain::Model
                 const auto Key = Gs2::Dictionary::Domain::Model::FEntryModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Dictionary::Model::FEntryModel>(
+                Self->Cache->Put(
+                    Gs2::Dictionary::Model::FEntryModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -190,7 +191,8 @@ namespace Gs2::Dictionary::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "entryModel")
                     {
-                        Self->Cache->Delete<Gs2::Dictionary::Model::FEntryModel>(
+                        Self->Cache->Delete(
+                            Gs2::Dictionary::Model::FEntryModel::TypeName,
                             Self->ParentKey,
                             Gs2::Dictionary::Domain::Model::FEntryModelDomain::CreateCacheKey(
                                 Self->EntryName

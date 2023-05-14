@@ -31,31 +31,6 @@
 namespace Gs2::SerialKey::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeCampaignModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::SerialKey::Model::FCampaignModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeCampaignModels(
-            MakeShared<Gs2::SerialKey::Request::FDescribeCampaignModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeCampaignModelsIteratorLoadTask>>
-    FDescribeCampaignModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeCampaignModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeCampaignModelsIterator::FDescribeCampaignModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client,
@@ -64,49 +39,112 @@ namespace Gs2::SerialKey::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeCampaignModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::SerialKey::Model::FCampaignModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeCampaignModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeCampaignModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::SerialKey::Model::FCampaignModelPtr& FDescribeCampaignModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::SerialKey::Model::FCampaignModelPtr FDescribeCampaignModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeCampaignModelsIterator::IteratorImpl& FDescribeCampaignModelsIterator::IteratorImpl::operator++()
+    FDescribeCampaignModelsIterator::FIterator& FDescribeCampaignModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "CampaignModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::SerialKey::Model::FCampaignModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::SerialKey::Model::FCampaignModelPtr>>();
+                *Range = Self->Cache->List<Gs2::SerialKey::Model::FCampaignModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeCampaignModels(
+                MakeShared<Gs2::SerialKey::Request::FDescribeCampaignModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FCampaignModel::TypeName,
+                    ListParentKey,
+                    Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeCampaignModelsIterator::IteratorImpl FDescribeCampaignModelsIterator::begin()
+    FDescribeCampaignModelsIterator::FIterator FDescribeCampaignModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeCampaignModelsIterator::IteratorImpl FDescribeCampaignModelsIterator::end()
+    FDescribeCampaignModelsIterator::FIterator FDescribeCampaignModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeCampaignModelsIterator::FIterator FDescribeCampaignModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

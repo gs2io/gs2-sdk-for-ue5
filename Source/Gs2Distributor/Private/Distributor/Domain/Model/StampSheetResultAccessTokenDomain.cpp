@@ -123,7 +123,8 @@ namespace Gs2::Distributor::Domain::Model
                 const auto Key = Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTransactionId()
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FStampSheetResult>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FStampSheetResult::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -199,7 +200,8 @@ namespace Gs2::Distributor::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "stampSheetResult")
                     {
-                        Self->Cache->Delete<Gs2::Distributor::Model::FStampSheetResult>(
+                        Self->Cache->Delete(
+                            Gs2::Distributor::Model::FStampSheetResult::TypeName,
                             Self->ParentKey,
                             Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
                                 Self->TransactionId

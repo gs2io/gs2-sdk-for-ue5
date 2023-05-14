@@ -13,8 +13,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -26,78 +24,123 @@
 namespace Gs2::UE5::Matchmaking::Domain::Iterator
 {
 
-	class EZGS2_API FEzDoMatchmakingIterator:
-            public TSharedFromThis<FEzDoMatchmakingIterator>
+	class EZGS2_API FEzDoMatchmakingIterator :
+        public TSharedFromThis<FEzDoMatchmakingIterator>
     {
 
-		TSharedPtr<Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator> Iterator;
+		Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDoMatchmakingIterator(
-            const Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIteratorPtr Iterator
-        );
+            Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDoMatchmakingIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Model::FEzGathering>,
-            public TSharedFromThis<FDoMatchmakingIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FNextTask>> Task;
+        explicit FEzDoMatchmakingIterator(
+            Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDoMatchmakingIteratorLoadTask(
-	            const TSharedPtr<Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGathering>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDoMatchmakingIterator;
+		    friend class FEzDoMatchmakingIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FNextTask>> Task;
-			Gs2::UE5::Matchmaking::Model::FEzGatheringPtr Current;
+			Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FIterator DomainIterator;
+			Gs2::UE5::Matchmaking::Model::FEzGatheringPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDoMatchmakingIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Matchmaking::Model::FEzGatheringPtr& operator*() const;
-			Gs2::UE5::Matchmaking::Model::FEzGatheringPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Matchmaking::Model::FEzGathering::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Matchmaking::Model::FEzGatheringPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDoMatchmakingIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDoMatchmakingIterator> FEzDoMatchmakingIteratorPtr;
 }

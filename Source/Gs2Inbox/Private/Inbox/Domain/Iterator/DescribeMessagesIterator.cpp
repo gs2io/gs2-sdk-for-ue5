@@ -31,35 +31,6 @@
 namespace Gs2::Inbox::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeMessagesIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Inbox::Model::FMessagePtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeMessages(
-            MakeShared<Gs2::Inbox::Request::FDescribeMessagesRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeMessagesIteratorLoadTask>>
-    FDescribeMessagesIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeMessagesIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeMessagesIterator::FDescribeMessagesIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Inbox::FGs2InboxRestClientPtr Client,
@@ -70,50 +41,119 @@ namespace Gs2::Inbox::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken),
+        AccessToken(AccessToken)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeMessagesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Inbox::Model::FMessage>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeMessagesIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeMessagesIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Inbox::Model::FMessagePtr& FDescribeMessagesIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Inbox::Model::FMessagePtr FDescribeMessagesIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeMessagesIterator::IteratorImpl& FDescribeMessagesIterator::IteratorImpl::operator++()
+    FDescribeMessagesIterator::FIterator& FDescribeMessagesIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId(),
+            "Message"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Inbox::Model::FMessage::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Inbox::Model::FMessagePtr>>();
+                *Range = Self->Cache->List<Gs2::Inbox::Model::FMessage>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeMessages(
+                MakeShared<Gs2::Inbox::Request::FDescribeMessagesRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FMessage::TypeName,
+                    ListParentKey,
+                    Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeMessagesIterator::IteratorImpl FDescribeMessagesIterator::begin()
+    FDescribeMessagesIterator::FIterator FDescribeMessagesIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeMessagesIterator::IteratorImpl FDescribeMessagesIterator::end()
+    FDescribeMessagesIterator::FIterator FDescribeMessagesIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeMessagesIterator::FIterator FDescribeMessagesIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

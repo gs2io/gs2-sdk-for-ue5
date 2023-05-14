@@ -101,7 +101,8 @@ namespace Gs2::Enhance::Domain
                 const auto Key = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Enhance::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Enhance::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -178,7 +179,8 @@ namespace Gs2::Enhance::Domain
                 const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Enhance::Model::FRateModel>(
+                Cache->Put(
+                    Gs2::Enhance::Model::FRateModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -211,7 +213,8 @@ namespace Gs2::Enhance::Domain
                 );
                 const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Cache->Put<Gs2::Enhance::Model::FProgress>(
+                Cache->Put(
+                    Gs2::Enhance::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -251,7 +254,7 @@ namespace Gs2::Enhance::Domain
                 );
                 const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Cache->Delete<Gs2::Enhance::Model::FProgress>(ParentKey, Key);
+                Cache->Delete(Gs2::Enhance::Model::FProgress::TypeName, ParentKey, Key);
             }
         }
     }
@@ -294,7 +297,8 @@ namespace Gs2::Enhance::Domain
                 const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Enhance::Model::FRateModel>(
+                Cache->Put(
+                    Gs2::Enhance::Model::FRateModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -335,7 +339,8 @@ namespace Gs2::Enhance::Domain
                 );
                 const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Cache->Put<Gs2::Enhance::Model::FProgress>(
+                Cache->Put(
+                    Gs2::Enhance::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

@@ -92,7 +92,8 @@ namespace Gs2::Auth::Domain::Model
             
         }
         const auto Domain = Self;
-        Self->Cache->Put<Gs2::Auth::Model::FAccessToken>(
+        Self->Cache->Put(
+            Gs2::Auth::Model::FAccessToken::TypeName,
             Self->ParentKey,
             Gs2::Auth::Domain::Model::FAccessTokenDomain::CreateCacheKey(),
             MakeShared<Gs2::Auth::Model::FAccessToken>()
@@ -147,7 +148,8 @@ namespace Gs2::Auth::Domain::Model
             
         }
         const auto Domain = Self;
-        Self->Cache->Put<Gs2::Auth::Model::FAccessToken>(
+        Self->Cache->Put(
+            Gs2::Auth::Model::FAccessToken::TypeName,
             Self->ParentKey,
             Gs2::Auth::Domain::Model::FAccessTokenDomain::CreateCacheKey(),
             MakeShared<Gs2::Auth::Model::FAccessToken>()

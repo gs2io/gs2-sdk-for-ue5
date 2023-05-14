@@ -109,7 +109,8 @@ namespace Gs2::Identifier::Domain::Model
                 );
                 const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Identifier::Model::FPassword>(
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FPassword::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -170,7 +171,8 @@ namespace Gs2::Identifier::Domain::Model
                 );
                 const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Identifier::Model::FPassword>(
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FPassword::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -229,7 +231,7 @@ namespace Gs2::Identifier::Domain::Model
                 );
                 const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete<Gs2::Identifier::Model::FPassword>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Identifier::Model::FPassword::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -295,7 +297,8 @@ namespace Gs2::Identifier::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "password")
                     {
-                        Self->Cache->Delete<Gs2::Identifier::Model::FPassword>(
+                        Self->Cache->Delete(
+                            Gs2::Identifier::Model::FPassword::TypeName,
                             Self->ParentKey,
                             Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
                             )

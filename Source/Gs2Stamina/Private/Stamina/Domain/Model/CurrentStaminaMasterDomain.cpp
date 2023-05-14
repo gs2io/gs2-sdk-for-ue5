@@ -115,7 +115,8 @@ namespace Gs2::Stamina::Domain::Model
                 );
                 const auto Key = Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FCurrentStaminaMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FCurrentStaminaMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -176,7 +177,8 @@ namespace Gs2::Stamina::Domain::Model
                 );
                 const auto Key = Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FCurrentStaminaMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FCurrentStaminaMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -235,7 +237,8 @@ namespace Gs2::Stamina::Domain::Model
                 );
                 const auto Key = Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FCurrentStaminaMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FCurrentStaminaMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -296,7 +299,8 @@ namespace Gs2::Stamina::Domain::Model
                 );
                 const auto Key = Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FCurrentStaminaMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FCurrentStaminaMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -367,7 +371,8 @@ namespace Gs2::Stamina::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentStaminaMaster")
                     {
-                        Self->Cache->Delete<Gs2::Stamina::Model::FCurrentStaminaMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Stamina::Model::FCurrentStaminaMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
                             )

@@ -98,7 +98,8 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Money::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Money::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -176,7 +177,8 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                     TOptional<FString>()
                 );
-                Cache->Put<Gs2::Money::Model::FWallet>(
+                Cache->Put(
+                    Gs2::Money::Model::FWallet::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -217,7 +219,8 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                     TOptional<FString>()
                 );
-                Cache->Put<Gs2::Money::Model::FWallet>(
+                Cache->Put(
+                    Gs2::Money::Model::FWallet::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -251,7 +254,8 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTransactionId()
                 );
-                Cache->Put<Gs2::Money::Model::FReceipt>(
+                Cache->Put(
+                    Gs2::Money::Model::FReceipt::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -300,7 +304,8 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                     TOptional<FString>()
                 );
-                Cache->Put<Gs2::Money::Model::FWallet>(
+                Cache->Put(
+                    Gs2::Money::Model::FWallet::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

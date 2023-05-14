@@ -99,7 +99,8 @@ namespace Gs2::Chat::Domain
                 const auto Key = Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Chat::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Chat::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -184,7 +185,8 @@ namespace Gs2::Chat::Domain
                 PayloadJson->GetStringField("roomName"),
                 "Message"
             );
-            Cache->ClearListCache<Gs2::Chat::Model::FMessage>(ListParentKey);
+            Cache->ClearListCache(Gs2::Chat::Model::FMessage::TypeName, ListParentKey);
+            PostNotificationEvent.Broadcast(Gs2::Chat::Model::FPostNotification::FromJson(PayloadJson));
         }
     }
 

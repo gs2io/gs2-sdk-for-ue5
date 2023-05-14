@@ -117,7 +117,8 @@ namespace Gs2::Dictionary::Domain::Model
                     const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Self->Cache->Put<Gs2::Dictionary::Model::FEntry>(
+                    Self->Cache->Put(
+                        Gs2::Dictionary::Model::FEntry::TypeName,
                         ParentKey,
                         Key,
                         Item,
@@ -148,7 +149,8 @@ namespace Gs2::Dictionary::Domain::Model
             const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                 (*ResultModel->GetItems())[i]->GetName()
             );
-            Self->Cache->Put<Gs2::Dictionary::Model::FEntry>(
+            Self->Cache->Put(
+                Gs2::Dictionary::Model::FEntry::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],
@@ -207,7 +209,8 @@ namespace Gs2::Dictionary::Domain::Model
             for (auto Item : Self->Cache->List<Gs2::Dictionary::Model::FEntry>(
                 ParentKey
             )) {
-                Self->Cache->Delete<Gs2::Dictionary::Model::FEntry>(
+                Self->Cache->Delete(
+                        Gs2::Dictionary::Model::FEntry::TypeName,
                         ParentKey,
                         Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                             Item->GetName()

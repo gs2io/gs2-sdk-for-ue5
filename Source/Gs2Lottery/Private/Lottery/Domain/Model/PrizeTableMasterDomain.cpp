@@ -123,7 +123,8 @@ namespace Gs2::Lottery::Domain::Model
                 const auto Key = Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FPrizeTableMaster>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -184,7 +185,8 @@ namespace Gs2::Lottery::Domain::Model
                 const auto Key = Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FPrizeTableMaster>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -247,7 +249,7 @@ namespace Gs2::Lottery::Domain::Model
                 const auto Key = Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Lottery::Model::FPrizeTableMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Lottery::Model::FPrizeTableMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -318,7 +320,8 @@ namespace Gs2::Lottery::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "prizeTableMaster")
                     {
-                        Self->Cache->Delete<Gs2::Lottery::Model::FPrizeTableMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
                                 Self->PrizeTableName

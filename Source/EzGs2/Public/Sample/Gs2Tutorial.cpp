@@ -103,8 +103,8 @@ public:
 		)->TakeOvers();
 		for (auto TakeOver : *It)
 		{
-			UE_LOG(GameLog, Display, TEXT("Type: %d"), *TakeOver->GetType());
-			UE_LOG(GameLog, Display, TEXT("Identifier: %s"), ToCStr(*TakeOver->GetUserIdentifier()));
+			UE_LOG(GameLog, Display, TEXT("Type: %d"), *TakeOver->Current()->GetType());
+			UE_LOG(GameLog, Display, TEXT("Identifier: %s"), ToCStr(*TakeOver->Current()->GetUserIdentifier()));
 		}
 
 		// Finalize GS2-SDK

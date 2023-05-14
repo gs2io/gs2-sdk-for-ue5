@@ -118,7 +118,8 @@ namespace Gs2::Identifier::Domain::Model
             const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                 (*ResultModel->GetItems())[i]->GetName()
             );
-            Self->Cache->Put<Gs2::Identifier::Model::FSecurityPolicy>(
+            Self->Cache->Put(
+                Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],
@@ -185,7 +186,8 @@ namespace Gs2::Identifier::Domain::Model
             const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                 (*ResultModel->GetItems())[i]->GetName()
             );
-            Self->Cache->Put<Gs2::Identifier::Model::FSecurityPolicy>(
+            Self->Cache->Put(
+                Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],
@@ -252,7 +254,8 @@ namespace Gs2::Identifier::Domain::Model
             const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                 (*ResultModel->GetItems())[i]->GetName()
             );
-            Self->Cache->Put<Gs2::Identifier::Model::FSecurityPolicy>(
+            Self->Cache->Put(
+                Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],

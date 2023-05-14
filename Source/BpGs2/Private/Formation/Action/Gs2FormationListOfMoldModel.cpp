@@ -48,7 +48,7 @@ void UGs2FormationListOfMoldModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnMoldModels.Add(EzMoldModelToFGs2FormationMoldModelValue(v));
+        ReturnMoldModels.Add(EzMoldModelToFGs2FormationMoldModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnMoldModels, ReturnError);
 }

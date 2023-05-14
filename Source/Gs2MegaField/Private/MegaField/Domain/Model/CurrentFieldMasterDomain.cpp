@@ -114,7 +114,8 @@ namespace Gs2::MegaField::Domain::Model
                 );
                 const auto Key = Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FCurrentFieldMaster>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FCurrentFieldMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -175,7 +176,8 @@ namespace Gs2::MegaField::Domain::Model
                 );
                 const auto Key = Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FCurrentFieldMaster>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FCurrentFieldMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -234,7 +236,8 @@ namespace Gs2::MegaField::Domain::Model
                 );
                 const auto Key = Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FCurrentFieldMaster>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FCurrentFieldMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -295,7 +298,8 @@ namespace Gs2::MegaField::Domain::Model
                 );
                 const auto Key = Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FCurrentFieldMaster>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FCurrentFieldMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -366,7 +370,8 @@ namespace Gs2::MegaField::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentFieldMaster")
                     {
-                        Self->Cache->Delete<Gs2::MegaField::Model::FCurrentFieldMaster>(
+                        Self->Cache->Delete(
+                            Gs2::MegaField::Model::FCurrentFieldMaster::TypeName,
                             Self->ParentKey,
                             Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain::CreateCacheKey(
                             )

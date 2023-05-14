@@ -53,7 +53,7 @@ void UGs2RankingListOfRankingAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnRankings.Add(EzRankingToFGs2RankingRankingValue(v));
+        ReturnRankings.Add(EzRankingToFGs2RankingRankingValue(v.Current()));
     }
     OnSuccess.Broadcast(ReturnRankings, ReturnError);
 }

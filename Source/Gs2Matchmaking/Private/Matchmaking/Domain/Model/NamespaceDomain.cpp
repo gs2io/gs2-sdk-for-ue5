@@ -157,7 +157,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -213,7 +214,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -271,7 +273,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Matchmaking::Model::FNamespace>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Matchmaking::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -332,7 +334,8 @@ namespace Gs2::Matchmaking::Domain::Model
                     ResultModel->GetItem()->GetNumberOfPlayer().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetNumberOfPlayer()) : TOptional<FString>(),
                     RequestModel->GetKeyId()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FBallot>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FBallot::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -409,7 +412,8 @@ namespace Gs2::Matchmaking::Domain::Model
                     ResultModel->GetItem()->GetNumberOfPlayer().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetNumberOfPlayer()) : TOptional<FString>(),
                     RequestModel->GetKeyId()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FBallot>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FBallot::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -482,7 +486,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FRatingModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -668,7 +673,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "namespace")
                     {
-                        Self->Cache->Delete<Gs2::Matchmaking::Model::FNamespace>(
+                        Self->Cache->Delete(
+                            Gs2::Matchmaking::Model::FNamespace::TypeName,
                             Self->ParentKey,
                             Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
                                 Self->NamespaceName

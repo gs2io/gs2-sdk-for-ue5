@@ -56,7 +56,7 @@ void UGs2MatchmakingDoMatchmakingAsyncFunction::Activate()
     for (auto Gathering : *Future)
     {
         const FGs2Error ReturnError;
-        OnSuccess.Broadcast(EzGatheringToFGs2MatchmakingGatheringValue(Gathering), ReturnError);
+        OnSuccess.Broadcast(EzGatheringToFGs2MatchmakingGatheringValue(Gathering.Current()), ReturnError);
         SetReadyToDestroy();
         return;
     }

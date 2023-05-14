@@ -130,7 +130,8 @@ namespace Gs2::MegaField::Domain::Model
                     ResultModel->GetItem()->GetAreaModelName(),
                     ResultModel->GetItem()->GetLayerModelName()
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FSpatial>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FSpatial::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -197,7 +198,8 @@ namespace Gs2::MegaField::Domain::Model
                         Item->GetAreaModelName(),
                         Item->GetLayerModelName()
                     );
-                    Self->Cache->Put<Gs2::MegaField::Model::FSpatial>(
+                    Self->Cache->Put(
+                        Gs2::MegaField::Model::FSpatial::TypeName,
                         ParentKey,
                         Key,
                         Item,
@@ -230,7 +232,8 @@ namespace Gs2::MegaField::Domain::Model
                 (*ResultModel->GetItems())[i]->GetAreaModelName(),
                 (*ResultModel->GetItems())[i]->GetLayerModelName()
             );
-            Self->Cache->Put<Gs2::MegaField::Model::FSpatial>(
+            Self->Cache->Put(
+                Gs2::MegaField::Model::FSpatial::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],
@@ -357,7 +360,8 @@ namespace Gs2::MegaField::Domain::Model
                         Item->GetAreaModelName(),
                         Item->GetLayerModelName()
                     );
-                    Self->Cache->Put<Gs2::MegaField::Model::FSpatial>(
+                    Self->Cache->Put(
+                        Gs2::MegaField::Model::FSpatial::TypeName,
                         ParentKey,
                         Key,
                         Item,
@@ -390,7 +394,8 @@ namespace Gs2::MegaField::Domain::Model
                 (*ResultModel->GetItems())[i]->GetAreaModelName(),
                 (*ResultModel->GetItems())[i]->GetLayerModelName()
             );
-            Self->Cache->Put<Gs2::MegaField::Model::FSpatial>(
+            Self->Cache->Put(
+                Gs2::MegaField::Model::FSpatial::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],

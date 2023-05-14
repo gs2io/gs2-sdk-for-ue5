@@ -110,7 +110,8 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Script::Model::FScript>(
+                Self->Cache->Put(
+                    Gs2::Script::Model::FScript::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -171,7 +172,8 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Script::Model::FScript>(
+                Self->Cache->Put(
+                    Gs2::Script::Model::FScript::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -234,7 +236,8 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Script::Model::FScript>(
+                Self->Cache->Put(
+                    Gs2::Script::Model::FScript::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -297,7 +300,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Script::Model::FScript>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Script::Model::FScript::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -368,7 +371,8 @@ namespace Gs2::Script::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "script")
                     {
-                        Self->Cache->Delete<Gs2::Script::Model::FScript>(
+                        Self->Cache->Delete(
+                            Gs2::Script::Model::FScript::TypeName,
                             Self->ParentKey,
                             Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                                 Self->ScriptName

@@ -120,7 +120,8 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FQuestGroupModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FQuestGroupModel>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FQuestGroupModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -220,7 +221,8 @@ namespace Gs2::Quest::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "questGroupModel")
                     {
-                        Self->Cache->Delete<Gs2::Quest::Model::FQuestGroupModel>(
+                        Self->Cache->Delete(
+                            Gs2::Quest::Model::FQuestGroupModel::TypeName,
                             Self->ParentKey,
                             Gs2::Quest::Domain::Model::FQuestGroupModelDomain::CreateCacheKey(
                                 Self->QuestGroupName

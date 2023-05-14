@@ -51,7 +51,7 @@ void UGs2FormationListOfPropertyFormAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnPropertyForms.Add(EzPropertyFormToFGs2FormationPropertyFormValue(v));
+        ReturnPropertyForms.Add(EzPropertyFormToFGs2FormationPropertyFormValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnPropertyForms, ReturnError);
 }

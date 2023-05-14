@@ -117,7 +117,8 @@ namespace Gs2::Experience::Domain::Model
                 const auto Key = Gs2::Experience::Domain::Model::FExperienceModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FExperienceModel>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FExperienceModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -191,7 +192,8 @@ namespace Gs2::Experience::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "experienceModel")
                     {
-                        Self->Cache->Delete<Gs2::Experience::Model::FExperienceModel>(
+                        Self->Cache->Delete(
+                            Gs2::Experience::Model::FExperienceModel::TypeName,
                             Self->ParentKey,
                             Gs2::Experience::Domain::Model::FExperienceModelDomain::CreateCacheKey(
                                 Self->ExperienceName

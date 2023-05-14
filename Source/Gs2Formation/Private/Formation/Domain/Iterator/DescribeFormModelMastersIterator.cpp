@@ -31,34 +31,6 @@
 namespace Gs2::Formation::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeFormModelMastersIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Formation::Model::FFormModelMasterPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeFormModelMasters(
-            MakeShared<Gs2::Formation::Request::FDescribeFormModelMastersRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeFormModelMastersIteratorLoadTask>>
-    FDescribeFormModelMastersIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeFormModelMastersIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeFormModelMastersIterator::FDescribeFormModelMastersIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Formation::FGs2FormationRestClientPtr Client,
@@ -67,50 +39,117 @@ namespace Gs2::Formation::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeFormModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FFormModelMaster>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeFormModelMastersIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeFormModelMastersIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Formation::Model::FFormModelMasterPtr& FDescribeFormModelMastersIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Formation::Model::FFormModelMasterPtr FDescribeFormModelMastersIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeFormModelMastersIterator::IteratorImpl& FDescribeFormModelMastersIterator::IteratorImpl::operator++()
+    FDescribeFormModelMastersIterator::FIterator& FDescribeFormModelMastersIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "FormModelMaster"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Formation::Model::FFormModelMaster::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Formation::Model::FFormModelMasterPtr>>();
+                *Range = Self->Cache->List<Gs2::Formation::Model::FFormModelMaster>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeFormModelMasters(
+                MakeShared<Gs2::Formation::Request::FDescribeFormModelMastersRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FFormModelMaster::TypeName,
+                    ListParentKey,
+                    Gs2::Formation::Domain::Model::FFormModelMasterDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeFormModelMastersIterator::IteratorImpl FDescribeFormModelMastersIterator::begin()
+    FDescribeFormModelMastersIterator::FIterator FDescribeFormModelMastersIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeFormModelMastersIterator::IteratorImpl FDescribeFormModelMastersIterator::end()
+    FDescribeFormModelMastersIterator::FIterator FDescribeFormModelMastersIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeFormModelMastersIterator::FIterator FDescribeFormModelMastersIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

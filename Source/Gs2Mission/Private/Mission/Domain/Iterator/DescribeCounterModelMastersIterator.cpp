@@ -31,34 +31,6 @@
 namespace Gs2::Mission::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeCounterModelMastersIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Mission::Model::FCounterModelMasterPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeCounterModelMasters(
-            MakeShared<Gs2::Mission::Request::FDescribeCounterModelMastersRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeCounterModelMastersIteratorLoadTask>>
-    FDescribeCounterModelMastersIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeCounterModelMastersIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeCounterModelMastersIterator::FDescribeCounterModelMastersIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Mission::FGs2MissionRestClientPtr Client,
@@ -67,50 +39,117 @@ namespace Gs2::Mission::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeCounterModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Mission::Model::FCounterModelMaster>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeCounterModelMastersIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeCounterModelMastersIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Mission::Model::FCounterModelMasterPtr& FDescribeCounterModelMastersIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Mission::Model::FCounterModelMasterPtr FDescribeCounterModelMastersIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeCounterModelMastersIterator::IteratorImpl& FDescribeCounterModelMastersIterator::IteratorImpl::operator++()
+    FDescribeCounterModelMastersIterator::FIterator& FDescribeCounterModelMastersIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "CounterModelMaster"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Mission::Model::FCounterModelMaster::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Mission::Model::FCounterModelMasterPtr>>();
+                *Range = Self->Cache->List<Gs2::Mission::Model::FCounterModelMaster>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeCounterModelMasters(
+                MakeShared<Gs2::Mission::Request::FDescribeCounterModelMastersRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCounterModelMaster::TypeName,
+                    ListParentKey,
+                    Gs2::Mission::Domain::Model::FCounterModelMasterDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeCounterModelMastersIterator::IteratorImpl FDescribeCounterModelMastersIterator::begin()
+    FDescribeCounterModelMastersIterator::FIterator FDescribeCounterModelMastersIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeCounterModelMastersIterator::IteratorImpl FDescribeCounterModelMastersIterator::end()
+    FDescribeCounterModelMastersIterator::FIterator FDescribeCounterModelMastersIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeCounterModelMastersIterator::FIterator FDescribeCounterModelMastersIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

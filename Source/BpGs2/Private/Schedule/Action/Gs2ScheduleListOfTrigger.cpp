@@ -48,7 +48,7 @@ void UGs2ScheduleListOfTriggerAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnTriggers.Add(EzTriggerToFGs2ScheduleTriggerValue(v));
+        ReturnTriggers.Add(EzTriggerToFGs2ScheduleTriggerValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnTriggers, ReturnError);
 }

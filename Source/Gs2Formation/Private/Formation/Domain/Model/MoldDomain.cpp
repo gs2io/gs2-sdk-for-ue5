@@ -127,7 +127,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FMold>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -143,7 +144,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FMoldModel>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetMoldModel(),
@@ -206,7 +208,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FMold>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -222,7 +225,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FMoldModel>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetMoldModel(),
@@ -287,7 +291,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FMold>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -303,7 +308,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FMoldModel>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetMoldModel(),
@@ -368,7 +374,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Formation::Model::FMold>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Formation::Model::FMold::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -469,7 +475,8 @@ namespace Gs2::Formation::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "mold")
                     {
-                        Self->Cache->Delete<Gs2::Formation::Model::FMold>(
+                        Self->Cache->Delete(
+                            Gs2::Formation::Model::FMold::TypeName,
                             Self->ParentKey,
                             Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                                 Self->MoldName

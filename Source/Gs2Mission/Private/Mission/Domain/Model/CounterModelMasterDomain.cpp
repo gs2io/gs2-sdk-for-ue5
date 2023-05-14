@@ -122,7 +122,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCounterModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCounterModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -183,7 +184,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCounterModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCounterModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -246,7 +248,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Mission::Model::FCounterModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Mission::Model::FCounterModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -317,7 +319,8 @@ namespace Gs2::Mission::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "counterModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Mission::Model::FCounterModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Mission::Model::FCounterModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Mission::Domain::Model::FCounterModelMasterDomain::CreateCacheKey(
                                 Self->CounterName

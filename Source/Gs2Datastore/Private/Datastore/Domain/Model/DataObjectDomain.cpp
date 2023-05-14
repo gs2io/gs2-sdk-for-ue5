@@ -120,7 +120,8 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Datastore::Model::FDataObject>(
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -185,7 +186,8 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Datastore::Model::FDataObject>(
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -251,13 +253,15 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Datastore::Model::FDataObject>(
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-                Self->Cache->ClearListCache<Gs2::Datastore::Model::FDataObjectHistory>(
+                Self->Cache->ClearListCache(
+                    Gs2::Datastore::Model::FDataObjectHistory::TypeName,
                     Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
                         Self->NamespaceName,
                         Self->UserId,
@@ -324,7 +328,8 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Datastore::Model::FDataObject>(
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -389,7 +394,8 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Datastore::Model::FDataObject>(
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -456,7 +462,8 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Datastore::Model::FDataObject>(
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

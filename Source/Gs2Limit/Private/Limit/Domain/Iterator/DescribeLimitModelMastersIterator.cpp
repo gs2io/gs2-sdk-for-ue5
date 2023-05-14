@@ -31,34 +31,6 @@
 namespace Gs2::Limit::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeLimitModelMastersIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Limit::Model::FLimitModelMasterPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeLimitModelMasters(
-            MakeShared<Gs2::Limit::Request::FDescribeLimitModelMastersRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeLimitModelMastersIteratorLoadTask>>
-    FDescribeLimitModelMastersIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeLimitModelMastersIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeLimitModelMastersIterator::FDescribeLimitModelMastersIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Limit::FGs2LimitRestClientPtr Client,
@@ -67,50 +39,117 @@ namespace Gs2::Limit::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeLimitModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Limit::Model::FLimitModelMaster>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeLimitModelMastersIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeLimitModelMastersIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Limit::Model::FLimitModelMasterPtr& FDescribeLimitModelMastersIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Limit::Model::FLimitModelMasterPtr FDescribeLimitModelMastersIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeLimitModelMastersIterator::IteratorImpl& FDescribeLimitModelMastersIterator::IteratorImpl::operator++()
+    FDescribeLimitModelMastersIterator::FIterator& FDescribeLimitModelMastersIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "LimitModelMaster"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Limit::Model::FLimitModelMaster::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Limit::Model::FLimitModelMasterPtr>>();
+                *Range = Self->Cache->List<Gs2::Limit::Model::FLimitModelMaster>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeLimitModelMasters(
+                MakeShared<Gs2::Limit::Request::FDescribeLimitModelMastersRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FLimitModelMaster::TypeName,
+                    ListParentKey,
+                    Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeLimitModelMastersIterator::IteratorImpl FDescribeLimitModelMastersIterator::begin()
+    FDescribeLimitModelMastersIterator::FIterator FDescribeLimitModelMastersIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeLimitModelMastersIterator::IteratorImpl FDescribeLimitModelMastersIterator::end()
+    FDescribeLimitModelMastersIterator::FIterator FDescribeLimitModelMastersIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeLimitModelMastersIterator::FIterator FDescribeLimitModelMastersIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

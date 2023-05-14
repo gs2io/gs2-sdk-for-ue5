@@ -25,23 +25,15 @@
 namespace Gs2::JobQueue::Domain::Iterator
 {
 
-    class FDescribeDeadLetterJobsByUserIdIteratorLoadTask;
-
     class GS2JOBQUEUE_API FDescribeDeadLetterJobsByUserIdIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::JobQueue::Model::FDeadLetterJob, FDescribeDeadLetterJobsByUserIdIteratorLoadTask>
+        public TSharedFromThis<FDescribeDeadLetterJobsByUserIdIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
-
-        friend FDescribeDeadLetterJobsByUserIdIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeDeadLetterJobsByUserIdIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeDeadLetterJobsByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client,
@@ -49,67 +41,157 @@ public:
             const TOptional<FString> UserId
         );
 
-        class GS2JOBQUEUE_API IteratorImpl
-        {
-            friend FDescribeDeadLetterJobsByUserIdIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIterator::FNextTask>> Task;
-            Gs2::JobQueue::Model::FDeadLetterJobPtr Current;
+        class GS2JOBQUEUE_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::JobQueue::Model::FDeadLetterJob>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::JobQueue::Model::FDeadLetterJob>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::JobQueue::Model::FDeadLetterJobPtr& operator*() const;
-            Gs2::JobQueue::Model::FDeadLetterJobPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2JOBQUEUE_API FIterator
+        {
+            TSharedRef<FDescribeDeadLetterJobsByUserIdIterator> Self;
+            TSharedPtr<TArray<Gs2::JobQueue::Model::FDeadLetterJobPtr>> Range;
+            TOptional<TArray<Gs2::JobQueue::Model::FDeadLetterJobPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeDeadLetterJobsByUserIdIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeDeadLetterJobsByUserIdIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeDeadLetterJobsByUserIdIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::JobQueue::Model::FDeadLetterJobPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeDeadLetterJobsByUserIdIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeDeadLetterJobsByUserIdIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeDeadLetterJobsByUserIdIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeDeadLetterJobsByUserIdIterator> FDescribeDeadLetterJobsByUserIdIteratorPtr;
-
-    class FDescribeDeadLetterJobsByUserIdIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::JobQueue::Model::FDeadLetterJobPtr>>,
-        public TSharedFromThis<FDescribeDeadLetterJobsByUserIdIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeDeadLetterJobsByUserIdIterator> Self;
-
-    public:
-        explicit FDescribeDeadLetterJobsByUserIdIteratorLoadTask(
-            TSharedPtr<FDescribeDeadLetterJobsByUserIdIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::JobQueue::Model::FDeadLetterJobPtr>>> Result
-        ) override;
-    };
 }

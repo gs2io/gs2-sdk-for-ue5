@@ -122,7 +122,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FMoldModel>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -196,7 +197,8 @@ namespace Gs2::Formation::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "moldModel")
                     {
-                        Self->Cache->Delete<Gs2::Formation::Model::FMoldModel>(
+                        Self->Cache->Delete(
+                            Gs2::Formation::Model::FMoldModel::TypeName,
                             Self->ParentKey,
                             Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                                 Self->MoldName

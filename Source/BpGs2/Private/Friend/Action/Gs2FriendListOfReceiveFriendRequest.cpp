@@ -50,7 +50,7 @@ void UGs2FriendListOfReceiveFriendRequestAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnReceiveFriendRequests.Add(EzFriendRequestToFGs2FriendFriendRequest(v));
+        ReturnReceiveFriendRequests.Add(EzFriendRequestToFGs2FriendFriendRequest(v->Current()));
     }
     OnSuccess.Broadcast(ReturnReceiveFriendRequests, ReturnError);
 }

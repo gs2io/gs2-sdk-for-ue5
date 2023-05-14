@@ -105,7 +105,8 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -183,13 +184,15 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Mission::Model::FCounter>(
+                Cache->Put(
+                    Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-                Cache->ClearListCache<Gs2::Mission::Model::FComplete>(
+                Cache->ClearListCache(
+                    Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
                 );
             }
@@ -227,7 +230,8 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetMissionGroupName()
                 );
-                Cache->Put<Gs2::Mission::Model::FComplete>(
+                Cache->Put(
+                    Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -276,13 +280,15 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Mission::Model::FCounter>(
+                Cache->Put(
+                    Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-                Cache->ClearListCache<Gs2::Mission::Model::FComplete>(
+                Cache->ClearListCache(
+                    Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
                 );
             }

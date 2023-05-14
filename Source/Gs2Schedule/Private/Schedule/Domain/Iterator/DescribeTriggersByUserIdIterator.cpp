@@ -31,35 +31,6 @@
 namespace Gs2::Schedule::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeTriggersByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Schedule::Model::FTriggerPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeTriggersByUserId(
-            MakeShared<Gs2::Schedule::Request::FDescribeTriggersByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeTriggersByUserIdIteratorLoadTask>>
-    FDescribeTriggersByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeTriggersByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeTriggersByUserIdIterator::FDescribeTriggersByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Schedule::FGs2ScheduleRestClientPtr Client,
@@ -70,50 +41,119 @@ namespace Gs2::Schedule::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeTriggersByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Schedule::Model::FTrigger>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeTriggersByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeTriggersByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Schedule::Model::FTriggerPtr& FDescribeTriggersByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Schedule::Model::FTriggerPtr FDescribeTriggersByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeTriggersByUserIdIterator::IteratorImpl& FDescribeTriggersByUserIdIterator::IteratorImpl::operator++()
+    FDescribeTriggersByUserIdIterator::FIterator& FDescribeTriggersByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "Trigger"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Schedule::Model::FTrigger::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Schedule::Model::FTriggerPtr>>();
+                *Range = Self->Cache->List<Gs2::Schedule::Model::FTrigger>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeTriggersByUserId(
+                MakeShared<Gs2::Schedule::Request::FDescribeTriggersByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FTrigger::TypeName,
+                    ListParentKey,
+                    Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeTriggersByUserIdIterator::IteratorImpl FDescribeTriggersByUserIdIterator::begin()
+    FDescribeTriggersByUserIdIterator::FIterator FDescribeTriggersByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeTriggersByUserIdIterator::IteratorImpl FDescribeTriggersByUserIdIterator::end()
+    FDescribeTriggersByUserIdIterator::FIterator FDescribeTriggersByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeTriggersByUserIdIterator::FIterator FDescribeTriggersByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

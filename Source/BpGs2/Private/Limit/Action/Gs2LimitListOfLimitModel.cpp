@@ -48,7 +48,7 @@ void UGs2LimitListOfLimitModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnLimitModels.Add(EzLimitModelToFGs2LimitLimitModelValue(v));
+        ReturnLimitModels.Add(EzLimitModelToFGs2LimitLimitModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnLimitModels, ReturnError);
 }

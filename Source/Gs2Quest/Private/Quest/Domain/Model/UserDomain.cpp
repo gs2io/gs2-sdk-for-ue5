@@ -120,7 +120,8 @@ namespace Gs2::Quest::Domain::Model
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FProgress>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

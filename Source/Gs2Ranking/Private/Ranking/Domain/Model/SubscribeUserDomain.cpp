@@ -131,7 +131,8 @@ namespace Gs2::Ranking::Domain::Model
                     ResultModel->GetItem()->GetCategoryName(),
                     ResultModel->GetItem()->GetTargetUserId()
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FSubscribeUser>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FSubscribeUser::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -196,7 +197,7 @@ namespace Gs2::Ranking::Domain::Model
                     ResultModel->GetItem()->GetCategoryName(),
                     ResultModel->GetItem()->GetTargetUserId()
                 );
-                Self->Cache->Delete<Gs2::Ranking::Model::FSubscribeUser>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Ranking::Model::FSubscribeUser::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -274,7 +275,8 @@ namespace Gs2::Ranking::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "subscribeUser")
                     {
-                        Self->Cache->Delete<Gs2::Ranking::Model::FSubscribeUser>(
+                        Self->Cache->Delete(
+                            Gs2::Ranking::Model::FSubscribeUser::TypeName,
                             Self->ParentKey,
                             Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
                                 Self->CategoryName,

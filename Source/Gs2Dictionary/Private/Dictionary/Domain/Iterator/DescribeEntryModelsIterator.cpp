@@ -31,31 +31,6 @@
 namespace Gs2::Dictionary::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeEntryModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Dictionary::Model::FEntryModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeEntryModels(
-            MakeShared<Gs2::Dictionary::Request::FDescribeEntryModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeEntryModelsIteratorLoadTask>>
-    FDescribeEntryModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeEntryModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeEntryModelsIterator::FDescribeEntryModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client,
@@ -64,49 +39,112 @@ namespace Gs2::Dictionary::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeEntryModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Dictionary::Model::FEntryModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeEntryModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeEntryModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Dictionary::Model::FEntryModelPtr& FDescribeEntryModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Dictionary::Model::FEntryModelPtr FDescribeEntryModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeEntryModelsIterator::IteratorImpl& FDescribeEntryModelsIterator::IteratorImpl::operator++()
+    FDescribeEntryModelsIterator::FIterator& FDescribeEntryModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "EntryModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Dictionary::Model::FEntryModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Dictionary::Model::FEntryModelPtr>>();
+                *Range = Self->Cache->List<Gs2::Dictionary::Model::FEntryModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeEntryModels(
+                MakeShared<Gs2::Dictionary::Request::FDescribeEntryModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Dictionary::Model::FEntryModel::TypeName,
+                    ListParentKey,
+                    Gs2::Dictionary::Domain::Model::FEntryModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeEntryModelsIterator::IteratorImpl FDescribeEntryModelsIterator::begin()
+    FDescribeEntryModelsIterator::FIterator FDescribeEntryModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeEntryModelsIterator::IteratorImpl FDescribeEntryModelsIterator::end()
+    FDescribeEntryModelsIterator::FIterator FDescribeEntryModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeEntryModelsIterator::FIterator FDescribeEntryModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

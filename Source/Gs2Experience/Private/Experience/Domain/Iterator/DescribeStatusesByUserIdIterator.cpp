@@ -31,36 +31,6 @@
 namespace Gs2::Experience::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeStatusesByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Experience::Model::FStatusPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeStatusesByUserId(
-            MakeShared<Gs2::Experience::Request::FDescribeStatusesByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithExperienceName(Self->ExperienceName)
-                ->WithUserId(Self->UserId)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeStatusesByUserIdIteratorLoadTask>>
-    FDescribeStatusesByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeStatusesByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeStatusesByUserIdIterator::FDescribeStatusesByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Experience::FGs2ExperienceRestClientPtr Client,
@@ -73,50 +43,122 @@ namespace Gs2::Experience::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         ExperienceName(ExperienceName),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeStatusesByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Experience::Model::FStatus>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeStatusesByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeStatusesByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Experience::Model::FStatusPtr& FDescribeStatusesByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Experience::Model::FStatusPtr FDescribeStatusesByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeStatusesByUserIdIterator::IteratorImpl& FDescribeStatusesByUserIdIterator::IteratorImpl::operator++()
+    FDescribeStatusesByUserIdIterator::FIterator& FDescribeStatusesByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "Status"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Experience::Model::FStatus::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Experience::Model::FStatusPtr>>();
+                *Range = Self->Cache->List<Gs2::Experience::Model::FStatus>(
+                    ListParentKey
+                );
+                Range->RemoveAll([this](const Gs2::Experience::Model::FStatusPtr& Item) { return Self->ExperienceName && Item->GetExperienceName() == Self->ExperienceName; });
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeStatusesByUserId(
+                MakeShared<Gs2::Experience::Request::FDescribeStatusesByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithExperienceName(Self->ExperienceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ListParentKey,
+                    Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                        Item->GetExperienceName(),
+                        Item->GetPropertyId()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeStatusesByUserIdIterator::IteratorImpl FDescribeStatusesByUserIdIterator::begin()
+    FDescribeStatusesByUserIdIterator::FIterator FDescribeStatusesByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeStatusesByUserIdIterator::IteratorImpl FDescribeStatusesByUserIdIterator::end()
+    FDescribeStatusesByUserIdIterator::FIterator FDescribeStatusesByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeStatusesByUserIdIterator::FIterator FDescribeStatusesByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

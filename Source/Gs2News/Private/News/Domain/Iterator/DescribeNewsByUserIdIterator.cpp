@@ -31,32 +31,6 @@
 namespace Gs2::News::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeNewsByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::News::Model::FNewsPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeNewsByUserId(
-            MakeShared<Gs2::News::Request::FDescribeNewsByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeNewsByUserIdIteratorLoadTask>>
-    FDescribeNewsByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeNewsByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeNewsByUserIdIterator::FDescribeNewsByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::News::FGs2NewsRestClientPtr Client,
@@ -67,49 +41,113 @@ namespace Gs2::News::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeNewsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::News::Model::FNews>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeNewsByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeNewsByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::News::Model::FNewsPtr& FDescribeNewsByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::News::Model::FNewsPtr FDescribeNewsByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeNewsByUserIdIterator::IteratorImpl& FDescribeNewsByUserIdIterator::IteratorImpl::operator++()
+    FDescribeNewsByUserIdIterator::FIterator& FDescribeNewsByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::News::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "News"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::News::Model::FNews::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::News::Model::FNewsPtr>>();
+                *Range = Self->Cache->List<Gs2::News::Model::FNews>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeNewsByUserId(
+                MakeShared<Gs2::News::Request::FDescribeNewsByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::News::Model::FNews::TypeName,
+                    ListParentKey,
+                    Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeNewsByUserIdIterator::IteratorImpl FDescribeNewsByUserIdIterator::begin()
+    FDescribeNewsByUserIdIterator::FIterator FDescribeNewsByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeNewsByUserIdIterator::IteratorImpl FDescribeNewsByUserIdIterator::end()
+    FDescribeNewsByUserIdIterator::FIterator FDescribeNewsByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeNewsByUserIdIterator::FIterator FDescribeNewsByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

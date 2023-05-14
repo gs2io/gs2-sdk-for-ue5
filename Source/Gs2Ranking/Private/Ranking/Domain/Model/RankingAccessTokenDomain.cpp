@@ -130,7 +130,8 @@ namespace Gs2::Ranking::Domain::Model
                 const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetCategoryName()
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FRanking>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FRanking::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -195,7 +196,8 @@ namespace Gs2::Ranking::Domain::Model
                     ResultModel->GetItem()->GetScorerUserId(),
                     ResultModel->GetItem()->GetUniqueId()
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FScore>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FScore::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -290,7 +292,8 @@ namespace Gs2::Ranking::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "ranking")
                     {
-                        Self->Cache->Delete<Gs2::Ranking::Model::FRanking>(
+                        Self->Cache->Delete(
+                            Gs2::Ranking::Model::FRanking::TypeName,
                             ParentKey,
                             Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
                                 Self->CategoryName

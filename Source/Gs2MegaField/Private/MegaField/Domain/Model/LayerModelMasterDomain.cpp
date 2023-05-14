@@ -123,7 +123,8 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FLayerModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FLayerModelMaster>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FLayerModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -186,7 +187,8 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FLayerModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FLayerModelMaster>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FLayerModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -251,7 +253,7 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FLayerModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::MegaField::Model::FLayerModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::MegaField::Model::FLayerModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -324,7 +326,8 @@ namespace Gs2::MegaField::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "layerModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::MegaField::Model::FLayerModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::MegaField::Model::FLayerModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::MegaField::Domain::Model::FLayerModelMasterDomain::CreateCacheKey(
                                 Self->LayerModelName

@@ -127,13 +127,15 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCounter>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-                Self->Cache->ClearListCache<Gs2::Mission::Model::FComplete>(
+                Self->Cache->ClearListCache(
+                    Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
                 );
             }
@@ -195,7 +197,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCounter>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -258,7 +261,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Mission::Model::FCounter>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Mission::Model::FCounter::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -331,7 +334,8 @@ namespace Gs2::Mission::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "counter")
                     {
-                        Self->Cache->Delete<Gs2::Mission::Model::FCounter>(
+                        Self->Cache->Delete(
+                            Gs2::Mission::Model::FCounter::TypeName,
                             Self->ParentKey,
                             Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                                 Self->CounterName

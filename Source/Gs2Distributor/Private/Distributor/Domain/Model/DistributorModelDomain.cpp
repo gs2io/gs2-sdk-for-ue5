@@ -117,7 +117,8 @@ namespace Gs2::Distributor::Domain::Model
                 const auto Key = Gs2::Distributor::Domain::Model::FDistributorModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FDistributorModel>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FDistributorModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -191,7 +192,8 @@ namespace Gs2::Distributor::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "distributorModel")
                     {
-                        Self->Cache->Delete<Gs2::Distributor::Model::FDistributorModel>(
+                        Self->Cache->Delete(
+                            Gs2::Distributor::Model::FDistributorModel::TypeName,
                             Self->ParentKey,
                             Gs2::Distributor::Domain::Model::FDistributorModelDomain::CreateCacheKey(
                                 Self->DistributorName

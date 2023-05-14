@@ -25,89 +25,171 @@
 namespace Gs2::Ranking::Domain::Iterator
 {
 
-    class FDescribeCategoryModelMastersIteratorLoadTask;
-
     class GS2RANKING_API FDescribeCategoryModelMastersIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Ranking::Model::FCategoryModelMaster, FDescribeCategoryModelMastersIteratorLoadTask>
+        public TSharedFromThis<FDescribeCategoryModelMastersIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Ranking::FGs2RankingRestClientPtr Client;
-
-        friend FDescribeCategoryModelMastersIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeCategoryModelMastersIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeCategoryModelMastersIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Ranking::FGs2RankingRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );
 
-        class GS2RANKING_API IteratorImpl
-        {
-            friend FDescribeCategoryModelMastersIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Ranking::Domain::Iterator::FDescribeCategoryModelMastersIterator::FNextTask>> Task;
-            Gs2::Ranking::Model::FCategoryModelMasterPtr Current;
+        class GS2RANKING_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Model::FCategoryModelMaster>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Ranking::Domain::Iterator::FDescribeCategoryModelMastersIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FCategoryModelMaster>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Ranking::Model::FCategoryModelMasterPtr& operator*() const;
-            Gs2::Ranking::Model::FCategoryModelMasterPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2RANKING_API FIterator
+        {
+            TSharedRef<FDescribeCategoryModelMastersIterator> Self;
+            TSharedPtr<TArray<Gs2::Ranking::Model::FCategoryModelMasterPtr>> Range;
+            TOptional<TArray<Gs2::Ranking::Model::FCategoryModelMasterPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeCategoryModelMastersIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeCategoryModelMastersIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeCategoryModelMastersIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Ranking::Model::FCategoryModelMasterPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeCategoryModelMastersIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeCategoryModelMastersIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeCategoryModelMastersIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeCategoryModelMastersIterator> FDescribeCategoryModelMastersIteratorPtr;
-
-    class FDescribeCategoryModelMastersIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking::Model::FCategoryModelMasterPtr>>,
-        public TSharedFromThis<FDescribeCategoryModelMastersIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeCategoryModelMastersIterator> Self;
-
-    public:
-        explicit FDescribeCategoryModelMastersIteratorLoadTask(
-            TSharedPtr<FDescribeCategoryModelMastersIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Ranking::Model::FCategoryModelMasterPtr>>> Result
-        ) override;
-    };
 }

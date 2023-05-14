@@ -129,7 +129,8 @@ namespace Gs2::Friend::Domain::Model
                 );
                 const auto Key = Gs2::Friend::Domain::Model::FPublicProfileDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Friend::Model::FPublicProfile>(
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FPublicProfile::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -200,7 +201,8 @@ namespace Gs2::Friend::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "publicProfile")
                     {
-                        Self->Cache->Delete<Gs2::Friend::Model::FPublicProfile>(
+                        Self->Cache->Delete(
+                            Gs2::Friend::Model::FPublicProfile::TypeName,
                             Self->ParentKey,
                             Gs2::Friend::Domain::Model::FPublicProfileDomain::CreateCacheKey(
                             )

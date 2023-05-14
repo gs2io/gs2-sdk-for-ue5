@@ -24,78 +24,123 @@
 namespace Gs2::UE5::Lottery::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeBoxesIterator:
-            public TSharedFromThis<FEzDescribeBoxesIterator>
+	class EZGS2_API FEzDescribeBoxesIterator :
+        public TSharedFromThis<FEzDescribeBoxesIterator>
     {
 
-		TSharedPtr<Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator> Iterator;
+		Gs2::Lottery::Domain::Iterator::FDescribeBoxesIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeBoxesIterator(
-            const Gs2::Lottery::Domain::Iterator::FDescribeBoxesIteratorPtr Iterator
-        );
+            Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeBoxesIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Lottery::Model::FEzBoxItems>,
-            public TSharedFromThis<FDescribeBoxesIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator::FNextTask>> Task;
+        explicit FEzDescribeBoxesIterator(
+            Gs2::Lottery::Domain::Iterator::FDescribeBoxesIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeBoxesIteratorLoadTask(
-	            const TSharedPtr<Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Lottery::Model::FEzBoxItems>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeBoxesIterator;
+		    friend class FEzDescribeBoxesIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator::FNextTask>> Task;
-			Gs2::UE5::Lottery::Model::FEzBoxItemsPtr Current;
+			Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator::FIterator DomainIterator;
+			Gs2::UE5::Lottery::Model::FEzBoxItemsPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeBoxesIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Lottery::Model::FEzBoxItemsPtr& operator*() const;
-			Gs2::UE5::Lottery::Model::FEzBoxItemsPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Lottery::Model::FEzBoxItems::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Lottery::Model::FEzBoxItemsPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeBoxesIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeBoxesIterator> FEzDescribeBoxesIteratorPtr;
 }

@@ -25,89 +25,171 @@
 namespace Gs2::Identifier::Domain::Iterator
 {
 
-    class FDescribePasswordsIteratorLoadTask;
-
     class GS2IDENTIFIER_API FDescribePasswordsIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Identifier::Model::FPassword, FDescribePasswordsIteratorLoadTask>
+        public TSharedFromThis<FDescribePasswordsIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Identifier::FGs2IdentifierRestClientPtr Client;
-
-        friend FDescribePasswordsIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribePasswordsIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> UserName;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribePasswordsIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Identifier::FGs2IdentifierRestClientPtr Client,
             const TOptional<FString> UserName
         );
 
-        class GS2IDENTIFIER_API IteratorImpl
-        {
-            friend FDescribePasswordsIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Identifier::Domain::Iterator::FDescribePasswordsIterator::FNextTask>> Task;
-            Gs2::Identifier::Model::FPasswordPtr Current;
+        class GS2IDENTIFIER_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Model::FPassword>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Identifier::Domain::Iterator::FDescribePasswordsIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FPassword>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Identifier::Model::FPasswordPtr& operator*() const;
-            Gs2::Identifier::Model::FPasswordPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2IDENTIFIER_API FIterator
+        {
+            TSharedRef<FDescribePasswordsIterator> Self;
+            TSharedPtr<TArray<Gs2::Identifier::Model::FPasswordPtr>> Range;
+            TOptional<TArray<Gs2::Identifier::Model::FPasswordPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribePasswordsIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribePasswordsIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribePasswordsIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Identifier::Model::FPasswordPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribePasswordsIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribePasswordsIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribePasswordsIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribePasswordsIterator> FDescribePasswordsIteratorPtr;
-
-    class FDescribePasswordsIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Identifier::Model::FPasswordPtr>>,
-        public TSharedFromThis<FDescribePasswordsIteratorLoadTask>
-    {
-        TSharedPtr<FDescribePasswordsIterator> Self;
-
-    public:
-        explicit FDescribePasswordsIteratorLoadTask(
-            TSharedPtr<FDescribePasswordsIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Identifier::Model::FPasswordPtr>>> Result
-        ) override;
-    };
 }

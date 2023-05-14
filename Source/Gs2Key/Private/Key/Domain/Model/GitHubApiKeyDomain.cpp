@@ -111,7 +111,8 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Key::Model::FGitHubApiKey>(
+                Self->Cache->Put(
+                    Gs2::Key::Model::FGitHubApiKey::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -174,7 +175,8 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Key::Model::FGitHubApiKey>(
+                Self->Cache->Put(
+                    Gs2::Key::Model::FGitHubApiKey::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -235,7 +237,7 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Key::Model::FGitHubApiKey>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Key::Model::FGitHubApiKey::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -306,7 +308,8 @@ namespace Gs2::Key::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "gitHubApiKey")
                     {
-                        Self->Cache->Delete<Gs2::Key::Model::FGitHubApiKey>(
+                        Self->Cache->Delete(
+                            Gs2::Key::Model::FGitHubApiKey::TypeName,
                             Self->ParentKey,
                             Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
                                 Self->ApiKeyName

@@ -114,7 +114,8 @@ namespace Gs2::Version::Domain::Model
                 );
                 const auto Key = Gs2::Version::Domain::Model::FCurrentVersionMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Version::Model::FCurrentVersionMaster>(
+                Self->Cache->Put(
+                    Gs2::Version::Model::FCurrentVersionMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -175,7 +176,8 @@ namespace Gs2::Version::Domain::Model
                 );
                 const auto Key = Gs2::Version::Domain::Model::FCurrentVersionMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Version::Model::FCurrentVersionMaster>(
+                Self->Cache->Put(
+                    Gs2::Version::Model::FCurrentVersionMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -234,7 +236,8 @@ namespace Gs2::Version::Domain::Model
                 );
                 const auto Key = Gs2::Version::Domain::Model::FCurrentVersionMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Version::Model::FCurrentVersionMaster>(
+                Self->Cache->Put(
+                    Gs2::Version::Model::FCurrentVersionMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -295,7 +298,8 @@ namespace Gs2::Version::Domain::Model
                 );
                 const auto Key = Gs2::Version::Domain::Model::FCurrentVersionMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Version::Model::FCurrentVersionMaster>(
+                Self->Cache->Put(
+                    Gs2::Version::Model::FCurrentVersionMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -366,7 +370,8 @@ namespace Gs2::Version::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentVersionMaster")
                     {
-                        Self->Cache->Delete<Gs2::Version::Model::FCurrentVersionMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Version::Model::FCurrentVersionMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Version::Domain::Model::FCurrentVersionMasterDomain::CreateCacheKey(
                             )

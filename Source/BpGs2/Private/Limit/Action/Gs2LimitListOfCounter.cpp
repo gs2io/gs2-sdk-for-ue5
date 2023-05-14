@@ -51,7 +51,7 @@ void UGs2LimitListOfCounterAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnCounters.Add(EzCounterToFGs2LimitCounterValue(v));
+        ReturnCounters.Add(EzCounterToFGs2LimitCounterValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnCounters, ReturnError);
 }

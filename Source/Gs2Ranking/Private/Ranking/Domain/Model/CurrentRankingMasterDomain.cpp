@@ -118,7 +118,8 @@ namespace Gs2::Ranking::Domain::Model
                 );
                 const auto Key = Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FCurrentRankingMaster>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FCurrentRankingMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -179,7 +180,8 @@ namespace Gs2::Ranking::Domain::Model
                 );
                 const auto Key = Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FCurrentRankingMaster>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FCurrentRankingMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -238,7 +240,8 @@ namespace Gs2::Ranking::Domain::Model
                 );
                 const auto Key = Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FCurrentRankingMaster>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FCurrentRankingMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -299,7 +302,8 @@ namespace Gs2::Ranking::Domain::Model
                 );
                 const auto Key = Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FCurrentRankingMaster>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FCurrentRankingMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -370,7 +374,8 @@ namespace Gs2::Ranking::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentRankingMaster")
                     {
-                        Self->Cache->Delete<Gs2::Ranking::Model::FCurrentRankingMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Ranking::Model::FCurrentRankingMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
                             )

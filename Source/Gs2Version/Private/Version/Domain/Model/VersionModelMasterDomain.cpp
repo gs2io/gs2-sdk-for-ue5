@@ -118,7 +118,8 @@ namespace Gs2::Version::Domain::Model
                 const auto Key = Gs2::Version::Domain::Model::FVersionModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Version::Model::FVersionModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Version::Model::FVersionModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -179,7 +180,8 @@ namespace Gs2::Version::Domain::Model
                 const auto Key = Gs2::Version::Domain::Model::FVersionModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Version::Model::FVersionModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Version::Model::FVersionModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -242,7 +244,7 @@ namespace Gs2::Version::Domain::Model
                 const auto Key = Gs2::Version::Domain::Model::FVersionModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Version::Model::FVersionModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Version::Model::FVersionModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -313,7 +315,8 @@ namespace Gs2::Version::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "versionModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Version::Model::FVersionModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Version::Model::FVersionModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Version::Domain::Model::FVersionModelMasterDomain::CreateCacheKey(
                                 Self->VersionName

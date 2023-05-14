@@ -103,7 +103,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -181,7 +182,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -197,7 +199,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -231,7 +234,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -247,7 +251,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -281,7 +286,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -297,7 +303,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -331,7 +338,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -347,7 +355,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -381,7 +390,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -397,7 +407,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -438,7 +449,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -454,7 +466,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -503,7 +516,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -519,7 +533,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -561,7 +576,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -577,7 +593,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -619,7 +636,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -635,7 +653,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -677,7 +696,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -693,7 +713,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),
@@ -735,7 +756,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetStaminaName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStamina>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -751,7 +773,8 @@ namespace Gs2::Stamina::Domain
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
                     ResultModel->GetStaminaModel()->GetName()
                 );
-                Cache->Put<Gs2::Stamina::Model::FStaminaModel>(
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetStaminaModel(),

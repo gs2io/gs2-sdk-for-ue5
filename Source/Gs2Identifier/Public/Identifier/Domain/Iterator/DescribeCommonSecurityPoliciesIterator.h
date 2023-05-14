@@ -25,87 +25,169 @@
 namespace Gs2::Identifier::Domain::Iterator
 {
 
-    class FDescribeCommonSecurityPoliciesIteratorLoadTask;
-
     class GS2IDENTIFIER_API FDescribeCommonSecurityPoliciesIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Identifier::Model::FSecurityPolicy, FDescribeCommonSecurityPoliciesIteratorLoadTask>
+        public TSharedFromThis<FDescribeCommonSecurityPoliciesIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Identifier::FGs2IdentifierRestClientPtr Client;
 
-        friend FDescribeCommonSecurityPoliciesIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeCommonSecurityPoliciesIteratorLoadTask>> Load() override;
-
-public:
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
-
+    public:
         FDescribeCommonSecurityPoliciesIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Identifier::FGs2IdentifierRestClientPtr Client
         );
 
-        class GS2IDENTIFIER_API IteratorImpl
-        {
-            friend FDescribeCommonSecurityPoliciesIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Identifier::Domain::Iterator::FDescribeCommonSecurityPoliciesIterator::FNextTask>> Task;
-            Gs2::Identifier::Model::FSecurityPolicyPtr Current;
+        class GS2IDENTIFIER_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Model::FSecurityPolicy>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Identifier::Domain::Iterator::FDescribeCommonSecurityPoliciesIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FSecurityPolicy>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Identifier::Model::FSecurityPolicyPtr& operator*() const;
-            Gs2::Identifier::Model::FSecurityPolicyPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2IDENTIFIER_API FIterator
+        {
+            TSharedRef<FDescribeCommonSecurityPoliciesIterator> Self;
+            TSharedPtr<TArray<Gs2::Identifier::Model::FSecurityPolicyPtr>> Range;
+            TOptional<TArray<Gs2::Identifier::Model::FSecurityPolicyPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeCommonSecurityPoliciesIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeCommonSecurityPoliciesIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeCommonSecurityPoliciesIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Identifier::Model::FSecurityPolicyPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeCommonSecurityPoliciesIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeCommonSecurityPoliciesIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeCommonSecurityPoliciesIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeCommonSecurityPoliciesIterator> FDescribeCommonSecurityPoliciesIteratorPtr;
-
-    class FDescribeCommonSecurityPoliciesIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Identifier::Model::FSecurityPolicyPtr>>,
-        public TSharedFromThis<FDescribeCommonSecurityPoliciesIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeCommonSecurityPoliciesIterator> Self;
-
-    public:
-        explicit FDescribeCommonSecurityPoliciesIteratorLoadTask(
-            TSharedPtr<FDescribeCommonSecurityPoliciesIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Identifier::Model::FSecurityPolicyPtr>>> Result
-        ) override;
-    };
 }

@@ -119,7 +119,8 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FAwait>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FAwait::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

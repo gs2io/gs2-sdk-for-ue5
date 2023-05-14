@@ -50,7 +50,7 @@ void UGs2FriendListOfBlackListAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnBlackList.Add(v->Value);
+        ReturnBlackList.Add(v->Current()->Value);
     }
     OnSuccess.Broadcast(ReturnBlackList, ReturnError);
 }

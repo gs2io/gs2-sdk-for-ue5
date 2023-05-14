@@ -48,7 +48,7 @@ void UGs2DatastoreListOfDataObjectHistoryAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnDataObjectHistories.Add(EzDataObjectHistoryToFGs2DatastoreDataObjectHistoryValue(v));
+        ReturnDataObjectHistories.Add(EzDataObjectHistoryToFGs2DatastoreDataObjectHistoryValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnDataObjectHistories, ReturnError);
 }

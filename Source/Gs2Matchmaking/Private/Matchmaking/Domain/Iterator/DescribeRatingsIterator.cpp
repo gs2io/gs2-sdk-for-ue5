@@ -31,35 +31,6 @@
 namespace Gs2::Matchmaking::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeRatingsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Matchmaking::Model::FRatingPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeRatings(
-            MakeShared<Gs2::Matchmaking::Request::FDescribeRatingsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeRatingsIteratorLoadTask>>
-    FDescribeRatingsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeRatingsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeRatingsIterator::FDescribeRatingsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client,
@@ -70,50 +41,119 @@ namespace Gs2::Matchmaking::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken),
+        AccessToken(AccessToken)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeRatingsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FRating>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeRatingsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeRatingsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Matchmaking::Model::FRatingPtr& FDescribeRatingsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Matchmaking::Model::FRatingPtr FDescribeRatingsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeRatingsIterator::IteratorImpl& FDescribeRatingsIterator::IteratorImpl::operator++()
+    FDescribeRatingsIterator::FIterator& FDescribeRatingsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId(),
+            "Rating"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Matchmaking::Model::FRating::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Matchmaking::Model::FRatingPtr>>();
+                *Range = Self->Cache->List<Gs2::Matchmaking::Model::FRating>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeRatings(
+                MakeShared<Gs2::Matchmaking::Request::FDescribeRatingsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FRating::TypeName,
+                    ListParentKey,
+                    Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeRatingsIterator::IteratorImpl FDescribeRatingsIterator::begin()
+    FDescribeRatingsIterator::FIterator FDescribeRatingsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeRatingsIterator::IteratorImpl FDescribeRatingsIterator::end()
+    FDescribeRatingsIterator::FIterator FDescribeRatingsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeRatingsIterator::FIterator FDescribeRatingsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

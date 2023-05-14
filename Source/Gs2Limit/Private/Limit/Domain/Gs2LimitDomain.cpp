@@ -100,7 +100,8 @@ namespace Gs2::Limit::Domain
                 const auto Key = Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -179,7 +180,7 @@ namespace Gs2::Limit::Domain
                     ResultModel->GetItem()->GetLimitName(),
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Delete<Gs2::Limit::Model::FCounter>(ParentKey, Key);
+                Cache->Delete(Gs2::Limit::Model::FCounter::TypeName, ParentKey, Key);
             }
         }
     }
@@ -216,7 +217,8 @@ namespace Gs2::Limit::Domain
                     ResultModel->GetItem()->GetLimitName(),
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Limit::Model::FCounter>(
+                Cache->Put(
+                    Gs2::Limit::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -266,7 +268,7 @@ namespace Gs2::Limit::Domain
                     ResultModel->GetItem()->GetLimitName(),
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Delete<Gs2::Limit::Model::FCounter>(ParentKey, Key);
+                Cache->Delete(Gs2::Limit::Model::FCounter::TypeName, ParentKey, Key);
             }
         }
     }

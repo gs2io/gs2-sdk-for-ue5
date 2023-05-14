@@ -31,36 +31,6 @@
 namespace Gs2::Ranking::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeRankingsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Ranking::Model::FRankingPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeRankings(
-            MakeShared<Gs2::Ranking::Request::FDescribeRankingsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithCategoryName(Self->CategoryName)
-                ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeRankingsIteratorLoadTask>>
-    FDescribeRankingsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeRankingsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeRankingsIterator::FDescribeRankingsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Ranking::FGs2RankingRestClientPtr Client,
@@ -73,50 +43,121 @@ namespace Gs2::Ranking::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         CategoryName(CategoryName),
-        AccessToken(AccessToken),
+        AccessToken(AccessToken)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeRankingsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FRanking>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeRankingsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeRankingsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Ranking::Model::FRankingPtr& FDescribeRankingsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Ranking::Model::FRankingPtr FDescribeRankingsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeRankingsIterator::IteratorImpl& FDescribeRankingsIterator::IteratorImpl::operator++()
+    FDescribeRankingsIterator::FIterator& FDescribeRankingsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId(),
+            "Ranking"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Ranking::Model::FRanking::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Ranking::Model::FRankingPtr>>();
+                *Range = Self->Cache->List<Gs2::Ranking::Model::FRanking>(
+                    ListParentKey
+                );
+                Range->RemoveAll([this](const Gs2::Ranking::Model::FRankingPtr& Item) { return Self->CategoryName && Item->GetCategoryName() == Self->CategoryName; });
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeRankings(
+                MakeShared<Gs2::Ranking::Request::FDescribeRankingsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithCategoryName(Self->CategoryName)
+                    ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FRanking::TypeName,
+                    ListParentKey,
+                    Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
+                        Item->GetCategoryName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeRankingsIterator::IteratorImpl FDescribeRankingsIterator::begin()
+    FDescribeRankingsIterator::FIterator FDescribeRankingsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeRankingsIterator::IteratorImpl FDescribeRankingsIterator::end()
+    FDescribeRankingsIterator::FIterator FDescribeRankingsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeRankingsIterator::FIterator FDescribeRankingsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

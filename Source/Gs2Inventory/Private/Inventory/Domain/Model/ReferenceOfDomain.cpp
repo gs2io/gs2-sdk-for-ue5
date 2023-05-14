@@ -133,7 +133,8 @@ namespace Gs2::Inventory::Domain::Model
                     ResultModel->GetItemSet()->GetItemName(),
                     ResultModel->GetItemSet()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemSet>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItemSet(),
@@ -150,7 +151,8 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemModel>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItemModel(),
@@ -229,7 +231,8 @@ namespace Gs2::Inventory::Domain::Model
                     ResultModel->GetItemSet()->GetItemName(),
                     ResultModel->GetItemSet()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemSet>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItemSet(),
@@ -246,7 +249,8 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemModel>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItemModel(),
@@ -337,7 +341,7 @@ namespace Gs2::Inventory::Domain::Model
                     ResultModel->GetItemSet()->GetItemName(),
                     ResultModel->GetItemSet()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Inventory::Model::FItemSet>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Inventory::Model::FItemSet::TypeName, ParentKey, Key);
             }
             if (ResultModel->GetItemModel() != nullptr)
             {
@@ -349,7 +353,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Inventory::Model::FItemModel>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Inventory::Model::FItemModel::TypeName, ParentKey, Key);
             }
             if (ResultModel->GetInventory() != nullptr)
             {
@@ -361,7 +365,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
-                Self->Cache->Delete<Gs2::Inventory::Model::FInventory>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Inventory::Model::FInventory::TypeName, ParentKey, Key);
             }
         }
         const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfDomain>(
@@ -457,7 +461,8 @@ namespace Gs2::Inventory::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "referenceOf")
                     {
-                        Self->Cache->Delete<Gs2::Inventory::Model::FItemSet>(
+                        Self->Cache->Delete(
+                            Gs2::Inventory::Model::FItemSet::TypeName,
                             Self->ParentKey,
                             Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
                                 Self->ItemName,

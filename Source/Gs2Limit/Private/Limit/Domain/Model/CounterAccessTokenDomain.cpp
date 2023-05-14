@@ -126,7 +126,8 @@ namespace Gs2::Limit::Domain::Model
                     ResultModel->GetItem()->GetLimitName(),
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FCounter>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -191,7 +192,8 @@ namespace Gs2::Limit::Domain::Model
                     ResultModel->GetItem()->GetLimitName(),
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Limit::Model::FCounter>(
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -274,7 +276,8 @@ namespace Gs2::Limit::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "counter")
                     {
-                        Self->Cache->Delete<Gs2::Limit::Model::FCounter>(
+                        Self->Cache->Delete(
+                            Gs2::Limit::Model::FCounter::TypeName,
                             Self->ParentKey,
                             Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
                                 Self->LimitName,

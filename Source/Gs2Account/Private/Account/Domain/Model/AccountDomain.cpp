@@ -106,7 +106,8 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Put<Gs2::Account::Model::FAccount>(
+                Self->Cache->Put(
+                    Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -169,7 +170,8 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Put<Gs2::Account::Model::FAccount>(
+                Self->Cache->Put(
+                    Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -232,7 +234,8 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Put<Gs2::Account::Model::FAccount>(
+                Self->Cache->Put(
+                    Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -293,7 +296,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Delete<Gs2::Account::Model::FAccount>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Account::Model::FAccount::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -351,7 +354,8 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Put<Gs2::Account::Model::FAccount>(
+                Self->Cache->Put(
+                    Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -416,7 +420,7 @@ namespace Gs2::Account::Domain::Model
                 );
                 const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete<Gs2::Account::Model::FDataOwner>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Account::Model::FDataOwner::TypeName, ParentKey, Key);
             }
         }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FDataOwnerDomain>(
@@ -533,7 +537,8 @@ namespace Gs2::Account::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "account")
                     {
-                        Self->Cache->Delete<Gs2::Account::Model::FAccount>(
+                        Self->Cache->Delete(
+                            Gs2::Account::Model::FAccount::TypeName,
                             Self->ParentKey,
                             Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                                 Self->UserId

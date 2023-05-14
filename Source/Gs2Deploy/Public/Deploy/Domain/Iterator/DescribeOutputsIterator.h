@@ -25,89 +25,171 @@
 namespace Gs2::Deploy::Domain::Iterator
 {
 
-    class FDescribeOutputsIteratorLoadTask;
-
     class GS2DEPLOY_API FDescribeOutputsIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Deploy::Model::FOutput, FDescribeOutputsIteratorLoadTask>
+        public TSharedFromThis<FDescribeOutputsIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Deploy::FGs2DeployRestClientPtr Client;
-
-        friend FDescribeOutputsIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeOutputsIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> StackName;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeOutputsIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Deploy::FGs2DeployRestClientPtr Client,
             const TOptional<FString> StackName
         );
 
-        class GS2DEPLOY_API IteratorImpl
-        {
-            friend FDescribeOutputsIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Deploy::Domain::Iterator::FDescribeOutputsIterator::FNextTask>> Task;
-            Gs2::Deploy::Model::FOutputPtr Current;
+        class GS2DEPLOY_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Deploy::Model::FOutput>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Deploy::Domain::Iterator::FDescribeOutputsIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Deploy::Model::FOutput>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Deploy::Model::FOutputPtr& operator*() const;
-            Gs2::Deploy::Model::FOutputPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2DEPLOY_API FIterator
+        {
+            TSharedRef<FDescribeOutputsIterator> Self;
+            TSharedPtr<TArray<Gs2::Deploy::Model::FOutputPtr>> Range;
+            TOptional<TArray<Gs2::Deploy::Model::FOutputPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeOutputsIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeOutputsIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeOutputsIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Deploy::Model::FOutputPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeOutputsIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeOutputsIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeOutputsIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeOutputsIterator> FDescribeOutputsIteratorPtr;
-
-    class FDescribeOutputsIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Deploy::Model::FOutputPtr>>,
-        public TSharedFromThis<FDescribeOutputsIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeOutputsIterator> Self;
-
-    public:
-        explicit FDescribeOutputsIteratorLoadTask(
-            TSharedPtr<FDescribeOutputsIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Deploy::Model::FOutputPtr>>> Result
-        ) override;
-    };
 }

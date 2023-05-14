@@ -114,7 +114,8 @@ namespace Gs2::Exchange::Domain::Model
                 );
                 const auto Key = Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FCurrentRateMaster>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -175,7 +176,8 @@ namespace Gs2::Exchange::Domain::Model
                 );
                 const auto Key = Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FCurrentRateMaster>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -234,7 +236,8 @@ namespace Gs2::Exchange::Domain::Model
                 );
                 const auto Key = Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FCurrentRateMaster>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -295,7 +298,8 @@ namespace Gs2::Exchange::Domain::Model
                 );
                 const auto Key = Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FCurrentRateMaster>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -366,7 +370,8 @@ namespace Gs2::Exchange::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentRateMaster")
                     {
-                        Self->Cache->Delete<Gs2::Exchange::Model::FCurrentRateMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
                             )

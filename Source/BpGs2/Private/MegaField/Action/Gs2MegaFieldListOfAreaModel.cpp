@@ -48,7 +48,7 @@ void UGs2MegaFieldListOfAreaModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnAreaModels.Add(EzAreaModelToFGs2MegaFieldAreaModelValue(v));
+        ReturnAreaModels.Add(EzAreaModelToFGs2MegaFieldAreaModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnAreaModels, ReturnError);
 }

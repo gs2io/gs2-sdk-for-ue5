@@ -118,7 +118,8 @@ namespace Gs2::Version::Domain::Model
                 const auto Key = Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Version::Model::FVersionModel>(
+                Self->Cache->Put(
+                    Gs2::Version::Model::FVersionModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -192,7 +193,8 @@ namespace Gs2::Version::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "versionModel")
                     {
-                        Self->Cache->Delete<Gs2::Version::Model::FVersionModel>(
+                        Self->Cache->Delete(
+                            Gs2::Version::Model::FVersionModel::TypeName,
                             Self->ParentKey,
                             Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
                                 Self->VersionName

@@ -97,7 +97,8 @@ namespace Gs2::Lock::Domain
                 const auto Key = Gs2::Lock::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Lock::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Lock::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

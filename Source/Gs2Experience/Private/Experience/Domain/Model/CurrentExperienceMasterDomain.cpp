@@ -113,7 +113,8 @@ namespace Gs2::Experience::Domain::Model
                 );
                 const auto Key = Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FCurrentExperienceMaster>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FCurrentExperienceMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -174,7 +175,8 @@ namespace Gs2::Experience::Domain::Model
                 );
                 const auto Key = Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FCurrentExperienceMaster>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FCurrentExperienceMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -233,7 +235,8 @@ namespace Gs2::Experience::Domain::Model
                 );
                 const auto Key = Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FCurrentExperienceMaster>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FCurrentExperienceMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -294,7 +297,8 @@ namespace Gs2::Experience::Domain::Model
                 );
                 const auto Key = Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FCurrentExperienceMaster>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FCurrentExperienceMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -365,7 +369,8 @@ namespace Gs2::Experience::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentExperienceMaster")
                     {
-                        Self->Cache->Delete<Gs2::Experience::Model::FCurrentExperienceMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Experience::Model::FCurrentExperienceMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain::CreateCacheKey(
                             )

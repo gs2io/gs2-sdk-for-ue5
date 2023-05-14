@@ -126,7 +126,8 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FShowcase>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FShowcase::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -187,7 +188,8 @@ namespace Gs2::Showcase::Domain::Model
                 );
                 const auto Key = Gs2::Showcase::Domain::Model::FSalesItemDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FSalesItem>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FSalesItem::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -294,7 +296,8 @@ namespace Gs2::Showcase::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "showcase")
                     {
-                        Self->Cache->Delete<Gs2::Showcase::Model::FShowcase>(
+                        Self->Cache->Delete(
+                            Gs2::Showcase::Model::FShowcase::TypeName,
                             Self->ParentKey,
                             Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
                                 Self->ShowcaseName

@@ -31,31 +31,6 @@
 namespace Gs2::Mission::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeMissionGroupModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Mission::Model::FMissionGroupModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeMissionGroupModels(
-            MakeShared<Gs2::Mission::Request::FDescribeMissionGroupModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeMissionGroupModelsIteratorLoadTask>>
-    FDescribeMissionGroupModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeMissionGroupModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeMissionGroupModelsIterator::FDescribeMissionGroupModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Mission::FGs2MissionRestClientPtr Client,
@@ -64,49 +39,112 @@ namespace Gs2::Mission::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeMissionGroupModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Mission::Model::FMissionGroupModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeMissionGroupModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeMissionGroupModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Mission::Model::FMissionGroupModelPtr& FDescribeMissionGroupModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Mission::Model::FMissionGroupModelPtr FDescribeMissionGroupModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeMissionGroupModelsIterator::IteratorImpl& FDescribeMissionGroupModelsIterator::IteratorImpl::operator++()
+    FDescribeMissionGroupModelsIterator::FIterator& FDescribeMissionGroupModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "MissionGroupModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Mission::Model::FMissionGroupModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Mission::Model::FMissionGroupModelPtr>>();
+                *Range = Self->Cache->List<Gs2::Mission::Model::FMissionGroupModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeMissionGroupModels(
+                MakeShared<Gs2::Mission::Request::FDescribeMissionGroupModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FMissionGroupModel::TypeName,
+                    ListParentKey,
+                    Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeMissionGroupModelsIterator::IteratorImpl FDescribeMissionGroupModelsIterator::begin()
+    FDescribeMissionGroupModelsIterator::FIterator FDescribeMissionGroupModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeMissionGroupModelsIterator::IteratorImpl FDescribeMissionGroupModelsIterator::end()
+    FDescribeMissionGroupModelsIterator::FIterator FDescribeMissionGroupModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeMissionGroupModelsIterator::FIterator FDescribeMissionGroupModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

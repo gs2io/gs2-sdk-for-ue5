@@ -123,7 +123,8 @@ namespace Gs2::Lottery::Domain::Model
                 const auto Key = Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FPrizeTable>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FPrizeTable::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -223,7 +224,8 @@ namespace Gs2::Lottery::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "prizeTable")
                     {
-                        Self->Cache->Delete<Gs2::Lottery::Model::FPrizeTable>(
+                        Self->Cache->Delete(
+                            Gs2::Lottery::Model::FPrizeTable::TypeName,
                             Self->ParentKey,
                             Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
                                 Self->PrizeTableName

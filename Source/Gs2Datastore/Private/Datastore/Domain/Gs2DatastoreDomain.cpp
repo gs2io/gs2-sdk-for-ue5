@@ -98,7 +98,8 @@ namespace Gs2::Datastore::Domain
                 const auto Key = Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Datastore::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

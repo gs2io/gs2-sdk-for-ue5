@@ -113,7 +113,8 @@ namespace Gs2::SerialKey::Domain::Model
                 );
                 const auto Key = Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::SerialKey::Model::FCurrentCampaignMaster>(
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FCurrentCampaignMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -174,7 +175,8 @@ namespace Gs2::SerialKey::Domain::Model
                 );
                 const auto Key = Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::SerialKey::Model::FCurrentCampaignMaster>(
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FCurrentCampaignMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -233,7 +235,8 @@ namespace Gs2::SerialKey::Domain::Model
                 );
                 const auto Key = Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::SerialKey::Model::FCurrentCampaignMaster>(
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FCurrentCampaignMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -294,7 +297,8 @@ namespace Gs2::SerialKey::Domain::Model
                 );
                 const auto Key = Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::SerialKey::Model::FCurrentCampaignMaster>(
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FCurrentCampaignMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -365,7 +369,8 @@ namespace Gs2::SerialKey::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentCampaignMaster")
                     {
-                        Self->Cache->Delete<Gs2::SerialKey::Model::FCurrentCampaignMaster>(
+                        Self->Cache->Delete(
+                            Gs2::SerialKey::Model::FCurrentCampaignMaster::TypeName,
                             Self->ParentKey,
                             Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain::CreateCacheKey(
                             )

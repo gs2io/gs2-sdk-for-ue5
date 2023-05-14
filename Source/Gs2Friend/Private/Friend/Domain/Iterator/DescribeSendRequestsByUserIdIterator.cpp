@@ -31,35 +31,6 @@
 namespace Gs2::Friend::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeSendRequestsByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Friend::Model::FFriendRequestPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeSendRequestsByUserId(
-            MakeShared<Gs2::Friend::Request::FDescribeSendRequestsByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeSendRequestsByUserIdIteratorLoadTask>>
-    FDescribeSendRequestsByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeSendRequestsByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeSendRequestsByUserIdIterator::FDescribeSendRequestsByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
@@ -70,50 +41,119 @@ namespace Gs2::Friend::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeSendRequestsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Friend::Model::FFriendRequest>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeSendRequestsByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeSendRequestsByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Friend::Model::FFriendRequestPtr& FDescribeSendRequestsByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Friend::Model::FFriendRequestPtr FDescribeSendRequestsByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeSendRequestsByUserIdIterator::IteratorImpl& FDescribeSendRequestsByUserIdIterator::IteratorImpl::operator++()
+    FDescribeSendRequestsByUserIdIterator::FIterator& FDescribeSendRequestsByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "SendFriendRequest"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Friend::Model::FFriendRequest::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Friend::Model::FFriendRequestPtr>>();
+                *Range = Self->Cache->List<Gs2::Friend::Model::FFriendRequest>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeSendRequestsByUserId(
+                MakeShared<Gs2::Friend::Request::FDescribeSendRequestsByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FFriendRequest::TypeName,
+                    ListParentKey,
+                    Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
+                        Item->GetTargetUserId()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeSendRequestsByUserIdIterator::IteratorImpl FDescribeSendRequestsByUserIdIterator::begin()
+    FDescribeSendRequestsByUserIdIterator::FIterator FDescribeSendRequestsByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeSendRequestsByUserIdIterator::IteratorImpl FDescribeSendRequestsByUserIdIterator::end()
+    FDescribeSendRequestsByUserIdIterator::FIterator FDescribeSendRequestsByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeSendRequestsByUserIdIterator::FIterator FDescribeSendRequestsByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

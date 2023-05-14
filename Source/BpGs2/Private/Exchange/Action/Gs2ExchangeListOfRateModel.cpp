@@ -48,7 +48,7 @@ void UGs2ExchangeListOfRateModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnRateModels.Add(EzRateModelToFGs2ExchangeRateModelValue(v));
+        ReturnRateModels.Add(EzRateModelToFGs2ExchangeRateModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnRateModels, ReturnError);
 }

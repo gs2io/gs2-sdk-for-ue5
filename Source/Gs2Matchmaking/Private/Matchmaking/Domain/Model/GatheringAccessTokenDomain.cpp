@@ -127,7 +127,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FGathering>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FGathering::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -192,7 +193,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Matchmaking::Model::FGathering>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Matchmaking::Model::FGathering::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;

@@ -139,7 +139,8 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Put<Gs2::Friend::Model::FFriendUser>(
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FFriendUser::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -203,7 +204,7 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Delete<Gs2::Friend::Model::FFriendUser>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Friend::Model::FFriendUser::TypeName, ParentKey, Key);
             }
             {
                 const auto ParentKey = Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
@@ -215,9 +216,10 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Delete<Gs2::Friend::Model::FFriendUser>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Friend::Model::FFriendUser::TypeName, ParentKey, Key);
             }
-            Self->Cache->Delete<Gs2::Friend::Model::FFriendUser>(
+            Self->Cache->Delete(
+                Gs2::Friend::Model::FFriendUser::TypeName,
                 Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     ResultModel->GetItem()->GetUserId(),
@@ -228,7 +230,8 @@ namespace Gs2::Friend::Domain::Model
                     Self->TargetUserId
                 )
             );
-            Self->Cache->Delete<Gs2::Friend::Model::FFriendUser>(
+            Self->Cache->Delete(
+                Gs2::Friend::Model::FFriendUser::TypeName,
                 Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     ResultModel->GetItem()->GetUserId(),
@@ -312,7 +315,8 @@ namespace Gs2::Friend::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "friendUser")
                     {
-                        Self->Cache->Delete<Gs2::Friend::Model::FFriendUser>(
+                        Self->Cache->Delete(
+                            Gs2::Friend::Model::FFriendUser::TypeName,
                             Self->ParentKey,
                             Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
                                 Self->TargetUserId

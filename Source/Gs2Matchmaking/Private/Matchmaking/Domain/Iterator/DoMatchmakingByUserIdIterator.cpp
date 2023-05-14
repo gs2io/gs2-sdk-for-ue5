@@ -31,44 +31,6 @@
 namespace Gs2::Matchmaking::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDoMatchmakingByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Matchmaking::Model::FGatheringPtr>>> Result)
-    {
-        const auto Future = Self->Client->DoMatchmakingByUserId(
-            MakeShared<Gs2::Matchmaking::Request::FDoMatchmakingByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithPlayer(Self->Player)
-                ->WithMatchmakingContextToken(Self->MatchmakingContextToken)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        auto Arr = MakeShared<TArray<Gs2::Matchmaking::Model::FGatheringPtr>>();
-        Arr->Add(R->GetItem());
-        *Result = Arr;
-        Self->MatchmakingContextToken = R->GetMatchmakingContextToken();
-        Self->Last = !Self->MatchmakingContextToken.IsSet();
-        Self->Cache->ClearListCache<Gs2::Matchmaking::Model::FGathering>(
-            Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                TOptional<FString>("Singleton"),
-                "Gathering"
-            )
-        );
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDoMatchmakingByUserIdIteratorLoadTask>>
-    FDoMatchmakingByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDoMatchmakingByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDoMatchmakingByUserIdIterator::FDoMatchmakingByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client,
@@ -81,50 +43,98 @@ namespace Gs2::Matchmaking::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        Player(Player),
+        Player(Player)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDoMatchmakingByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FGathering>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDoMatchmakingByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDoMatchmakingByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         MatchmakingContextToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Matchmaking::Model::FGatheringPtr& FDoMatchmakingByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Matchmaking::Model::FGatheringPtr FDoMatchmakingByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDoMatchmakingByUserIdIterator::IteratorImpl& FDoMatchmakingByUserIdIterator::IteratorImpl::operator++()
+    FDoMatchmakingByUserIdIterator::FIterator& FDoMatchmakingByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto Future = Self->Client->DoMatchmakingByUserId(
+                MakeShared<Gs2::Matchmaking::Request::FDoMatchmakingByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithPlayer(Self->Player)
+                    ->WithMatchmakingContextToken(MatchmakingContextToken)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            auto Arr = MakeShared<TArray<Gs2::Matchmaking::Model::FGatheringPtr>>();
+            Arr->Add(R->GetItem());
+            Range = Arr;
+            RangeIteratorOpt = Range->CreateIterator();
+            MatchmakingContextToken = R->GetMatchmakingContextToken();
+            bLast = !MatchmakingContextToken.IsSet();
+            Self->Cache->ClearListCache(
+                Gs2::Matchmaking::Model::FGathering::TypeName,
+                Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                TOptional<FString>("Singleton"),
+                "Gathering"
+            )
+            );
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDoMatchmakingByUserIdIterator::IteratorImpl FDoMatchmakingByUserIdIterator::begin()
+    FDoMatchmakingByUserIdIterator::FIterator FDoMatchmakingByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDoMatchmakingByUserIdIterator::IteratorImpl FDoMatchmakingByUserIdIterator::end()
+    FDoMatchmakingByUserIdIterator::FIterator FDoMatchmakingByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDoMatchmakingByUserIdIterator::FIterator FDoMatchmakingByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

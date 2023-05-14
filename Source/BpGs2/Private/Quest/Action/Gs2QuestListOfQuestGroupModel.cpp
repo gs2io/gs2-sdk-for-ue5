@@ -48,7 +48,7 @@ void UGs2QuestListOfQuestGroupModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnQuestGroupModels.Add(EzQuestGroupModelToFGs2QuestQuestGroupModelValue(v));
+        ReturnQuestGroupModels.Add(EzQuestGroupModelToFGs2QuestQuestGroupModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnQuestGroupModels, ReturnError);
 }

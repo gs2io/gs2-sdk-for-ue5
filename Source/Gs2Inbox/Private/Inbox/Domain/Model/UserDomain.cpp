@@ -119,7 +119,8 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FMessage>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FMessage::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -191,7 +192,8 @@ namespace Gs2::Inbox::Domain::Model
                     const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Self->Cache->Put<Gs2::Inbox::Model::FMessage>(
+                    Self->Cache->Put(
+                        Gs2::Inbox::Model::FMessage::TypeName,
                         ParentKey,
                         Key,
                         Item,
@@ -199,7 +201,8 @@ namespace Gs2::Inbox::Domain::Model
                     );
                 }
             }
-            Self->Cache->Delete<Gs2::Inbox::Model::FReceived>(
+            Self->Cache->Delete(
+                Gs2::Inbox::Model::FReceived::TypeName,
                 Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
@@ -231,7 +234,8 @@ namespace Gs2::Inbox::Domain::Model
             const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                 (*ResultModel->GetItem())[i]->GetName()
             );
-            Self->Cache->Put<Gs2::Inbox::Model::FMessage>(
+            Self->Cache->Put(
+                Gs2::Inbox::Model::FMessage::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItem())[i],

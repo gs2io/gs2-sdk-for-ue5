@@ -122,7 +122,8 @@ namespace Gs2::Schedule::Domain::Model
                 const auto Key = Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Schedule::Model::FTrigger>(
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FTrigger::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -185,13 +186,15 @@ namespace Gs2::Schedule::Domain::Model
                 const auto Key = Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Schedule::Model::FTrigger>(
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FTrigger::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-                Self->Cache->ClearListCache<Gs2::Schedule::Model::FEvent>(
+                Self->Cache->ClearListCache(
+                    Gs2::Schedule::Model::FEvent::TypeName,
                     ParentKey.Replace(TEXT("Trigger"), TEXT("Event"))
                 );
             }
@@ -253,7 +256,7 @@ namespace Gs2::Schedule::Domain::Model
                 const auto Key = Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Schedule::Model::FTrigger>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Schedule::Model::FTrigger::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -326,7 +329,8 @@ namespace Gs2::Schedule::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "trigger")
                     {
-                        Self->Cache->Delete<Gs2::Schedule::Model::FTrigger>(
+                        Self->Cache->Delete(
+                            Gs2::Schedule::Model::FTrigger::TypeName,
                             Self->ParentKey,
                             Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
                                 Self->TriggerName

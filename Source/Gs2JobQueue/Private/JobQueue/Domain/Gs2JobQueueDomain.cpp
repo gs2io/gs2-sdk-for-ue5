@@ -114,7 +114,8 @@ namespace Gs2::JobQueue::Domain
                 const auto Key = Gs2::JobQueue::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::JobQueue::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::JobQueue::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -192,7 +193,8 @@ namespace Gs2::JobQueue::Domain
                     const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Cache->Put<Gs2::JobQueue::Model::FJob>(
+                    Cache->Put(
+                        Gs2::JobQueue::Model::FJob::TypeName,
                         ParentKey,
                         Key,
                         Item,
@@ -252,7 +254,8 @@ namespace Gs2::JobQueue::Domain
                     const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Cache->Put<Gs2::JobQueue::Model::FJob>(
+                    Cache->Put(
+                        Gs2::JobQueue::Model::FJob::TypeName,
                         ParentKey,
                         Key,
                         Item,

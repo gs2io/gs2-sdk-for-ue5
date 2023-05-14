@@ -24,78 +24,123 @@
 namespace Gs2::UE5::Ranking::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeRankingsIterator:
-            public TSharedFromThis<FEzDescribeRankingsIterator>
+	class EZGS2_API FEzDescribeRankingsIterator :
+        public TSharedFromThis<FEzDescribeRankingsIterator>
     {
 
-		TSharedPtr<Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator> Iterator;
+		Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeRankingsIterator(
-            const Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr Iterator
-        );
+            Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeRankingsIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking::Model::FEzRanking>,
-            public TSharedFromThis<FDescribeRankingsIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator::FNextTask>> Task;
+        explicit FEzDescribeRankingsIterator(
+            Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeRankingsIteratorLoadTask(
-	            const TSharedPtr<Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Ranking::Model::FEzRanking>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeRankingsIterator;
+		    friend class FEzDescribeRankingsIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator::FNextTask>> Task;
-			Gs2::UE5::Ranking::Model::FEzRankingPtr Current;
+			Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator::FIterator DomainIterator;
+			Gs2::UE5::Ranking::Model::FEzRankingPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeRankingsIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Ranking::Model::FEzRankingPtr& operator*() const;
-			Gs2::UE5::Ranking::Model::FEzRankingPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Ranking::Model::FEzRanking::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Ranking::Model::FEzRankingPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeRankingsIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeRankingsIterator> FEzDescribeRankingsIteratorPtr;
 }

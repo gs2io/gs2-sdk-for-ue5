@@ -48,7 +48,7 @@ void UGs2ChatListOfMessageAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnMessages.Add(EzMessageToFGs2ChatMessageValue(v));
+        ReturnMessages.Add(EzMessageToFGs2ChatMessageValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnMessages, ReturnError);
 }

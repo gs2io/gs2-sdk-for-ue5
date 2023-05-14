@@ -122,7 +122,8 @@ namespace Gs2::Quest::Domain::Model
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FProgress>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -138,7 +139,8 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FQuestGroupModelDomain::CreateCacheKey(
                     ResultModel->GetQuestGroup()->GetName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FQuestGroupModel>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FQuestGroupModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetQuestGroup(),
@@ -155,7 +157,8 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FQuestModelDomain::CreateCacheKey(
                     ResultModel->GetQuest()->GetName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FQuestModel>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FQuestModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetQuest(),
@@ -216,9 +219,10 @@ namespace Gs2::Quest::Domain::Model
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete<Gs2::Quest::Model::FProgress>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Quest::Model::FProgress::TypeName, ParentKey, Key);
             }
-            Self->Cache->Delete<Gs2::Quest::Model::FCompletedQuestList>(
+            Self->Cache->Delete(
+                Gs2::Quest::Model::FCompletedQuestList::TypeName,
                 Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId(),
@@ -228,7 +232,8 @@ namespace Gs2::Quest::Domain::Model
                     Gs2::Quest::Model::FQuestModel::GetQuestGroupNameFromGrn(*ResultModel->GetItem()->GetQuestModelId())
                 )
             );
-            Self->Cache->ClearListCache<Gs2::Quest::Model::FCompletedQuestList>(
+            Self->Cache->ClearListCache(
+                Gs2::Quest::Model::FCompletedQuestList::TypeName,
                 Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId(),
@@ -320,7 +325,7 @@ namespace Gs2::Quest::Domain::Model
                 );
                 const auto Key = Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete<Gs2::Quest::Model::FProgress>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Quest::Model::FProgress::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -388,7 +393,8 @@ namespace Gs2::Quest::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "progress")
                     {
-                        Self->Cache->Delete<Gs2::Quest::Model::FProgress>(
+                        Self->Cache->Delete(
+                            Gs2::Quest::Model::FProgress::TypeName,
                             Self->ParentKey,
                             Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
                             )

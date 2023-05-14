@@ -114,7 +114,8 @@ namespace Gs2::Inbox::Domain::Model
                 );
                 const auto Key = Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FCurrentMessageMaster>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FCurrentMessageMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -175,7 +176,8 @@ namespace Gs2::Inbox::Domain::Model
                 );
                 const auto Key = Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FCurrentMessageMaster>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FCurrentMessageMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -234,7 +236,8 @@ namespace Gs2::Inbox::Domain::Model
                 );
                 const auto Key = Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FCurrentMessageMaster>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FCurrentMessageMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -295,7 +298,8 @@ namespace Gs2::Inbox::Domain::Model
                 );
                 const auto Key = Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FCurrentMessageMaster>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FCurrentMessageMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -366,7 +370,8 @@ namespace Gs2::Inbox::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentMessageMaster")
                     {
-                        Self->Cache->Delete<Gs2::Inbox::Model::FCurrentMessageMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Inbox::Model::FCurrentMessageMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain::CreateCacheKey(
                             )

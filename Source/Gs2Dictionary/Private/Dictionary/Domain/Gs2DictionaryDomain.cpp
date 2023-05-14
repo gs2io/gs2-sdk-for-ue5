@@ -100,7 +100,8 @@ namespace Gs2::Dictionary::Domain
                 const auto Key = Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Dictionary::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Dictionary::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -178,7 +179,8 @@ namespace Gs2::Dictionary::Domain
                     const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Cache->Put<Gs2::Dictionary::Model::FEntry>(
+                    Cache->Put(
+                        Gs2::Dictionary::Model::FEntry::TypeName,
                         ParentKey,
                         Key,
                         Item,
@@ -235,7 +237,8 @@ namespace Gs2::Dictionary::Domain
                     const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Cache->Put<Gs2::Dictionary::Model::FEntry>(
+                    Cache->Put(
+                        Gs2::Dictionary::Model::FEntry::TypeName,
                         ParentKey,
                         Key,
                         Item,

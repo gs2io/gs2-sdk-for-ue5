@@ -118,7 +118,8 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FGlobalMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FGlobalMessage>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FGlobalMessage::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -192,7 +193,8 @@ namespace Gs2::Inbox::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "globalMessage")
                     {
-                        Self->Cache->Delete<Gs2::Inbox::Model::FGlobalMessage>(
+                        Self->Cache->Delete(
+                            Gs2::Inbox::Model::FGlobalMessage::TypeName,
                             Self->ParentKey,
                             Gs2::Inbox::Domain::Model::FGlobalMessageDomain::CreateCacheKey(
                                 Self->GlobalMessageName

@@ -117,7 +117,8 @@ namespace Gs2::SerialKey::Domain::Model
                 const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::SerialKey::Model::FCampaignModelMaster>(
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -178,7 +179,8 @@ namespace Gs2::SerialKey::Domain::Model
                 const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::SerialKey::Model::FCampaignModelMaster>(
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -241,7 +243,7 @@ namespace Gs2::SerialKey::Domain::Model
                 const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::SerialKey::Model::FCampaignModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::SerialKey::Model::FCampaignModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -312,7 +314,8 @@ namespace Gs2::SerialKey::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "campaignModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::SerialKey::Model::FCampaignModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::SerialKey::Domain::Model::FCampaignModelMasterDomain::CreateCacheKey(
                                 Self->CampaignModelName

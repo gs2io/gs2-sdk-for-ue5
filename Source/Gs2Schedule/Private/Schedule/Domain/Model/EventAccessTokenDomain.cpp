@@ -123,7 +123,8 @@ namespace Gs2::Schedule::Domain::Model
                 const auto Key = Gs2::Schedule::Domain::Model::FEventDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Schedule::Model::FEvent>(
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FEvent::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -199,7 +200,8 @@ namespace Gs2::Schedule::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "event")
                     {
-                        Self->Cache->Delete<Gs2::Schedule::Model::FEvent>(
+                        Self->Cache->Delete(
+                            Gs2::Schedule::Model::FEvent::TypeName,
                             Self->ParentKey,
                             Gs2::Schedule::Domain::Model::FEventDomain::CreateCacheKey(
                                 Self->EventName

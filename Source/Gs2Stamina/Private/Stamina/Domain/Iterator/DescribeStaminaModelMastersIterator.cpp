@@ -31,34 +31,6 @@
 namespace Gs2::Stamina::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeStaminaModelMastersIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Stamina::Model::FStaminaModelMasterPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeStaminaModelMasters(
-            MakeShared<Gs2::Stamina::Request::FDescribeStaminaModelMastersRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeStaminaModelMastersIteratorLoadTask>>
-    FDescribeStaminaModelMastersIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeStaminaModelMastersIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeStaminaModelMastersIterator::FDescribeStaminaModelMastersIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Stamina::FGs2StaminaRestClientPtr Client,
@@ -67,50 +39,117 @@ namespace Gs2::Stamina::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeStaminaModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Stamina::Model::FStaminaModelMaster>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeStaminaModelMastersIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeStaminaModelMastersIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Stamina::Model::FStaminaModelMasterPtr& FDescribeStaminaModelMastersIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Stamina::Model::FStaminaModelMasterPtr FDescribeStaminaModelMastersIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeStaminaModelMastersIterator::IteratorImpl& FDescribeStaminaModelMastersIterator::IteratorImpl::operator++()
+    FDescribeStaminaModelMastersIterator::FIterator& FDescribeStaminaModelMastersIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "StaminaModelMaster"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Stamina::Model::FStaminaModelMasterPtr>>();
+                *Range = Self->Cache->List<Gs2::Stamina::Model::FStaminaModelMaster>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeStaminaModelMasters(
+                MakeShared<Gs2::Stamina::Request::FDescribeStaminaModelMastersRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
+                    ListParentKey,
+                    Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeStaminaModelMastersIterator::IteratorImpl FDescribeStaminaModelMastersIterator::begin()
+    FDescribeStaminaModelMastersIterator::FIterator FDescribeStaminaModelMastersIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeStaminaModelMastersIterator::IteratorImpl FDescribeStaminaModelMastersIterator::end()
+    FDescribeStaminaModelMastersIterator::FIterator FDescribeStaminaModelMastersIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeStaminaModelMastersIterator::FIterator FDescribeStaminaModelMastersIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

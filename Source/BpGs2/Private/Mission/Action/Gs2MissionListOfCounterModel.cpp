@@ -48,7 +48,7 @@ void UGs2MissionListOfCounterModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnCounterModels.Add(EzCounterModelToFGs2MissionCounterModelValue(v));
+        ReturnCounterModels.Add(EzCounterModelToFGs2MissionCounterModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnCounterModels, ReturnError);
 }

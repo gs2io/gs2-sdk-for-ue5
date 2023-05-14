@@ -136,7 +136,8 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Put<Gs2::Friend::Model::FFollowUser>(
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FFollowUser::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -199,7 +200,8 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Put<Gs2::Friend::Model::FFollowUser>(
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FFollowUser::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -264,7 +266,7 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Delete<Gs2::Friend::Model::FFollowUser>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Friend::Model::FFollowUser::TypeName, ParentKey, Key);
             }
             {
                 const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -275,7 +277,7 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Delete<Gs2::Friend::Model::FFollowUser>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Friend::Model::FFollowUser::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -349,7 +351,8 @@ namespace Gs2::Friend::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "followUser")
                     {
-                        Self->Cache->Delete<Gs2::Friend::Model::FFollowUser>(
+                        Self->Cache->Delete(
+                            Gs2::Friend::Model::FFollowUser::TypeName,
                             Self->ParentKey,
                             Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
                                 Self->TargetUserId

@@ -110,7 +110,8 @@ namespace Gs2::Realtime::Domain::Model
                 const auto Key = Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Realtime::Model::FRoom>(
+                Self->Cache->Put(
+                    Gs2::Realtime::Model::FRoom::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -171,7 +172,7 @@ namespace Gs2::Realtime::Domain::Model
                 const auto Key = Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Realtime::Model::FRoom>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Realtime::Model::FRoom::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -242,7 +243,8 @@ namespace Gs2::Realtime::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "room")
                     {
-                        Self->Cache->Delete<Gs2::Realtime::Model::FRoom>(
+                        Self->Cache->Delete(
+                            Gs2::Realtime::Model::FRoom::TypeName,
                             Self->ParentKey,
                             Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
                                 Self->RoomName

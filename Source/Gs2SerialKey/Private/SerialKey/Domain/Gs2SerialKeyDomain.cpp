@@ -101,7 +101,8 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::SerialKey::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -186,7 +187,8 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetCode()
                 );
-                Cache->Put<Gs2::SerialKey::Model::FSerialKey>(
+                Cache->Put(
+                    Gs2::SerialKey::Model::FSerialKey::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -202,7 +204,8 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
                     ResultModel->GetCampaignModel()->GetName()
                 );
-                Cache->Put<Gs2::SerialKey::Model::FCampaignModel>(
+                Cache->Put(
+                    Gs2::SerialKey::Model::FCampaignModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetCampaignModel(),

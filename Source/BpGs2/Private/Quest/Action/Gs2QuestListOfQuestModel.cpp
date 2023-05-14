@@ -48,7 +48,7 @@ void UGs2QuestListOfQuestModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnQuestModels.Add(EzQuestModelToFGs2QuestQuestModelValue(v));
+        ReturnQuestModels.Add(EzQuestModelToFGs2QuestQuestModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnQuestModels, ReturnError);
 }

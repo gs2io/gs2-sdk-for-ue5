@@ -129,12 +129,12 @@ namespace Gs2::Core::Util
             this->ResultValue = Result;
         }
     };
-    
+
+    GS2CORE_API extern TArray<TSharedPtr<FAsyncTaskBase>> RunningTasks;
+
     template <typename InObjectType, typename... InArgTypes>
     static TSharedPtr<InObjectType> New(InArgTypes&&... Args)
     {
-        static TArray<TSharedPtr<InObjectType>> RunningTasks;
-
         for (auto v : RunningTasks)
         {
             if (v.IsValid() && v->IsDone())

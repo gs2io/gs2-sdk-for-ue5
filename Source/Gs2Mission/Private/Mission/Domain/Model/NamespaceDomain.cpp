@@ -158,7 +158,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -214,7 +215,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -272,7 +274,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Mission::Model::FNamespace>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Mission::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -329,7 +331,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FMissionGroupModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FMissionGroupModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -398,7 +401,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCounterModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCounterModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -616,7 +620,8 @@ namespace Gs2::Mission::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "namespace")
                     {
-                        Self->Cache->Delete<Gs2::Mission::Model::FNamespace>(
+                        Self->Cache->Delete(
+                            Gs2::Mission::Model::FNamespace::TypeName,
                             Self->ParentKey,
                             Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheKey(
                                 Self->NamespaceName

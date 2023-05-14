@@ -134,7 +134,8 @@ namespace Gs2::Formation::Domain::Model
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FPropertyForm>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -151,7 +152,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
                     ResultModel->GetFormModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FFormModel>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FFormModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetFormModel(),
@@ -216,7 +218,8 @@ namespace Gs2::Formation::Domain::Model
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FPropertyForm>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -233,7 +236,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
                     ResultModel->GetFormModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FFormModel>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FFormModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetFormModel(),
@@ -302,7 +306,8 @@ namespace Gs2::Formation::Domain::Model
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FPropertyForm>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -319,7 +324,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
                     ResultModel->GetFormModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FFormModel>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FFormModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetFormModel(),
@@ -386,7 +392,7 @@ namespace Gs2::Formation::Domain::Model
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Self->Cache->Delete<Gs2::Formation::Model::FPropertyForm>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Formation::Model::FPropertyForm::TypeName, ParentKey, Key);
             }
             if (ResultModel->GetFormModel() != nullptr)
             {
@@ -398,7 +404,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
                     ResultModel->GetFormModel()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Formation::Model::FFormModel>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Formation::Model::FFormModel::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -476,7 +482,8 @@ namespace Gs2::Formation::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "propertyForm")
                     {
-                        Self->Cache->Delete<Gs2::Formation::Model::FPropertyForm>(
+                        Self->Cache->Delete(
+                            Gs2::Formation::Model::FPropertyForm::TypeName,
                             Self->ParentKey,
                             Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
                                 Self->FormModelName,

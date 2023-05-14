@@ -25,88 +25,169 @@
 namespace Gs2::Enhance::Domain::Iterator
 {
 
-    class FDescribeRateModelsIteratorLoadTask;
-
     class GS2ENHANCE_API FDescribeRateModelsIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Enhance::Model::FRateModel, FDescribeRateModelsIteratorLoadTask>
+        public TSharedFromThis<FDescribeRateModelsIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
-
-        friend FDescribeRateModelsIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeRateModelsIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeRateModelsIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Enhance::FGs2EnhanceRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );
 
-        class GS2ENHANCE_API IteratorImpl
-        {
-            friend FDescribeRateModelsIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Enhance::Domain::Iterator::FDescribeRateModelsIterator::FNextTask>> Task;
-            Gs2::Enhance::Model::FRateModelPtr Current;
+        class GS2ENHANCE_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Model::FRateModel>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Enhance::Domain::Iterator::FDescribeRateModelsIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Enhance::Model::FRateModel>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Enhance::Model::FRateModelPtr& operator*() const;
-            Gs2::Enhance::Model::FRateModelPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2ENHANCE_API FIterator
+        {
+            TSharedRef<FDescribeRateModelsIterator> Self;
+            TSharedPtr<TArray<Gs2::Enhance::Model::FRateModelPtr>> Range;
+            TOptional<TArray<Gs2::Enhance::Model::FRateModelPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeRateModelsIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeRateModelsIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeRateModelsIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Enhance::Model::FRateModelPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeRateModelsIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeRateModelsIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeRateModelsIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeRateModelsIterator> FDescribeRateModelsIteratorPtr;
-
-    class FDescribeRateModelsIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Enhance::Model::FRateModelPtr>>,
-        public TSharedFromThis<FDescribeRateModelsIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeRateModelsIterator> Self;
-
-    public:
-        explicit FDescribeRateModelsIteratorLoadTask(
-            TSharedPtr<FDescribeRateModelsIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Enhance::Model::FRateModelPtr>>> Result
-        ) override;
-    };
 }

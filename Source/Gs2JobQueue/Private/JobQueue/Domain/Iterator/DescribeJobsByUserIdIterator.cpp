@@ -31,35 +31,6 @@
 namespace Gs2::JobQueue::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeJobsByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::JobQueue::Model::FJobPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeJobsByUserId(
-            MakeShared<Gs2::JobQueue::Request::FDescribeJobsByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeJobsByUserIdIteratorLoadTask>>
-    FDescribeJobsByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeJobsByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeJobsByUserIdIterator::FDescribeJobsByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client,
@@ -70,50 +41,119 @@ namespace Gs2::JobQueue::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeJobsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::JobQueue::Model::FJob>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeJobsByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeJobsByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::JobQueue::Model::FJobPtr& FDescribeJobsByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::JobQueue::Model::FJobPtr FDescribeJobsByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeJobsByUserIdIterator::IteratorImpl& FDescribeJobsByUserIdIterator::IteratorImpl::operator++()
+    FDescribeJobsByUserIdIterator::FIterator& FDescribeJobsByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "Job"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::JobQueue::Model::FJob::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::JobQueue::Model::FJobPtr>>();
+                *Range = Self->Cache->List<Gs2::JobQueue::Model::FJob>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeJobsByUserId(
+                MakeShared<Gs2::JobQueue::Request::FDescribeJobsByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::JobQueue::Model::FJob::TypeName,
+                    ListParentKey,
+                    Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeJobsByUserIdIterator::IteratorImpl FDescribeJobsByUserIdIterator::begin()
+    FDescribeJobsByUserIdIterator::FIterator FDescribeJobsByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeJobsByUserIdIterator::IteratorImpl FDescribeJobsByUserIdIterator::end()
+    FDescribeJobsByUserIdIterator::FIterator FDescribeJobsByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeJobsByUserIdIterator::FIterator FDescribeJobsByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

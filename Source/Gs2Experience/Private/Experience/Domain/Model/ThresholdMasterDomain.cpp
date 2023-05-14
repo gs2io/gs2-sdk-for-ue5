@@ -117,7 +117,8 @@ namespace Gs2::Experience::Domain::Model
                 const auto Key = Gs2::Experience::Domain::Model::FThresholdMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FThresholdMaster>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FThresholdMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -178,7 +179,8 @@ namespace Gs2::Experience::Domain::Model
                 const auto Key = Gs2::Experience::Domain::Model::FThresholdMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FThresholdMaster>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FThresholdMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -241,7 +243,7 @@ namespace Gs2::Experience::Domain::Model
                 const auto Key = Gs2::Experience::Domain::Model::FThresholdMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Experience::Model::FThresholdMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Experience::Model::FThresholdMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -312,7 +314,8 @@ namespace Gs2::Experience::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "thresholdMaster")
                     {
-                        Self->Cache->Delete<Gs2::Experience::Model::FThresholdMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Experience::Model::FThresholdMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Experience::Domain::Model::FThresholdMasterDomain::CreateCacheKey(
                                 Self->ThresholdName

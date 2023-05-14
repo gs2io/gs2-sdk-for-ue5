@@ -48,7 +48,7 @@ void UGs2DictionaryListOfEntryModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnEntryModels.Add(EzEntryModelToFGs2DictionaryEntryModelValue(v));
+        ReturnEntryModels.Add(EzEntryModelToFGs2DictionaryEntryModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnEntryModels, ReturnError);
 }

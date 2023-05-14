@@ -119,7 +119,8 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FRecoverIntervalTableMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -180,7 +181,8 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FRecoverIntervalTableMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -243,7 +245,7 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Stamina::Model::FRecoverIntervalTableMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -314,7 +316,8 @@ namespace Gs2::Stamina::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "recoverIntervalTableMaster")
                     {
-                        Self->Cache->Delete<Gs2::Stamina::Model::FRecoverIntervalTableMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
                                 Self->RecoverIntervalTableName

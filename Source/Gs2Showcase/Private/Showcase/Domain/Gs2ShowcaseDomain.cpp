@@ -101,7 +101,8 @@ namespace Gs2::Showcase::Domain
                 const auto Key = Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

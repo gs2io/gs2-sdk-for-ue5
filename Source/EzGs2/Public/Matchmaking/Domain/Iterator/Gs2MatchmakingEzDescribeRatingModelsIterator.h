@@ -24,78 +24,123 @@
 namespace Gs2::UE5::Matchmaking::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeRatingModelsIterator:
-            public TSharedFromThis<FEzDescribeRatingModelsIterator>
+	class EZGS2_API FEzDescribeRatingModelsIterator :
+        public TSharedFromThis<FEzDescribeRatingModelsIterator>
     {
 
-		TSharedPtr<Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIterator> Iterator;
+		Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeRatingModelsIterator(
-            const Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIteratorPtr Iterator
-        );
+            Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeRatingModelsIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Model::FEzRatingModel>,
-            public TSharedFromThis<FDescribeRatingModelsIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIterator::FNextTask>> Task;
+        explicit FEzDescribeRatingModelsIterator(
+            Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeRatingModelsIteratorLoadTask(
-	            const TSharedPtr<Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzRatingModel>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeRatingModelsIterator;
+		    friend class FEzDescribeRatingModelsIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIterator::FNextTask>> Task;
-			Gs2::UE5::Matchmaking::Model::FEzRatingModelPtr Current;
+			Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIterator::FIterator DomainIterator;
+			Gs2::UE5::Matchmaking::Model::FEzRatingModelPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeRatingModelsIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Matchmaking::Model::FEzRatingModelPtr& operator*() const;
-			Gs2::UE5::Matchmaking::Model::FEzRatingModelPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Matchmaking::Model::FEzRatingModel::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Matchmaking::Model::FEzRatingModelPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeRatingModelsIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeRatingModelsIterator> FEzDescribeRatingModelsIteratorPtr;
 }

@@ -113,7 +113,8 @@ namespace Gs2::Showcase::Domain::Model
                 );
                 const auto Key = Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FCurrentShowcaseMaster>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FCurrentShowcaseMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -174,7 +175,8 @@ namespace Gs2::Showcase::Domain::Model
                 );
                 const auto Key = Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FCurrentShowcaseMaster>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FCurrentShowcaseMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -233,7 +235,8 @@ namespace Gs2::Showcase::Domain::Model
                 );
                 const auto Key = Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FCurrentShowcaseMaster>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FCurrentShowcaseMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -294,7 +297,8 @@ namespace Gs2::Showcase::Domain::Model
                 );
                 const auto Key = Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FCurrentShowcaseMaster>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FCurrentShowcaseMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -365,7 +369,8 @@ namespace Gs2::Showcase::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentShowcaseMaster")
                     {
-                        Self->Cache->Delete<Gs2::Showcase::Model::FCurrentShowcaseMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Showcase::Model::FCurrentShowcaseMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain::CreateCacheKey(
                             )

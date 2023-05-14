@@ -31,38 +31,6 @@
 namespace Gs2::Money::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeReceiptsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Money::Model::FReceiptPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeReceipts(
-            MakeShared<Gs2::Money::Request::FDescribeReceiptsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithSlot(Self->Slot)
-                ->WithBegin(Self->Begin)
-                ->WithEnd(Self->End)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeReceiptsIteratorLoadTask>>
-    FDescribeReceiptsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeReceiptsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeReceiptsIterator::FDescribeReceiptsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Money::FGs2MoneyRestClientPtr Client,
@@ -79,50 +47,125 @@ namespace Gs2::Money::Domain::Iterator
         UserId(UserId),
         Slot(Slot),
         Begin(Begin),
-        End(End),
+        End(End)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeReceiptsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Money::Model::FReceipt>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeReceiptsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeReceiptsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Money::Model::FReceiptPtr& FDescribeReceiptsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Money::Model::FReceiptPtr FDescribeReceiptsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeReceiptsIterator::IteratorImpl& FDescribeReceiptsIterator::IteratorImpl::operator++()
+    FDescribeReceiptsIterator::FIterator& FDescribeReceiptsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "Receipt"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Money::Model::FReceipt::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Money::Model::FReceiptPtr>>();
+                *Range = Self->Cache->List<Gs2::Money::Model::FReceipt>(
+                    ListParentKey
+                );
+                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->Slot && Item->GetSlot() == Self->Slot; });
+                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->Begin && *Item->GetCreatedAt() >= *Self->Begin; });
+                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->End && *Item->GetCreatedAt() <= *Self->End; });
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeReceipts(
+                MakeShared<Gs2::Money::Request::FDescribeReceiptsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithSlot(Self->Slot)
+                    ->WithBegin(Self->Begin)
+                    ->WithEnd(Self->End)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Money::Model::FReceipt::TypeName,
+                    ListParentKey,
+                    Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
+                        Item->GetTransactionId()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeReceiptsIterator::IteratorImpl FDescribeReceiptsIterator::begin()
+    FDescribeReceiptsIterator::FIterator FDescribeReceiptsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeReceiptsIterator::IteratorImpl FDescribeReceiptsIterator::end()
+    FDescribeReceiptsIterator::FIterator FDescribeReceiptsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeReceiptsIterator::FIterator FDescribeReceiptsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

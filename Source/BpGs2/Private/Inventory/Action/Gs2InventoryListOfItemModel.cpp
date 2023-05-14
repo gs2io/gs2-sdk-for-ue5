@@ -48,7 +48,7 @@ void UGs2InventoryListOfItemModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnItemModels.Add(EzItemModelToFGs2InventoryItemModelValue(v));
+        ReturnItemModels.Add(EzItemModelToFGs2InventoryItemModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnItemModels, ReturnError);
 }

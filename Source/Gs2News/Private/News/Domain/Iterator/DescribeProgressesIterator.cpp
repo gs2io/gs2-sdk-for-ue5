@@ -31,34 +31,6 @@
 namespace Gs2::News::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeProgressesIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::News::Model::FProgressPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeProgresses(
-            MakeShared<Gs2::News::Request::FDescribeProgressesRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeProgressesIteratorLoadTask>>
-    FDescribeProgressesIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeProgressesIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeProgressesIterator::FDescribeProgressesIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::News::FGs2NewsRestClientPtr Client,
@@ -67,50 +39,117 @@ namespace Gs2::News::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeProgressesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::News::Model::FProgress>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeProgressesIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeProgressesIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::News::Model::FProgressPtr& FDescribeProgressesIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::News::Model::FProgressPtr FDescribeProgressesIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeProgressesIterator::IteratorImpl& FDescribeProgressesIterator::IteratorImpl::operator++()
+    FDescribeProgressesIterator::FIterator& FDescribeProgressesIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::News::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "Progress"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::News::Model::FProgress::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::News::Model::FProgressPtr>>();
+                *Range = Self->Cache->List<Gs2::News::Model::FProgress>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeProgresses(
+                MakeShared<Gs2::News::Request::FDescribeProgressesRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::News::Model::FProgress::TypeName,
+                    ListParentKey,
+                    Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
+                        Item->GetUploadToken()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeProgressesIterator::IteratorImpl FDescribeProgressesIterator::begin()
+    FDescribeProgressesIterator::FIterator FDescribeProgressesIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeProgressesIterator::IteratorImpl FDescribeProgressesIterator::end()
+    FDescribeProgressesIterator::FIterator FDescribeProgressesIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeProgressesIterator::FIterator FDescribeProgressesIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

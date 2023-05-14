@@ -48,7 +48,7 @@ void UGs2EnhanceListOfRateModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnRateModels.Add(EzRateModelToFGs2EnhanceRateModelValue(v));
+        ReturnRateModels.Add(EzRateModelToFGs2EnhanceRateModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnRateModels, ReturnError);
 }

@@ -25,88 +25,169 @@
 namespace Gs2::Experience::Domain::Iterator
 {
 
-    class FDescribeExperienceModelsIteratorLoadTask;
-
     class GS2EXPERIENCE_API FDescribeExperienceModelsIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Experience::Model::FExperienceModel, FDescribeExperienceModelsIteratorLoadTask>
+        public TSharedFromThis<FDescribeExperienceModelsIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Experience::FGs2ExperienceRestClientPtr Client;
-
-        friend FDescribeExperienceModelsIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeExperienceModelsIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeExperienceModelsIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Experience::FGs2ExperienceRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );
 
-        class GS2EXPERIENCE_API IteratorImpl
-        {
-            friend FDescribeExperienceModelsIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIterator::FNextTask>> Task;
-            Gs2::Experience::Model::FExperienceModelPtr Current;
+        class GS2EXPERIENCE_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Model::FExperienceModel>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Experience::Model::FExperienceModel>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Experience::Model::FExperienceModelPtr& operator*() const;
-            Gs2::Experience::Model::FExperienceModelPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2EXPERIENCE_API FIterator
+        {
+            TSharedRef<FDescribeExperienceModelsIterator> Self;
+            TSharedPtr<TArray<Gs2::Experience::Model::FExperienceModelPtr>> Range;
+            TOptional<TArray<Gs2::Experience::Model::FExperienceModelPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeExperienceModelsIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeExperienceModelsIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeExperienceModelsIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Experience::Model::FExperienceModelPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeExperienceModelsIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeExperienceModelsIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeExperienceModelsIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeExperienceModelsIterator> FDescribeExperienceModelsIteratorPtr;
-
-    class FDescribeExperienceModelsIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Experience::Model::FExperienceModelPtr>>,
-        public TSharedFromThis<FDescribeExperienceModelsIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeExperienceModelsIterator> Self;
-
-    public:
-        explicit FDescribeExperienceModelsIteratorLoadTask(
-            TSharedPtr<FDescribeExperienceModelsIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Experience::Model::FExperienceModelPtr>>> Result
-        ) override;
-    };
 }

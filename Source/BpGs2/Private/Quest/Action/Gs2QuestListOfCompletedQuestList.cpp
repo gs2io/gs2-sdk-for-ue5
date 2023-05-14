@@ -50,7 +50,7 @@ void UGs2QuestListOfCompletedQuestListAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnCompletedQuestList.Add(EzCompletedQuestListToFGs2QuestCompletedQuestListValue(v));
+        ReturnCompletedQuestList.Add(EzCompletedQuestListToFGs2QuestCompletedQuestListValue(v.Current()));
     }
     OnSuccess.Broadcast(ReturnCompletedQuestList, ReturnError);
 }

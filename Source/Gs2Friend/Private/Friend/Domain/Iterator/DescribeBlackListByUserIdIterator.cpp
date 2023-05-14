@@ -31,42 +31,6 @@
 namespace Gs2::Friend::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeBlackListByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Friend::Model::FBlackListEntryPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeBlackListByUserId(
-            MakeShared<Gs2::Friend::Request::FDescribeBlackListByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (!(*Result).IsValid())
-        {
-            *Result = MakeShared<TArray<Friend::Model::FBlackListEntryPtr>>();
-        }
-        for (auto Item : *R->GetItems())
-        {
-            (*Result)->Add(MakeShared<Friend::Model::FBlackListEntry>(Item));
-        }
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeBlackListByUserIdIteratorLoadTask>>
-    FDescribeBlackListByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeBlackListByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeBlackListByUserIdIterator::FDescribeBlackListByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
@@ -77,50 +41,121 @@ namespace Gs2::Friend::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeBlackListByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Friend::Model::FBlackListEntry>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeBlackListByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeBlackListByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Friend::Model::FBlackListEntryPtr& FDescribeBlackListByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Friend::Model::FBlackListEntryPtr FDescribeBlackListByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeBlackListByUserIdIterator::IteratorImpl& FDescribeBlackListByUserIdIterator::IteratorImpl::operator++()
+    FDescribeBlackListByUserIdIterator::FIterator& FDescribeBlackListByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = "friend:UserId";
+            if (Self->Cache->IsListCached(
+                Gs2::Friend::Model::FBlackListEntry::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Friend::Model::FBlackListEntryPtr>>();
+                *Range = Self->Cache->List<Gs2::Friend::Model::FBlackListEntry>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeBlackListByUserId(
+                MakeShared<Gs2::Friend::Request::FDescribeBlackListByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            if (!Range.IsValid())
+            {
+                Range = MakeShared<TArray<Friend::Model::FBlackListEntryPtr>>();
+            }
+            for (auto Item : *R->GetItems())
+            {
+                Range->Add(MakeShared<Friend::Model::FBlackListEntry>(Item));
+            }
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FBlackListEntry::TypeName,
+                    ListParentKey,
+                    Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
+                    ),
+                    MakeShared<FString>(Item),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeBlackListByUserIdIterator::IteratorImpl FDescribeBlackListByUserIdIterator::begin()
+    FDescribeBlackListByUserIdIterator::FIterator FDescribeBlackListByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeBlackListByUserIdIterator::IteratorImpl FDescribeBlackListByUserIdIterator::end()
+    FDescribeBlackListByUserIdIterator::FIterator FDescribeBlackListByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeBlackListByUserIdIterator::FIterator FDescribeBlackListByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

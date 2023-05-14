@@ -128,7 +128,8 @@ namespace Gs2::Lottery::Domain::Model
                 const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetPrizeTableName()
                 );
-                Self->Cache->Put<Gs2::Lottery::Model::FBoxItems>(
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -190,11 +191,13 @@ namespace Gs2::Lottery::Domain::Model
                 const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
                     RequestModel->GetPrizeTableName()
                 );
-                Self->Cache->Delete<Gs2::Lottery::Model::FBoxItems>(
+                Self->Cache->Delete(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
                     ParentKey,
                     Key
                 );
-                Self->Cache->ClearListCache<Gs2::Lottery::Model::FBoxItems>(
+                Self->Cache->ClearListCache(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
                     ParentKey
                 );
             }
@@ -268,7 +271,8 @@ namespace Gs2::Lottery::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "boxItems")
                     {
-                        Self->Cache->Delete<Gs2::Lottery::Model::FBoxItems>(
+                        Self->Cache->Delete(
+                            Gs2::Lottery::Model::FBoxItems::TypeName,
                             Self->ParentKey,
                             Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
                                 Self->PrizeTableName

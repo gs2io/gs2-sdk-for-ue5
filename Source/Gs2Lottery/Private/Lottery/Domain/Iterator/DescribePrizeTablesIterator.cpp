@@ -31,31 +31,6 @@
 namespace Gs2::Lottery::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribePrizeTablesIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Lottery::Model::FPrizeTablePtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribePrizeTables(
-            MakeShared<Gs2::Lottery::Request::FDescribePrizeTablesRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribePrizeTablesIteratorLoadTask>>
-    FDescribePrizeTablesIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribePrizeTablesIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribePrizeTablesIterator::FDescribePrizeTablesIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client,
@@ -64,49 +39,112 @@ namespace Gs2::Lottery::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribePrizeTablesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FPrizeTable>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribePrizeTablesIterator::FIterator::FIterator(
+        const TSharedRef<FDescribePrizeTablesIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Lottery::Model::FPrizeTablePtr& FDescribePrizeTablesIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Lottery::Model::FPrizeTablePtr FDescribePrizeTablesIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribePrizeTablesIterator::IteratorImpl& FDescribePrizeTablesIterator::IteratorImpl::operator++()
+    FDescribePrizeTablesIterator::FIterator& FDescribePrizeTablesIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "PrizeTable"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Lottery::Model::FPrizeTable::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Lottery::Model::FPrizeTablePtr>>();
+                *Range = Self->Cache->List<Gs2::Lottery::Model::FPrizeTable>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribePrizeTables(
+                MakeShared<Gs2::Lottery::Request::FDescribePrizeTablesRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FPrizeTable::TypeName,
+                    ListParentKey,
+                    Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribePrizeTablesIterator::IteratorImpl FDescribePrizeTablesIterator::begin()
+    FDescribePrizeTablesIterator::FIterator FDescribePrizeTablesIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribePrizeTablesIterator::IteratorImpl FDescribePrizeTablesIterator::end()
+    FDescribePrizeTablesIterator::FIterator FDescribePrizeTablesIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribePrizeTablesIterator::FIterator FDescribePrizeTablesIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

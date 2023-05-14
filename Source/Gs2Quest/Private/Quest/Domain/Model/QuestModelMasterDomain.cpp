@@ -125,7 +125,8 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FQuestModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FQuestModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -188,7 +189,8 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FQuestModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FQuestModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -253,7 +255,7 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Quest::Model::FQuestModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Quest::Model::FQuestModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -326,7 +328,8 @@ namespace Gs2::Quest::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "questModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Quest::Model::FQuestModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Quest::Model::FQuestModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
                                 Self->QuestName

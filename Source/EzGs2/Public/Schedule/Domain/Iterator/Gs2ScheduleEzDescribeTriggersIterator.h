@@ -24,78 +24,123 @@
 namespace Gs2::UE5::Schedule::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeTriggersIterator:
-            public TSharedFromThis<FEzDescribeTriggersIterator>
+	class EZGS2_API FEzDescribeTriggersIterator :
+        public TSharedFromThis<FEzDescribeTriggersIterator>
     {
 
-		TSharedPtr<Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator> Iterator;
+		Gs2::Schedule::Domain::Iterator::FDescribeTriggersIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeTriggersIterator(
-            const Gs2::Schedule::Domain::Iterator::FDescribeTriggersIteratorPtr Iterator
-        );
+            Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeTriggersIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Schedule::Model::FEzTrigger>,
-            public TSharedFromThis<FDescribeTriggersIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator::FNextTask>> Task;
+        explicit FEzDescribeTriggersIterator(
+            Gs2::Schedule::Domain::Iterator::FDescribeTriggersIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeTriggersIteratorLoadTask(
-	            const TSharedPtr<Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Schedule::Model::FEzTrigger>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeTriggersIterator;
+		    friend class FEzDescribeTriggersIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator::FNextTask>> Task;
-			Gs2::UE5::Schedule::Model::FEzTriggerPtr Current;
+			Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator::FIterator DomainIterator;
+			Gs2::UE5::Schedule::Model::FEzTriggerPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeTriggersIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Schedule::Model::FEzTriggerPtr& operator*() const;
-			Gs2::UE5::Schedule::Model::FEzTriggerPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Schedule::Model::FEzTrigger::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Schedule::Model::FEzTriggerPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeTriggersIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeTriggersIterator> FEzDescribeTriggersIteratorPtr;
 }

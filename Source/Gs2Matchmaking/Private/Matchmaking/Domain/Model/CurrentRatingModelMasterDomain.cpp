@@ -117,7 +117,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 );
                 const auto Key = Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FCurrentRatingModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FCurrentRatingModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -178,7 +179,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 );
                 const auto Key = Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FCurrentRatingModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FCurrentRatingModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -237,7 +239,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 );
                 const auto Key = Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FCurrentRatingModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FCurrentRatingModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -298,7 +301,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 );
                 const auto Key = Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FCurrentRatingModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FCurrentRatingModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -369,7 +373,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentRatingModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Matchmaking::Model::FCurrentRatingModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Matchmaking::Model::FCurrentRatingModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain::CreateCacheKey(
                             )

@@ -23,78 +23,123 @@
 namespace Gs2::UE5::Friend::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeBlackListIterator:
-            public TSharedFromThis<FEzDescribeBlackListIterator>
+	class EZGS2_API FEzDescribeBlackListIterator :
+        public TSharedFromThis<FEzDescribeBlackListIterator>
     {
 
-		TSharedPtr<Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator> Iterator;
+		Gs2::Friend::Domain::Iterator::FDescribeBlackListIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeBlackListIterator(
-            const Gs2::Friend::Domain::Iterator::FDescribeBlackListIteratorPtr Iterator
-        );
+            Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeBlackListIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FBlackListEntry>,
-            public TSharedFromThis<FDescribeBlackListIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FNextTask>> Task;
+        explicit FEzDescribeBlackListIterator(
+            Gs2::Friend::Domain::Iterator::FDescribeBlackListIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeBlackListIteratorLoadTask(
-	            const TSharedPtr<Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Friend::Model::FBlackListEntry>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeBlackListIterator;
+		    friend class FEzDescribeBlackListIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FNextTask>> Task;
-			Gs2::Friend::Model::FBlackListEntryPtr Current;
+			Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FIterator DomainIterator;
+			Gs2::Friend::Model::FBlackListEntryPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeBlackListIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::Friend::Model::FBlackListEntryPtr& operator*() const;
-			Gs2::Friend::Model::FBlackListEntryPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+    				? DomainIterator.Current()
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::Friend::Model::FBlackListEntryPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeBlackListIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeBlackListIterator> FEzDescribeBlackListIteratorPtr;
 }

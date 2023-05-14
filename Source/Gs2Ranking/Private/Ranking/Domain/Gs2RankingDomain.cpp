@@ -103,7 +103,8 @@ namespace Gs2::Ranking::Domain
                 const auto Key = Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

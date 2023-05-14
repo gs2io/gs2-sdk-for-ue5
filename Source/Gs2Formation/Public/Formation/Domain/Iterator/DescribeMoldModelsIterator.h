@@ -25,88 +25,169 @@
 namespace Gs2::Formation::Domain::Iterator
 {
 
-    class FDescribeMoldModelsIteratorLoadTask;
-
     class GS2FORMATION_API FDescribeMoldModelsIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Formation::Model::FMoldModel, FDescribeMoldModelsIteratorLoadTask>
+        public TSharedFromThis<FDescribeMoldModelsIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Formation::FGs2FormationRestClientPtr Client;
-
-        friend FDescribeMoldModelsIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeMoldModelsIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeMoldModelsIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Formation::FGs2FormationRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );
 
-        class GS2FORMATION_API IteratorImpl
-        {
-            friend FDescribeMoldModelsIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Formation::Domain::Iterator::FDescribeMoldModelsIterator::FNextTask>> Task;
-            Gs2::Formation::Model::FMoldModelPtr Current;
+        class GS2FORMATION_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Model::FMoldModel>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Formation::Domain::Iterator::FDescribeMoldModelsIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FMoldModel>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Formation::Model::FMoldModelPtr& operator*() const;
-            Gs2::Formation::Model::FMoldModelPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2FORMATION_API FIterator
+        {
+            TSharedRef<FDescribeMoldModelsIterator> Self;
+            TSharedPtr<TArray<Gs2::Formation::Model::FMoldModelPtr>> Range;
+            TOptional<TArray<Gs2::Formation::Model::FMoldModelPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeMoldModelsIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeMoldModelsIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeMoldModelsIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Formation::Model::FMoldModelPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeMoldModelsIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeMoldModelsIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeMoldModelsIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeMoldModelsIterator> FDescribeMoldModelsIteratorPtr;
-
-    class FDescribeMoldModelsIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Formation::Model::FMoldModelPtr>>,
-        public TSharedFromThis<FDescribeMoldModelsIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeMoldModelsIterator> Self;
-
-    public:
-        explicit FDescribeMoldModelsIteratorLoadTask(
-            TSharedPtr<FDescribeMoldModelsIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Formation::Model::FMoldModelPtr>>> Result
-        ) override;
-    };
 }

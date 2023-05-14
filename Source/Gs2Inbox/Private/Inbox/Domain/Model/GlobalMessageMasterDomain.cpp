@@ -118,7 +118,8 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FGlobalMessageMaster>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FGlobalMessageMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -179,7 +180,8 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FGlobalMessageMaster>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FGlobalMessageMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -242,7 +244,7 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Inbox::Model::FGlobalMessageMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Inbox::Model::FGlobalMessageMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -313,7 +315,8 @@ namespace Gs2::Inbox::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "globalMessageMaster")
                     {
-                        Self->Cache->Delete<Gs2::Inbox::Model::FGlobalMessageMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Inbox::Model::FGlobalMessageMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain::CreateCacheKey(
                                 Self->GlobalMessageName

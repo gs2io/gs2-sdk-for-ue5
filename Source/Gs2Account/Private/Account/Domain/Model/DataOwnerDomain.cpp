@@ -116,7 +116,8 @@ namespace Gs2::Account::Domain::Model
                 );
                 const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Account::Model::FDataOwner>(
+                Self->Cache->Put(
+                    Gs2::Account::Model::FDataOwner::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -187,7 +188,8 @@ namespace Gs2::Account::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "dataOwner")
                     {
-                        Self->Cache->Delete<Gs2::Account::Model::FDataOwner>(
+                        Self->Cache->Delete(
+                            Gs2::Account::Model::FDataOwner::TypeName,
                             Self->ParentKey,
                             Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
                             )

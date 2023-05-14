@@ -113,7 +113,8 @@ namespace Gs2::Schedule::Domain::Model
                 );
                 const auto Key = Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Schedule::Model::FCurrentEventMaster>(
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -174,7 +175,8 @@ namespace Gs2::Schedule::Domain::Model
                 );
                 const auto Key = Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Schedule::Model::FCurrentEventMaster>(
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -233,7 +235,8 @@ namespace Gs2::Schedule::Domain::Model
                 );
                 const auto Key = Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Schedule::Model::FCurrentEventMaster>(
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -294,7 +297,8 @@ namespace Gs2::Schedule::Domain::Model
                 );
                 const auto Key = Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Schedule::Model::FCurrentEventMaster>(
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -365,7 +369,8 @@ namespace Gs2::Schedule::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentEventMaster")
                     {
-                        Self->Cache->Delete<Gs2::Schedule::Model::FCurrentEventMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
                             )

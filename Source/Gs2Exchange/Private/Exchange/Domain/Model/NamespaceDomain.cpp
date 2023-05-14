@@ -154,7 +154,8 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -210,7 +211,8 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -268,7 +270,7 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Exchange::Model::FNamespace>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Exchange::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -325,7 +327,8 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FRateModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FRateModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FRateModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -495,7 +498,8 @@ namespace Gs2::Exchange::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "namespace")
                     {
-                        Self->Cache->Delete<Gs2::Exchange::Model::FNamespace>(
+                        Self->Cache->Delete(
+                            Gs2::Exchange::Model::FNamespace::TypeName,
                             Self->ParentKey,
                             Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheKey(
                                 Self->NamespaceName

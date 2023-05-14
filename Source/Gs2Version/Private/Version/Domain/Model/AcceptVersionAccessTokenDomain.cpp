@@ -124,7 +124,8 @@ namespace Gs2::Version::Domain::Model
                 const auto Key = Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetVersionName()
                 );
-                Self->Cache->Put<Gs2::Version::Model::FAcceptVersion>(
+                Self->Cache->Put(
+                    Gs2::Version::Model::FAcceptVersion::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -189,7 +190,8 @@ namespace Gs2::Version::Domain::Model
                 const auto Key = Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetVersionName()
                 );
-                Self->Cache->Put<Gs2::Version::Model::FAcceptVersion>(
+                Self->Cache->Put(
+                    Gs2::Version::Model::FAcceptVersion::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -252,7 +254,7 @@ namespace Gs2::Version::Domain::Model
                 const auto Key = Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetVersionName()
                 );
-                Self->Cache->Delete<Gs2::Version::Model::FAcceptVersion>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Version::Model::FAcceptVersion::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -325,7 +327,8 @@ namespace Gs2::Version::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "acceptVersion")
                     {
-                        Self->Cache->Delete<Gs2::Version::Model::FAcceptVersion>(
+                        Self->Cache->Delete(
+                            Gs2::Version::Model::FAcceptVersion::TypeName,
                             Self->ParentKey,
                             Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
                                 Self->VersionName

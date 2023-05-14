@@ -127,7 +127,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FMissionTaskModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FMissionTaskModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -190,7 +191,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FMissionTaskModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FMissionTaskModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -255,7 +257,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Mission::Model::FMissionTaskModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Mission::Model::FMissionTaskModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -328,7 +330,8 @@ namespace Gs2::Mission::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "missionTaskModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Mission::Model::FMissionTaskModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Mission::Model::FMissionTaskModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain::CreateCacheKey(
                                 Self->MissionTaskName

@@ -101,7 +101,8 @@ namespace Gs2::Exchange::Domain
                 const auto Key = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -178,7 +179,8 @@ namespace Gs2::Exchange::Domain
                 const auto Key = Gs2::Exchange::Domain::Model::FRateModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Exchange::Model::FRateModel>(
+                Cache->Put(
+                    Gs2::Exchange::Model::FRateModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -212,7 +214,8 @@ namespace Gs2::Exchange::Domain
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Exchange::Model::FAwait>(
+                Cache->Put(
+                    Gs2::Exchange::Model::FAwait::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -253,7 +256,7 @@ namespace Gs2::Exchange::Domain
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Delete<Gs2::Exchange::Model::FAwait>(ParentKey, Key);
+                Cache->Delete(Gs2::Exchange::Model::FAwait::TypeName, ParentKey, Key);
             }
         }
     }
@@ -296,7 +299,8 @@ namespace Gs2::Exchange::Domain
                 const auto Key = Gs2::Exchange::Domain::Model::FRateModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Exchange::Model::FRateModel>(
+                Cache->Put(
+                    Gs2::Exchange::Model::FRateModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -338,7 +342,8 @@ namespace Gs2::Exchange::Domain
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Exchange::Model::FAwait>(
+                Cache->Put(
+                    Gs2::Exchange::Model::FAwait::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

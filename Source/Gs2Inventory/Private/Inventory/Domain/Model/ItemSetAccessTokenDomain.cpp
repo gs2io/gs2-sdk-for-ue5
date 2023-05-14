@@ -141,14 +141,16 @@ namespace Gs2::Inventory::Domain::Model
                         Item->GetName()
                     );
                     if (Item->GetCount() == 0) {
-                        Self->Cache->Delete<Gs2::Inventory::Model::FItemSet>(
+                        Self->Cache->Delete(
+                            Gs2::Inventory::Model::FItemSet::TypeName,
                             ParentKey,
                             Key
                         );
                     }
                     else
                     {
-                        Self->Cache->Put<Gs2::Inventory::Model::FItemSet>(
+                        Self->Cache->Put(
+                            Gs2::Inventory::Model::FItemSet::TypeName,
                             ParentKey,
                             Key,
                             Item,
@@ -188,7 +190,8 @@ namespace Gs2::Inventory::Domain::Model
                             }
                         }
                     }
-                    Self->Cache->Put<Gs2::Inventory::Model::FItemSetEntry>(
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
                         Self->ParentKey,
                         Key,
                         MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*Group.Value),
@@ -206,7 +209,8 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemModel>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItemModel(),
@@ -240,7 +244,8 @@ namespace Gs2::Inventory::Domain::Model
                             }
                         }
                     }
-                    Self->Cache->Put<Gs2::Inventory::Model::FInventory>(
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FInventory::TypeName,
                         ParentKey,
                         Key,
                         ResultModel->GetInventory(),
@@ -309,14 +314,16 @@ namespace Gs2::Inventory::Domain::Model
                         Item->GetName()
                     );
                     if (Item->GetCount() == 0) {
-                        Self->Cache->Delete<Gs2::Inventory::Model::FItemSet>(
+                        Self->Cache->Delete(
+                            Gs2::Inventory::Model::FItemSet::TypeName,
                             ParentKey,
                             Key
                         );
                     }
                     else
                     {
-                        Self->Cache->Put<Gs2::Inventory::Model::FItemSet>(
+                        Self->Cache->Put(
+                            Gs2::Inventory::Model::FItemSet::TypeName,
                             ParentKey,
                             Key,
                             Item,
@@ -356,7 +363,8 @@ namespace Gs2::Inventory::Domain::Model
                             }
                         }
                     }
-                    Self->Cache->Put<Gs2::Inventory::Model::FItemSetEntry>(
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
                         Self->ParentKey,
                         Key,
                         MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*Group.Value),
@@ -374,7 +382,8 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemModel>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItemModel(),
@@ -408,7 +417,8 @@ namespace Gs2::Inventory::Domain::Model
                             }
                         }
                     }
-                    Self->Cache->Put<Gs2::Inventory::Model::FInventory>(
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FInventory::TypeName,
                         ParentKey,
                         Key,
                         ResultModel->GetInventory(),
@@ -495,14 +505,16 @@ namespace Gs2::Inventory::Domain::Model
                         Item->GetName()
                     );
                     if (Item->GetCount() == 0) {
-                        Self->Cache->Delete<Gs2::Inventory::Model::FItemSet>(
+                        Self->Cache->Delete(
+                            Gs2::Inventory::Model::FItemSet::TypeName,
                             ParentKey,
                             Key
                         );
                     }
                     else
                     {
-                        Self->Cache->Put<Gs2::Inventory::Model::FItemSet>(
+                        Self->Cache->Put(
+                            Gs2::Inventory::Model::FItemSet::TypeName,
                             ParentKey,
                             Key,
                             Item,
@@ -542,7 +554,8 @@ namespace Gs2::Inventory::Domain::Model
                             }
                         }
                     }
-                    Self->Cache->Put<Gs2::Inventory::Model::FItemSetEntry>(
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
                         Self->ParentKey,
                         Key,
                         MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*Group.Value),
@@ -560,7 +573,8 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemModel>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItemModel(),
@@ -594,7 +608,8 @@ namespace Gs2::Inventory::Domain::Model
                             }
                         }
                     }
-                    Self->Cache->Put<Gs2::Inventory::Model::FInventory>(
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FInventory::TypeName,
                         ParentKey,
                         Key,
                         ResultModel->GetInventory(),
@@ -678,7 +693,8 @@ namespace Gs2::Inventory::Domain::Model
                     ResultModel->GetItemSet()->GetItemName(),
                     ResultModel->GetItemSet()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemSet>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItemSet(),
@@ -695,7 +711,8 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemModel>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItemModel(),
@@ -833,7 +850,8 @@ namespace Gs2::Inventory::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "itemSet")
                     {
-                        Self->Cache->Delete<Gs2::Inventory::Model::FItemSet>(
+                        Self->Cache->Delete(
+                            Gs2::Inventory::Model::FItemSet::TypeName,
                             Self->ParentKey,
                             Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
                                 Self->ItemName,

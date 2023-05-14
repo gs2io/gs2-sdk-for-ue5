@@ -24,78 +24,123 @@
 namespace Gs2::UE5::MegaField::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeAreaModelsIterator:
-            public TSharedFromThis<FEzDescribeAreaModelsIterator>
+	class EZGS2_API FEzDescribeAreaModelsIterator :
+        public TSharedFromThis<FEzDescribeAreaModelsIterator>
     {
 
-		TSharedPtr<Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator> Iterator;
+		Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeAreaModelsIterator(
-            const Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIteratorPtr Iterator
-        );
+            Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeAreaModelsIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::MegaField::Model::FEzAreaModel>,
-            public TSharedFromThis<FDescribeAreaModelsIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator::FNextTask>> Task;
+        explicit FEzDescribeAreaModelsIterator(
+            Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeAreaModelsIteratorLoadTask(
-	            const TSharedPtr<Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::MegaField::Model::FEzAreaModel>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeAreaModelsIterator;
+		    friend class FEzDescribeAreaModelsIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator::FNextTask>> Task;
-			Gs2::UE5::MegaField::Model::FEzAreaModelPtr Current;
+			Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator::FIterator DomainIterator;
+			Gs2::UE5::MegaField::Model::FEzAreaModelPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeAreaModelsIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::MegaField::Model::FEzAreaModelPtr& operator*() const;
-			Gs2::UE5::MegaField::Model::FEzAreaModelPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::MegaField::Model::FEzAreaModel::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::MegaField::Model::FEzAreaModelPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeAreaModelsIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeAreaModelsIterator> FEzDescribeAreaModelsIteratorPtr;
 }

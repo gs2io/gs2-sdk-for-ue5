@@ -48,7 +48,7 @@ void UGs2AccountListOfTakeOverAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnTakeOvers.Add(EzTakeOverToFGs2AccountTakeOverValue(v));
+        ReturnTakeOvers.Add(EzTakeOverToFGs2AccountTakeOverValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnTakeOvers, ReturnError);
 }

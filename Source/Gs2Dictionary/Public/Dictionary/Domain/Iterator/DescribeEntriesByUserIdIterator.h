@@ -25,23 +25,15 @@
 namespace Gs2::Dictionary::Domain::Iterator
 {
 
-    class FDescribeEntriesByUserIdIteratorLoadTask;
-
     class GS2DICTIONARY_API FDescribeEntriesByUserIdIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Dictionary::Model::FEntry, FDescribeEntriesByUserIdIteratorLoadTask>
+        public TSharedFromThis<FDescribeEntriesByUserIdIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
-
-        friend FDescribeEntriesByUserIdIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeEntriesByUserIdIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeEntriesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client,
@@ -49,67 +41,157 @@ public:
             const TOptional<FString> UserId
         );
 
-        class GS2DICTIONARY_API IteratorImpl
-        {
-            friend FDescribeEntriesByUserIdIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Dictionary::Domain::Iterator::FDescribeEntriesByUserIdIterator::FNextTask>> Task;
-            Gs2::Dictionary::Model::FEntryPtr Current;
+        class GS2DICTIONARY_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Model::FEntry>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Dictionary::Domain::Iterator::FDescribeEntriesByUserIdIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Dictionary::Model::FEntry>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Dictionary::Model::FEntryPtr& operator*() const;
-            Gs2::Dictionary::Model::FEntryPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2DICTIONARY_API FIterator
+        {
+            TSharedRef<FDescribeEntriesByUserIdIterator> Self;
+            TSharedPtr<TArray<Gs2::Dictionary::Model::FEntryPtr>> Range;
+            TOptional<TArray<Gs2::Dictionary::Model::FEntryPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeEntriesByUserIdIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeEntriesByUserIdIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeEntriesByUserIdIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Dictionary::Model::FEntryPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeEntriesByUserIdIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeEntriesByUserIdIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeEntriesByUserIdIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeEntriesByUserIdIterator> FDescribeEntriesByUserIdIteratorPtr;
-
-    class FDescribeEntriesByUserIdIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Dictionary::Model::FEntryPtr>>,
-        public TSharedFromThis<FDescribeEntriesByUserIdIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeEntriesByUserIdIterator> Self;
-
-    public:
-        explicit FDescribeEntriesByUserIdIteratorLoadTask(
-            TSharedPtr<FDescribeEntriesByUserIdIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Dictionary::Model::FEntryPtr>>> Result
-        ) override;
-    };
 }

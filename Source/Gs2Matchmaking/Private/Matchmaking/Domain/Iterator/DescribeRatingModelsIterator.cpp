@@ -31,31 +31,6 @@
 namespace Gs2::Matchmaking::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeRatingModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Matchmaking::Model::FRatingModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeRatingModels(
-            MakeShared<Gs2::Matchmaking::Request::FDescribeRatingModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeRatingModelsIteratorLoadTask>>
-    FDescribeRatingModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeRatingModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeRatingModelsIterator::FDescribeRatingModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client,
@@ -64,49 +39,112 @@ namespace Gs2::Matchmaking::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeRatingModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FRatingModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeRatingModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeRatingModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Matchmaking::Model::FRatingModelPtr& FDescribeRatingModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Matchmaking::Model::FRatingModelPtr FDescribeRatingModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeRatingModelsIterator::IteratorImpl& FDescribeRatingModelsIterator::IteratorImpl::operator++()
+    FDescribeRatingModelsIterator::FIterator& FDescribeRatingModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "RatingModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Matchmaking::Model::FRatingModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Matchmaking::Model::FRatingModelPtr>>();
+                *Range = Self->Cache->List<Gs2::Matchmaking::Model::FRatingModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeRatingModels(
+                MakeShared<Gs2::Matchmaking::Request::FDescribeRatingModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FRatingModel::TypeName,
+                    ListParentKey,
+                    Gs2::Matchmaking::Domain::Model::FRatingModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeRatingModelsIterator::IteratorImpl FDescribeRatingModelsIterator::begin()
+    FDescribeRatingModelsIterator::FIterator FDescribeRatingModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeRatingModelsIterator::IteratorImpl FDescribeRatingModelsIterator::end()
+    FDescribeRatingModelsIterator::FIterator FDescribeRatingModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeRatingModelsIterator::FIterator FDescribeRatingModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

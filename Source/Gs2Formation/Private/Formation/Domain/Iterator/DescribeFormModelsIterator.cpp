@@ -31,31 +31,6 @@
 namespace Gs2::Formation::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeFormModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Formation::Model::FFormModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeFormModels(
-            MakeShared<Gs2::Formation::Request::FDescribeFormModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeFormModelsIteratorLoadTask>>
-    FDescribeFormModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeFormModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeFormModelsIterator::FDescribeFormModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Formation::FGs2FormationRestClientPtr Client,
@@ -64,49 +39,112 @@ namespace Gs2::Formation::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeFormModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FFormModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeFormModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeFormModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Formation::Model::FFormModelPtr& FDescribeFormModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Formation::Model::FFormModelPtr FDescribeFormModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeFormModelsIterator::IteratorImpl& FDescribeFormModelsIterator::IteratorImpl::operator++()
+    FDescribeFormModelsIterator::FIterator& FDescribeFormModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "FormModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Formation::Model::FFormModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Formation::Model::FFormModelPtr>>();
+                *Range = Self->Cache->List<Gs2::Formation::Model::FFormModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeFormModels(
+                MakeShared<Gs2::Formation::Request::FDescribeFormModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FFormModel::TypeName,
+                    ListParentKey,
+                    Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeFormModelsIterator::IteratorImpl FDescribeFormModelsIterator::begin()
+    FDescribeFormModelsIterator::FIterator FDescribeFormModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeFormModelsIterator::IteratorImpl FDescribeFormModelsIterator::end()
+    FDescribeFormModelsIterator::FIterator FDescribeFormModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeFormModelsIterator::FIterator FDescribeFormModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

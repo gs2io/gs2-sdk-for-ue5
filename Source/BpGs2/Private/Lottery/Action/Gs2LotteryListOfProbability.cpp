@@ -51,7 +51,7 @@ void UGs2LotteryListOfProbabilityAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnProbabilities.Add(EzProbabilityToFGs2LotteryProbability(v));
+        ReturnProbabilities.Add(EzProbabilityToFGs2LotteryProbability(v->Current()));
     }
     OnSuccess.Broadcast(ReturnProbabilities, ReturnError);
 }

@@ -126,7 +126,8 @@ namespace Gs2::JobQueue::Domain::Model
                 const auto Key = Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTryNumber().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetTryNumber()) : TOptional<FString>()
                 );
-                Self->Cache->Put<Gs2::JobQueue::Model::FJobResult>(
+                Self->Cache->Put(
+                    Gs2::JobQueue::Model::FJobResult::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -204,7 +205,8 @@ namespace Gs2::JobQueue::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "jobResult")
                     {
-                        Self->Cache->Delete<Gs2::JobQueue::Model::FJobResult>(
+                        Self->Cache->Delete(
+                            Gs2::JobQueue::Model::FJobResult::TypeName,
                             Self->ParentKey,
                             Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
                                 Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()

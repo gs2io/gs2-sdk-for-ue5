@@ -30,118 +30,52 @@ namespace Gs2::Core::Domain
     class GS2CORE_API FCacheDatabase
     {
         TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>>> Cache;
-        TMap<FTypeName, TMap<FParentCacheKey, bool>> ListCached;
+        TMap<FTypeName, TSet<FParentCacheKey>> ListCached;
 
     public:
-        FCacheDatabase()
-        {
-            
-        }
+        FCacheDatabase();
         FCacheDatabase(
             const FCacheDatabase& From
-        ):
-            Cache(From.Cache),
-            ListCached(From.ListCached)
-        {
-            
-        }
+        );
         
         ~FCacheDatabase() = default;
 
-        void Clear()
-        {
-            Cache.Reset();
-            ListCached.Reset();
-        }
+        void Clear();
         
-        template<class TKind>
         bool IsListCached(
+            FTypeName Kind,
             FParentCacheKey ParentKey
-        )
-        {
-            if (!ListCached.Contains(TKind::TypeName))
-            {
-                ListCached.Add(TKind::TypeName, TMap<FParentCacheKey, bool>());
-            }
-            return ListCached[TKind::TypeName].Contains(ParentKey);
-        }
+        );
         
-        template<class TKind>
         void SetListCache(
+            FTypeName Kind,
             FParentCacheKey ParentKey
-        )
-        {
-            if (!ListCached.Contains(TKind::TypeName))
-            {
-                ListCached.Add(TKind::TypeName, TMap<FParentCacheKey, bool>());
-            }
-            UE_LOG(Gs2Log, Log, TEXT("[%s][%s]: SetListCache"), ToCStr(TKind::TypeName), ToCStr(ParentKey));
-            ListCached[TKind::TypeName].Add(ParentKey, true);
-        }
+        );
         
-        template<class TKind>
         void ClearListCache(
+            FTypeName Kind,
             FParentCacheKey ParentKey
-        )
-        {
-            if (!Cache.Contains(TKind::TypeName))
-            {
-                Cache.Add(TKind::TypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>>());
-            }
-            if (!Cache[TKind::TypeName].Contains(ParentKey))
-            {
-                Cache[TKind::TypeName].Add(ParentKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>());
-            }
-            Cache[TKind::TypeName][ParentKey].Reset();
-            if (!ListCached.Contains(TKind::TypeName))
-            {
-                ListCached.Add(TKind::TypeName, TMap<FParentCacheKey, bool>());
-            }
-            UE_LOG(Gs2Log, Log, TEXT("[%s][%s]: ClearListCache"), ToCStr(TKind::TypeName), ToCStr(ParentKey));
-            ListCached[TKind::TypeName].Remove(ParentKey);
-        }
+        );
 
-        template<class TKind>
         void Put(
+            FTypeName Kind,
             FParentCacheKey ParentKey,
             FCacheKey Key,
-            TSharedPtr<TKind> Obj,
+            TSharedPtr<void> Obj,
             FDateTime Ttl
-        )
-        {
-            if (!Cache.Contains(TKind::TypeName))
-            {
-                Cache.Add(TKind::TypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>>());
-            }
-            if (!Cache[TKind::TypeName].Contains(ParentKey))
-            {
-                Cache[TKind::TypeName].Add(ParentKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>());
-            }
-            if (Ttl.ToUnixTimestamp() < 0)
-            {
-                UE_LOG(Gs2Log, Error, TEXT("invalid ttl"))
-            }
-            UE_LOG(Gs2Log, Log, TEXT("[%s][%s][%s]: Put %p"), ToCStr(TKind::TypeName), ToCStr(ParentKey), ToCStr(Key), &Obj);
-            Cache[TKind::TypeName][ParentKey].Add(Key, TTuple<TSharedPtr<void>, int64>(Obj, Ttl.ToUnixTimestamp()));
-        }
+        );
 
-        template<class TKind>
         void Delete(
+            FTypeName Kind,
             FParentCacheKey ParentKey,
             FCacheKey Key
-        )
-        {
-            if (!Cache.Contains(TKind::TypeName))
-            {
-                Cache.Add(TKind::TypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>>());
-            }
-            if (!Cache[TKind::TypeName].Contains(ParentKey))
-            {
-                Cache[TKind::TypeName].Add(ParentKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>());
-            }
-            UE_LOG(Gs2Log, Log, TEXT("[%s][%s][%s]: Remove"), ToCStr(TKind::TypeName), ToCStr(ParentKey), ToCStr(Key));
-            Cache[TKind::TypeName][ParentKey].Remove(Key);
-        }
+        );
+
+        TSharedPtr<void> Get(
+            FTypeName Kind,
+            FParentCacheKey ParentKey,
+            FCacheKey Key
+        );
 
         template<class TKind>
         TSharedPtr<TKind> Get(
@@ -149,33 +83,7 @@ namespace Gs2::Core::Domain
             FCacheKey Key
         )
         {
-            if (!Cache.Contains(TKind::TypeName))
-            {
-                Cache.Add(TKind::TypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>>());
-            }
-            if (!Cache[TKind::TypeName].Contains(ParentKey))
-            {
-                Cache[TKind::TypeName].Add(ParentKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>());
-            }
-            if (!Cache[TKind::TypeName][ParentKey].Contains(Key))
-            {
-                return nullptr;
-            }
-            auto Data = Cache[TKind::TypeName][ParentKey][Key];
-            if (Data.Value < FDateTime::Now().ToUnixTimestamp())
-            {
-                Delete<TKind>(
-                    ParentKey,
-                    Key
-                );
-                return nullptr;
-            }
-            if (Data.Key == nullptr)
-            {
-                return nullptr;
-            }
-            UE_LOG(Gs2Log, Log, TEXT("[%s][%s][%s]: Get %p"), ToCStr(TKind::TypeName), ToCStr(ParentKey), ToCStr(Key), &Data.Key);
-            return *static_cast<TSharedPtr<TKind>*>(static_cast<void*>(&Data.Key));
+            return StaticCastSharedPtr<TKind>(Get(TKind::TypeName, ParentKey, Key));
         }
 
         template<class TKind>
@@ -183,25 +91,18 @@ namespace Gs2::Core::Domain
             FParentCacheKey ParentKey
         )
         {
-            if (!Cache.Contains(TKind::TypeName))
-            {
-                Cache.Add(TKind::TypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>>());
-            }
-            if (!Cache[TKind::TypeName].Contains(ParentKey))
-            {
-                Cache[TKind::TypeName].Add(ParentKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>());
-            }
+            auto* Cache0 = Cache.Find(TKind::TypeName);
+            if (Cache0 == nullptr) return TArray<TSharedPtr<TKind>>();
+            auto* Cache1 = Cache0->Find(ParentKey);
+            if (Cache1 == nullptr) return TArray<TSharedPtr<TKind>>();
             TArray<TSharedPtr<TKind>> Result;
-            for (auto Item : Cache[TKind::TypeName][ParentKey])
+            for (auto Item : *Cache1)
             {
                 auto Key = Item.Key;
                 auto Data = Item.Value;
                 if (Data.Value < FDateTime::Now().ToUnixTimestamp())
                 {
-                    Delete<TKind>(
-                        ParentKey,
-                        Key
-                    );
+                    ClearListCache(TKind::TypeName, ParentKey);
                     return TArray<TSharedPtr<TKind>>();
                 }
                 Result.Add(*static_cast<TSharedPtr<TKind>*>(static_cast<void*>(&Data.Key)));

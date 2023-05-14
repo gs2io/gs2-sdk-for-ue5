@@ -31,33 +31,6 @@
 namespace Gs2::Lottery::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeProbabilitiesIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Lottery::Model::FProbabilityPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeProbabilities(
-            MakeShared<Gs2::Lottery::Request::FDescribeProbabilitiesRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithLotteryName(Self->LotteryName)
-                ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeProbabilitiesIteratorLoadTask>>
-    FDescribeProbabilitiesIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeProbabilitiesIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeProbabilitiesIterator::FDescribeProbabilitiesIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client,
@@ -70,49 +43,114 @@ namespace Gs2::Lottery::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         LotteryName(LotteryName),
-        AccessToken(AccessToken),
+        AccessToken(AccessToken)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeProbabilitiesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FProbability>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeProbabilitiesIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeProbabilitiesIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Lottery::Model::FProbabilityPtr& FDescribeProbabilitiesIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Lottery::Model::FProbabilityPtr FDescribeProbabilitiesIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeProbabilitiesIterator::IteratorImpl& FDescribeProbabilitiesIterator::IteratorImpl::operator++()
+    FDescribeProbabilitiesIterator::FIterator& FDescribeProbabilitiesIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId(),
+            "Probability"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Lottery::Model::FProbability::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Lottery::Model::FProbabilityPtr>>();
+                *Range = Self->Cache->List<Gs2::Lottery::Model::FProbability>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeProbabilities(
+                MakeShared<Gs2::Lottery::Request::FDescribeProbabilitiesRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithLotteryName(Self->LotteryName)
+                    ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FProbability::TypeName,
+                    ListParentKey,
+                    Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeProbabilitiesIterator::IteratorImpl FDescribeProbabilitiesIterator::begin()
+    FDescribeProbabilitiesIterator::FIterator FDescribeProbabilitiesIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeProbabilitiesIterator::IteratorImpl FDescribeProbabilitiesIterator::end()
+    FDescribeProbabilitiesIterator::FIterator FDescribeProbabilitiesIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeProbabilitiesIterator::FIterator FDescribeProbabilitiesIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

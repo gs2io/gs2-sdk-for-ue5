@@ -125,7 +125,8 @@ namespace Gs2::Ranking::Domain::Model
                     ResultModel->GetItem()->GetCategoryName(),
                     ResultModel->GetItem()->GetTargetUserId()
                 );
-                Self->Cache->Put<Gs2::Ranking::Model::FSubscribeUser>(
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FSubscribeUser::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

@@ -118,7 +118,8 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FAreaModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FAreaModel>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FAreaModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -218,7 +219,8 @@ namespace Gs2::MegaField::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "areaModel")
                     {
-                        Self->Cache->Delete<Gs2::MegaField::Model::FAreaModel>(
+                        Self->Cache->Delete(
+                            Gs2::MegaField::Model::FAreaModel::TypeName,
                             Self->ParentKey,
                             Gs2::MegaField::Domain::Model::FAreaModelDomain::CreateCacheKey(
                                 Self->AreaModelName

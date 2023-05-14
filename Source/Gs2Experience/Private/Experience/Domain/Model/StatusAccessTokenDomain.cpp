@@ -127,7 +127,8 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FStatus>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -192,7 +193,8 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FStatus>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -277,7 +279,8 @@ namespace Gs2::Experience::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "status")
                     {
-                        Self->Cache->Delete<Gs2::Experience::Model::FStatus>(
+                        Self->Cache->Delete(
+                            Gs2::Experience::Model::FStatus::TypeName,
                             Self->ParentKey,
                             Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
                                 Self->ExperienceName,

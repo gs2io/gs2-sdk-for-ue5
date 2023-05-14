@@ -112,7 +112,8 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FOutputDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Deploy::Model::FOutput>(
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FOutput::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -186,7 +187,8 @@ namespace Gs2::Deploy::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "output")
                     {
-                        Self->Cache->Delete<Gs2::Deploy::Model::FOutput>(
+                        Self->Cache->Delete(
+                            Gs2::Deploy::Model::FOutput::TypeName,
                             Self->ParentKey,
                             Gs2::Deploy::Domain::Model::FOutputDomain::CreateCacheKey(
                                 Self->OutputName

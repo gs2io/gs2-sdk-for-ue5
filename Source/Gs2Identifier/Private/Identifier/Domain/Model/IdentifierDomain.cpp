@@ -113,7 +113,8 @@ namespace Gs2::Identifier::Domain::Model
                 const auto Key = Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetClientId()
                 );
-                Self->Cache->Put<Gs2::Identifier::Model::FIdentifier>(
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FIdentifier::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -174,7 +175,7 @@ namespace Gs2::Identifier::Domain::Model
                 const auto Key = Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetClientId()
                 );
-                Self->Cache->Delete<Gs2::Identifier::Model::FIdentifier>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Identifier::Model::FIdentifier::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -245,7 +246,8 @@ namespace Gs2::Identifier::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "identifier")
                     {
-                        Self->Cache->Delete<Gs2::Identifier::Model::FIdentifier>(
+                        Self->Cache->Delete(
+                            Gs2::Identifier::Model::FIdentifier::TypeName,
                             Self->ParentKey,
                             Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
                                 Self->ClientId

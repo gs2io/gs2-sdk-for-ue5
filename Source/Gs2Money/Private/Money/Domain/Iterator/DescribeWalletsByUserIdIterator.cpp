@@ -31,35 +31,6 @@
 namespace Gs2::Money::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeWalletsByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Money::Model::FWalletPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeWalletsByUserId(
-            MakeShared<Gs2::Money::Request::FDescribeWalletsByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeWalletsByUserIdIteratorLoadTask>>
-    FDescribeWalletsByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeWalletsByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeWalletsByUserIdIterator::FDescribeWalletsByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Money::FGs2MoneyRestClientPtr Client,
@@ -70,50 +41,119 @@ namespace Gs2::Money::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeWalletsByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Money::Model::FWallet>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeWalletsByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeWalletsByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Money::Model::FWalletPtr& FDescribeWalletsByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Money::Model::FWalletPtr FDescribeWalletsByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeWalletsByUserIdIterator::IteratorImpl& FDescribeWalletsByUserIdIterator::IteratorImpl::operator++()
+    FDescribeWalletsByUserIdIterator::FIterator& FDescribeWalletsByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "Wallet"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Money::Model::FWallet::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Money::Model::FWalletPtr>>();
+                *Range = Self->Cache->List<Gs2::Money::Model::FWallet>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeWalletsByUserId(
+                MakeShared<Gs2::Money::Request::FDescribeWalletsByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Money::Model::FWallet::TypeName,
+                    ListParentKey,
+                    Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
+                        FString::FromInt(*Item->GetSlot())
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeWalletsByUserIdIterator::IteratorImpl FDescribeWalletsByUserIdIterator::begin()
+    FDescribeWalletsByUserIdIterator::FIterator FDescribeWalletsByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeWalletsByUserIdIterator::IteratorImpl FDescribeWalletsByUserIdIterator::end()
+    FDescribeWalletsByUserIdIterator::FIterator FDescribeWalletsByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeWalletsByUserIdIterator::FIterator FDescribeWalletsByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

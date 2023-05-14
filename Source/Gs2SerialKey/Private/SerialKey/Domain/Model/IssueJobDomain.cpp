@@ -122,7 +122,8 @@ namespace Gs2::SerialKey::Domain::Model
                 const auto Key = Gs2::SerialKey::Domain::Model::FIssueJobDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::SerialKey::Model::FIssueJob>(
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FIssueJob::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -198,7 +199,8 @@ namespace Gs2::SerialKey::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "issueJob")
                     {
-                        Self->Cache->Delete<Gs2::SerialKey::Model::FIssueJob>(
+                        Self->Cache->Delete(
+                            Gs2::SerialKey::Model::FIssueJob::TypeName,
                             Self->ParentKey,
                             Gs2::SerialKey::Domain::Model::FIssueJobDomain::CreateCacheKey(
                                 Self->IssueJobName

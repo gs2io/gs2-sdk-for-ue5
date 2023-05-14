@@ -204,7 +204,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetMissionGroupName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FComplete>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -269,7 +270,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetMissionGroupName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FComplete>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -332,7 +334,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetMissionGroupName()
                 );
-                Self->Cache->Delete<Gs2::Mission::Model::FComplete>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Mission::Model::FComplete::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -405,7 +407,8 @@ namespace Gs2::Mission::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "complete")
                     {
-                        Self->Cache->Delete<Gs2::Mission::Model::FComplete>(
+                        Self->Cache->Delete(
+                            Gs2::Mission::Model::FComplete::TypeName,
                             Self->ParentKey,
                             Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                                 Self->MissionGroupName

@@ -109,7 +109,8 @@ namespace Gs2::JobQueue::Domain::Model
                     const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Self->Cache->Put<Gs2::JobQueue::Model::FJob>(
+                    Self->Cache->Put(
+                        Gs2::JobQueue::Model::FJob::TypeName,
                         ParentKey,
                         Key,
                         Item,
@@ -140,7 +141,8 @@ namespace Gs2::JobQueue::Domain::Model
             const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                 (*ResultModel->GetItems())[i]->GetName()
             );
-            Self->Cache->Put<Gs2::JobQueue::Model::FJob>(
+            Self->Cache->Put(
+                Gs2::JobQueue::Model::FJob::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],
@@ -208,7 +210,7 @@ namespace Gs2::JobQueue::Domain::Model
                 const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::JobQueue::Model::FJob>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::JobQueue::Model::FJob::TypeName, ParentKey, Key);
             }
         }
         if (ResultModel->GetItem() != nullptr) {

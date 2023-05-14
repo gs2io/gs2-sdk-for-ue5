@@ -148,7 +148,8 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Deploy::Model::FStack>(
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -204,7 +205,8 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Deploy::Model::FStack>(
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -262,7 +264,8 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Deploy::Model::FStack>(
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -320,7 +323,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Deploy::Model::FStack>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Deploy::Model::FStack::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -373,7 +376,8 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Deploy::Model::FStack>(
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -431,7 +435,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Deploy::Model::FStack>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Deploy::Model::FStack::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -484,7 +488,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Deploy::Model::FStack>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Deploy::Model::FStack::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -626,7 +630,8 @@ namespace Gs2::Deploy::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "stack")
                     {
-                        Self->Cache->Delete<Gs2::Deploy::Model::FStack>(
+                        Self->Cache->Delete(
+                            Gs2::Deploy::Model::FStack::TypeName,
                             Self->ParentKey,
                             Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                                 Self->StackName

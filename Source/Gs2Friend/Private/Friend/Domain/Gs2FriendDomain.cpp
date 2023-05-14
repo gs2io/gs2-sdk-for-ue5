@@ -104,7 +104,8 @@ namespace Gs2::Friend::Domain
                 const auto Key = Gs2::Friend::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Friend::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

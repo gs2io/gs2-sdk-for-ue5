@@ -48,7 +48,7 @@ void UGs2ExperienceListOfExperienceModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnExperienceModels.Add(EzExperienceModelToFGs2ExperienceExperienceModelValue(v));
+        ReturnExperienceModels.Add(EzExperienceModelToFGs2ExperienceExperienceModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnExperienceModels, ReturnError);
 }

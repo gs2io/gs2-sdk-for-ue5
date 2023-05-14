@@ -128,7 +128,8 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -191,7 +192,8 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FItemModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -256,7 +258,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Inventory::Model::FItemModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Inventory::Model::FItemModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -329,7 +331,8 @@ namespace Gs2::Inventory::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "itemModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Inventory::Model::FItemModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Inventory::Model::FItemModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
                                 Self->ItemName

@@ -101,7 +101,8 @@ namespace Gs2::Experience::Domain
                 const auto Key = Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -180,7 +181,8 @@ namespace Gs2::Experience::Domain
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put<Gs2::Experience::Model::FStatus>(
+                Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -215,7 +217,8 @@ namespace Gs2::Experience::Domain
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put<Gs2::Experience::Model::FStatus>(
+                Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -250,7 +253,8 @@ namespace Gs2::Experience::Domain
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put<Gs2::Experience::Model::FStatus>(
+                Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -307,7 +311,8 @@ namespace Gs2::Experience::Domain
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put<Gs2::Experience::Model::FStatus>(
+                Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -350,7 +355,8 @@ namespace Gs2::Experience::Domain
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put<Gs2::Experience::Model::FStatus>(
+                Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -393,7 +399,8 @@ namespace Gs2::Experience::Domain
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put<Gs2::Experience::Model::FStatus>(
+                Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

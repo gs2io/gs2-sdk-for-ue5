@@ -119,7 +119,8 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FRateModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Exchange::Model::FRateModel>(
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FRateModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

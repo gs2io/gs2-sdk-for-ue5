@@ -118,7 +118,8 @@ namespace Gs2::News::Domain::Model
                 const auto Key = Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUploadToken()
                 );
-                Self->Cache->Put<Gs2::News::Model::FProgress>(
+                Self->Cache->Put(
+                    Gs2::News::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -218,7 +219,8 @@ namespace Gs2::News::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "progress")
                     {
-                        Self->Cache->Delete<Gs2::News::Model::FProgress>(
+                        Self->Cache->Delete(
+                            Gs2::News::Model::FProgress::TypeName,
                             Self->ParentKey,
                             Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
                                 Self->UploadToken

@@ -120,7 +120,8 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
                 );
-                Self->Cache->Put<Gs2::Account::Model::FTakeOver>(
+                Self->Cache->Put(
+                    Gs2::Account::Model::FTakeOver::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -185,7 +186,8 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
                 );
-                Self->Cache->Put<Gs2::Account::Model::FTakeOver>(
+                Self->Cache->Put(
+                    Gs2::Account::Model::FTakeOver::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -248,7 +250,8 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
                 );
-                Self->Cache->Put<Gs2::Account::Model::FTakeOver>(
+                Self->Cache->Put(
+                    Gs2::Account::Model::FTakeOver::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -326,7 +329,8 @@ namespace Gs2::Account::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "takeOver")
                     {
-                        Self->Cache->Delete<Gs2::Account::Model::FTakeOver>(
+                        Self->Cache->Delete(
+                            Gs2::Account::Model::FTakeOver::TypeName,
                             Self->ParentKey,
                             Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                                 Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()

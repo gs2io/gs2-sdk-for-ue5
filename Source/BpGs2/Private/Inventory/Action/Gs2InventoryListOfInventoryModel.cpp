@@ -48,7 +48,7 @@ void UGs2InventoryListOfInventoryModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnInventoryModels.Add(EzInventoryModelToFGs2InventoryInventoryModelValue(v));
+        ReturnInventoryModels.Add(EzInventoryModelToFGs2InventoryInventoryModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnInventoryModels, ReturnError);
 }

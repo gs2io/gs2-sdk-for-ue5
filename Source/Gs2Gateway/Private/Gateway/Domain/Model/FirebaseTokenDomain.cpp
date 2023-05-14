@@ -119,7 +119,8 @@ namespace Gs2::Gateway::Domain::Model
                 );
                 const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Gateway::Model::FFirebaseToken>(
+                Self->Cache->Put(
+                    Gs2::Gateway::Model::FFirebaseToken::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -182,7 +183,8 @@ namespace Gs2::Gateway::Domain::Model
                 );
                 const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Gateway::Model::FFirebaseToken>(
+                Self->Cache->Put(
+                    Gs2::Gateway::Model::FFirebaseToken::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -243,7 +245,7 @@ namespace Gs2::Gateway::Domain::Model
                 );
                 const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete<Gs2::Gateway::Model::FFirebaseToken>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Gateway::Model::FFirebaseToken::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -357,7 +359,8 @@ namespace Gs2::Gateway::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "firebaseToken")
                     {
-                        Self->Cache->Delete<Gs2::Gateway::Model::FFirebaseToken>(
+                        Self->Cache->Delete(
+                            Gs2::Gateway::Model::FFirebaseToken::TypeName,
                             Self->ParentKey,
                             Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
                             )

@@ -98,7 +98,8 @@ namespace Gs2::Identifier::Domain
                 const auto Key = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Identifier::Model::FUser>(
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FUser::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -159,7 +160,8 @@ namespace Gs2::Identifier::Domain
                 const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Identifier::Model::FSecurityPolicy>(
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

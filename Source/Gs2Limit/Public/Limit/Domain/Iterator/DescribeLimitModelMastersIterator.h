@@ -25,89 +25,171 @@
 namespace Gs2::Limit::Domain::Iterator
 {
 
-    class FDescribeLimitModelMastersIteratorLoadTask;
-
     class GS2LIMIT_API FDescribeLimitModelMastersIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Limit::Model::FLimitModelMaster, FDescribeLimitModelMastersIteratorLoadTask>
+        public TSharedFromThis<FDescribeLimitModelMastersIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Limit::FGs2LimitRestClientPtr Client;
-
-        friend FDescribeLimitModelMastersIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeLimitModelMastersIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeLimitModelMastersIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Limit::FGs2LimitRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );
 
-        class GS2LIMIT_API IteratorImpl
-        {
-            friend FDescribeLimitModelMastersIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Limit::Domain::Iterator::FDescribeLimitModelMastersIterator::FNextTask>> Task;
-            Gs2::Limit::Model::FLimitModelMasterPtr Current;
+        class GS2LIMIT_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Limit::Model::FLimitModelMaster>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Limit::Domain::Iterator::FDescribeLimitModelMastersIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Limit::Model::FLimitModelMaster>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Limit::Model::FLimitModelMasterPtr& operator*() const;
-            Gs2::Limit::Model::FLimitModelMasterPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2LIMIT_API FIterator
+        {
+            TSharedRef<FDescribeLimitModelMastersIterator> Self;
+            TSharedPtr<TArray<Gs2::Limit::Model::FLimitModelMasterPtr>> Range;
+            TOptional<TArray<Gs2::Limit::Model::FLimitModelMasterPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeLimitModelMastersIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeLimitModelMastersIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeLimitModelMastersIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Limit::Model::FLimitModelMasterPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeLimitModelMastersIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeLimitModelMastersIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeLimitModelMastersIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeLimitModelMastersIterator> FDescribeLimitModelMastersIteratorPtr;
-
-    class FDescribeLimitModelMastersIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Limit::Model::FLimitModelMasterPtr>>,
-        public TSharedFromThis<FDescribeLimitModelMastersIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeLimitModelMastersIterator> Self;
-
-    public:
-        explicit FDescribeLimitModelMastersIteratorLoadTask(
-            TSharedPtr<FDescribeLimitModelMastersIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Limit::Model::FLimitModelMasterPtr>>> Result
-        ) override;
-    };
 }

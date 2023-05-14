@@ -117,7 +117,8 @@ namespace Gs2::Experience::Domain::Model
                 const auto Key = Gs2::Experience::Domain::Model::FExperienceModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FExperienceModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FExperienceModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -178,7 +179,8 @@ namespace Gs2::Experience::Domain::Model
                 const auto Key = Gs2::Experience::Domain::Model::FExperienceModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Experience::Model::FExperienceModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FExperienceModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -241,7 +243,7 @@ namespace Gs2::Experience::Domain::Model
                 const auto Key = Gs2::Experience::Domain::Model::FExperienceModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Experience::Model::FExperienceModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Experience::Model::FExperienceModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -312,7 +314,8 @@ namespace Gs2::Experience::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "experienceModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Experience::Model::FExperienceModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Experience::Model::FExperienceModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Experience::Domain::Model::FExperienceModelMasterDomain::CreateCacheKey(
                                 Self->ExperienceName

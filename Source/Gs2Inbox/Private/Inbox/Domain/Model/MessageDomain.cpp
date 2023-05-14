@@ -123,7 +123,8 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FMessage>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FMessage::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -186,8 +187,9 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Inbox::Model::FMessage>(ParentKey, Key);
-                Self->Cache->ClearListCache<Gs2::Inbox::Model::FMessage>(
+                Self->Cache->Delete(Gs2::Inbox::Model::FMessage::TypeName, ParentKey, Key);
+                Self->Cache->ClearListCache(
+                    Gs2::Inbox::Model::FMessage::TypeName,
                     ParentKey
                 );
             }
@@ -249,7 +251,8 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Inbox::Model::FMessage>(
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FMessage::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -343,7 +346,7 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Inbox::Model::FMessage>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Inbox::Model::FMessage::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -416,7 +419,8 @@ namespace Gs2::Inbox::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "message")
                     {
-                        Self->Cache->Delete<Gs2::Inbox::Model::FMessage>(
+                        Self->Cache->Delete(
+                            Gs2::Inbox::Model::FMessage::TypeName,
                             Self->ParentKey,
                             Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                                 Self->MessageName

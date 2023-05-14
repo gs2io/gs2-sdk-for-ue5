@@ -31,31 +31,6 @@
 namespace Gs2::Inventory::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeInventoryModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Inventory::Model::FInventoryModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeInventoryModels(
-            MakeShared<Gs2::Inventory::Request::FDescribeInventoryModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeInventoryModelsIteratorLoadTask>>
-    FDescribeInventoryModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeInventoryModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeInventoryModelsIterator::FDescribeInventoryModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Inventory::FGs2InventoryRestClientPtr Client,
@@ -64,49 +39,112 @@ namespace Gs2::Inventory::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeInventoryModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Inventory::Model::FInventoryModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeInventoryModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeInventoryModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Inventory::Model::FInventoryModelPtr& FDescribeInventoryModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Inventory::Model::FInventoryModelPtr FDescribeInventoryModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeInventoryModelsIterator::IteratorImpl& FDescribeInventoryModelsIterator::IteratorImpl::operator++()
+    FDescribeInventoryModelsIterator::FIterator& FDescribeInventoryModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "InventoryModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Inventory::Model::FInventoryModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Inventory::Model::FInventoryModelPtr>>();
+                *Range = Self->Cache->List<Gs2::Inventory::Model::FInventoryModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeInventoryModels(
+                MakeShared<Gs2::Inventory::Request::FDescribeInventoryModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FInventoryModel::TypeName,
+                    ListParentKey,
+                    Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeInventoryModelsIterator::IteratorImpl FDescribeInventoryModelsIterator::begin()
+    FDescribeInventoryModelsIterator::FIterator FDescribeInventoryModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeInventoryModelsIterator::IteratorImpl FDescribeInventoryModelsIterator::end()
+    FDescribeInventoryModelsIterator::FIterator FDescribeInventoryModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeInventoryModelsIterator::FIterator FDescribeInventoryModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

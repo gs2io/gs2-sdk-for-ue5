@@ -48,7 +48,7 @@ void UGs2InboxListOfMessageAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnMessages.Add(EzMessageToFGs2InboxMessageValue(v));
+        ReturnMessages.Add(EzMessageToFGs2InboxMessageValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnMessages, ReturnError);
 }

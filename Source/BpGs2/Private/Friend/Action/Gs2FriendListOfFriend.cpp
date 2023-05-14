@@ -54,7 +54,7 @@ void UGs2FriendListOfFriendAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnFriends.Add(EzFriendUserToFGs2FriendFriendUserValue(v));
+        ReturnFriends.Add(EzFriendUserToFGs2FriendFriendUserValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnFriends, ReturnError);
 }

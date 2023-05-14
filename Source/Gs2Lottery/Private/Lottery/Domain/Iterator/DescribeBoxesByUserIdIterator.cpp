@@ -31,35 +31,6 @@
 namespace Gs2::Lottery::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeBoxesByUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Lottery::Model::FBoxItemsPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeBoxesByUserId(
-            MakeShared<Gs2::Lottery::Request::FDescribeBoxesByUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithUserId(Self->UserId)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeBoxesByUserIdIteratorLoadTask>>
-    FDescribeBoxesByUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeBoxesByUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeBoxesByUserIdIterator::FDescribeBoxesByUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client,
@@ -70,50 +41,119 @@ namespace Gs2::Lottery::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeBoxesByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FBoxItems>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeBoxesByUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeBoxesByUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Lottery::Model::FBoxItemsPtr& FDescribeBoxesByUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Lottery::Model::FBoxItemsPtr FDescribeBoxesByUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeBoxesByUserIdIterator::IteratorImpl& FDescribeBoxesByUserIdIterator::IteratorImpl::operator++()
+    FDescribeBoxesByUserIdIterator::FIterator& FDescribeBoxesByUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "BoxItems"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Lottery::Model::FBoxItems::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Lottery::Model::FBoxItemsPtr>>();
+                *Range = Self->Cache->List<Gs2::Lottery::Model::FBoxItems>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeBoxesByUserId(
+                MakeShared<Gs2::Lottery::Request::FDescribeBoxesByUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithUserId(Self->UserId)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ListParentKey,
+                    Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                        Item->GetPrizeTableName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeBoxesByUserIdIterator::IteratorImpl FDescribeBoxesByUserIdIterator::begin()
+    FDescribeBoxesByUserIdIterator::FIterator FDescribeBoxesByUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeBoxesByUserIdIterator::IteratorImpl FDescribeBoxesByUserIdIterator::end()
+    FDescribeBoxesByUserIdIterator::FIterator FDescribeBoxesByUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeBoxesByUserIdIterator::FIterator FDescribeBoxesByUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

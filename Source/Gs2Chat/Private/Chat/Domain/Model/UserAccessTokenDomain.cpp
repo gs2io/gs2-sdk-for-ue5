@@ -119,7 +119,8 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Chat::Model::FRoom>(
+                Self->Cache->Put(
+                    Gs2::Chat::Model::FRoom::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

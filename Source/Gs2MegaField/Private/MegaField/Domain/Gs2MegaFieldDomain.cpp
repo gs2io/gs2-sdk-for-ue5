@@ -102,7 +102,8 @@ namespace Gs2::MegaField::Domain
                 const auto Key = Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

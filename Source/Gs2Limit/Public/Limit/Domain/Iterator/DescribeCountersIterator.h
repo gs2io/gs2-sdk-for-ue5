@@ -25,25 +25,17 @@
 namespace Gs2::Limit::Domain::Iterator
 {
 
-    class FDescribeCountersIteratorLoadTask;
-
     class GS2LIMIT_API FDescribeCountersIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Limit::Model::FCounter, FDescribeCountersIteratorLoadTask>
+        public TSharedFromThis<FDescribeCountersIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Limit::FGs2LimitRestClientPtr Client;
-
-        friend FDescribeCountersIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeCountersIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
         const TOptional<FString> LimitName;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeCountersIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Limit::FGs2LimitRestClientPtr Client,
@@ -52,67 +44,157 @@ public:
             const TOptional<FString> LimitName
         );
 
-        class GS2LIMIT_API IteratorImpl
-        {
-            friend FDescribeCountersIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Limit::Domain::Iterator::FDescribeCountersIterator::FNextTask>> Task;
-            Gs2::Limit::Model::FCounterPtr Current;
+        class GS2LIMIT_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Limit::Model::FCounter>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Limit::Domain::Iterator::FDescribeCountersIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Limit::Model::FCounter>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Limit::Model::FCounterPtr& operator*() const;
-            Gs2::Limit::Model::FCounterPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2LIMIT_API FIterator
+        {
+            TSharedRef<FDescribeCountersIterator> Self;
+            TSharedPtr<TArray<Gs2::Limit::Model::FCounterPtr>> Range;
+            TOptional<TArray<Gs2::Limit::Model::FCounterPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeCountersIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeCountersIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeCountersIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Limit::Model::FCounterPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeCountersIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeCountersIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeCountersIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeCountersIterator> FDescribeCountersIteratorPtr;
-
-    class FDescribeCountersIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Limit::Model::FCounterPtr>>,
-        public TSharedFromThis<FDescribeCountersIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeCountersIterator> Self;
-
-    public:
-        explicit FDescribeCountersIteratorLoadTask(
-            TSharedPtr<FDescribeCountersIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Limit::Model::FCounterPtr>>> Result
-        ) override;
-    };
 }

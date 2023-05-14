@@ -48,7 +48,7 @@ void UGs2FormationListOfFormAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnForms.Add(EzFormToFGs2FormationFormValue(v));
+        ReturnForms.Add(EzFormToFGs2FormationFormValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnForms, ReturnError);
 }

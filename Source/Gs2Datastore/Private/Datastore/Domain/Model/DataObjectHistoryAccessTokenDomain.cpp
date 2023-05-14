@@ -126,7 +126,8 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGeneration()
                 );
-                Self->Cache->Put<Gs2::Datastore::Model::FDataObjectHistory>(
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FDataObjectHistory::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -204,7 +205,8 @@ namespace Gs2::Datastore::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "dataObjectHistory")
                     {
-                        Self->Cache->Delete<Gs2::Datastore::Model::FDataObjectHistory>(
+                        Self->Cache->Delete(
+                            Gs2::Datastore::Model::FDataObjectHistory::TypeName,
                             Self->ParentKey,
                             Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
                                 Self->Generation

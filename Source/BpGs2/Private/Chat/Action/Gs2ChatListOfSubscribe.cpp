@@ -48,7 +48,7 @@ void UGs2ChatListOfSubscribeAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnSubscribes.Add(EzSubscribeToFGs2ChatSubscribeValue(v));
+        ReturnSubscribes.Add(EzSubscribeToFGs2ChatSubscribeValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnSubscribes, ReturnError);
 }

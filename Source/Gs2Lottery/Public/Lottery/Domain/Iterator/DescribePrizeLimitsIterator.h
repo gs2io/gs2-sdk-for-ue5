@@ -25,23 +25,15 @@
 namespace Gs2::Lottery::Domain::Iterator
 {
 
-    class FDescribePrizeLimitsIteratorLoadTask;
-
     class GS2LOTTERY_API FDescribePrizeLimitsIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Lottery::Model::FPrizeLimit, FDescribePrizeLimitsIteratorLoadTask>
+        public TSharedFromThis<FDescribePrizeLimitsIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
-
-        friend FDescribePrizeLimitsIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribePrizeLimitsIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
         const TOptional<FString> PrizeTableName;
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribePrizeLimitsIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Lottery::FGs2LotteryRestClientPtr Client,
@@ -49,67 +41,157 @@ public:
             const TOptional<FString> PrizeTableName
         );
 
-        class GS2LOTTERY_API IteratorImpl
-        {
-            friend FDescribePrizeLimitsIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Lottery::Domain::Iterator::FDescribePrizeLimitsIterator::FNextTask>> Task;
-            Gs2::Lottery::Model::FPrizeLimitPtr Current;
+        class GS2LOTTERY_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Model::FPrizeLimit>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Lottery::Domain::Iterator::FDescribePrizeLimitsIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FPrizeLimit>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Lottery::Model::FPrizeLimitPtr& operator*() const;
-            Gs2::Lottery::Model::FPrizeLimitPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2LOTTERY_API FIterator
+        {
+            TSharedRef<FDescribePrizeLimitsIterator> Self;
+            TSharedPtr<TArray<Gs2::Lottery::Model::FPrizeLimitPtr>> Range;
+            TOptional<TArray<Gs2::Lottery::Model::FPrizeLimitPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribePrizeLimitsIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribePrizeLimitsIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribePrizeLimitsIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Lottery::Model::FPrizeLimitPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribePrizeLimitsIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribePrizeLimitsIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribePrizeLimitsIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribePrizeLimitsIterator> FDescribePrizeLimitsIteratorPtr;
-
-    class FDescribePrizeLimitsIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Lottery::Model::FPrizeLimitPtr>>,
-        public TSharedFromThis<FDescribePrizeLimitsIteratorLoadTask>
-    {
-        TSharedPtr<FDescribePrizeLimitsIterator> Self;
-
-    public:
-        explicit FDescribePrizeLimitsIteratorLoadTask(
-            TSharedPtr<FDescribePrizeLimitsIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Lottery::Model::FPrizeLimitPtr>>> Result
-        ) override;
-    };
 }

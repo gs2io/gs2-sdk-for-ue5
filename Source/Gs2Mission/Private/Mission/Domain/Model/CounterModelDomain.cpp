@@ -122,7 +122,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FCounterModel>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCounterModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -196,7 +197,8 @@ namespace Gs2::Mission::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "counterModel")
                     {
-                        Self->Cache->Delete<Gs2::Mission::Model::FCounterModel>(
+                        Self->Cache->Delete(
+                            Gs2::Mission::Model::FCounterModel::TypeName,
                             Self->ParentKey,
                             Gs2::Mission::Domain::Model::FCounterModelDomain::CreateCacheKey(
                                 Self->CounterName

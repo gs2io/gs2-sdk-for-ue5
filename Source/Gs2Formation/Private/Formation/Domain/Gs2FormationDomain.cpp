@@ -104,7 +104,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -182,7 +183,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMold>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -198,7 +200,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMoldModel>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetMoldModel(),
@@ -232,7 +235,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMold>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -248,7 +252,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMoldModel>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetMoldModel(),
@@ -283,7 +288,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
                 );
-                Cache->Put<Gs2::Formation::Model::FForm>(
+                Cache->Put(
+                    Gs2::Formation::Model::FForm::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -300,7 +306,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetMold()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMold>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetMold(),
@@ -335,7 +342,8 @@ namespace Gs2::Formation::Domain
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Cache->Put<Gs2::Formation::Model::FPropertyForm>(
+                Cache->Put(
+                    Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -391,7 +399,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMold>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -407,7 +416,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMoldModel>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetMoldModel(),
@@ -449,7 +459,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMold>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -465,7 +476,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMoldModel>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetMoldModel(),
@@ -508,7 +520,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
                 );
-                Cache->Put<Gs2::Formation::Model::FForm>(
+                Cache->Put(
+                    Gs2::Formation::Model::FForm::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -525,7 +538,8 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetMold()->GetName()
                 );
-                Cache->Put<Gs2::Formation::Model::FMold>(
+                Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetMold(),
@@ -568,7 +582,8 @@ namespace Gs2::Formation::Domain
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Cache->Put<Gs2::Formation::Model::FPropertyForm>(
+                Cache->Put(
+                    Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

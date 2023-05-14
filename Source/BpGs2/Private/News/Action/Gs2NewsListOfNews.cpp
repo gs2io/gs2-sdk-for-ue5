@@ -50,7 +50,7 @@ void UGs2NewsListOfNewsAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnNewses.Add(EzNewsToFGs2NewsNewsValue(v));
+        ReturnNewses.Add(EzNewsToFGs2NewsNewsValue(v.Current()));
     }
     OnSuccess.Broadcast(ReturnNewses, ReturnError);
 }

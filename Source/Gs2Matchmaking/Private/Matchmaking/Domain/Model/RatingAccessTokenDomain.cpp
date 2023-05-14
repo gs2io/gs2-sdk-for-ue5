@@ -127,7 +127,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 const auto Key = Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FRating>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FRating::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -203,7 +204,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "rating")
                     {
-                        Self->Cache->Delete<Gs2::Matchmaking::Model::FRating>(
+                        Self->Cache->Delete(
+                            Gs2::Matchmaking::Model::FRating::TypeName,
                             Self->ParentKey,
                             Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
                                 Self->RatingName

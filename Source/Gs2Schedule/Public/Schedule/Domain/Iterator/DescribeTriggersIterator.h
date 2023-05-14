@@ -25,24 +25,16 @@
 namespace Gs2::Schedule::Domain::Iterator
 {
 
-    class FDescribeTriggersIteratorLoadTask;
-
     class GS2SCHEDULE_API FDescribeTriggersIterator :
-        public Gs2::Core::Domain::Model::TGs2Iterator<Gs2::Schedule::Model::FTrigger, FDescribeTriggersIteratorLoadTask>
+        public TSharedFromThis<FDescribeTriggersIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
-
-        friend FDescribeTriggersIteratorLoadTask;
-        virtual TSharedPtr<FAsyncTask<FDescribeTriggersIteratorLoadTask>> Load() override;
-
-public:
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
-        TOptional<FString> PageToken;
-        TOptional<int32> FetchSize;
 
+    public:
         FDescribeTriggersIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Schedule::FGs2ScheduleRestClientPtr Client,
@@ -50,67 +42,157 @@ public:
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
-        class GS2SCHEDULE_API IteratorImpl
-        {
-            friend FDescribeTriggersIterator;
+        class FIterator;
 
-            TSharedPtr<FAsyncTask<Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator::FNextTask>> Task;
-            Gs2::Schedule::Model::FTriggerPtr Current;
+        class GS2SCHEDULE_API FIteratorNextTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Model::FTrigger>
+        {
+        private:
+            FIterator& Iterator;
 
         public:
-            explicit IteratorImpl(
-                const TSharedPtr<FAsyncTask<Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator::FNextTask>> Task
-            ): Task(Task)
-            {
+            FIteratorNextTask(FIterator& Iterator) :
+                Iterator(Iterator)
+            {}
 
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Schedule::Model::FTrigger>> Result) override;
+
+            static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
+            {
+                return Gs2::Core::Util::New<FAsyncTask<FIteratorNextTask>>(Iterator);
             }
-            const Gs2::Schedule::Model::FTriggerPtr& operator*() const;
-            Gs2::Schedule::Model::FTriggerPtr operator->();
-            IteratorImpl& operator++();
-
-            friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                if (a.Task == nullptr && b.Task == nullptr)
-                {
-                    return true;
-                }
-                if (a.Task == nullptr)
-                {
-                    return b.Current == nullptr;
-                }
-                if (b.Task == nullptr)
-                {
-                    return a.Current == nullptr;
-                }
-                return a.Current == b.Current;
-            };
-            friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
-            {
-                return !operator==(a, b);
-            };
         };
 
-        IteratorImpl begin();
-        IteratorImpl end();
+        class GS2SCHEDULE_API FIterator
+        {
+            TSharedRef<FDescribeTriggersIterator> Self;
+            TSharedPtr<TArray<Gs2::Schedule::Model::FTriggerPtr>> Range;
+            TOptional<TArray<Gs2::Schedule::Model::FTriggerPtr>::TIterator> RangeIteratorOpt;
+            Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
+            bool bLast;
+            bool bEnd;
+            TOptional<FString> PageToken;
+            TOptional<int32> FetchSize;
+
+            class FOneBeforeBegin {};
+            class FEnd {};
+
+            FIterator(
+                const TSharedRef<FDescribeTriggersIterator> Iterable,
+                FOneBeforeBegin
+            );
+
+            explicit FIterator(
+                const TSharedRef<FDescribeTriggersIterator> Iterable
+            ) :
+                FIterator(Iterable, FOneBeforeBegin())
+            {
+                operator++();
+            }
+
+            FIterator(
+                const TSharedRef<FDescribeTriggersIterator> Iterable,
+                FEnd
+            ) : Self(Iterable), bEnd(true)
+            {}
+
+        public:
+            FIterator(
+                const FIterator& Iterator
+            ) :
+                Self(Iterator.Self),
+                Range(Iterator.Range),
+                RangeIteratorOpt(Iterator.RangeIteratorOpt),
+                ErrorValue(Iterator.ErrorValue),
+                bLast(Iterator.bLast),
+                bEnd(Iterator.bEnd),
+                PageToken(Iterator.PageToken),
+                FetchSize(Iterator.FetchSize)
+            {}
+
+            FIterator& operator*()
+            {
+                return *this;
+            }
+
+            const FIterator& operator*() const
+            {
+                return *this;
+            }
+
+            FIterator* operator->()
+            {
+                return this;
+            }
+
+            const FIterator* operator->() const
+            {
+                return this;
+            }
+
+            FIterator& operator++();
+
+            friend bool operator== (const FIterator& a, const FIterator& b)
+            {
+                return a.Self == b.Self && a.bEnd && b.bEnd;
+            }
+            friend bool operator!= (const FIterator& a, const FIterator& b)
+            {
+                return !operator==(a, b);
+            }
+
+            bool HasNext() const
+            {
+                return !bEnd;
+            }
+
+            TSharedPtr<FAsyncTask<FIteratorNextTask>> Next()
+            {
+                return FIteratorNextTask::Issue(*this);
+            }
+
+            Gs2::Schedule::Model::FTriggerPtr& Current()
+            {
+                return **RangeIteratorOpt;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error() const
+            {
+                return ErrorValue;
+            }
+
+            bool IsError() const
+            {
+                return ErrorValue != nullptr;
+            }
+
+            void Retry()
+            {
+                if (ErrorValue && bLast)
+                {
+                    bLast = false;
+                }
+            }
+
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeTriggersIterator> Iterable)
+            {
+                return FIterator(Iterable, FOneBeforeBegin());
+            }
+
+            static FIterator BeginOf(const TSharedRef<FDescribeTriggersIterator> Iterable)
+            {
+                return FIterator(Iterable);
+            }
+
+            static FIterator EndOf(const TSharedRef<FDescribeTriggersIterator> Iterable)
+            {
+                return FIterator(Iterable, FEnd());
+            }
+        };
+
+        FIterator OneBeforeBegin();
+        FIterator begin();
+        FIterator end();
     };
     typedef TSharedPtr<FDescribeTriggersIterator> FDescribeTriggersIteratorPtr;
-
-    class FDescribeTriggersIteratorLoadTask :
-        public Gs2::Core::Util::TGs2Future<TArray<Gs2::Schedule::Model::FTriggerPtr>>,
-        public TSharedFromThis<FDescribeTriggersIteratorLoadTask>
-    {
-        TSharedPtr<FDescribeTriggersIterator> Self;
-
-    public:
-        explicit FDescribeTriggersIteratorLoadTask(
-            TSharedPtr<FDescribeTriggersIterator> Self
-        ): Self(Self)
-        {
-
-        }
-
-        virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-            TSharedPtr<TSharedPtr<TArray<Gs2::Schedule::Model::FTriggerPtr>>> Result
-        ) override;
-    };
 }

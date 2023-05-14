@@ -119,7 +119,8 @@ namespace Gs2::Inventory::Domain::Model
                 );
                 const auto Key = Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FCurrentItemModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FCurrentItemModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -180,7 +181,8 @@ namespace Gs2::Inventory::Domain::Model
                 );
                 const auto Key = Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FCurrentItemModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FCurrentItemModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -239,7 +241,8 @@ namespace Gs2::Inventory::Domain::Model
                 );
                 const auto Key = Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FCurrentItemModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FCurrentItemModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -300,7 +303,8 @@ namespace Gs2::Inventory::Domain::Model
                 );
                 const auto Key = Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Inventory::Model::FCurrentItemModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FCurrentItemModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -371,7 +375,8 @@ namespace Gs2::Inventory::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentItemModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Inventory::Model::FCurrentItemModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Inventory::Model::FCurrentItemModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain::CreateCacheKey(
                             )

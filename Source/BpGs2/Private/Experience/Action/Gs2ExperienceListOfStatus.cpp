@@ -51,7 +51,7 @@ void UGs2ExperienceListOfStatusAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnStatuses.Add(EzStatusToFGs2ExperienceStatusValue(v));
+        ReturnStatuses.Add(EzStatusToFGs2ExperienceStatusValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnStatuses, ReturnError);
 }

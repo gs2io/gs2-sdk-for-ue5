@@ -123,7 +123,8 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::MegaField::Model::FLayerModel>(
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FLayerModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -199,7 +200,8 @@ namespace Gs2::MegaField::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "layerModel")
                     {
-                        Self->Cache->Delete<Gs2::MegaField::Model::FLayerModel>(
+                        Self->Cache->Delete(
+                            Gs2::MegaField::Model::FLayerModel::TypeName,
                             Self->ParentKey,
                             Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
                                 Self->LayerModelName

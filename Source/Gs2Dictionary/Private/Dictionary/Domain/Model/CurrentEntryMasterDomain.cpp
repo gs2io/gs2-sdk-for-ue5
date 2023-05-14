@@ -112,7 +112,8 @@ namespace Gs2::Dictionary::Domain::Model
                 );
                 const auto Key = Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Dictionary::Model::FCurrentEntryMaster>(
+                Self->Cache->Put(
+                    Gs2::Dictionary::Model::FCurrentEntryMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -173,7 +174,8 @@ namespace Gs2::Dictionary::Domain::Model
                 );
                 const auto Key = Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Dictionary::Model::FCurrentEntryMaster>(
+                Self->Cache->Put(
+                    Gs2::Dictionary::Model::FCurrentEntryMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -232,7 +234,8 @@ namespace Gs2::Dictionary::Domain::Model
                 );
                 const auto Key = Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Dictionary::Model::FCurrentEntryMaster>(
+                Self->Cache->Put(
+                    Gs2::Dictionary::Model::FCurrentEntryMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -293,7 +296,8 @@ namespace Gs2::Dictionary::Domain::Model
                 );
                 const auto Key = Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Dictionary::Model::FCurrentEntryMaster>(
+                Self->Cache->Put(
+                    Gs2::Dictionary::Model::FCurrentEntryMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -364,7 +368,8 @@ namespace Gs2::Dictionary::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentEntryMaster")
                     {
-                        Self->Cache->Delete<Gs2::Dictionary::Model::FCurrentEntryMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Dictionary::Model::FCurrentEntryMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain::CreateCacheKey(
                             )

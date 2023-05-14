@@ -24,78 +24,123 @@
 namespace Gs2::UE5::Limit::Domain::Iterator
 {
 
-	class EZGS2_API FEzDescribeLimitModelsIterator:
-            public TSharedFromThis<FEzDescribeLimitModelsIterator>
+	class EZGS2_API FEzDescribeLimitModelsIterator :
+        public TSharedFromThis<FEzDescribeLimitModelsIterator>
     {
 
-		TSharedPtr<Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIterator> Iterator;
+		Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIteratorPtr DomainIterable;
 
 	public:
 
         explicit FEzDescribeLimitModelsIterator(
-            const Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIteratorPtr Iterator
-        );
+            Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIterator& DomainIterable
+        ) : DomainIterable(DomainIterable.AsShared())
+        {}
 
-	    class EZGS2_API FDescribeLimitModelsIteratorLoadTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Limit::Model::FEzLimitModel>,
-            public TSharedFromThis<FDescribeLimitModelsIteratorLoadTask>
-        {
-	        TSharedPtr<FAsyncTask<Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIterator::FNextTask>> Task;
+        explicit FEzDescribeLimitModelsIterator(
+            Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIteratorPtr DomainIterable
+        ) : DomainIterable(DomainIterable)
+        {}
 
-        public:
-            explicit FDescribeLimitModelsIteratorLoadTask(
-	            const TSharedPtr<Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIterator> Self
-            );
-
-        	virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-				TSharedPtr<TSharedPtr<Gs2::UE5::Limit::Model::FEzLimitModel>> Result
-			) override;
-        };
-
-		class EZGS2_API IteratorImpl
+		class EZGS2_API FIterator
 		{
-			friend FEzDescribeLimitModelsIterator;
+		    friend class FEzDescribeLimitModelsIterator;
 
-			TSharedPtr<FAsyncTask<Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIterator::FNextTask>> Task;
-			Gs2::UE5::Limit::Model::FEzLimitModelPtr Current;
+			Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIterator::FIterator DomainIterator;
+			Gs2::UE5::Limit::Model::FEzLimitModelPtr CurrentValue;
+
+			explicit FIterator(
+				Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIterator::FIterator&& DomainIterator
+			) :
+			    DomainIterator(DomainIterator),
+			    CurrentValue(nullptr)
+			{}
 
 		public:
-			explicit IteratorImpl(
-				const TSharedPtr<FAsyncTask<Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIterator::FNextTask>> Task
-			): Task(Task)
-			{
+			explicit FIterator(
+				FEzDescribeLimitModelsIterator& Iterable
+			) :
+			    FIterator(Iterable.begin())
+			{}
 
+			FIterator(
+			    const FIterator& Iterator
+            ) :
+                DomainIterator(Iterator.DomainIterator),
+                CurrentValue(Iterator.CurrentValue)
+            {}
+
+			FIterator& operator*()
+			{
+				return *this;
 			}
-			const Gs2::UE5::Limit::Model::FEzLimitModelPtr& operator*() const;
-			Gs2::UE5::Limit::Model::FEzLimitModelPtr operator->();
-			IteratorImpl& operator++();
 
-			friend bool operator== (const IteratorImpl& a, const IteratorImpl& b)
+			const FIterator& operator*() const
 			{
-				if (a.Task == nullptr && b.Task == nullptr)
-				{
-					return true;
-				}
-				if (a.Task == nullptr)
-				{
-					return b.Current == nullptr;
-				}
-				if (b.Task == nullptr)
-				{
-					return a.Current == nullptr;
-				}
-				return a.Current == b.Current;
-			};
-			friend bool operator!= (const IteratorImpl& a, const IteratorImpl& b)
+				return *this;
+			}
+
+			FIterator* operator->()
+			{
+				return this;
+			}
+
+			const FIterator* operator->() const
+			{
+				return this;
+			}
+
+			FIterator& operator++()
+			{
+				++DomainIterator;
+				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
+	    			? Gs2::UE5::Limit::Model::FEzLimitModel::FromModel(DomainIterator.Current())
+					: nullptr;
+				return *this;
+			}
+
+            Gs2::UE5::Limit::Model::FEzLimitModelPtr& Current()
+            {
+                return CurrentValue;
+            }
+
+            Gs2::Core::Model::FGs2ErrorPtr Error()
+            {
+                return DomainIterator.Error();
+            }
+
+            bool IsError() const
+            {
+                return DomainIterator.IsError();
+            }
+
+            void Retry()
+            {
+                DomainIterator.Retry();
+            }
+
+			friend bool operator== (const FIterator& a, const FIterator& b)
+			{
+				return a.DomainIterator == b.DomainIterator;
+			}
+			friend bool operator!= (const FIterator& a, const FIterator& b)
 			{
 				return !operator==(a, b);
-			};
+			}
 		};
 
-		IteratorImpl begin();
-		IteratorImpl end();
-
-		TSharedPtr<FAsyncTask<FDescribeLimitModelsIteratorLoadTask>> Next() const;
+		FIterator OneBeforeBegin()
+		{
+			return FIterator(DomainIterable->OneBeforeBegin());
+		}
+		FIterator begin()
+		{
+			return FIterator(DomainIterable->begin());
+		}
+		FIterator end()
+		{
+			return FIterator(DomainIterable->end());
+		}
     };
 	typedef TSharedPtr<FEzDescribeLimitModelsIterator> FEzDescribeLimitModelsIteratorPtr;
 }

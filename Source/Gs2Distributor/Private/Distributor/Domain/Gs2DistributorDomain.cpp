@@ -106,7 +106,8 @@ namespace Gs2::Distributor::Domain
                 const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Distributor::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

@@ -48,7 +48,7 @@ void UGs2LotteryListOfLotteryModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnLotteryModels.Add(EzLotteryModelToFGs2LotteryLotteryModelValue(v));
+        ReturnLotteryModels.Add(EzLotteryModelToFGs2LotteryLotteryModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnLotteryModels, ReturnError);
 }

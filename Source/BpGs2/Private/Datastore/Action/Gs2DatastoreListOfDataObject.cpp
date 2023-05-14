@@ -51,7 +51,7 @@ void UGs2DatastoreListOfDataObjectAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnDataObjects.Add(EzDataObjectToFGs2DatastoreDataObjectValue(v));
+        ReturnDataObjects.Add(EzDataObjectToFGs2DatastoreDataObjectValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnDataObjects, ReturnError);
 }

@@ -103,7 +103,8 @@ namespace Gs2::Matchmaking::Domain
                 const auto Key = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

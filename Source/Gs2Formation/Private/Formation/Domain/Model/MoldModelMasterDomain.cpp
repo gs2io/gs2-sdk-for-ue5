@@ -122,7 +122,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FMoldModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMoldModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -183,7 +184,8 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Formation::Model::FMoldModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMoldModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -246,7 +248,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Formation::Model::FMoldModelMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Formation::Model::FMoldModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -317,7 +319,8 @@ namespace Gs2::Formation::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "moldModelMaster")
                     {
-                        Self->Cache->Delete<Gs2::Formation::Model::FMoldModelMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Formation::Model::FMoldModelMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                                 Self->MoldName

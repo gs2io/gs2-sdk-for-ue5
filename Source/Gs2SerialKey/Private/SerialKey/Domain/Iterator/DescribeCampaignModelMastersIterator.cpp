@@ -31,34 +31,6 @@
 namespace Gs2::SerialKey::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeCampaignModelMastersIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::SerialKey::Model::FCampaignModelMasterPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeCampaignModelMasters(
-            MakeShared<Gs2::SerialKey::Request::FDescribeCampaignModelMastersRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithPageToken(Self->PageToken)
-                ->WithLimit(Self->FetchSize)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->PageToken = R->GetNextPageToken();
-        Self->Last = !Self->PageToken.IsSet();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeCampaignModelMastersIteratorLoadTask>>
-    FDescribeCampaignModelMastersIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeCampaignModelMastersIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeCampaignModelMastersIterator::FDescribeCampaignModelMastersIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client,
@@ -67,50 +39,117 @@ namespace Gs2::SerialKey::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeCampaignModelMastersIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::SerialKey::Model::FCampaignModelMaster>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeCampaignModelMastersIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeCampaignModelMastersIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::SerialKey::Model::FCampaignModelMasterPtr& FDescribeCampaignModelMastersIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::SerialKey::Model::FCampaignModelMasterPtr FDescribeCampaignModelMastersIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeCampaignModelMastersIterator::IteratorImpl& FDescribeCampaignModelMastersIterator::IteratorImpl::operator++()
+    FDescribeCampaignModelMastersIterator::FIterator& FDescribeCampaignModelMastersIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "CampaignModelMaster"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::SerialKey::Model::FCampaignModelMasterPtr>>();
+                *Range = Self->Cache->List<Gs2::SerialKey::Model::FCampaignModelMaster>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                PageToken = TOptional<FString>();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeCampaignModelMasters(
+                MakeShared<Gs2::SerialKey::Request::FDescribeCampaignModelMastersRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(FetchSize)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
+                    ListParentKey,
+                    Gs2::SerialKey::Domain::Model::FCampaignModelMasterDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeCampaignModelMastersIterator::IteratorImpl FDescribeCampaignModelMastersIterator::begin()
+    FDescribeCampaignModelMastersIterator::FIterator FDescribeCampaignModelMastersIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeCampaignModelMastersIterator::IteratorImpl FDescribeCampaignModelMastersIterator::end()
+    FDescribeCampaignModelMastersIterator::FIterator FDescribeCampaignModelMastersIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeCampaignModelMastersIterator::FIterator FDescribeCampaignModelMastersIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

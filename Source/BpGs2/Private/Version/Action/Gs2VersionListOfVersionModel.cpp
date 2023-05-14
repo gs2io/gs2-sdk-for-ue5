@@ -48,7 +48,7 @@ void UGs2VersionListOfVersionModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnVersionModels.Add(EzVersionModelToFGs2VersionVersionModelValue(v));
+        ReturnVersionModels.Add(EzVersionModelToFGs2VersionVersionModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnVersionModels, ReturnError);
 }

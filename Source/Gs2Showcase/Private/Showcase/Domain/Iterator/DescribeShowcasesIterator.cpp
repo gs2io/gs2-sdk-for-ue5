@@ -31,32 +31,6 @@
 namespace Gs2::Showcase::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeShowcasesIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Showcase::Model::FShowcasePtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeShowcases(
-            MakeShared<Gs2::Showcase::Request::FDescribeShowcasesRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeShowcasesIteratorLoadTask>>
-    FDescribeShowcasesIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeShowcasesIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeShowcasesIterator::FDescribeShowcasesIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client,
@@ -67,49 +41,114 @@ namespace Gs2::Showcase::Domain::Iterator
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken),
+        AccessToken(AccessToken)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeShowcasesIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FShowcase>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeShowcasesIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeShowcasesIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Showcase::Model::FShowcasePtr& FDescribeShowcasesIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Showcase::Model::FShowcasePtr FDescribeShowcasesIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeShowcasesIterator::IteratorImpl& FDescribeShowcasesIterator::IteratorImpl::operator++()
+    FDescribeShowcasesIterator::FIterator& FDescribeShowcasesIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Showcase::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId(),
+            "Showcase"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Showcase::Model::FShowcase::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Showcase::Model::FShowcasePtr>>();
+                *Range = Self->Cache->List<Gs2::Showcase::Model::FShowcase>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeShowcases(
+                MakeShared<Gs2::Showcase::Request::FDescribeShowcasesRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FShowcase::TypeName,
+                    ListParentKey,
+                    Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeShowcasesIterator::IteratorImpl FDescribeShowcasesIterator::begin()
+    FDescribeShowcasesIterator::FIterator FDescribeShowcasesIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeShowcasesIterator::IteratorImpl FDescribeShowcasesIterator::end()
+    FDescribeShowcasesIterator::FIterator FDescribeShowcasesIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeShowcasesIterator::FIterator FDescribeShowcasesIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

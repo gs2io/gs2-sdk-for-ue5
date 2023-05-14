@@ -31,33 +31,6 @@
 namespace Gs2::Ranking::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeSubscribesByCategoryNameAndUserIdIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Ranking::Model::FSubscribeUserPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeSubscribesByCategoryNameAndUserId(
-            MakeShared<Gs2::Ranking::Request::FDescribeSubscribesByCategoryNameAndUserIdRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-                ->WithCategoryName(Self->CategoryName)
-                ->WithUserId(Self->UserId)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeSubscribesByCategoryNameAndUserIdIteratorLoadTask>>
-    FDescribeSubscribesByCategoryNameAndUserIdIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeSubscribesByCategoryNameAndUserIdIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeSubscribesByCategoryNameAndUserIdIterator::FDescribeSubscribesByCategoryNameAndUserIdIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Ranking::FGs2RankingRestClientPtr Client,
@@ -70,49 +43,117 @@ namespace Gs2::Ranking::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         CategoryName(CategoryName),
-        UserId(UserId),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeSubscribesByCategoryNameAndUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FSubscribeUser>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeSubscribesByCategoryNameAndUserIdIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeSubscribesByCategoryNameAndUserIdIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Ranking::Model::FSubscribeUserPtr& FDescribeSubscribesByCategoryNameAndUserIdIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Ranking::Model::FSubscribeUserPtr FDescribeSubscribesByCategoryNameAndUserIdIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeSubscribesByCategoryNameAndUserIdIterator::IteratorImpl& FDescribeSubscribesByCategoryNameAndUserIdIterator::IteratorImpl::operator++()
+    FDescribeSubscribesByCategoryNameAndUserIdIterator::FIterator& FDescribeSubscribesByCategoryNameAndUserIdIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            "SubscribeUser"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Ranking::Model::FSubscribeUser::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Ranking::Model::FSubscribeUserPtr>>();
+                *Range = Self->Cache->List<Gs2::Ranking::Model::FSubscribeUser>(
+                    ListParentKey
+                );
+                Range->RemoveAll([this](const Gs2::Ranking::Model::FSubscribeUserPtr& Item) { return Self->CategoryName && Item->GetCategoryName() == Self->CategoryName; });
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeSubscribesByCategoryNameAndUserId(
+                MakeShared<Gs2::Ranking::Request::FDescribeSubscribesByCategoryNameAndUserIdRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+                    ->WithCategoryName(Self->CategoryName)
+                    ->WithUserId(Self->UserId)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FSubscribeUser::TypeName,
+                    ListParentKey,
+                    Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
+                        Item->GetCategoryName(),
+                        Item->GetTargetUserId()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeSubscribesByCategoryNameAndUserIdIterator::IteratorImpl FDescribeSubscribesByCategoryNameAndUserIdIterator::begin()
+    FDescribeSubscribesByCategoryNameAndUserIdIterator::FIterator FDescribeSubscribesByCategoryNameAndUserIdIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeSubscribesByCategoryNameAndUserIdIterator::IteratorImpl FDescribeSubscribesByCategoryNameAndUserIdIterator::end()
+    FDescribeSubscribesByCategoryNameAndUserIdIterator::FIterator FDescribeSubscribesByCategoryNameAndUserIdIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeSubscribesByCategoryNameAndUserIdIterator::FIterator FDescribeSubscribesByCategoryNameAndUserIdIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

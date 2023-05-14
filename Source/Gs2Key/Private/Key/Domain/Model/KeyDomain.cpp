@@ -111,7 +111,8 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Key::Model::FKey>(
+                Self->Cache->Put(
+                    Gs2::Key::Model::FKey::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -174,7 +175,8 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Key::Model::FKey>(
+                Self->Cache->Put(
+                    Gs2::Key::Model::FKey::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -235,7 +237,7 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Key::Model::FKey>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Key::Model::FKey::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -400,7 +402,8 @@ namespace Gs2::Key::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "key")
                     {
-                        Self->Cache->Delete<Gs2::Key::Model::FKey>(
+                        Self->Cache->Delete(
+                            Gs2::Key::Model::FKey::TypeName,
                             Self->ParentKey,
                             Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                                 Self->KeyName

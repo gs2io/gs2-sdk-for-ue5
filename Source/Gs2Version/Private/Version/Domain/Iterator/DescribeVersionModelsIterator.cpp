@@ -31,31 +31,6 @@
 namespace Gs2::Version::Domain::Iterator
 {
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeVersionModelsIteratorLoadTask::Action(
-        TSharedPtr<TSharedPtr<TArray<Gs2::Version::Model::FVersionModelPtr>>> Result)
-    {
-        const auto Future = Self->Client->DescribeVersionModels(
-            MakeShared<Gs2::Version::Request::FDescribeVersionModelsRequest>()
-                ->WithNamespaceName(Self->NamespaceName)
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto R = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = R->GetItems();
-        Self->Last = true;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FDescribeVersionModelsIteratorLoadTask>>
-    FDescribeVersionModelsIterator::Load()
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FDescribeVersionModelsIteratorLoadTask>>(SharedThis(this));
-    }
-
     FDescribeVersionModelsIterator::FDescribeVersionModelsIterator(
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Version::FGs2VersionRestClientPtr Client,
@@ -64,49 +39,112 @@ namespace Gs2::Version::Domain::Iterator
     ):
         Cache(Cache),
         Client(Client),
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeVersionModelsIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Gs2::Version::Model::FVersionModel>> Result)
+    {
+        ++Iterator;
+        *Result = Iterator->Current();
+        return Iterator.Error();
+    }
+
+    FDescribeVersionModelsIterator::FIterator::FIterator(
+        const TSharedRef<FDescribeVersionModelsIterator> Iterable,
+        FOneBeforeBegin
+    ) :
+        Self(Iterable),
+        bLast(false),
+        bEnd(false),
         FetchSize(TOptional<int32>())
     {
-
-    }
-    const Gs2::Version::Model::FVersionModelPtr& FDescribeVersionModelsIterator::IteratorImpl::operator*() const
-    {
-        return Current;
-    }
-    Gs2::Version::Model::FVersionModelPtr FDescribeVersionModelsIterator::IteratorImpl::operator->()
-    {
-        return Current;
     }
 
-    FDescribeVersionModelsIterator::IteratorImpl& FDescribeVersionModelsIterator::IteratorImpl::operator++()
+    FDescribeVersionModelsIterator::FIterator& FDescribeVersionModelsIterator::FIterator::operator++()
     {
-        Task->StartSynchronousTask();
-        Current = nullptr;
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
+        
+
+        if (bEnd) return *this;
+
+        if (ErrorValue && bLast)
         {
-            Current = Task->GetTask().Result();
+            bEnd = true;
+            return *this;
         }
-        Task->EnsureCompletion();
+
+        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+
+        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        {
+            const auto ListParentKey = Gs2::Version::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            "VersionModel"
+        );
+            if (Self->Cache->IsListCached(
+                Gs2::Version::Model::FVersionModel::TypeName,
+                ListParentKey
+            )) {
+                Range = MakeShared<TArray<Gs2::Version::Model::FVersionModelPtr>>();
+                *Range = Self->Cache->List<Gs2::Version::Model::FVersionModel>(
+                    ListParentKey
+                );
+                RangeIteratorOpt = Range->CreateIterator();
+                bLast = true;
+                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                return *this;
+            }
+            const auto Future = Self->Client->DescribeVersionModels(
+                MakeShared<Gs2::Version::Request::FDescribeVersionModelsRequest>()
+                    ->WithNamespaceName(Self->NamespaceName)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                ErrorValue = Future->GetTask().Error();
+                bLast = true;
+                return *this;
+            }
+            else
+            {
+                ErrorValue = nullptr;
+            }
+            const auto R = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            Range = R->GetItems();
+            for (auto Item : *R->GetItems())
+            {
+                Self->Cache->Put(
+                    Gs2::Version::Model::FVersionModel::TypeName,
+                    ListParentKey,
+                    Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
+                        Item->GetName()
+                    ),
+                    Item,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            RangeIteratorOpt = Range->CreateIterator();
+            bLast = true;
+        }
+
+        bEnd = bLast && !*RangeIteratorOpt;
         return *this;
     }
 
-    FDescribeVersionModelsIterator::IteratorImpl FDescribeVersionModelsIterator::begin()
+    FDescribeVersionModelsIterator::FIterator FDescribeVersionModelsIterator::OneBeforeBegin()
     {
-        const auto Task = Next();
-        IteratorImpl Impl(Task);
-        Task->StartSynchronousTask();
-        if (!Task->GetTask().IsError() && Task->GetTask().Result() != nullptr)
-        {
-            Impl.Current = Task->GetTask().Result();
-        }
-        Task->EnsureCompletion();
-        return Impl;
+        return FIterator::OneBeforeBeginOf(this->AsShared());
     }
 
-    // ReSharper disable once CppMemberFunctionMayBeStatic
-    FDescribeVersionModelsIterator::IteratorImpl FDescribeVersionModelsIterator::end()
+    FDescribeVersionModelsIterator::FIterator FDescribeVersionModelsIterator::begin()
     {
-        return IteratorImpl(nullptr);
+        return FIterator::BeginOf(this->AsShared());
+    }
+
+    FDescribeVersionModelsIterator::FIterator FDescribeVersionModelsIterator::end()
+    {
+        return FIterator::EndOf(this->AsShared());
     }
 }
 

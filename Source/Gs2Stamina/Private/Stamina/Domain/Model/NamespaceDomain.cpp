@@ -155,7 +155,8 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -211,7 +212,8 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -269,7 +271,7 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Stamina::Model::FNamespace>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Stamina::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -326,7 +328,8 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FRecoverIntervalTableMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -395,7 +398,8 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FMaxStaminaTableMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -464,7 +468,8 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FRecoverValueTableMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FRecoverValueTableMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -533,7 +538,8 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Stamina::Model::FStaminaModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -775,7 +781,8 @@ namespace Gs2::Stamina::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "namespace")
                     {
-                        Self->Cache->Delete<Gs2::Stamina::Model::FNamespace>(
+                        Self->Cache->Delete(
+                            Gs2::Stamina::Model::FNamespace::TypeName,
                             Self->ParentKey,
                             Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheKey(
                                 Self->NamespaceName

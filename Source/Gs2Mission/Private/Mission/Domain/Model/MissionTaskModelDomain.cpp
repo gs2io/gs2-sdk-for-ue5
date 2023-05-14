@@ -127,7 +127,8 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FMissionTaskModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Mission::Model::FMissionTaskModel>(
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FMissionTaskModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -203,7 +204,8 @@ namespace Gs2::Mission::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "missionTaskModel")
                     {
-                        Self->Cache->Delete<Gs2::Mission::Model::FMissionTaskModel>(
+                        Self->Cache->Delete(
+                            Gs2::Mission::Model::FMissionTaskModel::TypeName,
                             Self->ParentKey,
                             Gs2::Mission::Domain::Model::FMissionTaskModelDomain::CreateCacheKey(
                                 Self->MissionTaskName

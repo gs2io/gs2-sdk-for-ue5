@@ -103,7 +103,8 @@ namespace Gs2::Identifier::Domain::Model
                 const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Identifier::Model::FSecurityPolicy>(
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -161,7 +162,8 @@ namespace Gs2::Identifier::Domain::Model
                 const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Identifier::Model::FSecurityPolicy>(
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -217,7 +219,7 @@ namespace Gs2::Identifier::Domain::Model
                 const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Identifier::Model::FSecurityPolicy>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Identifier::Model::FSecurityPolicy::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -287,7 +289,8 @@ namespace Gs2::Identifier::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "securityPolicy")
                     {
-                        Self->Cache->Delete<Gs2::Identifier::Model::FSecurityPolicy>(
+                        Self->Cache->Delete(
+                            Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                             Self->ParentKey,
                             Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                                 Self->SecurityPolicyName

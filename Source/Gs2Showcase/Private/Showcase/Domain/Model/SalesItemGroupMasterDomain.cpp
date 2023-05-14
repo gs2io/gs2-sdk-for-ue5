@@ -117,7 +117,8 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FSalesItemGroupMaster>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -178,7 +179,8 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Showcase::Model::FSalesItemGroupMaster>(
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -241,7 +243,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Showcase::Model::FSalesItemGroupMaster>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -312,7 +314,8 @@ namespace Gs2::Showcase::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "salesItemGroupMaster")
                     {
-                        Self->Cache->Delete<Gs2::Showcase::Model::FSalesItemGroupMaster>(
+                        Self->Cache->Delete(
+                            Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
                             Self->ParentKey,
                             Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                                 Self->SalesItemGroupName

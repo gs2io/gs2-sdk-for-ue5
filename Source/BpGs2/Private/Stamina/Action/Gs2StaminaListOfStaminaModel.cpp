@@ -48,7 +48,7 @@ void UGs2StaminaListOfStaminaModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnStaminaModels.Add(EzStaminaModelToFGs2StaminaStaminaModelValue(v));
+        ReturnStaminaModels.Add(EzStaminaModelToFGs2StaminaStaminaModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnStaminaModels, ReturnError);
 }

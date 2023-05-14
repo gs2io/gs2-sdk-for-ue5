@@ -156,7 +156,8 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -212,7 +213,8 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FNamespace>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -270,7 +272,7 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete<Gs2::Quest::Model::FNamespace>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Quest::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -327,7 +329,8 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Quest::Model::FQuestGroupModelMaster>(
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -497,7 +500,8 @@ namespace Gs2::Quest::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "namespace")
                     {
-                        Self->Cache->Delete<Gs2::Quest::Model::FNamespace>(
+                        Self->Cache->Delete(
+                            Gs2::Quest::Model::FNamespace::TypeName,
                             Self->ParentKey,
                             Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheKey(
                                 Self->NamespaceName

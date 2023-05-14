@@ -119,7 +119,8 @@ namespace Gs2::Enhance::Domain::Model
                 );
                 const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Enhance::Model::FProgress>(
+                Self->Cache->Put(
+                    Gs2::Enhance::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -182,7 +183,8 @@ namespace Gs2::Enhance::Domain::Model
                 );
                 const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Enhance::Model::FProgress>(
+                Self->Cache->Put(
+                    Gs2::Enhance::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -319,7 +321,8 @@ namespace Gs2::Enhance::Domain::Model
                 );
                 const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Enhance::Model::FProgress>(
+                Self->Cache->Put(
+                    Gs2::Enhance::Model::FProgress::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -411,7 +414,7 @@ namespace Gs2::Enhance::Domain::Model
                 );
                 const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete<Gs2::Enhance::Model::FProgress>(ParentKey, Key);
+                Self->Cache->Delete(Gs2::Enhance::Model::FProgress::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -479,7 +482,8 @@ namespace Gs2::Enhance::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "progress")
                     {
-                        Self->Cache->Delete<Gs2::Enhance::Model::FProgress>(
+                        Self->Cache->Delete(
+                            Gs2::Enhance::Model::FProgress::TypeName,
                             Self->ParentKey,
                             Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
                             )

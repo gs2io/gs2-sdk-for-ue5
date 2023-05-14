@@ -48,7 +48,7 @@ void UGs2MissionListOfCompleteAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnCompletes.Add(EzCompleteToFGs2MissionCompleteValue(v));
+        ReturnCompletes.Add(EzCompleteToFGs2MissionCompleteValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnCompletes, ReturnError);
 }

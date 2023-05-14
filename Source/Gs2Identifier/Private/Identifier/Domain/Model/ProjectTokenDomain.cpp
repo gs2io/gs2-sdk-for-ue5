@@ -144,7 +144,8 @@ namespace Gs2::Identifier::Domain::Model
                 const auto ParentKey = FString("identifier:ProjectToken");
                 const auto Key = Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
                 );
-                Self->Cache->Put<Gs2::Identifier::Model::FProjectToken>(
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FProjectToken::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

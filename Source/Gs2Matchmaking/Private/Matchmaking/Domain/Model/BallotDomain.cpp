@@ -140,7 +140,8 @@ namespace Gs2::Matchmaking::Domain::Model
                     ResultModel->GetItem()->GetNumberOfPlayer().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetNumberOfPlayer()) : TOptional<FString>(),
                     RequestModel->GetKeyId()
                 );
-                Self->Cache->Put<Gs2::Matchmaking::Model::FBallot>(
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FBallot::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -227,7 +228,8 @@ namespace Gs2::Matchmaking::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "ballot")
                     {
-                        Self->Cache->Delete<Gs2::Matchmaking::Model::FBallot>(
+                        Self->Cache->Delete(
+                            Gs2::Matchmaking::Model::FBallot::TypeName,
                             Self->ParentKey,
                             Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                                 Self->RatingName,

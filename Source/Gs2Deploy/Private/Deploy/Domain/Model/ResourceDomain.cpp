@@ -112,7 +112,8 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put<Gs2::Deploy::Model::FResource>(
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FResource::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
@@ -186,7 +187,8 @@ namespace Gs2::Deploy::Domain::Model
                 {
                     if (Future->GetTask().Error()->Detail(0)->GetComponent() == "resource")
                     {
-                        Self->Cache->Delete<Gs2::Deploy::Model::FResource>(
+                        Self->Cache->Delete(
+                            Gs2::Deploy::Model::FResource::TypeName,
                             Self->ParentKey,
                             Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
                                 Self->ResourceName

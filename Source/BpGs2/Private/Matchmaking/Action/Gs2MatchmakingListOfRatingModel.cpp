@@ -48,7 +48,7 @@ void UGs2MatchmakingListOfRatingModelAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnRatingModels.Add(EzRatingModelToFGs2MatchmakingRatingModelValue(v));
+        ReturnRatingModels.Add(EzRatingModelToFGs2MatchmakingRatingModelValue(v->Current()));
     }
     OnSuccess.Broadcast(ReturnRatingModels, ReturnError);
 }
