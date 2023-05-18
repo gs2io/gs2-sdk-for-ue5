@@ -49,11 +49,20 @@ namespace Gs2::UE5::News::Domain::Iterator
 			Gs2::News::Domain::Iterator::FDescribeNewsIterator::FIterator DomainIterator;
 			Gs2::UE5::News::Model::FEzNewsPtr CurrentValue;
 
+        	static Gs2::UE5::News::Model::FEzNewsPtr ConvertCurrent(
+        		Gs2::News::Domain::Iterator::FDescribeNewsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::News::Model::FEzNews::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::News::Domain::Iterator::FDescribeNewsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::News::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::News::Model::FEzNews::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

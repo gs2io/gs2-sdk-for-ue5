@@ -206,16 +206,18 @@ namespace Gs2::Dictionary::Domain::Model
                 RequestModel->GetUserId(),
                 "Entry"
             );
-            for (auto Item : Self->Cache->List<Gs2::Dictionary::Model::FEntry>(
-                ParentKey
-            )) {
-                Self->Cache->Delete(
+            auto List = Self->Cache->TryGetList<Gs2::Dictionary::Model::FEntry>(ParentKey);
+            if (List)
+            {
+                for (auto Item : *List) {
+                    Self->Cache->Delete(
                         Gs2::Dictionary::Model::FEntry::TypeName,
                         ParentKey,
                         Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                             Item->GetName()
                         )
                     );
+                }
             }
         }
         const auto Domain = Self;

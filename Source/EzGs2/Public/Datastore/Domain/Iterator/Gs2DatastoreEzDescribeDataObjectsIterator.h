@@ -49,11 +49,20 @@ namespace Gs2::UE5::Datastore::Domain::Iterator
 			Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIterator::FIterator DomainIterator;
 			Gs2::UE5::Datastore::Model::FEzDataObjectPtr CurrentValue;
 
+        	static Gs2::UE5::Datastore::Model::FEzDataObjectPtr ConvertCurrent(
+        		Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Datastore::Model::FEzDataObject::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Datastore::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Datastore::Model::FEzDataObject::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

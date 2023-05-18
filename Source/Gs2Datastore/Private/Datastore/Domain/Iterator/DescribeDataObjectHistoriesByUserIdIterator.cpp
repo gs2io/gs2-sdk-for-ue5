@@ -83,23 +83,17 @@ namespace Gs2::Datastore::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            Self->DataObjectName,
-            "DataObjectHistory"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Datastore::Model::FDataObjectHistory::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>>();
-                *Range = Self->Cache->List<Gs2::Datastore::Model::FDataObjectHistory>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId,
+                Self->DataObjectName,
+                "DataObjectHistory"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Datastore::Model::FDataObjectHistory>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeDataObjectHistoriesByUserId(
@@ -139,6 +133,12 @@ namespace Gs2::Datastore::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Datastore::Model::FDataObjectHistory::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

@@ -53,15 +53,6 @@ void FCacheDatabase::Clear()
     ListCached.Reset();
 }
 
-bool FCacheDatabase::IsListCached(
-    FTypeName Kind,
-    FParentCacheKey ParentKey
-)
-{
-    auto* Cache0 = ListCached.Find(Kind);
-    return Cache0 != nullptr ? Cache0->Contains(ParentKey) : false;
-}
-
 void FCacheDatabase::SetListCache(
     FTypeName Kind,
     FParentCacheKey ParentKey

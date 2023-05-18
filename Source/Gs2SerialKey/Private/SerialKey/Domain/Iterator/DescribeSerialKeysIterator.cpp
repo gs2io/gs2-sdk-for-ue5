@@ -83,23 +83,17 @@ namespace Gs2::SerialKey::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            TOptional<FString>("Singleton"),
-            "SerialKey"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::SerialKey::Model::FSerialKey::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::SerialKey::Model::FSerialKeyPtr>>();
-                *Range = Self->Cache->List<Gs2::SerialKey::Model::FSerialKey>(
-                    ListParentKey
-                );
-                Range->RemoveAll([this](const Gs2::SerialKey::Model::FSerialKeyPtr& Item) { return Self->CampaignModelName && Item->GetCampaignModelName() == Self->CampaignModelName; });
+                Self->NamespaceName,
+                TOptional<FString>("Singleton"),
+                "SerialKey"
+            );
+            Range = Self->Cache->TryGetList<Gs2::SerialKey::Model::FSerialKey>(ListParentKey);
+            if (Range) {
+                Range->RemoveAll([this](const Gs2::SerialKey::Model::FSerialKeyPtr& Item) { return Self->CampaignModelName && Item->GetCampaignModelName() != Self->CampaignModelName; });
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeSerialKeys(
@@ -139,6 +133,12 @@ namespace Gs2::SerialKey::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::SerialKey::Model::FSerialKey::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

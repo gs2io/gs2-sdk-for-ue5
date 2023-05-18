@@ -83,23 +83,17 @@ namespace Gs2::Formation::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId(),
-            "PropertyForm"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Formation::Model::FPropertyForm::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Formation::Model::FPropertyFormPtr>>();
-                *Range = Self->Cache->List<Gs2::Formation::Model::FPropertyForm>(
-                    ListParentKey
-                );
-                Range->RemoveAll([this](const Gs2::Formation::Model::FPropertyFormPtr& Item) { return Self->FormModelName && Item->GetName() == Self->FormModelName; });
+                Self->NamespaceName,
+                Self->UserId(),
+                "PropertyForm"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Formation::Model::FPropertyForm>(ListParentKey);
+            if (Range) {
+                Range->RemoveAll([this](const Gs2::Formation::Model::FPropertyFormPtr& Item) { return Self->FormModelName && Item->GetName() != Self->FormModelName; });
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribePropertyForms(
@@ -140,6 +134,12 @@ namespace Gs2::Formation::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Formation::Model::FPropertyForm::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

@@ -79,21 +79,15 @@ namespace Gs2::Enhance::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "RateModelMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Enhance::Model::FRateModelMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Enhance::Model::FRateModelMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Enhance::Model::FRateModelMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "RateModelMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Enhance::Model::FRateModelMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeRateModelMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Enhance::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Enhance::Model::FRateModelMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

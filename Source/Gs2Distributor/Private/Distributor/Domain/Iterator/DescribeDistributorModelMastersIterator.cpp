@@ -79,21 +79,15 @@ namespace Gs2::Distributor::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "DistributorModelMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Distributor::Model::FDistributorModelMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "DistributorModelMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Distributor::Model::FDistributorModelMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeDistributorModelMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Distributor::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

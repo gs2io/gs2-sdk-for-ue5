@@ -81,22 +81,16 @@ namespace Gs2::Version::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId(),
-            "AcceptVersion"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Version::Model::FAcceptVersion::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Version::Model::FAcceptVersionPtr>>();
-                *Range = Self->Cache->List<Gs2::Version::Model::FAcceptVersion>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId(),
+                "AcceptVersion"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Version::Model::FAcceptVersion>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeAcceptVersions(
@@ -135,6 +129,12 @@ namespace Gs2::Version::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Version::Model::FAcceptVersion::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

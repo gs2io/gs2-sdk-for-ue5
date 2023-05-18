@@ -81,18 +81,12 @@ namespace Gs2::Friend::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = "friend:UserId";
-            if (Self->Cache->IsListCached(
-                Gs2::Friend::Model::FBlackListEntry::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Friend::Model::FBlackListEntryPtr>>();
-                *Range = Self->Cache->List<Gs2::Friend::Model::FBlackListEntry>(
-                    ListParentKey
-                );
+            Range = Self->Cache->TryGetList<Gs2::Friend::Model::FBlackListEntry>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeBlackListByUserId(
@@ -137,6 +131,12 @@ namespace Gs2::Friend::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Friend::Model::FBlackListEntry::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

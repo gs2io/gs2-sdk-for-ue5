@@ -79,21 +79,15 @@ namespace Gs2::Dictionary::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "EntryModelMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Dictionary::Model::FEntryModelMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Dictionary::Model::FEntryModelMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Dictionary::Model::FEntryModelMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "EntryModelMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Dictionary::Model::FEntryModelMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeEntryModelMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Dictionary::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Dictionary::Model::FEntryModelMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

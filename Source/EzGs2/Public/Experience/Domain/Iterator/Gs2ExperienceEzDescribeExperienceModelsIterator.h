@@ -49,11 +49,20 @@ namespace Gs2::UE5::Experience::Domain::Iterator
 			Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Experience::Model::FEzExperienceModelPtr CurrentValue;
 
+        	static Gs2::UE5::Experience::Model::FEzExperienceModelPtr ConvertCurrent(
+        		Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Experience::Model::FEzExperienceModel::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Experience::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Experience::Model::FEzExperienceModel::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

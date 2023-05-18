@@ -79,21 +79,15 @@ namespace Gs2::Mission::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "MissionGroupModelMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Mission::Model::FMissionGroupModelMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Mission::Model::FMissionGroupModelMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Mission::Model::FMissionGroupModelMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "MissionGroupModelMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Mission::Model::FMissionGroupModelMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeMissionGroupModelMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Mission::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Mission::Model::FMissionGroupModelMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

@@ -82,22 +82,16 @@ namespace Gs2::Ranking::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            "SubscribeUser"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Ranking::Model::FSubscribeUser::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Ranking::Model::FSubscribeUserPtr>>();
-                *Range = Self->Cache->List<Gs2::Ranking::Model::FSubscribeUser>(
-                    ListParentKey
-                );
-                Range->RemoveAll([this](const Gs2::Ranking::Model::FSubscribeUserPtr& Item) { return Self->CategoryName && Item->GetCategoryName() == Self->CategoryName; });
+                Self->NamespaceName,
+                Self->UserId,
+                "SubscribeUser"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FSubscribeUser>(ListParentKey);
+            if (Range) {
+                Range->RemoveAll([this](const Gs2::Ranking::Model::FSubscribeUserPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeSubscribesByCategoryNameAndUserId(
@@ -135,6 +129,12 @@ namespace Gs2::Ranking::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Ranking::Model::FSubscribeUser::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

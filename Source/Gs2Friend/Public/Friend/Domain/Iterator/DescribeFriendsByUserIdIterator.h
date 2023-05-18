@@ -157,6 +157,11 @@ namespace Gs2::Friend::Domain::Iterator
                 return **RangeIteratorOpt;
             }
 
+            bool IsCurrentValid() const
+            {
+                return RangeIteratorOpt && *RangeIteratorOpt;
+            }
+
             Gs2::Core::Model::FGs2ErrorPtr Error() const
             {
                 return ErrorValue;

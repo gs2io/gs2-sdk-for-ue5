@@ -30,6 +30,12 @@ struct FGs2LotteryProbability
     UPROPERTY(BlueprintReadWrite)
     FGs2LotteryDrawnPrize Prize = FGs2LotteryDrawnPrize();
     UPROPERTY(BlueprintReadWrite)
+    FString PrizeTableName = "";
+    UPROPERTY(BlueprintReadWrite)
+    int32 DrawnLimit = 0;
+    UPROPERTY(BlueprintReadWrite)
+    FString LimitFailOverPrizeId = "";
+    UPROPERTY(BlueprintReadWrite)
     float Rate = 0;
 };
 

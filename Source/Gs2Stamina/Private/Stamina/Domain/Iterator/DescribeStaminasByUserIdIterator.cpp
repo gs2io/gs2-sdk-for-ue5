@@ -81,22 +81,16 @@ namespace Gs2::Stamina::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Stamina::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            "Stamina"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Stamina::Model::FStamina::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Stamina::Model::FStaminaPtr>>();
-                *Range = Self->Cache->List<Gs2::Stamina::Model::FStamina>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId,
+                "Stamina"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Stamina::Model::FStamina>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeStaminasByUserId(
@@ -135,6 +129,12 @@ namespace Gs2::Stamina::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Stamina::Model::FStamina::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

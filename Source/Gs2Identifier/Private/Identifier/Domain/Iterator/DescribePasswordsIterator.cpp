@@ -79,21 +79,15 @@ namespace Gs2::Identifier::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->UserName,
-            "Password"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Identifier::Model::FPassword::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Identifier::Model::FPasswordPtr>>();
-                *Range = Self->Cache->List<Gs2::Identifier::Model::FPassword>(
-                    ListParentKey
-                );
+                Self->UserName,
+                "Password"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Identifier::Model::FPassword>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribePasswords(
@@ -130,6 +124,12 @@ namespace Gs2::Identifier::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Identifier::Model::FPassword::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

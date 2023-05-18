@@ -83,23 +83,17 @@ namespace Gs2::Experience::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            "Status"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Experience::Model::FStatus::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Experience::Model::FStatusPtr>>();
-                *Range = Self->Cache->List<Gs2::Experience::Model::FStatus>(
-                    ListParentKey
-                );
-                Range->RemoveAll([this](const Gs2::Experience::Model::FStatusPtr& Item) { return Self->ExperienceName && Item->GetExperienceName() == Self->ExperienceName; });
+                Self->NamespaceName,
+                Self->UserId,
+                "Status"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Experience::Model::FStatus>(ListParentKey);
+            if (Range) {
+                Range->RemoveAll([this](const Gs2::Experience::Model::FStatusPtr& Item) { return Self->ExperienceName && Item->GetExperienceName() != Self->ExperienceName; });
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeStatusesByUserId(
@@ -140,6 +134,12 @@ namespace Gs2::Experience::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

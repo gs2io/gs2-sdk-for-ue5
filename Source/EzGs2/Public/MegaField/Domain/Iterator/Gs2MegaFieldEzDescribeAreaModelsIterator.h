@@ -49,11 +49,20 @@ namespace Gs2::UE5::MegaField::Domain::Iterator
 			Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::MegaField::Model::FEzAreaModelPtr CurrentValue;
 
+        	static Gs2::UE5::MegaField::Model::FEzAreaModelPtr ConvertCurrent(
+        		Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::MegaField::Model::FEzAreaModel::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::MegaField::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::MegaField::Model::FEzAreaModel::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

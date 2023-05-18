@@ -49,11 +49,20 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 			Gs2::Chat::Domain::Iterator::FDescribeMessagesIterator::FIterator DomainIterator;
 			Gs2::UE5::Chat::Model::FEzMessagePtr CurrentValue;
 
+        	static Gs2::UE5::Chat::Model::FEzMessagePtr ConvertCurrent(
+        		Gs2::Chat::Domain::Iterator::FDescribeMessagesIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Chat::Model::FEzMessage::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Chat::Domain::Iterator::FDescribeMessagesIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Chat::Model::FEzMessage::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

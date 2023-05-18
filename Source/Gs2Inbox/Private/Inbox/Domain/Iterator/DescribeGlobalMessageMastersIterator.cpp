@@ -79,21 +79,15 @@ namespace Gs2::Inbox::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Inbox::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "GlobalMessageMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Inbox::Model::FGlobalMessageMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Inbox::Model::FGlobalMessageMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Inbox::Model::FGlobalMessageMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "GlobalMessageMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Inbox::Model::FGlobalMessageMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeGlobalMessageMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Inbox::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Inbox::Model::FGlobalMessageMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

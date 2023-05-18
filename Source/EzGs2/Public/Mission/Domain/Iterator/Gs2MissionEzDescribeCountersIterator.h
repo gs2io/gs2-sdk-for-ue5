@@ -49,11 +49,20 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 			Gs2::Mission::Domain::Iterator::FDescribeCountersIterator::FIterator DomainIterator;
 			Gs2::UE5::Mission::Model::FEzCounterPtr CurrentValue;
 
+        	static Gs2::UE5::Mission::Model::FEzCounterPtr ConvertCurrent(
+        		Gs2::Mission::Domain::Iterator::FDescribeCountersIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Mission::Model::FEzCounter::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Mission::Domain::Iterator::FDescribeCountersIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Mission::Model::FEzCounter::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

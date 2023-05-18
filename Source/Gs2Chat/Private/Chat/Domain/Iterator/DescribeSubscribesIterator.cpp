@@ -81,22 +81,16 @@ namespace Gs2::Chat::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId(),
-            "Subscribe"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Chat::Model::FSubscribe::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Chat::Model::FSubscribePtr>>();
-                *Range = Self->Cache->List<Gs2::Chat::Model::FSubscribe>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId(),
+                "Subscribe"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Chat::Model::FSubscribe>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeSubscribes(

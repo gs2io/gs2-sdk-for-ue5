@@ -49,11 +49,20 @@ namespace Gs2::UE5::Stamina::Domain::Iterator
 			Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Stamina::Model::FEzStaminaModelPtr CurrentValue;
 
+        	static Gs2::UE5::Stamina::Model::FEzStaminaModelPtr ConvertCurrent(
+        		Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Stamina::Model::FEzStaminaModel::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Stamina::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Stamina::Model::FEzStaminaModel::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

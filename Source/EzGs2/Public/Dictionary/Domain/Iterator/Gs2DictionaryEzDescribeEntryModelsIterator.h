@@ -49,11 +49,20 @@ namespace Gs2::UE5::Dictionary::Domain::Iterator
 			Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Dictionary::Model::FEzEntryModelPtr CurrentValue;
 
+        	static Gs2::UE5::Dictionary::Model::FEzEntryModelPtr ConvertCurrent(
+        		Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Dictionary::Model::FEzEntryModel::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Dictionary::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Dictionary::Model::FEzEntryModel::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

@@ -49,11 +49,20 @@ namespace Gs2::UE5::Version::Domain::Iterator
 			Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIterator::FIterator DomainIterator;
 			Gs2::UE5::Version::Model::FEzAcceptVersionPtr CurrentValue;
 
+        	static Gs2::UE5::Version::Model::FEzAcceptVersionPtr ConvertCurrent(
+        		Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Version::Model::FEzAcceptVersion::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Version::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Version::Model::FEzAcceptVersion::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

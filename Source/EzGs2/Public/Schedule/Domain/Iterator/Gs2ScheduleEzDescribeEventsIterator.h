@@ -49,11 +49,20 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 			Gs2::Schedule::Domain::Iterator::FDescribeEventsIterator::FIterator DomainIterator;
 			Gs2::UE5::Schedule::Model::FEzEventPtr CurrentValue;
 
+        	static Gs2::UE5::Schedule::Model::FEzEventPtr ConvertCurrent(
+        		Gs2::Schedule::Domain::Iterator::FDescribeEventsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Schedule::Model::FEzEvent::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Schedule::Domain::Iterator::FDescribeEventsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Schedule::Model::FEzEvent::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

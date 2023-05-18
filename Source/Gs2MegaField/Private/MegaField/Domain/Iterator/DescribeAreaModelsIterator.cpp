@@ -78,20 +78,14 @@ namespace Gs2::MegaField::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "AreaModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::MegaField::Model::FAreaModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::MegaField::Model::FAreaModelPtr>>();
-                *Range = Self->Cache->List<Gs2::MegaField::Model::FAreaModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "AreaModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::MegaField::Model::FAreaModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeAreaModels(
@@ -126,6 +120,12 @@ namespace Gs2::MegaField::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::MegaField::Model::FAreaModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

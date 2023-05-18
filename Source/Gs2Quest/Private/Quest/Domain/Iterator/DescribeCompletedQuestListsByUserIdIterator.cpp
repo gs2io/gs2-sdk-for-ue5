@@ -81,22 +81,16 @@ namespace Gs2::Quest::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            "CompletedQuestList"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Quest::Model::FCompletedQuestList::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Quest::Model::FCompletedQuestListPtr>>();
-                *Range = Self->Cache->List<Gs2::Quest::Model::FCompletedQuestList>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId,
+                "CompletedQuestList"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Quest::Model::FCompletedQuestList>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeCompletedQuestListsByUserId(
@@ -135,6 +129,12 @@ namespace Gs2::Quest::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Quest::Model::FCompletedQuestList::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

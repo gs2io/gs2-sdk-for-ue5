@@ -81,22 +81,16 @@ namespace Gs2::Lock::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Lock::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId(),
-            "Mutex"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Lock::Model::FMutex::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Lock::Model::FMutexPtr>>();
-                *Range = Self->Cache->List<Gs2::Lock::Model::FMutex>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId(),
+                "Mutex"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Lock::Model::FMutex>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeMutexes(
@@ -135,6 +129,12 @@ namespace Gs2::Lock::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Lock::Model::FMutex::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

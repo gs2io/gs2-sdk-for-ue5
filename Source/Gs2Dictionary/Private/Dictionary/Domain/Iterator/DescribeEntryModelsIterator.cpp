@@ -78,20 +78,14 @@ namespace Gs2::Dictionary::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "EntryModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Dictionary::Model::FEntryModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Dictionary::Model::FEntryModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Dictionary::Model::FEntryModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "EntryModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Dictionary::Model::FEntryModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeEntryModels(
@@ -126,6 +120,12 @@ namespace Gs2::Dictionary::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Dictionary::Model::FEntryModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

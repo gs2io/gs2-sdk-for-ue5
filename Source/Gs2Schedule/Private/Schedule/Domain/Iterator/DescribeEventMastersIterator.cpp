@@ -79,21 +79,15 @@ namespace Gs2::Schedule::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Schedule::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "EventMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Schedule::Model::FEventMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Schedule::Model::FEventMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Schedule::Model::FEventMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "EventMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Schedule::Model::FEventMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeEventMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Schedule::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Schedule::Model::FEventMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

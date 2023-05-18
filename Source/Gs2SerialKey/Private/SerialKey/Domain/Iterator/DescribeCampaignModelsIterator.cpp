@@ -78,20 +78,14 @@ namespace Gs2::SerialKey::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "CampaignModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::SerialKey::Model::FCampaignModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::SerialKey::Model::FCampaignModelPtr>>();
-                *Range = Self->Cache->List<Gs2::SerialKey::Model::FCampaignModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "CampaignModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::SerialKey::Model::FCampaignModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeCampaignModels(
@@ -126,6 +120,12 @@ namespace Gs2::SerialKey::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::SerialKey::Model::FCampaignModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

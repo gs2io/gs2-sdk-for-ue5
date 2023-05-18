@@ -49,11 +49,20 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 			Gs2::Quest::Domain::Iterator::FDescribeQuestGroupModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Quest::Model::FEzQuestGroupModelPtr CurrentValue;
 
+        	static Gs2::UE5::Quest::Model::FEzQuestGroupModelPtr ConvertCurrent(
+        		Gs2::Quest::Domain::Iterator::FDescribeQuestGroupModelsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Quest::Model::FEzQuestGroupModel::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Quest::Domain::Iterator::FDescribeQuestGroupModelsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Quest::Model::FEzQuestGroupModel::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

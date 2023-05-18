@@ -81,22 +81,16 @@ namespace Gs2::Money::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId(),
-            "Wallet"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Money::Model::FWallet::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Money::Model::FWalletPtr>>();
-                *Range = Self->Cache->List<Gs2::Money::Model::FWallet>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId(),
+                "Wallet"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Money::Model::FWallet>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeWallets(
@@ -135,6 +129,12 @@ namespace Gs2::Money::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Money::Model::FWallet::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

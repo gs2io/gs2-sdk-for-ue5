@@ -79,21 +79,15 @@ namespace Gs2::Quest::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "QuestGroupModelMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Quest::Model::FQuestGroupModelMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Quest::Model::FQuestGroupModelMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "QuestGroupModelMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Quest::Model::FQuestGroupModelMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeQuestGroupModelMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Quest::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

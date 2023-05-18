@@ -78,20 +78,14 @@ namespace Gs2::Formation::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "FormModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Formation::Model::FFormModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Formation::Model::FFormModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Formation::Model::FFormModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "FormModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Formation::Model::FFormModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeFormModels(
@@ -126,6 +120,12 @@ namespace Gs2::Formation::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Formation::Model::FFormModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

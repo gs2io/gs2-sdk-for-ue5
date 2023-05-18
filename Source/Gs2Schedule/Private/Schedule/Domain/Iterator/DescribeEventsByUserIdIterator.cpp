@@ -80,21 +80,15 @@ namespace Gs2::Schedule::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            "Event"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Schedule::Model::FEvent::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Schedule::Model::FEventPtr>>();
-                *Range = Self->Cache->List<Gs2::Schedule::Model::FEvent>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId,
+                "Event"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Schedule::Model::FEvent>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeEventsByUserId(
@@ -130,6 +124,12 @@ namespace Gs2::Schedule::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Schedule::Model::FEvent::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

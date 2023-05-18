@@ -49,11 +49,20 @@ namespace Gs2::UE5::Exchange::Domain::Iterator
 			Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIterator::FIterator DomainIterator;
 			Gs2::UE5::Exchange::Model::FEzAwaitPtr CurrentValue;
 
+        	static Gs2::UE5::Exchange::Model::FEzAwaitPtr ConvertCurrent(
+        		Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Exchange::Model::FEzAwait::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Exchange::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Exchange::Model::FEzAwait::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

@@ -76,18 +76,12 @@ namespace Gs2::Chat::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = "chat:Namespace";
-            if (Self->Cache->IsListCached(
-                Gs2::Chat::Model::FNamespace::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Chat::Model::FNamespacePtr>>();
-                *Range = Self->Cache->List<Gs2::Chat::Model::FNamespace>(
-                    ListParentKey
-                );
+            Range = Self->Cache->TryGetList<Gs2::Chat::Model::FNamespace>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeNamespaces(

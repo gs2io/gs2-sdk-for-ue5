@@ -78,20 +78,14 @@ namespace Gs2::Quest::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "QuestGroupModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Quest::Model::FQuestGroupModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Quest::Model::FQuestGroupModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Quest::Model::FQuestGroupModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "QuestGroupModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Quest::Model::FQuestGroupModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeQuestGroupModels(
@@ -126,6 +120,12 @@ namespace Gs2::Quest::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Quest::Model::FQuestGroupModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

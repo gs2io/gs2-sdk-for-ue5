@@ -83,23 +83,17 @@ namespace Gs2::Friend::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
-            "FriendUser"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Friend::Model::FFriendUser::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Friend::Model::FFriendUserPtr>>();
-                *Range = Self->Cache->List<Gs2::Friend::Model::FFriendUser>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId,
+                Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
+                "FriendUser"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Friend::Model::FFriendUser>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeFriendsByUserId(
@@ -139,6 +133,12 @@ namespace Gs2::Friend::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Friend::Model::FFriendUser::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

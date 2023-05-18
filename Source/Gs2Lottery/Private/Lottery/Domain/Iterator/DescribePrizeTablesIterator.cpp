@@ -78,20 +78,14 @@ namespace Gs2::Lottery::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "PrizeTable"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Lottery::Model::FPrizeTable::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Lottery::Model::FPrizeTablePtr>>();
-                *Range = Self->Cache->List<Gs2::Lottery::Model::FPrizeTable>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "PrizeTable"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Lottery::Model::FPrizeTable>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribePrizeTables(
@@ -126,6 +120,12 @@ namespace Gs2::Lottery::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Lottery::Model::FPrizeTable::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

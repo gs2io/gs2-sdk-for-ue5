@@ -49,11 +49,20 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 			Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FIterator DomainIterator;
 			Gs2::UE5::Matchmaking::Model::FEzGatheringPtr CurrentValue;
 
+        	static Gs2::UE5::Matchmaking::Model::FEzGatheringPtr ConvertCurrent(
+        		Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Matchmaking::Model::FEzGathering::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Matchmaking::Model::FEzGathering::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

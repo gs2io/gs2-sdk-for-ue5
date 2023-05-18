@@ -78,20 +78,14 @@ namespace Gs2::Matchmaking::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "RatingModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Matchmaking::Model::FRatingModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Matchmaking::Model::FRatingModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Matchmaking::Model::FRatingModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "RatingModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Matchmaking::Model::FRatingModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeRatingModels(
@@ -126,6 +120,12 @@ namespace Gs2::Matchmaking::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Matchmaking::Model::FRatingModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

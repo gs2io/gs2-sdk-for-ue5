@@ -79,21 +79,15 @@ namespace Gs2::Matchmaking::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "RatingModelMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Matchmaking::Model::FRatingModelMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Matchmaking::Model::FRatingModelMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "RatingModelMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Matchmaking::Model::FRatingModelMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeRatingModelMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Matchmaking::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

@@ -85,24 +85,18 @@ namespace Gs2::Ranking::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId(),
-            "Score"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Ranking::Model::FScore::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Ranking::Model::FScorePtr>>();
-                *Range = Self->Cache->List<Gs2::Ranking::Model::FScore>(
-                    ListParentKey
-                );
-                Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->CategoryName && Item->GetCategoryName() == Self->CategoryName; });
-                Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->ScorerUserId && Item->GetScorerUserId() == Self->ScorerUserId; });
+                Self->NamespaceName,
+                Self->UserId(),
+                "Score"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FScore>(ListParentKey);
+            if (Range) {
+                Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
+                Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->ScorerUserId && Item->GetScorerUserId() != Self->ScorerUserId; });
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeScores(
@@ -145,6 +139,12 @@ namespace Gs2::Ranking::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Ranking::Model::FScore::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

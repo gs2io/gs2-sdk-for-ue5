@@ -83,23 +83,17 @@ namespace Gs2::Datastore::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Datastore::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            "DataObject"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Datastore::Model::FDataObject::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Datastore::Model::FDataObjectPtr>>();
-                *Range = Self->Cache->List<Gs2::Datastore::Model::FDataObject>(
-                    ListParentKey
-                );
-                Range->RemoveAll([this](const Gs2::Datastore::Model::FDataObjectPtr& Item) { return Self->Status && Item->GetStatus() == Self->Status; });
+                Self->NamespaceName,
+                Self->UserId,
+                "DataObject"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Datastore::Model::FDataObject>(ListParentKey);
+            if (Range) {
+                Range->RemoveAll([this](const Gs2::Datastore::Model::FDataObjectPtr& Item) { return Self->Status && Item->GetStatus() != Self->Status; });
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeDataObjectsByUserId(
@@ -139,6 +133,12 @@ namespace Gs2::Datastore::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Datastore::Model::FDataObject::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

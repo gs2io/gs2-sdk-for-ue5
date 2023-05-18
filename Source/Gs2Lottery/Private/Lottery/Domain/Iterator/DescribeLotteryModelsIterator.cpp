@@ -78,20 +78,14 @@ namespace Gs2::Lottery::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "LotteryModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Lottery::Model::FLotteryModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Lottery::Model::FLotteryModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Lottery::Model::FLotteryModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "LotteryModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Lottery::Model::FLotteryModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeLotteryModels(
@@ -126,6 +120,12 @@ namespace Gs2::Lottery::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Lottery::Model::FLotteryModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

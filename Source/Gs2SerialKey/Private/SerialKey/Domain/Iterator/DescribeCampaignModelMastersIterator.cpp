@@ -79,21 +79,15 @@ namespace Gs2::SerialKey::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "CampaignModelMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::SerialKey::Model::FCampaignModelMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::SerialKey::Model::FCampaignModelMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "CampaignModelMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::SerialKey::Model::FCampaignModelMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeCampaignModelMasters(
@@ -131,6 +125,12 @@ namespace Gs2::SerialKey::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

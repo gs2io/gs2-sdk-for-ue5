@@ -49,11 +49,20 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 			Gs2::Formation::Domain::Iterator::FDescribeFormModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Formation::Model::FEzFormModelPtr CurrentValue;
 
+        	static Gs2::UE5::Formation::Model::FEzFormModelPtr ConvertCurrent(
+        		Gs2::Formation::Domain::Iterator::FDescribeFormModelsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Formation::Model::FEzFormModel::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Formation::Domain::Iterator::FDescribeFormModelsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Formation::Model::FEzFormModel::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

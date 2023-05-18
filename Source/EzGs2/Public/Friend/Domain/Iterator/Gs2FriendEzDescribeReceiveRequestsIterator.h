@@ -49,11 +49,20 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 			Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIterator::FIterator DomainIterator;
 			Gs2::UE5::Friend::Model::FEzFriendRequestPtr CurrentValue;
 
+        	static Gs2::UE5::Friend::Model::FEzFriendRequestPtr ConvertCurrent(
+        		Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Friend::Model::FEzFriendRequest::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Friend::Model::FEzFriendRequest::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

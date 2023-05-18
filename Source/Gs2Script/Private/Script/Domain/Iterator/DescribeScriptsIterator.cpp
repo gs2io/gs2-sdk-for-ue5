@@ -79,21 +79,15 @@ namespace Gs2::Script::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "Script"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Script::Model::FScript::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Script::Model::FScriptPtr>>();
-                *Range = Self->Cache->List<Gs2::Script::Model::FScript>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "Script"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Script::Model::FScript>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeScripts(
@@ -131,6 +125,12 @@ namespace Gs2::Script::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Script::Model::FScript::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

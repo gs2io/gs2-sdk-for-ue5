@@ -226,7 +226,7 @@ namespace Gs2::Friend::Domain::Model
                     "FriendUser"
                 ),
                 Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
-                    Self->TargetUserId
+                    Self->UserId
                 )
             );
             Self->Cache->Delete(
@@ -238,7 +238,7 @@ namespace Gs2::Friend::Domain::Model
                     "FriendUser"
                 ),
                 Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
-                    Self->TargetUserId
+                    Self->UserId
                 )
             );
         }

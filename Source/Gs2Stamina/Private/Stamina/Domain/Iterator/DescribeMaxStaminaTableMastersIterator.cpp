@@ -79,21 +79,15 @@ namespace Gs2::Stamina::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "MaxStaminaTableMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Stamina::Model::FMaxStaminaTableMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Stamina::Model::FMaxStaminaTableMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "MaxStaminaTableMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Stamina::Model::FMaxStaminaTableMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeMaxStaminaTableMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Stamina::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

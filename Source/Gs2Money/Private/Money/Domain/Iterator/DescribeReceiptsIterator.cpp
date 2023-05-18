@@ -87,25 +87,19 @@ namespace Gs2::Money::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            "Receipt"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Money::Model::FReceipt::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Money::Model::FReceiptPtr>>();
-                *Range = Self->Cache->List<Gs2::Money::Model::FReceipt>(
-                    ListParentKey
-                );
-                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->Slot && Item->GetSlot() == Self->Slot; });
-                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->Begin && *Item->GetCreatedAt() >= *Self->Begin; });
-                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->End && *Item->GetCreatedAt() <= *Self->End; });
+                Self->NamespaceName,
+                Self->UserId,
+                "Receipt"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Money::Model::FReceipt>(ListParentKey);
+            if (Range) {
+                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->Slot && Item->GetSlot() != Self->Slot; });
+                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->Begin && *Item->GetCreatedAt() < *Self->Begin; });
+                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->End && *Item->GetCreatedAt() > *Self->End; });
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeReceipts(
@@ -147,6 +141,12 @@ namespace Gs2::Money::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Money::Model::FReceipt::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

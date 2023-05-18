@@ -78,20 +78,14 @@ namespace Gs2::Experience::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "ExperienceModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Experience::Model::FExperienceModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Experience::Model::FExperienceModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Experience::Model::FExperienceModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "ExperienceModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Experience::Model::FExperienceModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeExperienceModels(
@@ -126,6 +120,12 @@ namespace Gs2::Experience::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Experience::Model::FExperienceModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

@@ -83,23 +83,17 @@ namespace Gs2::Formation::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            Self->MoldName,
-            "Form"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Formation::Model::FForm::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Formation::Model::FFormPtr>>();
-                *Range = Self->Cache->List<Gs2::Formation::Model::FForm>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId,
+                Self->MoldName,
+                "Form"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Formation::Model::FForm>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeFormsByUserId(
@@ -139,6 +133,12 @@ namespace Gs2::Formation::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Formation::Model::FForm::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

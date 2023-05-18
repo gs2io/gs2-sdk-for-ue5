@@ -48,11 +48,20 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 			Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FIterator DomainIterator;
 			Gs2::Friend::Model::FBlackListEntryPtr CurrentValue;
 
+        	static Gs2::Friend::Model::FBlackListEntryPtr ConvertCurrent(
+        		Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+    				? DomainIterator.Current()
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -92,9 +101,7 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-    				? DomainIterator.Current()
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

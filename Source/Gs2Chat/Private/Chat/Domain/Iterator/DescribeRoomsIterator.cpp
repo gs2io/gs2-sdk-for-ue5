@@ -79,22 +79,16 @@ namespace Gs2::Chat::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            TOptional<FString>("Singleton"),
-            "Room"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Chat::Model::FRoom::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Chat::Model::FRoomPtr>>();
-                *Range = Self->Cache->List<Gs2::Chat::Model::FRoom>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                TOptional<FString>("Singleton"),
+                "Room"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Chat::Model::FRoom>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeRooms(

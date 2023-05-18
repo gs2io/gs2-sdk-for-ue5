@@ -81,22 +81,16 @@ namespace Gs2::MegaField::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->AreaModelName,
-            "LayerModelMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::MegaField::Model::FLayerModelMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::MegaField::Model::FLayerModelMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::MegaField::Model::FLayerModelMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->AreaModelName,
+                "LayerModelMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::MegaField::Model::FLayerModelMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeLayerModelMasters(
@@ -135,6 +129,12 @@ namespace Gs2::MegaField::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::MegaField::Model::FLayerModelMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

@@ -85,22 +85,16 @@ namespace Gs2::Chat::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            TOptional<FString>("Singleton"),
-            Self->RoomName,
-            "Message"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Chat::Model::FMessage::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Chat::Model::FMessagePtr>>();
-                *Range = Self->Cache->List<Gs2::Chat::Model::FMessage>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                TOptional<FString>("Singleton"),
+                Self->RoomName,
+                "Message"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Chat::Model::FMessage>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeMessagesByUserId(

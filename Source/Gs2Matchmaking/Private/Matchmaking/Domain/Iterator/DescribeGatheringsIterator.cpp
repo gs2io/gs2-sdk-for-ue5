@@ -79,22 +79,16 @@ namespace Gs2::Matchmaking::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            TOptional<FString>("Singleton"),
-            "Gathering"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Matchmaking::Model::FGathering::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Matchmaking::Model::FGatheringPtr>>();
-                *Range = Self->Cache->List<Gs2::Matchmaking::Model::FGathering>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                TOptional<FString>("Singleton"),
+                "Gathering"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Matchmaking::Model::FGathering>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeGatherings(
@@ -132,6 +126,12 @@ namespace Gs2::Matchmaking::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Matchmaking::Model::FGathering::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

@@ -49,11 +49,20 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 			Gs2::Ranking::Domain::Iterator::FDescribeScoresIterator::FIterator DomainIterator;
 			Gs2::UE5::Ranking::Model::FEzScorePtr CurrentValue;
 
+        	static Gs2::UE5::Ranking::Model::FEzScorePtr ConvertCurrent(
+        		Gs2::Ranking::Domain::Iterator::FDescribeScoresIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Ranking::Model::FEzScore::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Ranking::Domain::Iterator::FDescribeScoresIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Ranking::Model::FEzScore::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

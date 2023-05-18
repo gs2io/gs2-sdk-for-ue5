@@ -76,18 +76,12 @@ namespace Gs2::Stamina::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = "stamina:Namespace";
-            if (Self->Cache->IsListCached(
-                Gs2::Stamina::Model::FNamespace::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Stamina::Model::FNamespacePtr>>();
-                *Range = Self->Cache->List<Gs2::Stamina::Model::FNamespace>(
-                    ListParentKey
-                );
+            Range = Self->Cache->TryGetList<Gs2::Stamina::Model::FNamespace>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeNamespaces(
@@ -124,6 +118,12 @@ namespace Gs2::Stamina::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Stamina::Model::FNamespace::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

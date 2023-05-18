@@ -80,21 +80,15 @@ namespace Gs2::Inventory::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->InventoryName,
-            "ItemModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Inventory::Model::FItemModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Inventory::Model::FItemModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Inventory::Model::FItemModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->InventoryName,
+                "ItemModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Inventory::Model::FItemModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeItemModels(
@@ -130,6 +124,12 @@ namespace Gs2::Inventory::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

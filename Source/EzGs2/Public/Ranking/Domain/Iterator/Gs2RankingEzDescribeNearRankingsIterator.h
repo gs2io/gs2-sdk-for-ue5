@@ -49,11 +49,20 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 			Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIterator::FIterator DomainIterator;
 			Gs2::UE5::Ranking::Model::FEzRankingPtr CurrentValue;
 
+        	static Gs2::UE5::Ranking::Model::FEzRankingPtr ConvertCurrent(
+        		Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Ranking::Model::FEzRanking::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Ranking::Model::FEzRanking::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

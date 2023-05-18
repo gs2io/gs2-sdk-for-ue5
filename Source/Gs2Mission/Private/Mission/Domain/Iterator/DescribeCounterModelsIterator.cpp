@@ -78,20 +78,14 @@ namespace Gs2::Mission::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "CounterModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Mission::Model::FCounterModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Mission::Model::FCounterModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Mission::Model::FCounterModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "CounterModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Mission::Model::FCounterModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeCounterModels(
@@ -126,6 +120,12 @@ namespace Gs2::Mission::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Mission::Model::FCounterModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

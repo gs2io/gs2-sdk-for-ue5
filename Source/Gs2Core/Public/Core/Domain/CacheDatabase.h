@@ -42,11 +42,6 @@ namespace Gs2::Core::Domain
 
         void Clear();
         
-        bool IsListCached(
-            FTypeName Kind,
-            FParentCacheKey ParentKey
-        );
-        
         void SetListCache(
             FTypeName Kind,
             FParentCacheKey ParentKey
@@ -87,25 +82,29 @@ namespace Gs2::Core::Domain
         }
 
         template<class TKind>
-        TArray<TSharedPtr<TKind>> List(
+        TSharedPtr<TArray<TSharedPtr<TKind>>> TryGetList(
             FParentCacheKey ParentKey
         )
         {
+            auto* ListCache0 = ListCached.Find(TKind::TypeName);
+            if (ListCache0 == nullptr || !ListCache0->Contains(ParentKey)) return nullptr;
+
             auto* Cache0 = Cache.Find(TKind::TypeName);
-            if (Cache0 == nullptr) return TArray<TSharedPtr<TKind>>();
+            if (Cache0 == nullptr) return nullptr;
             auto* Cache1 = Cache0->Find(ParentKey);
-            if (Cache1 == nullptr) return TArray<TSharedPtr<TKind>>();
-            TArray<TSharedPtr<TKind>> Result;
+            if (Cache1 == nullptr) return nullptr;
+            auto now = FDateTime::Now().ToUnixTimestamp();
+            auto Result = MakeShared<TArray<TSharedPtr<TKind>>>();
             for (auto Item : *Cache1)
             {
                 auto Key = Item.Key;
                 auto Data = Item.Value;
-                if (Data.Value < FDateTime::Now().ToUnixTimestamp())
+                if (Data.Value < now)
                 {
                     ClearListCache(TKind::TypeName, ParentKey);
-                    return TArray<TSharedPtr<TKind>>();
+                    return nullptr;
                 }
-                Result.Add(*static_cast<TSharedPtr<TKind>*>(static_cast<void*>(&Data.Key)));
+                Result->Add(*static_cast<TSharedPtr<TKind>*>(static_cast<void*>(&Data.Key)));
             }
             return Result;
         }

@@ -78,20 +78,14 @@ namespace Gs2::Limit::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "LimitModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Limit::Model::FLimitModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Limit::Model::FLimitModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Limit::Model::FLimitModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "LimitModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Limit::Model::FLimitModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeLimitModels(
@@ -126,6 +120,12 @@ namespace Gs2::Limit::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Limit::Model::FLimitModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

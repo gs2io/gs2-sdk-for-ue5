@@ -78,20 +78,14 @@ namespace Gs2::Inventory::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "InventoryModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Inventory::Model::FInventoryModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Inventory::Model::FInventoryModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Inventory::Model::FInventoryModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "InventoryModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Inventory::Model::FInventoryModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeInventoryModels(
@@ -126,6 +120,12 @@ namespace Gs2::Inventory::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Inventory::Model::FInventoryModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

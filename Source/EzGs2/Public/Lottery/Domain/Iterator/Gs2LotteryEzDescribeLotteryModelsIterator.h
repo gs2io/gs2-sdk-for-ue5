@@ -49,11 +49,20 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 			Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Lottery::Model::FEzLotteryModelPtr CurrentValue;
 
+        	static Gs2::UE5::Lottery::Model::FEzLotteryModelPtr ConvertCurrent(
+        		Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Lottery::Model::FEzLotteryModel::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Lottery::Model::FEzLotteryModel::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

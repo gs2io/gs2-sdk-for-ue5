@@ -81,22 +81,16 @@ namespace Gs2::Inbox::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            "Message"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Inbox::Model::FMessage::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Inbox::Model::FMessagePtr>>();
-                *Range = Self->Cache->List<Gs2::Inbox::Model::FMessage>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId,
+                "Message"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Inbox::Model::FMessage>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeMessagesByUserId(
@@ -135,6 +129,12 @@ namespace Gs2::Inbox::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Inbox::Model::FMessage::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

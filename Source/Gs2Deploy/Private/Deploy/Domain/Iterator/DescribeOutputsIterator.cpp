@@ -79,21 +79,15 @@ namespace Gs2::Deploy::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
-            Self->StackName,
-            "Output"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Deploy::Model::FOutput::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Deploy::Model::FOutputPtr>>();
-                *Range = Self->Cache->List<Gs2::Deploy::Model::FOutput>(
-                    ListParentKey
-                );
+                Self->StackName,
+                "Output"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Deploy::Model::FOutput>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeOutputs(
@@ -131,6 +125,12 @@ namespace Gs2::Deploy::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Deploy::Model::FOutput::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

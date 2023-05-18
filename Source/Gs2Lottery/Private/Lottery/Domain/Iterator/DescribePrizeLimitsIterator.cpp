@@ -81,22 +81,16 @@ namespace Gs2::Lottery::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->PrizeTableName,
-            "PrizeLimit"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Lottery::Model::FPrizeLimit::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Lottery::Model::FPrizeLimitPtr>>();
-                *Range = Self->Cache->List<Gs2::Lottery::Model::FPrizeLimit>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->PrizeTableName,
+                "PrizeLimit"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Lottery::Model::FPrizeLimit>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribePrizeLimits(
@@ -135,6 +129,12 @@ namespace Gs2::Lottery::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Lottery::Model::FPrizeLimit::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

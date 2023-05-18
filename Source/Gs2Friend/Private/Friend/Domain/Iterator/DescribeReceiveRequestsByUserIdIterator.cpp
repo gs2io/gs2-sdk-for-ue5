@@ -81,23 +81,17 @@ namespace Gs2::Friend::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            "ReceiveFriendRequest"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Friend::Model::FFriendRequest::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Friend::Model::FFriendRequestPtr>>();
-                *Range = Self->Cache->List<Gs2::Friend::Model::FFriendRequest>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId,
+                "ReceiveFriendRequest"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Friend::Model::FFriendRequest>(ListParentKey);
+            if (Range) {
                 Range->RemoveAll([this](const Gs2::Friend::Model::FFriendRequestPtr& Item) { return Self->UserId && Item->GetTargetUserId() != Self->UserId; });
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeReceiveRequestsByUserId(
@@ -136,6 +130,12 @@ namespace Gs2::Friend::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Friend::Model::FFriendRequest::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

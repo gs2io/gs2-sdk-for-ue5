@@ -79,21 +79,15 @@ namespace Gs2::Experience::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "ThresholdMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Experience::Model::FThresholdMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Experience::Model::FThresholdMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Experience::Model::FThresholdMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "ThresholdMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Experience::Model::FThresholdMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeThresholdMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Experience::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Experience::Model::FThresholdMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

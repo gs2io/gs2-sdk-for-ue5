@@ -79,21 +79,15 @@ namespace Gs2::Lottery::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "LotteryModelMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Lottery::Model::FLotteryModelMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Lottery::Model::FLotteryModelMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Lottery::Model::FLotteryModelMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "LotteryModelMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Lottery::Model::FLotteryModelMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeLotteryModelMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Lottery::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Lottery::Model::FLotteryModelMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

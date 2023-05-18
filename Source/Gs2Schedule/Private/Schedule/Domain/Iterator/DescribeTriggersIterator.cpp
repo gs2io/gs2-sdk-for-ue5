@@ -81,22 +81,16 @@ namespace Gs2::Schedule::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId(),
-            "Trigger"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Schedule::Model::FTrigger::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Schedule::Model::FTriggerPtr>>();
-                *Range = Self->Cache->List<Gs2::Schedule::Model::FTrigger>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId(),
+                "Trigger"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Schedule::Model::FTrigger>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeTriggers(
@@ -135,6 +129,12 @@ namespace Gs2::Schedule::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Schedule::Model::FTrigger::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

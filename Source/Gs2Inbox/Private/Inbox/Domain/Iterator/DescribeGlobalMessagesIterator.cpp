@@ -78,20 +78,14 @@ namespace Gs2::Inbox::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Inbox::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "GlobalMessage"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Inbox::Model::FGlobalMessage::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Inbox::Model::FGlobalMessagePtr>>();
-                *Range = Self->Cache->List<Gs2::Inbox::Model::FGlobalMessage>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "GlobalMessage"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Inbox::Model::FGlobalMessage>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeGlobalMessages(
@@ -126,6 +120,12 @@ namespace Gs2::Inbox::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Inbox::Model::FGlobalMessage::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

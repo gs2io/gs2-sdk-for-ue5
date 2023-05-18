@@ -78,20 +78,14 @@ namespace Gs2::Stamina::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "StaminaModel"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Stamina::Model::FStaminaModel::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Stamina::Model::FStaminaModelPtr>>();
-                *Range = Self->Cache->List<Gs2::Stamina::Model::FStaminaModel>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "StaminaModel"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Stamina::Model::FStaminaModel>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeStaminaModels(
@@ -126,6 +120,12 @@ namespace Gs2::Stamina::Domain::Iterator
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

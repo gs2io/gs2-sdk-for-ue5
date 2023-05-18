@@ -79,21 +79,15 @@ namespace Gs2::Showcase::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            "ShowcaseMaster"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Showcase::Model::FShowcaseMaster::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Showcase::Model::FShowcaseMasterPtr>>();
-                *Range = Self->Cache->List<Gs2::Showcase::Model::FShowcaseMaster>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                "ShowcaseMaster"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Showcase::Model::FShowcaseMaster>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeShowcaseMasters(
@@ -131,6 +125,12 @@ namespace Gs2::Showcase::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Showcase::Model::FShowcaseMaster::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

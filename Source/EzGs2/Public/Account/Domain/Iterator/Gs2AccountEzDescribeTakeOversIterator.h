@@ -49,11 +49,20 @@ namespace Gs2::UE5::Account::Domain::Iterator
 			Gs2::Account::Domain::Iterator::FDescribeTakeOversIterator::FIterator DomainIterator;
 			Gs2::UE5::Account::Model::FEzTakeOverPtr CurrentValue;
 
+        	static Gs2::UE5::Account::Model::FEzTakeOverPtr ConvertCurrent(
+        		Gs2::Account::Domain::Iterator::FDescribeTakeOversIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Account::Model::FEzTakeOver::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Account::Domain::Iterator::FDescribeTakeOversIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Account::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Account::Model::FEzTakeOver::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

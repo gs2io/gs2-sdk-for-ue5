@@ -183,7 +183,7 @@ namespace Gs2::Quest::Domain::Model
         if (ResultModel != nullptr) {
             
         }
-        if (!*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,

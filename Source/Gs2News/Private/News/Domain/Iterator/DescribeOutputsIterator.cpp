@@ -81,22 +81,16 @@ namespace Gs2::News::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::News::Domain::Model::FProgressDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UploadToken,
-            "Output"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::News::Model::FOutput::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::News::Model::FOutputPtr>>();
-                *Range = Self->Cache->List<Gs2::News::Model::FOutput>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UploadToken,
+                "Output"
+            );
+            Range = Self->Cache->TryGetList<Gs2::News::Model::FOutput>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeOutputs(
@@ -135,6 +129,12 @@ namespace Gs2::News::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::News::Model::FOutput::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

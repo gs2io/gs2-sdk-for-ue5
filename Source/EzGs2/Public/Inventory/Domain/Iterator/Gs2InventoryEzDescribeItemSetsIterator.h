@@ -49,11 +49,20 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 			Gs2::Inventory::Domain::Iterator::FDescribeItemSetsIterator::FIterator DomainIterator;
 			Gs2::UE5::Inventory::Model::FEzItemSetPtr CurrentValue;
 
+        	static Gs2::UE5::Inventory::Model::FEzItemSetPtr ConvertCurrent(
+        		Gs2::Inventory::Domain::Iterator::FDescribeItemSetsIterator::FIterator& DomainIterator
+        	)
+        	{
+				return DomainIterator.IsCurrentValid()
+	    			? Gs2::UE5::Inventory::Model::FEzItemSet::FromModel(DomainIterator.Current())
+					: nullptr;
+        	}
+
 			explicit FIterator(
 				Gs2::Inventory::Domain::Iterator::FDescribeItemSetsIterator::FIterator&& DomainIterator
 			) :
 			    DomainIterator(DomainIterator),
-			    CurrentValue(nullptr)
+			    CurrentValue(ConvertCurrent(DomainIterator))
 			{}
 
 		public:
@@ -93,9 +102,7 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 			FIterator& operator++()
 			{
 				++DomainIterator;
-				CurrentValue = DomainIterator.HasNext() && !DomainIterator.IsError()
-	    			? Gs2::UE5::Inventory::Model::FEzItemSet::FromModel(DomainIterator.Current())
-					: nullptr;
+				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
 

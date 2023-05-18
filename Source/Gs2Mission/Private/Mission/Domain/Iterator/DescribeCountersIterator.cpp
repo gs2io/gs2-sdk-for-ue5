@@ -81,22 +81,16 @@ namespace Gs2::Mission::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId(),
-            "Counter"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Mission::Model::FCounter::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Mission::Model::FCounterPtr>>();
-                *Range = Self->Cache->List<Gs2::Mission::Model::FCounter>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId(),
+                "Counter"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Mission::Model::FCounter>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeCounters(
@@ -135,6 +129,12 @@ namespace Gs2::Mission::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Mission::Model::FCounter::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

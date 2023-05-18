@@ -76,18 +76,12 @@ namespace Gs2::Ranking::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = "ranking:Namespace";
-            if (Self->Cache->IsListCached(
-                Gs2::Ranking::Model::FNamespace::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Ranking::Model::FNamespacePtr>>();
-                *Range = Self->Cache->List<Gs2::Ranking::Model::FNamespace>(
-                    ListParentKey
-                );
+            Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FNamespace>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeNamespaces(
@@ -124,6 +118,12 @@ namespace Gs2::Ranking::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Ranking::Model::FNamespace::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

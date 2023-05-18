@@ -83,23 +83,17 @@ namespace Gs2::Inventory::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            Self->InventoryName,
-            "ItemSet"
-        );
-            if (Self->Cache->IsListCached(
-                Gs2::Inventory::Model::FItemSet::TypeName,
-                ListParentKey
-            )) {
-                Range = MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>();
-                *Range = Self->Cache->List<Gs2::Inventory::Model::FItemSet>(
-                    ListParentKey
-                );
+                Self->NamespaceName,
+                Self->UserId,
+                Self->InventoryName,
+                "ItemSet"
+            );
+            Range = Self->Cache->TryGetList<Gs2::Inventory::Model::FItemSet>(ListParentKey);
+            if (Range) {
                 RangeIteratorOpt = Range->CreateIterator();
                 PageToken = TOptional<FString>();
                 bLast = true;
-                bEnd = static_cast<bool>(*RangeIteratorOpt);
+                bEnd = !static_cast<bool>(*RangeIteratorOpt);
                 return *this;
             }
             const auto Future = Self->Client->DescribeItemSetsByUserId(
@@ -140,6 +134,12 @@ namespace Gs2::Inventory::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast) {
+                Self->Cache->SetListCache(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;
