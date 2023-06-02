@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FDistributeResource final : public TSharedFromThis<FDistributeResource>
+    class GS2DISTRIBUTOR_API FDistributeResource final : public Gs2Object, public TSharedFromThis<FDistributeResource>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> RequestValue;
@@ -30,7 +31,7 @@ namespace Gs2::Distributor::Model
         FDistributeResource(
             const FDistributeResource& From
         );
-        ~FDistributeResource() = default;
+        virtual ~FDistributeResource() override = default;
 
         TSharedPtr<FDistributeResource> WithAction(const TOptional<FString> Action);
         TSharedPtr<FDistributeResource> WithRequest(const TOptional<FString> Request);

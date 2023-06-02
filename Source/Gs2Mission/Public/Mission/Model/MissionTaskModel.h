@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "AcquireAction.h"
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FMissionTaskModel final : public TSharedFromThis<FMissionTaskModel>
+    class GS2MISSION_API FMissionTaskModel final : public Gs2Object, public TSharedFromThis<FMissionTaskModel>
     {
         TOptional<FString> MissionTaskIdValue;
         TOptional<FString> NameValue;
@@ -37,7 +38,7 @@ namespace Gs2::Mission::Model
         FMissionTaskModel(
             const FMissionTaskModel& From
         );
-        ~FMissionTaskModel() = default;
+        virtual ~FMissionTaskModel() override = default;
 
         TSharedPtr<FMissionTaskModel> WithMissionTaskId(const TOptional<FString> MissionTaskId);
         TSharedPtr<FMissionTaskModel> WithName(const TOptional<FString> Name);

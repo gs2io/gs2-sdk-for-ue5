@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Inbox::Model
 {
-    class GS2INBOX_API FReceived final : public TSharedFromThis<FReceived>
+    class GS2INBOX_API FReceived final : public Gs2Object, public TSharedFromThis<FReceived>
     {
         TOptional<FString> ReceivedIdValue;
         TOptional<FString> UserIdValue;
@@ -33,7 +34,7 @@ namespace Gs2::Inbox::Model
         FReceived(
             const FReceived& From
         );
-        ~FReceived() = default;
+        virtual ~FReceived() override = default;
 
         TSharedPtr<FReceived> WithReceivedId(const TOptional<FString> ReceivedId);
         TSharedPtr<FReceived> WithUserId(const TOptional<FString> UserId);

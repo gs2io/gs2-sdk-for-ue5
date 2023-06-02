@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FCurrentShowcaseMaster final : public TSharedFromThis<FCurrentShowcaseMaster>
+    class GS2SHOWCASE_API FCurrentShowcaseMaster final : public Gs2Object, public TSharedFromThis<FCurrentShowcaseMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Showcase::Model
         FCurrentShowcaseMaster(
             const FCurrentShowcaseMaster& From
         );
-        ~FCurrentShowcaseMaster() = default;
+        virtual ~FCurrentShowcaseMaster() override = default;
 
         TSharedPtr<FCurrentShowcaseMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentShowcaseMaster> WithSettings(const TOptional<FString> Settings);

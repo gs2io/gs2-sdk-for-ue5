@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Config.h"
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FAcquireActionConfig final : public TSharedFromThis<FAcquireActionConfig>
+    class GS2FORMATION_API FAcquireActionConfig final : public Gs2Object, public TSharedFromThis<FAcquireActionConfig>
     {
         TOptional<FString> NameValue;
         TSharedPtr<TArray<TSharedPtr<FConfig>>> ConfigValue;
@@ -31,7 +32,7 @@ namespace Gs2::Formation::Model
         FAcquireActionConfig(
             const FAcquireActionConfig& From
         );
-        ~FAcquireActionConfig() = default;
+        virtual ~FAcquireActionConfig() override = default;
 
         TSharedPtr<FAcquireActionConfig> WithName(const TOptional<FString> Name);
         TSharedPtr<FAcquireActionConfig> WithConfig(const TSharedPtr<TArray<TSharedPtr<FConfig>>> Config);

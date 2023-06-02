@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FReferenceOfEntry
+    class GS2INVENTORY_API FReferenceOfEntry : public Gs2Object
     {
     public:
         FString Value;
@@ -28,7 +29,7 @@ namespace Gs2::Inventory::Model
         FReferenceOfEntry(
             FString& Value
         );
-        ~FReferenceOfEntry() = default;
+        virtual ~FReferenceOfEntry() override = default;
     
         static FString TypeName;
     };

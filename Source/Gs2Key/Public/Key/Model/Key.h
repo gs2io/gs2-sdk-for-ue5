@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Key::Model
 {
-    class GS2KEY_API FKey final : public TSharedFromThis<FKey>
+    class GS2KEY_API FKey final : public Gs2Object, public TSharedFromThis<FKey>
     {
         TOptional<FString> KeyIdValue;
         TOptional<FString> NameValue;
@@ -33,7 +34,7 @@ namespace Gs2::Key::Model
         FKey(
             const FKey& From
         );
-        ~FKey() = default;
+        virtual ~FKey() override = default;
 
         TSharedPtr<FKey> WithKeyId(const TOptional<FString> KeyId);
         TSharedPtr<FKey> WithName(const TOptional<FString> Name);

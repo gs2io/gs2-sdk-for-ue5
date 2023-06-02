@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Schedule::Model
 {
-    class GS2SCHEDULE_API FTrigger final : public TSharedFromThis<FTrigger>
+    class GS2SCHEDULE_API FTrigger final : public Gs2Object, public TSharedFromThis<FTrigger>
     {
         TOptional<FString> TriggerIdValue;
         TOptional<FString> NameValue;
@@ -33,7 +34,7 @@ namespace Gs2::Schedule::Model
         FTrigger(
             const FTrigger& From
         );
-        ~FTrigger() = default;
+        virtual ~FTrigger() override = default;
 
         TSharedPtr<FTrigger> WithTriggerId(const TOptional<FString> TriggerId);
         TSharedPtr<FTrigger> WithName(const TOptional<FString> Name);

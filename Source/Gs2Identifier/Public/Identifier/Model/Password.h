@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FPassword final : public TSharedFromThis<FPassword>
+    class GS2IDENTIFIER_API FPassword final : public Gs2Object, public TSharedFromThis<FPassword>
     {
         TOptional<FString> PasswordIdValue;
         TOptional<FString> UserIdValue;
@@ -32,7 +33,7 @@ namespace Gs2::Identifier::Model
         FPassword(
             const FPassword& From
         );
-        ~FPassword() = default;
+        virtual ~FPassword() override = default;
 
         TSharedPtr<FPassword> WithPasswordId(const TOptional<FString> PasswordId);
         TSharedPtr<FPassword> WithUserId(const TOptional<FString> UserId);

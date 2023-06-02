@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "OutputField.h"
 
 namespace Gs2::Deploy::Model
 {
-    class GS2DEPLOY_API FResource final : public TSharedFromThis<FResource>
+    class GS2DEPLOY_API FResource final : public Gs2Object, public TSharedFromThis<FResource>
     {
         TOptional<FString> ResourceIdValue;
         TOptional<FString> TypeValue;
@@ -40,7 +41,7 @@ namespace Gs2::Deploy::Model
         FResource(
             const FResource& From
         );
-        ~FResource() = default;
+        virtual ~FResource() override = default;
 
         TSharedPtr<FResource> WithResourceId(const TOptional<FString> ResourceId);
         TSharedPtr<FResource> WithType(const TOptional<FString> Type);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FConsumeAction final : public TSharedFromThis<FConsumeAction>
+    class GS2DISTRIBUTOR_API FConsumeAction final : public Gs2Object, public TSharedFromThis<FConsumeAction>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> RequestValue;
@@ -30,7 +31,7 @@ namespace Gs2::Distributor::Model
         FConsumeAction(
             const FConsumeAction& From
         );
-        ~FConsumeAction() = default;
+        virtual ~FConsumeAction() override = default;
 
         TSharedPtr<FConsumeAction> WithAction(const TOptional<FString> Action);
         TSharedPtr<FConsumeAction> WithRequest(const TOptional<FString> Request);

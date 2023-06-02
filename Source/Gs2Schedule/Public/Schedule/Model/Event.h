@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Schedule::Model
 {
-    class GS2SCHEDULE_API FEvent final : public TSharedFromThis<FEvent>
+    class GS2SCHEDULE_API FEvent final : public Gs2Object, public TSharedFromThis<FEvent>
     {
         TOptional<FString> EventIdValue;
         TOptional<FString> NameValue;
@@ -43,7 +44,7 @@ namespace Gs2::Schedule::Model
         FEvent(
             const FEvent& From
         );
-        ~FEvent() = default;
+        virtual ~FEvent() override = default;
 
         TSharedPtr<FEvent> WithEventId(const TOptional<FString> EventId);
         TSharedPtr<FEvent> WithName(const TOptional<FString> Name);

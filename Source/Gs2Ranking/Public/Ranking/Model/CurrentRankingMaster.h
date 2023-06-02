@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FCurrentRankingMaster final : public TSharedFromThis<FCurrentRankingMaster>
+    class GS2RANKING_API FCurrentRankingMaster final : public Gs2Object, public TSharedFromThis<FCurrentRankingMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Ranking::Model
         FCurrentRankingMaster(
             const FCurrentRankingMaster& From
         );
-        ~FCurrentRankingMaster() = default;
+        virtual ~FCurrentRankingMaster() override = default;
 
         TSharedPtr<FCurrentRankingMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentRankingMaster> WithSettings(const TOptional<FString> Settings);

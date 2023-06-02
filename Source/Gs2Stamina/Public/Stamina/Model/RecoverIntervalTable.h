@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FRecoverIntervalTable final : public TSharedFromThis<FRecoverIntervalTable>
+    class GS2STAMINA_API FRecoverIntervalTable final : public Gs2Object, public TSharedFromThis<FRecoverIntervalTable>
     {
         TOptional<FString> RecoverIntervalTableIdValue;
         TOptional<FString> NameValue;
@@ -33,7 +34,7 @@ namespace Gs2::Stamina::Model
         FRecoverIntervalTable(
             const FRecoverIntervalTable& From
         );
-        ~FRecoverIntervalTable() = default;
+        virtual ~FRecoverIntervalTable() override = default;
 
         TSharedPtr<FRecoverIntervalTable> WithRecoverIntervalTableId(const TOptional<FString> RecoverIntervalTableId);
         TSharedPtr<FRecoverIntervalTable> WithName(const TOptional<FString> Name);

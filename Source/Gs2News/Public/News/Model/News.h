@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::News::Model
 {
-    class GS2NEWS_API FNews final : public TSharedFromThis<FNews>
+    class GS2NEWS_API FNews final : public Gs2Object, public TSharedFromThis<FNews>
     {
         TOptional<FString> SectionValue;
         TOptional<FString> ContentValue;
@@ -34,7 +35,7 @@ namespace Gs2::News::Model
         FNews(
             const FNews& From
         );
-        ~FNews() = default;
+        virtual ~FNews() override = default;
 
         TSharedPtr<FNews> WithSection(const TOptional<FString> Section);
         TSharedPtr<FNews> WithContent(const TOptional<FString> Content);

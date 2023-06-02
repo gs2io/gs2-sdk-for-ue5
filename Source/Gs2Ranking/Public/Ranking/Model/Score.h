@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FScore final : public TSharedFromThis<FScore>
+    class GS2RANKING_API FScore final : public Gs2Object, public TSharedFromThis<FScore>
     {
         TOptional<FString> ScoreIdValue;
         TOptional<FString> CategoryNameValue;
@@ -36,7 +37,7 @@ namespace Gs2::Ranking::Model
         FScore(
             const FScore& From
         );
-        ~FScore() = default;
+        virtual ~FScore() override = default;
 
         TSharedPtr<FScore> WithScoreId(const TOptional<FString> ScoreId);
         TSharedPtr<FScore> WithCategoryName(const TOptional<FString> CategoryName);

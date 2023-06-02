@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Chat::Model
 {
-    class GS2CHAT_API FNotificationType final : public TSharedFromThis<FNotificationType>
+    class GS2CHAT_API FNotificationType final : public Gs2Object, public TSharedFromThis<FNotificationType>
     {
         TOptional<int32> CategoryValue;
         TOptional<bool> EnableTransferMobilePushNotificationValue;
@@ -30,7 +31,7 @@ namespace Gs2::Chat::Model
         FNotificationType(
             const FNotificationType& From
         );
-        ~FNotificationType() = default;
+        virtual ~FNotificationType() override = default;
 
         TSharedPtr<FNotificationType> WithCategory(const TOptional<int32> Category);
         TSharedPtr<FNotificationType> WithEnableTransferMobilePushNotification(const TOptional<bool> EnableTransferMobilePushNotification);

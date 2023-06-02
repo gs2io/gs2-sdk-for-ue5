@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FProgress final : public TSharedFromThis<FProgress>
+    class GS2ENHANCE_API FProgress final : public Gs2Object, public TSharedFromThis<FProgress>
     {
         TOptional<FString> ProgressIdValue;
         TOptional<FString> UserIdValue;
@@ -37,7 +38,7 @@ namespace Gs2::Enhance::Model
         FProgress(
             const FProgress& From
         );
-        ~FProgress() = default;
+        virtual ~FProgress() override = default;
 
         TSharedPtr<FProgress> WithProgressId(const TOptional<FString> ProgressId);
         TSharedPtr<FProgress> WithUserId(const TOptional<FString> UserId);

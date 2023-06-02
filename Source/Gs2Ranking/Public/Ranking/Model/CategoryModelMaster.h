@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FCategoryModelMaster final : public TSharedFromThis<FCategoryModelMaster>
+    class GS2RANKING_API FCategoryModelMaster final : public Gs2Object, public TSharedFromThis<FCategoryModelMaster>
     {
         TOptional<FString> CategoryModelIdValue;
         TOptional<FString> NameValue;
@@ -47,7 +48,7 @@ namespace Gs2::Ranking::Model
         FCategoryModelMaster(
             const FCategoryModelMaster& From
         );
-        ~FCategoryModelMaster() = default;
+        virtual ~FCategoryModelMaster() override = default;
 
         TSharedPtr<FCategoryModelMaster> WithCategoryModelId(const TOptional<FString> CategoryModelId);
         TSharedPtr<FCategoryModelMaster> WithName(const TOptional<FString> Name);

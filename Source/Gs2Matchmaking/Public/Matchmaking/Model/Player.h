@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Attribute.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FPlayer final : public TSharedFromThis<FPlayer>
+    class GS2MATCHMAKING_API FPlayer final : public Gs2Object, public TSharedFromThis<FPlayer>
     {
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<FAttribute>>> AttributesValue;
@@ -33,7 +34,7 @@ namespace Gs2::Matchmaking::Model
         FPlayer(
             const FPlayer& From
         );
-        ~FPlayer() = default;
+        virtual ~FPlayer() override = default;
 
         TSharedPtr<FPlayer> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FPlayer> WithAttributes(const TSharedPtr<TArray<TSharedPtr<FAttribute>>> Attributes);

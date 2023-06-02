@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FMaxStaminaTable final : public TSharedFromThis<FMaxStaminaTable>
+    class GS2STAMINA_API FMaxStaminaTable final : public Gs2Object, public TSharedFromThis<FMaxStaminaTable>
     {
         TOptional<FString> MaxStaminaTableIdValue;
         TOptional<FString> NameValue;
@@ -33,7 +34,7 @@ namespace Gs2::Stamina::Model
         FMaxStaminaTable(
             const FMaxStaminaTable& From
         );
-        ~FMaxStaminaTable() = default;
+        virtual ~FMaxStaminaTable() override = default;
 
         TSharedPtr<FMaxStaminaTable> WithMaxStaminaTableId(const TOptional<FString> MaxStaminaTableId);
         TSharedPtr<FMaxStaminaTable> WithName(const TOptional<FString> Name);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FAcquireAction final : public TSharedFromThis<FAcquireAction>
+    class GS2QUEST_API FAcquireAction final : public Gs2Object, public TSharedFromThis<FAcquireAction>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> RequestValue;
@@ -30,7 +31,7 @@ namespace Gs2::Quest::Model
         FAcquireAction(
             const FAcquireAction& From
         );
-        ~FAcquireAction() = default;
+        virtual ~FAcquireAction() override = default;
 
         TSharedPtr<FAcquireAction> WithAction(const TOptional<FString> Action);
         TSharedPtr<FAcquireAction> WithRequest(const TOptional<FString> Request);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::SerialKey::Model
 {
-    class GS2SERIALKEY_API FCampaignModelMaster final : public TSharedFromThis<FCampaignModelMaster>
+    class GS2SERIALKEY_API FCampaignModelMaster final : public Gs2Object, public TSharedFromThis<FCampaignModelMaster>
     {
         TOptional<FString> CampaignIdValue;
         TOptional<FString> NameValue;
@@ -35,7 +36,7 @@ namespace Gs2::SerialKey::Model
         FCampaignModelMaster(
             const FCampaignModelMaster& From
         );
-        ~FCampaignModelMaster() = default;
+        virtual ~FCampaignModelMaster() override = default;
 
         TSharedPtr<FCampaignModelMaster> WithCampaignId(const TOptional<FString> CampaignId);
         TSharedPtr<FCampaignModelMaster> WithName(const TOptional<FString> Name);

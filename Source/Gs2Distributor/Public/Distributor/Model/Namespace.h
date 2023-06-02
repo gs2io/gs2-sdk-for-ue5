@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FNamespace final : public TSharedFromThis<FNamespace>
+    class GS2DISTRIBUTOR_API FNamespace final : public Gs2Object, public TSharedFromThis<FNamespace>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;
@@ -38,7 +39,7 @@ namespace Gs2::Distributor::Model
         FNamespace(
             const FNamespace& From
         );
-        ~FNamespace() = default;
+        virtual ~FNamespace() override = default;
 
         TSharedPtr<FNamespace> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);

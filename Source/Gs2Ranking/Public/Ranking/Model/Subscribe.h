@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FSubscribe final : public TSharedFromThis<FSubscribe>
+    class GS2RANKING_API FSubscribe final : public Gs2Object, public TSharedFromThis<FSubscribe>
     {
         TOptional<FString> SubscribeIdValue;
         TOptional<FString> CategoryNameValue;
@@ -34,7 +35,7 @@ namespace Gs2::Ranking::Model
         FSubscribe(
             const FSubscribe& From
         );
-        ~FSubscribe() = default;
+        virtual ~FSubscribe() override = default;
 
         TSharedPtr<FSubscribe> WithSubscribeId(const TOptional<FString> SubscribeId);
         TSharedPtr<FSubscribe> WithCategoryName(const TOptional<FString> CategoryName);

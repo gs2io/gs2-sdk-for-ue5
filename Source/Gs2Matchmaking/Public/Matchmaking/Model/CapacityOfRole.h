@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Player.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FCapacityOfRole final : public TSharedFromThis<FCapacityOfRole>
+    class GS2MATCHMAKING_API FCapacityOfRole final : public Gs2Object, public TSharedFromThis<FCapacityOfRole>
     {
         TOptional<FString> RoleNameValue;
         TSharedPtr<TArray<FString>> RoleAliasesValue;
@@ -33,7 +34,7 @@ namespace Gs2::Matchmaking::Model
         FCapacityOfRole(
             const FCapacityOfRole& From
         );
-        ~FCapacityOfRole() = default;
+        virtual ~FCapacityOfRole() override = default;
 
         TSharedPtr<FCapacityOfRole> WithRoleName(const TOptional<FString> RoleName);
         TSharedPtr<FCapacityOfRole> WithRoleAliases(const TSharedPtr<TArray<FString>> RoleAliases);

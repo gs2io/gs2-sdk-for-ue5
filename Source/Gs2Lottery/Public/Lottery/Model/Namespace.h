@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
 #include "LogSetting.h"
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FNamespace final : public TSharedFromThis<FNamespace>
+    class GS2LOTTERY_API FNamespace final : public Gs2Object, public TSharedFromThis<FNamespace>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;
@@ -41,7 +42,7 @@ namespace Gs2::Lottery::Model
         FNamespace(
             const FNamespace& From
         );
-        ~FNamespace() = default;
+        virtual ~FNamespace() override = default;
 
         TSharedPtr<FNamespace> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);

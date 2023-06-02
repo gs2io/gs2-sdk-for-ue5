@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Limit::Model
 {
-    class GS2LIMIT_API FCounter final : public TSharedFromThis<FCounter>
+    class GS2LIMIT_API FCounter final : public Gs2Object, public TSharedFromThis<FCounter>
     {
         TOptional<FString> CounterIdValue;
         TOptional<FString> LimitNameValue;
@@ -36,7 +37,7 @@ namespace Gs2::Limit::Model
         FCounter(
             const FCounter& From
         );
-        ~FCounter() = default;
+        virtual ~FCounter() override = default;
 
         TSharedPtr<FCounter> WithCounterId(const TOptional<FString> CounterId);
         TSharedPtr<FCounter> WithLimitName(const TOptional<FString> LimitName);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FInventory final : public TSharedFromThis<FInventory>
+    class GS2INVENTORY_API FInventory final : public Gs2Object, public TSharedFromThis<FInventory>
     {
         TOptional<FString> InventoryIdValue;
         TOptional<FString> InventoryNameValue;
@@ -36,7 +37,7 @@ namespace Gs2::Inventory::Model
         FInventory(
             const FInventory& From
         );
-        ~FInventory() = default;
+        virtual ~FInventory() override = default;
 
         TSharedPtr<FInventory> WithInventoryId(const TOptional<FString> InventoryId);
         TSharedPtr<FInventory> WithInventoryName(const TOptional<FString> InventoryName);

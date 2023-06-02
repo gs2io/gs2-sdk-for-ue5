@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FMold final : public TSharedFromThis<FMold>
+    class GS2FORMATION_API FMold final : public Gs2Object, public TSharedFromThis<FMold>
     {
         TOptional<FString> MoldIdValue;
         TOptional<FString> NameValue;
@@ -34,7 +35,7 @@ namespace Gs2::Formation::Model
         FMold(
             const FMold& From
         );
-        ~FMold() = default;
+        virtual ~FMold() override = default;
 
         TSharedPtr<FMold> WithMoldId(const TOptional<FString> MoldId);
         TSharedPtr<FMold> WithName(const TOptional<FString> Name);

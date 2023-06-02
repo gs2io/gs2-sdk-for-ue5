@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Script::Model
 {
-    class GS2SCRIPT_API FScript final : public TSharedFromThis<FScript>
+    class GS2SCRIPT_API FScript final : public Gs2Object, public TSharedFromThis<FScript>
     {
         TOptional<FString> ScriptIdValue;
         TOptional<FString> NameValue;
@@ -34,7 +35,7 @@ namespace Gs2::Script::Model
         FScript(
             const FScript& From
         );
-        ~FScript() = default;
+        virtual ~FScript() override = default;
 
         TSharedPtr<FScript> WithScriptId(const TOptional<FString> ScriptId);
         TSharedPtr<FScript> WithName(const TOptional<FString> Name);

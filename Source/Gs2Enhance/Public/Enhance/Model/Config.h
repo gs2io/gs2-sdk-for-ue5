@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FConfig final : public TSharedFromThis<FConfig>
+    class GS2ENHANCE_API FConfig final : public Gs2Object, public TSharedFromThis<FConfig>
     {
         TOptional<FString> KeyValue;
         TOptional<FString> ValueValue;
@@ -30,7 +31,7 @@ namespace Gs2::Enhance::Model
         FConfig(
             const FConfig& From
         );
-        ~FConfig() = default;
+        virtual ~FConfig() override = default;
 
         TSharedPtr<FConfig> WithKey(const TOptional<FString> Key);
         TSharedPtr<FConfig> WithValue(const TOptional<FString> Value);

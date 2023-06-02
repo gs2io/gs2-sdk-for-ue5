@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FGitHubCheckoutSetting final : public TSharedFromThis<FGitHubCheckoutSetting>
+    class GS2STAMINA_API FGitHubCheckoutSetting final : public Gs2Object, public TSharedFromThis<FGitHubCheckoutSetting>
     {
         TOptional<FString> ApiKeyIdValue;
         TOptional<FString> RepositoryNameValue;
@@ -35,7 +36,7 @@ namespace Gs2::Stamina::Model
         FGitHubCheckoutSetting(
             const FGitHubCheckoutSetting& From
         );
-        ~FGitHubCheckoutSetting() = default;
+        virtual ~FGitHubCheckoutSetting() override = default;
 
         TSharedPtr<FGitHubCheckoutSetting> WithApiKeyId(const TOptional<FString> ApiKeyId);
         TSharedPtr<FGitHubCheckoutSetting> WithRepositoryName(const TOptional<FString> RepositoryName);

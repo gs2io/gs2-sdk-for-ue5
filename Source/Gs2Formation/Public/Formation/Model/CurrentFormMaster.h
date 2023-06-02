@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FCurrentFormMaster final : public TSharedFromThis<FCurrentFormMaster>
+    class GS2FORMATION_API FCurrentFormMaster final : public Gs2Object, public TSharedFromThis<FCurrentFormMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Formation::Model
         FCurrentFormMaster(
             const FCurrentFormMaster& From
         );
-        ~FCurrentFormMaster() = default;
+        virtual ~FCurrentFormMaster() override = default;
 
         TSharedPtr<FCurrentFormMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentFormMaster> WithSettings(const TOptional<FString> Settings);

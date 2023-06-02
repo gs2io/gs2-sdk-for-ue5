@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::JobQueue::Model
 {
-    class GS2JOBQUEUE_API FJobResultBody final : public TSharedFromThis<FJobResultBody>
+    class GS2JOBQUEUE_API FJobResultBody final : public Gs2Object, public TSharedFromThis<FJobResultBody>
     {
         TOptional<int32> TryNumberValue;
         TOptional<int32> StatusCodeValue;
@@ -32,7 +33,7 @@ namespace Gs2::JobQueue::Model
         FJobResultBody(
             const FJobResultBody& From
         );
-        ~FJobResultBody() = default;
+        virtual ~FJobResultBody() override = default;
 
         TSharedPtr<FJobResultBody> WithTryNumber(const TOptional<int32> TryNumber);
         TSharedPtr<FJobResultBody> WithStatusCode(const TOptional<int32> StatusCode);

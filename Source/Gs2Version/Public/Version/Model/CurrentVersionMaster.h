@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Version::Model
 {
-    class GS2VERSION_API FCurrentVersionMaster final : public TSharedFromThis<FCurrentVersionMaster>
+    class GS2VERSION_API FCurrentVersionMaster final : public Gs2Object, public TSharedFromThis<FCurrentVersionMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Version::Model
         FCurrentVersionMaster(
             const FCurrentVersionMaster& From
         );
-        ~FCurrentVersionMaster() = default;
+        virtual ~FCurrentVersionMaster() override = default;
 
         TSharedPtr<FCurrentVersionMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentVersionMaster> WithSettings(const TOptional<FString> Settings);

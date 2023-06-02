@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FBallot final : public TSharedFromThis<FBallot>
+    class GS2MATCHMAKING_API FBallot final : public Gs2Object, public TSharedFromThis<FBallot>
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> RatingNameValue;
@@ -32,7 +33,7 @@ namespace Gs2::Matchmaking::Model
         FBallot(
             const FBallot& From
         );
-        ~FBallot() = default;
+        virtual ~FBallot() override = default;
 
         TSharedPtr<FBallot> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FBallot> WithRatingName(const TOptional<FString> RatingName);

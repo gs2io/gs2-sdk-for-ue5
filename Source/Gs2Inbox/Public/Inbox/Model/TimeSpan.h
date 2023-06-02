@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Inbox::Model
 {
-    class GS2INBOX_API FTimeSpan final : public TSharedFromThis<FTimeSpan>
+    class GS2INBOX_API FTimeSpan final : public Gs2Object, public TSharedFromThis<FTimeSpan>
     {
         TOptional<int32> DaysValue;
         TOptional<int32> HoursValue;
@@ -31,7 +32,7 @@ namespace Gs2::Inbox::Model
         FTimeSpan(
             const FTimeSpan& From
         );
-        ~FTimeSpan() = default;
+        virtual ~FTimeSpan() override = default;
 
         TSharedPtr<FTimeSpan> WithDays(const TOptional<int32> Days);
         TSharedPtr<FTimeSpan> WithHours(const TOptional<int32> Hours);

@@ -124,7 +124,7 @@ namespace Gs2::Friend::Domain::Iterator
                     ListParentKey,
                     Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
                     ),
-                    MakeShared<FString>(Item),
+                    MakeShared<Friend::Model::FBlackListEntry>(Item),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }

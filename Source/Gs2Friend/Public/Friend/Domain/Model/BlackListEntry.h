@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FBlackListEntry
+    class GS2FRIEND_API FBlackListEntry : public Gs2Object
     {
     public:
         FString Value;
@@ -28,7 +29,7 @@ namespace Gs2::Friend::Model
         explicit FBlackListEntry(
             FString& Value
         );
-        ~FBlackListEntry() = default;
+        virtual ~FBlackListEntry() override = default;
     
         static FString TypeName;
     };

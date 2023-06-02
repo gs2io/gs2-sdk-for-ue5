@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Position.h"
 #include "Vector.h"
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FSpatial final : public TSharedFromThis<FSpatial>
+    class GS2MEGAFIELD_API FSpatial final : public Gs2Object, public TSharedFromThis<FSpatial>
     {
         TOptional<FString> SpatialIdValue;
         TOptional<FString> UserIdValue;
@@ -39,7 +40,7 @@ namespace Gs2::MegaField::Model
         FSpatial(
             const FSpatial& From
         );
-        ~FSpatial() = default;
+        virtual ~FSpatial() override = default;
 
         TSharedPtr<FSpatial> WithSpatialId(const TOptional<FString> SpatialId);
         TSharedPtr<FSpatial> WithUserId(const TOptional<FString> UserId);

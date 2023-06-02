@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "DisplayItem.h"
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FShowcase final : public TSharedFromThis<FShowcase>
+    class GS2SHOWCASE_API FShowcase final : public Gs2Object, public TSharedFromThis<FShowcase>
     {
         TOptional<FString> ShowcaseIdValue;
         TOptional<FString> NameValue;
@@ -34,7 +35,7 @@ namespace Gs2::Showcase::Model
         FShowcase(
             const FShowcase& From
         );
-        ~FShowcase() = default;
+        virtual ~FShowcase() override = default;
 
         TSharedPtr<FShowcase> WithShowcaseId(const TOptional<FString> ShowcaseId);
         TSharedPtr<FShowcase> WithName(const TOptional<FString> Name);

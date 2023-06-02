@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FMaterial final : public TSharedFromThis<FMaterial>
+    class GS2ENHANCE_API FMaterial final : public Gs2Object, public TSharedFromThis<FMaterial>
     {
         TOptional<FString> MaterialItemSetIdValue;
         TOptional<int32> CountValue;
@@ -30,7 +31,7 @@ namespace Gs2::Enhance::Model
         FMaterial(
             const FMaterial& From
         );
-        ~FMaterial() = default;
+        virtual ~FMaterial() override = default;
 
         TSharedPtr<FMaterial> WithMaterialItemSetId(const TOptional<FString> MaterialItemSetId);
         TSharedPtr<FMaterial> WithCount(const TOptional<int32> Count);

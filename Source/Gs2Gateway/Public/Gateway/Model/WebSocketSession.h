@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Gateway::Model
 {
-    class GS2GATEWAY_API FWebSocketSession final : public TSharedFromThis<FWebSocketSession>
+    class GS2GATEWAY_API FWebSocketSession final : public Gs2Object, public TSharedFromThis<FWebSocketSession>
     {
         TOptional<FString> WebSocketSessionIdValue;
         TOptional<FString> ConnectionIdValue;
@@ -34,7 +35,7 @@ namespace Gs2::Gateway::Model
         FWebSocketSession(
             const FWebSocketSession& From
         );
-        ~FWebSocketSession() = default;
+        virtual ~FWebSocketSession() override = default;
 
         TSharedPtr<FWebSocketSession> WithWebSocketSessionId(const TOptional<FString> WebSocketSessionId);
         TSharedPtr<FWebSocketSession> WithConnectionId(const TOptional<FString> ConnectionId);

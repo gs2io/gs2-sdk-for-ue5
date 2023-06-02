@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FCurrentRateMaster final : public TSharedFromThis<FCurrentRateMaster>
+    class GS2ENHANCE_API FCurrentRateMaster final : public Gs2Object, public TSharedFromThis<FCurrentRateMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Enhance::Model
         FCurrentRateMaster(
             const FCurrentRateMaster& From
         );
-        ~FCurrentRateMaster() = default;
+        virtual ~FCurrentRateMaster() override = default;
 
         TSharedPtr<FCurrentRateMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentRateMaster> WithSettings(const TOptional<FString> Settings);

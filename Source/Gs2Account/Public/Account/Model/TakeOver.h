@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FTakeOver final : public TSharedFromThis<FTakeOver>
+    class GS2ACCOUNT_API FTakeOver final : public Gs2Object, public TSharedFromThis<FTakeOver>
     {
         TOptional<FString> TakeOverIdValue;
         TOptional<FString> UserIdValue;
@@ -34,7 +35,7 @@ namespace Gs2::Account::Model
         FTakeOver(
             const FTakeOver& From
         );
-        ~FTakeOver() = default;
+        virtual ~FTakeOver() override = default;
 
         TSharedPtr<FTakeOver> WithTakeOverId(const TOptional<FString> TakeOverId);
         TSharedPtr<FTakeOver> WithUserId(const TOptional<FString> UserId);

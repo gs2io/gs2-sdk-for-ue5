@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "CounterScopeModel.h"
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FCounterModelMaster final : public TSharedFromThis<FCounterModelMaster>
+    class GS2MISSION_API FCounterModelMaster final : public Gs2Object, public TSharedFromThis<FCounterModelMaster>
     {
         TOptional<FString> CounterIdValue;
         TOptional<FString> NameValue;
@@ -37,7 +38,7 @@ namespace Gs2::Mission::Model
         FCounterModelMaster(
             const FCounterModelMaster& From
         );
-        ~FCounterModelMaster() = default;
+        virtual ~FCounterModelMaster() override = default;
 
         TSharedPtr<FCounterModelMaster> WithCounterId(const TOptional<FString> CounterId);
         TSharedPtr<FCounterModelMaster> WithName(const TOptional<FString> Name);

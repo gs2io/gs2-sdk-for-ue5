@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FReferenceOf final : public TSharedFromThis<FReferenceOf>
+    class GS2INVENTORY_API FReferenceOf final : public Gs2Object, public TSharedFromThis<FReferenceOf>
     {
         TOptional<FString> ReferenceOfIdValue;
         TOptional<FString> NameValue;
@@ -30,7 +31,7 @@ namespace Gs2::Inventory::Model
         FReferenceOf(
             const FReferenceOf& From
         );
-        ~FReferenceOf() = default;
+        virtual ~FReferenceOf() override = default;
 
         TSharedPtr<FReferenceOf> WithReferenceOfId(const TOptional<FString> ReferenceOfId);
         TSharedPtr<FReferenceOf> WithName(const TOptional<FString> Name);

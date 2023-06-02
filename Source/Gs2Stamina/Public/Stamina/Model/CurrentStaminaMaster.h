@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FCurrentStaminaMaster final : public TSharedFromThis<FCurrentStaminaMaster>
+    class GS2STAMINA_API FCurrentStaminaMaster final : public Gs2Object, public TSharedFromThis<FCurrentStaminaMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Stamina::Model
         FCurrentStaminaMaster(
             const FCurrentStaminaMaster& From
         );
-        ~FCurrentStaminaMaster() = default;
+        virtual ~FCurrentStaminaMaster() override = default;
 
         TSharedPtr<FCurrentStaminaMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentStaminaMaster> WithSettings(const TOptional<FString> Settings);

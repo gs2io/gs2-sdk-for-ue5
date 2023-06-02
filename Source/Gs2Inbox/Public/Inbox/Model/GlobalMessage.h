@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "AcquireAction.h"
 #include "TimeSpan.h"
 
 namespace Gs2::Inbox::Model
 {
-    class GS2INBOX_API FGlobalMessage final : public TSharedFromThis<FGlobalMessage>
+    class GS2INBOX_API FGlobalMessage final : public Gs2Object, public TSharedFromThis<FGlobalMessage>
     {
         TOptional<FString> GlobalMessageIdValue;
         TOptional<FString> NameValue;
@@ -36,7 +37,7 @@ namespace Gs2::Inbox::Model
         FGlobalMessage(
             const FGlobalMessage& From
         );
-        ~FGlobalMessage() = default;
+        virtual ~FGlobalMessage() override = default;
 
         TSharedPtr<FGlobalMessage> WithGlobalMessageId(const TOptional<FString> GlobalMessageId);
         TSharedPtr<FGlobalMessage> WithName(const TOptional<FString> Name);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FCurrentQuestMaster final : public TSharedFromThis<FCurrentQuestMaster>
+    class GS2QUEST_API FCurrentQuestMaster final : public Gs2Object, public TSharedFromThis<FCurrentQuestMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Quest::Model
         FCurrentQuestMaster(
             const FCurrentQuestMaster& From
         );
-        ~FCurrentQuestMaster() = default;
+        virtual ~FCurrentQuestMaster() override = default;
 
         TSharedPtr<FCurrentQuestMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentQuestMaster> WithSettings(const TOptional<FString> Settings);

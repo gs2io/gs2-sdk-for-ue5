@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FCalculatedAt final : public TSharedFromThis<FCalculatedAt>
+    class GS2RANKING_API FCalculatedAt final : public Gs2Object, public TSharedFromThis<FCalculatedAt>
     {
         TOptional<FString> CategoryNameValue;
         TOptional<int64> CalculatedAtValue;
@@ -30,7 +31,7 @@ namespace Gs2::Ranking::Model
         FCalculatedAt(
             const FCalculatedAt& From
         );
-        ~FCalculatedAt() = default;
+        virtual ~FCalculatedAt() override = default;
 
         TSharedPtr<FCalculatedAt> WithCategoryName(const TOptional<FString> CategoryName);
         TSharedPtr<FCalculatedAt> WithCalculatedAt(const TOptional<int64> CalculatedAt);

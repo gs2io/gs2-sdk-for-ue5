@@ -17,13 +17,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "ScriptSetting.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
 
 namespace Gs2::Chat::Model
 {
-    class GS2CHAT_API FNamespace final : public TSharedFromThis<FNamespace>
+    class GS2CHAT_API FNamespace final : public Gs2Object, public TSharedFromThis<FNamespace>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;
@@ -44,7 +45,7 @@ namespace Gs2::Chat::Model
         FNamespace(
             const FNamespace& From
         );
-        ~FNamespace() = default;
+        virtual ~FNamespace() override = default;
 
         TSharedPtr<FNamespace> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);

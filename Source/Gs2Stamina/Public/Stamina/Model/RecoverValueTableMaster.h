@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FRecoverValueTableMaster final : public TSharedFromThis<FRecoverValueTableMaster>
+    class GS2STAMINA_API FRecoverValueTableMaster final : public Gs2Object, public TSharedFromThis<FRecoverValueTableMaster>
     {
         TOptional<FString> RecoverValueTableIdValue;
         TOptional<FString> NameValue;
@@ -36,7 +37,7 @@ namespace Gs2::Stamina::Model
         FRecoverValueTableMaster(
             const FRecoverValueTableMaster& From
         );
-        ~FRecoverValueTableMaster() = default;
+        virtual ~FRecoverValueTableMaster() override = default;
 
         TSharedPtr<FRecoverValueTableMaster> WithRecoverValueTableId(const TOptional<FString> RecoverValueTableId);
         TSharedPtr<FRecoverValueTableMaster> WithName(const TOptional<FString> Name);

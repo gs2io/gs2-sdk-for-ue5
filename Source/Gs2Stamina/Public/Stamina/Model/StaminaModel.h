@@ -17,13 +17,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "MaxStaminaTable.h"
 #include "RecoverIntervalTable.h"
 #include "RecoverValueTable.h"
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FStaminaModel final : public TSharedFromThis<FStaminaModel>
+    class GS2STAMINA_API FStaminaModel final : public Gs2Object, public TSharedFromThis<FStaminaModel>
     {
         TOptional<FString> StaminaModelIdValue;
         TOptional<FString> NameValue;
@@ -42,7 +43,7 @@ namespace Gs2::Stamina::Model
         FStaminaModel(
             const FStaminaModel& From
         );
-        ~FStaminaModel() = default;
+        virtual ~FStaminaModel() override = default;
 
         TSharedPtr<FStaminaModel> WithStaminaModelId(const TOptional<FString> StaminaModelId);
         TSharedPtr<FStaminaModel> WithName(const TOptional<FString> Name);

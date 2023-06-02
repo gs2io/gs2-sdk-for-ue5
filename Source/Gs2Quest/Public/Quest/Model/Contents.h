@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "AcquireAction.h"
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FContents final : public TSharedFromThis<FContents>
+    class GS2QUEST_API FContents final : public Gs2Object, public TSharedFromThis<FContents>
     {
         TOptional<FString> MetadataValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> CompleteAcquireActionsValue;
@@ -32,7 +33,7 @@ namespace Gs2::Quest::Model
         FContents(
             const FContents& From
         );
-        ~FContents() = default;
+        virtual ~FContents() override = default;
 
         TSharedPtr<FContents> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FContents> WithCompleteAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> CompleteAcquireActions);

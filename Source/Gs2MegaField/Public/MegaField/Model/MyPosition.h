@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Position.h"
 #include "Vector.h"
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FMyPosition final : public TSharedFromThis<FMyPosition>
+    class GS2MEGAFIELD_API FMyPosition final : public Gs2Object, public TSharedFromThis<FMyPosition>
     {
         TSharedPtr<FPosition> PositionValue;
         TSharedPtr<FVector> VectorValue;
@@ -33,7 +34,7 @@ namespace Gs2::MegaField::Model
         FMyPosition(
             const FMyPosition& From
         );
-        ~FMyPosition() = default;
+        virtual ~FMyPosition() override = default;
 
         TSharedPtr<FMyPosition> WithPosition(const TSharedPtr<FPosition> Position);
         TSharedPtr<FMyPosition> WithVector(const TSharedPtr<FVector> Vector);

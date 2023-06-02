@@ -79,7 +79,7 @@ void FCacheDatabase::Put(
     FTypeName Kind,
     FParentCacheKey ParentKey,
     FCacheKey Key,
-    TSharedPtr<void> Obj,
+    TSharedPtr<Gs2Object> Obj,
     FDateTime Ttl
 )
 {
@@ -89,7 +89,7 @@ void FCacheDatabase::Put(
     }
 
     UE_LOG(Gs2Log, Log, TEXT("[%s][%s][%s]: Put %p"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), &Obj);
-    Ensure(Ensure(Cache, Kind), ParentKey).Add(Key, TTuple<TSharedPtr<void>, int64>(Obj, Ttl.ToUnixTimestamp()));
+    Ensure(Ensure(Cache, Kind), ParentKey).Add(Key, TTuple<TSharedPtr<Gs2Object>, int64>(Obj, Ttl.ToUnixTimestamp()));
 }
 
 void FCacheDatabase::Delete(
@@ -147,7 +147,7 @@ TSharedPtr<void> FCacheDatabase::Get(
 //             ClearListCache(Kind, ParentKey);
 //             return TArray<TSharedPtr<TKind>>();
 //         }
-//         Result.Add(*static_cast<TSharedPtr<TKind>*>(static_cast<void*>(&Data.Key)));
+//         Result.Add(*static_cast<TSharedPtr<TKind>*>(static_cast<Gs2Object*>(&Data.Key)));
 //     }
 //     return Result;
 // }

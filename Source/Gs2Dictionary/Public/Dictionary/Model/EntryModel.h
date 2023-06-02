@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Dictionary::Model
 {
-    class GS2DICTIONARY_API FEntryModel final : public TSharedFromThis<FEntryModel>
+    class GS2DICTIONARY_API FEntryModel final : public Gs2Object, public TSharedFromThis<FEntryModel>
     {
         TOptional<FString> EntryModelIdValue;
         TOptional<FString> NameValue;
@@ -31,7 +32,7 @@ namespace Gs2::Dictionary::Model
         FEntryModel(
             const FEntryModel& From
         );
-        ~FEntryModel() = default;
+        virtual ~FEntryModel() override = default;
 
         TSharedPtr<FEntryModel> WithEntryModelId(const TOptional<FString> EntryModelId);
         TSharedPtr<FEntryModel> WithName(const TOptional<FString> Name);

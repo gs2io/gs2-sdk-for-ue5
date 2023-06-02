@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FSlotWithSignature final : public TSharedFromThis<FSlotWithSignature>
+    class GS2FORMATION_API FSlotWithSignature final : public Gs2Object, public TSharedFromThis<FSlotWithSignature>
     {
         TOptional<FString> NameValue;
         TOptional<FString> PropertyTypeValue;
@@ -33,7 +34,7 @@ namespace Gs2::Formation::Model
         FSlotWithSignature(
             const FSlotWithSignature& From
         );
-        ~FSlotWithSignature() = default;
+        virtual ~FSlotWithSignature() override = default;
 
         TSharedPtr<FSlotWithSignature> WithName(const TOptional<FString> Name);
         TSharedPtr<FSlotWithSignature> WithPropertyType(const TOptional<FString> PropertyType);

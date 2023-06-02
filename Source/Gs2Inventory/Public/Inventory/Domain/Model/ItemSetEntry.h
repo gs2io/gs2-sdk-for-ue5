@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Inventory/Model/ItemSet.h"
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FItemSetEntry
+    class GS2INVENTORY_API FItemSetEntry : public Gs2Object
     {
     public:
         TArray<FItemSetPtr> Value;
@@ -32,7 +33,7 @@ namespace Gs2::Inventory::Model
         explicit FItemSetEntry(
             const FItemSetPtr& Value
         );
-        ~FItemSetEntry() = default;
+        virtual ~FItemSetEntry() override = default;
     
         static FString TypeName;
     };

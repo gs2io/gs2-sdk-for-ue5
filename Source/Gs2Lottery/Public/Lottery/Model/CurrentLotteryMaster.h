@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FCurrentLotteryMaster final : public TSharedFromThis<FCurrentLotteryMaster>
+    class GS2LOTTERY_API FCurrentLotteryMaster final : public Gs2Object, public TSharedFromThis<FCurrentLotteryMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Lottery::Model
         FCurrentLotteryMaster(
             const FCurrentLotteryMaster& From
         );
-        ~FCurrentLotteryMaster() = default;
+        virtual ~FCurrentLotteryMaster() override = default;
 
         TSharedPtr<FCurrentLotteryMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentLotteryMaster> WithSettings(const TOptional<FString> Settings);

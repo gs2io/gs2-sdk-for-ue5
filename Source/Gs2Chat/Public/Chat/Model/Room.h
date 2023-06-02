@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Chat::Model
 {
-    class GS2CHAT_API FRoom final : public TSharedFromThis<FRoom>
+    class GS2CHAT_API FRoom final : public Gs2Object, public TSharedFromThis<FRoom>
     {
         TOptional<FString> RoomIdValue;
         TOptional<FString> NameValue;
@@ -36,7 +37,7 @@ namespace Gs2::Chat::Model
         FRoom(
             const FRoom& From
         );
-        ~FRoom() = default;
+        virtual ~FRoom() override = default;
 
         TSharedPtr<FRoom> WithRoomId(const TOptional<FString> RoomId);
         TSharedPtr<FRoom> WithName(const TOptional<FString> Name);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::JobQueue::Model
 {
-    class GS2JOBQUEUE_API FJob final : public TSharedFromThis<FJob>
+    class GS2JOBQUEUE_API FJob final : public Gs2Object, public TSharedFromThis<FJob>
     {
         TOptional<FString> JobIdValue;
         TOptional<FString> NameValue;
@@ -37,7 +38,7 @@ namespace Gs2::JobQueue::Model
         FJob(
             const FJob& From
         );
-        ~FJob() = default;
+        virtual ~FJob() override = default;
 
         TSharedPtr<FJob> WithJobId(const TOptional<FString> JobId);
         TSharedPtr<FJob> WithName(const TOptional<FString> Name);

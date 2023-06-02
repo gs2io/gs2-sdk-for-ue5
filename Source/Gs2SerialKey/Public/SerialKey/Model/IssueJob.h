@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::SerialKey::Model
 {
-    class GS2SERIALKEY_API FIssueJob final : public TSharedFromThis<FIssueJob>
+    class GS2SERIALKEY_API FIssueJob final : public Gs2Object, public TSharedFromThis<FIssueJob>
     {
         TOptional<FString> IssueJobIdValue;
         TOptional<FString> NameValue;
@@ -35,7 +36,7 @@ namespace Gs2::SerialKey::Model
         FIssueJob(
             const FIssueJob& From
         );
-        ~FIssueJob() = default;
+        virtual ~FIssueJob() override = default;
 
         TSharedPtr<FIssueJob> WithIssueJobId(const TOptional<FString> IssueJobId);
         TSharedPtr<FIssueJob> WithName(const TOptional<FString> Name);

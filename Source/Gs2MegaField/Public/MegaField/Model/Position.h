@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FPosition final : public TSharedFromThis<FPosition>
+    class GS2MEGAFIELD_API FPosition final : public Gs2Object, public TSharedFromThis<FPosition>
     {
         TOptional<float> XValue;
         TOptional<float> YValue;
@@ -31,7 +32,7 @@ namespace Gs2::MegaField::Model
         FPosition(
             const FPosition& From
         );
-        ~FPosition() = default;
+        virtual ~FPosition() override = default;
 
         TSharedPtr<FPosition> WithX(const TOptional<float> X);
         TSharedPtr<FPosition> WithY(const TOptional<float> Y);

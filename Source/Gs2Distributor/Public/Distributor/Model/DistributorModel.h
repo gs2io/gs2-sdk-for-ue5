@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FDistributorModel final : public TSharedFromThis<FDistributorModel>
+    class GS2DISTRIBUTOR_API FDistributorModel final : public Gs2Object, public TSharedFromThis<FDistributorModel>
     {
         TOptional<FString> DistributorModelIdValue;
         TOptional<FString> NameValue;
@@ -33,7 +34,7 @@ namespace Gs2::Distributor::Model
         FDistributorModel(
             const FDistributorModel& From
         );
-        ~FDistributorModel() = default;
+        virtual ~FDistributorModel() override = default;
 
         TSharedPtr<FDistributorModel> WithDistributorModelId(const TOptional<FString> DistributorModelId);
         TSharedPtr<FDistributorModel> WithName(const TOptional<FString> Name);

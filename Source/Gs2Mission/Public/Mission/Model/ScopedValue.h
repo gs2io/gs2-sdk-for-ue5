@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FScopedValue final : public TSharedFromThis<FScopedValue>
+    class GS2MISSION_API FScopedValue final : public Gs2Object, public TSharedFromThis<FScopedValue>
     {
         TOptional<FString> ResetTypeValue;
         TOptional<int64> ValueValue;
@@ -32,7 +33,7 @@ namespace Gs2::Mission::Model
         FScopedValue(
             const FScopedValue& From
         );
-        ~FScopedValue() = default;
+        virtual ~FScopedValue() override = default;
 
         TSharedPtr<FScopedValue> WithResetType(const TOptional<FString> ResetType);
         TSharedPtr<FScopedValue> WithValue(const TOptional<int64> Value);

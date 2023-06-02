@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Ballot.h"
 #include "GameResult.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FWrittenBallot final : public TSharedFromThis<FWrittenBallot>
+    class GS2MATCHMAKING_API FWrittenBallot final : public Gs2Object, public TSharedFromThis<FWrittenBallot>
     {
         TSharedPtr<FBallot> BallotValue;
         TSharedPtr<TArray<TSharedPtr<FGameResult>>> GameResultsValue;
@@ -32,7 +33,7 @@ namespace Gs2::Matchmaking::Model
         FWrittenBallot(
             const FWrittenBallot& From
         );
-        ~FWrittenBallot() = default;
+        virtual ~FWrittenBallot() override = default;
 
         TSharedPtr<FWrittenBallot> WithBallot(const TSharedPtr<FBallot> Ballot);
         TSharedPtr<FWrittenBallot> WithGameResults(const TSharedPtr<TArray<TSharedPtr<FGameResult>>> GameResults);

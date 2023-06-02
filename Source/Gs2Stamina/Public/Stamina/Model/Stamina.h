@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Stamina::Model
 {
-    class GS2STAMINA_API FStamina final : public TSharedFromThis<FStamina>
+    class GS2STAMINA_API FStamina final : public Gs2Object, public TSharedFromThis<FStamina>
     {
         TOptional<FString> StaminaIdValue;
         TOptional<FString> StaminaNameValue;
@@ -40,7 +41,7 @@ namespace Gs2::Stamina::Model
         FStamina(
             const FStamina& From
         );
-        ~FStamina() = default;
+        virtual ~FStamina() override = default;
 
         TSharedPtr<FStamina> WithStaminaId(const TOptional<FString> StaminaId);
         TSharedPtr<FStamina> WithStaminaName(const TOptional<FString> StaminaName);

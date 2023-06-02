@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Content.h"
 
 namespace Gs2::News::Model
 {
-    class GS2NEWS_API FView final : public TSharedFromThis<FView>
+    class GS2NEWS_API FView final : public Gs2Object, public TSharedFromThis<FView>
     {
         TSharedPtr<TArray<TSharedPtr<FContent>>> ContentsValue;
         TSharedPtr<TArray<TSharedPtr<FContent>>> RemoveContentsValue;
@@ -31,7 +32,7 @@ namespace Gs2::News::Model
         FView(
             const FView& From
         );
-        ~FView() = default;
+        virtual ~FView() override = default;
 
         TSharedPtr<FView> WithContents(const TSharedPtr<TArray<TSharedPtr<FContent>>> Contents);
         TSharedPtr<FView> WithRemoveContents(const TSharedPtr<TArray<TSharedPtr<FContent>>> RemoveContents);

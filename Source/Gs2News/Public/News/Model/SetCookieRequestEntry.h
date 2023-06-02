@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::News::Model
 {
-    class GS2NEWS_API FSetCookieRequestEntry final : public TSharedFromThis<FSetCookieRequestEntry>
+    class GS2NEWS_API FSetCookieRequestEntry final : public Gs2Object, public TSharedFromThis<FSetCookieRequestEntry>
     {
         TOptional<FString> KeyValue;
         TOptional<FString> ValueValue;
@@ -30,7 +31,7 @@ namespace Gs2::News::Model
         FSetCookieRequestEntry(
             const FSetCookieRequestEntry& From
         );
-        ~FSetCookieRequestEntry() = default;
+        virtual ~FSetCookieRequestEntry() override = default;
 
         TSharedPtr<FSetCookieRequestEntry> WithKey(const TOptional<FString> Key);
         TSharedPtr<FSetCookieRequestEntry> WithValue(const TOptional<FString> Value);

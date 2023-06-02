@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Version::Model
 {
-    class GS2VERSION_API FVersion final : public TSharedFromThis<FVersion>
+    class GS2VERSION_API FVersion final : public Gs2Object, public TSharedFromThis<FVersion>
     {
         TOptional<int32> MajorValue;
         TOptional<int32> MinorValue;
@@ -31,7 +32,7 @@ namespace Gs2::Version::Model
         FVersion(
             const FVersion& From
         );
-        ~FVersion() = default;
+        virtual ~FVersion() override = default;
 
         TSharedPtr<FVersion> WithMajor(const TOptional<int32> Major);
         TSharedPtr<FVersion> WithMinor(const TOptional<int32> Minor);

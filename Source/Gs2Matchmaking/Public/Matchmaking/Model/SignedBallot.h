@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FSignedBallot final : public TSharedFromThis<FSignedBallot>
+    class GS2MATCHMAKING_API FSignedBallot final : public Gs2Object, public TSharedFromThis<FSignedBallot>
     {
         TOptional<FString> BodyValue;
         TOptional<FString> SignatureValue;
@@ -30,7 +31,7 @@ namespace Gs2::Matchmaking::Model
         FSignedBallot(
             const FSignedBallot& From
         );
-        ~FSignedBallot() = default;
+        virtual ~FSignedBallot() override = default;
 
         TSharedPtr<FSignedBallot> WithBody(const TOptional<FString> Body);
         TSharedPtr<FSignedBallot> WithSignature(const TOptional<FString> Signature);

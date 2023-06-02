@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FMissionGroupModelMaster final : public TSharedFromThis<FMissionGroupModelMaster>
+    class GS2MISSION_API FMissionGroupModelMaster final : public Gs2Object, public TSharedFromThis<FMissionGroupModelMaster>
     {
         TOptional<FString> MissionGroupIdValue;
         TOptional<FString> NameValue;
@@ -39,7 +40,7 @@ namespace Gs2::Mission::Model
         FMissionGroupModelMaster(
             const FMissionGroupModelMaster& From
         );
-        ~FMissionGroupModelMaster() = default;
+        virtual ~FMissionGroupModelMaster() override = default;
 
         TSharedPtr<FMissionGroupModelMaster> WithMissionGroupId(const TOptional<FString> MissionGroupId);
         TSharedPtr<FMissionGroupModelMaster> WithName(const TOptional<FString> Name);

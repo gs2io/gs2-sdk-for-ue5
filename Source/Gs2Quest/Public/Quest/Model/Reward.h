@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FReward final : public TSharedFromThis<FReward>
+    class GS2QUEST_API FReward final : public Gs2Object, public TSharedFromThis<FReward>
     {
         TOptional<FString> ActionValue;
         TOptional<FString> RequestValue;
@@ -32,7 +33,7 @@ namespace Gs2::Quest::Model
         FReward(
             const FReward& From
         );
-        ~FReward() = default;
+        virtual ~FReward() override = default;
 
         TSharedPtr<FReward> WithAction(const TOptional<FString> Action);
         TSharedPtr<FReward> WithRequest(const TOptional<FString> Request);

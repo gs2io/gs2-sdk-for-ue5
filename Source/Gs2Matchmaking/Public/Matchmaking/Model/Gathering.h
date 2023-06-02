@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "AttributeRange.h"
 #include "CapacityOfRole.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FGathering final : public TSharedFromThis<FGathering>
+    class GS2MATCHMAKING_API FGathering final : public Gs2Object, public TSharedFromThis<FGathering>
     {
         TOptional<FString> GatheringIdValue;
         TOptional<FString> NameValue;
@@ -39,7 +40,7 @@ namespace Gs2::Matchmaking::Model
         FGathering(
             const FGathering& From
         );
-        ~FGathering() = default;
+        virtual ~FGathering() override = default;
 
         TSharedPtr<FGathering> WithGatheringId(const TOptional<FString> GatheringId);
         TSharedPtr<FGathering> WithName(const TOptional<FString> Name);

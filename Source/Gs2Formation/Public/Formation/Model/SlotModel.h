@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FSlotModel final : public TSharedFromThis<FSlotModel>
+    class GS2FORMATION_API FSlotModel final : public Gs2Object, public TSharedFromThis<FSlotModel>
     {
         TOptional<FString> NameValue;
         TOptional<FString> PropertyRegexValue;
@@ -31,7 +32,7 @@ namespace Gs2::Formation::Model
         FSlotModel(
             const FSlotModel& From
         );
-        ~FSlotModel() = default;
+        virtual ~FSlotModel() override = default;
 
         TSharedPtr<FSlotModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FSlotModel> WithPropertyRegex(const TOptional<FString> PropertyRegex);

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Core/Gs2Constant.h"
 
 typedef FString FTypeName;
@@ -29,7 +30,7 @@ namespace Gs2::Core::Domain
     
     class GS2CORE_API FCacheDatabase
     {
-        TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<void>, int64>>>> Cache;
+        TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<Gs2Object>, int64>>>> Cache;
         TMap<FTypeName, TSet<FParentCacheKey>> ListCached;
 
     public:
@@ -56,7 +57,7 @@ namespace Gs2::Core::Domain
             FTypeName Kind,
             FParentCacheKey ParentKey,
             FCacheKey Key,
-            TSharedPtr<void> Obj,
+            TSharedPtr<Gs2Object> Obj,
             FDateTime Ttl
         );
 
@@ -104,7 +105,7 @@ namespace Gs2::Core::Domain
                     ClearListCache(TKind::TypeName, ParentKey);
                     return nullptr;
                 }
-                Result->Add(*static_cast<TSharedPtr<TKind>*>(static_cast<void*>(&Data.Key)));
+                Result->Add(StaticCastSharedPtr<TKind>(Data.Key));
             }
             return Result;
         }

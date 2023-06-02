@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FCurrentRatingModelMaster final : public TSharedFromThis<FCurrentRatingModelMaster>
+    class GS2MATCHMAKING_API FCurrentRatingModelMaster final : public Gs2Object, public TSharedFromThis<FCurrentRatingModelMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Matchmaking::Model
         FCurrentRatingModelMaster(
             const FCurrentRatingModelMaster& From
         );
-        ~FCurrentRatingModelMaster() = default;
+        virtual ~FCurrentRatingModelMaster() override = default;
 
         TSharedPtr<FCurrentRatingModelMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentRatingModelMaster> WithSettings(const TOptional<FString> Settings);

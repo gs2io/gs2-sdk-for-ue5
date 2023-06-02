@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "WrittenBallot.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FVote final : public TSharedFromThis<FVote>
+    class GS2MATCHMAKING_API FVote final : public Gs2Object, public TSharedFromThis<FVote>
     {
         TOptional<FString> VoteIdValue;
         TOptional<FString> RatingNameValue;
@@ -35,7 +36,7 @@ namespace Gs2::Matchmaking::Model
         FVote(
             const FVote& From
         );
-        ~FVote() = default;
+        virtual ~FVote() override = default;
 
         TSharedPtr<FVote> WithVoteId(const TOptional<FString> VoteId);
         TSharedPtr<FVote> WithRatingName(const TOptional<FString> RatingName);

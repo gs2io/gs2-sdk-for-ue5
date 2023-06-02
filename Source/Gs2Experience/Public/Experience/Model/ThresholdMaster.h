@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FThresholdMaster final : public TSharedFromThis<FThresholdMaster>
+    class GS2EXPERIENCE_API FThresholdMaster final : public Gs2Object, public TSharedFromThis<FThresholdMaster>
     {
         TOptional<FString> ThresholdIdValue;
         TOptional<FString> NameValue;
@@ -35,7 +36,7 @@ namespace Gs2::Experience::Model
         FThresholdMaster(
             const FThresholdMaster& From
         );
-        ~FThresholdMaster() = default;
+        virtual ~FThresholdMaster() override = default;
 
         TSharedPtr<FThresholdMaster> WithThresholdId(const TOptional<FString> ThresholdId);
         TSharedPtr<FThresholdMaster> WithName(const TOptional<FString> Name);

@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
 
 namespace Gs2::Exchange::Model
 {
-    class GS2EXCHANGE_API FRateModel final : public TSharedFromThis<FRateModel>
+    class GS2EXCHANGE_API FRateModel final : public Gs2Object, public TSharedFromThis<FRateModel>
     {
         TOptional<FString> RateModelIdValue;
         TOptional<FString> NameValue;
@@ -39,7 +40,7 @@ namespace Gs2::Exchange::Model
         FRateModel(
             const FRateModel& From
         );
-        ~FRateModel() = default;
+        virtual ~FRateModel() override = default;
 
         TSharedPtr<FRateModel> WithRateModelId(const TOptional<FString> RateModelId);
         TSharedPtr<FRateModel> WithName(const TOptional<FString> Name);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Enhance::Model
 {
-    class GS2ENHANCE_API FBonusRate final : public TSharedFromThis<FBonusRate>
+    class GS2ENHANCE_API FBonusRate final : public Gs2Object, public TSharedFromThis<FBonusRate>
     {
         TOptional<float> RateValue;
         TOptional<int32> WeightValue;
@@ -30,7 +31,7 @@ namespace Gs2::Enhance::Model
         FBonusRate(
             const FBonusRate& From
         );
-        ~FBonusRate() = default;
+        virtual ~FBonusRate() override = default;
 
         TSharedPtr<FBonusRate> WithRate(const TOptional<float> Rate);
         TSharedPtr<FBonusRate> WithWeight(const TOptional<int32> Weight);

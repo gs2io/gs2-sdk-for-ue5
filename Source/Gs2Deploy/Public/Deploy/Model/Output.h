@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Deploy::Model
 {
-    class GS2DEPLOY_API FOutput final : public TSharedFromThis<FOutput>
+    class GS2DEPLOY_API FOutput final : public Gs2Object, public TSharedFromThis<FOutput>
     {
         TOptional<FString> OutputIdValue;
         TOptional<FString> NameValue;
@@ -32,7 +33,7 @@ namespace Gs2::Deploy::Model
         FOutput(
             const FOutput& From
         );
-        ~FOutput() = default;
+        virtual ~FOutput() override = default;
 
         TSharedPtr<FOutput> WithOutputId(const TOptional<FString> OutputId);
         TSharedPtr<FOutput> WithName(const TOptional<FString> Name);

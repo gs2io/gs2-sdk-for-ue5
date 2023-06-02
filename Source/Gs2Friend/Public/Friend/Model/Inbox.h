@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FInbox final : public TSharedFromThis<FInbox>
+    class GS2FRIEND_API FInbox final : public Gs2Object, public TSharedFromThis<FInbox>
     {
         TOptional<FString> InboxIdValue;
         TOptional<FString> UserIdValue;
@@ -33,7 +34,7 @@ namespace Gs2::Friend::Model
         FInbox(
             const FInbox& From
         );
-        ~FInbox() = default;
+        virtual ~FInbox() override = default;
 
         TSharedPtr<FInbox> WithInboxId(const TOptional<FString> InboxId);
         TSharedPtr<FInbox> WithUserId(const TOptional<FString> UserId);

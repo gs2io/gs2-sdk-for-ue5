@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FSecurityPolicy final : public TSharedFromThis<FSecurityPolicy>
+    class GS2IDENTIFIER_API FSecurityPolicy final : public Gs2Object, public TSharedFromThis<FSecurityPolicy>
     {
         TOptional<FString> SecurityPolicyIdValue;
         TOptional<FString> NameValue;
@@ -34,7 +35,7 @@ namespace Gs2::Identifier::Model
         FSecurityPolicy(
             const FSecurityPolicy& From
         );
-        ~FSecurityPolicy() = default;
+        virtual ~FSecurityPolicy() override = default;
 
         TSharedPtr<FSecurityPolicy> WithSecurityPolicyId(const TOptional<FString> SecurityPolicyId);
         TSharedPtr<FSecurityPolicy> WithName(const TOptional<FString> Name);

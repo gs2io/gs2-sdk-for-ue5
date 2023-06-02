@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FCounterScopeModel final : public TSharedFromThis<FCounterScopeModel>
+    class GS2MISSION_API FCounterScopeModel final : public Gs2Object, public TSharedFromThis<FCounterScopeModel>
     {
         TOptional<FString> ResetTypeValue;
         TOptional<int32> ResetDayOfMonthValue;
@@ -32,7 +33,7 @@ namespace Gs2::Mission::Model
         FCounterScopeModel(
             const FCounterScopeModel& From
         );
-        ~FCounterScopeModel() = default;
+        virtual ~FCounterScopeModel() override = default;
 
         TSharedPtr<FCounterScopeModel> WithResetType(const TOptional<FString> ResetType);
         TSharedPtr<FCounterScopeModel> WithResetDayOfMonth(const TOptional<int32> ResetDayOfMonth);

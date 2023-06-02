@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Limit::Model
 {
-    class GS2LIMIT_API FCurrentLimitMaster final : public TSharedFromThis<FCurrentLimitMaster>
+    class GS2LIMIT_API FCurrentLimitMaster final : public Gs2Object, public TSharedFromThis<FCurrentLimitMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Limit::Model
         FCurrentLimitMaster(
             const FCurrentLimitMaster& From
         );
-        ~FCurrentLimitMaster() = default;
+        virtual ~FCurrentLimitMaster() override = default;
 
         TSharedPtr<FCurrentLimitMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentLimitMaster> WithSettings(const TOptional<FString> Settings);

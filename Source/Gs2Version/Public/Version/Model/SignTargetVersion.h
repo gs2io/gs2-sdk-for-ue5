@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Version.h"
 
 namespace Gs2::Version::Model
 {
-    class GS2VERSION_API FSignTargetVersion final : public TSharedFromThis<FSignTargetVersion>
+    class GS2VERSION_API FSignTargetVersion final : public Gs2Object, public TSharedFromThis<FSignTargetVersion>
     {
         TOptional<FString> RegionValue;
         TOptional<FString> NamespaceNameValue;
@@ -33,7 +34,7 @@ namespace Gs2::Version::Model
         FSignTargetVersion(
             const FSignTargetVersion& From
         );
-        ~FSignTargetVersion() = default;
+        virtual ~FSignTargetVersion() override = default;
 
         TSharedPtr<FSignTargetVersion> WithRegion(const TOptional<FString> Region);
         TSharedPtr<FSignTargetVersion> WithNamespaceName(const TOptional<FString> NamespaceName);

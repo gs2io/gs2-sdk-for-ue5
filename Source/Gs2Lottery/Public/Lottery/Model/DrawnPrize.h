@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "AcquireAction.h"
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FDrawnPrize final : public TSharedFromThis<FDrawnPrize>
+    class GS2LOTTERY_API FDrawnPrize final : public Gs2Object, public TSharedFromThis<FDrawnPrize>
     {
         TOptional<FString> PrizeIdValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
@@ -31,7 +32,7 @@ namespace Gs2::Lottery::Model
         FDrawnPrize(
             const FDrawnPrize& From
         );
-        ~FDrawnPrize() = default;
+        virtual ~FDrawnPrize() override = default;
 
         TSharedPtr<FDrawnPrize> WithPrizeId(const TOptional<FString> PrizeId);
         TSharedPtr<FDrawnPrize> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);

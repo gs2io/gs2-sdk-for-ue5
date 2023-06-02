@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FSalesItemGroupMaster final : public TSharedFromThis<FSalesItemGroupMaster>
+    class GS2SHOWCASE_API FSalesItemGroupMaster final : public Gs2Object, public TSharedFromThis<FSalesItemGroupMaster>
     {
         TOptional<FString> SalesItemGroupIdValue;
         TOptional<FString> NameValue;
@@ -35,7 +36,7 @@ namespace Gs2::Showcase::Model
         FSalesItemGroupMaster(
             const FSalesItemGroupMaster& From
         );
-        ~FSalesItemGroupMaster() = default;
+        virtual ~FSalesItemGroupMaster() override = default;
 
         TSharedPtr<FSalesItemGroupMaster> WithSalesItemGroupId(const TOptional<FString> SalesItemGroupId);
         TSharedPtr<FSalesItemGroupMaster> WithName(const TOptional<FString> Name);

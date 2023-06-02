@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FProjectToken final : public TSharedFromThis<FProjectToken>
+    class GS2IDENTIFIER_API FProjectToken final : public Gs2Object, public TSharedFromThis<FProjectToken>
     {
         TOptional<FString> TokenValue;
 
@@ -29,7 +30,7 @@ namespace Gs2::Identifier::Model
         FProjectToken(
             const FProjectToken& From
         );
-        ~FProjectToken() = default;
+        virtual ~FProjectToken() override = default;
 
         TSharedPtr<FProjectToken> WithToken(const TOptional<FString> Token);
 

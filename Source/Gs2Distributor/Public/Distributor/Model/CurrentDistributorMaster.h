@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FCurrentDistributorMaster final : public TSharedFromThis<FCurrentDistributorMaster>
+    class GS2DISTRIBUTOR_API FCurrentDistributorMaster final : public Gs2Object, public TSharedFromThis<FCurrentDistributorMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Distributor::Model
         FCurrentDistributorMaster(
             const FCurrentDistributorMaster& From
         );
-        ~FCurrentDistributorMaster() = default;
+        virtual ~FCurrentDistributorMaster() override = default;
 
         TSharedPtr<FCurrentDistributorMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentDistributorMaster> WithSettings(const TOptional<FString> Settings);

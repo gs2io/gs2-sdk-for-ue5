@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FStatus final : public TSharedFromThis<FStatus>
+    class GS2EXPERIENCE_API FStatus final : public Gs2Object, public TSharedFromThis<FStatus>
     {
         TOptional<FString> StatusIdValue;
         TOptional<FString> ExperienceNameValue;
@@ -38,7 +39,7 @@ namespace Gs2::Experience::Model
         FStatus(
             const FStatus& From
         );
-        ~FStatus() = default;
+        virtual ~FStatus() override = default;
 
         TSharedPtr<FStatus> WithStatusId(const TOptional<FString> StatusId);
         TSharedPtr<FStatus> WithExperienceName(const TOptional<FString> ExperienceName);

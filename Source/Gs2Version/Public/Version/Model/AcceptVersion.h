@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Version.h"
 
 namespace Gs2::Version::Model
 {
-    class GS2VERSION_API FAcceptVersion final : public TSharedFromThis<FAcceptVersion>
+    class GS2VERSION_API FAcceptVersion final : public Gs2Object, public TSharedFromThis<FAcceptVersion>
     {
         TOptional<FString> AcceptVersionIdValue;
         TOptional<FString> VersionNameValue;
@@ -35,7 +36,7 @@ namespace Gs2::Version::Model
         FAcceptVersion(
             const FAcceptVersion& From
         );
-        ~FAcceptVersion() = default;
+        virtual ~FAcceptVersion() override = default;
 
         TSharedPtr<FAcceptVersion> WithAcceptVersionId(const TOptional<FString> AcceptVersionId);
         TSharedPtr<FAcceptVersion> WithVersionName(const TOptional<FString> VersionName);

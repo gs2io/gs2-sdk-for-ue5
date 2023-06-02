@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "DrawnPrize.h"
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FProbability final : public TSharedFromThis<FProbability>
+    class GS2LOTTERY_API FProbability final : public Gs2Object, public TSharedFromThis<FProbability>
     {
         TSharedPtr<FDrawnPrize> PrizeValue;
         TOptional<float> RateValue;
@@ -31,7 +32,7 @@ namespace Gs2::Lottery::Model
         FProbability(
             const FProbability& From
         );
-        ~FProbability() = default;
+        virtual ~FProbability() override = default;
 
         TSharedPtr<FProbability> WithPrize(const TSharedPtr<FDrawnPrize> Prize);
         TSharedPtr<FProbability> WithRate(const TOptional<float> Rate);

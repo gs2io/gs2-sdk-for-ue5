@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FUser final : public TSharedFromThis<FUser>
+    class GS2IDENTIFIER_API FUser final : public Gs2Object, public TSharedFromThis<FUser>
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> NameValue;
@@ -33,7 +34,7 @@ namespace Gs2::Identifier::Model
         FUser(
             const FUser& From
         );
-        ~FUser() = default;
+        virtual ~FUser() override = default;
 
         TSharedPtr<FUser> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FUser> WithName(const TOptional<FString> Name);

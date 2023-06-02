@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FComplete final : public TSharedFromThis<FComplete>
+    class GS2MISSION_API FComplete final : public Gs2Object, public TSharedFromThis<FComplete>
     {
         TOptional<FString> CompleteIdValue;
         TOptional<FString> UserIdValue;
@@ -36,7 +37,7 @@ namespace Gs2::Mission::Model
         FComplete(
             const FComplete& From
         );
-        ~FComplete() = default;
+        virtual ~FComplete() override = default;
 
         TSharedPtr<FComplete> WithCompleteId(const TOptional<FString> CompleteId);
         TSharedPtr<FComplete> WithUserId(const TOptional<FString> UserId);

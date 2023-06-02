@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FBlackList final : public TSharedFromThis<FBlackList>
+    class GS2FRIEND_API FBlackList final : public Gs2Object, public TSharedFromThis<FBlackList>
     {
         TOptional<FString> BlackListIdValue;
         TOptional<FString> UserIdValue;
@@ -33,7 +34,7 @@ namespace Gs2::Friend::Model
         FBlackList(
             const FBlackList& From
         );
-        ~FBlackList() = default;
+        virtual ~FBlackList() override = default;
 
         TSharedPtr<FBlackList> WithBlackListId(const TOptional<FString> BlackListId);
         TSharedPtr<FBlackList> WithUserId(const TOptional<FString> UserId);

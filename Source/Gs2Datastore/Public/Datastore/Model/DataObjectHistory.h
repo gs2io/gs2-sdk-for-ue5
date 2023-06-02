@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Datastore::Model
 {
-    class GS2DATASTORE_API FDataObjectHistory final : public TSharedFromThis<FDataObjectHistory>
+    class GS2DATASTORE_API FDataObjectHistory final : public Gs2Object, public TSharedFromThis<FDataObjectHistory>
     {
         TOptional<FString> DataObjectHistoryIdValue;
         TOptional<FString> DataObjectNameValue;
@@ -33,7 +34,7 @@ namespace Gs2::Datastore::Model
         FDataObjectHistory(
             const FDataObjectHistory& From
         );
-        ~FDataObjectHistory() = default;
+        virtual ~FDataObjectHistory() override = default;
 
         TSharedPtr<FDataObjectHistory> WithDataObjectHistoryId(const TOptional<FString> DataObjectHistoryId);
         TSharedPtr<FDataObjectHistory> WithDataObjectName(const TOptional<FString> DataObjectName);

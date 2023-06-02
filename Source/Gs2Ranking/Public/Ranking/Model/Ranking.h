@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Ranking::Model
 {
-    class GS2RANKING_API FRanking final : public TSharedFromThis<FRanking>
+    class GS2RANKING_API FRanking final : public Gs2Object, public TSharedFromThis<FRanking>
     {
         TOptional<int64> RankValue;
         TOptional<int64> IndexValue;
@@ -35,7 +36,7 @@ namespace Gs2::Ranking::Model
         FRanking(
             const FRanking& From
         );
-        ~FRanking() = default;
+        virtual ~FRanking() override = default;
 
         TSharedPtr<FRanking> WithRank(const TOptional<int64> Rank);
         TSharedPtr<FRanking> WithIndex(const TOptional<int64> Index);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FScope final : public TSharedFromThis<FScope>
+    class GS2MEGAFIELD_API FScope final : public Gs2Object, public TSharedFromThis<FScope>
     {
         TOptional<FString> LayerNameValue;
         TOptional<float> RValue;
@@ -31,7 +32,7 @@ namespace Gs2::MegaField::Model
         FScope(
             const FScope& From
         );
-        ~FScope() = default;
+        virtual ~FScope() override = default;
 
         TSharedPtr<FScope> WithLayerName(const TOptional<FString> LayerName);
         TSharedPtr<FScope> WithR(const TOptional<float> R);

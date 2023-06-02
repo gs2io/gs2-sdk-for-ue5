@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "NotificationType.h"
 
 namespace Gs2::Chat::Model
 {
-    class GS2CHAT_API FSubscribe final : public TSharedFromThis<FSubscribe>
+    class GS2CHAT_API FSubscribe final : public Gs2Object, public TSharedFromThis<FSubscribe>
     {
         TOptional<FString> SubscribeIdValue;
         TOptional<FString> UserIdValue;
@@ -34,7 +35,7 @@ namespace Gs2::Chat::Model
         FSubscribe(
             const FSubscribe& From
         );
-        ~FSubscribe() = default;
+        virtual ~FSubscribe() override = default;
 
         TSharedPtr<FSubscribe> WithSubscribeId(const TOptional<FString> SubscribeId);
         TSharedPtr<FSubscribe> WithUserId(const TOptional<FString> UserId);

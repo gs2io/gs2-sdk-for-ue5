@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::SerialKey::Model
 {
-    class GS2SERIALKEY_API FSerialKey final : public TSharedFromThis<FSerialKey>
+    class GS2SERIALKEY_API FSerialKey final : public Gs2Object, public TSharedFromThis<FSerialKey>
     {
         TOptional<FString> SerialKeyIdValue;
         TOptional<FString> CampaignModelNameValue;
@@ -37,7 +38,7 @@ namespace Gs2::SerialKey::Model
         FSerialKey(
             const FSerialKey& From
         );
-        ~FSerialKey() = default;
+        virtual ~FSerialKey() override = default;
 
         TSharedPtr<FSerialKey> WithSerialKeyId(const TOptional<FString> SerialKeyId);
         TSharedPtr<FSerialKey> WithCampaignModelName(const TOptional<FString> CampaignModelName);

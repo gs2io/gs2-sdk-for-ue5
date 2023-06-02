@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Money::Model
 {
-    class GS2MONEY_API FReceipt final : public TSharedFromThis<FReceipt>
+    class GS2MONEY_API FReceipt final : public Gs2Object, public TSharedFromThis<FReceipt>
     {
         TOptional<FString> ReceiptIdValue;
         TOptional<FString> TransactionIdValue;
@@ -40,7 +41,7 @@ namespace Gs2::Money::Model
         FReceipt(
             const FReceipt& From
         );
-        ~FReceipt() = default;
+        virtual ~FReceipt() override = default;
 
         TSharedPtr<FReceipt> WithReceiptId(const TOptional<FString> ReceiptId);
         TSharedPtr<FReceipt> WithTransactionId(const TOptional<FString> TransactionId);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Inbox::Model
 {
-    class GS2INBOX_API FTransactionSetting final : public TSharedFromThis<FTransactionSetting>
+    class GS2INBOX_API FTransactionSetting final : public Gs2Object, public TSharedFromThis<FTransactionSetting>
     {
         TOptional<bool> EnableAutoRunValue;
         TOptional<FString> DistributorNamespaceIdValue;
@@ -32,7 +33,7 @@ namespace Gs2::Inbox::Model
         FTransactionSetting(
             const FTransactionSetting& From
         );
-        ~FTransactionSetting() = default;
+        virtual ~FTransactionSetting() override = default;
 
         TSharedPtr<FTransactionSetting> WithEnableAutoRun(const TOptional<bool> EnableAutoRun);
         TSharedPtr<FTransactionSetting> WithDistributorNamespaceId(const TOptional<FString> DistributorNamespaceId);

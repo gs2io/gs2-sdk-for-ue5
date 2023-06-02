@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "LayerModel.h"
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FAreaModel final : public TSharedFromThis<FAreaModel>
+    class GS2MEGAFIELD_API FAreaModel final : public Gs2Object, public TSharedFromThis<FAreaModel>
     {
         TOptional<FString> AreaModelIdValue;
         TOptional<FString> NameValue;
@@ -33,7 +34,7 @@ namespace Gs2::MegaField::Model
         FAreaModel(
             const FAreaModel& From
         );
-        ~FAreaModel() = default;
+        virtual ~FAreaModel() override = default;
 
         TSharedPtr<FAreaModel> WithAreaModelId(const TOptional<FString> AreaModelId);
         TSharedPtr<FAreaModel> WithName(const TOptional<FString> Name);

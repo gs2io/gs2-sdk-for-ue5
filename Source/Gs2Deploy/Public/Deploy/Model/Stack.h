@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Deploy::Model
 {
-    class GS2DEPLOY_API FStack final : public TSharedFromThis<FStack>
+    class GS2DEPLOY_API FStack final : public Gs2Object, public TSharedFromThis<FStack>
     {
         TOptional<FString> StackIdValue;
         TOptional<FString> NameValue;
@@ -35,7 +36,7 @@ namespace Gs2::Deploy::Model
         FStack(
             const FStack& From
         );
-        ~FStack() = default;
+        virtual ~FStack() override = default;
 
         TSharedPtr<FStack> WithStackId(const TOptional<FString> StackId);
         TSharedPtr<FStack> WithName(const TOptional<FString> Name);

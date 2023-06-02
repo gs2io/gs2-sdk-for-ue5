@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Inbox::Model
 {
-    class GS2INBOX_API FCurrentMessageMaster final : public TSharedFromThis<FCurrentMessageMaster>
+    class GS2INBOX_API FCurrentMessageMaster final : public Gs2Object, public TSharedFromThis<FCurrentMessageMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Inbox::Model
         FCurrentMessageMaster(
             const FCurrentMessageMaster& From
         );
-        ~FCurrentMessageMaster() = default;
+        virtual ~FCurrentMessageMaster() override = default;
 
         TSharedPtr<FCurrentMessageMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentMessageMaster> WithSettings(const TOptional<FString> Settings);

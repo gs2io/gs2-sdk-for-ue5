@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Inventory::Model
 {
-    class GS2INVENTORY_API FCurrentItemModelMaster final : public TSharedFromThis<FCurrentItemModelMaster>
+    class GS2INVENTORY_API FCurrentItemModelMaster final : public Gs2Object, public TSharedFromThis<FCurrentItemModelMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Inventory::Model
         FCurrentItemModelMaster(
             const FCurrentItemModelMaster& From
         );
-        ~FCurrentItemModelMaster() = default;
+        virtual ~FCurrentItemModelMaster() override = default;
 
         TSharedPtr<FCurrentItemModelMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentItemModelMaster> WithSettings(const TOptional<FString> Settings);

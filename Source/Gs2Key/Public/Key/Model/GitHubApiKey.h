@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Key::Model
 {
-    class GS2KEY_API FGitHubApiKey final : public TSharedFromThis<FGitHubApiKey>
+    class GS2KEY_API FGitHubApiKey final : public Gs2Object, public TSharedFromThis<FGitHubApiKey>
     {
         TOptional<FString> ApiKeyIdValue;
         TOptional<FString> NameValue;
@@ -34,7 +35,7 @@ namespace Gs2::Key::Model
         FGitHubApiKey(
             const FGitHubApiKey& From
         );
-        ~FGitHubApiKey() = default;
+        virtual ~FGitHubApiKey() override = default;
 
         TSharedPtr<FGitHubApiKey> WithApiKeyId(const TOptional<FString> ApiKeyId);
         TSharedPtr<FGitHubApiKey> WithName(const TOptional<FString> Name);

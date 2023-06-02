@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Money::Model
 {
-    class GS2MONEY_API FWalletDetail final : public TSharedFromThis<FWalletDetail>
+    class GS2MONEY_API FWalletDetail final : public Gs2Object, public TSharedFromThis<FWalletDetail>
     {
         TOptional<float> PriceValue;
         TOptional<int32> CountValue;
@@ -30,7 +31,7 @@ namespace Gs2::Money::Model
         FWalletDetail(
             const FWalletDetail& From
         );
-        ~FWalletDetail() = default;
+        virtual ~FWalletDetail() override = default;
 
         TSharedPtr<FWalletDetail> WithPrice(const TOptional<float> Price);
         TSharedPtr<FWalletDetail> WithCount(const TOptional<int32> Count);

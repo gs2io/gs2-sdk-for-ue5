@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Lock::Model
 {
-    class GS2LOCK_API FMutex final : public TSharedFromThis<FMutex>
+    class GS2LOCK_API FMutex final : public Gs2Object, public TSharedFromThis<FMutex>
     {
         TOptional<FString> MutexIdValue;
         TOptional<FString> UserIdValue;
@@ -33,7 +34,7 @@ namespace Gs2::Lock::Model
         FMutex(
             const FMutex& From
         );
-        ~FMutex() = default;
+        virtual ~FMutex() override = default;
 
         TSharedPtr<FMutex> WithMutexId(const TOptional<FString> MutexId);
         TSharedPtr<FMutex> WithUserId(const TOptional<FString> UserId);

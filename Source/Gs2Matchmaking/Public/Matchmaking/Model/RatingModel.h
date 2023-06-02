@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FRatingModel final : public TSharedFromThis<FRatingModel>
+    class GS2MATCHMAKING_API FRatingModel final : public Gs2Object, public TSharedFromThis<FRatingModel>
     {
         TOptional<FString> RatingModelIdValue;
         TOptional<FString> NameValue;
@@ -33,7 +34,7 @@ namespace Gs2::Matchmaking::Model
         FRatingModel(
             const FRatingModel& From
         );
-        ~FRatingModel() = default;
+        virtual ~FRatingModel() override = default;
 
         TSharedPtr<FRatingModel> WithRatingModelId(const TOptional<FString> RatingModelId);
         TSharedPtr<FRatingModel> WithName(const TOptional<FString> Name);

@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Dictionary::Model
 {
-    class GS2DICTIONARY_API FCurrentEntryMaster final : public TSharedFromThis<FCurrentEntryMaster>
+    class GS2DICTIONARY_API FCurrentEntryMaster final : public Gs2Object, public TSharedFromThis<FCurrentEntryMaster>
     {
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> SettingsValue;
@@ -30,7 +31,7 @@ namespace Gs2::Dictionary::Model
         FCurrentEntryMaster(
             const FCurrentEntryMaster& From
         );
-        ~FCurrentEntryMaster() = default;
+        virtual ~FCurrentEntryMaster() override = default;
 
         TSharedPtr<FCurrentEntryMaster> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FCurrentEntryMaster> WithSettings(const TOptional<FString> Settings);

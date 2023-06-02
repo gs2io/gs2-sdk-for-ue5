@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "AcquireAction.h"
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FBoxItem final : public TSharedFromThis<FBoxItem>
+    class GS2LOTTERY_API FBoxItem final : public Gs2Object, public TSharedFromThis<FBoxItem>
     {
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
         TOptional<int32> RemainingValue;
@@ -32,7 +33,7 @@ namespace Gs2::Lottery::Model
         FBoxItem(
             const FBoxItem& From
         );
-        ~FBoxItem() = default;
+        virtual ~FBoxItem() override = default;
 
         TSharedPtr<FBoxItem> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
         TSharedPtr<FBoxItem> WithRemaining(const TOptional<int32> Remaining);

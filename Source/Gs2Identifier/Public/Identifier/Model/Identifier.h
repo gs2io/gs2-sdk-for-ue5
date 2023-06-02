@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Identifier::Model
 {
-    class GS2IDENTIFIER_API FIdentifier final : public TSharedFromThis<FIdentifier>
+    class GS2IDENTIFIER_API FIdentifier final : public Gs2Object, public TSharedFromThis<FIdentifier>
     {
         TOptional<FString> ClientIdValue;
         TOptional<FString> UserNameValue;
@@ -32,7 +33,7 @@ namespace Gs2::Identifier::Model
         FIdentifier(
             const FIdentifier& From
         );
-        ~FIdentifier() = default;
+        virtual ~FIdentifier() override = default;
 
         TSharedPtr<FIdentifier> WithClientId(const TOptional<FString> ClientId);
         TSharedPtr<FIdentifier> WithUserName(const TOptional<FString> UserName);

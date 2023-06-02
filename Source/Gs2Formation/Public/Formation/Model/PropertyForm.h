@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Slot.h"
 
 namespace Gs2::Formation::Model
 {
-    class GS2FORMATION_API FPropertyForm final : public TSharedFromThis<FPropertyForm>
+    class GS2FORMATION_API FPropertyForm final : public Gs2Object, public TSharedFromThis<FPropertyForm>
     {
         TOptional<FString> FormIdValue;
         TOptional<FString> UserIdValue;
@@ -36,7 +37,7 @@ namespace Gs2::Formation::Model
         FPropertyForm(
             const FPropertyForm& From
         );
-        ~FPropertyForm() = default;
+        virtual ~FPropertyForm() override = default;
 
         TSharedPtr<FPropertyForm> WithFormId(const TOptional<FString> FormId);
         TSharedPtr<FPropertyForm> WithUserId(const TOptional<FString> UserId);

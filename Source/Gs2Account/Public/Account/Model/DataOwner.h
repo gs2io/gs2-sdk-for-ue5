@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FDataOwner final : public TSharedFromThis<FDataOwner>
+    class GS2ACCOUNT_API FDataOwner final : public Gs2Object, public TSharedFromThis<FDataOwner>
     {
         TOptional<FString> DataOwnerIdValue;
         TOptional<FString> UserIdValue;
@@ -32,7 +33,7 @@ namespace Gs2::Account::Model
         FDataOwner(
             const FDataOwner& From
         );
-        ~FDataOwner() = default;
+        virtual ~FDataOwner() override = default;
 
         TSharedPtr<FDataOwner> WithDataOwnerId(const TOptional<FString> DataOwnerId);
         TSharedPtr<FDataOwner> WithUserId(const TOptional<FString> UserId);

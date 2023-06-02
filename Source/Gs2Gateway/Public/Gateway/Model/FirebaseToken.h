@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Gateway::Model
 {
-    class GS2GATEWAY_API FFirebaseToken final : public TSharedFromThis<FFirebaseToken>
+    class GS2GATEWAY_API FFirebaseToken final : public Gs2Object, public TSharedFromThis<FFirebaseToken>
     {
         TOptional<FString> FirebaseTokenIdValue;
         TOptional<FString> UserIdValue;
@@ -33,7 +34,7 @@ namespace Gs2::Gateway::Model
         FFirebaseToken(
             const FFirebaseToken& From
         );
-        ~FFirebaseToken() = default;
+        virtual ~FFirebaseToken() override = default;
 
         TSharedPtr<FFirebaseToken> WithFirebaseTokenId(const TOptional<FString> FirebaseTokenId);
         TSharedPtr<FFirebaseToken> WithUserId(const TOptional<FString> UserId);

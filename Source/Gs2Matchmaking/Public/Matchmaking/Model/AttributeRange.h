@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FAttributeRange final : public TSharedFromThis<FAttributeRange>
+    class GS2MATCHMAKING_API FAttributeRange final : public Gs2Object, public TSharedFromThis<FAttributeRange>
     {
         TOptional<FString> NameValue;
         TOptional<int32> MinValue;
@@ -31,7 +32,7 @@ namespace Gs2::Matchmaking::Model
         FAttributeRange(
             const FAttributeRange& From
         );
-        ~FAttributeRange() = default;
+        virtual ~FAttributeRange() override = default;
 
         TSharedPtr<FAttributeRange> WithName(const TOptional<FString> Name);
         TSharedPtr<FAttributeRange> WithMin(const TOptional<int32> Min);

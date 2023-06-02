@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
 
 namespace Gs2::Distributor::Model
 {
-    class GS2DISTRIBUTOR_API FStampSheetResult final : public TSharedFromThis<FStampSheetResult>
+    class GS2DISTRIBUTOR_API FStampSheetResult final : public Gs2Object, public TSharedFromThis<FStampSheetResult>
     {
         TOptional<FString> StampSheetResultIdValue;
         TOptional<FString> UserIdValue;
@@ -39,7 +40,7 @@ namespace Gs2::Distributor::Model
         FStampSheetResult(
             const FStampSheetResult& From
         );
-        ~FStampSheetResult() = default;
+        virtual ~FStampSheetResult() override = default;
 
         TSharedPtr<FStampSheetResult> WithStampSheetResultId(const TOptional<FString> StampSheetResultId);
         TSharedPtr<FStampSheetResult> WithUserId(const TOptional<FString> UserId);

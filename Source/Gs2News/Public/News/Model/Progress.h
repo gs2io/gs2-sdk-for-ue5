@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::News::Model
 {
-    class GS2NEWS_API FProgress final : public TSharedFromThis<FProgress>
+    class GS2NEWS_API FProgress final : public Gs2Object, public TSharedFromThis<FProgress>
     {
         TOptional<FString> ProgressIdValue;
         TOptional<FString> UploadTokenValue;
@@ -34,7 +35,7 @@ namespace Gs2::News::Model
         FProgress(
             const FProgress& From
         );
-        ~FProgress() = default;
+        virtual ~FProgress() override = default;
 
         TSharedPtr<FProgress> WithProgressId(const TOptional<FString> ProgressId);
         TSharedPtr<FProgress> WithUploadToken(const TOptional<FString> UploadToken);

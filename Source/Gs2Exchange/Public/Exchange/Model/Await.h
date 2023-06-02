@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Exchange::Model
 {
-    class GS2EXCHANGE_API FAwait final : public TSharedFromThis<FAwait>
+    class GS2EXCHANGE_API FAwait final : public Gs2Object, public TSharedFromThis<FAwait>
     {
         TOptional<FString> AwaitIdValue;
         TOptional<FString> UserIdValue;
@@ -34,7 +35,7 @@ namespace Gs2::Exchange::Model
         FAwait(
             const FAwait& From
         );
-        ~FAwait() = default;
+        virtual ~FAwait() override = default;
 
         TSharedPtr<FAwait> WithAwaitId(const TOptional<FString> AwaitId);
         TSharedPtr<FAwait> WithUserId(const TOptional<FString> UserId);

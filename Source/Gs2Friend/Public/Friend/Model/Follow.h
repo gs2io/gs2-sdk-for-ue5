@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FFollow final : public TSharedFromThis<FFollow>
+    class GS2FRIEND_API FFollow final : public Gs2Object, public TSharedFromThis<FFollow>
     {
         TOptional<FString> FollowIdValue;
         TOptional<FString> UserIdValue;
@@ -33,7 +34,7 @@ namespace Gs2::Friend::Model
         FFollow(
             const FFollow& From
         );
-        ~FFollow() = default;
+        virtual ~FFollow() override = default;
 
         TSharedPtr<FFollow> WithFollowId(const TOptional<FString> FollowId);
         TSharedPtr<FFollow> WithUserId(const TOptional<FString> UserId);

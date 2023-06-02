@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Chat::Model
 {
-    class GS2CHAT_API FNotificationSetting final : public TSharedFromThis<FNotificationSetting>
+    class GS2CHAT_API FNotificationSetting final : public Gs2Object, public TSharedFromThis<FNotificationSetting>
     {
         TOptional<FString> GatewayNamespaceIdValue;
         TOptional<bool> EnableTransferMobileNotificationValue;
@@ -31,7 +32,7 @@ namespace Gs2::Chat::Model
         FNotificationSetting(
             const FNotificationSetting& From
         );
-        ~FNotificationSetting() = default;
+        virtual ~FNotificationSetting() override = default;
 
         TSharedPtr<FNotificationSetting> WithGatewayNamespaceId(const TOptional<FString> GatewayNamespaceId);
         TSharedPtr<FNotificationSetting> WithEnableTransferMobileNotification(const TOptional<bool> EnableTransferMobileNotification);

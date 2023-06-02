@@ -130,7 +130,7 @@ namespace Gs2::Inventory::Domain::Iterator
                     Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
                         Item
                     ),
-                    MakeShared<FString>(Item),
+                    MakeShared<Inventory::Model::FReferenceOfEntry>(Item),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }

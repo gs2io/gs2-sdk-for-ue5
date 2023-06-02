@@ -17,12 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FSalesItemMaster final : public TSharedFromThis<FSalesItemMaster>
+    class GS2SHOWCASE_API FSalesItemMaster final : public Gs2Object, public TSharedFromThis<FSalesItemMaster>
     {
         TOptional<FString> SalesItemIdValue;
         TOptional<FString> NameValue;
@@ -38,7 +39,7 @@ namespace Gs2::Showcase::Model
         FSalesItemMaster(
             const FSalesItemMaster& From
         );
-        ~FSalesItemMaster() = default;
+        virtual ~FSalesItemMaster() override = default;
 
         TSharedPtr<FSalesItemMaster> WithSalesItemId(const TOptional<FString> SalesItemId);
         TSharedPtr<FSalesItemMaster> WithName(const TOptional<FString> Name);

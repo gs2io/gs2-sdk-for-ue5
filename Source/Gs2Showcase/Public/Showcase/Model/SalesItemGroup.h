@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "SalesItem.h"
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FSalesItemGroup final : public TSharedFromThis<FSalesItemGroup>
+    class GS2SHOWCASE_API FSalesItemGroup final : public Gs2Object, public TSharedFromThis<FSalesItemGroup>
     {
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
@@ -32,7 +33,7 @@ namespace Gs2::Showcase::Model
         FSalesItemGroup(
             const FSalesItemGroup& From
         );
-        ~FSalesItemGroup() = default;
+        virtual ~FSalesItemGroup() override = default;
 
         TSharedPtr<FSalesItemGroup> WithName(const TOptional<FString> Name);
         TSharedPtr<FSalesItemGroup> WithMetadata(const TOptional<FString> Metadata);

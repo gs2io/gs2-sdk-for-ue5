@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Auth::Model
 {
-    class GS2AUTH_API FAccessToken final : public TSharedFromThis<FAccessToken>
+    class GS2AUTH_API FAccessToken final : public Gs2Object, public TSharedFromThis<FAccessToken>
     {
         TOptional<FString> TokenValue;
         TOptional<FString> UserIdValue;
@@ -32,7 +33,7 @@ namespace Gs2::Auth::Model
         FAccessToken(
             const FAccessToken& From
         );
-        ~FAccessToken() = default;
+        virtual ~FAccessToken() override = default;
 
         TSharedPtr<FAccessToken> WithToken(const TOptional<FString> Token);
         TSharedPtr<FAccessToken> WithUserId(const TOptional<FString> UserId);

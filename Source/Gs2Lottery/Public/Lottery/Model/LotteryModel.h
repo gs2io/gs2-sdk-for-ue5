@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Lottery::Model
 {
-    class GS2LOTTERY_API FLotteryModel final : public TSharedFromThis<FLotteryModel>
+    class GS2LOTTERY_API FLotteryModel final : public Gs2Object, public TSharedFromThis<FLotteryModel>
     {
         TOptional<FString> LotteryModelIdValue;
         TOptional<FString> NameValue;
@@ -35,7 +36,7 @@ namespace Gs2::Lottery::Model
         FLotteryModel(
             const FLotteryModel& From
         );
-        ~FLotteryModel() = default;
+        virtual ~FLotteryModel() override = default;
 
         TSharedPtr<FLotteryModel> WithLotteryModelId(const TOptional<FString> LotteryModelId);
         TSharedPtr<FLotteryModel> WithName(const TOptional<FString> Name);

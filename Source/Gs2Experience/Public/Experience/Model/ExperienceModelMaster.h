@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FExperienceModelMaster final : public TSharedFromThis<FExperienceModelMaster>
+    class GS2EXPERIENCE_API FExperienceModelMaster final : public Gs2Object, public TSharedFromThis<FExperienceModelMaster>
     {
         TOptional<FString> ExperienceModelIdValue;
         TOptional<FString> NameValue;
@@ -38,7 +39,7 @@ namespace Gs2::Experience::Model
         FExperienceModelMaster(
             const FExperienceModelMaster& From
         );
-        ~FExperienceModelMaster() = default;
+        virtual ~FExperienceModelMaster() override = default;
 
         TSharedPtr<FExperienceModelMaster> WithExperienceModelId(const TOptional<FString> ExperienceModelId);
         TSharedPtr<FExperienceModelMaster> WithName(const TOptional<FString> Name);

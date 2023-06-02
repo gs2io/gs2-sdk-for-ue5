@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Friend::Model
 {
-    class GS2FRIEND_API FFriendRequest final : public TSharedFromThis<FFriendRequest>
+    class GS2FRIEND_API FFriendRequest final : public Gs2Object, public TSharedFromThis<FFriendRequest>
     {
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetUserIdValue;
@@ -30,7 +31,7 @@ namespace Gs2::Friend::Model
         FFriendRequest(
             const FFriendRequest& From
         );
-        ~FFriendRequest() = default;
+        virtual ~FFriendRequest() override = default;
 
         TSharedPtr<FFriendRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FFriendRequest> WithTargetUserId(const TOptional<FString> TargetUserId);

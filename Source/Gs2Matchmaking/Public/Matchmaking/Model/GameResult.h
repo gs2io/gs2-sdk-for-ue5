@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Matchmaking::Model
 {
-    class GS2MATCHMAKING_API FGameResult final : public TSharedFromThis<FGameResult>
+    class GS2MATCHMAKING_API FGameResult final : public Gs2Object, public TSharedFromThis<FGameResult>
     {
         TOptional<int32> RankValue;
         TOptional<FString> UserIdValue;
@@ -30,7 +31,7 @@ namespace Gs2::Matchmaking::Model
         FGameResult(
             const FGameResult& From
         );
-        ~FGameResult() = default;
+        virtual ~FGameResult() override = default;
 
         TSharedPtr<FGameResult> WithRank(const TOptional<int32> Rank);
         TSharedPtr<FGameResult> WithUserId(const TOptional<FString> UserId);

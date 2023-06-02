@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::MegaField::Model
 {
-    class GS2MEGAFIELD_API FLayerModelMaster final : public TSharedFromThis<FLayerModelMaster>
+    class GS2MEGAFIELD_API FLayerModelMaster final : public Gs2Object, public TSharedFromThis<FLayerModelMaster>
     {
         TOptional<FString> LayerModelMasterIdValue;
         TOptional<FString> NameValue;
@@ -34,7 +35,7 @@ namespace Gs2::MegaField::Model
         FLayerModelMaster(
             const FLayerModelMaster& From
         );
-        ~FLayerModelMaster() = default;
+        virtual ~FLayerModelMaster() override = default;
 
         TSharedPtr<FLayerModelMaster> WithLayerModelMasterId(const TOptional<FString> LayerModelMasterId);
         TSharedPtr<FLayerModelMaster> WithName(const TOptional<FString> Name);

@@ -17,11 +17,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "ScopedValue.h"
 
 namespace Gs2::Mission::Model
 {
-    class GS2MISSION_API FCounter final : public TSharedFromThis<FCounter>
+    class GS2MISSION_API FCounter final : public Gs2Object, public TSharedFromThis<FCounter>
     {
         TOptional<FString> CounterIdValue;
         TOptional<FString> UserIdValue;
@@ -35,7 +36,7 @@ namespace Gs2::Mission::Model
         FCounter(
             const FCounter& From
         );
-        ~FCounter() = default;
+        virtual ~FCounter() override = default;
 
         TSharedPtr<FCounter> WithCounterId(const TOptional<FString> CounterId);
         TSharedPtr<FCounter> WithUserId(const TOptional<FString> UserId);

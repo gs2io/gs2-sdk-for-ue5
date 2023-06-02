@@ -17,13 +17,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 #include "Contents.h"
 #include "AcquireAction.h"
 #include "ConsumeAction.h"
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FQuestModel final : public TSharedFromThis<FQuestModel>
+    class GS2QUEST_API FQuestModel final : public Gs2Object, public TSharedFromThis<FQuestModel>
     {
         TOptional<FString> QuestModelIdValue;
         TOptional<FString> NameValue;
@@ -40,7 +41,7 @@ namespace Gs2::Quest::Model
         FQuestModel(
             const FQuestModel& From
         );
-        ~FQuestModel() = default;
+        virtual ~FQuestModel() override = default;
 
         TSharedPtr<FQuestModel> WithQuestModelId(const TOptional<FString> QuestModelId);
         TSharedPtr<FQuestModel> WithName(const TOptional<FString> Name);

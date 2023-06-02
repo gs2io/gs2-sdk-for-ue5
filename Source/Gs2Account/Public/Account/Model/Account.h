@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Account::Model
 {
-    class GS2ACCOUNT_API FAccount final : public TSharedFromThis<FAccount>
+    class GS2ACCOUNT_API FAccount final : public Gs2Object, public TSharedFromThis<FAccount>
     {
         TOptional<FString> AccountIdValue;
         TOptional<FString> UserIdValue;
@@ -34,7 +35,7 @@ namespace Gs2::Account::Model
         FAccount(
             const FAccount& From
         );
-        ~FAccount() = default;
+        virtual ~FAccount() override = default;
 
         TSharedPtr<FAccount> WithAccountId(const TOptional<FString> AccountId);
         TSharedPtr<FAccount> WithUserId(const TOptional<FString> UserId);

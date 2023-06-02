@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Quest::Model
 {
-    class GS2QUEST_API FCompletedQuestList final : public TSharedFromThis<FCompletedQuestList>
+    class GS2QUEST_API FCompletedQuestList final : public Gs2Object, public TSharedFromThis<FCompletedQuestList>
     {
         TOptional<FString> CompletedQuestListIdValue;
         TOptional<FString> UserIdValue;
@@ -34,7 +35,7 @@ namespace Gs2::Quest::Model
         FCompletedQuestList(
             const FCompletedQuestList& From
         );
-        ~FCompletedQuestList() = default;
+        virtual ~FCompletedQuestList() override = default;
 
         TSharedPtr<FCompletedQuestList> WithCompletedQuestListId(const TOptional<FString> CompletedQuestListId);
         TSharedPtr<FCompletedQuestList> WithUserId(const TOptional<FString> UserId);

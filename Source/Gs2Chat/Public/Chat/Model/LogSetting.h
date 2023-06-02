@@ -17,10 +17,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Gs2Object.h"
 
 namespace Gs2::Chat::Model
 {
-    class GS2CHAT_API FLogSetting final : public TSharedFromThis<FLogSetting>
+    class GS2CHAT_API FLogSetting final : public Gs2Object, public TSharedFromThis<FLogSetting>
     {
         TOptional<FString> LoggingNamespaceIdValue;
 
@@ -29,7 +30,7 @@ namespace Gs2::Chat::Model
         FLogSetting(
             const FLogSetting& From
         );
-        ~FLogSetting() = default;
+        virtual ~FLogSetting() override = default;
 
         TSharedPtr<FLogSetting> WithLoggingNamespaceId(const TOptional<FString> LoggingNamespaceId);
 
