@@ -208,6 +208,33 @@ namespace Gs2::Lottery
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPredictionTask>> FGs2LotteryWebSocketClient::Prediction(
+        const Request::FPredictionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPredictionTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPredictionByUserIdTask>> FGs2LotteryWebSocketClient::PredictionByUserId(
+        const Request::FPredictionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPredictionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDrawWithRandomSeedByUserIdTask>> FGs2LotteryWebSocketClient::DrawWithRandomSeedByUserId(
+        const Request::FDrawWithRandomSeedByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDrawWithRandomSeedByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDrawByStampSheetTask>> FGs2LotteryWebSocketClient::DrawByStampSheet(
         const Request::FDrawByStampSheetRequestPtr Request) const
     {

@@ -60,6 +60,12 @@
 #include "Task/WebSocket/GetPrizeTableTask.h"
 #include "Request/DrawByUserIdRequest.h"
 #include "Task/WebSocket/DrawByUserIdTask.h"
+#include "Request/PredictionRequest.h"
+#include "Task/WebSocket/PredictionTask.h"
+#include "Request/PredictionByUserIdRequest.h"
+#include "Task/WebSocket/PredictionByUserIdTask.h"
+#include "Request/DrawWithRandomSeedByUserIdRequest.h"
+#include "Task/WebSocket/DrawWithRandomSeedByUserIdTask.h"
 #include "Request/DrawByStampSheetRequest.h"
 #include "Task/WebSocket/DrawByStampSheetTask.h"
 #include "Request/DescribeProbabilitiesRequest.h"
@@ -186,6 +192,18 @@ namespace Gs2::Lottery
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDrawByUserIdTask>> DrawByUserId(
             const Request::FDrawByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPredictionTask>> Prediction(
+            const Request::FPredictionRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPredictionByUserIdTask>> PredictionByUserId(
+            const Request::FPredictionByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDrawWithRandomSeedByUserIdTask>> DrawWithRandomSeedByUserId(
+            const Request::FDrawWithRandomSeedByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDrawByStampSheetTask>> DrawByStampSheet(

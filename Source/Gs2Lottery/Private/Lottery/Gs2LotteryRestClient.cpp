@@ -208,6 +208,33 @@ namespace Gs2::Lottery
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPredictionTask>> FGs2LotteryRestClient::Prediction(
+        const Request::FPredictionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPredictionTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FPredictionByUserIdTask>> FGs2LotteryRestClient::PredictionByUserId(
+        const Request::FPredictionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPredictionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDrawWithRandomSeedByUserIdTask>> FGs2LotteryRestClient::DrawWithRandomSeedByUserId(
+        const Request::FDrawWithRandomSeedByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDrawWithRandomSeedByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDrawByStampSheetTask>> FGs2LotteryRestClient::DrawByStampSheet(
         const Request::FDrawByStampSheetRequestPtr Request) const
     {

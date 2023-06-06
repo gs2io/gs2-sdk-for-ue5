@@ -60,6 +60,12 @@
 #include "Task/Rest/GetPrizeTableTask.h"
 #include "Request/DrawByUserIdRequest.h"
 #include "Task/Rest/DrawByUserIdTask.h"
+#include "Request/PredictionRequest.h"
+#include "Task/Rest/PredictionTask.h"
+#include "Request/PredictionByUserIdRequest.h"
+#include "Task/Rest/PredictionByUserIdTask.h"
+#include "Request/DrawWithRandomSeedByUserIdRequest.h"
+#include "Task/Rest/DrawWithRandomSeedByUserIdTask.h"
 #include "Request/DrawByStampSheetRequest.h"
 #include "Task/Rest/DrawByStampSheetTask.h"
 #include "Request/DescribeProbabilitiesRequest.h"
@@ -186,6 +192,18 @@ namespace Gs2::Lottery
 
         TSharedPtr<FAsyncTask<Task::Rest::FDrawByUserIdTask>> DrawByUserId(
             const Request::FDrawByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPredictionTask>> Prediction(
+            const Request::FPredictionRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPredictionByUserIdTask>> PredictionByUserId(
+            const Request::FPredictionByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDrawWithRandomSeedByUserIdTask>> DrawWithRandomSeedByUserId(
+            const Request::FDrawWithRandomSeedByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDrawByStampSheetTask>> DrawByStampSheet(

@@ -161,6 +161,24 @@
 #include "Task/Rest/DrawByUserIdTask.h"
 #include "Task/WebSocket/DrawByUserIdTask.h"
 
+// Prediction
+#include "Request/PredictionRequest.h"
+#include "Result/PredictionResult.h"
+#include "Task/Rest/PredictionTask.h"
+#include "Task/WebSocket/PredictionTask.h"
+
+// PredictionByUserId
+#include "Request/PredictionByUserIdRequest.h"
+#include "Result/PredictionByUserIdResult.h"
+#include "Task/Rest/PredictionByUserIdTask.h"
+#include "Task/WebSocket/PredictionByUserIdTask.h"
+
+// DrawWithRandomSeedByUserId
+#include "Request/DrawWithRandomSeedByUserIdRequest.h"
+#include "Result/DrawWithRandomSeedByUserIdResult.h"
+#include "Task/Rest/DrawWithRandomSeedByUserIdTask.h"
+#include "Task/WebSocket/DrawWithRandomSeedByUserIdTask.h"
+
 // DrawByStampSheet
 #include "Request/DrawByStampSheetRequest.h"
 #include "Result/DrawByStampSheetResult.h"

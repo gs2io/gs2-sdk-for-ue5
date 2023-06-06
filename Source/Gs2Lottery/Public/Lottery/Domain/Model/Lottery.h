@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -116,6 +118,84 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<FAsyncTask<FDrawTask>> Draw(
             Request::FDrawByUserIdRequestPtr Request
+        );
+
+        class GS2LOTTERY_API FPredictionTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>,
+            public TSharedFromThis<FPredictionTask>
+        {
+            const TSharedPtr<FLotteryDomain> Self;
+            const Request::FPredictionRequestPtr Request;
+        public:
+            explicit FPredictionTask(
+                const TSharedPtr<FLotteryDomain> Self,
+                const Request::FPredictionRequestPtr Request
+            );
+
+            FPredictionTask(
+                const FPredictionTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>> Result
+            ) override;
+        };
+        friend FPredictionTask;
+
+        TSharedPtr<FAsyncTask<FPredictionTask>> Prediction(
+            Request::FPredictionRequestPtr Request
+        );
+
+        class GS2LOTTERY_API FPredictionByUserIdTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>,
+            public TSharedFromThis<FPredictionByUserIdTask>
+        {
+            const TSharedPtr<FLotteryDomain> Self;
+            const Request::FPredictionByUserIdRequestPtr Request;
+        public:
+            explicit FPredictionByUserIdTask(
+                const TSharedPtr<FLotteryDomain> Self,
+                const Request::FPredictionByUserIdRequestPtr Request
+            );
+
+            FPredictionByUserIdTask(
+                const FPredictionByUserIdTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>> Result
+            ) override;
+        };
+        friend FPredictionByUserIdTask;
+
+        TSharedPtr<FAsyncTask<FPredictionByUserIdTask>> PredictionByUserId(
+            Request::FPredictionByUserIdRequestPtr Request
+        );
+
+        class GS2LOTTERY_API FDrawWithRandomSeedTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FLotteryDomain>,
+            public TSharedFromThis<FDrawWithRandomSeedTask>
+        {
+            const TSharedPtr<FLotteryDomain> Self;
+            const Request::FDrawWithRandomSeedByUserIdRequestPtr Request;
+        public:
+            explicit FDrawWithRandomSeedTask(
+                const TSharedPtr<FLotteryDomain> Self,
+                const Request::FDrawWithRandomSeedByUserIdRequestPtr Request
+            );
+
+            FDrawWithRandomSeedTask(
+                const FDrawWithRandomSeedTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryDomain>> Result
+            ) override;
+        };
+        friend FDrawWithRandomSeedTask;
+
+        TSharedPtr<FAsyncTask<FDrawWithRandomSeedTask>> DrawWithRandomSeed(
+            Request::FDrawWithRandomSeedByUserIdRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

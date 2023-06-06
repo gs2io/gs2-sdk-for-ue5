@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -155,6 +157,172 @@ namespace Gs2::Lottery::Domain::Model
         Request::FDrawByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FDrawTask>>(this->AsShared(), Request);
+    }
+
+    FLotteryDomain::FPredictionTask::FPredictionTask(
+        const TSharedPtr<FLotteryDomain> Self,
+        const Request::FPredictionRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FLotteryDomain::FPredictionTask::FPredictionTask(
+        const FPredictionTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FLotteryDomain::FPredictionTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->Prediction(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        *Result = ResultModel->GetItems();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FLotteryDomain::FPredictionTask>> FLotteryDomain::Prediction(
+        Request::FPredictionRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPredictionTask>>(this->AsShared(), Request);
+    }
+
+    FLotteryDomain::FPredictionByUserIdTask::FPredictionByUserIdTask(
+        const TSharedPtr<FLotteryDomain> Self,
+        const Request::FPredictionByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FLotteryDomain::FPredictionByUserIdTask::FPredictionByUserIdTask(
+        const FPredictionByUserIdTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FLotteryDomain::FPredictionByUserIdTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->PredictionByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        *Result = ResultModel->GetItems();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FLotteryDomain::FPredictionByUserIdTask>> FLotteryDomain::PredictionByUserId(
+        Request::FPredictionByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPredictionByUserIdTask>>(this->AsShared(), Request);
+    }
+
+    FLotteryDomain::FDrawWithRandomSeedTask::FDrawWithRandomSeedTask(
+        const TSharedPtr<FLotteryDomain> Self,
+        const Request::FDrawWithRandomSeedByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FLotteryDomain::FDrawWithRandomSeedTask::FDrawWithRandomSeedTask(
+        const FDrawWithRandomSeedTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FLotteryDomain::FDrawWithRandomSeedTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->DrawWithRandomSeedByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        {
+            const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                Self->Cache,
+                Self->JobQueueDomain,
+                Self->Session,
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId(),
+                Self->StampSheetConfiguration
+            );
+            const auto Future3 = StampSheet->Run();
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return MakeShared<Core::Model::FTransactionError<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>(
+                    Future3->GetTask().Error()->GetErrors(),
+                    [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
+                    {
+                        return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                            Self->Cache,
+                            Self->JobQueueDomain,
+                            Self->Session,
+                            *ResultModel->GetStampSheet(),
+                            *ResultModel->GetStampSheetEncryptionKeyId(),
+                            Self->StampSheetConfiguration
+                        )->Run();
+                    }
+                );
+            }
+            Future3->EnsureCompletion();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FLotteryDomain::FDrawWithRandomSeedTask>> FLotteryDomain::DrawWithRandomSeed(
+        Request::FDrawWithRandomSeedByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDrawWithRandomSeedTask>>(this->AsShared(), Request);
     }
 
     FString FLotteryDomain::CreateCacheParentKey(
