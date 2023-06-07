@@ -50,6 +50,11 @@ namespace Gs2::Schedule::Domain::Model
         Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
+        TOptional<int32> RepeatCount;
+        TOptional<int32> GetRepeatCount() const
+        {
+            return RepeatCount;
+        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> EventName;

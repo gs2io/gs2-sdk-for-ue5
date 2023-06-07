@@ -19,14 +19,16 @@
 namespace Gs2::Schedule::Result
 {
     FGetEventByUserIdResult::FGetEventByUserIdResult():
-        ItemValue(nullptr)
+        ItemValue(nullptr),
+        RepeatCountValue(TOptional<int32>())
     {
     }
 
     FGetEventByUserIdResult::FGetEventByUserIdResult(
         const FGetEventByUserIdResult& From
     ):
-        ItemValue(From.ItemValue)
+        ItemValue(From.ItemValue),
+        RepeatCountValue(From.RepeatCountValue)
     {
     }
 
@@ -38,6 +40,14 @@ namespace Gs2::Schedule::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetEventByUserIdResult> FGetEventByUserIdResult::WithRepeatCount(
+        const TOptional<int32> RepeatCount
+    )
+    {
+        this->RepeatCountValue = RepeatCount;
+        return SharedThis(this);
+    }
+
     TSharedPtr<Model::FEvent> FGetEventByUserIdResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -45,6 +55,20 @@ namespace Gs2::Schedule::Result
             return nullptr;
         }
         return ItemValue;
+    }
+
+    TOptional<int32> FGetEventByUserIdResult::GetRepeatCount() const
+    {
+        return RepeatCountValue;
+    }
+
+    FString FGetEventByUserIdResult::GetRepeatCountString() const
+    {
+        if (!RepeatCountValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), RepeatCountValue.GetValue());
     }
 
     TSharedPtr<FGetEventByUserIdResult> FGetEventByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -60,7 +84,16 @@ namespace Gs2::Schedule::Result
                         return nullptr;
                     }
                     return Model::FEvent::FromJson(Data->GetObjectField("item"));
-                 }() : nullptr);
+                 }() : nullptr)
+            ->WithRepeatCount(Data->HasField("repeatCount") ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField("repeatCount", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>());
     }
 
     TSharedPtr<FJsonObject> FGetEventByUserIdResult::ToJson() const
@@ -69,6 +102,10 @@ namespace Gs2::Schedule::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (RepeatCountValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("repeatCount", RepeatCountValue.GetValue());
         }
         return JsonRootObject;
     }

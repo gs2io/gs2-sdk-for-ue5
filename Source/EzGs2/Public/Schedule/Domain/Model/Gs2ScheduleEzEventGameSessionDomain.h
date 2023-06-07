@@ -35,6 +35,7 @@ namespace Gs2::UE5::Schedule::Domain::Model
         Gs2::UE5::Util::FProfilePtr ProfileValue;
 
         public:
+        TOptional<int32> RepeatCount() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> EventName() const;

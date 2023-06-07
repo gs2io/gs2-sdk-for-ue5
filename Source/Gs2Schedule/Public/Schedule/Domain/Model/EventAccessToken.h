@@ -50,6 +50,11 @@ namespace Gs2::Schedule::Domain::Model
         Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
+        TOptional<int32> RepeatCount;
+        TOptional<int32> GetRepeatCount() const
+        {
+            return RepeatCount;
+        }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }

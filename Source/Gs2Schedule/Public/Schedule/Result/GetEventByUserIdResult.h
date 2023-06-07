@@ -24,6 +24,7 @@ namespace Gs2::Schedule::Result
     class GS2SCHEDULE_API FGetEventByUserIdResult final : public TSharedFromThis<FGetEventByUserIdResult>
     {
         TSharedPtr<Model::FEvent> ItemValue;
+        TOptional<int32> RepeatCountValue;
         
     public:
         
@@ -34,8 +35,11 @@ namespace Gs2::Schedule::Result
         ~FGetEventByUserIdResult() = default;
 
         TSharedPtr<FGetEventByUserIdResult> WithItem(const TSharedPtr<Model::FEvent> Item);
+        TSharedPtr<FGetEventByUserIdResult> WithRepeatCount(const TOptional<int32> RepeatCount);
 
         TSharedPtr<Model::FEvent> GetItem() const;
+        TOptional<int32> GetRepeatCount() const;
+        FString GetRepeatCountString() const;
 
         static TSharedPtr<FGetEventByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
