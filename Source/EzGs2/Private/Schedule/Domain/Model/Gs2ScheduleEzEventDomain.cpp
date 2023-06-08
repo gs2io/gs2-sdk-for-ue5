@@ -24,6 +24,11 @@ namespace Gs2::UE5::Schedule::Domain::Model
         return Domain->RepeatCount;
     }
 
+    TOptional<bool> FEzEventDomain::InSchedule() const
+    {
+        return Domain->InSchedule;
+    }
+
     TOptional<FString> FEzEventDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

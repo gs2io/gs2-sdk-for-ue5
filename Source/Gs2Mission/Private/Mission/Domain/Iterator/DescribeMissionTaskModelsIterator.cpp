@@ -84,13 +84,20 @@ namespace Gs2::Mission::Domain::Iterator
                 Self->MissionGroupName,
                 "MissionTaskModel"
             );
-            Range = Self->Cache->TryGetList<Gs2::Mission::Model::FMissionTaskModel>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Mission::Model::FMissionTaskModel>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeMissionTaskModels(
                 MakeShared<Gs2::Mission::Request::FDescribeMissionTaskModelsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -125,7 +132,7 @@ namespace Gs2::Mission::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Mission::Model::FMissionTaskModel::TypeName,
                     ListParentKey
                 );

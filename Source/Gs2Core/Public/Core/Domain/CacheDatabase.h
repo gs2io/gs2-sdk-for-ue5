@@ -32,6 +32,8 @@ namespace Gs2::Core::Domain
     {
         TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<Gs2Object>, int64>>>> Cache;
         TMap<FTypeName, TSet<FParentCacheKey>> ListCached;
+        TMap<FTypeName, TSet<FParentCacheKey>> ListCacheUpdateRequired;
+        TMap<FTypeName, TMap<FParentCacheKey, TSharedPtr<Gs2Object>>> ListUpdateContexts;
 
     public:
         FCacheDatabase();
@@ -43,11 +45,17 @@ namespace Gs2::Core::Domain
 
         void Clear();
         
-        void SetListCache(
+        void SetListCached(
+            FTypeName Kind,
+            FParentCacheKey ParentKey,
+            TSharedPtr<Gs2Object> UpdateContext = nullptr
+        );
+        
+        void SetListCacheUpdateRequired(
             FTypeName Kind,
             FParentCacheKey ParentKey
         );
-        
+
         void ClearListCache(
             FTypeName Kind,
             FParentCacheKey ParentKey
@@ -84,7 +92,8 @@ namespace Gs2::Core::Domain
 
         template<class TKind>
         TSharedPtr<TArray<TSharedPtr<TKind>>> TryGetList(
-            FParentCacheKey ParentKey
+            FParentCacheKey ParentKey,
+            TSharedPtr<Gs2Object>* OutUpdateContext = nullptr
         )
         {
             auto* ListCache0 = ListCached.Find(TKind::TypeName);
@@ -107,6 +116,24 @@ namespace Gs2::Core::Domain
                 }
                 Result->Add(StaticCastSharedPtr<TKind>(Data.Key));
             }
+
+            if (OutUpdateContext)
+            {
+                *OutUpdateContext = nullptr;
+
+                auto* ListCacheUpdateRequired0 = ListCacheUpdateRequired.Find(TKind::TypeName);
+                if (ListCacheUpdateRequired0 && ListCacheUpdateRequired0->Contains(ParentKey))
+                {
+                    if (auto* ListUpdateContexts0 = ListUpdateContexts.Find(TKind::TypeName))
+                    {
+                        if (auto* UpdateContext = ListUpdateContexts0->Find(ParentKey))
+                        {
+                            *OutUpdateContext = *UpdateContext;
+                        }
+                    }
+                }
+            }
+
             return Result;
         }
     };

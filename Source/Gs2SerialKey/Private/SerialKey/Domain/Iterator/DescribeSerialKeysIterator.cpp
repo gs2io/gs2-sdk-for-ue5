@@ -87,15 +87,22 @@ namespace Gs2::SerialKey::Domain::Iterator
                 TOptional<FString>("Singleton"),
                 "SerialKey"
             );
-            Range = Self->Cache->TryGetList<Gs2::SerialKey::Model::FSerialKey>(ListParentKey);
-            if (Range) {
-                Range->RemoveAll([this](const Gs2::SerialKey::Model::FSerialKeyPtr& Item) { return Self->CampaignModelName && Item->GetCampaignModelName() != Self->CampaignModelName; });
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::SerialKey::Model::FSerialKey>(ListParentKey);
+
+                if (Range)
+                {
+                    Range->RemoveAll([this](const Gs2::SerialKey::Model::FSerialKeyPtr& Item) { return Self->CampaignModelName && Item->GetCampaignModelName() != Self->CampaignModelName; });
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeSerialKeys(
                 MakeShared<Gs2::SerialKey::Request::FDescribeSerialKeysRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -134,7 +141,7 @@ namespace Gs2::SerialKey::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::SerialKey::Model::FSerialKey::TypeName,
                     ListParentKey
                 );

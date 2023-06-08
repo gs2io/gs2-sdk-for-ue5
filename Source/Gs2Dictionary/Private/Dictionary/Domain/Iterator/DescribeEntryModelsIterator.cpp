@@ -81,13 +81,20 @@ namespace Gs2::Dictionary::Domain::Iterator
                 Self->NamespaceName,
                 "EntryModel"
             );
-            Range = Self->Cache->TryGetList<Gs2::Dictionary::Model::FEntryModel>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Dictionary::Model::FEntryModel>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeEntryModels(
                 MakeShared<Gs2::Dictionary::Request::FDescribeEntryModelsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -121,7 +128,7 @@ namespace Gs2::Dictionary::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Dictionary::Model::FEntryModel::TypeName,
                     ListParentKey
                 );

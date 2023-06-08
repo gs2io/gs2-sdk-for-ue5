@@ -86,13 +86,20 @@ namespace Gs2::Inventory::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = "inventory:String";
-            Range = Self->Cache->TryGetList<Gs2::Inventory::Model::FReferenceOfEntry>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Inventory::Model::FReferenceOfEntry>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeReferenceOfByUserId(
                 MakeShared<Gs2::Inventory::Request::FDescribeReferenceOfByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -137,7 +144,7 @@ namespace Gs2::Inventory::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Inventory::Model::FReferenceOfEntry::TypeName,
                     ListParentKey
                 );

@@ -59,8 +59,6 @@ struct FGs2ScheduleEventValue
     int32 RepeatEndHour = 0;
     UPROPERTY(BlueprintReadOnly)
     FString RelativeTriggerName = "";
-    UPROPERTY(BlueprintReadOnly)
-    int32 RelativeDuration = 0;
 };
 
 inline FGs2ScheduleEventValue EzEventToFGs2ScheduleEventValue(
@@ -81,7 +79,6 @@ inline FGs2ScheduleEventValue EzEventToFGs2ScheduleEventValue(
     Value.RepeatBeginHour = Model->GetRepeatBeginHour() ? *Model->GetRepeatBeginHour() : 0;
     Value.RepeatEndHour = Model->GetRepeatEndHour() ? *Model->GetRepeatEndHour() : 0;
     Value.RelativeTriggerName = Model->GetRelativeTriggerName() ? *Model->GetRelativeTriggerName() : "";
-    Value.RelativeDuration = Model->GetRelativeDuration() ? *Model->GetRelativeDuration() : 0;
     return Value;
 }
 
@@ -102,8 +99,7 @@ inline Gs2::UE5::Schedule::Model::FEzEventPtr FGs2ScheduleEventValueToEzEvent(
         ->WithRepeatEndDayOfWeek(Model.RepeatEndDayOfWeek)
         ->WithRepeatBeginHour(Model.RepeatBeginHour)
         ->WithRepeatEndHour(Model.RepeatEndHour)
-        ->WithRelativeTriggerName(Model.RelativeTriggerName)
-        ->WithRelativeDuration(Model.RelativeDuration);
+        ->WithRelativeTriggerName(Model.RelativeTriggerName);
 }
 
 UCLASS()

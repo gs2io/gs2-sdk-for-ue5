@@ -85,14 +85,21 @@ namespace Gs2::Chat::Domain::Iterator
                 Self->UserId(),
                 "Subscribe"
             );
-            Range = Self->Cache->TryGetList<Gs2::Chat::Model::FSubscribe>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Chat::Model::FSubscribe>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeSubscribes(
                 MakeShared<Gs2::Chat::Request::FDescribeSubscribesRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -130,7 +137,7 @@ namespace Gs2::Chat::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Chat::Model::FSubscribe::TypeName,
                     ListParentKey
                 );

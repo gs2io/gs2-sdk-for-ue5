@@ -21,7 +21,7 @@ namespace Gs2::Lottery::Request
     FPredictionRequest::FPredictionRequest():
         NamespaceNameValue(TOptional<FString>()),
         LotteryNameValue(TOptional<FString>()),
-        UserIdValue(TOptional<FString>()),
+        AccessTokenValue(TOptional<FString>()),
         RandomSeedValue(TOptional<int64>()),
         CountValue(TOptional<int32>())
     {
@@ -32,7 +32,7 @@ namespace Gs2::Lottery::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         LotteryNameValue(From.LotteryNameValue),
-        UserIdValue(From.UserIdValue),
+        AccessTokenValue(From.AccessTokenValue),
         RandomSeedValue(From.RandomSeedValue),
         CountValue(From.CountValue)
     {
@@ -62,11 +62,11 @@ namespace Gs2::Lottery::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FPredictionRequest> FPredictionRequest::WithUserId(
-        const TOptional<FString> UserId
+    TSharedPtr<FPredictionRequest> FPredictionRequest::WithAccessToken(
+        const TOptional<FString> AccessToken
     )
     {
-        this->UserIdValue = UserId;
+        this->AccessTokenValue = AccessToken;
         return SharedThis(this);
     }
 
@@ -109,9 +109,9 @@ namespace Gs2::Lottery::Request
         return LotteryNameValue;
     }
 
-    TOptional<FString> FPredictionRequest::GetUserId() const
+    TOptional<FString> FPredictionRequest::GetAccessToken() const
     {
-        return UserIdValue;
+        return AccessTokenValue;
     }
 
     TOptional<int64> FPredictionRequest::GetRandomSeed() const
@@ -172,10 +172,10 @@ namespace Gs2::Lottery::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+            ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
               {
                   FString v;
-                    if (Data->TryGetStringField("userId", v))
+                    if (Data->TryGetStringField("xGs2AccessToken", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -217,9 +217,9 @@ namespace Gs2::Lottery::Request
         {
             JsonRootObject->SetStringField("lotteryName", LotteryNameValue.GetValue());
         }
-        if (UserIdValue.IsSet())
+        if (AccessTokenValue.IsSet())
         {
-            JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+            JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
         }
         if (RandomSeedValue.IsSet())
         {

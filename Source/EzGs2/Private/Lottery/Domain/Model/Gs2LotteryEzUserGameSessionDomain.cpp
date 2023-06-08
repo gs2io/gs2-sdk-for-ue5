@@ -51,6 +51,16 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
     }
 
+    Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomainPtr FEzUserGameSessionDomain::Lottery(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomain>(
+            Domain->Lottery(
+            ),
+            ProfileValue
+        );
+    }
+
     Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeBoxesIteratorPtr FEzUserGameSessionDomain::Boxes(
     ) const
     {

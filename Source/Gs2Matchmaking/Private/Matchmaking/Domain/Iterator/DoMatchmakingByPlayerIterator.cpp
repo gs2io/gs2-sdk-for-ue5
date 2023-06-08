@@ -80,6 +80,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
+
             const auto Future = Self->Client->DoMatchmakingByPlayer(
                 MakeShared<Gs2::Matchmaking::Request::FDoMatchmakingByPlayerRequest>()
                     ->WithNamespaceName(Self->NamespaceName)

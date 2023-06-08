@@ -86,13 +86,20 @@ namespace Gs2::Lottery::Domain::Iterator
                 Self->UserId(),
                 "Probability"
             );
-            Range = Self->Cache->TryGetList<Gs2::Lottery::Model::FProbability>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Lottery::Model::FProbability>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeProbabilities(
                 MakeShared<Gs2::Lottery::Request::FDescribeProbabilitiesRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -127,7 +134,7 @@ namespace Gs2::Lottery::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Lottery::Model::FProbability::TypeName,
                     ListParentKey
                 );

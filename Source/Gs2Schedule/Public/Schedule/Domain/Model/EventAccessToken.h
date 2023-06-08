@@ -51,9 +51,14 @@ namespace Gs2::Schedule::Domain::Model
 
         public:
         TOptional<int32> RepeatCount;
+        TOptional<bool> InSchedule;
         TOptional<int32> GetRepeatCount() const
         {
             return RepeatCount;
+        }
+        TOptional<bool> GetInSchedule() const
+        {
+            return InSchedule;
         }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;

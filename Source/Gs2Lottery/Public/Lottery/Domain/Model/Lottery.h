@@ -125,11 +125,11 @@ namespace Gs2::Lottery::Domain::Model
             public TSharedFromThis<FPredictionTask>
         {
             const TSharedPtr<FLotteryDomain> Self;
-            const Request::FPredictionRequestPtr Request;
+            const Request::FPredictionByUserIdRequestPtr Request;
         public:
             explicit FPredictionTask(
                 const TSharedPtr<FLotteryDomain> Self,
-                const Request::FPredictionRequestPtr Request
+                const Request::FPredictionByUserIdRequestPtr Request
             );
 
             FPredictionTask(
@@ -143,32 +143,6 @@ namespace Gs2::Lottery::Domain::Model
         friend FPredictionTask;
 
         TSharedPtr<FAsyncTask<FPredictionTask>> Prediction(
-            Request::FPredictionRequestPtr Request
-        );
-
-        class GS2LOTTERY_API FPredictionByUserIdTask final :
-            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>,
-            public TSharedFromThis<FPredictionByUserIdTask>
-        {
-            const TSharedPtr<FLotteryDomain> Self;
-            const Request::FPredictionByUserIdRequestPtr Request;
-        public:
-            explicit FPredictionByUserIdTask(
-                const TSharedPtr<FLotteryDomain> Self,
-                const Request::FPredictionByUserIdRequestPtr Request
-            );
-
-            FPredictionByUserIdTask(
-                const FPredictionByUserIdTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>> Result
-            ) override;
-        };
-        friend FPredictionByUserIdTask;
-
-        TSharedPtr<FAsyncTask<FPredictionByUserIdTask>> PredictionByUserId(
             Request::FPredictionByUserIdRequestPtr Request
         );
 

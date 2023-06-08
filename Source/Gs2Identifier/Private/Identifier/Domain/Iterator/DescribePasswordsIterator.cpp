@@ -82,14 +82,21 @@ namespace Gs2::Identifier::Domain::Iterator
                 Self->UserName,
                 "Password"
             );
-            Range = Self->Cache->TryGetList<Gs2::Identifier::Model::FPassword>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Identifier::Model::FPassword>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribePasswords(
                 MakeShared<Gs2::Identifier::Request::FDescribePasswordsRequest>()
                     ->WithUserName(Self->UserName)
@@ -125,7 +132,7 @@ namespace Gs2::Identifier::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Identifier::Model::FPassword::TypeName,
                     ListParentKey
                 );

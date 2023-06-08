@@ -86,14 +86,21 @@ namespace Gs2::Ranking::Domain::Iterator
                 Self->UserId(),
                 "SubscribeUser"
             );
-            Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FSubscribeUser>(ListParentKey);
-            if (Range) {
-                Range->RemoveAll([this](const Gs2::Ranking::Model::FSubscribeUserPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FSubscribeUser>(ListParentKey);
+
+                if (Range)
+                {
+                    Range->RemoveAll([this](const Gs2::Ranking::Model::FSubscribeUserPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeSubscribesByCategoryName(
                 MakeShared<Gs2::Ranking::Request::FDescribeSubscribesByCategoryNameRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -130,7 +137,7 @@ namespace Gs2::Ranking::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Ranking::Model::FSubscribeUser::TypeName,
                     ListParentKey
                 );

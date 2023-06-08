@@ -85,15 +85,22 @@ namespace Gs2::Friend::Domain::Iterator
                 Self->UserId,
                 "ReceiveFriendRequest"
             );
-            Range = Self->Cache->TryGetList<Gs2::Friend::Model::FFriendRequest>(ListParentKey);
-            if (Range) {
-                Range->RemoveAll([this](const Gs2::Friend::Model::FFriendRequestPtr& Item) { return Self->UserId && Item->GetTargetUserId() != Self->UserId; });
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Friend::Model::FFriendRequest>(ListParentKey);
+
+                if (Range)
+                {
+                    Range->RemoveAll([this](const Gs2::Friend::Model::FFriendRequestPtr& Item) { return Self->UserId && Item->GetTargetUserId() != Self->UserId; });
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeReceiveRequestsByUserId(
                 MakeShared<Gs2::Friend::Request::FDescribeReceiveRequestsByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -131,7 +138,7 @@ namespace Gs2::Friend::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Friend::Model::FFriendRequest::TypeName,
                     ListParentKey
                 );

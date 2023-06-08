@@ -84,13 +84,20 @@ namespace Gs2::News::Domain::Iterator
                 Self->UserId,
                 "News"
             );
-            Range = Self->Cache->TryGetList<Gs2::News::Model::FNews>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::News::Model::FNews>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeNewsByUserId(
                 MakeShared<Gs2::News::Request::FDescribeNewsByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -124,7 +131,7 @@ namespace Gs2::News::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::News::Model::FNews::TypeName,
                     ListParentKey
                 );

@@ -76,14 +76,21 @@ namespace Gs2::Formation::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = "formation:Namespace";
-            Range = Self->Cache->TryGetList<Gs2::Formation::Model::FNamespace>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Formation::Model::FNamespace>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeNamespaces(
                 MakeShared<Gs2::Formation::Request::FDescribeNamespacesRequest>()
                     ->WithPageToken(PageToken)
@@ -119,7 +126,7 @@ namespace Gs2::Formation::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Formation::Model::FNamespace::TypeName,
                     ListParentKey
                 );

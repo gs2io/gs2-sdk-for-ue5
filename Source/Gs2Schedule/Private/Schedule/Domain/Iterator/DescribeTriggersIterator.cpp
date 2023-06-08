@@ -85,14 +85,21 @@ namespace Gs2::Schedule::Domain::Iterator
                 Self->UserId(),
                 "Trigger"
             );
-            Range = Self->Cache->TryGetList<Gs2::Schedule::Model::FTrigger>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Schedule::Model::FTrigger>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeTriggers(
                 MakeShared<Gs2::Schedule::Request::FDescribeTriggersRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -130,7 +137,7 @@ namespace Gs2::Schedule::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Schedule::Model::FTrigger::TypeName,
                     ListParentKey
                 );

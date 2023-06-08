@@ -37,7 +37,6 @@ namespace Gs2::Schedule::Model
         TOptional<int32> RepeatBeginHourValue;
         TOptional<int32> RepeatEndHourValue;
         TOptional<FString> RelativeTriggerNameValue;
-        TOptional<int32> RelativeDurationValue;
 
     public:
         FEvent();
@@ -60,7 +59,6 @@ namespace Gs2::Schedule::Model
         TSharedPtr<FEvent> WithRepeatBeginHour(const TOptional<int32> RepeatBeginHour);
         TSharedPtr<FEvent> WithRepeatEndHour(const TOptional<int32> RepeatEndHour);
         TSharedPtr<FEvent> WithRelativeTriggerName(const TOptional<FString> RelativeTriggerName);
-        TSharedPtr<FEvent> WithRelativeDuration(const TOptional<int32> RelativeDuration);
 
         TOptional<FString> GetEventId() const;
         TOptional<FString> GetName() const;
@@ -82,8 +80,6 @@ namespace Gs2::Schedule::Model
         TOptional<int32> GetRepeatEndHour() const;
         FString GetRepeatEndHourString() const;
         TOptional<FString> GetRelativeTriggerName() const;
-        TOptional<int32> GetRelativeDuration() const;
-        FString GetRelativeDurationString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

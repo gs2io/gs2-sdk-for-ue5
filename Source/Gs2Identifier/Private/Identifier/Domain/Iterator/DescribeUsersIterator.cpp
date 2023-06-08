@@ -76,14 +76,21 @@ namespace Gs2::Identifier::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto ListParentKey = "identifier:User";
-            Range = Self->Cache->TryGetList<Gs2::Identifier::Model::FUser>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Identifier::Model::FUser>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeUsers(
                 MakeShared<Gs2::Identifier::Request::FDescribeUsersRequest>()
                     ->WithPageToken(PageToken)
@@ -119,7 +126,7 @@ namespace Gs2::Identifier::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Identifier::Model::FUser::TypeName,
                     ListParentKey
                 );

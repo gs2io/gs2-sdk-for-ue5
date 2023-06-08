@@ -82,6 +82,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
+
             const auto Future = Self->Client->DoMatchmaking(
                 MakeShared<Gs2::Matchmaking::Request::FDoMatchmakingRequest>()
                     ->WithNamespaceName(Self->NamespaceName)

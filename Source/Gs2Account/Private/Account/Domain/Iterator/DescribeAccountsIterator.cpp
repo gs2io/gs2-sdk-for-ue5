@@ -82,14 +82,21 @@ namespace Gs2::Account::Domain::Iterator
                 Self->NamespaceName,
                 "Account"
             );
-            Range = Self->Cache->TryGetList<Gs2::Account::Model::FAccount>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Account::Model::FAccount>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeAccounts(
                 MakeShared<Gs2::Account::Request::FDescribeAccountsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -126,7 +133,7 @@ namespace Gs2::Account::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Account::Model::FAccount::TypeName,
                     ListParentKey
                 );

@@ -84,13 +84,20 @@ namespace Gs2::Schedule::Domain::Iterator
                 Self->UserId(),
                 "Event"
             );
-            Range = Self->Cache->TryGetList<Gs2::Schedule::Model::FEvent>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Schedule::Model::FEvent>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeEvents(
                 MakeShared<Gs2::Schedule::Request::FDescribeEventsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -125,7 +132,7 @@ namespace Gs2::Schedule::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Schedule::Model::FEvent::TypeName,
                     ListParentKey
                 );

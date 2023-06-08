@@ -122,14 +122,6 @@ namespace Gs2::UE5::Schedule::Model
         this->RelativeTriggerNameValue = RelativeTriggerName;
         return SharedThis(this);
     }
-
-    TSharedPtr<FEzEvent> FEzEvent::WithRelativeDuration(
-        const TOptional<int32> RelativeDuration
-    )
-    {
-        this->RelativeDurationValue = RelativeDuration;
-        return SharedThis(this);
-    }
     TOptional<FString> FEzEvent::GetName() const
     {
         return NameValue;
@@ -236,19 +228,6 @@ namespace Gs2::UE5::Schedule::Model
     {
         return RelativeTriggerNameValue;
     }
-    TOptional<int32> FEzEvent::GetRelativeDuration() const
-    {
-        return RelativeDurationValue;
-    }
-
-    FString FEzEvent::GetRelativeDurationString() const
-    {
-        if (!RelativeDurationValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString::Printf(TEXT("%d"), RelativeDurationValue.GetValue());
-    }
 
     Gs2::Schedule::Model::FEventPtr FEzEvent::ToModel() const
     {
@@ -265,8 +244,7 @@ namespace Gs2::UE5::Schedule::Model
             ->WithRepeatEndDayOfWeek(RepeatEndDayOfWeekValue)
             ->WithRepeatBeginHour(RepeatBeginHourValue)
             ->WithRepeatEndHour(RepeatEndHourValue)
-            ->WithRelativeTriggerName(RelativeTriggerNameValue)
-            ->WithRelativeDuration(RelativeDurationValue);
+            ->WithRelativeTriggerName(RelativeTriggerNameValue);
     }
 
     TSharedPtr<FEzEvent> FEzEvent::FromModel(const Gs2::Schedule::Model::FEventPtr Model)
@@ -288,7 +266,6 @@ namespace Gs2::UE5::Schedule::Model
             ->WithRepeatEndDayOfWeek(Model->GetRepeatEndDayOfWeek())
             ->WithRepeatBeginHour(Model->GetRepeatBeginHour())
             ->WithRepeatEndHour(Model->GetRepeatEndHour())
-            ->WithRelativeTriggerName(Model->GetRelativeTriggerName())
-            ->WithRelativeDuration(Model->GetRelativeDuration());
+            ->WithRelativeTriggerName(Model->GetRelativeTriggerName());
     }
 }

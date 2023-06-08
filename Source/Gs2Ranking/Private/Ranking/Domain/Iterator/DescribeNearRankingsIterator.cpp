@@ -86,15 +86,22 @@ namespace Gs2::Ranking::Domain::Iterator
                 TOptional<FString>("Singleton"),
                 "NearRanking"
             );
-            Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FRanking>(ListParentKey);
-            if (Range) {
-                Range->RemoveAll([this](const Gs2::Ranking::Model::FRankingPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
-                Range->RemoveAll([this](const Gs2::Ranking::Model::FRankingPtr& Item) { return Self->Score && Item->GetScore() != Self->Score; });
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FRanking>(ListParentKey);
+
+                if (Range)
+                {
+                    Range->RemoveAll([this](const Gs2::Ranking::Model::FRankingPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
+                    Range->RemoveAll([this](const Gs2::Ranking::Model::FRankingPtr& Item) { return Self->Score && Item->GetScore() != Self->Score; });
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeNearRankings(
                 MakeShared<Gs2::Ranking::Request::FDescribeNearRankingsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -130,7 +137,7 @@ namespace Gs2::Ranking::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Ranking::Model::FRanking::TypeName,
                     ListParentKey
                 );

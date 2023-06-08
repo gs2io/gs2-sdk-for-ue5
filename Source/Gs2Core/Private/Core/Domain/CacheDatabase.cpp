@@ -43,7 +43,9 @@ FCacheDatabase::FCacheDatabase(
     const FCacheDatabase& From
 ):
     Cache(From.Cache),
-    ListCached(From.ListCached)
+    ListCached(From.ListCached),
+    ListCacheUpdateRequired(From.ListCacheUpdateRequired),
+    ListUpdateContexts(From.ListUpdateContexts)
 {
 }
 
@@ -51,14 +53,33 @@ void FCacheDatabase::Clear()
 {
     Cache.Reset();
     ListCached.Reset();
+    ListCacheUpdateRequired.Reset();
+    ListUpdateContexts.Reset();
 }
 
-void FCacheDatabase::SetListCache(
+void FCacheDatabase::SetListCached(
+    FTypeName Kind,
+    FParentCacheKey ParentKey,
+    TSharedPtr<Gs2Object> UpdateContext
+)
+{
+    Ensure(ListCached, Kind).Add(ParentKey);
+
+    if (UpdateContext)
+    {
+        auto* ListCacheUpdateRequired0 = ListCacheUpdateRequired.Find(Kind);
+        if (ListCacheUpdateRequired0 != nullptr) ListCacheUpdateRequired0->Remove(ParentKey);
+
+        Ensure(ListUpdateContexts, Kind).Add(ParentKey, UpdateContext);
+    }
+}
+
+void FCacheDatabase::SetListCacheUpdateRequired(
     FTypeName Kind,
     FParentCacheKey ParentKey
 )
 {
-    Ensure(ListCached, Kind).Add(ParentKey);
+    Ensure(ListCacheUpdateRequired, Kind).Add(ParentKey);
 }
 
 void FCacheDatabase::ClearListCache(
@@ -73,6 +94,12 @@ void FCacheDatabase::ClearListCache(
 
     auto* ListCache0 = ListCached.Find(Kind);
     if (ListCache0 != nullptr) ListCache0->Remove(ParentKey);
+
+    auto* ListCacheUpdateRequired0 = ListCacheUpdateRequired.Find(Kind);
+    if (ListCacheUpdateRequired0 != nullptr) ListCacheUpdateRequired0->Remove(ParentKey);
+
+    auto* ListUpdateContexts0 = ListUpdateContexts.Find(Kind);
+    if (ListUpdateContexts0 != nullptr) ListUpdateContexts0->Remove(ParentKey);
 }
 
 void FCacheDatabase::Put(

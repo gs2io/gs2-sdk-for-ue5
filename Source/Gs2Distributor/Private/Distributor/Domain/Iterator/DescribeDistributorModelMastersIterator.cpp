@@ -82,14 +82,21 @@ namespace Gs2::Distributor::Domain::Iterator
                 Self->NamespaceName,
                 "DistributorModelMaster"
             );
-            Range = Self->Cache->TryGetList<Gs2::Distributor::Model::FDistributorModelMaster>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Distributor::Model::FDistributorModelMaster>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeDistributorModelMasters(
                 MakeShared<Gs2::Distributor::Request::FDescribeDistributorModelMastersRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -126,7 +133,7 @@ namespace Gs2::Distributor::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
                     ListParentKey
                 );

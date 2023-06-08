@@ -34,7 +34,6 @@ namespace Gs2::Schedule::Model
         RepeatBeginHourValue(TOptional<int32>()),
         RepeatEndHourValue(TOptional<int32>()),
         RelativeTriggerNameValue(TOptional<FString>()),
-        RelativeDurationValue(TOptional<int32>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>())
     {
@@ -58,7 +57,6 @@ namespace Gs2::Schedule::Model
         RepeatBeginHourValue(From.RepeatBeginHourValue),
         RepeatEndHourValue(From.RepeatEndHourValue),
         RelativeTriggerNameValue(From.RelativeTriggerNameValue),
-        RelativeDurationValue(From.RelativeDurationValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue)
     {
@@ -181,14 +179,6 @@ namespace Gs2::Schedule::Model
     )
     {
         this->RelativeTriggerNameValue = RelativeTriggerName;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FEventMaster> FEventMaster::WithRelativeDuration(
-        const TOptional<int32> RelativeDuration
-    )
-    {
-        this->RelativeDurationValue = RelativeDuration;
         return SharedThis(this);
     }
 
@@ -320,19 +310,6 @@ namespace Gs2::Schedule::Model
     TOptional<FString> FEventMaster::GetRelativeTriggerName() const
     {
         return RelativeTriggerNameValue;
-    }
-    TOptional<int32> FEventMaster::GetRelativeDuration() const
-    {
-        return RelativeDurationValue;
-    }
-
-    FString FEventMaster::GetRelativeDurationString() const
-    {
-        if (!RelativeDurationValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString::Printf(TEXT("%d"), RelativeDurationValue.GetValue());
     }
     TOptional<int64> FEventMaster::GetCreatedAt() const
     {
@@ -546,15 +523,6 @@ namespace Gs2::Schedule::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithRelativeDuration(Data->HasField("relativeDuration") ? [Data]() -> TOptional<int32>
-                {
-                    int32 v;
-                    if (Data->TryGetNumberField("relativeDuration", v))
-                    {
-                        return TOptional(v);
-                    }
-                    return TOptional<int32>();
-                }() : TOptional<int32>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -637,10 +605,6 @@ namespace Gs2::Schedule::Model
         if (RelativeTriggerNameValue.IsSet())
         {
             JsonRootObject->SetStringField("relativeTriggerName", RelativeTriggerNameValue.GetValue());
-        }
-        if (RelativeDurationValue.IsSet())
-        {
-            JsonRootObject->SetNumberField("relativeDuration", RelativeDurationValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {

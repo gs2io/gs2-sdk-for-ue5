@@ -36,7 +36,6 @@ namespace Gs2::UE5::Schedule::Model
         TOptional<int32> RepeatBeginHourValue;
         TOptional<int32> RepeatEndHourValue;
         TOptional<FString> RelativeTriggerNameValue;
-        TOptional<int32> RelativeDurationValue;
 
 	public:
         TSharedPtr<FEzEvent> WithName(const TOptional<FString> Name);
@@ -52,7 +51,6 @@ namespace Gs2::UE5::Schedule::Model
         TSharedPtr<FEzEvent> WithRepeatBeginHour(const TOptional<int32> RepeatBeginHour);
         TSharedPtr<FEzEvent> WithRepeatEndHour(const TOptional<int32> RepeatEndHour);
         TSharedPtr<FEzEvent> WithRelativeTriggerName(const TOptional<FString> RelativeTriggerName);
-        TSharedPtr<FEzEvent> WithRelativeDuration(const TOptional<int32> RelativeDuration);
 
         TOptional<FString> GetName() const;
 
@@ -85,9 +83,6 @@ namespace Gs2::UE5::Schedule::Model
         FString GetRepeatEndHourString() const;
 
         TOptional<FString> GetRelativeTriggerName() const;
-
-        TOptional<int32> GetRelativeDuration() const;
-        FString GetRelativeDurationString() const;
 
         Gs2::Schedule::Model::FEventPtr ToModel() const;
         static TSharedPtr<FEzEvent> FromModel(Gs2::Schedule::Model::FEventPtr Model);

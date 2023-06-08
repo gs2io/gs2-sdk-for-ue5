@@ -83,14 +83,21 @@ namespace Gs2::Matchmaking::Domain::Iterator
                 TOptional<FString>("Singleton"),
                 "Gathering"
             );
-            Range = Self->Cache->TryGetList<Gs2::Matchmaking::Model::FGathering>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Matchmaking::Model::FGathering>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeGatherings(
                 MakeShared<Gs2::Matchmaking::Request::FDescribeGatheringsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -127,7 +134,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Matchmaking::Model::FGathering::TypeName,
                     ListParentKey
                 );

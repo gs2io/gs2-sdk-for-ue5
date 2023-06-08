@@ -33,8 +33,7 @@ namespace Gs2::Schedule::Request
         RepeatEndDayOfWeekValue(TOptional<FString>()),
         RepeatBeginHourValue(TOptional<int32>()),
         RepeatEndHourValue(TOptional<int32>()),
-        RelativeTriggerNameValue(TOptional<FString>()),
-        RelativeDurationValue(TOptional<int32>())
+        RelativeTriggerNameValue(TOptional<FString>())
     {
     }
 
@@ -55,8 +54,7 @@ namespace Gs2::Schedule::Request
         RepeatEndDayOfWeekValue(From.RepeatEndDayOfWeekValue),
         RepeatBeginHourValue(From.RepeatBeginHourValue),
         RepeatEndHourValue(From.RepeatEndHourValue),
-        RelativeTriggerNameValue(From.RelativeTriggerNameValue),
-        RelativeDurationValue(From.RelativeDurationValue)
+        RelativeTriggerNameValue(From.RelativeTriggerNameValue)
     {
     }
 
@@ -185,14 +183,6 @@ namespace Gs2::Schedule::Request
     )
     {
         this->RelativeTriggerNameValue = RelativeTriggerName;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FCreateEventMasterRequest> FCreateEventMasterRequest::WithRelativeDuration(
-        const TOptional<int32> RelativeDuration
-    )
-    {
-        this->RelativeDurationValue = RelativeDuration;
         return SharedThis(this);
     }
 
@@ -328,20 +318,6 @@ namespace Gs2::Schedule::Request
     TOptional<FString> FCreateEventMasterRequest::GetRelativeTriggerName() const
     {
         return RelativeTriggerNameValue;
-    }
-
-    TOptional<int32> FCreateEventMasterRequest::GetRelativeDuration() const
-    {
-        return RelativeDurationValue;
-    }
-
-    FString FCreateEventMasterRequest::GetRelativeDurationString() const
-    {
-        if (!RelativeDurationValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString::Printf(TEXT("%d"), RelativeDurationValue.GetValue());
     }
 
     TSharedPtr<FCreateEventMasterRequest> FCreateEventMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -485,16 +461,7 @@ namespace Gs2::Schedule::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-            ->WithRelativeDuration(Data->HasField("relativeDuration") ? [Data]() -> TOptional<int32>
-              {
-                  int32 v;
-                    if (Data->TryGetNumberField("relativeDuration", v))
-                  {
-                        return TOptional(v);
-                  }
-                  return TOptional<int32>();
-              }() : TOptional<int32>());
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FCreateEventMasterRequest::ToJson() const
@@ -563,10 +530,6 @@ namespace Gs2::Schedule::Request
         if (RelativeTriggerNameValue.IsSet())
         {
             JsonRootObject->SetStringField("relativeTriggerName", RelativeTriggerNameValue.GetValue());
-        }
-        if (RelativeDurationValue.IsSet())
-        {
-            JsonRootObject->SetNumberField("relativeDuration", RelativeDurationValue.GetValue());
         }
         return JsonRootObject;
     }

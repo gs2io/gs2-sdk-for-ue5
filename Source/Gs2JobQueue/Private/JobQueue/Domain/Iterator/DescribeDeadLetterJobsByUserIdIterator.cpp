@@ -85,14 +85,21 @@ namespace Gs2::JobQueue::Domain::Iterator
                 Self->UserId,
                 "DeadLetterJob"
             );
-            Range = Self->Cache->TryGetList<Gs2::JobQueue::Model::FDeadLetterJob>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::JobQueue::Model::FDeadLetterJob>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeDeadLetterJobsByUserId(
                 MakeShared<Gs2::JobQueue::Request::FDescribeDeadLetterJobsByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -130,7 +137,7 @@ namespace Gs2::JobQueue::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::JobQueue::Model::FDeadLetterJob::TypeName,
                     ListParentKey
                 );

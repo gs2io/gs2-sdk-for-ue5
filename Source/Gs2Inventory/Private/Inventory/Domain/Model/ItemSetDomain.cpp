@@ -157,6 +157,26 @@ namespace Gs2::Inventory::Domain::Model
                         );
                     }
                 }
+                if (ResultModel->GetItems()->Num() == 0)
+                {
+                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId,
+                        Self->InventoryName,
+                        "ItemSet"
+                    );
+                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                        Self->ItemName,
+                        TOptional<FString>()
+                        );
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
+                        Self->ParentKey,
+                        Key,
+                        MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*ResultModel->GetItems()),
+                        FDateTime::FromUnixTimestamp((FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp())
+                    );
+                }
                 TMap<FString, TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Groups;
                 for (auto Item : *ResultModel->GetItems())
                 {
@@ -329,6 +349,26 @@ namespace Gs2::Inventory::Domain::Model
                             Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                         );
                     }
+                }
+                if (ResultModel->GetItems()->Num() == 0)
+                {
+                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId,
+                        Self->InventoryName,
+                        "ItemSet"
+                    );
+                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                        Self->ItemName,
+                        TOptional<FString>()
+                        );
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
+                        Self->ParentKey,
+                        Key,
+                        MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*ResultModel->GetItems()),
+                        FDateTime::FromUnixTimestamp((FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp())
+                    );
                 }
                 TMap<FString, TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Groups;
                 for (auto Item : *ResultModel->GetItems())
@@ -521,6 +561,26 @@ namespace Gs2::Inventory::Domain::Model
                         );
                     }
                 }
+                if (ResultModel->GetItems()->Num() == 0)
+                {
+                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId,
+                        Self->InventoryName,
+                        "ItemSet"
+                    );
+                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                        Self->ItemName,
+                        TOptional<FString>()
+                        );
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
+                        Self->ParentKey,
+                        Key,
+                        MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*ResultModel->GetItems()),
+                        FDateTime::FromUnixTimestamp((FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp())
+                    );
+                }
                 TMap<FString, TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Groups;
                 for (auto Item : *ResultModel->GetItems())
                 {
@@ -711,6 +771,26 @@ namespace Gs2::Inventory::Domain::Model
                         );
                     }
                 }
+                if (ResultModel->GetItems()->Num() == 0)
+                {
+                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId,
+                        Self->InventoryName,
+                        "ItemSet"
+                    );
+                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                        Self->ItemName,
+                        TOptional<FString>()
+                        );
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
+                        Self->ParentKey,
+                        Key,
+                        MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*ResultModel->GetItems()),
+                        FDateTime::FromUnixTimestamp((FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp())
+                    );
+                }
                 TMap<FString, TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Groups;
                 for (auto Item : *ResultModel->GetItems())
                 {
@@ -886,6 +966,26 @@ namespace Gs2::Inventory::Domain::Model
                         Gs2::Inventory::Model::FItemSet::TypeName,
                         ParentKey,
                         Key
+                    );
+                }
+                if (ResultModel->GetItems()->Num() == 0)
+                {
+                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId,
+                        Self->InventoryName,
+                        "ItemSet"
+                    );
+                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                        Self->ItemName,
+                        TOptional<FString>()
+                        );
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
+                        Self->ParentKey,
+                        Key,
+                        MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*ResultModel->GetItems()),
+                        FDateTime::FromUnixTimestamp((FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp())
                     );
                 }
                 TMap<FString, TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Groups;

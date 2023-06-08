@@ -81,13 +81,20 @@ namespace Gs2::Enhance::Domain::Iterator
                 Self->NamespaceName,
                 "RateModel"
             );
-            Range = Self->Cache->TryGetList<Gs2::Enhance::Model::FRateModel>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Enhance::Model::FRateModel>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeRateModels(
                 MakeShared<Gs2::Enhance::Request::FDescribeRateModelsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -121,7 +128,7 @@ namespace Gs2::Enhance::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Enhance::Model::FRateModel::TypeName,
                     ListParentKey
                 );

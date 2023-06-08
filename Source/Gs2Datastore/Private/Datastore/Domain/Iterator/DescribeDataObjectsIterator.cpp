@@ -87,15 +87,22 @@ namespace Gs2::Datastore::Domain::Iterator
                 Self->UserId(),
                 "DataObject"
             );
-            Range = Self->Cache->TryGetList<Gs2::Datastore::Model::FDataObject>(ListParentKey);
-            if (Range) {
-                Range->RemoveAll([this](const Gs2::Datastore::Model::FDataObjectPtr& Item) { return Self->Status && Item->GetStatus() != Self->Status; });
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Datastore::Model::FDataObject>(ListParentKey);
+
+                if (Range)
+                {
+                    Range->RemoveAll([this](const Gs2::Datastore::Model::FDataObjectPtr& Item) { return Self->Status && Item->GetStatus() != Self->Status; });
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeDataObjects(
                 MakeShared<Gs2::Datastore::Request::FDescribeDataObjectsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -134,7 +141,7 @@ namespace Gs2::Datastore::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Datastore::Model::FDataObject::TypeName,
                     ListParentKey
                 );

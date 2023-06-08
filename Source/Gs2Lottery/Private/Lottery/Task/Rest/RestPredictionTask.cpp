@@ -81,11 +81,6 @@ namespace Gs2::Lottery::Task::Rest
                 !this->Request->GetLotteryName().IsSet() || this->Request->GetLotteryName().GetValue().Len() == 0 ?
                     TEXT("null") : ToCStr(*this->Request->GetLotteryName())
             );
-            Url = Url.Replace(
-                TEXT("{userId}"),
-                !this->Request->GetUserId().IsSet() || this->Request->GetUserId().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetUserId())
-            );
 
             request->SetURL(Url);
 
@@ -108,6 +103,10 @@ namespace Gs2::Lottery::Task::Rest
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
+            if (this->Request->GetAccessToken().IsSet())
+            {
+                request->SetHeader("X-GS2-ACCESS-TOKEN", this->Request->GetAccessToken().GetValue());
+            }
             if (this->Request->GetDuplicationAvoider().IsSet())
             {
                 request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());

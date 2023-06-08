@@ -27,7 +27,7 @@ namespace Gs2::Lottery::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> LotteryNameValue;
-        TOptional<FString> UserIdValue;
+        TOptional<FString> AccessTokenValue;
         TOptional<int64> RandomSeedValue;
         TOptional<int32> CountValue;
         TOptional<FString> DuplicationAvoiderValue;
@@ -43,7 +43,7 @@ namespace Gs2::Lottery::Request
         TSharedPtr<FPredictionRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FPredictionRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FPredictionRequest> WithLotteryName(const TOptional<FString> LotteryName);
-        TSharedPtr<FPredictionRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FPredictionRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FPredictionRequest> WithRandomSeed(const TOptional<int64> RandomSeed);
         TSharedPtr<FPredictionRequest> WithCount(const TOptional<int32> Count);
         TSharedPtr<FPredictionRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
@@ -51,7 +51,7 @@ namespace Gs2::Lottery::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetLotteryName() const;
-        TOptional<FString> GetUserId() const;
+        TOptional<FString> GetAccessToken() const;
         TOptional<int64> GetRandomSeed() const;
         FString GetRandomSeedString() const;
         TOptional<int32> GetCount() const;

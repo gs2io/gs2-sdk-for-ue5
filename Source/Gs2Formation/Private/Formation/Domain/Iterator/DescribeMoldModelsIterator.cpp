@@ -81,13 +81,20 @@ namespace Gs2::Formation::Domain::Iterator
                 Self->NamespaceName,
                 "MoldModel"
             );
-            Range = Self->Cache->TryGetList<Gs2::Formation::Model::FMoldModel>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Formation::Model::FMoldModel>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeMoldModels(
                 MakeShared<Gs2::Formation::Request::FDescribeMoldModelsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -121,7 +128,7 @@ namespace Gs2::Formation::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Formation::Model::FMoldModel::TypeName,
                     ListParentKey
                 );

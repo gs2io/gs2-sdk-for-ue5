@@ -84,13 +84,20 @@ namespace Gs2::MegaField::Domain::Iterator
                 Self->AreaModelName,
                 "LayerModel"
             );
-            Range = Self->Cache->TryGetList<Gs2::MegaField::Model::FLayerModel>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::MegaField::Model::FLayerModel>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeLayerModels(
                 MakeShared<Gs2::MegaField::Request::FDescribeLayerModelsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -125,7 +132,7 @@ namespace Gs2::MegaField::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::MegaField::Model::FLayerModel::TypeName,
                     ListParentKey
                 );

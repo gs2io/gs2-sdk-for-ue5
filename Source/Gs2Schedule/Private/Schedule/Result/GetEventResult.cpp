@@ -20,7 +20,9 @@ namespace Gs2::Schedule::Result
 {
     FGetEventResult::FGetEventResult():
         ItemValue(nullptr),
-        RepeatCountValue(TOptional<int32>())
+        RepeatCountValue(TOptional<int32>()),
+        InScheduleValue(TOptional<bool>()),
+        RepeatScheduleValue(nullptr)
     {
     }
 
@@ -28,7 +30,9 @@ namespace Gs2::Schedule::Result
         const FGetEventResult& From
     ):
         ItemValue(From.ItemValue),
-        RepeatCountValue(From.RepeatCountValue)
+        RepeatCountValue(From.RepeatCountValue),
+        InScheduleValue(From.InScheduleValue),
+        RepeatScheduleValue(From.RepeatScheduleValue)
     {
     }
 
@@ -45,6 +49,22 @@ namespace Gs2::Schedule::Result
     )
     {
         this->RepeatCountValue = RepeatCount;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGetEventResult> FGetEventResult::WithInSchedule(
+        const TOptional<bool> InSchedule
+    )
+    {
+        this->InScheduleValue = InSchedule;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGetEventResult> FGetEventResult::WithRepeatSchedule(
+        const TSharedPtr<Model::FRepeatSchedule> RepeatSchedule
+    )
+    {
+        this->RepeatScheduleValue = RepeatSchedule;
         return SharedThis(this);
     }
 
@@ -71,6 +91,29 @@ namespace Gs2::Schedule::Result
         return FString::Printf(TEXT("%d"), RepeatCountValue.GetValue());
     }
 
+    TOptional<bool> FGetEventResult::GetInSchedule() const
+    {
+        return InScheduleValue;
+    }
+
+    FString FGetEventResult::GetInScheduleString() const
+    {
+        if (!InScheduleValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(InScheduleValue.GetValue() ? "true" : "false");
+    }
+
+    TSharedPtr<Model::FRepeatSchedule> FGetEventResult::GetRepeatSchedule() const
+    {
+        if (!RepeatScheduleValue.IsValid())
+        {
+            return nullptr;
+        }
+        return RepeatScheduleValue;
+    }
+
     TSharedPtr<FGetEventResult> FGetEventResult::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
@@ -93,7 +136,24 @@ namespace Gs2::Schedule::Result
                         return TOptional(v);
                     }
                     return TOptional<int32>();
-                }() : TOptional<int32>());
+                }() : TOptional<int32>())
+            ->WithInSchedule(Data->HasField("inSchedule") ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField("inSchedule", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
+            ->WithRepeatSchedule(Data->HasField("repeatSchedule") ? [Data]() -> Model::FRepeatSchedulePtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("repeatSchedule"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FRepeatSchedule::FromJson(Data->GetObjectField("repeatSchedule"));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FGetEventResult::ToJson() const
@@ -106,6 +166,14 @@ namespace Gs2::Schedule::Result
         if (RepeatCountValue.IsSet())
         {
             JsonRootObject->SetNumberField("repeatCount", RepeatCountValue.GetValue());
+        }
+        if (InScheduleValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("inSchedule", InScheduleValue.GetValue());
+        }
+        if (RepeatScheduleValue != nullptr && RepeatScheduleValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("repeatSchedule", RepeatScheduleValue->ToJson());
         }
         return JsonRootObject;
     }

@@ -20,6 +20,7 @@
 #include "Schedule/Domain/Model/Event.h"
 #include "Schedule/Model/Gs2ScheduleEzTrigger.h"
 #include "Schedule/Model/Gs2ScheduleEzEvent.h"
+#include "Schedule/Model/Gs2ScheduleEzRepeatSchedule.h"
 #include "Gs2ScheduleEzEventDomain.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
@@ -35,6 +36,7 @@ namespace Gs2::UE5::Schedule::Domain::Model
 
         public:
         TOptional<int32> RepeatCount() const;
+        TOptional<bool> InSchedule() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> EventName() const;

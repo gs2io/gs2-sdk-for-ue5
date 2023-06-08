@@ -89,16 +89,23 @@ namespace Gs2::Ranking::Domain::Iterator
                 Self->UserId,
                 "Score"
             );
-            Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FScore>(ListParentKey);
-            if (Range) {
-                Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
-                Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->ScorerUserId && Item->GetScorerUserId() != Self->ScorerUserId; });
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FScore>(ListParentKey);
+
+                if (Range)
+                {
+                    Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
+                    Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->ScorerUserId && Item->GetScorerUserId() != Self->ScorerUserId; });
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeScoresByUserId(
                 MakeShared<Gs2::Ranking::Request::FDescribeScoresByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -140,7 +147,7 @@ namespace Gs2::Ranking::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Ranking::Model::FScore::TypeName,
                     ListParentKey
                 );

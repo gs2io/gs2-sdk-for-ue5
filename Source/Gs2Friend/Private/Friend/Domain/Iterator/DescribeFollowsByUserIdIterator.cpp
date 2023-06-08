@@ -87,14 +87,21 @@ namespace Gs2::Friend::Domain::Iterator
                 Self->UserId,
                 FString("FollowUser:") + (Self->WithProfile.IsSet() ? *Self->WithProfile == true ? "True" : "False" : "False")
             );
-            Range = Self->Cache->TryGetList<Gs2::Friend::Model::FFollowUser>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Friend::Model::FFollowUser>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeFollowsByUserId(
                 MakeShared<Gs2::Friend::Request::FDescribeFollowsByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -133,7 +140,7 @@ namespace Gs2::Friend::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Friend::Model::FFollowUser::TypeName,
                     ListParentKey
                 );

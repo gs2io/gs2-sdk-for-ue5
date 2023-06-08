@@ -87,15 +87,22 @@ namespace Gs2::Limit::Domain::Iterator
                 Self->UserId,
                 "Counter"
             );
-            Range = Self->Cache->TryGetList<Gs2::Limit::Model::FCounter>(ListParentKey);
-            if (Range) {
-                Range->RemoveAll([this](const Gs2::Limit::Model::FCounterPtr& Item) { return Self->LimitName && Item->GetLimitName() != Self->LimitName; });
-                RangeIteratorOpt = Range->CreateIterator();
-                PageToken = TOptional<FString>();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Limit::Model::FCounter>(ListParentKey);
+
+                if (Range)
+                {
+                    Range->RemoveAll([this](const Gs2::Limit::Model::FCounterPtr& Item) { return Self->LimitName && Item->GetLimitName() != Self->LimitName; });
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeCountersByUserId(
                 MakeShared<Gs2::Limit::Request::FDescribeCountersByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -135,7 +142,7 @@ namespace Gs2::Limit::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Limit::Model::FCounter::TypeName,
                     ListParentKey
                 );

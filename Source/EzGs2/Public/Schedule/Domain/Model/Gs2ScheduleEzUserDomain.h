@@ -20,6 +20,7 @@
 #include "Schedule/Domain/Model/User.h"
 #include "Schedule/Model/Gs2ScheduleEzTrigger.h"
 #include "Schedule/Model/Gs2ScheduleEzEvent.h"
+#include "Schedule/Model/Gs2ScheduleEzRepeatSchedule.h"
 #include "Gs2ScheduleEzTriggerDomain.h"
 #include "Gs2ScheduleEzEventDomain.h"
 #include "Gs2ScheduleEzUserDomain.h"

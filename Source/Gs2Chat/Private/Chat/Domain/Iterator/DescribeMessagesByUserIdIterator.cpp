@@ -25,6 +25,7 @@
 // ReSharper disable CppUnusedIncludeDirective
 
 #include "Chat/Domain/Iterator/DescribeMessagesByUserIdIterator.h"
+#include "Chat/Domain/Iterator/DescribeMessagesStartAt.h"
 #include "Chat/Domain/Model/Message.h"
 #include "Chat/Domain/Model/Room.h"
 
@@ -90,13 +91,31 @@ namespace Gs2::Chat::Domain::Iterator
                 Self->RoomName,
                 "Message"
             );
-            Range = Self->Cache->TryGetList<Gs2::Chat::Model::FMessage>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                TSharedPtr<Gs2Object> UpdateContext;
+                Range = Self->Cache->TryGetList<Gs2::Chat::Model::FMessage>(ListParentKey, &UpdateContext);
+
+                if (Range)
+                {
+                    if (UpdateContext)
+                    {
+                        auto UpdateContextValue = StaticCastSharedPtr<FDescribeMessagesStartAt>(UpdateContext)->Value;
+                        Range->RemoveAll([UpdateContextValue](const Gs2::Chat::Model::FMessagePtr& Message){ return *Message->GetCreatedAt() >= UpdateContextValue; });
+                        StartAt = UpdateContextValue;
+                        bLast = false;
+                    }
+                    else
+                    {
+                        bLast = true;
+                    }
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeMessagesByUserId(
                 MakeShared<Gs2::Chat::Request::FDescribeMessagesByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -139,9 +158,13 @@ namespace Gs2::Chat::Domain::Iterator
                 bLast = true;
             }
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Chat::Model::FMessage::TypeName,
-                    ListParentKey
+                    ListParentKey,
+                    StartAt
+                        // ReSharper disable once CppSmartPointerVsMakeFunction
+                        ? TSharedPtr<Gs2Object>(new FDescribeMessagesStartAt(*StartAt))
+                        : nullptr
                 );
             }
         }

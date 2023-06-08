@@ -21,7 +21,8 @@ namespace Gs2::Schedule::Request
     FGetEventByUserIdRequest::FGetEventByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         EventNameValue(TOptional<FString>()),
-        UserIdValue(TOptional<FString>())
+        UserIdValue(TOptional<FString>()),
+        IsInScheduleValue(TOptional<bool>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Schedule::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         EventNameValue(From.EventNameValue),
-        UserIdValue(From.UserIdValue)
+        UserIdValue(From.UserIdValue),
+        IsInScheduleValue(From.IsInScheduleValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Schedule::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetEventByUserIdRequest> FGetEventByUserIdRequest::WithIsInSchedule(
+        const TOptional<bool> IsInSchedule
+    )
+    {
+        this->IsInScheduleValue = IsInSchedule;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetEventByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -84,6 +94,20 @@ namespace Gs2::Schedule::Request
     TOptional<FString> FGetEventByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<bool> FGetEventByUserIdRequest::GetIsInSchedule() const
+    {
+        return IsInScheduleValue;
+    }
+
+    FString FGetEventByUserIdRequest::GetIsInScheduleString() const
+    {
+        if (!IsInScheduleValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(IsInScheduleValue.GetValue() ? "true" : "false");
     }
 
     TSharedPtr<FGetEventByUserIdRequest> FGetEventByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -119,7 +143,16 @@ namespace Gs2::Schedule::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+            ->WithIsInSchedule(Data->HasField("isInSchedule") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("isInSchedule", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>());
     }
 
     TSharedPtr<FJsonObject> FGetEventByUserIdRequest::ToJson() const
@@ -140,6 +173,10 @@ namespace Gs2::Schedule::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (IsInScheduleValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("isInSchedule", IsInScheduleValue.GetValue());
         }
         return JsonRootObject;
     }

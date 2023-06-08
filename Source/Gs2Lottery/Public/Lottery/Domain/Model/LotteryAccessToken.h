@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -91,6 +93,32 @@ namespace Gs2::Lottery::Domain::Model
 
         FLotteryAccessTokenDomain(
             const FLotteryAccessTokenDomain& From
+        );
+
+        class GS2LOTTERY_API FPredictionTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>,
+            public TSharedFromThis<FPredictionTask>
+        {
+            const TSharedPtr<FLotteryAccessTokenDomain> Self;
+            const Request::FPredictionRequestPtr Request;
+        public:
+            explicit FPredictionTask(
+                const TSharedPtr<FLotteryAccessTokenDomain> Self,
+                const Request::FPredictionRequestPtr Request
+            );
+
+            FPredictionTask(
+                const FPredictionTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>> Result
+            ) override;
+        };
+        friend FPredictionTask;
+
+        TSharedPtr<FAsyncTask<FPredictionTask>> Prediction(
+            Request::FPredictionRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

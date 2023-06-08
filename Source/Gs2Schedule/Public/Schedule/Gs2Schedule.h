@@ -24,6 +24,7 @@
 #include "Model/CurrentEventMaster.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/RepeatSchedule.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

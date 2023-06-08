@@ -25,6 +25,7 @@
 #include "Lottery/Model/Gs2LotteryEzBoxItem.h"
 #include "Lottery/Model/Gs2LotteryEzBoxItems.h"
 #include "Lottery/Model/Gs2LotteryEzConfig.h"
+#include "Gs2LotteryEzLotteryGameSessionDomain.h"
 #include "Gs2LotteryEzBoxItemsGameSessionDomain.h"
 #include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeBoxesIterator.h"
 #include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeProbabilitiesIterator.h"
@@ -53,6 +54,9 @@ namespace Gs2::UE5::Lottery::Domain::Model
             Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::FProfilePtr Profile
         );
+
+        Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomainPtr Lottery(
+        ) const;
 
         Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeBoxesIteratorPtr Boxes(
         ) const;

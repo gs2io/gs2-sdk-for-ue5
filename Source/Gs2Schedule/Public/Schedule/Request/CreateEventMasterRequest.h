@@ -40,7 +40,6 @@ namespace Gs2::Schedule::Request
         TOptional<int32> RepeatBeginHourValue;
         TOptional<int32> RepeatEndHourValue;
         TOptional<FString> RelativeTriggerNameValue;
-        TOptional<int32> RelativeDurationValue;
         
     public:
         
@@ -66,7 +65,6 @@ namespace Gs2::Schedule::Request
         TSharedPtr<FCreateEventMasterRequest> WithRepeatBeginHour(const TOptional<int32> RepeatBeginHour);
         TSharedPtr<FCreateEventMasterRequest> WithRepeatEndHour(const TOptional<int32> RepeatEndHour);
         TSharedPtr<FCreateEventMasterRequest> WithRelativeTriggerName(const TOptional<FString> RelativeTriggerName);
-        TSharedPtr<FCreateEventMasterRequest> WithRelativeDuration(const TOptional<int32> RelativeDuration);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -90,8 +88,6 @@ namespace Gs2::Schedule::Request
         TOptional<int32> GetRepeatEndHour() const;
         FString GetRepeatEndHourString() const;
         TOptional<FString> GetRelativeTriggerName() const;
-        TOptional<int32> GetRelativeDuration() const;
-        FString GetRelativeDurationString() const;
 
         static TSharedPtr<FCreateEventMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

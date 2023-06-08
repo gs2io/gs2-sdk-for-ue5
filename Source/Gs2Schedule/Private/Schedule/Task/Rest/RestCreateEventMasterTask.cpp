@@ -140,10 +140,6 @@ namespace Gs2::Schedule::Task::Rest
             {
                 JsonRootObject->SetStringField("relativeTriggerName", this->Request->GetRelativeTriggerName().GetValue());
             }
-            if (this->Request->GetRelativeDuration().IsSet())
-            {
-                JsonRootObject->SetNumberField("relativeDuration", this->Request->GetRelativeDuration().GetValue());
-            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -80,6 +82,51 @@ namespace Gs2::Lottery::Domain::Model
         Client(From.Client)
     {
 
+    }
+
+    FLotteryAccessTokenDomain::FPredictionTask::FPredictionTask(
+        const TSharedPtr<FLotteryAccessTokenDomain> Self,
+        const Request::FPredictionRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FLotteryAccessTokenDomain::FPredictionTask::FPredictionTask(
+        const FPredictionTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FLotteryAccessTokenDomain::FPredictionTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->Prediction(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        *Result = ResultModel->GetItems();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FLotteryAccessTokenDomain::FPredictionTask>> FLotteryAccessTokenDomain::Prediction(
+        Request::FPredictionRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPredictionTask>>(this->AsShared(), Request);
     }
 
     FString FLotteryAccessTokenDomain::CreateCacheParentKey(

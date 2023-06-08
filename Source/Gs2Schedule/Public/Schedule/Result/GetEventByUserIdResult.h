@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Event.h"
+#include "../Model/RepeatSchedule.h"
 
 namespace Gs2::Schedule::Result
 {
@@ -25,6 +26,8 @@ namespace Gs2::Schedule::Result
     {
         TSharedPtr<Model::FEvent> ItemValue;
         TOptional<int32> RepeatCountValue;
+        TOptional<bool> InScheduleValue;
+        TSharedPtr<Model::FRepeatSchedule> RepeatScheduleValue;
         
     public:
         
@@ -36,10 +39,15 @@ namespace Gs2::Schedule::Result
 
         TSharedPtr<FGetEventByUserIdResult> WithItem(const TSharedPtr<Model::FEvent> Item);
         TSharedPtr<FGetEventByUserIdResult> WithRepeatCount(const TOptional<int32> RepeatCount);
+        TSharedPtr<FGetEventByUserIdResult> WithInSchedule(const TOptional<bool> InSchedule);
+        TSharedPtr<FGetEventByUserIdResult> WithRepeatSchedule(const TSharedPtr<Model::FRepeatSchedule> RepeatSchedule);
 
         TSharedPtr<Model::FEvent> GetItem() const;
         TOptional<int32> GetRepeatCount() const;
         FString GetRepeatCountString() const;
+        TOptional<bool> GetInSchedule() const;
+        FString GetInScheduleString() const;
+        TSharedPtr<Model::FRepeatSchedule> GetRepeatSchedule() const;
 
         static TSharedPtr<FGetEventByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

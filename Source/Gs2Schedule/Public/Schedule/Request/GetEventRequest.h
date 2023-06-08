@@ -28,6 +28,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> EventNameValue;
         TOptional<FString> AccessTokenValue;
+        TOptional<bool> IsInScheduleValue;
         
     public:
         
@@ -41,11 +42,14 @@ namespace Gs2::Schedule::Request
         TSharedPtr<FGetEventRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetEventRequest> WithEventName(const TOptional<FString> EventName);
         TSharedPtr<FGetEventRequest> WithAccessToken(const TOptional<FString> AccessToken);
+        TSharedPtr<FGetEventRequest> WithIsInSchedule(const TOptional<bool> IsInSchedule);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetEventName() const;
         TOptional<FString> GetAccessToken() const;
+        TOptional<bool> GetIsInSchedule() const;
+        FString GetIsInScheduleString() const;
 
         static TSharedPtr<FGetEventRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -80,6 +80,7 @@ namespace Gs2::Chat::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
+
             const auto Future = Self->Client->DescribeSubscribesByRoomName(
                 MakeShared<Gs2::Chat::Request::FDescribeSubscribesByRoomNameRequest>()
                     ->WithNamespaceName(Self->NamespaceName)

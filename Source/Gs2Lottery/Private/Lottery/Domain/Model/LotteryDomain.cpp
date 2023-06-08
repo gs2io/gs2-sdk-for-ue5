@@ -161,7 +161,7 @@ namespace Gs2::Lottery::Domain::Model
 
     FLotteryDomain::FPredictionTask::FPredictionTask(
         const TSharedPtr<FLotteryDomain> Self,
-        const Request::FPredictionRequestPtr Request
+        const Request::FPredictionByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
 
@@ -174,51 +174,6 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FLotteryDomain::FPredictionTask::Action(
-        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->Prediction(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        *Result = ResultModel->GetItems();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FLotteryDomain::FPredictionTask>> FLotteryDomain::Prediction(
-        Request::FPredictionRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FPredictionTask>>(this->AsShared(), Request);
-    }
-
-    FLotteryDomain::FPredictionByUserIdTask::FPredictionByUserIdTask(
-        const TSharedPtr<FLotteryDomain> Self,
-        const Request::FPredictionByUserIdRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FLotteryDomain::FPredictionByUserIdTask::FPredictionByUserIdTask(
-        const FPredictionByUserIdTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FLotteryDomain::FPredictionByUserIdTask::Action(
         TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>> Result
     )
     {
@@ -243,10 +198,10 @@ namespace Gs2::Lottery::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FLotteryDomain::FPredictionByUserIdTask>> FLotteryDomain::PredictionByUserId(
+    TSharedPtr<FAsyncTask<FLotteryDomain::FPredictionTask>> FLotteryDomain::Prediction(
         Request::FPredictionByUserIdRequestPtr Request
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FPredictionByUserIdTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FPredictionTask>>(this->AsShared(), Request);
     }
 
     FLotteryDomain::FDrawWithRandomSeedTask::FDrawWithRandomSeedTask(

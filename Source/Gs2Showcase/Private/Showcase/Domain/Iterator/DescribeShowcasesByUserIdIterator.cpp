@@ -84,13 +84,20 @@ namespace Gs2::Showcase::Domain::Iterator
                 Self->UserId,
                 "Showcase"
             );
-            Range = Self->Cache->TryGetList<Gs2::Showcase::Model::FShowcase>(ListParentKey);
-            if (Range) {
-                RangeIteratorOpt = Range->CreateIterator();
-                bLast = true;
-                bEnd = !static_cast<bool>(*RangeIteratorOpt);
-                return *this;
+
+            if (!RangeIteratorOpt)
+            {
+                Range = Self->Cache->TryGetList<Gs2::Showcase::Model::FShowcase>(ListParentKey);
+
+                if (Range)
+                {
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
             }
+
             const auto Future = Self->Client->DescribeShowcasesByUserId(
                 MakeShared<Gs2::Showcase::Request::FDescribeShowcasesByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
@@ -125,7 +132,7 @@ namespace Gs2::Showcase::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCache(
+                Self->Cache->SetListCached(
                     Gs2::Showcase::Model::FShowcase::TypeName,
                     ListParentKey
                 );
