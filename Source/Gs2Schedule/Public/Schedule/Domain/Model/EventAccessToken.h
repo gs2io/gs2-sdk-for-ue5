@@ -50,15 +50,20 @@ namespace Gs2::Schedule::Domain::Model
         Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
-        TOptional<int32> RepeatCount;
         TOptional<bool> InSchedule;
-        TOptional<int32> GetRepeatCount() const
-        {
-            return RepeatCount;
-        }
+        TOptional<int64> ScheduleStartAt;
+        TOptional<int64> ScheduleEndAt;
         TOptional<bool> GetInSchedule() const
         {
             return InSchedule;
+        }
+        TOptional<int64> GetScheduleStartAt() const
+        {
+            return ScheduleStartAt;
+        }
+        TOptional<int64> GetScheduleEndAt() const
+        {
+            return ScheduleEndAt;
         }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;

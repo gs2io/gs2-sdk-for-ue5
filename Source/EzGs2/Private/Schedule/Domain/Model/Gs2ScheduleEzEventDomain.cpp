@@ -19,14 +19,19 @@
 namespace Gs2::UE5::Schedule::Domain::Model
 {
 
-    TOptional<int32> FEzEventDomain::RepeatCount() const
-    {
-        return Domain->RepeatCount;
-    }
-
     TOptional<bool> FEzEventDomain::InSchedule() const
     {
         return Domain->InSchedule;
+    }
+
+    TOptional<int64> FEzEventDomain::ScheduleStartAt() const
+    {
+        return Domain->ScheduleStartAt;
+    }
+
+    TOptional<int64> FEzEventDomain::ScheduleEndAt() const
+    {
+        return Domain->ScheduleEndAt;
     }
 
     TOptional<FString> FEzEventDomain::NamespaceName() const

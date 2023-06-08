@@ -25,8 +25,9 @@ namespace Gs2::Schedule::Result
     class GS2SCHEDULE_API FGetEventResult final : public TSharedFromThis<FGetEventResult>
     {
         TSharedPtr<Model::FEvent> ItemValue;
-        TOptional<int32> RepeatCountValue;
         TOptional<bool> InScheduleValue;
+        TOptional<int64> ScheduleStartAtValue;
+        TOptional<int64> ScheduleEndAtValue;
         TSharedPtr<Model::FRepeatSchedule> RepeatScheduleValue;
         
     public:
@@ -38,15 +39,18 @@ namespace Gs2::Schedule::Result
         ~FGetEventResult() = default;
 
         TSharedPtr<FGetEventResult> WithItem(const TSharedPtr<Model::FEvent> Item);
-        TSharedPtr<FGetEventResult> WithRepeatCount(const TOptional<int32> RepeatCount);
         TSharedPtr<FGetEventResult> WithInSchedule(const TOptional<bool> InSchedule);
+        TSharedPtr<FGetEventResult> WithScheduleStartAt(const TOptional<int64> ScheduleStartAt);
+        TSharedPtr<FGetEventResult> WithScheduleEndAt(const TOptional<int64> ScheduleEndAt);
         TSharedPtr<FGetEventResult> WithRepeatSchedule(const TSharedPtr<Model::FRepeatSchedule> RepeatSchedule);
 
         TSharedPtr<Model::FEvent> GetItem() const;
-        TOptional<int32> GetRepeatCount() const;
-        FString GetRepeatCountString() const;
         TOptional<bool> GetInSchedule() const;
         FString GetInScheduleString() const;
+        TOptional<int64> GetScheduleStartAt() const;
+        FString GetScheduleStartAtString() const;
+        TOptional<int64> GetScheduleEndAt() const;
+        FString GetScheduleEndAtString() const;
         TSharedPtr<Model::FRepeatSchedule> GetRepeatSchedule() const;
 
         static TSharedPtr<FGetEventResult> FromJson(const TSharedPtr<FJsonObject> Data);
