@@ -32,6 +32,7 @@
 #include "Friend/Domain/Gs2Friend.h"
 #include "Gateway/Domain/Gs2Gateway.h"
 #include "Identifier/Domain/Gs2Identifier.h"
+#include "Idle/Domain/Gs2Idle.h"
 #include "Inbox/Domain/Gs2Inbox.h"
 #include "Inventory/Domain/Gs2Inventory.h"
 #include "JobQueue/Domain/Gs2JobQueue.h"
@@ -82,6 +83,7 @@ namespace Gs2::Core::Domain
         const Gs2::Friend::Domain::FGs2FriendDomainPtr Friend;
         const Gs2::Gateway::Domain::FGs2GatewayDomainPtr Gateway;
         const Gs2::Identifier::Domain::FGs2IdentifierDomainPtr Identifier;
+        const Gs2::Idle::Domain::FGs2IdleDomainPtr Idle;
         const Gs2::Inbox::Domain::FGs2InboxDomainPtr Inbox;
         const Gs2::Inventory::Domain::FGs2InventoryDomainPtr Inventory;
         const Gs2::JobQueue::Domain::FGs2JobQueueDomainPtr JobQueue;

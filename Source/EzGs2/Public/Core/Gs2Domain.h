@@ -30,6 +30,7 @@
 #include "Formation/Domain/EzGs2Formation.h"
 #include "Friend/Domain/EzGs2Friend.h"
 #include "Gateway/Domain/EzGs2Gateway.h"
+#include "Idle/Domain/EzGs2Idle.h"
 #include "Inbox/Domain/EzGs2Inbox.h"
 #include "Inventory/Domain/EzGs2Inventory.h"
 #include "JobQueue/Domain/EzGs2JobQueue.h"
@@ -75,6 +76,7 @@ namespace Gs2::UE5::Core::Domain
         Gs2::UE5::Formation::Domain::FEzGs2FormationPtr Formation;
         Gs2::UE5::Friend::Domain::FEzGs2FriendPtr Friend;
         Gs2::UE5::Gateway::Domain::FEzGs2GatewayPtr Gateway;
+        Gs2::UE5::Idle::Domain::FEzGs2IdlePtr Idle;
         Gs2::UE5::Inbox::Domain::FEzGs2InboxPtr Inbox;
         Gs2::UE5::Inventory::Domain::FEzGs2InventoryPtr Inventory;
         Gs2::UE5::JobQueue::Domain::FEzGs2JobQueuePtr JobQueue;

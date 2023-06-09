@@ -1,0 +1,133 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#include "Idle/Model/CurrentCategoryMaster.h"
+
+namespace Gs2::Idle::Model
+{
+    FCurrentCategoryMaster::FCurrentCategoryMaster():
+        NamespaceIdValue(TOptional<FString>()),
+        SettingsValue(TOptional<FString>())
+    {
+    }
+
+    FCurrentCategoryMaster::FCurrentCategoryMaster(
+        const FCurrentCategoryMaster& From
+    ):
+        NamespaceIdValue(From.NamespaceIdValue),
+        SettingsValue(From.SettingsValue)
+    {
+    }
+
+    TSharedPtr<FCurrentCategoryMaster> FCurrentCategoryMaster::WithNamespaceId(
+        const TOptional<FString> NamespaceId
+    )
+    {
+        this->NamespaceIdValue = NamespaceId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCurrentCategoryMaster> FCurrentCategoryMaster::WithSettings(
+        const TOptional<FString> Settings
+    )
+    {
+        this->SettingsValue = Settings;
+        return SharedThis(this);
+    }
+    TOptional<FString> FCurrentCategoryMaster::GetNamespaceId() const
+    {
+        return NamespaceIdValue;
+    }
+    TOptional<FString> FCurrentCategoryMaster::GetSettings() const
+    {
+        return SettingsValue;
+    }
+
+    TOptional<FString> FCurrentCategoryMaster::GetRegionFromGrn(const FString Grn)
+    {
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):idle:(?<namespaceName>.+)"));
+        FRegexMatcher Matcher(Pattern, Grn);
+        while (Matcher.FindNext())
+        {
+            return Matcher.GetCaptureGroup(1);
+        }
+        return TOptional<FString>();
+    }
+
+    TOptional<FString> FCurrentCategoryMaster::GetOwnerIdFromGrn(const FString Grn)
+    {
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):idle:(?<namespaceName>.+)"));
+        FRegexMatcher Matcher(Pattern, Grn);
+        while (Matcher.FindNext())
+        {
+            return Matcher.GetCaptureGroup(2);
+        }
+        return TOptional<FString>();
+    }
+
+    TOptional<FString> FCurrentCategoryMaster::GetNamespaceNameFromGrn(const FString Grn)
+    {
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):idle:(?<namespaceName>.+)"));
+        FRegexMatcher Matcher(Pattern, Grn);
+        while (Matcher.FindNext())
+        {
+            return Matcher.GetCaptureGroup(3);
+        }
+        return TOptional<FString>();
+    }
+
+    TSharedPtr<FCurrentCategoryMaster> FCurrentCategoryMaster::FromJson(const TSharedPtr<FJsonObject> Data)
+    {
+        if (Data == nullptr) {
+            return nullptr;
+        }
+        return MakeShared<FCurrentCategoryMaster>()
+            ->WithNamespaceId(Data->HasField("namespaceId") ? [Data]() -> TOptional<FString>
+                {
+                    FString v;
+                    if (Data->TryGetStringField("namespaceId", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithSettings(Data->HasField("settings") ? [Data]() -> TOptional<FString>
+                {
+                    FString v;
+                    if (Data->TryGetStringField("settings", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>());
+    }
+
+    TSharedPtr<FJsonObject> FCurrentCategoryMaster::ToJson() const
+    {
+        const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (NamespaceIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("namespaceId", NamespaceIdValue.GetValue());
+        }
+        if (SettingsValue.IsSet())
+        {
+            JsonRootObject->SetStringField("settings", SettingsValue.GetValue());
+        }
+        return JsonRootObject;
+    }
+
+    FString FCurrentCategoryMaster::TypeName = "CurrentCategoryMaster";
+}

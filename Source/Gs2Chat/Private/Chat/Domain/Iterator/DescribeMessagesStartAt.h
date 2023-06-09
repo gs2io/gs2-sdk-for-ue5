@@ -32,7 +32,7 @@
 
 namespace Gs2::Chat::Domain::Iterator
 {
-    class GS2FRIEND_API FDescribeMessagesStartAt : public Gs2Object
+    class FDescribeMessagesStartAt : public Gs2Object
     {
     public:
         int64 Value;

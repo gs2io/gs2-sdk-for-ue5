@@ -82,6 +82,7 @@ namespace Gs2::Core::Domain
         Friend(MakeShared<Friend::Domain::FGs2FriendDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Gateway(MakeShared<Gateway::Domain::FGs2GatewayDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession, WebSocketSession)),
         Identifier(MakeShared<Identifier::Domain::FGs2IdentifierDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
+        Idle(MakeShared<Idle::Domain::FGs2IdleDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Inbox(MakeShared<Inbox::Domain::FGs2InboxDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Inventory(MakeShared<Inventory::Domain::FGs2InventoryDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         JobQueue(MakeShared<JobQueue::Domain::FGs2JobQueueDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
@@ -174,6 +175,10 @@ namespace Gs2::Core::Domain
                     if (Service == "Gs2Identifier")
                     {
                         Identifier->HandleNotification(Method, *Message->GetPayload());
+                    }
+                    if (Service == "Gs2Idle")
+                    {
+                        Idle->HandleNotification(Method, *Message->GetPayload());
                     }
                     if (Service == "Gs2Inbox")
                     {
@@ -294,6 +299,7 @@ namespace Gs2::Core::Domain
         Friend(From.Friend),
         Gateway(From.Gateway),
         Identifier(From.Identifier),
+        Idle(From.Idle),
         Inbox(From.Inbox),
         Inventory(From.Inventory),
         JobQueue(From.JobQueue),
@@ -392,6 +398,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Identifier")
             {
                 Identifier->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2Idle")
+            {
+                Idle->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2Inbox")
             {
@@ -548,6 +558,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Identifier")
             {
                 Identifier->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2Idle")
+            {
+                Idle->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2Inbox")
             {
@@ -723,6 +737,10 @@ namespace Gs2::Core::Domain
             if (Service == "identifier")
             {
                 Identifier->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "idle")
+            {
+                Idle->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "inbox")
             {

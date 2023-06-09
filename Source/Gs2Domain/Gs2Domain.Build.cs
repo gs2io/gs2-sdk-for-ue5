@@ -31,6 +31,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2Friend",
 			"Gs2Gateway",
 			"Gs2Identifier",
+			"Gs2Idle",
 			"Gs2Inbox",
 			"Gs2Inventory",
 			"Gs2JobQueue",
