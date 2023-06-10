@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Idle/Model/CategoryModel.h"
+#include "Gs2IdleEzAcquireActionList.h"
 
 namespace Gs2::UE5::Idle::Model
 {
@@ -26,6 +27,8 @@ namespace Gs2::UE5::Idle::Model
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
         TOptional<int32> RewardIntervalMinutesValue;
+        TOptional<int32> DefaultMaximumIdleMinutesValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Idle::Model::FEzAcquireActionList>>> AcquireActionsValue;
         TOptional<FString> IdlePeriodScheduleIdValue;
         TOptional<FString> ReceivePeriodScheduleIdValue;
 
@@ -33,6 +36,8 @@ namespace Gs2::UE5::Idle::Model
         TSharedPtr<FEzCategoryModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzCategoryModel> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FEzCategoryModel> WithRewardIntervalMinutes(const TOptional<int32> RewardIntervalMinutes);
+        TSharedPtr<FEzCategoryModel> WithDefaultMaximumIdleMinutes(const TOptional<int32> DefaultMaximumIdleMinutes);
+        TSharedPtr<FEzCategoryModel> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Idle::Model::FEzAcquireActionList>>> AcquireActions);
         TSharedPtr<FEzCategoryModel> WithIdlePeriodScheduleId(const TOptional<FString> IdlePeriodScheduleId);
         TSharedPtr<FEzCategoryModel> WithReceivePeriodScheduleId(const TOptional<FString> ReceivePeriodScheduleId);
 
@@ -42,6 +47,11 @@ namespace Gs2::UE5::Idle::Model
 
         TOptional<int32> GetRewardIntervalMinutes() const;
         FString GetRewardIntervalMinutesString() const;
+
+        TOptional<int32> GetDefaultMaximumIdleMinutes() const;
+        FString GetDefaultMaximumIdleMinutesString() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Idle::Model::FEzAcquireActionList>>> GetAcquireActions() const;
 
         TOptional<FString> GetIdlePeriodScheduleId() const;
 

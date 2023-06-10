@@ -66,12 +66,12 @@
 #include "Task/WebSocket/IncreaseMaximumIdleMinutesByStampSheetTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
-#include "Request/GetCurrentIdleMasterRequest.h"
-#include "Task/WebSocket/GetCurrentIdleMasterTask.h"
-#include "Request/UpdateCurrentIdleMasterRequest.h"
-#include "Task/WebSocket/UpdateCurrentIdleMasterTask.h"
-#include "Request/UpdateCurrentIdleMasterFromGitHubRequest.h"
-#include "Task/WebSocket/UpdateCurrentIdleMasterFromGitHubTask.h"
+#include "Request/GetCurrentCategoryMasterRequest.h"
+#include "Task/WebSocket/GetCurrentCategoryMasterTask.h"
+#include "Request/UpdateCurrentCategoryMasterRequest.h"
+#include "Task/WebSocket/UpdateCurrentCategoryMasterTask.h"
+#include "Request/UpdateCurrentCategoryMasterFromGitHubRequest.h"
+#include "Task/WebSocket/UpdateCurrentCategoryMasterFromGitHubTask.h"
 
 namespace Gs2::Idle
 {
@@ -180,16 +180,16 @@ namespace Gs2::Idle
             const Request::FExportMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentIdleMasterTask>> GetCurrentIdleMaster(
-            const Request::FGetCurrentIdleMasterRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentCategoryMasterTask>> GetCurrentCategoryMaster(
+            const Request::FGetCurrentCategoryMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentIdleMasterTask>> UpdateCurrentIdleMaster(
-            const Request::FUpdateCurrentIdleMasterRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentCategoryMasterTask>> UpdateCurrentCategoryMaster(
+            const Request::FUpdateCurrentCategoryMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentIdleMasterFromGitHubTask>> UpdateCurrentIdleMasterFromGitHub(
-            const Request::FUpdateCurrentIdleMasterFromGitHubRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentCategoryMasterFromGitHubTask>> UpdateCurrentCategoryMasterFromGitHub(
+            const Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2IdleWebSocketClient, ESPMode::ThreadSafe> FGs2IdleWebSocketClientPtr;

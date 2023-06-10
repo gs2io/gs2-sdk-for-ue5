@@ -39,6 +39,8 @@ struct FGs2IdleStatusValue
     int64 RandomSeed = 0;
     UPROPERTY(BlueprintReadOnly)
     int32 IdleMinutes = 0;
+    UPROPERTY(BlueprintReadOnly)
+    int32 MaximumIdleMinutes = 0;
 };
 
 inline FGs2IdleStatusValue EzStatusToFGs2IdleStatusValue(
@@ -49,6 +51,7 @@ inline FGs2IdleStatusValue EzStatusToFGs2IdleStatusValue(
     Value.CategoryName = Model->GetCategoryName() ? *Model->GetCategoryName() : "";
     Value.RandomSeed = Model->GetRandomSeed() ? *Model->GetRandomSeed() : 0;
     Value.IdleMinutes = Model->GetIdleMinutes() ? *Model->GetIdleMinutes() : 0;
+    Value.MaximumIdleMinutes = Model->GetMaximumIdleMinutes() ? *Model->GetMaximumIdleMinutes() : 0;
     return Value;
 }
 
@@ -59,7 +62,8 @@ inline Gs2::UE5::Idle::Model::FEzStatusPtr FGs2IdleStatusValueToEzStatus(
     return MakeShared<Gs2::UE5::Idle::Model::FEzStatus>()
         ->WithCategoryName(Model.CategoryName)
         ->WithRandomSeed(Model.RandomSeed)
-        ->WithIdleMinutes(Model.IdleMinutes);
+        ->WithIdleMinutes(Model.IdleMinutes)
+        ->WithMaximumIdleMinutes(Model.MaximumIdleMinutes);
 }
 
 UCLASS()

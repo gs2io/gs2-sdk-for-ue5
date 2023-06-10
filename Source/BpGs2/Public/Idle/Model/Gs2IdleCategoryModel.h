@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Idle/Domain/Model/Gs2IdleEzCategoryModelDomain.h"
+#include "Idle/Model/Gs2IdleAcquireActionList.h"
 #include "Gs2IdleCategoryModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -40,6 +41,10 @@ struct FGs2IdleCategoryModelValue
     UPROPERTY(BlueprintReadOnly)
     int32 RewardIntervalMinutes = 0;
     UPROPERTY(BlueprintReadOnly)
+    int32 DefaultMaximumIdleMinutes = 0;
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FGs2IdleAcquireActionList> AcquireActions = TArray<FGs2IdleAcquireActionList>();
+    UPROPERTY(BlueprintReadOnly)
     FString IdlePeriodScheduleId = "";
     UPROPERTY(BlueprintReadOnly)
     FString ReceivePeriodScheduleId = "";
@@ -53,6 +58,16 @@ inline FGs2IdleCategoryModelValue EzCategoryModelToFGs2IdleCategoryModelValue(
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.RewardIntervalMinutes = Model->GetRewardIntervalMinutes() ? *Model->GetRewardIntervalMinutes() : 0;
+    Value.DefaultMaximumIdleMinutes = Model->GetDefaultMaximumIdleMinutes() ? *Model->GetDefaultMaximumIdleMinutes() : 0;
+    Value.AcquireActions = Model->GetAcquireActions() ? [&]
+    {
+        TArray<FGs2IdleAcquireActionList> r;
+        for (auto v : *Model->GetAcquireActions())
+        {
+            r.Add(EzAcquireActionListToFGs2IdleAcquireActionList(v));
+        }
+        return r;
+    }() : TArray<FGs2IdleAcquireActionList>();
     Value.IdlePeriodScheduleId = Model->GetIdlePeriodScheduleId() ? *Model->GetIdlePeriodScheduleId() : "";
     Value.ReceivePeriodScheduleId = Model->GetReceivePeriodScheduleId() ? *Model->GetReceivePeriodScheduleId() : "";
     return Value;
@@ -66,6 +81,14 @@ inline Gs2::UE5::Idle::Model::FEzCategoryModelPtr FGs2IdleCategoryModelValueToEz
         ->WithName(Model.Name)
         ->WithMetadata(Model.Metadata)
         ->WithRewardIntervalMinutes(Model.RewardIntervalMinutes)
+        ->WithDefaultMaximumIdleMinutes(Model.DefaultMaximumIdleMinutes)
+        ->WithAcquireActions([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Idle::Model::FEzAcquireActionListPtr>>();
+            for (auto v : Model.AcquireActions) {
+                r->Add(FGs2IdleAcquireActionListToEzAcquireActionList(v));
+            }
+            return r;
+        }())
         ->WithIdlePeriodScheduleId(Model.IdlePeriodScheduleId)
         ->WithReceivePeriodScheduleId(Model.ReceivePeriodScheduleId);
 }

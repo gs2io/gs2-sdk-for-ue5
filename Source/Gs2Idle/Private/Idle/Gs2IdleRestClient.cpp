@@ -235,28 +235,28 @@ namespace Gs2::Idle
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentIdleMasterTask>> FGs2IdleRestClient::GetCurrentIdleMaster(
-        const Request::FGetCurrentIdleMasterRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentCategoryMasterTask>> FGs2IdleRestClient::GetCurrentCategoryMaster(
+        const Request::FGetCurrentCategoryMasterRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetCurrentIdleMasterTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetCurrentCategoryMasterTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentIdleMasterTask>> FGs2IdleRestClient::UpdateCurrentIdleMaster(
-        const Request::FUpdateCurrentIdleMasterRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentCategoryMasterTask>> FGs2IdleRestClient::UpdateCurrentCategoryMaster(
+        const Request::FUpdateCurrentCategoryMasterRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentIdleMasterTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentCategoryMasterTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentIdleMasterFromGitHubTask>> FGs2IdleRestClient::UpdateCurrentIdleMasterFromGitHub(
-        const Request::FUpdateCurrentIdleMasterFromGitHubRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentCategoryMasterFromGitHubTask>> FGs2IdleRestClient::UpdateCurrentCategoryMasterFromGitHub(
+        const Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentIdleMasterFromGitHubTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateCurrentCategoryMasterFromGitHubTask>>(
             Session,
             Request
         );

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Idle/Action/Gs2IdleActionPrediction.h"
@@ -50,7 +52,15 @@ void UGs2IdlePredictionAsyncFunction::Activate()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
-        auto ReturnAcquireAction = EzAcquireActionToFGs2IdleAcquireAction(Result);
+        auto ReturnAcquireAction = [&]
+        {
+            TArray<FGs2IdleAcquireAction> r;
+            for (auto v : *Result)
+            {
+                r.Add(EzAcquireActionToFGs2IdleAcquireAction(v));
+            }
+            return r;
+        }();
         const FGs2Error ReturnError;
         OnSuccess.Broadcast(ReturnAcquireAction, ReturnError);
         SetReadyToDestroy();

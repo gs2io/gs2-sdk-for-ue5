@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -34,19 +32,14 @@ struct FGs2IdleAcquireAction
     FString Request = "";
 };
 
-inline TArray<FGs2IdleAcquireAction> EzAcquireActionToFGs2IdleAcquireAction(
-    const TSharedPtr<TArray<Gs2::UE5::Idle::Model::FEzAcquireActionPtr>> Models
+inline FGs2IdleAcquireAction EzAcquireActionToFGs2IdleAcquireAction(
+    const Gs2::UE5::Idle::Model::FEzAcquireActionPtr Model
 )
 {
-    TArray<FGs2IdleAcquireAction> Values;
-    for (auto Model : *Models)
-    {
-        FGs2IdleAcquireAction Value;
-        Value.Action = Model->GetAction() ? *Model->GetAction() : "";
-        Value.Request = Model->GetRequest() ? *Model->GetRequest() : "";
-        Values.Add(Value);
-    }
-    return Values;
+    FGs2IdleAcquireAction Value;
+    Value.Action = Model->GetAction() ? *Model->GetAction() : "";
+    Value.Request = Model->GetRequest() ? *Model->GetRequest() : "";
+    return Value;
 }
 
 inline Gs2::UE5::Idle::Model::FEzAcquireActionPtr FGs2IdleAcquireActionToEzAcquireAction(

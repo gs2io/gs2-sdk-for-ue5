@@ -20,7 +20,6 @@ namespace Gs2::Idle::Request
 {
     FDescribeStatusesRequest::FDescribeStatusesRequest():
         NamespaceNameValue(TOptional<FString>()),
-        CategoryNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
@@ -31,7 +30,6 @@ namespace Gs2::Idle::Request
         const FDescribeStatusesRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        CategoryNameValue(From.CategoryNameValue),
         AccessTokenValue(From.AccessTokenValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
@@ -51,14 +49,6 @@ namespace Gs2::Idle::Request
     )
     {
         this->NamespaceNameValue = NamespaceName;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FDescribeStatusesRequest> FDescribeStatusesRequest::WithCategoryName(
-        const TOptional<FString> CategoryName
-    )
-    {
-        this->CategoryNameValue = CategoryName;
         return SharedThis(this);
     }
 
@@ -96,11 +86,6 @@ namespace Gs2::Idle::Request
         return NamespaceNameValue;
     }
 
-    TOptional<FString> FDescribeStatusesRequest::GetCategoryName() const
-    {
-        return CategoryNameValue;
-    }
-
     TOptional<FString> FDescribeStatusesRequest::GetAccessToken() const
     {
         return AccessTokenValue;
@@ -136,15 +121,6 @@ namespace Gs2::Idle::Request
               {
                   FString v;
                     if (Data->TryGetStringField("namespaceName", v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
-            ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
-              {
-                  FString v;
-                    if (Data->TryGetStringField("categoryName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -189,10 +165,6 @@ namespace Gs2::Idle::Request
         if (NamespaceNameValue.IsSet())
         {
             JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
-        }
-        if (CategoryNameValue.IsSet())
-        {
-            JsonRootObject->SetStringField("categoryName", CategoryNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {

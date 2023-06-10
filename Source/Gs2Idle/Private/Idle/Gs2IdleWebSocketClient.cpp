@@ -235,28 +235,28 @@ namespace Gs2::Idle
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentIdleMasterTask>> FGs2IdleWebSocketClient::GetCurrentIdleMaster(
-        const Request::FGetCurrentIdleMasterRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetCurrentCategoryMasterTask>> FGs2IdleWebSocketClient::GetCurrentCategoryMaster(
+        const Request::FGetCurrentCategoryMasterRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetCurrentIdleMasterTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetCurrentCategoryMasterTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentIdleMasterTask>> FGs2IdleWebSocketClient::UpdateCurrentIdleMaster(
-        const Request::FUpdateCurrentIdleMasterRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentCategoryMasterTask>> FGs2IdleWebSocketClient::UpdateCurrentCategoryMaster(
+        const Request::FUpdateCurrentCategoryMasterRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentIdleMasterTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentCategoryMasterTask>>(
             Session,
             Request
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentIdleMasterFromGitHubTask>> FGs2IdleWebSocketClient::UpdateCurrentIdleMasterFromGitHub(
-        const Request::FUpdateCurrentIdleMasterFromGitHubRequestPtr Request) const
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateCurrentCategoryMasterFromGitHubTask>> FGs2IdleWebSocketClient::UpdateCurrentCategoryMasterFromGitHub(
+        const Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request) const
     {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentIdleMasterFromGitHubTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateCurrentCategoryMasterFromGitHubTask>>(
             Session,
             Request
         );

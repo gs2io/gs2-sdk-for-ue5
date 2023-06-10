@@ -33,7 +33,6 @@ class BPGS2_API UGs2IdleListOfStatusAsyncFunction : public UBlueprintAsyncAction
     FGs2IdleOwnUser User;
 
 public:
-    FString CategoryName;
 
     UPROPERTY(BlueprintAssignable)
     FGs2IdleListOfStatusSuccessDelegate OnSuccess;
@@ -46,8 +45,7 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Idle::Fetch::ListOfStatus", Category="Game Server Services|GS2-Idle|Namespace|User|Status|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2IdleListOfStatusAsyncFunction* ListOfStatus(
         UObject* WorldContextObject,
-        FGs2IdleOwnUser User,
-        FString CategoryName
+        FGs2IdleOwnUser User
     );
 
     virtual void Activate() override;

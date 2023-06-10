@@ -42,12 +42,10 @@ namespace Gs2::UE5::Idle::Domain::Model
     }
 
     Gs2::UE5::Idle::Domain::Iterator::FEzDescribeStatusesIteratorPtr FEzUserGameSessionDomain::Statuses(
-          const TOptional<FString> CategoryName
     ) const
     {
         return MakeShared<Gs2::UE5::Idle::Domain::Iterator::FEzDescribeStatusesIterator>(
             Domain->Statuses(
-                CategoryName
             )
         );
     }

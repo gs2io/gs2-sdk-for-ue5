@@ -22,6 +22,7 @@
 #include "Idle/Model/Gs2IdleEzStatus.h"
 #include "Idle/Model/Gs2IdleEzConfig.h"
 #include "Idle/Model/Gs2IdleEzAcquireAction.h"
+#include "Idle/Model/Gs2IdleEzAcquireActionList.h"
 #include "Gs2IdleEzStatusGameSessionDomain.h"
 #include "Idle/Domain/Iterator/Gs2IdleEzDescribeStatusesIterator.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"

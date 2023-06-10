@@ -133,27 +133,87 @@ namespace Gs2::Idle::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FExportMasterTask>>(this->AsShared(), Request);
     }
 
-    FCurrentCategoryMasterDomain::FGetCurrentIdleMasterTask::FGetCurrentIdleMasterTask(
+    FCurrentCategoryMasterDomain::FGetTask::FGetTask(
         const TSharedPtr<FCurrentCategoryMasterDomain> Self,
-        const Request::FGetCurrentIdleMasterRequestPtr Request
+        const Request::FGetCurrentCategoryMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
 
     }
 
-    FCurrentCategoryMasterDomain::FGetCurrentIdleMasterTask::FGetCurrentIdleMasterTask(
-        const FGetCurrentIdleMasterTask& From
+    FCurrentCategoryMasterDomain::FGetTask::FGetTask(
+        const FGetTask& From
     ): TGs2Future(From), Self(From.Self), Request(From.Request)
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FCurrentCategoryMasterDomain::FGetCurrentIdleMasterTask::Action(
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentCategoryMasterDomain::FGetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Idle::Model::FCurrentCategoryMaster>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->GetCurrentCategoryMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Idle::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "CurrentCategoryMaster"
+                );
+                const auto Key = Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Idle::Model::FCurrentCategoryMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCurrentCategoryMasterDomain::FGetTask>> FCurrentCategoryMasterDomain::Get(
+        Request::FGetCurrentCategoryMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
+    }
+
+    FCurrentCategoryMasterDomain::FUpdateTask::FUpdateTask(
+        const TSharedPtr<FCurrentCategoryMasterDomain> Self,
+        const Request::FUpdateCurrentCategoryMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCurrentCategoryMasterDomain::FUpdateTask::FUpdateTask(
+        const FUpdateTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentCategoryMasterDomain::FUpdateTask::Action(
         TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>> Result
     )
     {
         Request
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->GetCurrentIdleMaster(
+        const auto Future = Self->Client->UpdateCurrentCategoryMaster(
             Request
         );
         Future->StartSynchronousTask();
@@ -189,33 +249,33 @@ namespace Gs2::Idle::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FCurrentCategoryMasterDomain::FGetCurrentIdleMasterTask>> FCurrentCategoryMasterDomain::GetCurrentIdleMaster(
-        Request::FGetCurrentIdleMasterRequestPtr Request
+    TSharedPtr<FAsyncTask<FCurrentCategoryMasterDomain::FUpdateTask>> FCurrentCategoryMasterDomain::Update(
+        Request::FUpdateCurrentCategoryMasterRequestPtr Request
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FGetCurrentIdleMasterTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FUpdateTask>>(this->AsShared(), Request);
     }
 
-    FCurrentCategoryMasterDomain::FUpdateCurrentIdleMasterTask::FUpdateCurrentIdleMasterTask(
+    FCurrentCategoryMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
         const TSharedPtr<FCurrentCategoryMasterDomain> Self,
-        const Request::FUpdateCurrentIdleMasterRequestPtr Request
+        const Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {
 
     }
 
-    FCurrentCategoryMasterDomain::FUpdateCurrentIdleMasterTask::FUpdateCurrentIdleMasterTask(
-        const FUpdateCurrentIdleMasterTask& From
+    FCurrentCategoryMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
+        const FUpdateFromGitHubTask& From
     ): TGs2Future(From), Self(From.Self), Request(From.Request)
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FCurrentCategoryMasterDomain::FUpdateCurrentIdleMasterTask::Action(
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentCategoryMasterDomain::FUpdateFromGitHubTask::Action(
         TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>> Result
     )
     {
         Request
             ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->UpdateCurrentIdleMaster(
+        const auto Future = Self->Client->UpdateCurrentCategoryMasterFromGitHub(
             Request
         );
         Future->StartSynchronousTask();
@@ -251,72 +311,10 @@ namespace Gs2::Idle::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FCurrentCategoryMasterDomain::FUpdateCurrentIdleMasterTask>> FCurrentCategoryMasterDomain::UpdateCurrentIdleMaster(
-        Request::FUpdateCurrentIdleMasterRequestPtr Request
+    TSharedPtr<FAsyncTask<FCurrentCategoryMasterDomain::FUpdateFromGitHubTask>> FCurrentCategoryMasterDomain::UpdateFromGitHub(
+        Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FUpdateCurrentIdleMasterTask>>(this->AsShared(), Request);
-    }
-
-    FCurrentCategoryMasterDomain::FUpdateCurrentIdleMasterFromGitHubTask::FUpdateCurrentIdleMasterFromGitHubTask(
-        const TSharedPtr<FCurrentCategoryMasterDomain> Self,
-        const Request::FUpdateCurrentIdleMasterFromGitHubRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FCurrentCategoryMasterDomain::FUpdateCurrentIdleMasterFromGitHubTask::FUpdateCurrentIdleMasterFromGitHubTask(
-        const FUpdateCurrentIdleMasterFromGitHubTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FCurrentCategoryMasterDomain::FUpdateCurrentIdleMasterFromGitHubTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->UpdateCurrentIdleMasterFromGitHub(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Idle::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "CurrentCategoryMaster"
-                );
-                const auto Key = Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
-                );
-                Self->Cache->Put(
-                    Gs2::Idle::Model::FCurrentCategoryMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        auto Domain = Self;
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FCurrentCategoryMasterDomain::FUpdateCurrentIdleMasterFromGitHubTask>> FCurrentCategoryMasterDomain::UpdateCurrentIdleMasterFromGitHub(
-        Request::FUpdateCurrentIdleMasterFromGitHubRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FUpdateCurrentIdleMasterFromGitHubTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FUpdateFromGitHubTask>>(this->AsShared(), Request);
     }
 
     FString FCurrentCategoryMasterDomain::CreateCacheParentKey(
@@ -359,6 +357,41 @@ namespace Gs2::Idle::Domain::Model
             Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
             )
         );
+        if (Value == nullptr) {
+            const auto Future = Self->Get(
+                MakeShared<Gs2::Idle::Request::FGetCurrentCategoryMasterRequest>()
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                {
+                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentCategoryMaster")
+                    {
+                        Self->Cache->Delete(
+                            Gs2::Idle::Model::FCurrentCategoryMaster::TypeName,
+                            Self->ParentKey,
+                            Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
+                            )
+                        );
+                    }
+                    else
+                    {
+                        return Future->GetTask().Error();
+                    }
+                }
+                else
+                {
+                    return Future->GetTask().Error();
+                }
+            }
+            Value = Self->Cache->Get<Gs2::Idle::Model::FCurrentCategoryMaster>(
+                Self->ParentKey,
+                Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
+                )
+            );
+            Future->EnsureCompletion();
+        }
         *Result = Value;
 
         return nullptr;

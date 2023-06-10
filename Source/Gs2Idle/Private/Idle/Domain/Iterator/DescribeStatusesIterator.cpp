@@ -35,14 +35,12 @@ namespace Gs2::Idle::Domain::Iterator
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Idle::FGs2IdleRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> CategoryName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        CategoryName(CategoryName),
         AccessToken(AccessToken)
     {
     }
@@ -94,7 +92,6 @@ namespace Gs2::Idle::Domain::Iterator
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Idle::Model::FStatusPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -106,7 +103,6 @@ namespace Gs2::Idle::Domain::Iterator
             const auto Future = Self->Client->DescribeStatuses(
                 MakeShared<Gs2::Idle::Request::FDescribeStatusesRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
-                    ->WithCategoryName(Self->CategoryName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

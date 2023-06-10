@@ -66,12 +66,12 @@
 #include "Task/Rest/IncreaseMaximumIdleMinutesByStampSheetTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
-#include "Request/GetCurrentIdleMasterRequest.h"
-#include "Task/Rest/GetCurrentIdleMasterTask.h"
-#include "Request/UpdateCurrentIdleMasterRequest.h"
-#include "Task/Rest/UpdateCurrentIdleMasterTask.h"
-#include "Request/UpdateCurrentIdleMasterFromGitHubRequest.h"
-#include "Task/Rest/UpdateCurrentIdleMasterFromGitHubTask.h"
+#include "Request/GetCurrentCategoryMasterRequest.h"
+#include "Task/Rest/GetCurrentCategoryMasterTask.h"
+#include "Request/UpdateCurrentCategoryMasterRequest.h"
+#include "Task/Rest/UpdateCurrentCategoryMasterTask.h"
+#include "Request/UpdateCurrentCategoryMasterFromGitHubRequest.h"
+#include "Task/Rest/UpdateCurrentCategoryMasterFromGitHubTask.h"
 
 namespace Gs2::Idle
 {
@@ -180,16 +180,16 @@ namespace Gs2::Idle
             const Request::FExportMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentIdleMasterTask>> GetCurrentIdleMaster(
-            const Request::FGetCurrentIdleMasterRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::Rest::FGetCurrentCategoryMasterTask>> GetCurrentCategoryMaster(
+            const Request::FGetCurrentCategoryMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentIdleMasterTask>> UpdateCurrentIdleMaster(
-            const Request::FUpdateCurrentIdleMasterRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentCategoryMasterTask>> UpdateCurrentCategoryMaster(
+            const Request::FUpdateCurrentCategoryMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentIdleMasterFromGitHubTask>> UpdateCurrentIdleMasterFromGitHub(
-            const Request::FUpdateCurrentIdleMasterFromGitHubRequestPtr Request
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateCurrentCategoryMasterFromGitHubTask>> UpdateCurrentCategoryMasterFromGitHub(
+            const Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2IdleRestClient, ESPMode::ThreadSafe> FGs2IdleRestClientPtr;

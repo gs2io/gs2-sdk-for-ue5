@@ -75,14 +75,12 @@ namespace Gs2::Idle::Domain::Model
     }
 
     Gs2::Idle::Domain::Iterator::FDescribeStatusesIteratorPtr FUserAccessTokenDomain::Statuses(
-        const TOptional<FString> CategoryName
     ) const
     {
         return MakeShared<Gs2::Idle::Domain::Iterator::FDescribeStatusesIterator>(
             Cache,
             Client,
             NamespaceName,
-            CategoryName,
             AccessToken
         );
     }

@@ -76,7 +76,6 @@ namespace Gs2::Idle::Domain::Model
         );
 
         Gs2::Idle::Domain::Iterator::FDescribeStatusesByUserIdIteratorPtr Statuses(
-            const TOptional<FString> CategoryName
         ) const;
 
         TSharedPtr<Gs2::Idle::Domain::Model::FStatusDomain> Status(

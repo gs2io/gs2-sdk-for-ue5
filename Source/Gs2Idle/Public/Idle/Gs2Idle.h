@@ -174,23 +174,23 @@
 #include "Task/Rest/ExportMasterTask.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 
-// GetCurrentIdleMaster
-#include "Request/GetCurrentIdleMasterRequest.h"
-#include "Result/GetCurrentIdleMasterResult.h"
-#include "Task/Rest/GetCurrentIdleMasterTask.h"
-#include "Task/WebSocket/GetCurrentIdleMasterTask.h"
+// GetCurrentCategoryMaster
+#include "Request/GetCurrentCategoryMasterRequest.h"
+#include "Result/GetCurrentCategoryMasterResult.h"
+#include "Task/Rest/GetCurrentCategoryMasterTask.h"
+#include "Task/WebSocket/GetCurrentCategoryMasterTask.h"
 
-// UpdateCurrentIdleMaster
-#include "Request/UpdateCurrentIdleMasterRequest.h"
-#include "Result/UpdateCurrentIdleMasterResult.h"
-#include "Task/Rest/UpdateCurrentIdleMasterTask.h"
-#include "Task/WebSocket/UpdateCurrentIdleMasterTask.h"
+// UpdateCurrentCategoryMaster
+#include "Request/UpdateCurrentCategoryMasterRequest.h"
+#include "Result/UpdateCurrentCategoryMasterResult.h"
+#include "Task/Rest/UpdateCurrentCategoryMasterTask.h"
+#include "Task/WebSocket/UpdateCurrentCategoryMasterTask.h"
 
-// UpdateCurrentIdleMasterFromGitHub
-#include "Request/UpdateCurrentIdleMasterFromGitHubRequest.h"
-#include "Result/UpdateCurrentIdleMasterFromGitHubResult.h"
-#include "Task/Rest/UpdateCurrentIdleMasterFromGitHubTask.h"
-#include "Task/WebSocket/UpdateCurrentIdleMasterFromGitHubTask.h"
+// UpdateCurrentCategoryMasterFromGitHub
+#include "Request/UpdateCurrentCategoryMasterFromGitHubRequest.h"
+#include "Result/UpdateCurrentCategoryMasterFromGitHubResult.h"
+#include "Task/Rest/UpdateCurrentCategoryMasterFromGitHubTask.h"
+#include "Task/WebSocket/UpdateCurrentCategoryMasterFromGitHubTask.h"
 
 // Client
 #include "Gs2IdleRestClient.h"

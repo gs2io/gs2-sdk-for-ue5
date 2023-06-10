@@ -22,6 +22,7 @@
 #include "Idle/Model/Gs2IdleEzStatus.h"
 #include "Idle/Model/Gs2IdleEzConfig.h"
 #include "Idle/Model/Gs2IdleEzAcquireAction.h"
+#include "Idle/Model/Gs2IdleEzAcquireActionList.h"
 #include "Gs2IdleEzStatusGameSessionDomain.h"
 #include "Idle/Domain/Iterator/Gs2IdleEzDescribeStatusesIterator.h"
 #include "Gs2IdleEzUserGameSessionDomain.h"
@@ -48,7 +49,6 @@ namespace Gs2::UE5::Idle::Domain::Model
         );
 
         Gs2::UE5::Idle::Domain::Iterator::FEzDescribeStatusesIteratorPtr Statuses(
-            const TOptional<FString> CategoryName = TOptional<FString>()
         ) const;
 
         Gs2::UE5::Idle::Domain::Model::FEzStatusGameSessionDomainPtr Status(

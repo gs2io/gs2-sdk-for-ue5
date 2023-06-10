@@ -27,8 +27,7 @@ UGs2IdleListOfStatusAsyncFunction::UGs2IdleListOfStatusAsyncFunction(
 
 UGs2IdleListOfStatusAsyncFunction* UGs2IdleListOfStatusAsyncFunction::ListOfStatus(
     UObject* WorldContextObject,
-    FGs2IdleOwnUser User,
-    FString CategoryName
+    FGs2IdleOwnUser User
 )
 {
     UGs2IdleListOfStatusAsyncFunction* Action = NewObject<UGs2IdleListOfStatusAsyncFunction>();
@@ -38,7 +37,6 @@ UGs2IdleListOfStatusAsyncFunction* UGs2IdleListOfStatusAsyncFunction::ListOfStat
         return Action;
     }
     Action->User = User;
-    Action->CategoryName = CategoryName;
     return Action;
 }
 
@@ -47,7 +45,6 @@ void UGs2IdleListOfStatusAsyncFunction::Activate()
     TArray<FGs2IdleStatusValue> ReturnStatuses;
     FGs2Error ReturnError;
     const auto It = User.Value->Statuses(
-        CategoryName
     );
     for (auto v : *It)
     {

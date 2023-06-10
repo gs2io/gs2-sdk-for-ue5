@@ -94,82 +94,82 @@ namespace Gs2::Idle::Domain::Model
             Request::FExportMasterRequestPtr Request
         );
 
-        class GS2IDLE_API FGetCurrentIdleMasterTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>,
-            public TSharedFromThis<FGetCurrentIdleMasterTask>
+        class GS2IDLE_API FGetTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Idle::Model::FCurrentCategoryMaster>,
+            public TSharedFromThis<FGetTask>
         {
             const TSharedPtr<FCurrentCategoryMasterDomain> Self;
-            const Request::FGetCurrentIdleMasterRequestPtr Request;
+            const Request::FGetCurrentCategoryMasterRequestPtr Request;
         public:
-            explicit FGetCurrentIdleMasterTask(
+            explicit FGetTask(
                 const TSharedPtr<FCurrentCategoryMasterDomain> Self,
-                const Request::FGetCurrentIdleMasterRequestPtr Request
+                const Request::FGetCurrentCategoryMasterRequestPtr Request
             );
 
-            FGetCurrentIdleMasterTask(
-                const FGetCurrentIdleMasterTask& From
+            FGetTask(
+                const FGetTask& From
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Idle::Model::FCurrentCategoryMaster>> Result
             ) override;
         };
-        friend FGetCurrentIdleMasterTask;
+        friend FGetTask;
 
-        TSharedPtr<FAsyncTask<FGetCurrentIdleMasterTask>> GetCurrentIdleMaster(
-            Request::FGetCurrentIdleMasterRequestPtr Request
+        TSharedPtr<FAsyncTask<FGetTask>> Get(
+            Request::FGetCurrentCategoryMasterRequestPtr Request
         );
 
-        class GS2IDLE_API FUpdateCurrentIdleMasterTask final :
+        class GS2IDLE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>,
-            public TSharedFromThis<FUpdateCurrentIdleMasterTask>
+            public TSharedFromThis<FUpdateTask>
         {
             const TSharedPtr<FCurrentCategoryMasterDomain> Self;
-            const Request::FUpdateCurrentIdleMasterRequestPtr Request;
+            const Request::FUpdateCurrentCategoryMasterRequestPtr Request;
         public:
-            explicit FUpdateCurrentIdleMasterTask(
+            explicit FUpdateTask(
                 const TSharedPtr<FCurrentCategoryMasterDomain> Self,
-                const Request::FUpdateCurrentIdleMasterRequestPtr Request
+                const Request::FUpdateCurrentCategoryMasterRequestPtr Request
             );
 
-            FUpdateCurrentIdleMasterTask(
-                const FUpdateCurrentIdleMasterTask& From
+            FUpdateTask(
+                const FUpdateTask& From
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>> Result
             ) override;
         };
-        friend FUpdateCurrentIdleMasterTask;
+        friend FUpdateTask;
 
-        TSharedPtr<FAsyncTask<FUpdateCurrentIdleMasterTask>> UpdateCurrentIdleMaster(
-            Request::FUpdateCurrentIdleMasterRequestPtr Request
+        TSharedPtr<FAsyncTask<FUpdateTask>> Update(
+            Request::FUpdateCurrentCategoryMasterRequestPtr Request
         );
 
-        class GS2IDLE_API FUpdateCurrentIdleMasterFromGitHubTask final :
+        class GS2IDLE_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>,
-            public TSharedFromThis<FUpdateCurrentIdleMasterFromGitHubTask>
+            public TSharedFromThis<FUpdateFromGitHubTask>
         {
             const TSharedPtr<FCurrentCategoryMasterDomain> Self;
-            const Request::FUpdateCurrentIdleMasterFromGitHubRequestPtr Request;
+            const Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request;
         public:
-            explicit FUpdateCurrentIdleMasterFromGitHubTask(
+            explicit FUpdateFromGitHubTask(
                 const TSharedPtr<FCurrentCategoryMasterDomain> Self,
-                const Request::FUpdateCurrentIdleMasterFromGitHubRequestPtr Request
+                const Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request
             );
 
-            FUpdateCurrentIdleMasterFromGitHubTask(
-                const FUpdateCurrentIdleMasterFromGitHubTask& From
+            FUpdateFromGitHubTask(
+                const FUpdateFromGitHubTask& From
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>> Result
             ) override;
         };
-        friend FUpdateCurrentIdleMasterFromGitHubTask;
+        friend FUpdateFromGitHubTask;
 
-        TSharedPtr<FAsyncTask<FUpdateCurrentIdleMasterFromGitHubTask>> UpdateCurrentIdleMasterFromGitHub(
-            Request::FUpdateCurrentIdleMasterFromGitHubRequestPtr Request
+        TSharedPtr<FAsyncTask<FUpdateFromGitHubTask>> UpdateFromGitHub(
+            Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

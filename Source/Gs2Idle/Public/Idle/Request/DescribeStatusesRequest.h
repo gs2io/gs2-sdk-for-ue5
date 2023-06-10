@@ -26,7 +26,6 @@ namespace Gs2::Idle::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
-        TOptional<FString> CategoryNameValue;
         TOptional<FString> AccessTokenValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
@@ -41,14 +40,12 @@ namespace Gs2::Idle::Request
 
         TSharedPtr<FDescribeStatusesRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeStatusesRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
-        TSharedPtr<FDescribeStatusesRequest> WithCategoryName(const TOptional<FString> CategoryName);
         TSharedPtr<FDescribeStatusesRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FDescribeStatusesRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeStatusesRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
-        TOptional<FString> GetCategoryName() const;
         TOptional<FString> GetAccessToken() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;

@@ -42,6 +42,14 @@ namespace Gs2::UE5::Idle::Model
         this->IdleMinutesValue = IdleMinutes;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzStatus> FEzStatus::WithMaximumIdleMinutes(
+        const TOptional<int32> MaximumIdleMinutes
+    )
+    {
+        this->MaximumIdleMinutesValue = MaximumIdleMinutes;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzStatus::GetCategoryName() const
     {
         return CategoryNameValue;
@@ -72,13 +80,27 @@ namespace Gs2::UE5::Idle::Model
         }
         return FString::Printf(TEXT("%d"), IdleMinutesValue.GetValue());
     }
+    TOptional<int32> FEzStatus::GetMaximumIdleMinutes() const
+    {
+        return MaximumIdleMinutesValue;
+    }
+
+    FString FEzStatus::GetMaximumIdleMinutesString() const
+    {
+        if (!MaximumIdleMinutesValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), MaximumIdleMinutesValue.GetValue());
+    }
 
     Gs2::Idle::Model::FStatusPtr FEzStatus::ToModel() const
     {
         return MakeShared<Gs2::Idle::Model::FStatus>()
             ->WithCategoryName(CategoryNameValue)
             ->WithRandomSeed(RandomSeedValue)
-            ->WithIdleMinutes(IdleMinutesValue);
+            ->WithIdleMinutes(IdleMinutesValue)
+            ->WithMaximumIdleMinutes(MaximumIdleMinutesValue);
     }
 
     TSharedPtr<FEzStatus> FEzStatus::FromModel(const Gs2::Idle::Model::FStatusPtr Model)
@@ -90,6 +112,7 @@ namespace Gs2::UE5::Idle::Model
         return MakeShared<FEzStatus>()
             ->WithCategoryName(Model->GetCategoryName())
             ->WithRandomSeed(Model->GetRandomSeed())
-            ->WithIdleMinutes(Model->GetIdleMinutes());
+            ->WithIdleMinutes(Model->GetIdleMinutes())
+            ->WithMaximumIdleMinutes(Model->GetMaximumIdleMinutes());
     }
 }

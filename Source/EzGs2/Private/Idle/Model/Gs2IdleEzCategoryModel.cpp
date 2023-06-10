@@ -43,6 +43,22 @@ namespace Gs2::UE5::Idle::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzCategoryModel> FEzCategoryModel::WithDefaultMaximumIdleMinutes(
+        const TOptional<int32> DefaultMaximumIdleMinutes
+    )
+    {
+        this->DefaultMaximumIdleMinutesValue = DefaultMaximumIdleMinutes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzCategoryModel> FEzCategoryModel::WithAcquireActions(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Idle::Model::FEzAcquireActionList>>> AcquireActions
+    )
+    {
+        this->AcquireActionsValue = AcquireActions;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzCategoryModel> FEzCategoryModel::WithIdlePeriodScheduleId(
         const TOptional<FString> IdlePeriodScheduleId
     )
@@ -79,6 +95,23 @@ namespace Gs2::UE5::Idle::Model
         }
         return FString::Printf(TEXT("%d"), RewardIntervalMinutesValue.GetValue());
     }
+    TOptional<int32> FEzCategoryModel::GetDefaultMaximumIdleMinutes() const
+    {
+        return DefaultMaximumIdleMinutesValue;
+    }
+
+    FString FEzCategoryModel::GetDefaultMaximumIdleMinutesString() const
+    {
+        if (!DefaultMaximumIdleMinutesValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), DefaultMaximumIdleMinutesValue.GetValue());
+    }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Idle::Model::FEzAcquireActionList>>> FEzCategoryModel::GetAcquireActions() const
+    {
+        return AcquireActionsValue;
+    }
     TOptional<FString> FEzCategoryModel::GetIdlePeriodScheduleId() const
     {
         return IdlePeriodScheduleIdValue;
@@ -94,6 +127,21 @@ namespace Gs2::UE5::Idle::Model
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
             ->WithRewardIntervalMinutes(RewardIntervalMinutesValue)
+            ->WithDefaultMaximumIdleMinutes(DefaultMaximumIdleMinutesValue)
+            ->WithAcquireActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Idle::Model::FAcquireActionList>>>();
+                    if (AcquireActionsValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *AcquireActionsValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            )
             ->WithIdlePeriodScheduleId(IdlePeriodScheduleIdValue)
             ->WithReceivePeriodScheduleId(ReceivePeriodScheduleIdValue);
     }
@@ -108,6 +156,21 @@ namespace Gs2::UE5::Idle::Model
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
             ->WithRewardIntervalMinutes(Model->GetRewardIntervalMinutes())
+            ->WithDefaultMaximumIdleMinutes(Model->GetDefaultMaximumIdleMinutes())
+            ->WithAcquireActions([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzAcquireActionList>>>();
+                    if (Model->GetAcquireActions() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetAcquireActions())
+                    {
+                        v->Add(FEzAcquireActionList::FromModel(v2));
+                    }
+                    return v;
+                }()
+            )
             ->WithIdlePeriodScheduleId(Model->GetIdlePeriodScheduleId())
             ->WithReceivePeriodScheduleId(Model->GetReceivePeriodScheduleId());
     }
