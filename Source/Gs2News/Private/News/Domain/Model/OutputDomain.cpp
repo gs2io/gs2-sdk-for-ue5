@@ -183,46 +183,48 @@ namespace Gs2::News::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::News::Model::FOutput>(
+        TSharedPtr<Gs2::News::Model::FOutput> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::News::Model::FOutput>(
             Self->ParentKey,
             Gs2::News::Domain::Model::FOutputDomain::CreateCacheKey(
                 Self->OutputName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::News::Request::FGetOutputRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "output")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::News::Model::FOutput::TypeName,
-                            Self->ParentKey,
-                            Gs2::News::Domain::Model::FOutputDomain::CreateCacheKey(
-                                Self->OutputName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::News::Domain::Model::FOutputDomain::CreateCacheKey(
+                    Self->OutputName
+                );
+                Self->Cache->Put(
+                    Gs2::News::Model::FOutput::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "output")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::News::Model::FOutput>(
+            Self->Cache->TryGet<Gs2::News::Model::FOutput>(
                 Self->ParentKey,
                 Gs2::News::Domain::Model::FOutputDomain::CreateCacheKey(
                     Self->OutputName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

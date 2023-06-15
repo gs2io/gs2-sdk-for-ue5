@@ -353,43 +353,45 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Schedule::Model::FCurrentEventMaster>(
+        TSharedPtr<Gs2::Schedule::Model::FCurrentEventMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Schedule::Model::FCurrentEventMaster>(
             Self->ParentKey,
             Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Schedule::Request::FGetCurrentEventMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentEventMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentEventMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Schedule::Model::FCurrentEventMaster>(
+            Self->Cache->TryGet<Gs2::Schedule::Model::FCurrentEventMaster>(
                 Self->ParentKey,
                 Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

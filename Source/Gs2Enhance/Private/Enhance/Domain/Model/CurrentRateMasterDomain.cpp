@@ -354,43 +354,45 @@ namespace Gs2::Enhance::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Enhance::Model::FCurrentRateMaster>(
+        TSharedPtr<Gs2::Enhance::Model::FCurrentRateMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Enhance::Model::FCurrentRateMaster>(
             Self->ParentKey,
             Gs2::Enhance::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Enhance::Request::FGetCurrentRateMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentRateMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Enhance::Model::FCurrentRateMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Enhance::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Enhance::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Enhance::Model::FCurrentRateMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentRateMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Enhance::Model::FCurrentRateMaster>(
+            Self->Cache->TryGet<Gs2::Enhance::Model::FCurrentRateMaster>(
                 Self->ParentKey,
                 Gs2::Enhance::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

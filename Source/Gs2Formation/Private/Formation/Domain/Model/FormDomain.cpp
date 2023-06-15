@@ -519,7 +519,7 @@ namespace Gs2::Formation::Domain::Model
                 );
             }
         }
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,
@@ -699,46 +699,48 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Formation::Model::FForm>(
+        TSharedPtr<Gs2::Formation::Model::FForm> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FForm>(
             Self->ParentKey,
             Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
                 Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Formation::Request::FGetFormByUserIdRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "form")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Formation::Model::FForm::TypeName,
-                            Self->ParentKey,
-                            Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
-                                Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
+                    Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
+                );
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FForm::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "form")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Formation::Model::FForm>(
+            Self->Cache->TryGet<Gs2::Formation::Model::FForm>(
                 Self->ParentKey,
                 Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
                     Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

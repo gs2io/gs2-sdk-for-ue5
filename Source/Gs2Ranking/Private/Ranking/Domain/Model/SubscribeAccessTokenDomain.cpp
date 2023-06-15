@@ -124,11 +124,13 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Ranking::Model::FSubscribe>(
+        TSharedPtr<Gs2::Ranking::Model::FSubscribe> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Ranking::Model::FSubscribe>(
             Self->ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeDomain::CreateCacheKey(
                 Self->CategoryName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

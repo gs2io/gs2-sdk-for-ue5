@@ -119,11 +119,13 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::JobQueue::Model::FDeadLetterJob>(
+        TSharedPtr<Gs2::JobQueue::Model::FDeadLetterJob> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::JobQueue::Model::FDeadLetterJob>(
             Self->ParentKey,
             Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain::CreateCacheKey(
                 Self->DeadLetterJobName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

@@ -356,11 +356,13 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Chat::Model::FRoom>(
+        TSharedPtr<Gs2::Chat::Model::FRoom> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Chat::Model::FRoom>(
             Self->ParentKey,
             Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
                 Self->RoomName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

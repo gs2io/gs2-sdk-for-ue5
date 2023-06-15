@@ -118,7 +118,7 @@ namespace Gs2::Lottery::Domain::Model
         if (ResultModel != nullptr) {
             
         }
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,
@@ -239,7 +239,7 @@ namespace Gs2::Lottery::Domain::Model
         if (ResultModel != nullptr) {
             
         }
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,

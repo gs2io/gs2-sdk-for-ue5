@@ -135,11 +135,13 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::JobQueue::Model::FJob>(
+        TSharedPtr<Gs2::JobQueue::Model::FJob> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::JobQueue::Model::FJob>(
             Self->ParentKey,
             Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                 Self->JobName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

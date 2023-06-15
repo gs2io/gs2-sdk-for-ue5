@@ -130,7 +130,7 @@ namespace Gs2::Enhance::Domain::Model
             }
         }
         Self->BonusRate = ResultModel->GetBonusRate();
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,

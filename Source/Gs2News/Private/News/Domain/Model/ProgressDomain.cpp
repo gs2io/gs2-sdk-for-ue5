@@ -202,46 +202,48 @@ namespace Gs2::News::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::News::Model::FProgress>(
+        TSharedPtr<Gs2::News::Model::FProgress> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::News::Model::FProgress>(
             Self->ParentKey,
             Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
                 Self->UploadToken
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::News::Request::FGetProgressRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "progress")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::News::Model::FProgress::TypeName,
-                            Self->ParentKey,
-                            Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
-                                Self->UploadToken
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
+                    Self->UploadToken
+                );
+                Self->Cache->Put(
+                    Gs2::News::Model::FProgress::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "progress")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::News::Model::FProgress>(
+            Self->Cache->TryGet<Gs2::News::Model::FProgress>(
                 Self->ParentKey,
                 Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
                     Self->UploadToken
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

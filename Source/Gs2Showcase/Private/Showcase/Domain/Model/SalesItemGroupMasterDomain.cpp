@@ -297,46 +297,48 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Showcase::Model::FSalesItemGroupMaster>(
+        TSharedPtr<Gs2::Showcase::Model::FSalesItemGroupMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Showcase::Model::FSalesItemGroupMaster>(
             Self->ParentKey,
             Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                 Self->SalesItemGroupName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Showcase::Request::FGetSalesItemGroupMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "salesItemGroupMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
-                                Self->SalesItemGroupName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
+                    Self->SalesItemGroupName
+                );
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "salesItemGroupMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Showcase::Model::FSalesItemGroupMaster>(
+            Self->Cache->TryGet<Gs2::Showcase::Model::FSalesItemGroupMaster>(
                 Self->ParentKey,
                 Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                     Self->SalesItemGroupName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

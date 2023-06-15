@@ -555,11 +555,13 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Datastore::Model::FDataObject>(
+        TSharedPtr<Gs2::Datastore::Model::FDataObject> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Datastore::Model::FDataObject>(
             Self->ParentKey,
             Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                 Self->DataObjectName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

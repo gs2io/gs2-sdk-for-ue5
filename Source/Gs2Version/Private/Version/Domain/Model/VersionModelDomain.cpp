@@ -176,46 +176,48 @@ namespace Gs2::Version::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Version::Model::FVersionModel>(
+        TSharedPtr<Gs2::Version::Model::FVersionModel> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Version::Model::FVersionModel>(
             Self->ParentKey,
             Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
                 Self->VersionName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Version::Request::FGetVersionModelRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "versionModel")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Version::Model::FVersionModel::TypeName,
-                            Self->ParentKey,
-                            Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
-                                Self->VersionName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
+                    Self->VersionName
+                );
+                Self->Cache->Put(
+                    Gs2::Version::Model::FVersionModel::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "versionModel")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Version::Model::FVersionModel>(
+            Self->Cache->TryGet<Gs2::Version::Model::FVersionModel>(
                 Self->ParentKey,
                 Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
                     Self->VersionName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

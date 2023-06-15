@@ -420,46 +420,48 @@ namespace Gs2::Datastore::Domain::Model
     {
         const auto ParentKey = FString("datastore:Namespace");
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Datastore::Model::FNamespace>(
+        TSharedPtr<Gs2::Datastore::Model::FNamespace> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Datastore::Model::FNamespace>(
             Self->ParentKey,
             Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 Self->NamespaceName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Datastore::Request::FGetNamespaceRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "namespace")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Datastore::Model::FNamespace::TypeName,
-                            Self->ParentKey,
-                            Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                                Self->NamespaceName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                    Self->NamespaceName
+                );
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FNamespace::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "namespace")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Datastore::Model::FNamespace>(
+            Self->Cache->TryGet<Gs2::Datastore::Model::FNamespace>(
                 Self->ParentKey,
                 Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

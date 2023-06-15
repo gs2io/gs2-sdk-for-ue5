@@ -170,46 +170,48 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Deploy::Model::FEvent>(
+        TSharedPtr<Gs2::Deploy::Model::FEvent> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Deploy::Model::FEvent>(
             Self->ParentKey,
             Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
                 Self->EventName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Deploy::Request::FGetEventRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "event")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Deploy::Model::FEvent::TypeName,
-                            Self->ParentKey,
-                            Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
-                                Self->EventName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
+                    Self->EventName
+                );
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FEvent::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "event")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Deploy::Model::FEvent>(
+            Self->Cache->TryGet<Gs2::Deploy::Model::FEvent>(
                 Self->ParentKey,
                 Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
                     Self->EventName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

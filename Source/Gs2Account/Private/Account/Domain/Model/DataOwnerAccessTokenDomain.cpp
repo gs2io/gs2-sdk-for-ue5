@@ -111,10 +111,12 @@ namespace Gs2::Account::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Account::Model::FDataOwner>(
+        TSharedPtr<Gs2::Account::Model::FDataOwner> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Account::Model::FDataOwner>(
             Self->ParentKey,
             Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

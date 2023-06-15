@@ -186,46 +186,48 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Quest::Model::FCompletedQuestList>(
+        TSharedPtr<Gs2::Quest::Model::FCompletedQuestList> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Quest::Model::FCompletedQuestList>(
             Self->ParentKey,
             Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
                 Self->QuestGroupName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Quest::Request::FGetCompletedQuestListRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "completedQuestList")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Quest::Model::FCompletedQuestList::TypeName,
-                            Self->ParentKey,
-                            Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
-                                Self->QuestGroupName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
+                    Self->QuestGroupName
+                );
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FCompletedQuestList::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "completedQuestList")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Quest::Model::FCompletedQuestList>(
+            Self->Cache->TryGet<Gs2::Quest::Model::FCompletedQuestList>(
                 Self->ParentKey,
                 Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
                     Self->QuestGroupName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

@@ -242,7 +242,7 @@ namespace Gs2::Idle::Domain::Model
         if (ResultModel != nullptr) {
             
         }
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,
@@ -390,46 +390,47 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Idle::Model::FStatus>(
+        Gs2::Idle::Model::FStatusPtr Value;
+        const auto bCacheHit = Self->Cache->TryGet<Gs2::Idle::Model::FStatus>(
             Self->ParentKey,
             Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
                 Self->CategoryName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Idle::Request::FGetStatusByUserIdRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "status")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Idle::Model::FStatus::TypeName,
-                            Self->ParentKey,
-                            Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                                Self->CategoryName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                Self->Cache->Put(
+                    Gs2::Idle::Model::FStatus::TypeName,
+                    Self->ParentKey,
+                    Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                        Self->CategoryName
+                    ),
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "status")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Idle::Model::FStatus>(
+            Self->Cache->TryGet<Gs2::Idle::Model::FStatus>(
                 Self->ParentKey,
                 Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
                     Self->CategoryName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

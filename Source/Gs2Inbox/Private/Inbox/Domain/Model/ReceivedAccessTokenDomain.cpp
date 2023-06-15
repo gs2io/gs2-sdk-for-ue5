@@ -114,10 +114,12 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Inbox::Model::FReceived>(
+        TSharedPtr<Gs2::Inbox::Model::FReceived> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Inbox::Model::FReceived>(
             Self->ParentKey,
             Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

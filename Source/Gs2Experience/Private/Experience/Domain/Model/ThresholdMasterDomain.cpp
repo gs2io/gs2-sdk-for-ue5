@@ -297,46 +297,48 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Experience::Model::FThresholdMaster>(
+        TSharedPtr<Gs2::Experience::Model::FThresholdMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Experience::Model::FThresholdMaster>(
             Self->ParentKey,
             Gs2::Experience::Domain::Model::FThresholdMasterDomain::CreateCacheKey(
                 Self->ThresholdName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Experience::Request::FGetThresholdMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "thresholdMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Experience::Model::FThresholdMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Experience::Domain::Model::FThresholdMasterDomain::CreateCacheKey(
-                                Self->ThresholdName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Experience::Domain::Model::FThresholdMasterDomain::CreateCacheKey(
+                    Self->ThresholdName
+                );
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FThresholdMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "thresholdMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Experience::Model::FThresholdMaster>(
+            Self->Cache->TryGet<Gs2::Experience::Model::FThresholdMaster>(
                 Self->ParentKey,
                 Gs2::Experience::Domain::Model::FThresholdMasterDomain::CreateCacheKey(
                     Self->ThresholdName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

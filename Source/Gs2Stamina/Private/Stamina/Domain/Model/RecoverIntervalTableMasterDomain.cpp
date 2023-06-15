@@ -299,46 +299,48 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Stamina::Model::FRecoverIntervalTableMaster>(
+        TSharedPtr<Gs2::Stamina::Model::FRecoverIntervalTableMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FRecoverIntervalTableMaster>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
                 Self->RecoverIntervalTableName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Stamina::Request::FGetRecoverIntervalTableMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "recoverIntervalTableMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
-                                Self->RecoverIntervalTableName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
+                    Self->RecoverIntervalTableName
+                );
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "recoverIntervalTableMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Stamina::Model::FRecoverIntervalTableMaster>(
+            Self->Cache->TryGet<Gs2::Stamina::Model::FRecoverIntervalTableMaster>(
                 Self->ParentKey,
                 Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
                     Self->RecoverIntervalTableName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

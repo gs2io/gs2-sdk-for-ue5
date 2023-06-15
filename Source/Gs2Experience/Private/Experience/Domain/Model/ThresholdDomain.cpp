@@ -100,10 +100,12 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Experience::Model::FThreshold>(
+        TSharedPtr<Gs2::Experience::Model::FThreshold> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Experience::Model::FThreshold>(
             Self->ParentKey,
             Gs2::Experience::Domain::Model::FThresholdDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

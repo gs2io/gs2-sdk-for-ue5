@@ -224,39 +224,38 @@ namespace Gs2::Matchmaking::Domain::Model
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "ballot")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Matchmaking::Model::FBallot::TypeName,
-                            Self->ParentKey,
-                            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                                Self->RatingName,
-                                Self->GatheringName,
-                                Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
-                                Self->KeyId
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FBallot::TypeName,
+                    Self->ParentKey,
+                    Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
+                        Self->RatingName,
+                        Self->GatheringName,
+                        Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                        Self->KeyId
+                    ),
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "ballot")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Matchmaking::Model::FBallot>(
+            Self->Cache->TryGet<Gs2::Matchmaking::Model::FBallot>(
                 Self->ParentKey,
                 Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                     Self->RatingName,
                     Self->GatheringName,
                     Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
                     Self->KeyId
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

@@ -274,46 +274,48 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::SerialKey::Model::FCampaignModel>(
+        TSharedPtr<Gs2::SerialKey::Model::FCampaignModel> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::SerialKey::Model::FCampaignModel>(
             Self->ParentKey,
             Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
                 Self->CampaignModelName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::SerialKey::Request::FGetCampaignModelRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "campaignModel")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::SerialKey::Model::FCampaignModel::TypeName,
-                            Self->ParentKey,
-                            Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
-                                Self->CampaignModelName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
+                    Self->CampaignModelName
+                );
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FCampaignModel::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "campaignModel")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::SerialKey::Model::FCampaignModel>(
+            Self->Cache->TryGet<Gs2::SerialKey::Model::FCampaignModel>(
                 Self->ParentKey,
                 Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
                     Self->CampaignModelName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

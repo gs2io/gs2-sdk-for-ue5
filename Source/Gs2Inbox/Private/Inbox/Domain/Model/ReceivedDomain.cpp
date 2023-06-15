@@ -297,43 +297,45 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Inbox::Model::FReceived>(
+        TSharedPtr<Gs2::Inbox::Model::FReceived> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Inbox::Model::FReceived>(
             Self->ParentKey,
             Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Inbox::Request::FGetReceivedByUserIdRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "received")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Inbox::Model::FReceived::TypeName,
-                            Self->ParentKey,
-                            Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FReceived::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "received")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Inbox::Model::FReceived>(
+            Self->Cache->TryGet<Gs2::Inbox::Model::FReceived>(
                 Self->ParentKey,
                 Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

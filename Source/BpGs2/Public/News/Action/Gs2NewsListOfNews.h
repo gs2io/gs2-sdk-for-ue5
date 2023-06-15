@@ -25,8 +25,8 @@
 #include "News/Model/Gs2NewsNews.h"
 #include "Gs2NewsListOfNews.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2NewsListOfNewsSuccessDelegate, TArray<FGs2NewsNewsValue>, Values, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2NewsListOfNewsErrorDelegate, TArray<FGs2NewsNewsValue>, Values, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2NewsListOfNewsSuccessDelegate, const TArray<FGs2NewsNewsValue>, Values, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2NewsListOfNewsErrorDelegate, const TArray<FGs2NewsNewsValue>, Values, const FGs2Error, Error);
 
 UCLASS()
 class BPGS2_API UGs2NewsListOfNewsAsyncFunction : public UBlueprintAsyncActionBase

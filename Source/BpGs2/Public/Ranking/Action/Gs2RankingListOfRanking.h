@@ -24,8 +24,8 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2RankingListOfRanking.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2RankingListOfRankingSuccessDelegate, TArray<FGs2RankingRankingValue>, Values, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2RankingListOfRankingErrorDelegate, TArray<FGs2RankingRankingValue>, Values, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2RankingListOfRankingSuccessDelegate, const TArray<FGs2RankingRankingValue>&, Values, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2RankingListOfRankingErrorDelegate, const TArray<FGs2RankingRankingValue>&, Values, const FGs2Error, Error);
 
 UCLASS()
 class BPGS2_API UGs2RankingListOfRankingAsyncFunction : public UBlueprintAsyncActionBase

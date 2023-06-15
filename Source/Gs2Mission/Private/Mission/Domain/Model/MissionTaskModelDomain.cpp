@@ -187,46 +187,48 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Mission::Model::FMissionTaskModel>(
+        TSharedPtr<Gs2::Mission::Model::FMissionTaskModel> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Mission::Model::FMissionTaskModel>(
             Self->ParentKey,
             Gs2::Mission::Domain::Model::FMissionTaskModelDomain::CreateCacheKey(
                 Self->MissionTaskName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Mission::Request::FGetMissionTaskModelRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "missionTaskModel")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Mission::Model::FMissionTaskModel::TypeName,
-                            Self->ParentKey,
-                            Gs2::Mission::Domain::Model::FMissionTaskModelDomain::CreateCacheKey(
-                                Self->MissionTaskName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Mission::Domain::Model::FMissionTaskModelDomain::CreateCacheKey(
+                    Self->MissionTaskName
+                );
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FMissionTaskModel::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "missionTaskModel")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Mission::Model::FMissionTaskModel>(
+            Self->Cache->TryGet<Gs2::Mission::Model::FMissionTaskModel>(
                 Self->ParentKey,
                 Gs2::Mission::Domain::Model::FMissionTaskModelDomain::CreateCacheKey(
                     Self->MissionTaskName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

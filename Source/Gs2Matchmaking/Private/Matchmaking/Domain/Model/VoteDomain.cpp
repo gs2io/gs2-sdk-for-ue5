@@ -170,12 +170,14 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Matchmaking::Model::FVote>(
+        TSharedPtr<Gs2::Matchmaking::Model::FVote> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Matchmaking::Model::FVote>(
             Self->ParentKey,
             Gs2::Matchmaking::Domain::Model::FVoteDomain::CreateCacheKey(
                 Self->RatingName,
                 Self->GatheringName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

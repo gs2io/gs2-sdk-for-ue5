@@ -123,11 +123,13 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Showcase::Model::FDisplayItem>(
+        TSharedPtr<Gs2::Showcase::Model::FDisplayItem> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Showcase::Model::FDisplayItem>(
             Self->ParentKey,
             Gs2::Showcase::Domain::Model::FDisplayItemDomain::CreateCacheKey(
                 Self->DisplayItemId
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

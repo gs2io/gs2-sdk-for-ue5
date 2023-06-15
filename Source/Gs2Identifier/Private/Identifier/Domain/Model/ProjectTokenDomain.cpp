@@ -199,10 +199,12 @@ namespace Gs2::Identifier::Domain::Model
     {
         const auto ParentKey = FString("identifier:ProjectToken");
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Identifier::Model::FProjectToken>(
+        TSharedPtr<Gs2::Identifier::Model::FProjectToken> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Identifier::Model::FProjectToken>(
             Self->ParentKey,
             Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

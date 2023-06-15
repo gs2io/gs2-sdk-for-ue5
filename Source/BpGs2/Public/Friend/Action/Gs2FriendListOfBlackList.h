@@ -24,8 +24,8 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendListOfBlackList.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendListOfBlackListSuccessDelegate, TArray<FString>, Values, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendListOfBlackListErrorDelegate, TArray<FString>, Values, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendListOfBlackListSuccessDelegate, const TArray<FString>, Values, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendListOfBlackListErrorDelegate, const TArray<FString>, Values, const FGs2Error, Error);
 
 UCLASS()
 class BPGS2_API UGs2FriendListOfBlackListAsyncFunction : public UBlueprintAsyncActionBase

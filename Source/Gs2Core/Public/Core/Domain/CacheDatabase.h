@@ -75,11 +75,25 @@ namespace Gs2::Core::Domain
             FCacheKey Key
         );
 
-        TSharedPtr<void> Get(
+        bool TryGet(
             FTypeName Kind,
             FParentCacheKey ParentKey,
-            FCacheKey Key
+            FCacheKey Key,
+            TSharedPtr<Gs2Object>* OutObject
         );
+
+        template<class TKind>
+        bool TryGet(
+            FParentCacheKey ParentKey,
+            FCacheKey Key,
+            TSharedPtr<TKind>* OutObject
+        )
+        {
+            TSharedPtr<Gs2Object> Out;
+            auto Result = TryGet(TKind::TypeName, ParentKey, Key, &Out);
+            *OutObject = StaticCastSharedPtr<TKind>(Out);
+            return Result;
+        }
 
         template<class TKind>
         TSharedPtr<TKind> Get(
@@ -87,7 +101,9 @@ namespace Gs2::Core::Domain
             FCacheKey Key
         )
         {
-            return StaticCastSharedPtr<TKind>(Get(TKind::TypeName, ParentKey, Key));
+            TSharedPtr<TKind> Out;
+            TryGet<TKind>(ParentKey, Key, &Out);
+            return Out;
         }
 
         template<class TKind>
@@ -114,7 +130,10 @@ namespace Gs2::Core::Domain
                     ClearListCache(TKind::TypeName, ParentKey);
                     return nullptr;
                 }
-                Result->Add(StaticCastSharedPtr<TKind>(Data.Key));
+                if (Data.Key)
+                {
+                    Result->Add(StaticCastSharedPtr<TKind>(Data.Key));
+                }
             }
 
             if (OutUpdateContext)

@@ -243,46 +243,48 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Schedule::Model::FTrigger>(
+        TSharedPtr<Gs2::Schedule::Model::FTrigger> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Schedule::Model::FTrigger>(
             Self->ParentKey,
             Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
                 Self->TriggerName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Schedule::Request::FGetTriggerRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "trigger")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Schedule::Model::FTrigger::TypeName,
-                            Self->ParentKey,
-                            Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
-                                Self->TriggerName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
+                    Self->TriggerName
+                );
+                Self->Cache->Put(
+                    Gs2::Schedule::Model::FTrigger::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "trigger")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Schedule::Model::FTrigger>(
+            Self->Cache->TryGet<Gs2::Schedule::Model::FTrigger>(
                 Self->ParentKey,
                 Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
                     Self->TriggerName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

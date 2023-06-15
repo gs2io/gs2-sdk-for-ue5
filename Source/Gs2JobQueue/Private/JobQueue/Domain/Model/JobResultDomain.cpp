@@ -188,46 +188,48 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::JobQueue::Model::FJobResult>(
+        TSharedPtr<Gs2::JobQueue::Model::FJobResult> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::JobQueue::Model::FJobResult>(
             Self->ParentKey,
             Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
                 Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::JobQueue::Request::FGetJobResultByUserIdRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "jobResult")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::JobQueue::Model::FJobResult::TypeName,
-                            Self->ParentKey,
-                            Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
-                                Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
+                    Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
+                );
+                Self->Cache->Put(
+                    Gs2::JobQueue::Model::FJobResult::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "jobResult")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::JobQueue::Model::FJobResult>(
+            Self->Cache->TryGet<Gs2::JobQueue::Model::FJobResult>(
                 Self->ParentKey,
                 Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
                     Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

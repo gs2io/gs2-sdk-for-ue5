@@ -178,10 +178,12 @@ namespace Gs2::Gateway::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Gateway::Model::FWebSocketSession>(
+        TSharedPtr<Gs2::Gateway::Model::FWebSocketSession> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Gateway::Model::FWebSocketSession>(
             Self->ParentKey,
             Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

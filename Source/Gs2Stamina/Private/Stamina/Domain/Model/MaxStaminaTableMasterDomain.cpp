@@ -299,46 +299,48 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Stamina::Model::FMaxStaminaTableMaster>(
+        TSharedPtr<Gs2::Stamina::Model::FMaxStaminaTableMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FMaxStaminaTableMaster>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain::CreateCacheKey(
                 Self->MaxStaminaTableName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Stamina::Request::FGetMaxStaminaTableMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "maxStaminaTableMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain::CreateCacheKey(
-                                Self->MaxStaminaTableName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain::CreateCacheKey(
+                    Self->MaxStaminaTableName
+                );
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "maxStaminaTableMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Stamina::Model::FMaxStaminaTableMaster>(
+            Self->Cache->TryGet<Gs2::Stamina::Model::FMaxStaminaTableMaster>(
                 Self->ParentKey,
                 Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain::CreateCacheKey(
                     Self->MaxStaminaTableName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

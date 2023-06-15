@@ -354,43 +354,45 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Inbox::Model::FCurrentMessageMaster>(
+        TSharedPtr<Gs2::Inbox::Model::FCurrentMessageMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Inbox::Model::FCurrentMessageMaster>(
             Self->ParentKey,
             Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Inbox::Request::FGetCurrentMessageMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentMessageMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Inbox::Model::FCurrentMessageMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FCurrentMessageMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentMessageMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Inbox::Model::FCurrentMessageMaster>(
+            Self->Cache->TryGet<Gs2::Inbox::Model::FCurrentMessageMaster>(
                 Self->ParentKey,
                 Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

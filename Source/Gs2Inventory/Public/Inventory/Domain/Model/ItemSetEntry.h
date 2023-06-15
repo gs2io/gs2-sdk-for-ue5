@@ -37,4 +37,5 @@ namespace Gs2::Inventory::Model
     
         static FString TypeName;
     };
+    typedef TSharedPtr<FItemSetEntry> FItemSetEntryPtr;
 }

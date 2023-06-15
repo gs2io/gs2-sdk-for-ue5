@@ -128,7 +128,7 @@ namespace Gs2::Enhance::Domain::Model
                 );
             }
         }
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,

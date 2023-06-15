@@ -307,10 +307,12 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Identifier::Model::FAttachSecurityPolicy>(
+        TSharedPtr<Gs2::Identifier::Model::FAttachSecurityPolicy> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Identifier::Model::FAttachSecurityPolicy>(
             Self->ParentKey,
             Gs2::Identifier::Domain::Model::FAttachSecurityPolicyDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

@@ -115,11 +115,13 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Stamina::Model::FRecoverIntervalTable>(
+        TSharedPtr<Gs2::Stamina::Model::FRecoverIntervalTable> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FRecoverIntervalTable>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FRecoverIntervalTableDomain::CreateCacheKey(
                 Self->RecoverIntervalTableName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

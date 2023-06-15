@@ -115,11 +115,13 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Stamina::Model::FMaxStaminaTable>(
+        TSharedPtr<Gs2::Stamina::Model::FMaxStaminaTable> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FMaxStaminaTable>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FMaxStaminaTableDomain::CreateCacheKey(
                 Self->MaxStaminaTableName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

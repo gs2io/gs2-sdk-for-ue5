@@ -183,46 +183,48 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Distributor::Model::FStampSheetResult>(
+        TSharedPtr<Gs2::Distributor::Model::FStampSheetResult> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Distributor::Model::FStampSheetResult>(
             Self->ParentKey,
             Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
                 Self->TransactionId
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Distributor::Request::FGetStampSheetResultRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "stampSheetResult")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Distributor::Model::FStampSheetResult::TypeName,
-                            Self->ParentKey,
-                            Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
-                                Self->TransactionId
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
+                    Self->TransactionId
+                );
+                Self->Cache->Put(
+                    Gs2::Distributor::Model::FStampSheetResult::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "stampSheetResult")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Distributor::Model::FStampSheetResult>(
+            Self->Cache->TryGet<Gs2::Distributor::Model::FStampSheetResult>(
                 Self->ParentKey,
                 Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
                     Self->TransactionId
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

@@ -115,11 +115,13 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Stamina::Model::FRecoverValueTable>(
+        TSharedPtr<Gs2::Stamina::Model::FRecoverValueTable> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FRecoverValueTable>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FRecoverValueTableDomain::CreateCacheKey(
                 Self->RecoverValueTableName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

@@ -229,46 +229,48 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Identifier::Model::FIdentifier>(
+        TSharedPtr<Gs2::Identifier::Model::FIdentifier> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Identifier::Model::FIdentifier>(
             Self->ParentKey,
             Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
                 Self->ClientId
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Identifier::Request::FGetIdentifierRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "identifier")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Identifier::Model::FIdentifier::TypeName,
-                            Self->ParentKey,
-                            Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
-                                Self->ClientId
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
+                    Self->ClientId
+                );
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FIdentifier::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "identifier")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Identifier::Model::FIdentifier>(
+            Self->Cache->TryGet<Gs2::Identifier::Model::FIdentifier>(
                 Self->ParentKey,
                 Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
                     Self->ClientId
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

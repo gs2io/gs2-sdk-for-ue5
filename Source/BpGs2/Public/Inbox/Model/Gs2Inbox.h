@@ -37,6 +37,8 @@ struct FGs2InboxReceiveNotification
     UPROPERTY(BlueprintReadWrite)
     FString NamespaceName = "";
     UPROPERTY(BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(BlueprintReadWrite)
     FString MessageName = "";
 };
 
@@ -46,6 +48,7 @@ inline FGs2InboxReceiveNotification EzReceiveNotificationToFGs2InboxReceiveNotif
 {
     FGs2InboxReceiveNotification Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.MessageName = Model->GetMessageName() ? *Model->GetMessageName() : "";
     return Value;
 }

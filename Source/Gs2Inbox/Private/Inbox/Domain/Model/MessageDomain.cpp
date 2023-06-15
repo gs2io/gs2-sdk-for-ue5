@@ -260,7 +260,7 @@ namespace Gs2::Inbox::Domain::Model
                 );
             }
         }
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,
@@ -402,46 +402,48 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Inbox::Model::FMessage>(
+        TSharedPtr<Gs2::Inbox::Model::FMessage> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Inbox::Model::FMessage>(
             Self->ParentKey,
             Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                 Self->MessageName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Inbox::Request::FGetMessageByUserIdRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "message")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Inbox::Model::FMessage::TypeName,
-                            Self->ParentKey,
-                            Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                                Self->MessageName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
+                    Self->MessageName
+                );
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FMessage::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "message")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Inbox::Model::FMessage>(
+            Self->Cache->TryGet<Gs2::Inbox::Model::FMessage>(
                 Self->ParentKey,
                 Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     Self->MessageName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

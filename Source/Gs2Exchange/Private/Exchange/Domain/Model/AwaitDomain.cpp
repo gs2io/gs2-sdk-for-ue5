@@ -196,7 +196,7 @@ namespace Gs2::Exchange::Domain::Model
                 );
             }
         }
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,
@@ -291,7 +291,7 @@ namespace Gs2::Exchange::Domain::Model
                 );
             }
         }
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,
@@ -386,7 +386,7 @@ namespace Gs2::Exchange::Domain::Model
                 );
             }
         }
-        if (ResultModel->GetAutoRunStampSheet().IsSet() && !*ResultModel->GetAutoRunStampSheet())
+        if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
                 Self->Cache,
@@ -528,46 +528,48 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Exchange::Model::FAwait>(
+        TSharedPtr<Gs2::Exchange::Model::FAwait> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Exchange::Model::FAwait>(
             Self->ParentKey,
             Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                 Self->AwaitName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Exchange::Request::FGetAwaitByUserIdRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "await")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Exchange::Model::FAwait::TypeName,
-                            Self->ParentKey,
-                            Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
-                                Self->AwaitName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
+                    Self->AwaitName
+                );
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FAwait::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "await")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Exchange::Model::FAwait>(
+            Self->Cache->TryGet<Gs2::Exchange::Model::FAwait>(
                 Self->ParentKey,
                 Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     Self->AwaitName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

@@ -235,46 +235,48 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Lottery::Model::FPrizeLimit>(
+        TSharedPtr<Gs2::Lottery::Model::FPrizeLimit> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Lottery::Model::FPrizeLimit>(
             Self->ParentKey,
             Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
                 Self->PrizeId
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Lottery::Request::FGetPrizeLimitRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "prizeLimit")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Lottery::Model::FPrizeLimit::TypeName,
-                            Self->ParentKey,
-                            Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
-                                Self->PrizeId
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
+                    Self->PrizeId
+                );
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FPrizeLimit::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "prizeLimit")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Lottery::Model::FPrizeLimit>(
+            Self->Cache->TryGet<Gs2::Lottery::Model::FPrizeLimit>(
                 Self->ParentKey,
                 Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
                     Self->PrizeId
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

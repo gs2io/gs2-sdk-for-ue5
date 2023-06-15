@@ -180,46 +180,48 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Mission::Model::FCounterModel>(
+        TSharedPtr<Gs2::Mission::Model::FCounterModel> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Mission::Model::FCounterModel>(
             Self->ParentKey,
             Gs2::Mission::Domain::Model::FCounterModelDomain::CreateCacheKey(
                 Self->CounterName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Mission::Request::FGetCounterModelRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "counterModel")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Mission::Model::FCounterModel::TypeName,
-                            Self->ParentKey,
-                            Gs2::Mission::Domain::Model::FCounterModelDomain::CreateCacheKey(
-                                Self->CounterName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Mission::Domain::Model::FCounterModelDomain::CreateCacheKey(
+                    Self->CounterName
+                );
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FCounterModel::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "counterModel")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Mission::Model::FCounterModel>(
+            Self->Cache->TryGet<Gs2::Mission::Model::FCounterModel>(
                 Self->ParentKey,
                 Gs2::Mission::Domain::Model::FCounterModelDomain::CreateCacheKey(
                     Self->CounterName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

@@ -188,46 +188,48 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Datastore::Model::FDataObjectHistory>(
+        TSharedPtr<Gs2::Datastore::Model::FDataObjectHistory> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Datastore::Model::FDataObjectHistory>(
             Self->ParentKey,
             Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
                 Self->Generation
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Datastore::Request::FGetDataObjectHistoryRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "dataObjectHistory")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Datastore::Model::FDataObjectHistory::TypeName,
-                            Self->ParentKey,
-                            Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
-                                Self->Generation
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
+                    Self->Generation
+                );
+                Self->Cache->Put(
+                    Gs2::Datastore::Model::FDataObjectHistory::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "dataObjectHistory")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Datastore::Model::FDataObjectHistory>(
+            Self->Cache->TryGet<Gs2::Datastore::Model::FDataObjectHistory>(
                 Self->ParentKey,
                 Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
                     Self->Generation
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

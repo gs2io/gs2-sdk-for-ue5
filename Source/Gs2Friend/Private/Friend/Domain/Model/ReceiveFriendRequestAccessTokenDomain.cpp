@@ -398,46 +398,48 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Friend::Model::FFriendRequest>(
+        TSharedPtr<Gs2::Friend::Model::FFriendRequest> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
             Self->ParentKey,
             Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
                 Self->FromUserId
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Friend::Request::FGetReceiveRequestRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "friendRequest")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
-                            Self->ParentKey,
-                            Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
-                                Self->FromUserId
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
+                    Self->FromUserId
+                );
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FFriendRequest::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "friendRequest")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Friend::Model::FFriendRequest>(
+            Self->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
                 Self->ParentKey,
                 Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain::CreateCacheKey(
                     Self->FromUserId
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

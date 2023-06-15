@@ -297,46 +297,48 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Showcase::Model::FShowcaseMaster>(
+        TSharedPtr<Gs2::Showcase::Model::FShowcaseMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Showcase::Model::FShowcaseMaster>(
             Self->ParentKey,
             Gs2::Showcase::Domain::Model::FShowcaseMasterDomain::CreateCacheKey(
                 Self->ShowcaseName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Showcase::Request::FGetShowcaseMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "showcaseMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Showcase::Model::FShowcaseMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Showcase::Domain::Model::FShowcaseMasterDomain::CreateCacheKey(
-                                Self->ShowcaseName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Showcase::Domain::Model::FShowcaseMasterDomain::CreateCacheKey(
+                    Self->ShowcaseName
+                );
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FShowcaseMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "showcaseMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Showcase::Model::FShowcaseMaster>(
+            Self->Cache->TryGet<Gs2::Showcase::Model::FShowcaseMaster>(
                 Self->ParentKey,
                 Gs2::Showcase::Domain::Model::FShowcaseMasterDomain::CreateCacheKey(
                     Self->ShowcaseName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

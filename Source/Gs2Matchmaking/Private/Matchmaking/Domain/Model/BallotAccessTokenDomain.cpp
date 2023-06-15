@@ -215,55 +215,57 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Matchmaking::Model::FBallot>(
+        TSharedPtr<Gs2::Matchmaking::Model::FBallot> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Matchmaking::Model::FBallot>(
             Self->ParentKey,
             Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                 Self->RatingName,
                 Self->GatheringName,
                 Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
                 Self->KeyId
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Matchmaking::Request::FGetBallotRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "ballot")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Matchmaking::Model::FBallot::TypeName,
-                            Self->ParentKey,
-                            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                                Self->RatingName,
-                                Self->GatheringName,
-                                Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
-                                Self->KeyId
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
+                    Self->RatingName,
+                    Self->GatheringName,
+                    Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
+                    Self->KeyId
+                );
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FBallot::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "ballot")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Matchmaking::Model::FBallot>(
+            Self->Cache->TryGet<Gs2::Matchmaking::Model::FBallot>(
                 Self->ParentKey,
                 Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
                     Self->RatingName,
                     Self->GatheringName,
                     Self->NumberOfPlayer.IsSet() ? FString::FromInt(*Self->NumberOfPlayer) : TOptional<FString>(),
                     Self->KeyId
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

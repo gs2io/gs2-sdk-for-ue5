@@ -358,43 +358,45 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Ranking::Model::FCurrentRankingMaster>(
+        TSharedPtr<Gs2::Ranking::Model::FCurrentRankingMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Ranking::Model::FCurrentRankingMaster>(
             Self->ParentKey,
             Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Ranking::Request::FGetCurrentRankingMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentRankingMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Ranking::Model::FCurrentRankingMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FCurrentRankingMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentRankingMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Ranking::Model::FCurrentRankingMaster>(
+            Self->Cache->TryGet<Gs2::Ranking::Model::FCurrentRankingMaster>(
                 Self->ParentKey,
                 Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

@@ -355,43 +355,45 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Stamina::Model::FCurrentStaminaMaster>(
+        TSharedPtr<Gs2::Stamina::Model::FCurrentStaminaMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FCurrentStaminaMaster>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Stamina::Request::FGetCurrentStaminaMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentStaminaMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Stamina::Model::FCurrentStaminaMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FCurrentStaminaMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentStaminaMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Stamina::Model::FCurrentStaminaMaster>(
+            Self->Cache->TryGet<Gs2::Stamina::Model::FCurrentStaminaMaster>(
                 Self->ParentKey,
                 Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

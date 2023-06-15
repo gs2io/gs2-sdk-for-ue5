@@ -272,46 +272,48 @@ namespace Gs2::Identifier::Domain::Model
     {
         const auto ParentKey = FString("identifier:SecurityPolicy");
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Identifier::Model::FSecurityPolicy>(
+        TSharedPtr<Gs2::Identifier::Model::FSecurityPolicy> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Identifier::Model::FSecurityPolicy>(
             Self->ParentKey,
             Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                 Self->SecurityPolicyName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Identifier::Request::FGetSecurityPolicyRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "securityPolicy")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Identifier::Model::FSecurityPolicy::TypeName,
-                            Self->ParentKey,
-                            Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
-                                Self->SecurityPolicyName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                    Self->SecurityPolicyName
+                );
+                Self->Cache->Put(
+                    Gs2::Identifier::Model::FSecurityPolicy::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "securityPolicy")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Identifier::Model::FSecurityPolicy>(
+            Self->Cache->TryGet<Gs2::Identifier::Model::FSecurityPolicy>(
                 Self->ParentKey,
                 Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                     Self->SecurityPolicyName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

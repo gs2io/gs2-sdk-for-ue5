@@ -375,46 +375,48 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Chat::Model::FSubscribe>(
+        TSharedPtr<Gs2::Chat::Model::FSubscribe> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Chat::Model::FSubscribe>(
             Self->ParentKey,
             Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                 Self->RoomName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Chat::Request::FGetSubscribeRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "subscribe")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Chat::Model::FSubscribe::TypeName,
-                            Self->ParentKey,
-                            Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
-                                Self->RoomName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
+                    Self->RoomName
+                );
+                Self->Cache->Put(
+                    Gs2::Chat::Model::FSubscribe::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "subscribe")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Chat::Model::FSubscribe>(
+            Self->Cache->TryGet<Gs2::Chat::Model::FSubscribe>(
                 Self->ParentKey,
                 Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                     Self->RoomName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

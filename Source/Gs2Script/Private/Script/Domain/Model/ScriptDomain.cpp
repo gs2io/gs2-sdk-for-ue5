@@ -354,46 +354,48 @@ namespace Gs2::Script::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Script::Model::FScript>(
+        TSharedPtr<Gs2::Script::Model::FScript> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Script::Model::FScript>(
             Self->ParentKey,
             Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                 Self->ScriptName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Script::Request::FGetScriptRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "script")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Script::Model::FScript::TypeName,
-                            Self->ParentKey,
-                            Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
-                                Self->ScriptName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
+                    Self->ScriptName
+                );
+                Self->Cache->Put(
+                    Gs2::Script::Model::FScript::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "script")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Script::Model::FScript>(
+            Self->Cache->TryGet<Gs2::Script::Model::FScript>(
                 Self->ParentKey,
                 Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     Self->ScriptName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

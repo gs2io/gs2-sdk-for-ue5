@@ -193,46 +193,48 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Chat::Model::FMessage>(
+        TSharedPtr<Gs2::Chat::Model::FMessage> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Chat::Model::FMessage>(
             Self->ParentKey,
             Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
                 Self->MessageName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Chat::Request::FGetMessageRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "message")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Chat::Model::FMessage::TypeName,
-                            Self->ParentKey,
-                            Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                                Self->MessageName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
+                    Self->MessageName
+                );
+                Self->Cache->Put(
+                    Gs2::Chat::Model::FMessage::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "message")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Chat::Model::FMessage>(
+            Self->Cache->TryGet<Gs2::Chat::Model::FMessage>(
                 Self->ParentKey,
                 Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
                     Self->MessageName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

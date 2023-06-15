@@ -291,46 +291,48 @@ namespace Gs2::Key::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Key::Model::FGitHubApiKey>(
+        TSharedPtr<Gs2::Key::Model::FGitHubApiKey> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Key::Model::FGitHubApiKey>(
             Self->ParentKey,
             Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
                 Self->ApiKeyName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Key::Request::FGetGitHubApiKeyRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "gitHubApiKey")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Key::Model::FGitHubApiKey::TypeName,
-                            Self->ParentKey,
-                            Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
-                                Self->ApiKeyName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
+                    Self->ApiKeyName
+                );
+                Self->Cache->Put(
+                    Gs2::Key::Model::FGitHubApiKey::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "gitHubApiKey")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Key::Model::FGitHubApiKey>(
+            Self->Cache->TryGet<Gs2::Key::Model::FGitHubApiKey>(
                 Self->ParentKey,
                 Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
                     Self->ApiKeyName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

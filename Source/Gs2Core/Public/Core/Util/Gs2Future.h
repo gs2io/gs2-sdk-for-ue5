@@ -28,25 +28,39 @@ namespace Gs2::Core::Util
     {
         friend class FAutoDeleteAsyncTask<TGs2Future>;
 
+    public:
         DECLARE_DELEGATE_OneParam(FSuccessDelegate, TSharedPtr<TResult>);
         DECLARE_DELEGATE_OneParam(FErrorDelegate, Model::FGs2ErrorPtr);
-        
+
+        struct DelegateContext
+        {
+            FSuccessDelegate SuccessDelegate;
+            FErrorDelegate ErrorDelegate;
+
+            DelegateContext() = default;
+
+            DelegateContext(const DelegateContext& From) :
+                SuccessDelegate(From.SuccessDelegate),
+                ErrorDelegate(From.ErrorDelegate)
+            {}
+        };
+
+    private:
         TSharedPtr<TResult> ResultValue;
         Model::FGs2ErrorPtr ErrorValue;
-        
-        FSuccessDelegate SuccessDelegate;
-        FErrorDelegate ErrorDelegate;
+
+        TSharedRef<DelegateContext> Delegates;
     
     public:
         TGs2Future(
-        ): ResultValue(nullptr), ErrorValue(MakeShared<Model::FNotExecutedError>(MakeShared<TArray<Model::FGs2ErrorDetailPtr>>()))
+        ): ResultValue(nullptr), ErrorValue(MakeShared<Model::FNotExecutedError>(MakeShared<TArray<Model::FGs2ErrorDetailPtr>>())), Delegates(MakeShared<DelegateContext>())
         {
             
         }
 
         TGs2Future(
             const TGs2Future& From
-        ): ResultValue(From.ResultValue), ErrorValue(From.ErrorValue), SuccessDelegate(From.SuccessDelegate), ErrorDelegate(From.ErrorDelegate)
+        ): ResultValue(From.ResultValue), ErrorValue(From.ErrorValue), Delegates(From.Delegates)
         {
             
         }
@@ -70,12 +84,12 @@ namespace Gs2::Core::Util
 
         FSuccessDelegate& OnSuccessDelegate()
         {
-            return this->SuccessDelegate;
+            return this->Delegates->SuccessDelegate;
         }
 
         FErrorDelegate& OnErrorDelegate()
         {
-            return this->ErrorDelegate;
+            return this->Delegates->ErrorDelegate;
         }
 
         TSharedPtr<TResult> Result() const
@@ -110,20 +124,20 @@ namespace Gs2::Core::Util
         
         virtual void OnError(Model::FGs2ErrorPtr Error)
         {
-            FGs2Ticker::EntryInvokeFromGameThreads([=]
+            FGs2Ticker::EntryInvokeFromGameThreads([Delegates=this->Delegates, Error]
             {
                 // ReSharper disable once CppExpressionWithoutSideEffects
-                ErrorDelegate.ExecuteIfBound(Error);
+                Delegates->ErrorDelegate.ExecuteIfBound(Error);
             });
             this->ErrorValue = Error;
         }
     
         virtual void OnComplete(TSharedPtr<TResult> Result)
         {
-            FGs2Ticker::EntryInvokeFromGameThreads([=]
+            FGs2Ticker::EntryInvokeFromGameThreads([Delegates=this->Delegates, Result]
             {
                 // ReSharper disable once CppExpressionWithoutSideEffects
-                SuccessDelegate.ExecuteIfBound(Result);
+                Delegates->SuccessDelegate.ExecuteIfBound(Result);
             });
             this->ErrorValue = nullptr;
             this->ResultValue = Result;
@@ -135,12 +149,9 @@ namespace Gs2::Core::Util
     template <typename InObjectType, typename... InArgTypes>
     static TSharedPtr<InObjectType> New(InArgTypes&&... Args)
     {
-        for (auto v : RunningTasks)
+        for (auto Iterator = RunningTasks.CreateIterator(); Iterator; ++Iterator)
         {
-            if (v.IsValid() && v->IsDone())
-            {
-                v->EnsureCompletion();
-            }
+            if ((*Iterator)->IsDone()) Iterator.RemoveCurrent();
         }
         
         auto Future = MakeShared<InObjectType>(Args...);

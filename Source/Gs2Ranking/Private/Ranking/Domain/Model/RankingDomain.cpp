@@ -267,13 +267,15 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Ranking::Model::FRanking>(
+        TSharedPtr<Gs2::Ranking::Model::FRanking> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
             Self->ParentKey,
             Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
                 Self->CategoryName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Ranking::Request::FGetRankingByUserIdRequest>()
                     ->WithScorerUserId(ScorerUserId)
@@ -281,33 +283,33 @@ namespace Gs2::Ranking::Domain::Model
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "ranking")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Ranking::Model::FRanking::TypeName,
-                            Self->ParentKey,
-                            Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                                Self->CategoryName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
+                    Self->CategoryName
+                );
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FRanking::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "ranking")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Ranking::Model::FRanking>(
+            Self->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
                 Self->ParentKey,
                 Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
                     Self->CategoryName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

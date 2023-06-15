@@ -594,49 +594,51 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Experience::Model::FStatus>(
+        TSharedPtr<Gs2::Experience::Model::FStatus> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Experience::Model::FStatus>(
             Self->ParentKey,
             Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
                 Self->ExperienceName,
                 Self->PropertyId
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Experience::Request::FGetStatusByUserIdRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "status")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Experience::Model::FStatus::TypeName,
-                            Self->ParentKey,
-                            Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                                Self->ExperienceName,
-                                Self->PropertyId
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    Self->ExperienceName,
+                    Self->PropertyId
+                );
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "status")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Experience::Model::FStatus>(
+            Self->Cache->TryGet<Gs2::Experience::Model::FStatus>(
                 Self->ParentKey,
                 Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
                     Self->ExperienceName,
                     Self->PropertyId
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

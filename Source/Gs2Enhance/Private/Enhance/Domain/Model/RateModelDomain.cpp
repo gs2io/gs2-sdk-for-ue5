@@ -176,46 +176,48 @@ namespace Gs2::Enhance::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Enhance::Model::FRateModel>(
+        TSharedPtr<Gs2::Enhance::Model::FRateModel> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Enhance::Model::FRateModel>(
             Self->ParentKey,
             Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                 Self->RateName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Enhance::Request::FGetRateModelRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "rateModel")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Enhance::Model::FRateModel::TypeName,
-                            Self->ParentKey,
-                            Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
-                                Self->RateName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
+                    Self->RateName
+                );
+                Self->Cache->Put(
+                    Gs2::Enhance::Model::FRateModel::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "rateModel")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Enhance::Model::FRateModel>(
+            Self->Cache->TryGet<Gs2::Enhance::Model::FRateModel>(
                 Self->ParentKey,
                 Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                     Self->RateName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

@@ -185,43 +185,45 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Friend::Model::FPublicProfile>(
+        TSharedPtr<Gs2::Friend::Model::FPublicProfile> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Friend::Model::FPublicProfile>(
             Self->ParentKey,
             Gs2::Friend::Domain::Model::FPublicProfileDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Friend::Request::FGetPublicProfileRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "publicProfile")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Friend::Model::FPublicProfile::TypeName,
-                            Self->ParentKey,
-                            Gs2::Friend::Domain::Model::FPublicProfileDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Friend::Domain::Model::FPublicProfileDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Friend::Model::FPublicProfile::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "publicProfile")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Friend::Model::FPublicProfile>(
+            Self->Cache->TryGet<Gs2::Friend::Model::FPublicProfile>(
                 Self->ParentKey,
                 Gs2::Friend::Domain::Model::FPublicProfileDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

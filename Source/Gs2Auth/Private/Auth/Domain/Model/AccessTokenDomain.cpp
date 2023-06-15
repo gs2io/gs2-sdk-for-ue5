@@ -205,10 +205,12 @@ namespace Gs2::Auth::Domain::Model
     {
         const auto ParentKey = FString("auth:AccessToken");
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Auth::Model::FAccessToken>(
+        TSharedPtr<Gs2::Auth::Model::FAccessToken> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Auth::Model::FAccessToken>(
             Self->ParentKey,
             Gs2::Auth::Domain::Model::FAccessTokenDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

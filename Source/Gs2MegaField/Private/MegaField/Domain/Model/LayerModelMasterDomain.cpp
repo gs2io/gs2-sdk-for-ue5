@@ -309,46 +309,48 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::MegaField::Model::FLayerModelMaster>(
+        TSharedPtr<Gs2::MegaField::Model::FLayerModelMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::MegaField::Model::FLayerModelMaster>(
             Self->ParentKey,
             Gs2::MegaField::Domain::Model::FLayerModelMasterDomain::CreateCacheKey(
                 Self->LayerModelName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::MegaField::Request::FGetLayerModelMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "layerModelMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::MegaField::Model::FLayerModelMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::MegaField::Domain::Model::FLayerModelMasterDomain::CreateCacheKey(
-                                Self->LayerModelName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::MegaField::Domain::Model::FLayerModelMasterDomain::CreateCacheKey(
+                    Self->LayerModelName
+                );
+                Self->Cache->Put(
+                    Gs2::MegaField::Model::FLayerModelMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "layerModelMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::MegaField::Model::FLayerModelMaster>(
+            Self->Cache->TryGet<Gs2::MegaField::Model::FLayerModelMaster>(
                 Self->ParentKey,
                 Gs2::MegaField::Domain::Model::FLayerModelMasterDomain::CreateCacheKey(
                     Self->LayerModelName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

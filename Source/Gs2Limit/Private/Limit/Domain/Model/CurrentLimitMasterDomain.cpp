@@ -352,43 +352,45 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Limit::Model::FCurrentLimitMaster>(
+        TSharedPtr<Gs2::Limit::Model::FCurrentLimitMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Limit::Model::FCurrentLimitMaster>(
             Self->ParentKey,
             Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Limit::Request::FGetCurrentLimitMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentLimitMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentLimitMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Limit::Model::FCurrentLimitMaster>(
+            Self->Cache->TryGet<Gs2::Limit::Model::FCurrentLimitMaster>(
                 Self->ParentKey,
                 Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

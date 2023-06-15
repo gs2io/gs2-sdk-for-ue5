@@ -25,8 +25,8 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2DatastoreActionDownload.generated.h"
   
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2DatastoreDownloadSuccessDelegate, TArray<uint8>, Binary, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2DatastoreDownloadErrorDelegate, TArray<uint8>, Binary, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2DatastoreDownloadSuccessDelegate, const TArray<uint8>, Binary, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2DatastoreDownloadErrorDelegate, const TArray<uint8>, Binary, const FGs2Error, Error);
 
 UCLASS()
 class BPGS2_API UGs2DatastoreDownloadAsyncFunction : public UBlueprintAsyncActionBase

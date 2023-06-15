@@ -176,46 +176,48 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Inbox::Model::FGlobalMessage>(
+        TSharedPtr<Gs2::Inbox::Model::FGlobalMessage> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Inbox::Model::FGlobalMessage>(
             Self->ParentKey,
             Gs2::Inbox::Domain::Model::FGlobalMessageDomain::CreateCacheKey(
                 Self->GlobalMessageName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Inbox::Request::FGetGlobalMessageRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "globalMessage")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Inbox::Model::FGlobalMessage::TypeName,
-                            Self->ParentKey,
-                            Gs2::Inbox::Domain::Model::FGlobalMessageDomain::CreateCacheKey(
-                                Self->GlobalMessageName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Inbox::Domain::Model::FGlobalMessageDomain::CreateCacheKey(
+                    Self->GlobalMessageName
+                );
+                Self->Cache->Put(
+                    Gs2::Inbox::Model::FGlobalMessage::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "globalMessage")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Inbox::Model::FGlobalMessage>(
+            Self->Cache->TryGet<Gs2::Inbox::Model::FGlobalMessage>(
                 Self->ParentKey,
                 Gs2::Inbox::Domain::Model::FGlobalMessageDomain::CreateCacheKey(
                     Self->GlobalMessageName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

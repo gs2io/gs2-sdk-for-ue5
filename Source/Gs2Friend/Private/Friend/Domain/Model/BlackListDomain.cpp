@@ -267,10 +267,12 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Friend::Model::FBlackList>(
+        TSharedPtr<Gs2::Friend::Model::FBlackList> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Friend::Model::FBlackList>(
             Self->ParentKey,
             Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

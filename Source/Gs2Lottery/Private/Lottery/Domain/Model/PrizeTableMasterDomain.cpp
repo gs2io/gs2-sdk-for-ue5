@@ -303,46 +303,48 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Lottery::Model::FPrizeTableMaster>(
+        TSharedPtr<Gs2::Lottery::Model::FPrizeTableMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Lottery::Model::FPrizeTableMaster>(
             Self->ParentKey,
             Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
                 Self->PrizeTableName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Lottery::Request::FGetPrizeTableMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "prizeTableMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
-                                Self->PrizeTableName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
+                    Self->PrizeTableName
+                );
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "prizeTableMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Lottery::Model::FPrizeTableMaster>(
+            Self->Cache->TryGet<Gs2::Lottery::Model::FPrizeTableMaster>(
                 Self->ParentKey,
                 Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
                     Self->PrizeTableName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

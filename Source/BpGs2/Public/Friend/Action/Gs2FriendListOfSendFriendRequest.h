@@ -24,8 +24,8 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendListOfSendFriendRequest.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendListOfSendFriendRequestSuccessDelegate, TArray<FGs2FriendFriendRequest>, Values, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendListOfSendFriendRequestErrorDelegate, TArray<FGs2FriendFriendRequest>, Values, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendListOfSendFriendRequestSuccessDelegate, const TArray<FGs2FriendFriendRequest>, Values, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendListOfSendFriendRequestErrorDelegate, const TArray<FGs2FriendFriendRequest>, Values, const FGs2Error, Error);
 
 UCLASS()
 class BPGS2_API UGs2FriendListOfSendFriendRequestAsyncFunction : public UBlueprintAsyncActionBase

@@ -358,43 +358,45 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Formation::Model::FCurrentFormMaster>(
+        TSharedPtr<Gs2::Formation::Model::FCurrentFormMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FCurrentFormMaster>(
             Self->ParentKey,
             Gs2::Formation::Domain::Model::FCurrentFormMasterDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Formation::Request::FGetCurrentFormMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentFormMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Formation::Model::FCurrentFormMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Formation::Domain::Model::FCurrentFormMasterDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Formation::Domain::Model::FCurrentFormMasterDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FCurrentFormMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentFormMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Formation::Model::FCurrentFormMaster>(
+            Self->Cache->TryGet<Gs2::Formation::Model::FCurrentFormMaster>(
                 Self->ParentKey,
                 Gs2::Formation::Domain::Model::FCurrentFormMasterDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

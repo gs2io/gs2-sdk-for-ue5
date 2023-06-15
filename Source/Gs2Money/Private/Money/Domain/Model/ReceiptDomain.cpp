@@ -182,11 +182,13 @@ namespace Gs2::Money::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Money::Model::FReceipt>(
+        TSharedPtr<Gs2::Money::Model::FReceipt> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Money::Model::FReceipt>(
             Self->ParentKey,
             Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                 Self->TransactionId
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

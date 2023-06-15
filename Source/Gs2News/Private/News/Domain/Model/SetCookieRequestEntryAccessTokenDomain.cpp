@@ -125,12 +125,14 @@ namespace Gs2::News::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::News::Model::FSetCookieRequestEntry>(
+        TSharedPtr<Gs2::News::Model::FSetCookieRequestEntry> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::News::Model::FSetCookieRequestEntry>(
             Self->ParentKey,
             Gs2::News::Domain::Model::FSetCookieRequestEntryDomain::CreateCacheKey(
                 Self->Key,
                 Self->Value
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

@@ -226,46 +226,48 @@ namespace Gs2::Realtime::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Realtime::Model::FRoom>(
+        TSharedPtr<Gs2::Realtime::Model::FRoom> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Realtime::Model::FRoom>(
             Self->ParentKey,
             Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
                 Self->RoomName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Realtime::Request::FGetRoomRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "room")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Realtime::Model::FRoom::TypeName,
-                            Self->ParentKey,
-                            Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
-                                Self->RoomName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
+                    Self->RoomName
+                );
+                Self->Cache->Put(
+                    Gs2::Realtime::Model::FRoom::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "room")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Realtime::Model::FRoom>(
+            Self->Cache->TryGet<Gs2::Realtime::Model::FRoom>(
                 Self->ParentKey,
                 Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
                     Self->RoomName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

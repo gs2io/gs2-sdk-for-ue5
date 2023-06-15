@@ -282,46 +282,47 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::SerialKey::Model::FSerialKey>(
+        Gs2::SerialKey::Model::FSerialKeyPtr Value;
+        const auto bCacheHit = Self->Cache->TryGet<Gs2::SerialKey::Model::FSerialKey>(
             Self->ParentKey,
             Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
                 Self->SerialKeyCode
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::SerialKey::Request::FGetSerialKeyRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "serialKey")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::SerialKey::Model::FSerialKey::TypeName,
-                            Self->ParentKey,
-                            Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                                Self->SerialKeyCode
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                Self->Cache->Put(
+                    Gs2::SerialKey::Model::FSerialKey::TypeName,
+                    Self->ParentKey,
+                    Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                        Self->SerialKeyCode
+                    ),
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "serialKey")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::SerialKey::Model::FSerialKey>(
+            Self->Cache->TryGet<Gs2::SerialKey::Model::FSerialKey>(
                 Self->ParentKey,
                 Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
                     Self->SerialKeyCode
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

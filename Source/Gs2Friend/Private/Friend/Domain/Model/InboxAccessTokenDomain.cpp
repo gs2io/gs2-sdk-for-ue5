@@ -124,10 +124,12 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Friend::Model::FInbox>(
+        TSharedPtr<Gs2::Friend::Model::FInbox> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Friend::Model::FInbox>(
             Self->ParentKey,
             Gs2::Friend::Domain::Model::FInboxDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

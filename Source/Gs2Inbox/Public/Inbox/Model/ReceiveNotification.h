@@ -22,12 +22,18 @@ namespace Gs2::Inbox::Model
 	{
 	public:
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> UserIdValue;
         TOptional<FString> MessageNameValue;
 
         TSharedPtr<FReceiveNotification> WithNamespaceName(
             const TOptional<FString> NamespaceName
         );
         TOptional<FString> GetNamespaceName() const;
+
+        TSharedPtr<FReceiveNotification> WithUserId(
+            const TOptional<FString> UserId
+        );
+        TOptional<FString> GetUserId() const;
 
         TSharedPtr<FReceiveNotification> WithMessageName(
             const TOptional<FString> MessageName

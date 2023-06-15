@@ -212,10 +212,12 @@ namespace Gs2::News::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::News::Model::FNews>(
+        TSharedPtr<Gs2::News::Model::FNews> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::News::Model::FNews>(
             Self->ParentKey,
             Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

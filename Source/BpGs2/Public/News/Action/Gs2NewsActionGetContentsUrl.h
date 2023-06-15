@@ -26,8 +26,8 @@
 #include "News/Model/Gs2NewsUser.h"
 #include "Gs2NewsActionGetContentsUrl.generated.h"
   
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2NewsGetContentsUrlSuccessDelegate, TArray<FGs2NewsOwnSetCookieRequestEntry>, SetCookieRequestEntries, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2NewsGetContentsUrlErrorDelegate, TArray<FGs2NewsOwnSetCookieRequestEntry>, SetCookieRequestEntries, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2NewsGetContentsUrlSuccessDelegate, const TArray<FGs2NewsOwnSetCookieRequestEntry>, SetCookieRequestEntries, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2NewsGetContentsUrlErrorDelegate, const TArray<FGs2NewsOwnSetCookieRequestEntry>, SetCookieRequestEntries, const FGs2Error, Error);
 
 UCLASS()
 class BPGS2_API UGs2NewsGetContentsUrlAsyncFunction : public UBlueprintAsyncActionBase

@@ -120,12 +120,14 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::MegaField::Model::FLayer>(
+        TSharedPtr<Gs2::MegaField::Model::FLayer> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::MegaField::Model::FLayer>(
             Self->ParentKey,
             Gs2::MegaField::Domain::Model::FLayerDomain::CreateCacheKey(
                 Self->AreaModelName,
                 Self->LayerModelName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

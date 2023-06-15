@@ -204,52 +204,54 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Ranking::Model::FScore>(
+        TSharedPtr<Gs2::Ranking::Model::FScore> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Ranking::Model::FScore>(
             Self->ParentKey,
             Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
                 Self->CategoryName,
                 Self->ScorerUserId,
                 Self->UniqueId ? *Self->UniqueId : "0"
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Ranking::Request::FGetScoreRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "score")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Ranking::Model::FScore::TypeName,
-                            Self->ParentKey,
-                            Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
-                                Self->CategoryName,
-                                Self->ScorerUserId,
-                                Self->UniqueId ? *Self->UniqueId : "0"
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
+                    Self->CategoryName,
+                    Self->ScorerUserId,
+                    Self->UniqueId ? *Self->UniqueId : "0"
+                );
+                Self->Cache->Put(
+                    Gs2::Ranking::Model::FScore::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "score")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Ranking::Model::FScore>(
+            Self->Cache->TryGet<Gs2::Ranking::Model::FScore>(
                 Self->ParentKey,
                 Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
                     Self->CategoryName,
                     Self->ScorerUserId,
                     Self->UniqueId ? *Self->UniqueId : "0"
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

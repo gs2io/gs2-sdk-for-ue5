@@ -385,46 +385,48 @@ namespace Gs2::Key::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Key::Model::FKey>(
+        TSharedPtr<Gs2::Key::Model::FKey> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Key::Model::FKey>(
             Self->ParentKey,
             Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                 Self->KeyName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Key::Request::FGetKeyRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "key")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Key::Model::FKey::TypeName,
-                            Self->ParentKey,
-                            Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
-                                Self->KeyName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
+                    Self->KeyName
+                );
+                Self->Cache->Put(
+                    Gs2::Key::Model::FKey::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "key")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Key::Model::FKey>(
+            Self->Cache->TryGet<Gs2::Key::Model::FKey>(
                 Self->ParentKey,
                 Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     Self->KeyName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

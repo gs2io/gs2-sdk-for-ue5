@@ -299,46 +299,48 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Stamina::Model::FRecoverValueTableMaster>(
+        TSharedPtr<Gs2::Stamina::Model::FRecoverValueTableMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FRecoverValueTableMaster>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain::CreateCacheKey(
                 Self->RecoverValueTableName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Stamina::Request::FGetRecoverValueTableMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "recoverValueTableMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Stamina::Model::FRecoverValueTableMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain::CreateCacheKey(
-                                Self->RecoverValueTableName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain::CreateCacheKey(
+                    Self->RecoverValueTableName
+                );
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FRecoverValueTableMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "recoverValueTableMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Stamina::Model::FRecoverValueTableMaster>(
+            Self->Cache->TryGet<Gs2::Stamina::Model::FRecoverValueTableMaster>(
                 Self->ParentKey,
                 Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain::CreateCacheKey(
                     Self->RecoverValueTableName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

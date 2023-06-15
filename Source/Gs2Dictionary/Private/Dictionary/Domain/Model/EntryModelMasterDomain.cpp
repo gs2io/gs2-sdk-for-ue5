@@ -296,46 +296,48 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Dictionary::Model::FEntryModelMaster>(
+        TSharedPtr<Gs2::Dictionary::Model::FEntryModelMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Dictionary::Model::FEntryModelMaster>(
             Self->ParentKey,
             Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain::CreateCacheKey(
                 Self->EntryName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Dictionary::Request::FGetEntryModelMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "entryModelMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Dictionary::Model::FEntryModelMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain::CreateCacheKey(
-                                Self->EntryName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain::CreateCacheKey(
+                    Self->EntryName
+                );
+                Self->Cache->Put(
+                    Gs2::Dictionary::Model::FEntryModelMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "entryModelMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Dictionary::Model::FEntryModelMaster>(
+            Self->Cache->TryGet<Gs2::Dictionary::Model::FEntryModelMaster>(
                 Self->ParentKey,
                 Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain::CreateCacheKey(
                     Self->EntryName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

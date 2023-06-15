@@ -352,43 +352,45 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Idle::Model::FCurrentCategoryMaster>(
+        TSharedPtr<Gs2::Idle::Model::FCurrentCategoryMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Idle::Model::FCurrentCategoryMaster>(
             Self->ParentKey,
             Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Idle::Request::FGetCurrentCategoryMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "currentCategoryMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Idle::Model::FCurrentCategoryMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Idle::Model::FCurrentCategoryMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentCategoryMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Idle::Model::FCurrentCategoryMaster>(
+            Self->Cache->TryGet<Gs2::Idle::Model::FCurrentCategoryMaster>(
                 Self->ParentKey,
                 Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

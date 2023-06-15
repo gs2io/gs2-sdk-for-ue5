@@ -201,11 +201,13 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::SerialKey::Model::FSerialKey>(
+        TSharedPtr<Gs2::SerialKey::Model::FSerialKey> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::SerialKey::Model::FSerialKey>(
             Self->ParentKey,
             Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
                 Self->SerialKeyCode
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

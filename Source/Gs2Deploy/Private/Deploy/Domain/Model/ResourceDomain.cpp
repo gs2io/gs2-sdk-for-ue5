@@ -170,46 +170,48 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Deploy::Model::FResource>(
+        TSharedPtr<Gs2::Deploy::Model::FResource> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Deploy::Model::FResource>(
             Self->ParentKey,
             Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
                 Self->ResourceName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Deploy::Request::FGetResourceRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "resource")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Deploy::Model::FResource::TypeName,
-                            Self->ParentKey,
-                            Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
-                                Self->ResourceName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
+                    Self->ResourceName
+                );
+                Self->Cache->Put(
+                    Gs2::Deploy::Model::FResource::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "resource")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Deploy::Model::FResource>(
+            Self->Cache->TryGet<Gs2::Deploy::Model::FResource>(
                 Self->ParentKey,
                 Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
                     Self->ResourceName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

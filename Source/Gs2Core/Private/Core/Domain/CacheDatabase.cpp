@@ -133,25 +133,27 @@ void FCacheDatabase::Delete(
     Cache1->Remove(Key);
 }
 
-TSharedPtr<void> FCacheDatabase::Get(
+bool FCacheDatabase::TryGet(
     FTypeName Kind,
     FParentCacheKey ParentKey,
-    FCacheKey Key
+    FCacheKey Key,
+    TSharedPtr<Gs2Object>* OutObject
 )
 {
     auto* Cache0 = Cache.Find(Kind);
-    if (Cache0 == nullptr) return nullptr;
+    if (Cache0 == nullptr) return false;
     auto* Cache1 = Cache0->Find(ParentKey);
-    if (Cache1 == nullptr) return nullptr;
+    if (Cache1 == nullptr) return false;
     auto* Data = Cache1->Find(Key);
-    if (Data == nullptr) return nullptr;
+    if (Data == nullptr) return false;
     if (Data->Value < FDateTime::Now().ToUnixTimestamp())
     {
         Delete(Kind, ParentKey, Key);
-        return nullptr;
+        return false;
     }
     UE_LOG(Gs2Log, Log, TEXT("[%s][%s][%s]: Get %p"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), &Data->Key);
-    return Data->Key;
+    *OutObject = Data->Key;
+    return true;
 }
 
 // template<class TKind>

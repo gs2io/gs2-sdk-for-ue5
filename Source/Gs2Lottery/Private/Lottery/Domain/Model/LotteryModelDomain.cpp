@@ -181,46 +181,48 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Lottery::Model::FLotteryModel>(
+        TSharedPtr<Gs2::Lottery::Model::FLotteryModel> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Lottery::Model::FLotteryModel>(
             Self->ParentKey,
             Gs2::Lottery::Domain::Model::FLotteryModelDomain::CreateCacheKey(
                 Self->LotteryName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Lottery::Request::FGetLotteryModelRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "lotteryModel")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Lottery::Model::FLotteryModel::TypeName,
-                            Self->ParentKey,
-                            Gs2::Lottery::Domain::Model::FLotteryModelDomain::CreateCacheKey(
-                                Self->LotteryName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Lottery::Domain::Model::FLotteryModelDomain::CreateCacheKey(
+                    Self->LotteryName
+                );
+                Self->Cache->Put(
+                    Gs2::Lottery::Model::FLotteryModel::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "lotteryModel")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Lottery::Model::FLotteryModel>(
+            Self->Cache->TryGet<Gs2::Lottery::Model::FLotteryModel>(
                 Self->ParentKey,
                 Gs2::Lottery::Domain::Model::FLotteryModelDomain::CreateCacheKey(
                     Self->LotteryName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

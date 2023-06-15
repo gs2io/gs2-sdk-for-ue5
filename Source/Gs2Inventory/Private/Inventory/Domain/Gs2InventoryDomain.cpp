@@ -343,9 +343,11 @@ namespace Gs2::Inventory::Domain
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
-                const auto Item = Cache->Get<Gs2::Inventory::Model::FInventory>(
+                TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
+                auto bCacheHit = Cache->TryGet<Gs2::Inventory::Model::FInventory>(
                     ParentKey,
-                    Key
+                    Key,
+                    &Item
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
@@ -613,9 +615,11 @@ namespace Gs2::Inventory::Domain
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
-                const auto Item = Cache->Get<Gs2::Inventory::Model::FInventory>(
+                TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
+                auto bCacheHit = Cache->TryGet<Gs2::Inventory::Model::FInventory>(
                     ParentKey,
-                    Key
+                    Key,
+                    &Item
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
@@ -922,9 +926,11 @@ namespace Gs2::Inventory::Domain
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
-                const auto Item = Cache->Get<Gs2::Inventory::Model::FInventory>(
+                TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
+                auto bCacheHit = Cache->TryGet<Gs2::Inventory::Model::FInventory>(
                     ParentKey,
-                    Key
+                    Key,
+                    &Item
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {

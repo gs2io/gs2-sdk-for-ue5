@@ -293,46 +293,48 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Formation::Model::FMold>(
+        TSharedPtr<Gs2::Formation::Model::FMold> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FMold>(
             Self->ParentKey,
             Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                 Self->MoldName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Formation::Request::FGetMoldRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "mold")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Formation::Model::FMold::TypeName,
-                            Self->ParentKey,
-                            Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                                Self->MoldName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
+                    Self->MoldName
+                );
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "mold")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Formation::Model::FMold>(
+            Self->Cache->TryGet<Gs2::Formation::Model::FMold>(
                 Self->ParentKey,
                 Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     Self->MoldName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

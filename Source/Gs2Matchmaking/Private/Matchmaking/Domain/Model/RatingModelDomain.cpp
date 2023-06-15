@@ -179,46 +179,48 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Matchmaking::Model::FRatingModel>(
+        TSharedPtr<Gs2::Matchmaking::Model::FRatingModel> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Matchmaking::Model::FRatingModel>(
             Self->ParentKey,
             Gs2::Matchmaking::Domain::Model::FRatingModelDomain::CreateCacheKey(
                 Self->RatingName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Matchmaking::Request::FGetRatingModelRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "ratingModel")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Matchmaking::Model::FRatingModel::TypeName,
-                            Self->ParentKey,
-                            Gs2::Matchmaking::Domain::Model::FRatingModelDomain::CreateCacheKey(
-                                Self->RatingName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Matchmaking::Domain::Model::FRatingModelDomain::CreateCacheKey(
+                    Self->RatingName
+                );
+                Self->Cache->Put(
+                    Gs2::Matchmaking::Model::FRatingModel::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "ratingModel")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Matchmaking::Model::FRatingModel>(
+            Self->Cache->TryGet<Gs2::Matchmaking::Model::FRatingModel>(
                 Self->ParentKey,
                 Gs2::Matchmaking::Domain::Model::FRatingModelDomain::CreateCacheKey(
                     Self->RatingName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

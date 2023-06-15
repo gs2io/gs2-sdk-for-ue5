@@ -172,43 +172,45 @@ namespace Gs2::Account::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Account::Model::FDataOwner>(
+        TSharedPtr<Gs2::Account::Model::FDataOwner> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Account::Model::FDataOwner>(
             Self->ParentKey,
             Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Account::Request::FGetDataOwnerByUserIdRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "dataOwner")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Account::Model::FDataOwner::TypeName,
-                            Self->ParentKey,
-                            Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
+                );
+                Self->Cache->Put(
+                    Gs2::Account::Model::FDataOwner::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "dataOwner")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Account::Model::FDataOwner>(
+            Self->Cache->TryGet<Gs2::Account::Model::FDataOwner>(
                 Self->ParentKey,
                 Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

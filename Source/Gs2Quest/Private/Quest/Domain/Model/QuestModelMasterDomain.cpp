@@ -311,46 +311,48 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Quest::Model::FQuestModelMaster>(
+        TSharedPtr<Gs2::Quest::Model::FQuestModelMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Quest::Model::FQuestModelMaster>(
             Self->ParentKey,
             Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
                 Self->QuestName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Quest::Request::FGetQuestModelMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "questModelMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Quest::Model::FQuestModelMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
-                                Self->QuestName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
+                    Self->QuestName
+                );
+                Self->Cache->Put(
+                    Gs2::Quest::Model::FQuestModelMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "questModelMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Quest::Model::FQuestModelMaster>(
+            Self->Cache->TryGet<Gs2::Quest::Model::FQuestModelMaster>(
                 Self->ParentKey,
                 Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
                     Self->QuestName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }

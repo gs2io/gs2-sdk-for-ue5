@@ -106,10 +106,12 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Lottery::Model::FBoxItem>(
+        TSharedPtr<Gs2::Lottery::Model::FBoxItem> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Lottery::Model::FBoxItem>(
             Self->ParentKey,
             Gs2::Lottery::Domain::Model::FBoxItemDomain::CreateCacheKey(
-            )
+            ),
+            &Value
         );
         *Result = Value;
 

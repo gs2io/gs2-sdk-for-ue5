@@ -314,46 +314,48 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Inventory::Model::FItemModelMaster>(
+        TSharedPtr<Gs2::Inventory::Model::FItemModelMaster> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Inventory::Model::FItemModelMaster>(
             Self->ParentKey,
             Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
                 Self->ItemName
-            )
+            ),
+            &Value
         );
-        if (Value == nullptr) {
+        if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Inventory::Request::FGetItemModelMasterRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    if (Future->GetTask().Error()->Detail(0)->GetComponent() == "itemModelMaster")
-                    {
-                        Self->Cache->Delete(
-                            Gs2::Inventory::Model::FItemModelMaster::TypeName,
-                            Self->ParentKey,
-                            Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
-                                Self->ItemName
-                            )
-                        );
-                    }
-                    else
-                    {
-                        return Future->GetTask().Error();
-                    }
+                    return Future->GetTask().Error();
                 }
-                else
+
+                const auto Key = Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
+                    Self->ItemName
+                );
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FItemModelMaster::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "itemModelMaster")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Value = Self->Cache->Get<Gs2::Inventory::Model::FItemModelMaster>(
+            Self->Cache->TryGet<Gs2::Inventory::Model::FItemModelMaster>(
                 Self->ParentKey,
                 Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
                     Self->ItemName
-                )
+                ),
+                &Value
             );
             Future->EnsureCompletion();
         }
