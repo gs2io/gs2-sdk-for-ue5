@@ -207,7 +207,7 @@ namespace Gs2::Auth::Domain::Model
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Auth::Model::FAccessToken> Value;
         auto bCacheHit = Self->Cache->TryGet<Gs2::Auth::Model::FAccessToken>(
-            Self->ParentKey,
+            ParentKey,
             Gs2::Auth::Domain::Model::FAccessTokenDomain::CreateCacheKey(
             ),
             &Value

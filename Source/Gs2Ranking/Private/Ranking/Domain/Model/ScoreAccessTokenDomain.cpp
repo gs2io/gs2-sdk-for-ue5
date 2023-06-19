@@ -126,11 +126,11 @@ namespace Gs2::Ranking::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Score"
-                );
+                const auto ParentKey = FString() +
+                    (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
+                    (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
+                    (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
+                    "Score";
                 const auto Key = Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetCategoryName(),
                     ResultModel->GetItem()->GetScorerUserId(),
@@ -203,10 +203,15 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FScore>> Result
     )
     {
+        const auto ParentKey = FString() +
+            (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
+            (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
+            (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
+            "Score";
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Ranking::Model::FScore> Value;
         auto bCacheHit = Self->Cache->TryGet<Gs2::Ranking::Model::FScore>(
-            Self->ParentKey,
+            ParentKey,
             Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
                 Self->CategoryName,
                 Self->ScorerUserId,
@@ -233,7 +238,7 @@ namespace Gs2::Ranking::Domain::Model
                 );
                 Self->Cache->Put(
                     Gs2::Ranking::Model::FScore::TypeName,
-                    Self->ParentKey,
+                    ParentKey,
                     Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -245,7 +250,7 @@ namespace Gs2::Ranking::Domain::Model
                 }
             }
             Self->Cache->TryGet<Gs2::Ranking::Model::FScore>(
-                Self->ParentKey,
+                ParentKey,
                 Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
                     Self->CategoryName,
                     Self->ScorerUserId,

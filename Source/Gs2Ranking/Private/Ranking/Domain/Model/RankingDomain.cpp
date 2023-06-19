@@ -102,7 +102,6 @@ namespace Gs2::Ranking::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithScorerUserId(Self->UserId)
             ->WithUserId(Self->UserId)
             ->WithCategoryName(Self->CategoryName);
         const auto Future = Self->Client->GetRankingByUserId(
@@ -120,13 +119,13 @@ namespace Gs2::Ranking::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    ResultModel->GetItem()->GetUserId(),
-                    "Ranking"
-                );
+                const auto ParentKey = FString() +
+                    (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
+                    (Self->UserId.IsSet() ? *Self->UserId : "null") + ":" +
+                    (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
+                    "Ranking";
                 const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName()
+                    ResultModel->GetItem()->GetUserId()
                 );
                 Self->Cache->Put(
                     Gs2::Ranking::Model::FRanking::TypeName,
@@ -184,11 +183,11 @@ namespace Gs2::Ranking::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Score"
-                );
+                const auto ParentKey = FString() +
+                    (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
+                    (Self->UserId.IsSet() ? *Self->UserId : "null") + ":" +
+                    (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
+                    "Score";
                 const auto Key = Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetCategoryName(),
                     ResultModel->GetItem()->GetScorerUserId(),
@@ -266,12 +265,17 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FRanking>> Result
     )
     {
+        const auto ParentKey = FString() +
+            (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
+            (Self->UserId.IsSet() ? *Self->UserId : "null") + ":" +
+            (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
+            "Ranking";
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Ranking::Model::FRanking> Value;
         auto bCacheHit = Self->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
-            Self->ParentKey,
+            ParentKey,
             Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                Self->CategoryName
+                ScorerUserId
             ),
             &Value
         );
@@ -289,11 +293,11 @@ namespace Gs2::Ranking::Domain::Model
                 }
 
                 const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    Self->CategoryName
+                    ScorerUserId
                 );
                 Self->Cache->Put(
                     Gs2::Ranking::Model::FRanking::TypeName,
-                    Self->ParentKey,
+                    ParentKey,
                     Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -305,9 +309,9 @@ namespace Gs2::Ranking::Domain::Model
                 }
             }
             Self->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
-                Self->ParentKey,
+                ParentKey,
                 Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    Self->CategoryName
+                    ScorerUserId
                 ),
                 &Value
             );

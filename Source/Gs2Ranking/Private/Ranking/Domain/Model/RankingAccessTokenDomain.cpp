@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -122,13 +120,13 @@ namespace Gs2::Ranking::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    ResultModel->GetItem()->GetUserId(),
-                    "Ranking"
-                );
+                const auto ParentKey = FString() +
+                    (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
+                    (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
+                    (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
+                    "Ranking";
                 const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName()
+                    ResultModel->GetItem()->GetUserId()
                 );
                 Self->Cache->Put(
                     Gs2::Ranking::Model::FRanking::TypeName,
@@ -186,11 +184,11 @@ namespace Gs2::Ranking::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Score"
-                );
+                const auto ParentKey = FString() +
+                    (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
+                    (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
+                    (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
+                    "Score";
                 const auto Key = Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetCategoryName(),
                     ResultModel->GetItem()->GetScorerUserId(),
@@ -268,17 +266,17 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FRanking>> Result
     )
     {
-        const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            ScorerUserId,
-            "Ranking"
-        );
+        const auto ParentKey = FString() +
+            (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
+            (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
+            (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
+            "Ranking";
         // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::Ranking::Model::FRankingPtr Value;
-        const auto bCacheHit = Self->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
+        TSharedPtr<Gs2::Ranking::Model::FRanking> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
             ParentKey,
             Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                Self->CategoryName
+                ScorerUserId
             ),
             &Value
         );
@@ -295,12 +293,13 @@ namespace Gs2::Ranking::Domain::Model
                     return Future->GetTask().Error();
                 }
 
+                const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
+                    ScorerUserId
+                );
                 Self->Cache->Put(
                     Gs2::Ranking::Model::FRanking::TypeName,
                     ParentKey,
-                    Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                        Self->CategoryName
-                    ),
+                    Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
@@ -313,7 +312,7 @@ namespace Gs2::Ranking::Domain::Model
             Self->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
                 ParentKey,
                 Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    Self->CategoryName
+                    ScorerUserId
                 ),
                 &Value
             );

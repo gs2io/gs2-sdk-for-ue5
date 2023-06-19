@@ -606,7 +606,7 @@ namespace Gs2::Lottery::Domain::Model
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Lottery::Model::FNamespace> Value;
         auto bCacheHit = Self->Cache->TryGet<Gs2::Lottery::Model::FNamespace>(
-            Self->ParentKey,
+            ParentKey,
             Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 Self->NamespaceName
             ),
@@ -629,7 +629,7 @@ namespace Gs2::Lottery::Domain::Model
                 );
                 Self->Cache->Put(
                     Gs2::Lottery::Model::FNamespace::TypeName,
-                    Self->ParentKey,
+                    ParentKey,
                     Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -641,7 +641,7 @@ namespace Gs2::Lottery::Domain::Model
                 }
             }
             Self->Cache->TryGet<Gs2::Lottery::Model::FNamespace>(
-                Self->ParentKey,
+                ParentKey,
                 Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
                 ),

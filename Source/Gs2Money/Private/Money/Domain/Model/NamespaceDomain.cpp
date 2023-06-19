@@ -350,7 +350,7 @@ namespace Gs2::Money::Domain::Model
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Money::Model::FNamespace> Value;
         auto bCacheHit = Self->Cache->TryGet<Gs2::Money::Model::FNamespace>(
-            Self->ParentKey,
+            ParentKey,
             Gs2::Money::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 Self->NamespaceName
             ),
@@ -373,7 +373,7 @@ namespace Gs2::Money::Domain::Model
                 );
                 Self->Cache->Put(
                     Gs2::Money::Model::FNamespace::TypeName,
-                    Self->ParentKey,
+                    ParentKey,
                     Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -385,7 +385,7 @@ namespace Gs2::Money::Domain::Model
                 }
             }
             Self->Cache->TryGet<Gs2::Money::Model::FNamespace>(
-                Self->ParentKey,
+                ParentKey,
                 Gs2::Money::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
                 ),
