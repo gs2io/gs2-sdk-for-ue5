@@ -203,13 +203,19 @@ namespace Gs2::Matchmaking::Domain
             }
             CompleteNotificationEvent.Broadcast(Gs2::Matchmaking::Model::FCompleteNotification::FromJson(PayloadJson));
         }
-        if (Action == "ChangeRating") {
+        if (Action == "ChangeRatingNotification") {
             TSharedPtr<FJsonObject> PayloadJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
                 !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
             {
                 return;
             }
+            const auto ListParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                PayloadJson->GetStringField("namespaceName"),
+                PayloadJson->GetStringField("userId"),
+                "Rating"
+            );
+            Cache->ClearListCache(Gs2::Matchmaking::Model::FRating::TypeName, ListParentKey);
             ChangeRatingNotificationEvent.Broadcast(Gs2::Matchmaking::Model::FChangeRatingNotification::FromJson(PayloadJson));
         }
     }

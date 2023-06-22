@@ -142,6 +142,8 @@ struct FGs2MatchmakingChangeRatingNotification
     UPROPERTY(BlueprintReadWrite)
     FString NamespaceName = "";
     UPROPERTY(BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(BlueprintReadWrite)
     float RateValue = 0;
 };
 
@@ -151,6 +153,7 @@ inline FGs2MatchmakingChangeRatingNotification EzChangeRatingNotificationToFGs2M
 {
     FGs2MatchmakingChangeRatingNotification Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.RateValue = Model->GetRateValue() ? *Model->GetRateValue() : 0;
     return Value;
 }
