@@ -201,7 +201,7 @@ namespace Gs2::Identifier::Domain::Model
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Identifier::Model::FProjectToken> Value;
         auto bCacheHit = Self->Cache->TryGet<Gs2::Identifier::Model::FProjectToken>(
-            Self->ParentKey,
+            ParentKey,
             Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
             ),
             &Value

@@ -355,7 +355,7 @@ namespace Gs2::Gateway::Domain::Model
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Gateway::Model::FNamespace> Value;
         auto bCacheHit = Self->Cache->TryGet<Gs2::Gateway::Model::FNamespace>(
-            Self->ParentKey,
+            ParentKey,
             Gs2::Gateway::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 Self->NamespaceName
             ),
@@ -378,7 +378,7 @@ namespace Gs2::Gateway::Domain::Model
                 );
                 Self->Cache->Put(
                     Gs2::Gateway::Model::FNamespace::TypeName,
-                    Self->ParentKey,
+                    ParentKey,
                     Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -390,7 +390,7 @@ namespace Gs2::Gateway::Domain::Model
                 }
             }
             Self->Cache->TryGet<Gs2::Gateway::Model::FNamespace>(
-                Self->ParentKey,
+                ParentKey,
                 Gs2::Gateway::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
                 ),

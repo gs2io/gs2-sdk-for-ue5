@@ -615,7 +615,7 @@ namespace Gs2::Deploy::Domain::Model
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Deploy::Model::FStack> Value;
         auto bCacheHit = Self->Cache->TryGet<Gs2::Deploy::Model::FStack>(
-            Self->ParentKey,
+            ParentKey,
             Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                 Self->StackName
             ),
@@ -638,7 +638,7 @@ namespace Gs2::Deploy::Domain::Model
                 );
                 Self->Cache->Put(
                     Gs2::Deploy::Model::FStack::TypeName,
-                    Self->ParentKey,
+                    ParentKey,
                     Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -650,7 +650,7 @@ namespace Gs2::Deploy::Domain::Model
                 }
             }
             Self->Cache->TryGet<Gs2::Deploy::Model::FStack>(
-                Self->ParentKey,
+                ParentKey,
                 Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     Self->StackName
                 ),
