@@ -46,6 +46,11 @@ void UGs2QuestListOfCompletedQuestListAsyncFunction::Activate()
 {
     TArray<FGs2QuestCompletedQuestListValue> ReturnCompletedQuestList;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestListOfCompletedQuestListAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->CompletedQuestLists(
     );
     for (auto v : *It)

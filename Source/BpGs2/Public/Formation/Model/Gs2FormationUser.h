@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Formation/Domain/Model/Gs2FormationEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FormationUser.generated.h"
 
 USTRUCT(BlueprintType)

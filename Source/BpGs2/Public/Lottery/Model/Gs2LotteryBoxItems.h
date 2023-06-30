@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Lottery/Domain/Model/Gs2LotteryEzBoxItemsGameSessionDomain.h"
 #include "Lottery/Model/Gs2LotteryBoxItem.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2LotteryBoxItems.generated.h"
 
 USTRUCT(BlueprintType)
@@ -47,6 +48,10 @@ inline FGs2LotteryBoxItemsValue EzBoxItemsToFGs2LotteryBoxItemsValue(
 )
 {
     FGs2LotteryBoxItemsValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LotteryBoxItemsFunctionLibrary::EzBoxItemsToFGs2LotteryBoxItemsValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.BoxId = Model->GetBoxId() ? *Model->GetBoxId() : "";
     Value.PrizeTableName = Model->GetPrizeTableName() ? *Model->GetPrizeTableName() : "";
     Value.Items = Model->GetItems() ? [&]

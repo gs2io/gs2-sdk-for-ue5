@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Exchange/Domain/Model/Gs2ExchangeEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ExchangeNamespace.generated.h"
 
 USTRUCT(BlueprintType)

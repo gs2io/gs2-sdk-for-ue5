@@ -44,6 +44,11 @@ void UGs2MatchmakingListOfRatingAsyncFunction::Activate()
 {
     TArray<FGs2MatchmakingRatingValue> ReturnRatings;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingListOfRatingAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Ratings(
     );
     for (auto v : *It)

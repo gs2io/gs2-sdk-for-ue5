@@ -44,6 +44,11 @@ void UGs2LimitListOfLimitModelAsyncFunction::Activate()
 {
     TArray<FGs2LimitLimitModelValue> ReturnLimitModels;
     FGs2Error ReturnError;
+
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LimitListOfLimitModelAsyncFunction::Activate] Namespace parameter specification is missing."))
+        return;
+    }
     const auto It = Namespace.Value->LimitModels(
     );
     for (auto v : *It)

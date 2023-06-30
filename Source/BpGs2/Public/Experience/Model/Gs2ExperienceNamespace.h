@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Experience/Domain/Model/Gs2ExperienceEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ExperienceNamespace.generated.h"
 
 USTRUCT(BlueprintType)

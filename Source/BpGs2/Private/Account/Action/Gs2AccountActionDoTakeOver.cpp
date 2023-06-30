@@ -55,7 +55,6 @@ void UGs2AccountDoTakeOverAsyncFunction::Activate()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
-  
         FGs2AccountAccount ReturnAccount;
         ReturnAccount.Value = Result;
         const FGs2Error ReturnError;
@@ -64,7 +63,6 @@ void UGs2AccountDoTakeOverAsyncFunction::Activate()
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](const auto Error)
     {
-  
         FGs2AccountAccount ReturnAccount;
         FGs2Error ReturnError;
         ReturnError.Value = Error;

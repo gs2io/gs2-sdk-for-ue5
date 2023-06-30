@@ -20,6 +20,7 @@
 
 #include "CoreMinimal.h"
 #include "Ranking/Domain/Model/Gs2RankingEzSubscribeUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2RankingSubscribeUser.generated.h"
 
 USTRUCT(BlueprintType)
@@ -46,9 +47,22 @@ inline FGs2RankingSubscribeUserValue EzSubscribeUserToFGs2RankingSubscribeUserVa
 )
 {
     FGs2RankingSubscribeUserValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingSubscribeUserFunctionLibrary::EzSubscribeUserToFGs2RankingSubscribeUserValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.TargetUserId = Model->GetTargetUserId() ? *Model->GetTargetUserId() : "";
     return Value;
+}
+
+inline Gs2::UE5::Ranking::Model::FEzSubscribeUserPtr FGs2RankingSubscribeUserValueToEzSubscribeUser(
+    const FGs2RankingSubscribeUserValue Model
+)
+{
+    return MakeShared<Gs2::UE5::Ranking::Model::FEzSubscribeUser>()
+        ->WithUserId(Model.UserId)
+        ->WithTargetUserId(Model.TargetUserId);
 }
 
 UCLASS()

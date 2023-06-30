@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Stamina/Domain/Model/Gs2StaminaEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2StaminaUser.generated.h"
 
 USTRUCT(BlueprintType)

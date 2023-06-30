@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dictionary/Domain/Model/Gs2DictionaryEzEntryModelDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2DictionaryEntryModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -44,6 +45,10 @@ inline FGs2DictionaryEntryModelValue EzEntryModelToFGs2DictionaryEntryModelValue
 )
 {
     FGs2DictionaryEntryModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2DictionaryEntryModelFunctionLibrary::EzEntryModelToFGs2DictionaryEntryModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     return Value;

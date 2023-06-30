@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Money/Domain/Model/Gs2MoneyEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MoneyNamespace.generated.h"
 
 USTRUCT(BlueprintType)

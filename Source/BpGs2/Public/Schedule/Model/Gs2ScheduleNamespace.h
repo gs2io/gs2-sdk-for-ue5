@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Schedule/Domain/Model/Gs2ScheduleEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ScheduleNamespace.generated.h"
 
 USTRUCT(BlueprintType)

@@ -44,6 +44,11 @@ void UGs2DatastoreListOfDataObjectHistoryAsyncFunction::Activate()
 {
     TArray<FGs2DatastoreDataObjectHistoryValue> ReturnDataObjectHistories;
     FGs2Error ReturnError;
+
+    if (DataObject.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2DatastoreListOfDataObjectHistoryAsyncFunction::Activate] DataObject parameter specification is missing."))
+        return;
+    }
     const auto It = DataObject.Value->DataObjectHistories(
     );
     for (auto v : *It)

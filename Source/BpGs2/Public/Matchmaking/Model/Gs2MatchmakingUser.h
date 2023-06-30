@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzUserGameSessionDomain.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzUserDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MatchmakingUser.generated.h"
 
 USTRUCT(BlueprintType)

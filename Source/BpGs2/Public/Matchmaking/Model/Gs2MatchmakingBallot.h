@@ -21,6 +21,7 @@
 #include "CoreMinimal.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzBallotDomain.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzBallotGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MatchmakingBallot.generated.h"
 
 USTRUCT(BlueprintType)
@@ -59,11 +60,26 @@ inline FGs2MatchmakingBallotValue EzBallotToFGs2MatchmakingBallotValue(
 )
 {
     FGs2MatchmakingBallotValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingBallotFunctionLibrary::EzBallotToFGs2MatchmakingBallotValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.RatingName = Model->GetRatingName() ? *Model->GetRatingName() : "";
     Value.GatheringName = Model->GetGatheringName() ? *Model->GetGatheringName() : "";
     Value.NumberOfPlayer = Model->GetNumberOfPlayer() ? *Model->GetNumberOfPlayer() : 0;
     return Value;
+}
+
+inline Gs2::UE5::Matchmaking::Model::FEzBallotPtr FGs2MatchmakingBallotValueToEzBallot(
+    const FGs2MatchmakingBallotValue Model
+)
+{
+    return MakeShared<Gs2::UE5::Matchmaking::Model::FEzBallot>()
+        ->WithUserId(Model.UserId)
+        ->WithRatingName(Model.RatingName)
+        ->WithGatheringName(Model.GatheringName)
+        ->WithNumberOfPlayer(Model.NumberOfPlayer);
 }
 
 UCLASS()

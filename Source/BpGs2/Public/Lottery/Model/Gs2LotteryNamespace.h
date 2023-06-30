@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Lottery/Domain/Model/Gs2LotteryEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2LotteryNamespace.generated.h"
 
 USTRUCT(BlueprintType)

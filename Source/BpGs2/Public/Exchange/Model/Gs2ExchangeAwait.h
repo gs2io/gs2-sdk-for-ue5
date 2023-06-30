@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Exchange/Domain/Model/Gs2ExchangeEzAwaitGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ExchangeAwait.generated.h"
 
 USTRUCT(BlueprintType)
@@ -48,6 +49,10 @@ inline FGs2ExchangeAwaitValue EzAwaitToFGs2ExchangeAwaitValue(
 )
 {
     FGs2ExchangeAwaitValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ExchangeAwaitFunctionLibrary::EzAwaitToFGs2ExchangeAwaitValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.RateName = Model->GetRateName() ? *Model->GetRateName() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";

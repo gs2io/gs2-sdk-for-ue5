@@ -21,6 +21,7 @@
 #include "MegaField/Domain/Model/Gs2MegaFieldEzSpatialDomain.h"
 #include "MegaField/Model/Gs2MegaFieldPosition.h"
 #include "MegaField/Model/Gs2MegaFieldVector.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MegaFieldSpatial.generated.h"
 
 USTRUCT(BlueprintType)
@@ -61,6 +62,10 @@ inline FGs2MegaFieldSpatialValue EzSpatialToFGs2MegaFieldSpatialValue(
 )
 {
     FGs2MegaFieldSpatialValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MegaFieldSpatialFunctionLibrary::EzSpatialToFGs2MegaFieldSpatialValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.AreaModelName = Model->GetAreaModelName() ? *Model->GetAreaModelName() : "";
     Value.LayerModelName = Model->GetLayerModelName() ? *Model->GetLayerModelName() : "";

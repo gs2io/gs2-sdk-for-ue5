@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Inventory/Domain/Model/Gs2InventoryEzItemSetGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2InventoryItemSet.generated.h"
 
 USTRUCT(BlueprintType)
@@ -54,6 +55,10 @@ inline FGs2InventoryItemSetValue EzItemSetToFGs2InventoryItemSetValue(
 )
 {
     FGs2InventoryItemSetValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InventoryItemSetFunctionLibrary::EzItemSetToFGs2InventoryItemSetValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.ItemSetId = Model->GetItemSetId() ? *Model->GetItemSetId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.InventoryName = Model->GetInventoryName() ? *Model->GetInventoryName() : "";

@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Formation/Domain/Model/Gs2FormationEzFormGameSessionDomain.h"
 #include "Formation/Model/Gs2FormationSlot.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FormationForm.generated.h"
 
 USTRUCT(BlueprintType)
@@ -47,6 +48,10 @@ inline FGs2FormationFormValue EzFormToFGs2FormationFormValue(
 )
 {
     FGs2FormationFormValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationFormFunctionLibrary::EzFormToFGs2FormationFormValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Index = Model->GetIndex() ? *Model->GetIndex() : 0;
     Value.Slots = Model->GetSlots() ? [&]

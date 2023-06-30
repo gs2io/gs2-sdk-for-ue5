@@ -44,6 +44,11 @@ void UGs2ExperienceListOfExperienceModelAsyncFunction::Activate()
 {
     TArray<FGs2ExperienceExperienceModelValue> ReturnExperienceModels;
     FGs2Error ReturnError;
+
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ExperienceListOfExperienceModelAsyncFunction::Activate] Namespace parameter specification is missing."))
+        return;
+    }
     const auto It = Namespace.Value->ExperienceModels(
     );
     for (auto v : *It)

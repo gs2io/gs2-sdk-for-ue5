@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Datastore/Domain/Model/Gs2DatastoreEzUserGameSessionDomain.h"
 #include "Datastore/Domain/Model/Gs2DatastoreEzUserDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2DatastoreUser.generated.h"
 
 USTRUCT(BlueprintType)

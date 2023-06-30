@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Quest/Domain/Model/Gs2QuestEzCompletedQuestListGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2QuestCompletedQuestList.generated.h"
 
 USTRUCT(BlueprintType)
@@ -44,6 +45,10 @@ inline FGs2QuestCompletedQuestListValue EzCompletedQuestListToFGs2QuestCompleted
 )
 {
     FGs2QuestCompletedQuestListValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestCompletedQuestListFunctionLibrary::EzCompletedQuestListToFGs2QuestCompletedQuestListValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.QuestGroupName = Model->GetQuestGroupName() ? *Model->GetQuestGroupName() : "";
     Value.CompleteQuestNames = Model->GetCompleteQuestNames() ? [&]
     {

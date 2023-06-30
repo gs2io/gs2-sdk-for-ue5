@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Version/Domain/Model/Gs2VersionEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2VersionUser.generated.h"
 
 USTRUCT(BlueprintType)

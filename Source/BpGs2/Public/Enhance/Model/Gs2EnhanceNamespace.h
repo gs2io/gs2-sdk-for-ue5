@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Enhance/Domain/Model/Gs2EnhanceEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2EnhanceNamespace.generated.h"
 
 USTRUCT(BlueprintType)

@@ -21,6 +21,7 @@
 #include "Stamina/Model/Gs2StaminaMaxStaminaTable.h"
 #include "Stamina/Model/Gs2StaminaRecoverIntervalTable.h"
 #include "Stamina/Model/Gs2StaminaRecoverValueTable.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2StaminaStaminaModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -63,6 +64,10 @@ inline FGs2StaminaStaminaModelValue EzStaminaModelToFGs2StaminaStaminaModelValue
 )
 {
     FGs2StaminaStaminaModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2StaminaStaminaModelFunctionLibrary::EzStaminaModelToFGs2StaminaStaminaModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.RecoverIntervalMinutes = Model->GetRecoverIntervalMinutes() ? *Model->GetRecoverIntervalMinutes() : 0;

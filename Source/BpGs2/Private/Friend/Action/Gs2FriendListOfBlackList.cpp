@@ -46,6 +46,11 @@ void UGs2FriendListOfBlackListAsyncFunction::Activate()
 {
     TArray<FString> ReturnBlackList;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendListOfBlackListAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->BlackLists(
     );
     for (auto v : *It)

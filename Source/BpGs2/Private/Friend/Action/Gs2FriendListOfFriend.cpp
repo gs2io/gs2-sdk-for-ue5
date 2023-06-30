@@ -49,6 +49,11 @@ void UGs2FriendListOfFriendAsyncFunction::Activate()
 {
     TArray<FGs2FriendFriendUserValue> ReturnFriends;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendListOfFriendAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Friends(
         WithProfile
     );

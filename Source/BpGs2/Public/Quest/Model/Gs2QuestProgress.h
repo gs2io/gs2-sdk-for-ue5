@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Quest/Domain/Model/Gs2QuestEzProgressGameSessionDomain.h"
 #include "Quest/Model/Gs2QuestReward.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2QuestProgress.generated.h"
 
 USTRUCT(BlueprintType)
@@ -51,6 +52,10 @@ inline FGs2QuestProgressValue EzProgressToFGs2QuestProgressValue(
 )
 {
     FGs2QuestProgressValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestProgressFunctionLibrary::EzProgressToFGs2QuestProgressValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.ProgressId = Model->GetProgressId() ? *Model->GetProgressId() : "";
     Value.TransactionId = Model->GetTransactionId() ? *Model->GetTransactionId() : "";
     Value.QuestModelId = Model->GetQuestModelId() ? *Model->GetQuestModelId() : "";

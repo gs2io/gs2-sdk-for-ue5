@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Stamina/Domain/Model/Gs2StaminaEzStaminaGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2StaminaStamina.generated.h"
 
 USTRUCT(BlueprintType)
@@ -54,6 +55,10 @@ inline FGs2StaminaStaminaValue EzStaminaToFGs2StaminaStaminaValue(
 )
 {
     FGs2StaminaStaminaValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2StaminaStaminaFunctionLibrary::EzStaminaToFGs2StaminaStaminaValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.StaminaName = Model->GetStaminaName() ? *Model->GetStaminaName() : "";
     Value.Value = Model->GetValue() ? *Model->GetValue() : 0;
     Value.OverflowValue = Model->GetOverflowValue() ? *Model->GetOverflowValue() : 0;

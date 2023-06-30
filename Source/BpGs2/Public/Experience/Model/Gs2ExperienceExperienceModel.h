@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Experience/Domain/Model/Gs2ExperienceEzExperienceModelDomain.h"
 #include "Experience/Model/Gs2ExperienceThreshold.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ExperienceExperienceModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -53,6 +54,10 @@ inline FGs2ExperienceExperienceModelValue EzExperienceModelToFGs2ExperienceExper
 )
 {
     FGs2ExperienceExperienceModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ExperienceExperienceModelFunctionLibrary::EzExperienceModelToFGs2ExperienceExperienceModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.DefaultExperience = Model->GetDefaultExperience() ? *Model->GetDefaultExperience() : 0;

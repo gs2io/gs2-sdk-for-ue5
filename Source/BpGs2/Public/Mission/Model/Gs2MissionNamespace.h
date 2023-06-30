@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Mission/Domain/Model/Gs2MissionEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MissionNamespace.generated.h"
 
 USTRUCT(BlueprintType)

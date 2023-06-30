@@ -44,6 +44,11 @@ void UGs2InventoryListOfInventoryAsyncFunction::Activate()
 {
     TArray<FGs2InventoryInventoryValue> ReturnInventories;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InventoryListOfInventoryAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Inventories(
     );
     for (auto v : *It)

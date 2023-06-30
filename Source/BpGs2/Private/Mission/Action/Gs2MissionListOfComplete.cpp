@@ -44,6 +44,11 @@ void UGs2MissionListOfCompleteAsyncFunction::Activate()
 {
     TArray<FGs2MissionCompleteValue> ReturnCompletes;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionListOfCompleteAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Completes(
     );
     for (auto v : *It)

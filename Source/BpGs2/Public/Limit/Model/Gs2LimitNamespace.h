@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Limit/Domain/Model/Gs2LimitEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2LimitNamespace.generated.h"
 
 USTRUCT(BlueprintType)

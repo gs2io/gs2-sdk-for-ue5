@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Account/Domain/Model/Gs2AccountEzTakeOverGameSessionDomain.h"
 #include "Account/Domain/Model/Gs2AccountEzTakeOverDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2AccountTakeOver.generated.h"
 
 USTRUCT(BlueprintType)
@@ -57,6 +58,10 @@ inline FGs2AccountTakeOverValue EzTakeOverToFGs2AccountTakeOverValue(
 )
 {
     FGs2AccountTakeOverValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2AccountTakeOverFunctionLibrary::EzTakeOverToFGs2AccountTakeOverValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.Type = Model->GetType() ? *Model->GetType() : 0;
     Value.UserIdentifier = Model->GetUserIdentifier() ? *Model->GetUserIdentifier() : "";

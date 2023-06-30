@@ -44,6 +44,11 @@ void UGs2AccountListOfTakeOverAsyncFunction::Activate()
 {
     TArray<FGs2AccountTakeOverValue> ReturnTakeOvers;
     FGs2Error ReturnError;
+
+    if (Account.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2AccountListOfTakeOverAsyncFunction::Activate] Account parameter specification is missing."))
+        return;
+    }
     const auto It = Account.Value->TakeOvers(
     );
     for (auto v : *It)

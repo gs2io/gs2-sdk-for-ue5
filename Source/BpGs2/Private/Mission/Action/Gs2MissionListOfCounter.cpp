@@ -44,6 +44,11 @@ void UGs2MissionListOfCounterAsyncFunction::Activate()
 {
     TArray<FGs2MissionCounterValue> ReturnCounters;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionListOfCounterAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Counters(
     );
     for (auto v : *It)

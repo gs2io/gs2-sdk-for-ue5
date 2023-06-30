@@ -48,6 +48,11 @@ void UGs2RankingListOfSubscribeUserAsyncFunction::Activate()
 {
     TArray<FGs2RankingSubscribeUserValue> ReturnSubscribeUsers;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingListOfSubscribeUserAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->SubscribeUsers(
         CategoryName
     );

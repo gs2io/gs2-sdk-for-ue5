@@ -22,6 +22,10 @@ FGs2Authenticator UGs2AuthenticatorFunctionLibrary::CreateGs2Authenticator(
 )
 {
 	FGs2Authenticator Return;
+	if (Namespace.Value == nullptr) {
+		UE_LOG(BpGs2Log, Error, TEXT("[UGs2AuthenticatorFunctionLibrary::CreateGs2Authenticator] Namespace parameter specification is missing."))
+		return Return;
+	}
 	Return.Value = MakeShared<Gs2::UE5::Util::FGs2AccountAuthenticator>(
 		*Namespace.Value->NamespaceName(),
 		FString::Format(TEXT("grn:gs2:{region}:{ownerId}:key:{0}:key:{1}"), {Key.NamespaceName, Key.KeyName})

@@ -46,6 +46,11 @@ void UGs2NewsListOfNewsAsyncFunction::Activate()
 {
     TArray<FGs2NewsNewsValue> ReturnNewses;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2NewsListOfNewsAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Newses(
     );
     for (auto v : *It)

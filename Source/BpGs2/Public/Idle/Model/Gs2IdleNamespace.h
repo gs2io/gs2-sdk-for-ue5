@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Idle/Domain/Model/Gs2IdleEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2IdleNamespace.generated.h"
 
 USTRUCT(BlueprintType)

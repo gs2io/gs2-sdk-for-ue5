@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Formation/Domain/Model/Gs2FormationEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FormationNamespace.generated.h"
 
 USTRUCT(BlueprintType)

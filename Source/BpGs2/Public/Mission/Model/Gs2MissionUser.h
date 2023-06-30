@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Mission/Domain/Model/Gs2MissionEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MissionUser.generated.h"
 
 USTRUCT(BlueprintType)

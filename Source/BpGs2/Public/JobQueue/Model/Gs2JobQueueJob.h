@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "JobQueue/Domain/Model/Gs2JobQueueEzJobGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2JobQueueJob.generated.h"
 
 USTRUCT(BlueprintType)
@@ -50,6 +51,10 @@ inline FGs2JobQueueJobValue EzJobToFGs2JobQueueJobValue(
 )
 {
     FGs2JobQueueJobValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2JobQueueJobFunctionLibrary::EzJobToFGs2JobQueueJobValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.JobId = Model->GetJobId() ? *Model->GetJobId() : "";
     Value.ScriptId = Model->GetScriptId() ? *Model->GetScriptId() : "";
     Value.Args = Model->GetArgs() ? *Model->GetArgs() : "";

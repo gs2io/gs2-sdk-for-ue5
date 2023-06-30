@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Formation/Domain/Model/Gs2FormationEzMoldGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FormationMold.generated.h"
 
 USTRUCT(BlueprintType)
@@ -46,6 +47,10 @@ inline FGs2FormationMoldValue EzMoldToFGs2FormationMoldValue(
 )
 {
     FGs2FormationMoldValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationMoldFunctionLibrary::EzMoldToFGs2FormationMoldValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.Capacity = Model->GetCapacity() ? *Model->GetCapacity() : 0;

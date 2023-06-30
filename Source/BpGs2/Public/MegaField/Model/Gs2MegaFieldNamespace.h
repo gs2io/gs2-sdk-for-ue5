@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "MegaField/Domain/Model/Gs2MegaFieldEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MegaFieldNamespace.generated.h"
 
 USTRUCT(BlueprintType)

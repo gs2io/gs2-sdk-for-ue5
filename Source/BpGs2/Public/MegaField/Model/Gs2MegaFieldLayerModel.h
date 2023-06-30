@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "MegaField/Domain/Model/Gs2MegaFieldEzLayerModelDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MegaFieldLayerModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -44,6 +45,10 @@ inline FGs2MegaFieldLayerModelValue EzLayerModelToFGs2MegaFieldLayerModelValue(
 )
 {
     FGs2MegaFieldLayerModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MegaFieldLayerModelFunctionLibrary::EzLayerModelToFGs2MegaFieldLayerModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     return Value;

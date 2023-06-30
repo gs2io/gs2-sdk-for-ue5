@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Realtime/Domain/Model/Gs2RealtimeEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2RealtimeNamespace.generated.h"
 
 USTRUCT(BlueprintType)

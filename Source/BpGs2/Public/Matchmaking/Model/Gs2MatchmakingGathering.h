@@ -21,6 +21,7 @@
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzGatheringDomain.h"
 #include "Matchmaking/Model/Gs2MatchmakingAttributeRange.h"
 #include "Matchmaking/Model/Gs2MatchmakingCapacityOfRole.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MatchmakingGathering.generated.h"
 
 USTRUCT(BlueprintType)
@@ -69,6 +70,10 @@ inline FGs2MatchmakingGatheringValue EzGatheringToFGs2MatchmakingGatheringValue(
 )
 {
     FGs2MatchmakingGatheringValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingGatheringFunctionLibrary::EzGatheringToFGs2MatchmakingGatheringValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.GatheringId = Model->GetGatheringId() ? *Model->GetGatheringId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.AttributeRanges = Model->GetAttributeRanges() ? [&]

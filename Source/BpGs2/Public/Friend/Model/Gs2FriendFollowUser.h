@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Friend/Domain/Model/Gs2FriendEzFollowUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FriendFollowUser.generated.h"
 
 USTRUCT(BlueprintType)
@@ -46,6 +47,10 @@ inline FGs2FriendFollowUserValue EzFollowUserToFGs2FriendFollowUserValue(
 )
 {
     FGs2FriendFollowUserValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendFollowUserFunctionLibrary::EzFollowUserToFGs2FriendFollowUserValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.PublicProfile = Model->GetPublicProfile() ? *Model->GetPublicProfile() : "";
     Value.FollowerProfile = Model->GetFollowerProfile() ? *Model->GetFollowerProfile() : "";

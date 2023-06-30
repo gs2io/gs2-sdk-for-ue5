@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Stamina/Domain/Model/Gs2StaminaEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2StaminaNamespace.generated.h"
 
 USTRUCT(BlueprintType)

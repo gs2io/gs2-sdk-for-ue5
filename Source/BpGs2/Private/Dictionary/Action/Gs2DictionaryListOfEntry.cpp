@@ -44,6 +44,11 @@ void UGs2DictionaryListOfEntryAsyncFunction::Activate()
 {
     TArray<FGs2DictionaryEntryValue> ReturnEntries;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2DictionaryListOfEntryAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Entries(
     );
     for (auto v : *It)

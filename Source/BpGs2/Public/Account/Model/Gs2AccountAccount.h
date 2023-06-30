@@ -21,6 +21,7 @@
 #include "CoreMinimal.h"
 #include "Account/Domain/Model/Gs2AccountEzAccountGameSessionDomain.h"
 #include "Account/Domain/Model/Gs2AccountEzAccountDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2AccountAccount.generated.h"
 
 USTRUCT(BlueprintType)
@@ -57,10 +58,24 @@ inline FGs2AccountAccountValue EzAccountToFGs2AccountAccountValue(
 )
 {
     FGs2AccountAccountValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2AccountAccountFunctionLibrary::EzAccountToFGs2AccountAccountValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.Password = Model->GetPassword() ? *Model->GetPassword() : "";
     Value.CreatedAt = Model->GetCreatedAt() ? *Model->GetCreatedAt() : 0;
     return Value;
+}
+
+inline Gs2::UE5::Account::Model::FEzAccountPtr FGs2AccountAccountValueToEzAccount(
+    const FGs2AccountAccountValue Model
+)
+{
+    return MakeShared<Gs2::UE5::Account::Model::FEzAccount>()
+        ->WithUserId(Model.UserId)
+        ->WithPassword(Model.Password)
+        ->WithCreatedAt(Model.CreatedAt);
 }
 
 UCLASS()

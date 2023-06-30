@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Chat/Domain/Model/Gs2ChatEzMessageGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ChatMessage.generated.h"
 
 USTRUCT(BlueprintType)
@@ -52,6 +53,10 @@ inline FGs2ChatMessageValue EzMessageToFGs2ChatMessageValue(
 )
 {
     FGs2ChatMessageValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ChatMessageFunctionLibrary::EzMessageToFGs2ChatMessageValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.RoomName = Model->GetRoomName() ? *Model->GetRoomName() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";

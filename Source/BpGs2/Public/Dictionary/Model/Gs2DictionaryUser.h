@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dictionary/Domain/Model/Gs2DictionaryEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2DictionaryUser.generated.h"
 
 USTRUCT(BlueprintType)

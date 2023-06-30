@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Lottery/Domain/Model/Gs2LotteryEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2LotteryUser.generated.h"
 
 USTRUCT(BlueprintType)

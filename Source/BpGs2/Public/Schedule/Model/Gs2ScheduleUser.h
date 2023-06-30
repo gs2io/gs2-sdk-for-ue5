@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Schedule/Domain/Model/Gs2ScheduleEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ScheduleUser.generated.h"
 
 USTRUCT(BlueprintType)

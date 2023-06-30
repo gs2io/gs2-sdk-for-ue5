@@ -22,6 +22,7 @@
 #include "Quest/Model/Gs2QuestAcquireAction.h"
 #include "Quest/Model/Gs2QuestConsumeAction.h"
 #include "Quest/Model/Gs2QuestAcquireAction.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2QuestQuestModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -62,6 +63,10 @@ inline FGs2QuestQuestModelValue EzQuestModelToFGs2QuestQuestModelValue(
 )
 {
     FGs2QuestQuestModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestQuestModelFunctionLibrary::EzQuestModelToFGs2QuestQuestModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.QuestModelId = Model->GetQuestModelId() ? *Model->GetQuestModelId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";

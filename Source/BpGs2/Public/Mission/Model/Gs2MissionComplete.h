@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Mission/Domain/Model/Gs2MissionEzCompleteGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MissionComplete.generated.h"
 
 USTRUCT(BlueprintType)
@@ -46,6 +47,10 @@ inline FGs2MissionCompleteValue EzCompleteToFGs2MissionCompleteValue(
 )
 {
     FGs2MissionCompleteValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionCompleteFunctionLibrary::EzCompleteToFGs2MissionCompleteValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.MissionGroupName = Model->GetMissionGroupName() ? *Model->GetMissionGroupName() : "";
     Value.CompletedMissionTaskNames = Model->GetCompletedMissionTaskNames() ? [&]
     {

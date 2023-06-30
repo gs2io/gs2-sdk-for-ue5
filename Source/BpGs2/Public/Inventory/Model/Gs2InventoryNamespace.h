@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Inventory/Domain/Model/Gs2InventoryEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2InventoryNamespace.generated.h"
 
 USTRUCT(BlueprintType)

@@ -46,6 +46,11 @@ void UGs2ExchangeListOfAwaitAsyncFunction::Activate()
 {
     TArray<FGs2ExchangeAwaitValue> ReturnAwaits;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ExchangeListOfAwaitAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Awaits(
         RateName
     );

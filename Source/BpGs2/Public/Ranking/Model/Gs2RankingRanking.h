@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Ranking/Domain/Model/Gs2RankingEzRankingGameSessionDomain.h"
 #include "Ranking/Domain/Model/Gs2RankingEzRankingDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2RankingRanking.generated.h"
 
 USTRUCT(BlueprintType)
@@ -61,6 +62,10 @@ inline FGs2RankingRankingValue EzRankingToFGs2RankingRankingValue(
 )
 {
     FGs2RankingRankingValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingRankingFunctionLibrary::EzRankingToFGs2RankingRankingValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Rank = Model->GetRank() ? *Model->GetRank() : 0;
     Value.Index = Model->GetIndex() ? *Model->GetIndex() : 0;
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";

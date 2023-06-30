@@ -44,6 +44,11 @@ void UGs2InventoryListOfItemSetAsyncFunction::Activate()
 {
     TArray<FGs2InventoryItemSetValue> ReturnItemSets;
     FGs2Error ReturnError;
+
+    if (Inventory.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InventoryListOfItemSetAsyncFunction::Activate] Inventory parameter specification is missing."))
+        return;
+    }
     const auto It = Inventory.Value->ItemSets(
     );
     for (auto v : *It)

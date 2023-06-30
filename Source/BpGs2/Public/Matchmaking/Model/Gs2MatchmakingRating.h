@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzRatingGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MatchmakingRating.generated.h"
 
 USTRUCT(BlueprintType)
@@ -52,6 +53,10 @@ inline FGs2MatchmakingRatingValue EzRatingToFGs2MatchmakingRatingValue(
 )
 {
     FGs2MatchmakingRatingValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MatchmakingRatingFunctionLibrary::EzRatingToFGs2MatchmakingRatingValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.RatingId = Model->GetRatingId() ? *Model->GetRatingId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";

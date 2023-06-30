@@ -44,6 +44,11 @@ void UGs2MegaFieldListOfLayerModelAsyncFunction::Activate()
 {
     TArray<FGs2MegaFieldLayerModelValue> ReturnLayerModels;
     FGs2Error ReturnError;
+
+    if (AreaModel.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MegaFieldListOfLayerModelAsyncFunction::Activate] AreaModel parameter specification is missing."))
+        return;
+    }
     const auto It = AreaModel.Value->LayerModels(
     );
     for (auto v : *It)

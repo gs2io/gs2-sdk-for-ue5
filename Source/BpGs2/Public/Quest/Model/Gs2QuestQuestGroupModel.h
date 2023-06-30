@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Quest/Domain/Model/Gs2QuestEzQuestGroupModelDomain.h"
 #include "Quest/Model/Gs2QuestQuestModel.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2QuestQuestGroupModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -49,6 +50,10 @@ inline FGs2QuestQuestGroupModelValue EzQuestGroupModelToFGs2QuestQuestGroupModel
 )
 {
     FGs2QuestQuestGroupModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestQuestGroupModelFunctionLibrary::EzQuestGroupModelToFGs2QuestQuestGroupModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.Quests = Model->GetQuests() ? [&]

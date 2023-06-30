@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Account/Domain/Model/Gs2AccountEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2AccountNamespace.generated.h"
 
 USTRUCT(BlueprintType)

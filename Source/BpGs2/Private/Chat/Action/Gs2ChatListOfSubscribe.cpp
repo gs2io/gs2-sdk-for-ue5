@@ -44,6 +44,11 @@ void UGs2ChatListOfSubscribeAsyncFunction::Activate()
 {
     TArray<FGs2ChatSubscribeValue> ReturnSubscribes;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ChatListOfSubscribeAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Subscribes(
     );
     for (auto v : *It)

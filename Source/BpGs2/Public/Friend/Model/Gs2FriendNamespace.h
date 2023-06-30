@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Friend/Domain/Model/Gs2FriendEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FriendNamespace.generated.h"
 
 USTRUCT(BlueprintType)

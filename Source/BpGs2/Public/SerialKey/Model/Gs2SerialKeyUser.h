@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "SerialKey/Domain/Model/Gs2SerialKeyEzUserGameSessionDomain.h"
 #include "SerialKey/Domain/Model/Gs2SerialKeyEzUserDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2SerialKeyUser.generated.h"
 
 USTRUCT(BlueprintType)

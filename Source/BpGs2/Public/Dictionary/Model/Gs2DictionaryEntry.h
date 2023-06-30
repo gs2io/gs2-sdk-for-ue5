@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dictionary/Domain/Model/Gs2DictionaryEzEntryGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2DictionaryEntry.generated.h"
 
 USTRUCT(BlueprintType)
@@ -48,6 +49,10 @@ inline FGs2DictionaryEntryValue EzEntryToFGs2DictionaryEntryValue(
 )
 {
     FGs2DictionaryEntryValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2DictionaryEntryFunctionLibrary::EzEntryToFGs2DictionaryEntryValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.EntryId = Model->GetEntryId() ? *Model->GetEntryId() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";

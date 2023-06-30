@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Formation/Domain/Model/Gs2FormationEzFormModelDomain.h"
 #include "Formation/Model/Gs2FormationSlotModel.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FormationFormModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -47,6 +48,10 @@ inline FGs2FormationFormModelValue EzFormModelToFGs2FormationFormModelValue(
 )
 {
     FGs2FormationFormModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationFormModelFunctionLibrary::EzFormModelToFGs2FormationFormModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.Slots = Model->GetSlots() ? [&]

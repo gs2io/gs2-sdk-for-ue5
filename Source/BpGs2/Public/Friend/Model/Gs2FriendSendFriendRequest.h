@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Friend/Domain/Model/Gs2FriendEzSendFriendRequestGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FriendSendFriendRequest.generated.h"
 
 USTRUCT(BlueprintType)

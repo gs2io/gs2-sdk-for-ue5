@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Enhance/Domain/Model/Gs2EnhanceEzProgressGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2EnhanceProgress.generated.h"
 
 USTRUCT(BlueprintType)
@@ -50,6 +51,10 @@ inline FGs2EnhanceProgressValue EzProgressToFGs2EnhanceProgressValue(
 )
 {
     FGs2EnhanceProgressValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2EnhanceProgressFunctionLibrary::EzProgressToFGs2EnhanceProgressValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.RateName = Model->GetRateName() ? *Model->GetRateName() : "";
     Value.PropertyId = Model->GetPropertyId() ? *Model->GetPropertyId() : "";

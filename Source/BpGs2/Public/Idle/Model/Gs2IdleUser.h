@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Idle/Domain/Model/Gs2IdleEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2IdleUser.generated.h"
 
 USTRUCT(BlueprintType)

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Limit/Domain/Model/Gs2LimitEzLimitModelDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2LimitLimitModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -54,6 +55,10 @@ inline FGs2LimitLimitModelValue EzLimitModelToFGs2LimitLimitModelValue(
 )
 {
     FGs2LimitLimitModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LimitLimitModelFunctionLibrary::EzLimitModelToFGs2LimitLimitModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.LimitModelId = Model->GetLimitModelId() ? *Model->GetLimitModelId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";

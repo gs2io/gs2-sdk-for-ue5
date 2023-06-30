@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "News/Domain/Model/Gs2NewsEzNewsGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2NewsNews.generated.h"
 
 USTRUCT(BlueprintType)
@@ -52,6 +53,10 @@ inline FGs2NewsNewsValue EzNewsToFGs2NewsNewsValue(
 )
 {
     FGs2NewsNewsValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2NewsNewsFunctionLibrary::EzNewsToFGs2NewsNewsValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Section = Model->GetSection() ? *Model->GetSection() : "";
     Value.Content = Model->GetContent() ? *Model->GetContent() : "";
     Value.Title = Model->GetTitle() ? *Model->GetTitle() : "";

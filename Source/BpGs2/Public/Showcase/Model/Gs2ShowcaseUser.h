@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Showcase/Domain/Model/Gs2ShowcaseEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ShowcaseUser.generated.h"
 
 USTRUCT(BlueprintType)

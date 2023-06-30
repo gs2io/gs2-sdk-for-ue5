@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Mission/Domain/Model/Gs2MissionEzCounterGameSessionDomain.h"
 #include "Mission/Model/Gs2MissionScopedValue.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MissionCounter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -45,6 +46,10 @@ inline FGs2MissionCounterValue EzCounterToFGs2MissionCounterValue(
 )
 {
     FGs2MissionCounterValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionCounterFunctionLibrary::EzCounterToFGs2MissionCounterValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Values = Model->GetValues() ? [&]
     {

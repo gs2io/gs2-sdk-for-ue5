@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Exchange/Domain/Model/Gs2ExchangeEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ExchangeUser.generated.h"
 
 USTRUCT(BlueprintType)

@@ -21,6 +21,7 @@
 #include "CoreMinimal.h"
 #include "Showcase/Domain/Model/Gs2ShowcaseEzShowcaseGameSessionDomain.h"
 #include "Showcase/Model/Gs2ShowcaseDisplayItem.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ShowcaseShowcase.generated.h"
 
 USTRUCT(BlueprintType)
@@ -49,6 +50,10 @@ inline FGs2ShowcaseShowcaseValue EzShowcaseToFGs2ShowcaseShowcaseValue(
 )
 {
     FGs2ShowcaseShowcaseValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseShowcaseFunctionLibrary::EzShowcaseToFGs2ShowcaseShowcaseValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.DisplayItems = Model->GetDisplayItems() ? [&]
@@ -61,6 +66,22 @@ inline FGs2ShowcaseShowcaseValue EzShowcaseToFGs2ShowcaseShowcaseValue(
         return r;
     }() : TArray<FGs2ShowcaseDisplayItem>();
     return Value;
+}
+
+inline Gs2::UE5::Showcase::Model::FEzShowcasePtr FGs2ShowcaseShowcaseValueToEzShowcase(
+    const FGs2ShowcaseShowcaseValue Model
+)
+{
+    return MakeShared<Gs2::UE5::Showcase::Model::FEzShowcase>()
+        ->WithName(Model.Name)
+        ->WithMetadata(Model.Metadata)
+        ->WithDisplayItems([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Showcase::Model::FEzDisplayItemPtr>>();
+            for (auto v : Model.DisplayItems) {
+                r->Add(FGs2ShowcaseDisplayItemToEzDisplayItem(v));
+            }
+            return r;
+        }());
 }
 
 UCLASS()

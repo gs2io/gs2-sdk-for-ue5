@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dictionary/Domain/Model/Gs2DictionaryEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2DictionaryNamespace.generated.h"
 
 USTRUCT(BlueprintType)

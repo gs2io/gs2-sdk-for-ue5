@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "News/Domain/Model/Gs2NewsEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2NewsUser.generated.h"
 
 USTRUCT(BlueprintType)

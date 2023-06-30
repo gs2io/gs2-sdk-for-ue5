@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Inventory/Domain/Model/Gs2InventoryEzInventoryGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2InventoryInventory.generated.h"
 
 USTRUCT(BlueprintType)
@@ -48,6 +49,10 @@ inline FGs2InventoryInventoryValue EzInventoryToFGs2InventoryInventoryValue(
 )
 {
     FGs2InventoryInventoryValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InventoryInventoryFunctionLibrary::EzInventoryToFGs2InventoryInventoryValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.InventoryId = Model->GetInventoryId() ? *Model->GetInventoryId() : "";
     Value.InventoryName = Model->GetInventoryName() ? *Model->GetInventoryName() : "";
     Value.CurrentInventoryCapacityUsage = Model->GetCurrentInventoryCapacityUsage() ? *Model->GetCurrentInventoryCapacityUsage() : 0;

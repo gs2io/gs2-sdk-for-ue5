@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Ranking/Domain/Model/Gs2RankingEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2RankingNamespace.generated.h"
 
 USTRUCT(BlueprintType)

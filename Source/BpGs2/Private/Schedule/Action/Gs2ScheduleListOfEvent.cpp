@@ -44,6 +44,11 @@ void UGs2ScheduleListOfEventAsyncFunction::Activate()
 {
     TArray<FGs2ScheduleEventValue> ReturnEvents;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ScheduleListOfEventAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Events(
     );
     for (auto v : *It)

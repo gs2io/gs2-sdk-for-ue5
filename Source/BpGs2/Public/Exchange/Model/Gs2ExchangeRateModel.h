@@ -20,6 +20,7 @@
 #include "Exchange/Domain/Model/Gs2ExchangeEzRateModelDomain.h"
 #include "Exchange/Model/Gs2ExchangeConsumeAction.h"
 #include "Exchange/Model/Gs2ExchangeAcquireAction.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ExchangeRateModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -54,6 +55,10 @@ inline FGs2ExchangeRateModelValue EzRateModelToFGs2ExchangeRateModelValue(
 )
 {
     FGs2ExchangeRateModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ExchangeRateModelFunctionLibrary::EzRateModelToFGs2ExchangeRateModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.TimingType = Model->GetTimingType() ? *Model->GetTimingType() : "";

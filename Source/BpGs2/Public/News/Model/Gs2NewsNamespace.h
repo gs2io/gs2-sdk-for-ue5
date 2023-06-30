@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "News/Domain/Model/Gs2NewsEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2NewsNamespace.generated.h"
 
 USTRUCT(BlueprintType)

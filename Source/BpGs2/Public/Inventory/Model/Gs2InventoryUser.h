@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Inventory/Domain/Model/Gs2InventoryEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2InventoryUser.generated.h"
 
 USTRUCT(BlueprintType)

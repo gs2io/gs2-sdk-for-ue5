@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Realtime/Domain/Model/Gs2RealtimeEzRoomDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2RealtimeRoom.generated.h"
 
 USTRUCT(BlueprintType)
@@ -48,6 +49,10 @@ inline FGs2RealtimeRoomValue EzRoomToFGs2RealtimeRoomValue(
 )
 {
     FGs2RealtimeRoomValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RealtimeRoomFunctionLibrary::EzRoomToFGs2RealtimeRoomValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.IpAddress = Model->GetIpAddress() ? *Model->GetIpAddress() : "";
     Value.Port = Model->GetPort() ? *Model->GetPort() : 0;

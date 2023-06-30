@@ -44,6 +44,11 @@ void UGs2InboxListOfMessageAsyncFunction::Activate()
 {
     TArray<FGs2InboxMessageValue> ReturnMessages;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InboxListOfMessageAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Messages(
     );
     for (auto v : *It)

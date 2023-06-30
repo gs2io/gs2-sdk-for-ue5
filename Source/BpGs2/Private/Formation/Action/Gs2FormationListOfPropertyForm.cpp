@@ -46,6 +46,11 @@ void UGs2FormationListOfPropertyFormAsyncFunction::Activate()
 {
     TArray<FGs2FormationPropertyFormValue> ReturnPropertyForms;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationListOfPropertyFormAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->PropertyForms(
         FormModelName
     );

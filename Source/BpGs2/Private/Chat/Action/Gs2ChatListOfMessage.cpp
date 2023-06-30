@@ -44,6 +44,11 @@ void UGs2ChatListOfMessageAsyncFunction::Activate()
 {
     TArray<FGs2ChatMessageValue> ReturnMessages;
     FGs2Error ReturnError;
+
+    if (Room.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ChatListOfMessageAsyncFunction::Activate] Room parameter specification is missing."))
+        return;
+    }
     const auto It = Room.Value->Messages(
     );
     for (auto v : *It)

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Enhance/Domain/Model/Gs2EnhanceEzRateModelDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2EnhanceRateModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -52,6 +53,10 @@ inline FGs2EnhanceRateModelValue EzRateModelToFGs2EnhanceRateModelValue(
 )
 {
     FGs2EnhanceRateModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2EnhanceRateModelFunctionLibrary::EzRateModelToFGs2EnhanceRateModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.TargetInventoryModelId = Model->GetTargetInventoryModelId() ? *Model->GetTargetInventoryModelId() : "";

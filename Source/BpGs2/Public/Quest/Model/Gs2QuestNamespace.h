@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Quest/Domain/Model/Gs2QuestEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2QuestNamespace.generated.h"
 
 USTRUCT(BlueprintType)

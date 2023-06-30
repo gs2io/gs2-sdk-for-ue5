@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Experience/Domain/Model/Gs2ExperienceEzStatusGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ExperienceStatus.generated.h"
 
 USTRUCT(BlueprintType)
@@ -50,6 +51,10 @@ inline FGs2ExperienceStatusValue EzStatusToFGs2ExperienceStatusValue(
 )
 {
     FGs2ExperienceStatusValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ExperienceStatusFunctionLibrary::EzStatusToFGs2ExperienceStatusValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.ExperienceName = Model->GetExperienceName() ? *Model->GetExperienceName() : "";
     Value.PropertyId = Model->GetPropertyId() ? *Model->GetPropertyId() : "";
     Value.ExperienceValue = Model->GetExperienceValue() ? *Model->GetExperienceValue() : 0;

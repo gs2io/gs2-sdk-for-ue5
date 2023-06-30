@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Inbox/Domain/Model/Gs2InboxEzMessageGameSessionDomain.h"
 #include "Inbox/Model/Gs2InboxAcquireAction.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2InboxMessage.generated.h"
 
 USTRUCT(BlueprintType)
@@ -57,6 +58,10 @@ inline FGs2InboxMessageValue EzMessageToFGs2InboxMessageValue(
 )
 {
     FGs2InboxMessageValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InboxMessageFunctionLibrary::EzMessageToFGs2InboxMessageValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.MessageId = Model->GetMessageId() ? *Model->GetMessageId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";

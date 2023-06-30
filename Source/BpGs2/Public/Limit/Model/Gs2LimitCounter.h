@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Limit/Domain/Model/Gs2LimitEzCounterGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2LimitCounter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -52,6 +53,10 @@ inline FGs2LimitCounterValue EzCounterToFGs2LimitCounterValue(
 )
 {
     FGs2LimitCounterValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LimitCounterFunctionLibrary::EzCounterToFGs2LimitCounterValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.CounterId = Model->GetCounterId() ? *Model->GetCounterId() : "";
     Value.LimitName = Model->GetLimitName() ? *Model->GetLimitName() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";

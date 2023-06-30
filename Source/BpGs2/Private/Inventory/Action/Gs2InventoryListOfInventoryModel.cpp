@@ -44,6 +44,11 @@ void UGs2InventoryListOfInventoryModelAsyncFunction::Activate()
 {
     TArray<FGs2InventoryInventoryModelValue> ReturnInventoryModels;
     FGs2Error ReturnError;
+
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InventoryListOfInventoryModelAsyncFunction::Activate] Namespace parameter specification is missing."))
+        return;
+    }
     const auto It = Namespace.Value->InventoryModels(
     );
     for (auto v : *It)

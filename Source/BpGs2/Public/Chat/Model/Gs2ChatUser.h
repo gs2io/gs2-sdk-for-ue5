@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Chat/Domain/Model/Gs2ChatEzUserGameSessionDomain.h"
 #include "Chat/Domain/Model/Gs2ChatEzUserDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ChatUser.generated.h"
 
 USTRUCT(BlueprintType)

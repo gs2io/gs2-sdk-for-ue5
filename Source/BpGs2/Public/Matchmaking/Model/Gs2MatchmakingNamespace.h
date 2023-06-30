@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MatchmakingNamespace.generated.h"
 
 USTRUCT(BlueprintType)

@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Chat/Domain/Model/Gs2ChatEzSubscribeGameSessionDomain.h"
 #include "Chat/Model/Gs2ChatNotificationType.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ChatSubscribe.generated.h"
 
 USTRUCT(BlueprintType)
@@ -47,6 +48,10 @@ inline FGs2ChatSubscribeValue EzSubscribeToFGs2ChatSubscribeValue(
 )
 {
     FGs2ChatSubscribeValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ChatSubscribeFunctionLibrary::EzSubscribeToFGs2ChatSubscribeValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.RoomName = Model->GetRoomName() ? *Model->GetRoomName() : "";
     Value.NotificationTypes = Model->GetNotificationTypes() ? [&]

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "MegaField/Domain/Model/Gs2MegaFieldEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MegaFieldUser.generated.h"
 
 USTRUCT(BlueprintType)

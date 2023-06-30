@@ -19,8 +19,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SerialKey/Domain/Model/Gs2SerialKeyEzSerialKeyDomain.h"
 #include "SerialKey/Domain/Model/Gs2SerialKeyEzSerialKeyGameSessionDomain.h"
+#include "SerialKey/Domain/Model/Gs2SerialKeyEzSerialKeyDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2SerialKeySerialKey.generated.h"
 
 USTRUCT(BlueprintType)
@@ -59,11 +60,26 @@ inline FGs2SerialKeySerialKeyValue EzSerialKeyToFGs2SerialKeySerialKeyValue(
 )
 {
     FGs2SerialKeySerialKeyValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeySerialKeyFunctionLibrary::EzSerialKeyToFGs2SerialKeySerialKeyValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.CampaignModelName = Model->GetCampaignModelName() ? *Model->GetCampaignModelName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.Code = Model->GetCode() ? *Model->GetCode() : "";
     Value.Status = Model->GetStatus() ? *Model->GetStatus() : "";
     return Value;
+}
+
+inline Gs2::UE5::SerialKey::Model::FEzSerialKeyPtr FGs2SerialKeySerialKeyValueToEzSerialKey(
+    const FGs2SerialKeySerialKeyValue Model
+)
+{
+    return MakeShared<Gs2::UE5::SerialKey::Model::FEzSerialKey>()
+        ->WithCampaignModelName(Model.CampaignModelName)
+        ->WithMetadata(Model.Metadata)
+        ->WithCode(Model.Code)
+        ->WithStatus(Model.Status);
 }
 
 UCLASS()

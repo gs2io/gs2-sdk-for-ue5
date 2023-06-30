@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Inbox/Domain/Model/Gs2InboxEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2InboxUser.generated.h"
 
 USTRUCT(BlueprintType)

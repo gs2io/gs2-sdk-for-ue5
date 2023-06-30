@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "SerialKey/Domain/Model/Gs2SerialKeyEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2SerialKeyNamespace.generated.h"
 
 USTRUCT(BlueprintType)

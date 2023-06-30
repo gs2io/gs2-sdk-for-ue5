@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Limit/Domain/Model/Gs2LimitEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2LimitUser.generated.h"
 
 USTRUCT(BlueprintType)

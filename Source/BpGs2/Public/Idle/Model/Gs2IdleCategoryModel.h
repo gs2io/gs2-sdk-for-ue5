@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Idle/Domain/Model/Gs2IdleEzCategoryModelDomain.h"
 #include "Idle/Model/Gs2IdleAcquireActionList.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2IdleCategoryModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -55,6 +56,10 @@ inline FGs2IdleCategoryModelValue EzCategoryModelToFGs2IdleCategoryModelValue(
 )
 {
     FGs2IdleCategoryModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2IdleCategoryModelFunctionLibrary::EzCategoryModelToFGs2IdleCategoryModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.RewardIntervalMinutes = Model->GetRewardIntervalMinutes() ? *Model->GetRewardIntervalMinutes() : 0;

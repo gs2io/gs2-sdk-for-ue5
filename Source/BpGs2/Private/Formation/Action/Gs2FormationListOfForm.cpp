@@ -44,6 +44,11 @@ void UGs2FormationListOfFormAsyncFunction::Activate()
 {
     TArray<FGs2FormationFormValue> ReturnForms;
     FGs2Error ReturnError;
+
+    if (Mold.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationListOfFormAsyncFunction::Activate] Mold parameter specification is missing."))
+        return;
+    }
     const auto It = Mold.Value->Forms(
     );
     for (auto v : *It)

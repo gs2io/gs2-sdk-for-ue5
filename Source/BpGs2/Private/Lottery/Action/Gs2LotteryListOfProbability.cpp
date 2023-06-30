@@ -46,6 +46,11 @@ void UGs2LotteryListOfProbabilityAsyncFunction::Activate()
 {
     TArray<FGs2LotteryProbability> ReturnProbabilities;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LotteryListOfProbabilityAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Probabilities(
         LotteryName
     );

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Money/Domain/Model/Gs2MoneyEzWalletGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MoneyWallet.generated.h"
 
 USTRUCT(BlueprintType)
@@ -48,6 +49,10 @@ inline FGs2MoneyWalletValue EzWalletToFGs2MoneyWalletValue(
 )
 {
     FGs2MoneyWalletValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MoneyWalletFunctionLibrary::EzWalletToFGs2MoneyWalletValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Slot = Model->GetSlot() ? *Model->GetSlot() : 0;
     Value.Paid = Model->GetPaid() ? *Model->GetPaid() : 0;
     Value.Free = Model->GetFree() ? *Model->GetFree() : 0;

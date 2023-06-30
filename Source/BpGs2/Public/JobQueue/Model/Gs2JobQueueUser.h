@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "JobQueue/Domain/Model/Gs2JobQueueEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2JobQueueUser.generated.h"
 
 USTRUCT(BlueprintType)

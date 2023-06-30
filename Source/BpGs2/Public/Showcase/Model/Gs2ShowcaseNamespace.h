@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Showcase/Domain/Model/Gs2ShowcaseEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ShowcaseNamespace.generated.h"
 
 USTRUCT(BlueprintType)

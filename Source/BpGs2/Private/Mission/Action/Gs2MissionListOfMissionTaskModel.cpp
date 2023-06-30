@@ -44,6 +44,11 @@ void UGs2MissionListOfMissionTaskModelAsyncFunction::Activate()
 {
     TArray<FGs2MissionMissionTaskModelValue> ReturnMissionTaskModels;
     FGs2Error ReturnError;
+
+    if (MissionGroupModel.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionListOfMissionTaskModelAsyncFunction::Activate] MissionGroupModel parameter specification is missing."))
+        return;
+    }
     const auto It = MissionGroupModel.Value->MissionTaskModels(
     );
     for (auto v : *It)

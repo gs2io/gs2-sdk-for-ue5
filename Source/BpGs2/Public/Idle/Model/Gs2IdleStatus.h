@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Idle/Domain/Model/Gs2IdleEzStatusGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2IdleStatus.generated.h"
 
 USTRUCT(BlueprintType)
@@ -48,6 +49,10 @@ inline FGs2IdleStatusValue EzStatusToFGs2IdleStatusValue(
 )
 {
     FGs2IdleStatusValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2IdleStatusFunctionLibrary::EzStatusToFGs2IdleStatusValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.CategoryName = Model->GetCategoryName() ? *Model->GetCategoryName() : "";
     Value.RandomSeed = Model->GetRandomSeed() ? *Model->GetRandomSeed() : 0;
     Value.IdleMinutes = Model->GetIdleMinutes() ? *Model->GetIdleMinutes() : 0;

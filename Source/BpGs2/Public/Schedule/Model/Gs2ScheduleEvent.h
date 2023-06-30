@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Schedule/Domain/Model/Gs2ScheduleEzEventGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ScheduleEvent.generated.h"
 
 USTRUCT(BlueprintType)
@@ -66,6 +67,10 @@ inline FGs2ScheduleEventValue EzEventToFGs2ScheduleEventValue(
 )
 {
     FGs2ScheduleEventValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ScheduleEventFunctionLibrary::EzEventToFGs2ScheduleEventValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.ScheduleType = Model->GetScheduleType() ? *Model->GetScheduleType() : "";

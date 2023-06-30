@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Chat/Domain/Model/Gs2ChatEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ChatNamespace.generated.h"
 
 USTRUCT(BlueprintType)

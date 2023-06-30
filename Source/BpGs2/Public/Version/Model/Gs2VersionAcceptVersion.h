@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Version/Domain/Model/Gs2VersionEzAcceptVersionGameSessionDomain.h"
 #include "Version/Model/Gs2VersionVersion.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2VersionAcceptVersion.generated.h"
 
 USTRUCT(BlueprintType)
@@ -47,6 +48,10 @@ inline FGs2VersionAcceptVersionValue EzAcceptVersionToFGs2VersionAcceptVersionVa
 )
 {
     FGs2VersionAcceptVersionValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2VersionAcceptVersionFunctionLibrary::EzAcceptVersionToFGs2VersionAcceptVersionValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.VersionName = Model->GetVersionName() ? *Model->GetVersionName() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.Version = Model->GetVersion() ? EzVersionToFGs2VersionVersion(Model->GetVersion()) : FGs2VersionVersion();

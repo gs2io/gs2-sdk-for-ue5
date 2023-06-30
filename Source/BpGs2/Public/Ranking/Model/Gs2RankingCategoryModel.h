@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Ranking/Domain/Model/Gs2RankingEzCategoryModelDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2RankingCategoryModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -48,6 +49,10 @@ inline FGs2RankingCategoryModelValue EzCategoryModelToFGs2RankingCategoryModelVa
 )
 {
     FGs2RankingCategoryModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingCategoryModelFunctionLibrary::EzCategoryModelToFGs2RankingCategoryModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.EntryPeriodEventId = Model->GetEntryPeriodEventId() ? *Model->GetEntryPeriodEventId() : "";

@@ -44,6 +44,11 @@ void UGs2QuestListOfQuestGroupModelAsyncFunction::Activate()
 {
     TArray<FGs2QuestQuestGroupModelValue> ReturnQuestGroupModels;
     FGs2Error ReturnError;
+
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestListOfQuestGroupModelAsyncFunction::Activate] Namespace parameter specification is missing."))
+        return;
+    }
     const auto It = Namespace.Value->QuestGroupModels(
     );
     for (auto v : *It)

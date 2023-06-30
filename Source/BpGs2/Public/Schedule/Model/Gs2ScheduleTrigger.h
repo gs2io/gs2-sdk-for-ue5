@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Schedule/Domain/Model/Gs2ScheduleEzTriggerGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ScheduleTrigger.generated.h"
 
 USTRUCT(BlueprintType)
@@ -48,6 +49,10 @@ inline FGs2ScheduleTriggerValue EzTriggerToFGs2ScheduleTriggerValue(
 )
 {
     FGs2ScheduleTriggerValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ScheduleTriggerFunctionLibrary::EzTriggerToFGs2ScheduleTriggerValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.TriggerId = Model->GetTriggerId() ? *Model->GetTriggerId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.CreatedAt = Model->GetCreatedAt() ? *Model->GetCreatedAt() : 0;

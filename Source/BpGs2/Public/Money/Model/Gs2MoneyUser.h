@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Money/Domain/Model/Gs2MoneyEzUserGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MoneyUser.generated.h"
 
 USTRUCT(BlueprintType)

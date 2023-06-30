@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Enhance/Domain/Model/Gs2EnhanceEzEnhanceGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2EnhanceEnhance.generated.h"
 
 USTRUCT(BlueprintType)

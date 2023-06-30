@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Mission/Domain/Model/Gs2MissionEzMissionGroupModelDomain.h"
 #include "Mission/Model/Gs2MissionMissionTaskModel.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2MissionMissionGroupModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -57,6 +58,10 @@ inline FGs2MissionMissionGroupModelValue EzMissionGroupModelToFGs2MissionMission
 )
 {
     FGs2MissionMissionGroupModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionMissionGroupModelFunctionLibrary::EzMissionGroupModelToFGs2MissionMissionGroupModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.Tasks = Model->GetTasks() ? [&]

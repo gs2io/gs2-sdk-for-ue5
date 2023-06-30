@@ -44,6 +44,11 @@ void UGs2QuestListOfQuestModelAsyncFunction::Activate()
 {
     TArray<FGs2QuestQuestModelValue> ReturnQuestModels;
     FGs2Error ReturnError;
+
+    if (QuestGroupModel.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2QuestListOfQuestModelAsyncFunction::Activate] QuestGroupModel parameter specification is missing."))
+        return;
+    }
     const auto It = QuestGroupModel.Value->QuestModels(
     );
     for (auto v : *It)

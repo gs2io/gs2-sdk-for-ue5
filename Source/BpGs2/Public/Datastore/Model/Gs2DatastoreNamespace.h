@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Datastore/Domain/Model/Gs2DatastoreEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2DatastoreNamespace.generated.h"
 
 USTRUCT(BlueprintType)

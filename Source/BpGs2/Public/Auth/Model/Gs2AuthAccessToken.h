@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Auth/Domain/Model/Gs2AuthEzAccessTokenDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2AuthAccessToken.generated.h"
 
 USTRUCT(BlueprintType)
@@ -46,6 +47,10 @@ inline FGs2AuthAccessTokenValue EzAccessTokenToFGs2AuthAccessTokenValue(
 )
 {
     FGs2AuthAccessTokenValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2AuthAccessTokenFunctionLibrary::EzAccessTokenToFGs2AuthAccessTokenValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Token = Model->GetToken() ? *Model->GetToken() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.Expire = Model->GetExpire() ? *Model->GetExpire() : 0;

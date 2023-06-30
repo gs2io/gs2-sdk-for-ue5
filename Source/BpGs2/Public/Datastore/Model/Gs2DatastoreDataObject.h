@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Datastore/Domain/Model/Gs2DatastoreEzDataObjectGameSessionDomain.h"
 #include "Datastore/Domain/Model/Gs2DatastoreEzDataObjectDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2DatastoreDataObject.generated.h"
 
 USTRUCT(BlueprintType)
@@ -67,6 +68,10 @@ inline FGs2DatastoreDataObjectValue EzDataObjectToFGs2DatastoreDataObjectValue(
 )
 {
     FGs2DatastoreDataObjectValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2DatastoreDataObjectFunctionLibrary::EzDataObjectToFGs2DatastoreDataObjectValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.DataObjectId = Model->GetDataObjectId() ? *Model->GetDataObjectId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";

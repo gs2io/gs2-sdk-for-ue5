@@ -46,6 +46,11 @@ void UGs2LimitListOfCounterAsyncFunction::Activate()
 {
     TArray<FGs2LimitCounterValue> ReturnCounters;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LimitListOfCounterAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Counters(
         LimitName
     );

@@ -46,6 +46,11 @@ void UGs2FriendListOfSendFriendRequestAsyncFunction::Activate()
 {
     TArray<FGs2FriendFriendRequest> ReturnSendFriendRequests;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendListOfSendFriendRequestAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->SendRequests(
     );
     for (auto v : *It)

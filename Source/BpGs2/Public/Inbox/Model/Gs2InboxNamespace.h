@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Inbox/Domain/Model/Gs2InboxEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2InboxNamespace.generated.h"
 
 USTRUCT(BlueprintType)

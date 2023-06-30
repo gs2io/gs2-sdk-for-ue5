@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "JobQueue/Domain/Model/Gs2JobQueueEzNamespaceDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2JobQueueNamespace.generated.h"
 
 USTRUCT(BlueprintType)

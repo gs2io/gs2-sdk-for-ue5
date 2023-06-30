@@ -50,6 +50,11 @@ void UGs2RankingListOfScoreAsyncFunction::Activate()
 {
     TArray<FGs2RankingScoreValue> ReturnScores;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingListOfScoreAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Scores(
         CategoryName,
         ScorerUserId

@@ -44,6 +44,11 @@ void UGs2FormationListOfMoldAsyncFunction::Activate()
 {
     TArray<FGs2FormationMoldValue> ReturnMolds;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationListOfMoldAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Molds(
     );
     for (auto v : *It)

@@ -44,6 +44,11 @@ void UGs2ScheduleListOfTriggerAsyncFunction::Activate()
 {
     TArray<FGs2ScheduleTriggerValue> ReturnTriggers;
     FGs2Error ReturnError;
+
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ScheduleListOfTriggerAsyncFunction::Activate] User parameter specification is missing."))
+        return;
+    }
     const auto It = User.Value->Triggers(
     );
     for (auto v : *It)

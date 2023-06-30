@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "SerialKey/Domain/Model/Gs2SerialKeyEzCampaignModelDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2SerialKeyCampaignModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -46,6 +47,10 @@ inline FGs2SerialKeyCampaignModelValue EzCampaignModelToFGs2SerialKeyCampaignMod
 )
 {
     FGs2SerialKeyCampaignModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SerialKeyCampaignModelFunctionLibrary::EzCampaignModelToFGs2SerialKeyCampaignModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.EnableCampaignCode = Model->GetEnableCampaignCode() ? *Model->GetEnableCampaignCode() : false;

@@ -44,6 +44,11 @@ void UGs2StaminaListOfStaminaModelAsyncFunction::Activate()
 {
     TArray<FGs2StaminaStaminaModelValue> ReturnStaminaModels;
     FGs2Error ReturnError;
+
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2StaminaListOfStaminaModelAsyncFunction::Activate] Namespace parameter specification is missing."))
+        return;
+    }
     const auto It = Namespace.Value->StaminaModels(
     );
     for (auto v : *It)

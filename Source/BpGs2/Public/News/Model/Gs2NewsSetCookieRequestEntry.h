@@ -20,6 +20,7 @@
 
 #include "CoreMinimal.h"
 #include "News/Domain/Model/Gs2NewsEzSetCookieRequestEntryGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2NewsSetCookieRequestEntry.generated.h"
 
 USTRUCT(BlueprintType)
@@ -46,9 +47,22 @@ inline FGs2NewsSetCookieRequestEntryValue EzSetCookieRequestEntryToFGs2NewsSetCo
 )
 {
     FGs2NewsSetCookieRequestEntryValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2NewsSetCookieRequestEntryFunctionLibrary::EzSetCookieRequestEntryToFGs2NewsSetCookieRequestEntryValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Key = Model->GetKey() ? *Model->GetKey() : "";
     Value.Value = Model->GetValue() ? *Model->GetValue() : "";
     return Value;
+}
+
+inline Gs2::UE5::News::Model::FEzSetCookieRequestEntryPtr FGs2NewsSetCookieRequestEntryValueToEzSetCookieRequestEntry(
+    const FGs2NewsSetCookieRequestEntryValue Model
+)
+{
+    return MakeShared<Gs2::UE5::News::Model::FEzSetCookieRequestEntry>()
+        ->WithKey(Model.Key)
+        ->WithValue(Model.Value);
 }
 
 UCLASS()

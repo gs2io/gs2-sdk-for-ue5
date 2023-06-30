@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Lottery/Domain/Model/Gs2LotteryEzLotteryModelDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2LotteryLotteryModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -48,6 +49,10 @@ inline FGs2LotteryLotteryModelValue EzLotteryModelToFGs2LotteryLotteryModelValue
 )
 {
     FGs2LotteryLotteryModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LotteryLotteryModelFunctionLibrary::EzLotteryModelToFGs2LotteryLotteryModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.Mode = Model->GetMode() ? *Model->GetMode() : "";

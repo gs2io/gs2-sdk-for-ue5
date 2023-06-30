@@ -44,6 +44,11 @@ void UGs2VersionListOfVersionModelAsyncFunction::Activate()
 {
     TArray<FGs2VersionVersionModelValue> ReturnVersionModels;
     FGs2Error ReturnError;
+
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2VersionListOfVersionModelAsyncFunction::Activate] Namespace parameter specification is missing."))
+        return;
+    }
     const auto It = Namespace.Value->VersionModels(
     );
     for (auto v : *It)

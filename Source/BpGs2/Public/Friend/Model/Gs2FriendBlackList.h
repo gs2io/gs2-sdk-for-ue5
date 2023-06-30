@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Friend/Domain/Model/Gs2FriendEzBlackListGameSessionDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FriendBlackList.generated.h"
 
 USTRUCT(BlueprintType)
@@ -44,6 +45,10 @@ inline FGs2FriendBlackListValue EzBlackListToFGs2FriendBlackListValue(
 )
 {
     FGs2FriendBlackListValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendBlackListFunctionLibrary::EzBlackListToFGs2FriendBlackListValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.TargetUserIds = Model->GetTargetUserIds() ? [&]
     {

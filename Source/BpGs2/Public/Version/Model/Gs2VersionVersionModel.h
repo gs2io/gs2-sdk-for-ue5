@@ -21,6 +21,7 @@
 #include "Version/Model/Gs2VersionVersion.h"
 #include "Version/Model/Gs2VersionVersion.h"
 #include "Version/Model/Gs2VersionVersion.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2VersionVersionModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -57,6 +58,10 @@ inline FGs2VersionVersionModelValue EzVersionModelToFGs2VersionVersionModelValue
 )
 {
     FGs2VersionVersionModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2VersionVersionModelFunctionLibrary::EzVersionModelToFGs2VersionVersionModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.WarningVersion = Model->GetWarningVersion() ? EzVersionToFGs2VersionVersion(Model->GetWarningVersion()) : FGs2VersionVersion();
