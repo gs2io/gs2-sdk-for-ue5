@@ -74,6 +74,14 @@ namespace Gs2::UE5::Inventory::Model
         this->ExpiresAtValue = ExpiresAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzItemSet> FEzItemSet::WithReferenceOf(
+        const TSharedPtr<TArray<FString>> ReferenceOf
+    )
+    {
+        this->ReferenceOfValue = ReferenceOf;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzItemSet::GetItemSetId() const
     {
         return ItemSetIdValue;
@@ -129,6 +137,10 @@ namespace Gs2::UE5::Inventory::Model
         }
         return FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue());
     }
+    TSharedPtr<TArray<FString>> FEzItemSet::GetReferenceOf() const
+    {
+        return ReferenceOfValue;
+    }
 
     Gs2::Inventory::Model::FItemSetPtr FEzItemSet::ToModel() const
     {
@@ -139,7 +151,8 @@ namespace Gs2::UE5::Inventory::Model
             ->WithItemName(ItemNameValue)
             ->WithCount(CountValue)
             ->WithSortValue(SortValueValue)
-            ->WithExpiresAt(ExpiresAtValue);
+            ->WithExpiresAt(ExpiresAtValue)
+            ->WithReferenceOf(ReferenceOfValue);
     }
 
     TSharedPtr<FEzItemSet> FEzItemSet::FromModel(const Gs2::Inventory::Model::FItemSetPtr Model)
@@ -155,6 +168,7 @@ namespace Gs2::UE5::Inventory::Model
             ->WithItemName(Model->GetItemName())
             ->WithCount(Model->GetCount())
             ->WithSortValue(Model->GetSortValue())
-            ->WithExpiresAt(Model->GetExpiresAt());
+            ->WithExpiresAt(Model->GetExpiresAt())
+            ->WithReferenceOf(Model->GetReferenceOf());
     }
 }

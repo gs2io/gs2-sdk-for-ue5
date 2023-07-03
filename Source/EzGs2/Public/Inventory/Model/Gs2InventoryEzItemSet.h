@@ -30,6 +30,7 @@ namespace Gs2::UE5::Inventory::Model
         TOptional<int64> CountValue;
         TOptional<int32> SortValueValue;
         TOptional<int64> ExpiresAtValue;
+        TSharedPtr<TArray<FString>> ReferenceOfValue;
 
 	public:
         TSharedPtr<FEzItemSet> WithItemSetId(const TOptional<FString> ItemSetId);
@@ -39,6 +40,7 @@ namespace Gs2::UE5::Inventory::Model
         TSharedPtr<FEzItemSet> WithCount(const TOptional<int64> Count);
         TSharedPtr<FEzItemSet> WithSortValue(const TOptional<int32> SortValue);
         TSharedPtr<FEzItemSet> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FEzItemSet> WithReferenceOf(const TSharedPtr<TArray<FString>> ReferenceOf);
 
         TOptional<FString> GetItemSetId() const;
 
@@ -56,6 +58,8 @@ namespace Gs2::UE5::Inventory::Model
 
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
+
+        TSharedPtr<TArray<FString>> GetReferenceOf() const;
 
         Gs2::Inventory::Model::FItemSetPtr ToModel() const;
         static TSharedPtr<FEzItemSet> FromModel(Gs2::Inventory::Model::FItemSetPtr Model);

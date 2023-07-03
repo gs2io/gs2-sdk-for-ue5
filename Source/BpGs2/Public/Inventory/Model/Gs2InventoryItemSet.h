@@ -48,6 +48,8 @@ struct FGs2InventoryItemSetValue
     int32 SortValue = 0;
     UPROPERTY(BlueprintReadOnly)
     int64 ExpiresAt = 0;
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FString> ReferenceOf = TArray<FString>();
 };
 
 inline FGs2InventoryItemSetValue EzItemSetToFGs2InventoryItemSetValue(
@@ -66,6 +68,15 @@ inline FGs2InventoryItemSetValue EzItemSetToFGs2InventoryItemSetValue(
     Value.Count = Model->GetCount() ? *Model->GetCount() : 0;
     Value.SortValue = Model->GetSortValue() ? *Model->GetSortValue() : 0;
     Value.ExpiresAt = Model->GetExpiresAt() ? *Model->GetExpiresAt() : 0;
+    Value.ReferenceOf = Model->GetReferenceOf() ? [&]
+    {
+        TArray<FString> r;
+        for (auto v : *Model->GetReferenceOf())
+        {
+            r.Add(v);
+        }
+        return r;
+    }() : TArray<FString>();
     return Value;
 }
 
@@ -80,7 +91,14 @@ inline Gs2::UE5::Inventory::Model::FEzItemSetPtr FGs2InventoryItemSetValueToEzIt
         ->WithItemName(Model.ItemName)
         ->WithCount(Model.Count)
         ->WithSortValue(Model.SortValue)
-        ->WithExpiresAt(Model.ExpiresAt);
+        ->WithExpiresAt(Model.ExpiresAt)
+        ->WithReferenceOf([&]{
+            auto r = MakeShared<TArray<FString>>();
+            for (auto v : Model.ReferenceOf) {
+                r->Add(v);
+            }
+            return r;
+        }());
 }
 
 UCLASS()
