@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Exchange/Domain/Model/Namespace.h"
 #include "Exchange/Model/Gs2ExchangeEzRateModel.h"
+#include "Exchange/Model/Gs2ExchangeEzIncrementalRateModel.h"
 #include "Exchange/Model/Gs2ExchangeEzAwait.h"
 #include "Exchange/Model/Gs2ExchangeEzConfig.h"
 #include "Exchange/Model/Gs2ExchangeEzAcquireAction.h"
@@ -28,6 +29,8 @@
 #include "Gs2ExchangeEzUserDomain.h"
 #include "Gs2ExchangeEzUserDomain.h"
 #include "Gs2ExchangeEzUserGameSessionDomain.h"
+#include "Gs2ExchangeEzIncrementalRateModelDomain.h"
+#include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeIncrementalRateModelsIterator.h"
 #include "Gs2ExchangeEzNamespaceDomain.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
@@ -60,6 +63,13 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
         Gs2::UE5::Exchange::Domain::Model::FEzUserGameSessionDomainPtr Me(
             Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+        ) const;
+
+        Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIteratorPtr IncrementalRateModels(
+        ) const;
+
+        Gs2::UE5::Exchange::Domain::Model::FEzIncrementalRateModelDomainPtr IncrementalRateModel(
+            const FString RateName
         ) const;
 
     };

@@ -44,12 +44,36 @@
 #include "Task/WebSocket/UpdateRateModelMasterTask.h"
 #include "Request/DeleteRateModelMasterRequest.h"
 #include "Task/WebSocket/DeleteRateModelMasterTask.h"
+#include "Request/DescribeIncrementalRateModelsRequest.h"
+#include "Task/WebSocket/DescribeIncrementalRateModelsTask.h"
+#include "Request/GetIncrementalRateModelRequest.h"
+#include "Task/WebSocket/GetIncrementalRateModelTask.h"
+#include "Request/DescribeIncrementalRateModelMastersRequest.h"
+#include "Task/WebSocket/DescribeIncrementalRateModelMastersTask.h"
+#include "Request/CreateIncrementalRateModelMasterRequest.h"
+#include "Task/WebSocket/CreateIncrementalRateModelMasterTask.h"
+#include "Request/GetIncrementalRateModelMasterRequest.h"
+#include "Task/WebSocket/GetIncrementalRateModelMasterTask.h"
+#include "Request/UpdateIncrementalRateModelMasterRequest.h"
+#include "Task/WebSocket/UpdateIncrementalRateModelMasterTask.h"
+#include "Request/DeleteIncrementalRateModelMasterRequest.h"
+#include "Task/WebSocket/DeleteIncrementalRateModelMasterTask.h"
 #include "Request/ExchangeRequest.h"
 #include "Task/WebSocket/ExchangeTask.h"
 #include "Request/ExchangeByUserIdRequest.h"
 #include "Task/WebSocket/ExchangeByUserIdTask.h"
 #include "Request/ExchangeByStampSheetRequest.h"
 #include "Task/WebSocket/ExchangeByStampSheetTask.h"
+#include "Request/IncrementalExchangeRequest.h"
+#include "Task/WebSocket/IncrementalExchangeTask.h"
+#include "Request/IncrementalExchangeByUserIdRequest.h"
+#include "Task/WebSocket/IncrementalExchangeByUserIdTask.h"
+#include "Request/IncrementalExchangeByStampSheetRequest.h"
+#include "Task/WebSocket/IncrementalExchangeByStampSheetTask.h"
+#include "Request/UnlockIncrementalExchangeByUserIdRequest.h"
+#include "Task/WebSocket/UnlockIncrementalExchangeByUserIdTask.h"
+#include "Request/UnlockIncrementalExchangeByStampSheetRequest.h"
+#include "Task/WebSocket/UnlockIncrementalExchangeByStampSheetTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentRateMasterRequest.h"
@@ -150,6 +174,34 @@ namespace Gs2::Exchange
             const Request::FDeleteRateModelMasterRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeIncrementalRateModelsTask>> DescribeIncrementalRateModels(
+            const Request::FDescribeIncrementalRateModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetIncrementalRateModelTask>> GetIncrementalRateModel(
+            const Request::FGetIncrementalRateModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeIncrementalRateModelMastersTask>> DescribeIncrementalRateModelMasters(
+            const Request::FDescribeIncrementalRateModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateIncrementalRateModelMasterTask>> CreateIncrementalRateModelMaster(
+            const Request::FCreateIncrementalRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetIncrementalRateModelMasterTask>> GetIncrementalRateModelMaster(
+            const Request::FGetIncrementalRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateIncrementalRateModelMasterTask>> UpdateIncrementalRateModelMaster(
+            const Request::FUpdateIncrementalRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteIncrementalRateModelMasterTask>> DeleteIncrementalRateModelMaster(
+            const Request::FDeleteIncrementalRateModelMasterRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FExchangeTask>> Exchange(
             const Request::FExchangeRequestPtr Request
         ) const;
@@ -160,6 +212,26 @@ namespace Gs2::Exchange
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExchangeByStampSheetTask>> ExchangeByStampSheet(
             const Request::FExchangeByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementalExchangeTask>> IncrementalExchange(
+            const Request::FIncrementalExchangeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementalExchangeByUserIdTask>> IncrementalExchangeByUserId(
+            const Request::FIncrementalExchangeByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementalExchangeByStampSheetTask>> IncrementalExchangeByStampSheet(
+            const Request::FIncrementalExchangeByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByUserIdTask>> UnlockIncrementalExchangeByUserId(
+            const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByStampSheetTask>> UnlockIncrementalExchangeByStampSheet(
+            const Request::FUnlockIncrementalExchangeByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

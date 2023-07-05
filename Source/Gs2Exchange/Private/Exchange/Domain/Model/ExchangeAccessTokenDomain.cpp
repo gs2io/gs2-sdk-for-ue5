@@ -27,6 +27,8 @@
 #include "Exchange/Domain/Model/Namespace.h"
 #include "Exchange/Domain/Model/RateModel.h"
 #include "Exchange/Domain/Model/RateModelMaster.h"
+#include "Exchange/Domain/Model/IncrementalRateModel.h"
+#include "Exchange/Domain/Model/IncrementalRateModelMaster.h"
 #include "Exchange/Domain/Model/Exchange.h"
 #include "Exchange/Domain/Model/ExchangeAccessToken.h"
 #include "Exchange/Domain/Model/CurrentRateMaster.h"
@@ -168,6 +170,99 @@ namespace Gs2::Exchange::Domain::Model
         Request::FExchangeRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FExchangeTask>>(this->AsShared(), Request);
+    }
+
+    FExchangeAccessTokenDomain::FIncrementalTask::FIncrementalTask(
+        const TSharedPtr<FExchangeAccessTokenDomain> Self,
+        const Request::FIncrementalExchangeRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FExchangeAccessTokenDomain::FIncrementalTask::FIncrementalTask(
+        const FIncrementalTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FExchangeAccessTokenDomain::FIncrementalTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FExchangeAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->IncrementalExchange(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "IncrementalRateModel"
+                );
+                const auto Key = Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FIncrementalRateModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (ResultModel && ResultModel->GetStampSheet())
+        {
+            const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                Self->Cache,
+                Self->JobQueueDomain,
+                Self->Session,
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId(),
+                Self->StampSheetConfiguration
+            );
+            const auto Future3 = StampSheet->Run();
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return MakeShared<Core::Model::FTransactionError<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>(
+                    Future3->GetTask().Error()->GetErrors(),
+                    [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
+                    {
+                        return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                            Self->Cache,
+                            Self->JobQueueDomain,
+                            Self->Session,
+                            *ResultModel->GetStampSheet(),
+                            *ResultModel->GetStampSheetEncryptionKeyId(),
+                            Self->StampSheetConfiguration
+                        )->Run();
+                    }
+                );
+            }
+            Future3->EnsureCompletion();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FExchangeAccessTokenDomain::FIncrementalTask>> FExchangeAccessTokenDomain::Incremental(
+        Request::FIncrementalExchangeRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FIncrementalTask>>(this->AsShared(), Request);
     }
 
     FString FExchangeAccessTokenDomain::CreateCacheParentKey(

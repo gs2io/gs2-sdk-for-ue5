@@ -73,4 +73,25 @@ namespace Gs2::UE5::Exchange::Domain::Model
             ProfileValue
         );
     }
+
+    Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIteratorPtr FEzNamespaceDomain::IncrementalRateModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIterator>(
+            Domain->IncrementalRateModels(
+            )
+        );
+    }
+
+    Gs2::UE5::Exchange::Domain::Model::FEzIncrementalRateModelDomainPtr FEzNamespaceDomain::IncrementalRateModel(
+        const FString RateName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Exchange::Domain::Model::FEzIncrementalRateModelDomain>(
+            Domain->IncrementalRateModel(
+                RateName
+            ),
+            ProfileValue
+        );
+    }
 }

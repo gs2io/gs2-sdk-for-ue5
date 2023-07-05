@@ -44,4 +44,10 @@ class BPGS2_API UGs2ExchangeNamespaceFunctionLibrary : public UBlueprintFunction
         FGs2ExchangeNamespace Namespace,
         FGs2AccessToken AccessToken
     );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Exchange::IncrementalRateModel", Category="Game Server Services|GS2-Exchange|Namespace|IncrementalRateModel", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="IncrementalRateModel") FGs2ExchangeIncrementalRateModel IncrementalRateModel(
+        FGs2ExchangeNamespace Namespace,
+        FString RateName
+    );
 };

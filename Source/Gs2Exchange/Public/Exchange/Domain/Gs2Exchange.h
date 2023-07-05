@@ -27,6 +27,8 @@
 #include "Exchange/Domain/Model/Namespace.h"
 #include "Exchange/Domain/Model/RateModel.h"
 #include "Exchange/Domain/Model/RateModelMaster.h"
+#include "Exchange/Domain/Model/IncrementalRateModel.h"
+#include "Exchange/Domain/Model/IncrementalRateModelMaster.h"
 #include "Exchange/Domain/Model/Exchange.h"
 #include "Exchange/Domain/Model/ExchangeAccessToken.h"
 #include "Exchange/Domain/Model/CurrentRateMaster.h"
@@ -39,6 +41,8 @@
 #include "Exchange/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelMastersIterator.h"
+#include "Exchange/Domain/Iterator/DescribeIncrementalRateModelsIterator.h"
+#include "Exchange/Domain/Iterator/DescribeIncrementalRateModelMastersIterator.h"
 #include "Exchange/Domain/Iterator/DescribeAwaitsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeAwaitsByUserIdIterator.h"
 

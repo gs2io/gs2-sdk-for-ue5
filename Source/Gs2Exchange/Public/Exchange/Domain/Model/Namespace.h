@@ -24,6 +24,8 @@
 #include "Exchange/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelMastersIterator.h"
+#include "Exchange/Domain/Iterator/DescribeIncrementalRateModelsIterator.h"
+#include "Exchange/Domain/Iterator/DescribeIncrementalRateModelMastersIterator.h"
 #include "Exchange/Domain/Iterator/DescribeAwaitsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeAwaitsByUserIdIterator.h"
 
@@ -32,6 +34,8 @@ namespace Gs2::Exchange::Domain::Model
     class FNamespaceDomain;
     class FRateModelDomain;
     class FRateModelMasterDomain;
+    class FIncrementalRateModelDomain;
+    class FIncrementalRateModelMasterDomain;
     class FExchangeDomain;
     class FExchangeAccessTokenDomain;
     class FCurrentRateMasterDomain;
@@ -210,6 +214,32 @@ namespace Gs2::Exchange::Domain::Model
             Request::FCreateRateModelMasterRequestPtr Request
         );
 
+        class GS2EXCHANGE_API FCreateIncrementalRateModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain>,
+            public TSharedFromThis<FCreateIncrementalRateModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateIncrementalRateModelMasterRequestPtr Request;
+        public:
+            explicit FCreateIncrementalRateModelMasterTask(
+                const TSharedPtr<FNamespaceDomain> Self,
+                const Request::FCreateIncrementalRateModelMasterRequestPtr Request
+            );
+
+            FCreateIncrementalRateModelMasterTask(
+                const FCreateIncrementalRateModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateIncrementalRateModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateIncrementalRateModelMasterTask>> CreateIncrementalRateModelMaster(
+            Request::FCreateIncrementalRateModelMasterRequestPtr Request
+        );
+
         Gs2::Exchange::Domain::Iterator::FDescribeRateModelMastersIteratorPtr RateModelMasters(
         ) const;
 
@@ -233,6 +263,20 @@ namespace Gs2::Exchange::Domain::Model
 
         TSharedPtr<Gs2::Exchange::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        ) const;
+
+        Gs2::Exchange::Domain::Iterator::FDescribeIncrementalRateModelsIteratorPtr IncrementalRateModels(
+        ) const;
+
+        TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain> IncrementalRateModel(
+            const FString RateName
+        ) const;
+
+        Gs2::Exchange::Domain::Iterator::FDescribeIncrementalRateModelMastersIteratorPtr IncrementalRateModelMasters(
+        ) const;
+
+        TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain> IncrementalRateModelMaster(
+            const FString RateName
         ) const;
 
         static FString CreateCacheParentKey(

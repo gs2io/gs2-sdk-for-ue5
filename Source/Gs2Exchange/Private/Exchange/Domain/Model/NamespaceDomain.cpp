@@ -26,6 +26,8 @@
 #include "Exchange/Domain/Model/Namespace.h"
 #include "Exchange/Domain/Model/RateModel.h"
 #include "Exchange/Domain/Model/RateModelMaster.h"
+#include "Exchange/Domain/Model/IncrementalRateModel.h"
+#include "Exchange/Domain/Model/IncrementalRateModelMaster.h"
 #include "Exchange/Domain/Model/Exchange.h"
 #include "Exchange/Domain/Model/ExchangeAccessToken.h"
 #include "Exchange/Domain/Model/CurrentRateMaster.h"
@@ -355,6 +357,76 @@ namespace Gs2::Exchange::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateRateModelMasterTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FCreateIncrementalRateModelMasterTask::FCreateIncrementalRateModelMasterTask(
+        const TSharedPtr<FNamespaceDomain> Self,
+        const Request::FCreateIncrementalRateModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateIncrementalRateModelMasterTask::FCreateIncrementalRateModelMasterTask(
+        const FCreateIncrementalRateModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateIncrementalRateModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateIncrementalRateModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "IncrementalRateModelMaster"
+                );
+                const auto Key = Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Put(
+                    Gs2::Exchange::Model::FIncrementalRateModelMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain>(
+            Self->Cache,
+            Self->JobQueueDomain,
+            Self->StampSheetConfiguration,
+            Self->Session,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateIncrementalRateModelMasterTask>> FNamespaceDomain::CreateIncrementalRateModelMaster(
+        Request::FCreateIncrementalRateModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateIncrementalRateModelMasterTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Exchange::Domain::Iterator::FDescribeRateModelMastersIteratorPtr FNamespaceDomain::RateModelMasters(
     ) const
     {
@@ -440,6 +512,54 @@ namespace Gs2::Exchange::Domain::Model
             Session,
             NamespaceName,
             AccessToken
+        );
+    }
+
+    Gs2::Exchange::Domain::Iterator::FDescribeIncrementalRateModelsIteratorPtr FNamespaceDomain::IncrementalRateModels(
+    ) const
+    {
+        return MakeShared<Gs2::Exchange::Domain::Iterator::FDescribeIncrementalRateModelsIterator>(
+            Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain> FNamespaceDomain::IncrementalRateModel(
+        const FString RateName
+    ) const
+    {
+        return MakeShared<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            RateName
+        );
+    }
+
+    Gs2::Exchange::Domain::Iterator::FDescribeIncrementalRateModelMastersIteratorPtr FNamespaceDomain::IncrementalRateModelMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Exchange::Domain::Iterator::FDescribeIncrementalRateModelMastersIterator>(
+            Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain> FNamespaceDomain::IncrementalRateModelMaster(
+        const FString RateName
+    ) const
+    {
+        return MakeShared<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            RateName
         );
     }
 

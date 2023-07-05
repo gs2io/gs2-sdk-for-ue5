@@ -24,6 +24,8 @@
 #include "Exchange/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelMastersIterator.h"
+#include "Exchange/Domain/Iterator/DescribeIncrementalRateModelsIterator.h"
+#include "Exchange/Domain/Iterator/DescribeIncrementalRateModelMastersIterator.h"
 #include "Exchange/Domain/Iterator/DescribeAwaitsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeAwaitsByUserIdIterator.h"
 
@@ -32,6 +34,8 @@ namespace Gs2::Exchange::Domain::Model
     class FNamespaceDomain;
     class FRateModelDomain;
     class FRateModelMasterDomain;
+    class FIncrementalRateModelDomain;
+    class FIncrementalRateModelMasterDomain;
     class FExchangeDomain;
     class FExchangeAccessTokenDomain;
     class FCurrentRateMasterDomain;

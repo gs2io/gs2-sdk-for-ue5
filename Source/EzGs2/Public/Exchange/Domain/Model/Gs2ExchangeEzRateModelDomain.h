@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Exchange/Domain/Model/RateModel.h"
 #include "Exchange/Model/Gs2ExchangeEzRateModel.h"
+#include "Exchange/Model/Gs2ExchangeEzIncrementalRateModel.h"
 #include "Exchange/Model/Gs2ExchangeEzAwait.h"
 #include "Exchange/Model/Gs2ExchangeEzConfig.h"
 #include "Exchange/Model/Gs2ExchangeEzAcquireAction.h"

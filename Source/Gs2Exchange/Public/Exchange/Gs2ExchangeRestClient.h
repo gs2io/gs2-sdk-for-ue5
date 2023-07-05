@@ -44,12 +44,36 @@
 #include "Task/Rest/UpdateRateModelMasterTask.h"
 #include "Request/DeleteRateModelMasterRequest.h"
 #include "Task/Rest/DeleteRateModelMasterTask.h"
+#include "Request/DescribeIncrementalRateModelsRequest.h"
+#include "Task/Rest/DescribeIncrementalRateModelsTask.h"
+#include "Request/GetIncrementalRateModelRequest.h"
+#include "Task/Rest/GetIncrementalRateModelTask.h"
+#include "Request/DescribeIncrementalRateModelMastersRequest.h"
+#include "Task/Rest/DescribeIncrementalRateModelMastersTask.h"
+#include "Request/CreateIncrementalRateModelMasterRequest.h"
+#include "Task/Rest/CreateIncrementalRateModelMasterTask.h"
+#include "Request/GetIncrementalRateModelMasterRequest.h"
+#include "Task/Rest/GetIncrementalRateModelMasterTask.h"
+#include "Request/UpdateIncrementalRateModelMasterRequest.h"
+#include "Task/Rest/UpdateIncrementalRateModelMasterTask.h"
+#include "Request/DeleteIncrementalRateModelMasterRequest.h"
+#include "Task/Rest/DeleteIncrementalRateModelMasterTask.h"
 #include "Request/ExchangeRequest.h"
 #include "Task/Rest/ExchangeTask.h"
 #include "Request/ExchangeByUserIdRequest.h"
 #include "Task/Rest/ExchangeByUserIdTask.h"
 #include "Request/ExchangeByStampSheetRequest.h"
 #include "Task/Rest/ExchangeByStampSheetTask.h"
+#include "Request/IncrementalExchangeRequest.h"
+#include "Task/Rest/IncrementalExchangeTask.h"
+#include "Request/IncrementalExchangeByUserIdRequest.h"
+#include "Task/Rest/IncrementalExchangeByUserIdTask.h"
+#include "Request/IncrementalExchangeByStampSheetRequest.h"
+#include "Task/Rest/IncrementalExchangeByStampSheetTask.h"
+#include "Request/UnlockIncrementalExchangeByUserIdRequest.h"
+#include "Task/Rest/UnlockIncrementalExchangeByUserIdTask.h"
+#include "Request/UnlockIncrementalExchangeByStampSheetRequest.h"
+#include "Task/Rest/UnlockIncrementalExchangeByStampSheetTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentRateMasterRequest.h"
@@ -150,6 +174,34 @@ namespace Gs2::Exchange
             const Request::FDeleteRateModelMasterRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeIncrementalRateModelsTask>> DescribeIncrementalRateModels(
+            const Request::FDescribeIncrementalRateModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetIncrementalRateModelTask>> GetIncrementalRateModel(
+            const Request::FGetIncrementalRateModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeIncrementalRateModelMastersTask>> DescribeIncrementalRateModelMasters(
+            const Request::FDescribeIncrementalRateModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateIncrementalRateModelMasterTask>> CreateIncrementalRateModelMaster(
+            const Request::FCreateIncrementalRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetIncrementalRateModelMasterTask>> GetIncrementalRateModelMaster(
+            const Request::FGetIncrementalRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateIncrementalRateModelMasterTask>> UpdateIncrementalRateModelMaster(
+            const Request::FUpdateIncrementalRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteIncrementalRateModelMasterTask>> DeleteIncrementalRateModelMaster(
+            const Request::FDeleteIncrementalRateModelMasterRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FExchangeTask>> Exchange(
             const Request::FExchangeRequestPtr Request
         ) const;
@@ -160,6 +212,26 @@ namespace Gs2::Exchange
 
         TSharedPtr<FAsyncTask<Task::Rest::FExchangeByStampSheetTask>> ExchangeByStampSheet(
             const Request::FExchangeByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIncrementalExchangeTask>> IncrementalExchange(
+            const Request::FIncrementalExchangeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIncrementalExchangeByUserIdTask>> IncrementalExchangeByUserId(
+            const Request::FIncrementalExchangeByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIncrementalExchangeByStampSheetTask>> IncrementalExchangeByStampSheet(
+            const Request::FIncrementalExchangeByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByUserIdTask>> UnlockIncrementalExchangeByUserId(
+            const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByStampSheetTask>> UnlockIncrementalExchangeByStampSheet(
+            const Request::FUnlockIncrementalExchangeByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

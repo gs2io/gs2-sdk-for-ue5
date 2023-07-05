@@ -136,6 +136,69 @@ namespace Gs2::Exchange
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeIncrementalRateModelsTask>> FGs2ExchangeRestClient::DescribeIncrementalRateModels(
+        const Request::FDescribeIncrementalRateModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeIncrementalRateModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetIncrementalRateModelTask>> FGs2ExchangeRestClient::GetIncrementalRateModel(
+        const Request::FGetIncrementalRateModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetIncrementalRateModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeIncrementalRateModelMastersTask>> FGs2ExchangeRestClient::DescribeIncrementalRateModelMasters(
+        const Request::FDescribeIncrementalRateModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeIncrementalRateModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateIncrementalRateModelMasterTask>> FGs2ExchangeRestClient::CreateIncrementalRateModelMaster(
+        const Request::FCreateIncrementalRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateIncrementalRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetIncrementalRateModelMasterTask>> FGs2ExchangeRestClient::GetIncrementalRateModelMaster(
+        const Request::FGetIncrementalRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetIncrementalRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateIncrementalRateModelMasterTask>> FGs2ExchangeRestClient::UpdateIncrementalRateModelMaster(
+        const Request::FUpdateIncrementalRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateIncrementalRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteIncrementalRateModelMasterTask>> FGs2ExchangeRestClient::DeleteIncrementalRateModelMaster(
+        const Request::FDeleteIncrementalRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteIncrementalRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FExchangeTask>> FGs2ExchangeRestClient::Exchange(
         const Request::FExchangeRequestPtr Request) const
     {
@@ -158,6 +221,51 @@ namespace Gs2::Exchange
         const Request::FExchangeByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FExchangeByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FIncrementalExchangeTask>> FGs2ExchangeRestClient::IncrementalExchange(
+        const Request::FIncrementalExchangeRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncrementalExchangeTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FIncrementalExchangeByUserIdTask>> FGs2ExchangeRestClient::IncrementalExchangeByUserId(
+        const Request::FIncrementalExchangeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncrementalExchangeByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FIncrementalExchangeByStampSheetTask>> FGs2ExchangeRestClient::IncrementalExchangeByStampSheet(
+        const Request::FIncrementalExchangeByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncrementalExchangeByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByUserIdTask>> FGs2ExchangeRestClient::UnlockIncrementalExchangeByUserId(
+        const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByStampSheetTask>> FGs2ExchangeRestClient::UnlockIncrementalExchangeByStampSheet(
+        const Request::FUnlockIncrementalExchangeByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUnlockIncrementalExchangeByStampSheetTask>>(
             Session,
             Request
         );

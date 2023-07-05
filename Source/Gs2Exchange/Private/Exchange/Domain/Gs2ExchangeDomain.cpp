@@ -28,6 +28,8 @@
 #include "Exchange/Domain/Model/Namespace.h"
 #include "Exchange/Domain/Model/RateModel.h"
 #include "Exchange/Domain/Model/RateModelMaster.h"
+#include "Exchange/Domain/Model/IncrementalRateModel.h"
+#include "Exchange/Domain/Model/IncrementalRateModelMaster.h"
 #include "Exchange/Domain/Model/Exchange.h"
 #include "Exchange/Domain/Model/CurrentRateMaster.h"
 #include "Exchange/Domain/Model/Await.h"
@@ -188,6 +190,74 @@ namespace Gs2::Exchange::Domain
                 );
             }
         }
+        if (Method == "IncrementalExchangeByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Exchange::Request::FIncrementalExchangeByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Exchange::Result::FIncrementalExchangeByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "IncrementalRateModel"
+                );
+                const auto Key = Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Exchange::Model::FIncrementalRateModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "UnlockIncrementalExchangeByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Exchange::Request::FUnlockIncrementalExchangeByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Exchange::Result::FUnlockIncrementalExchangeByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "IncrementalRateModel"
+                );
+                const auto Key = Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Exchange::Model::FIncrementalRateModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "CreateAwaitByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -301,6 +371,90 @@ namespace Gs2::Exchange::Domain
                 );
                 Cache->Put(
                     Gs2::Exchange::Model::FRateModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "incremental_exchange_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Exchange::Request::FIncrementalExchangeByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Exchange::Result::FIncrementalExchangeByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "IncrementalRateModel"
+                );
+                const auto Key = Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Exchange::Model::FIncrementalRateModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "unlock_incremental_exchange_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Exchange::Request::FUnlockIncrementalExchangeByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Exchange::Result::FUnlockIncrementalExchangeByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "IncrementalRateModel"
+                );
+                const auto Key = Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Exchange::Model::FIncrementalRateModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

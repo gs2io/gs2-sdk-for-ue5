@@ -16,9 +16,11 @@
 
 #include "BpGs2/Public/Exchange/Model/Gs2ExchangeNamespace.h"
 #include "BpGs2/Public/Exchange/Model/Gs2ExchangeRateModel.h"
+#include "BpGs2/Public/Exchange/Model/Gs2ExchangeIncrementalRateModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Exchange/Model/Gs2ExchangeRateModel.h"
 #include "Exchange/Model/Gs2ExchangeUser.h"
+#include "Exchange/Model/Gs2ExchangeIncrementalRateModel.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2ExchangeRateModel UGs2ExchangeNamespaceFunctionLibrary::RateModel(
@@ -56,5 +58,25 @@ FGs2ExchangeOwnUser UGs2ExchangeNamespaceFunctionLibrary::Me(
         return Return;
     }
     Return.Value = Namespace.Value->Me(AccessToken.Value);
+    return Return;
+}
+
+FGs2ExchangeIncrementalRateModel UGs2ExchangeNamespaceFunctionLibrary::IncrementalRateModel(
+    FGs2ExchangeNamespace Namespace,
+    FString RateName
+)
+{
+    FGs2ExchangeIncrementalRateModel Return;
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ExchangeNamespaceFunctionLibrary::IncrementalRateModel] Namespace parameter specification is missing."))
+        return Return;
+    }
+    if (RateName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ExchangeNamespaceFunctionLibrary::IncrementalRateModel] RateName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = Namespace.Value->IncrementalRateModel(
+        RateName
+    );
     return Return;
 }

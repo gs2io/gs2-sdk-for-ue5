@@ -136,6 +136,69 @@ namespace Gs2::Exchange
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeIncrementalRateModelsTask>> FGs2ExchangeWebSocketClient::DescribeIncrementalRateModels(
+        const Request::FDescribeIncrementalRateModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeIncrementalRateModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetIncrementalRateModelTask>> FGs2ExchangeWebSocketClient::GetIncrementalRateModel(
+        const Request::FGetIncrementalRateModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetIncrementalRateModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeIncrementalRateModelMastersTask>> FGs2ExchangeWebSocketClient::DescribeIncrementalRateModelMasters(
+        const Request::FDescribeIncrementalRateModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeIncrementalRateModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateIncrementalRateModelMasterTask>> FGs2ExchangeWebSocketClient::CreateIncrementalRateModelMaster(
+        const Request::FCreateIncrementalRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateIncrementalRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetIncrementalRateModelMasterTask>> FGs2ExchangeWebSocketClient::GetIncrementalRateModelMaster(
+        const Request::FGetIncrementalRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetIncrementalRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateIncrementalRateModelMasterTask>> FGs2ExchangeWebSocketClient::UpdateIncrementalRateModelMaster(
+        const Request::FUpdateIncrementalRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateIncrementalRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteIncrementalRateModelMasterTask>> FGs2ExchangeWebSocketClient::DeleteIncrementalRateModelMaster(
+        const Request::FDeleteIncrementalRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteIncrementalRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FExchangeTask>> FGs2ExchangeWebSocketClient::Exchange(
         const Request::FExchangeRequestPtr Request) const
     {
@@ -158,6 +221,51 @@ namespace Gs2::Exchange
         const Request::FExchangeByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FExchangeByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementalExchangeTask>> FGs2ExchangeWebSocketClient::IncrementalExchange(
+        const Request::FIncrementalExchangeRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIncrementalExchangeTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementalExchangeByUserIdTask>> FGs2ExchangeWebSocketClient::IncrementalExchangeByUserId(
+        const Request::FIncrementalExchangeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIncrementalExchangeByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementalExchangeByStampSheetTask>> FGs2ExchangeWebSocketClient::IncrementalExchangeByStampSheet(
+        const Request::FIncrementalExchangeByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIncrementalExchangeByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByUserIdTask>> FGs2ExchangeWebSocketClient::UnlockIncrementalExchangeByUserId(
+        const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByStampSheetTask>> FGs2ExchangeWebSocketClient::UnlockIncrementalExchangeByStampSheet(
+        const Request::FUnlockIncrementalExchangeByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUnlockIncrementalExchangeByStampSheetTask>>(
             Session,
             Request
         );

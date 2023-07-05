@@ -24,6 +24,8 @@
 #include "Exchange/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelMastersIterator.h"
+#include "Exchange/Domain/Iterator/DescribeIncrementalRateModelsIterator.h"
+#include "Exchange/Domain/Iterator/DescribeIncrementalRateModelMastersIterator.h"
 #include "Exchange/Domain/Iterator/DescribeAwaitsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeAwaitsByUserIdIterator.h"
 
@@ -32,6 +34,8 @@ namespace Gs2::Exchange::Domain::Model
     class FNamespaceDomain;
     class FRateModelDomain;
     class FRateModelMasterDomain;
+    class FIncrementalRateModelDomain;
+    class FIncrementalRateModelMasterDomain;
     class FExchangeDomain;
     class FExchangeAccessTokenDomain;
     class FCurrentRateMasterDomain;
@@ -107,6 +111,32 @@ namespace Gs2::Exchange::Domain::Model
 
         TSharedPtr<FAsyncTask<FExchangeTask>> Exchange(
             Request::FExchangeRequestPtr Request
+        );
+
+        class GS2EXCHANGE_API FIncrementalTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FExchangeAccessTokenDomain>,
+            public TSharedFromThis<FIncrementalTask>
+        {
+            const TSharedPtr<FExchangeAccessTokenDomain> Self;
+            const Request::FIncrementalExchangeRequestPtr Request;
+        public:
+            explicit FIncrementalTask(
+                const TSharedPtr<FExchangeAccessTokenDomain> Self,
+                const Request::FIncrementalExchangeRequestPtr Request
+            );
+
+            FIncrementalTask(
+                const FIncrementalTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FExchangeAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FIncrementalTask;
+
+        TSharedPtr<FAsyncTask<FIncrementalTask>> Incremental(
+            Request::FIncrementalExchangeRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

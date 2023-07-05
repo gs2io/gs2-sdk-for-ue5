@@ -20,6 +20,8 @@
 #include "Model/Namespace.h"
 #include "Model/RateModel.h"
 #include "Model/RateModelMaster.h"
+#include "Model/IncrementalRateModel.h"
+#include "Model/IncrementalRateModelMaster.h"
 #include "Model/CurrentRateMaster.h"
 #include "Model/Await.h"
 #include "Model/AcquireAction.h"
@@ -108,6 +110,48 @@
 #include "Task/Rest/DeleteRateModelMasterTask.h"
 #include "Task/WebSocket/DeleteRateModelMasterTask.h"
 
+// DescribeIncrementalRateModels
+#include "Request/DescribeIncrementalRateModelsRequest.h"
+#include "Result/DescribeIncrementalRateModelsResult.h"
+#include "Task/Rest/DescribeIncrementalRateModelsTask.h"
+#include "Task/WebSocket/DescribeIncrementalRateModelsTask.h"
+
+// GetIncrementalRateModel
+#include "Request/GetIncrementalRateModelRequest.h"
+#include "Result/GetIncrementalRateModelResult.h"
+#include "Task/Rest/GetIncrementalRateModelTask.h"
+#include "Task/WebSocket/GetIncrementalRateModelTask.h"
+
+// DescribeIncrementalRateModelMasters
+#include "Request/DescribeIncrementalRateModelMastersRequest.h"
+#include "Result/DescribeIncrementalRateModelMastersResult.h"
+#include "Task/Rest/DescribeIncrementalRateModelMastersTask.h"
+#include "Task/WebSocket/DescribeIncrementalRateModelMastersTask.h"
+
+// CreateIncrementalRateModelMaster
+#include "Request/CreateIncrementalRateModelMasterRequest.h"
+#include "Result/CreateIncrementalRateModelMasterResult.h"
+#include "Task/Rest/CreateIncrementalRateModelMasterTask.h"
+#include "Task/WebSocket/CreateIncrementalRateModelMasterTask.h"
+
+// GetIncrementalRateModelMaster
+#include "Request/GetIncrementalRateModelMasterRequest.h"
+#include "Result/GetIncrementalRateModelMasterResult.h"
+#include "Task/Rest/GetIncrementalRateModelMasterTask.h"
+#include "Task/WebSocket/GetIncrementalRateModelMasterTask.h"
+
+// UpdateIncrementalRateModelMaster
+#include "Request/UpdateIncrementalRateModelMasterRequest.h"
+#include "Result/UpdateIncrementalRateModelMasterResult.h"
+#include "Task/Rest/UpdateIncrementalRateModelMasterTask.h"
+#include "Task/WebSocket/UpdateIncrementalRateModelMasterTask.h"
+
+// DeleteIncrementalRateModelMaster
+#include "Request/DeleteIncrementalRateModelMasterRequest.h"
+#include "Result/DeleteIncrementalRateModelMasterResult.h"
+#include "Task/Rest/DeleteIncrementalRateModelMasterTask.h"
+#include "Task/WebSocket/DeleteIncrementalRateModelMasterTask.h"
+
 // Exchange
 #include "Request/ExchangeRequest.h"
 #include "Result/ExchangeResult.h"
@@ -125,6 +169,36 @@
 #include "Result/ExchangeByStampSheetResult.h"
 #include "Task/Rest/ExchangeByStampSheetTask.h"
 #include "Task/WebSocket/ExchangeByStampSheetTask.h"
+
+// IncrementalExchange
+#include "Request/IncrementalExchangeRequest.h"
+#include "Result/IncrementalExchangeResult.h"
+#include "Task/Rest/IncrementalExchangeTask.h"
+#include "Task/WebSocket/IncrementalExchangeTask.h"
+
+// IncrementalExchangeByUserId
+#include "Request/IncrementalExchangeByUserIdRequest.h"
+#include "Result/IncrementalExchangeByUserIdResult.h"
+#include "Task/Rest/IncrementalExchangeByUserIdTask.h"
+#include "Task/WebSocket/IncrementalExchangeByUserIdTask.h"
+
+// IncrementalExchangeByStampSheet
+#include "Request/IncrementalExchangeByStampSheetRequest.h"
+#include "Result/IncrementalExchangeByStampSheetResult.h"
+#include "Task/Rest/IncrementalExchangeByStampSheetTask.h"
+#include "Task/WebSocket/IncrementalExchangeByStampSheetTask.h"
+
+// UnlockIncrementalExchangeByUserId
+#include "Request/UnlockIncrementalExchangeByUserIdRequest.h"
+#include "Result/UnlockIncrementalExchangeByUserIdResult.h"
+#include "Task/Rest/UnlockIncrementalExchangeByUserIdTask.h"
+#include "Task/WebSocket/UnlockIncrementalExchangeByUserIdTask.h"
+
+// UnlockIncrementalExchangeByStampSheet
+#include "Request/UnlockIncrementalExchangeByStampSheetRequest.h"
+#include "Result/UnlockIncrementalExchangeByStampSheetResult.h"
+#include "Task/Rest/UnlockIncrementalExchangeByStampSheetTask.h"
+#include "Task/WebSocket/UnlockIncrementalExchangeByStampSheetTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"
