@@ -39,4 +39,10 @@ class BPGS2_API UGs2InventoryUserFunctionLibrary : public UBlueprintFunctionLibr
         FGs2InventoryOwnUser User,
         FString InventoryName
     );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Inventory::OwnSimpleInventory", Category="Game Server Services|GS2-Inventory|Namespace|User|SimpleInventory", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="SimpleInventory") FGs2InventoryOwnSimpleInventory OwnSimpleInventory(
+        FGs2InventoryOwnUser User,
+        FString InventoryName
+    );
 };

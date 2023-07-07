@@ -26,12 +26,18 @@
 #include "Inventory/Domain/Iterator/DescribeInventoryModelsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemModelMastersIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleInventoryModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleInventoryModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemModelsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoriesIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoriesByUserIdIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemSetsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemSetsByUserIdIterator.h"
 #include "Inventory/Domain/Iterator/DescribeReferenceOfIterator.h"
 #include "Inventory/Domain/Iterator/DescribeReferenceOfByUserIdIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemsByUserIdIterator.h"
 
 namespace Gs2::Inventory::Domain::Model
 {
@@ -40,6 +46,10 @@ namespace Gs2::Inventory::Domain::Model
     class FInventoryModelDomain;
     class FItemModelMasterDomain;
     class FItemModelDomain;
+    class FSimpleInventoryModelMasterDomain;
+    class FSimpleInventoryModelDomain;
+    class FSimpleItemModelMasterDomain;
+    class FSimpleItemModelDomain;
     class FCurrentItemModelMasterDomain;
     class FInventoryDomain;
     class FInventoryAccessTokenDomain;
@@ -47,6 +57,10 @@ namespace Gs2::Inventory::Domain::Model
     class FItemSetAccessTokenDomain;
     class FReferenceOfDomain;
     class FReferenceOfAccessTokenDomain;
+    class FSimpleInventoryDomain;
+    class FSimpleInventoryAccessTokenDomain;
+    class FSimpleItemDomain;
+    class FSimpleItemAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
     class FItemSetEntry;
@@ -93,6 +107,10 @@ namespace Gs2::Inventory::Domain::Model
         ) const;
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomain> Inventory(
+            const FString InventoryName
+        ) const;
+
+        TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryAccessTokenDomain> SimpleInventory(
             const FString InventoryName
         ) const;
 

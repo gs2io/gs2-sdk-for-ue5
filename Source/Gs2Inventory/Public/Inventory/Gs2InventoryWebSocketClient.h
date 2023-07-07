@@ -58,6 +58,34 @@
 #include "Task/WebSocket/DescribeItemModelsTask.h"
 #include "Request/GetItemModelRequest.h"
 #include "Task/WebSocket/GetItemModelTask.h"
+#include "Request/DescribeSimpleInventoryModelMastersRequest.h"
+#include "Task/WebSocket/DescribeSimpleInventoryModelMastersTask.h"
+#include "Request/CreateSimpleInventoryModelMasterRequest.h"
+#include "Task/WebSocket/CreateSimpleInventoryModelMasterTask.h"
+#include "Request/GetSimpleInventoryModelMasterRequest.h"
+#include "Task/WebSocket/GetSimpleInventoryModelMasterTask.h"
+#include "Request/UpdateSimpleInventoryModelMasterRequest.h"
+#include "Task/WebSocket/UpdateSimpleInventoryModelMasterTask.h"
+#include "Request/DeleteSimpleInventoryModelMasterRequest.h"
+#include "Task/WebSocket/DeleteSimpleInventoryModelMasterTask.h"
+#include "Request/DescribeSimpleInventoryModelsRequest.h"
+#include "Task/WebSocket/DescribeSimpleInventoryModelsTask.h"
+#include "Request/GetSimpleInventoryModelRequest.h"
+#include "Task/WebSocket/GetSimpleInventoryModelTask.h"
+#include "Request/DescribeSimpleItemModelMastersRequest.h"
+#include "Task/WebSocket/DescribeSimpleItemModelMastersTask.h"
+#include "Request/CreateSimpleItemModelMasterRequest.h"
+#include "Task/WebSocket/CreateSimpleItemModelMasterTask.h"
+#include "Request/GetSimpleItemModelMasterRequest.h"
+#include "Task/WebSocket/GetSimpleItemModelMasterTask.h"
+#include "Request/UpdateSimpleItemModelMasterRequest.h"
+#include "Task/WebSocket/UpdateSimpleItemModelMasterTask.h"
+#include "Request/DeleteSimpleItemModelMasterRequest.h"
+#include "Task/WebSocket/DeleteSimpleItemModelMasterTask.h"
+#include "Request/DescribeSimpleItemModelsRequest.h"
+#include "Task/WebSocket/DescribeSimpleItemModelsTask.h"
+#include "Request/GetSimpleItemModelRequest.h"
+#include "Task/WebSocket/GetSimpleItemModelTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentItemModelMasterRequest.h"
@@ -134,6 +162,30 @@
 #include "Task/WebSocket/DeleteReferenceOfItemSetByStampSheetTask.h"
 #include "Request/VerifyReferenceOfByStampTaskRequest.h"
 #include "Task/WebSocket/VerifyReferenceOfByStampTaskTask.h"
+#include "Request/DescribeSimpleItemsRequest.h"
+#include "Task/WebSocket/DescribeSimpleItemsTask.h"
+#include "Request/DescribeSimpleItemsByUserIdRequest.h"
+#include "Task/WebSocket/DescribeSimpleItemsByUserIdTask.h"
+#include "Request/GetSimpleItemRequest.h"
+#include "Task/WebSocket/GetSimpleItemTask.h"
+#include "Request/GetSimpleItemByUserIdRequest.h"
+#include "Task/WebSocket/GetSimpleItemByUserIdTask.h"
+#include "Request/GetSimpleItemWithSignatureRequest.h"
+#include "Task/WebSocket/GetSimpleItemWithSignatureTask.h"
+#include "Request/GetSimpleItemWithSignatureByUserIdRequest.h"
+#include "Task/WebSocket/GetSimpleItemWithSignatureByUserIdTask.h"
+#include "Request/AcquireSimpleItemsByUserIdRequest.h"
+#include "Task/WebSocket/AcquireSimpleItemsByUserIdTask.h"
+#include "Request/ConsumeSimpleItemsRequest.h"
+#include "Task/WebSocket/ConsumeSimpleItemsTask.h"
+#include "Request/ConsumeSimpleItemsByUserIdRequest.h"
+#include "Task/WebSocket/ConsumeSimpleItemsByUserIdTask.h"
+#include "Request/DeleteSimpleItemsByUserIdRequest.h"
+#include "Task/WebSocket/DeleteSimpleItemsByUserIdTask.h"
+#include "Request/AcquireSimpleItemsByStampSheetRequest.h"
+#include "Task/WebSocket/AcquireSimpleItemsByStampSheetTask.h"
+#include "Request/ConsumeSimpleItemsByStampTaskRequest.h"
+#include "Task/WebSocket/ConsumeSimpleItemsByStampTaskTask.h"
 
 namespace Gs2::Inventory
 {
@@ -224,6 +276,62 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetItemModelTask>> GetItemModel(
             const Request::FGetItemModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleInventoryModelMastersTask>> DescribeSimpleInventoryModelMasters(
+            const Request::FDescribeSimpleInventoryModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateSimpleInventoryModelMasterTask>> CreateSimpleInventoryModelMaster(
+            const Request::FCreateSimpleInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleInventoryModelMasterTask>> GetSimpleInventoryModelMaster(
+            const Request::FGetSimpleInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateSimpleInventoryModelMasterTask>> UpdateSimpleInventoryModelMaster(
+            const Request::FUpdateSimpleInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSimpleInventoryModelMasterTask>> DeleteSimpleInventoryModelMaster(
+            const Request::FDeleteSimpleInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleInventoryModelsTask>> DescribeSimpleInventoryModels(
+            const Request::FDescribeSimpleInventoryModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleInventoryModelTask>> GetSimpleInventoryModel(
+            const Request::FGetSimpleInventoryModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleItemModelMastersTask>> DescribeSimpleItemModelMasters(
+            const Request::FDescribeSimpleItemModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateSimpleItemModelMasterTask>> CreateSimpleItemModelMaster(
+            const Request::FCreateSimpleItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemModelMasterTask>> GetSimpleItemModelMaster(
+            const Request::FGetSimpleItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateSimpleItemModelMasterTask>> UpdateSimpleItemModelMaster(
+            const Request::FUpdateSimpleItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSimpleItemModelMasterTask>> DeleteSimpleItemModelMaster(
+            const Request::FDeleteSimpleItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleItemModelsTask>> DescribeSimpleItemModels(
+            const Request::FDescribeSimpleItemModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemModelTask>> GetSimpleItemModel(
+            const Request::FGetSimpleItemModelRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(
@@ -376,6 +484,54 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyReferenceOfByStampTaskTask>> VerifyReferenceOfByStampTask(
             const Request::FVerifyReferenceOfByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleItemsTask>> DescribeSimpleItems(
+            const Request::FDescribeSimpleItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleItemsByUserIdTask>> DescribeSimpleItemsByUserId(
+            const Request::FDescribeSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemTask>> GetSimpleItem(
+            const Request::FGetSimpleItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemByUserIdTask>> GetSimpleItemByUserId(
+            const Request::FGetSimpleItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemWithSignatureTask>> GetSimpleItemWithSignature(
+            const Request::FGetSimpleItemWithSignatureRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemWithSignatureByUserIdTask>> GetSimpleItemWithSignatureByUserId(
+            const Request::FGetSimpleItemWithSignatureByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireSimpleItemsByUserIdTask>> AcquireSimpleItemsByUserId(
+            const Request::FAcquireSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsTask>> ConsumeSimpleItems(
+            const Request::FConsumeSimpleItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByUserIdTask>> ConsumeSimpleItemsByUserId(
+            const Request::FConsumeSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSimpleItemsByUserIdTask>> DeleteSimpleItemsByUserId(
+            const Request::FDeleteSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireSimpleItemsByStampSheetTask>> AcquireSimpleItemsByStampSheet(
+            const Request::FAcquireSimpleItemsByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByStampTaskTask>> ConsumeSimpleItemsByStampTask(
+            const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2InventoryWebSocketClient, ESPMode::ThreadSafe> FGs2InventoryWebSocketClientPtr;

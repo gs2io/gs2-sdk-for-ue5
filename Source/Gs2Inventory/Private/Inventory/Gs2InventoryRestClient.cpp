@@ -199,6 +199,132 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleInventoryModelMastersTask>> FGs2InventoryRestClient::DescribeSimpleInventoryModelMasters(
+        const Request::FDescribeSimpleInventoryModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSimpleInventoryModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateSimpleInventoryModelMasterTask>> FGs2InventoryRestClient::CreateSimpleInventoryModelMaster(
+        const Request::FCreateSimpleInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateSimpleInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleInventoryModelMasterTask>> FGs2InventoryRestClient::GetSimpleInventoryModelMaster(
+        const Request::FGetSimpleInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSimpleInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateSimpleInventoryModelMasterTask>> FGs2InventoryRestClient::UpdateSimpleInventoryModelMaster(
+        const Request::FUpdateSimpleInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateSimpleInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteSimpleInventoryModelMasterTask>> FGs2InventoryRestClient::DeleteSimpleInventoryModelMaster(
+        const Request::FDeleteSimpleInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteSimpleInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleInventoryModelsTask>> FGs2InventoryRestClient::DescribeSimpleInventoryModels(
+        const Request::FDescribeSimpleInventoryModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSimpleInventoryModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleInventoryModelTask>> FGs2InventoryRestClient::GetSimpleInventoryModel(
+        const Request::FGetSimpleInventoryModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSimpleInventoryModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleItemModelMastersTask>> FGs2InventoryRestClient::DescribeSimpleItemModelMasters(
+        const Request::FDescribeSimpleItemModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSimpleItemModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateSimpleItemModelMasterTask>> FGs2InventoryRestClient::CreateSimpleItemModelMaster(
+        const Request::FCreateSimpleItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateSimpleItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemModelMasterTask>> FGs2InventoryRestClient::GetSimpleItemModelMaster(
+        const Request::FGetSimpleItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSimpleItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateSimpleItemModelMasterTask>> FGs2InventoryRestClient::UpdateSimpleItemModelMaster(
+        const Request::FUpdateSimpleItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateSimpleItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteSimpleItemModelMasterTask>> FGs2InventoryRestClient::DeleteSimpleItemModelMaster(
+        const Request::FDeleteSimpleItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteSimpleItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleItemModelsTask>> FGs2InventoryRestClient::DescribeSimpleItemModels(
+        const Request::FDescribeSimpleItemModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSimpleItemModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemModelTask>> FGs2InventoryRestClient::GetSimpleItemModel(
+        const Request::FGetSimpleItemModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSimpleItemModelTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2InventoryRestClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {
@@ -536,6 +662,114 @@ namespace Gs2::Inventory
         const Request::FVerifyReferenceOfByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyReferenceOfByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleItemsTask>> FGs2InventoryRestClient::DescribeSimpleItems(
+        const Request::FDescribeSimpleItemsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSimpleItemsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleItemsByUserIdTask>> FGs2InventoryRestClient::DescribeSimpleItemsByUserId(
+        const Request::FDescribeSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemTask>> FGs2InventoryRestClient::GetSimpleItem(
+        const Request::FGetSimpleItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSimpleItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemByUserIdTask>> FGs2InventoryRestClient::GetSimpleItemByUserId(
+        const Request::FGetSimpleItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSimpleItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemWithSignatureTask>> FGs2InventoryRestClient::GetSimpleItemWithSignature(
+        const Request::FGetSimpleItemWithSignatureRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSimpleItemWithSignatureTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemWithSignatureByUserIdTask>> FGs2InventoryRestClient::GetSimpleItemWithSignatureByUserId(
+        const Request::FGetSimpleItemWithSignatureByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetSimpleItemWithSignatureByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAcquireSimpleItemsByUserIdTask>> FGs2InventoryRestClient::AcquireSimpleItemsByUserId(
+        const Request::FAcquireSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAcquireSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FConsumeSimpleItemsTask>> FGs2InventoryRestClient::ConsumeSimpleItems(
+        const Request::FConsumeSimpleItemsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeSimpleItemsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FConsumeSimpleItemsByUserIdTask>> FGs2InventoryRestClient::ConsumeSimpleItemsByUserId(
+        const Request::FConsumeSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteSimpleItemsByUserIdTask>> FGs2InventoryRestClient::DeleteSimpleItemsByUserId(
+        const Request::FDeleteSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAcquireSimpleItemsByStampSheetTask>> FGs2InventoryRestClient::AcquireSimpleItemsByStampSheet(
+        const Request::FAcquireSimpleItemsByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAcquireSimpleItemsByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FConsumeSimpleItemsByStampTaskTask>> FGs2InventoryRestClient::ConsumeSimpleItemsByStampTask(
+        const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeSimpleItemsByStampTaskTask>>(
             Session,
             Request
         );

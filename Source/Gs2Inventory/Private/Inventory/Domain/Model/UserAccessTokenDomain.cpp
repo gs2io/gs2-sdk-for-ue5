@@ -29,6 +29,10 @@
 #include "Inventory/Domain/Model/InventoryModel.h"
 #include "Inventory/Domain/Model/ItemModelMaster.h"
 #include "Inventory/Domain/Model/ItemModel.h"
+#include "Inventory/Domain/Model/SimpleInventoryModelMaster.h"
+#include "Inventory/Domain/Model/SimpleInventoryModel.h"
+#include "Inventory/Domain/Model/SimpleItemModelMaster.h"
+#include "Inventory/Domain/Model/SimpleItemModel.h"
 #include "Inventory/Domain/Model/CurrentItemModelMaster.h"
 #include "Inventory/Domain/Model/Inventory.h"
 #include "Inventory/Domain/Model/InventoryAccessToken.h"
@@ -36,6 +40,10 @@
 #include "Inventory/Domain/Model/ItemSetAccessToken.h"
 #include "Inventory/Domain/Model/ReferenceOf.h"
 #include "Inventory/Domain/Model/ReferenceOfAccessToken.h"
+#include "Inventory/Domain/Model/SimpleInventory.h"
+#include "Inventory/Domain/Model/SimpleInventoryAccessToken.h"
+#include "Inventory/Domain/Model/SimpleItem.h"
+#include "Inventory/Domain/Model/SimpleItemAccessToken.h"
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
 #include "Inventory/Domain/Model/ItemSetEntry.h"
@@ -97,6 +105,21 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            AccessToken,
+            InventoryName
+        );
+    }
+
+    TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryAccessTokenDomain> FUserAccessTokenDomain::SimpleInventory(
+        const FString InventoryName
+    ) const
+    {
+        return MakeShared<Gs2::Inventory::Domain::Model::FSimpleInventoryAccessTokenDomain>(
             Cache,
             JobQueueDomain,
             StampSheetConfiguration,

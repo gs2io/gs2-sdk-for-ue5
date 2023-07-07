@@ -30,11 +30,17 @@
 #include "Inventory/Domain/Model/InventoryModel.h"
 #include "Inventory/Domain/Model/ItemModelMaster.h"
 #include "Inventory/Domain/Model/ItemModel.h"
+#include "Inventory/Domain/Model/SimpleInventoryModelMaster.h"
+#include "Inventory/Domain/Model/SimpleInventoryModel.h"
+#include "Inventory/Domain/Model/SimpleItemModelMaster.h"
+#include "Inventory/Domain/Model/SimpleItemModel.h"
 #include "Inventory/Domain/Model/CurrentItemModelMaster.h"
 #include "Inventory/Domain/Model/Inventory.h"
 #include "Inventory/Domain/Model/ItemSet.h"
 #include "Inventory/Domain/Model/ItemSetEntry.h"
 #include "Inventory/Domain/Model/ReferenceOf.h"
+#include "Inventory/Domain/Model/SimpleInventory.h"
+#include "Inventory/Domain/Model/SimpleItem.h"
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
 
@@ -493,6 +499,43 @@ namespace Gs2::Inventory::Domain
                 Cache->Delete(Gs2::Inventory::Model::FInventory::TypeName, ParentKey, Key);
             }
         }
+        if (Method == "AcquireSimpleItemsByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FAcquireSimpleItemsByUserIdResult::FromJson(ResultModelJson);
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        RequestModel->GetInventoryName(),
+                        "SimpleItem"
+                    );
+                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
+                        Item->GetItemName()
+                    );
+                    Cache->Put(
+                        Gs2::Inventory::Model::FSimpleItem::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
+        }
     }
 
     void FGs2InventoryDomain::UpdateCacheFromStampTask(
@@ -708,6 +751,43 @@ namespace Gs2::Inventory::Domain
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
+            }
+        }
+        if (Method == "ConsumeSimpleItemsByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FConsumeSimpleItemsByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FConsumeSimpleItemsByUserIdResult::FromJson(ResultModelJson);
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        RequestModel->GetInventoryName(),
+                        "SimpleItem"
+                    );
+                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
+                        Item->GetItemName()
+                    );
+                    Cache->Put(
+                        Gs2::Inventory::Model::FSimpleItem::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
             }
         }
     }
@@ -1090,6 +1170,51 @@ namespace Gs2::Inventory::Domain
                     ResultModel->GetInventory()->GetInventoryName()
                 );
                 Cache->Delete(Gs2::Inventory::Model::FInventory::TypeName, ParentKey, Key);
+            }
+        }
+        if (Method == "acquire_simple_items_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FAcquireSimpleItemsByUserIdResult::FromJson(ResultModelJson);
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        RequestModel->GetInventoryName(),
+                        "SimpleItem"
+                    );
+                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
+                        Item->GetItemName()
+                    );
+                    Cache->Put(
+                        Gs2::Inventory::Model::FSimpleItem::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
             }
         }
     }

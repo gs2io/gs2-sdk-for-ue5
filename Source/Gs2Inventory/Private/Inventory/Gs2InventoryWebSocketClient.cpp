@@ -199,6 +199,132 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleInventoryModelMastersTask>> FGs2InventoryWebSocketClient::DescribeSimpleInventoryModelMasters(
+        const Request::FDescribeSimpleInventoryModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSimpleInventoryModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateSimpleInventoryModelMasterTask>> FGs2InventoryWebSocketClient::CreateSimpleInventoryModelMaster(
+        const Request::FCreateSimpleInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateSimpleInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleInventoryModelMasterTask>> FGs2InventoryWebSocketClient::GetSimpleInventoryModelMaster(
+        const Request::FGetSimpleInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSimpleInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateSimpleInventoryModelMasterTask>> FGs2InventoryWebSocketClient::UpdateSimpleInventoryModelMaster(
+        const Request::FUpdateSimpleInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateSimpleInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSimpleInventoryModelMasterTask>> FGs2InventoryWebSocketClient::DeleteSimpleInventoryModelMaster(
+        const Request::FDeleteSimpleInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteSimpleInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleInventoryModelsTask>> FGs2InventoryWebSocketClient::DescribeSimpleInventoryModels(
+        const Request::FDescribeSimpleInventoryModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSimpleInventoryModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleInventoryModelTask>> FGs2InventoryWebSocketClient::GetSimpleInventoryModel(
+        const Request::FGetSimpleInventoryModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSimpleInventoryModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleItemModelMastersTask>> FGs2InventoryWebSocketClient::DescribeSimpleItemModelMasters(
+        const Request::FDescribeSimpleItemModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSimpleItemModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateSimpleItemModelMasterTask>> FGs2InventoryWebSocketClient::CreateSimpleItemModelMaster(
+        const Request::FCreateSimpleItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateSimpleItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemModelMasterTask>> FGs2InventoryWebSocketClient::GetSimpleItemModelMaster(
+        const Request::FGetSimpleItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSimpleItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateSimpleItemModelMasterTask>> FGs2InventoryWebSocketClient::UpdateSimpleItemModelMaster(
+        const Request::FUpdateSimpleItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateSimpleItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSimpleItemModelMasterTask>> FGs2InventoryWebSocketClient::DeleteSimpleItemModelMaster(
+        const Request::FDeleteSimpleItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteSimpleItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleItemModelsTask>> FGs2InventoryWebSocketClient::DescribeSimpleItemModels(
+        const Request::FDescribeSimpleItemModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSimpleItemModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemModelTask>> FGs2InventoryWebSocketClient::GetSimpleItemModel(
+        const Request::FGetSimpleItemModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSimpleItemModelTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2InventoryWebSocketClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {
@@ -536,6 +662,114 @@ namespace Gs2::Inventory
         const Request::FVerifyReferenceOfByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyReferenceOfByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleItemsTask>> FGs2InventoryWebSocketClient::DescribeSimpleItems(
+        const Request::FDescribeSimpleItemsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSimpleItemsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeSimpleItemsByUserIdTask>> FGs2InventoryWebSocketClient::DescribeSimpleItemsByUserId(
+        const Request::FDescribeSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemTask>> FGs2InventoryWebSocketClient::GetSimpleItem(
+        const Request::FGetSimpleItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSimpleItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemByUserIdTask>> FGs2InventoryWebSocketClient::GetSimpleItemByUserId(
+        const Request::FGetSimpleItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSimpleItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemWithSignatureTask>> FGs2InventoryWebSocketClient::GetSimpleItemWithSignature(
+        const Request::FGetSimpleItemWithSignatureRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSimpleItemWithSignatureTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemWithSignatureByUserIdTask>> FGs2InventoryWebSocketClient::GetSimpleItemWithSignatureByUserId(
+        const Request::FGetSimpleItemWithSignatureByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetSimpleItemWithSignatureByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireSimpleItemsByUserIdTask>> FGs2InventoryWebSocketClient::AcquireSimpleItemsByUserId(
+        const Request::FAcquireSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAcquireSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsTask>> FGs2InventoryWebSocketClient::ConsumeSimpleItems(
+        const Request::FConsumeSimpleItemsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByUserIdTask>> FGs2InventoryWebSocketClient::ConsumeSimpleItemsByUserId(
+        const Request::FConsumeSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSimpleItemsByUserIdTask>> FGs2InventoryWebSocketClient::DeleteSimpleItemsByUserId(
+        const Request::FDeleteSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireSimpleItemsByStampSheetTask>> FGs2InventoryWebSocketClient::AcquireSimpleItemsByStampSheet(
+        const Request::FAcquireSimpleItemsByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAcquireSimpleItemsByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByStampTaskTask>> FGs2InventoryWebSocketClient::ConsumeSimpleItemsByStampTask(
+        const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByStampTaskTask>>(
             Session,
             Request
         );

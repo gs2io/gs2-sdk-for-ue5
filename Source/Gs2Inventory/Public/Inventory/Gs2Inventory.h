@@ -22,13 +22,21 @@
 #include "Model/InventoryModel.h"
 #include "Model/ItemModelMaster.h"
 #include "Model/ItemModel.h"
+#include "Model/SimpleInventoryModelMaster.h"
+#include "Model/SimpleInventoryModel.h"
+#include "Model/SimpleItemModelMaster.h"
+#include "Model/SimpleItemModel.h"
 #include "Model/CurrentItemModelMaster.h"
 #include "Model/Inventory.h"
 #include "Model/ItemSet.h"
 #include "Model/ReferenceOf.h"
+#include "Model/SimpleInventory.h"
+#include "Model/SimpleItem.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/AcquireCount.h"
+#include "Model/ConsumeCount.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"
@@ -149,6 +157,90 @@
 #include "Result/GetItemModelResult.h"
 #include "Task/Rest/GetItemModelTask.h"
 #include "Task/WebSocket/GetItemModelTask.h"
+
+// DescribeSimpleInventoryModelMasters
+#include "Request/DescribeSimpleInventoryModelMastersRequest.h"
+#include "Result/DescribeSimpleInventoryModelMastersResult.h"
+#include "Task/Rest/DescribeSimpleInventoryModelMastersTask.h"
+#include "Task/WebSocket/DescribeSimpleInventoryModelMastersTask.h"
+
+// CreateSimpleInventoryModelMaster
+#include "Request/CreateSimpleInventoryModelMasterRequest.h"
+#include "Result/CreateSimpleInventoryModelMasterResult.h"
+#include "Task/Rest/CreateSimpleInventoryModelMasterTask.h"
+#include "Task/WebSocket/CreateSimpleInventoryModelMasterTask.h"
+
+// GetSimpleInventoryModelMaster
+#include "Request/GetSimpleInventoryModelMasterRequest.h"
+#include "Result/GetSimpleInventoryModelMasterResult.h"
+#include "Task/Rest/GetSimpleInventoryModelMasterTask.h"
+#include "Task/WebSocket/GetSimpleInventoryModelMasterTask.h"
+
+// UpdateSimpleInventoryModelMaster
+#include "Request/UpdateSimpleInventoryModelMasterRequest.h"
+#include "Result/UpdateSimpleInventoryModelMasterResult.h"
+#include "Task/Rest/UpdateSimpleInventoryModelMasterTask.h"
+#include "Task/WebSocket/UpdateSimpleInventoryModelMasterTask.h"
+
+// DeleteSimpleInventoryModelMaster
+#include "Request/DeleteSimpleInventoryModelMasterRequest.h"
+#include "Result/DeleteSimpleInventoryModelMasterResult.h"
+#include "Task/Rest/DeleteSimpleInventoryModelMasterTask.h"
+#include "Task/WebSocket/DeleteSimpleInventoryModelMasterTask.h"
+
+// DescribeSimpleInventoryModels
+#include "Request/DescribeSimpleInventoryModelsRequest.h"
+#include "Result/DescribeSimpleInventoryModelsResult.h"
+#include "Task/Rest/DescribeSimpleInventoryModelsTask.h"
+#include "Task/WebSocket/DescribeSimpleInventoryModelsTask.h"
+
+// GetSimpleInventoryModel
+#include "Request/GetSimpleInventoryModelRequest.h"
+#include "Result/GetSimpleInventoryModelResult.h"
+#include "Task/Rest/GetSimpleInventoryModelTask.h"
+#include "Task/WebSocket/GetSimpleInventoryModelTask.h"
+
+// DescribeSimpleItemModelMasters
+#include "Request/DescribeSimpleItemModelMastersRequest.h"
+#include "Result/DescribeSimpleItemModelMastersResult.h"
+#include "Task/Rest/DescribeSimpleItemModelMastersTask.h"
+#include "Task/WebSocket/DescribeSimpleItemModelMastersTask.h"
+
+// CreateSimpleItemModelMaster
+#include "Request/CreateSimpleItemModelMasterRequest.h"
+#include "Result/CreateSimpleItemModelMasterResult.h"
+#include "Task/Rest/CreateSimpleItemModelMasterTask.h"
+#include "Task/WebSocket/CreateSimpleItemModelMasterTask.h"
+
+// GetSimpleItemModelMaster
+#include "Request/GetSimpleItemModelMasterRequest.h"
+#include "Result/GetSimpleItemModelMasterResult.h"
+#include "Task/Rest/GetSimpleItemModelMasterTask.h"
+#include "Task/WebSocket/GetSimpleItemModelMasterTask.h"
+
+// UpdateSimpleItemModelMaster
+#include "Request/UpdateSimpleItemModelMasterRequest.h"
+#include "Result/UpdateSimpleItemModelMasterResult.h"
+#include "Task/Rest/UpdateSimpleItemModelMasterTask.h"
+#include "Task/WebSocket/UpdateSimpleItemModelMasterTask.h"
+
+// DeleteSimpleItemModelMaster
+#include "Request/DeleteSimpleItemModelMasterRequest.h"
+#include "Result/DeleteSimpleItemModelMasterResult.h"
+#include "Task/Rest/DeleteSimpleItemModelMasterTask.h"
+#include "Task/WebSocket/DeleteSimpleItemModelMasterTask.h"
+
+// DescribeSimpleItemModels
+#include "Request/DescribeSimpleItemModelsRequest.h"
+#include "Result/DescribeSimpleItemModelsResult.h"
+#include "Task/Rest/DescribeSimpleItemModelsTask.h"
+#include "Task/WebSocket/DescribeSimpleItemModelsTask.h"
+
+// GetSimpleItemModel
+#include "Request/GetSimpleItemModelRequest.h"
+#include "Result/GetSimpleItemModelResult.h"
+#include "Task/Rest/GetSimpleItemModelTask.h"
+#include "Task/WebSocket/GetSimpleItemModelTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"
@@ -377,6 +469,78 @@
 #include "Result/VerifyReferenceOfByStampTaskResult.h"
 #include "Task/Rest/VerifyReferenceOfByStampTaskTask.h"
 #include "Task/WebSocket/VerifyReferenceOfByStampTaskTask.h"
+
+// DescribeSimpleItems
+#include "Request/DescribeSimpleItemsRequest.h"
+#include "Result/DescribeSimpleItemsResult.h"
+#include "Task/Rest/DescribeSimpleItemsTask.h"
+#include "Task/WebSocket/DescribeSimpleItemsTask.h"
+
+// DescribeSimpleItemsByUserId
+#include "Request/DescribeSimpleItemsByUserIdRequest.h"
+#include "Result/DescribeSimpleItemsByUserIdResult.h"
+#include "Task/Rest/DescribeSimpleItemsByUserIdTask.h"
+#include "Task/WebSocket/DescribeSimpleItemsByUserIdTask.h"
+
+// GetSimpleItem
+#include "Request/GetSimpleItemRequest.h"
+#include "Result/GetSimpleItemResult.h"
+#include "Task/Rest/GetSimpleItemTask.h"
+#include "Task/WebSocket/GetSimpleItemTask.h"
+
+// GetSimpleItemByUserId
+#include "Request/GetSimpleItemByUserIdRequest.h"
+#include "Result/GetSimpleItemByUserIdResult.h"
+#include "Task/Rest/GetSimpleItemByUserIdTask.h"
+#include "Task/WebSocket/GetSimpleItemByUserIdTask.h"
+
+// GetSimpleItemWithSignature
+#include "Request/GetSimpleItemWithSignatureRequest.h"
+#include "Result/GetSimpleItemWithSignatureResult.h"
+#include "Task/Rest/GetSimpleItemWithSignatureTask.h"
+#include "Task/WebSocket/GetSimpleItemWithSignatureTask.h"
+
+// GetSimpleItemWithSignatureByUserId
+#include "Request/GetSimpleItemWithSignatureByUserIdRequest.h"
+#include "Result/GetSimpleItemWithSignatureByUserIdResult.h"
+#include "Task/Rest/GetSimpleItemWithSignatureByUserIdTask.h"
+#include "Task/WebSocket/GetSimpleItemWithSignatureByUserIdTask.h"
+
+// AcquireSimpleItemsByUserId
+#include "Request/AcquireSimpleItemsByUserIdRequest.h"
+#include "Result/AcquireSimpleItemsByUserIdResult.h"
+#include "Task/Rest/AcquireSimpleItemsByUserIdTask.h"
+#include "Task/WebSocket/AcquireSimpleItemsByUserIdTask.h"
+
+// ConsumeSimpleItems
+#include "Request/ConsumeSimpleItemsRequest.h"
+#include "Result/ConsumeSimpleItemsResult.h"
+#include "Task/Rest/ConsumeSimpleItemsTask.h"
+#include "Task/WebSocket/ConsumeSimpleItemsTask.h"
+
+// ConsumeSimpleItemsByUserId
+#include "Request/ConsumeSimpleItemsByUserIdRequest.h"
+#include "Result/ConsumeSimpleItemsByUserIdResult.h"
+#include "Task/Rest/ConsumeSimpleItemsByUserIdTask.h"
+#include "Task/WebSocket/ConsumeSimpleItemsByUserIdTask.h"
+
+// DeleteSimpleItemsByUserId
+#include "Request/DeleteSimpleItemsByUserIdRequest.h"
+#include "Result/DeleteSimpleItemsByUserIdResult.h"
+#include "Task/Rest/DeleteSimpleItemsByUserIdTask.h"
+#include "Task/WebSocket/DeleteSimpleItemsByUserIdTask.h"
+
+// AcquireSimpleItemsByStampSheet
+#include "Request/AcquireSimpleItemsByStampSheetRequest.h"
+#include "Result/AcquireSimpleItemsByStampSheetResult.h"
+#include "Task/Rest/AcquireSimpleItemsByStampSheetTask.h"
+#include "Task/WebSocket/AcquireSimpleItemsByStampSheetTask.h"
+
+// ConsumeSimpleItemsByStampTask
+#include "Request/ConsumeSimpleItemsByStampTaskRequest.h"
+#include "Result/ConsumeSimpleItemsByStampTaskResult.h"
+#include "Task/Rest/ConsumeSimpleItemsByStampTaskTask.h"
+#include "Task/WebSocket/ConsumeSimpleItemsByStampTaskTask.h"
 
 // Client
 #include "Gs2InventoryRestClient.h"

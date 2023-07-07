@@ -22,11 +22,18 @@
 #include "Inventory/Model/Gs2InventoryEzItemModel.h"
 #include "Inventory/Model/Gs2InventoryEzInventory.h"
 #include "Inventory/Model/Gs2InventoryEzItemSet.h"
+#include "Inventory/Model/Gs2InventoryEzSimpleInventoryModel.h"
+#include "Inventory/Model/Gs2InventoryEzSimpleItemModel.h"
+#include "Inventory/Model/Gs2InventoryEzSimpleItem.h"
+#include "Inventory/Model/Gs2InventoryEzConsumeCount.h"
+#include "Inventory/Model/Gs2InventoryEzAcquireCount.h"
 #include "Gs2InventoryEzInventoryModelDomain.h"
 #include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeInventoryModelsIterator.h"
 #include "Gs2InventoryEzUserDomain.h"
 #include "Gs2InventoryEzUserDomain.h"
 #include "Gs2InventoryEzUserGameSessionDomain.h"
+#include "Gs2InventoryEzSimpleInventoryModelDomain.h"
+#include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeSimpleInventoryModelsIterator.h"
 #include "Gs2InventoryEzNamespaceDomain.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
@@ -63,6 +70,13 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         Gs2::UE5::Inventory::Domain::Model::FEzUserGameSessionDomainPtr Me(
             Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+        ) const;
+
+        Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeSimpleInventoryModelsIteratorPtr SimpleInventoryModels(
+        ) const;
+
+        Gs2::UE5::Inventory::Domain::Model::FEzSimpleInventoryModelDomainPtr SimpleInventoryModel(
+            const FString InventoryName
         ) const;
 
     };

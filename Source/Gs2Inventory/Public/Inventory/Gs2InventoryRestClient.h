@@ -58,6 +58,34 @@
 #include "Task/Rest/DescribeItemModelsTask.h"
 #include "Request/GetItemModelRequest.h"
 #include "Task/Rest/GetItemModelTask.h"
+#include "Request/DescribeSimpleInventoryModelMastersRequest.h"
+#include "Task/Rest/DescribeSimpleInventoryModelMastersTask.h"
+#include "Request/CreateSimpleInventoryModelMasterRequest.h"
+#include "Task/Rest/CreateSimpleInventoryModelMasterTask.h"
+#include "Request/GetSimpleInventoryModelMasterRequest.h"
+#include "Task/Rest/GetSimpleInventoryModelMasterTask.h"
+#include "Request/UpdateSimpleInventoryModelMasterRequest.h"
+#include "Task/Rest/UpdateSimpleInventoryModelMasterTask.h"
+#include "Request/DeleteSimpleInventoryModelMasterRequest.h"
+#include "Task/Rest/DeleteSimpleInventoryModelMasterTask.h"
+#include "Request/DescribeSimpleInventoryModelsRequest.h"
+#include "Task/Rest/DescribeSimpleInventoryModelsTask.h"
+#include "Request/GetSimpleInventoryModelRequest.h"
+#include "Task/Rest/GetSimpleInventoryModelTask.h"
+#include "Request/DescribeSimpleItemModelMastersRequest.h"
+#include "Task/Rest/DescribeSimpleItemModelMastersTask.h"
+#include "Request/CreateSimpleItemModelMasterRequest.h"
+#include "Task/Rest/CreateSimpleItemModelMasterTask.h"
+#include "Request/GetSimpleItemModelMasterRequest.h"
+#include "Task/Rest/GetSimpleItemModelMasterTask.h"
+#include "Request/UpdateSimpleItemModelMasterRequest.h"
+#include "Task/Rest/UpdateSimpleItemModelMasterTask.h"
+#include "Request/DeleteSimpleItemModelMasterRequest.h"
+#include "Task/Rest/DeleteSimpleItemModelMasterTask.h"
+#include "Request/DescribeSimpleItemModelsRequest.h"
+#include "Task/Rest/DescribeSimpleItemModelsTask.h"
+#include "Request/GetSimpleItemModelRequest.h"
+#include "Task/Rest/GetSimpleItemModelTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentItemModelMasterRequest.h"
@@ -134,6 +162,30 @@
 #include "Task/Rest/DeleteReferenceOfItemSetByStampSheetTask.h"
 #include "Request/VerifyReferenceOfByStampTaskRequest.h"
 #include "Task/Rest/VerifyReferenceOfByStampTaskTask.h"
+#include "Request/DescribeSimpleItemsRequest.h"
+#include "Task/Rest/DescribeSimpleItemsTask.h"
+#include "Request/DescribeSimpleItemsByUserIdRequest.h"
+#include "Task/Rest/DescribeSimpleItemsByUserIdTask.h"
+#include "Request/GetSimpleItemRequest.h"
+#include "Task/Rest/GetSimpleItemTask.h"
+#include "Request/GetSimpleItemByUserIdRequest.h"
+#include "Task/Rest/GetSimpleItemByUserIdTask.h"
+#include "Request/GetSimpleItemWithSignatureRequest.h"
+#include "Task/Rest/GetSimpleItemWithSignatureTask.h"
+#include "Request/GetSimpleItemWithSignatureByUserIdRequest.h"
+#include "Task/Rest/GetSimpleItemWithSignatureByUserIdTask.h"
+#include "Request/AcquireSimpleItemsByUserIdRequest.h"
+#include "Task/Rest/AcquireSimpleItemsByUserIdTask.h"
+#include "Request/ConsumeSimpleItemsRequest.h"
+#include "Task/Rest/ConsumeSimpleItemsTask.h"
+#include "Request/ConsumeSimpleItemsByUserIdRequest.h"
+#include "Task/Rest/ConsumeSimpleItemsByUserIdTask.h"
+#include "Request/DeleteSimpleItemsByUserIdRequest.h"
+#include "Task/Rest/DeleteSimpleItemsByUserIdTask.h"
+#include "Request/AcquireSimpleItemsByStampSheetRequest.h"
+#include "Task/Rest/AcquireSimpleItemsByStampSheetTask.h"
+#include "Request/ConsumeSimpleItemsByStampTaskRequest.h"
+#include "Task/Rest/ConsumeSimpleItemsByStampTaskTask.h"
 
 namespace Gs2::Inventory
 {
@@ -224,6 +276,62 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetItemModelTask>> GetItemModel(
             const Request::FGetItemModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleInventoryModelMastersTask>> DescribeSimpleInventoryModelMasters(
+            const Request::FDescribeSimpleInventoryModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateSimpleInventoryModelMasterTask>> CreateSimpleInventoryModelMaster(
+            const Request::FCreateSimpleInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleInventoryModelMasterTask>> GetSimpleInventoryModelMaster(
+            const Request::FGetSimpleInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateSimpleInventoryModelMasterTask>> UpdateSimpleInventoryModelMaster(
+            const Request::FUpdateSimpleInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteSimpleInventoryModelMasterTask>> DeleteSimpleInventoryModelMaster(
+            const Request::FDeleteSimpleInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleInventoryModelsTask>> DescribeSimpleInventoryModels(
+            const Request::FDescribeSimpleInventoryModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleInventoryModelTask>> GetSimpleInventoryModel(
+            const Request::FGetSimpleInventoryModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleItemModelMastersTask>> DescribeSimpleItemModelMasters(
+            const Request::FDescribeSimpleItemModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateSimpleItemModelMasterTask>> CreateSimpleItemModelMaster(
+            const Request::FCreateSimpleItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemModelMasterTask>> GetSimpleItemModelMaster(
+            const Request::FGetSimpleItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateSimpleItemModelMasterTask>> UpdateSimpleItemModelMaster(
+            const Request::FUpdateSimpleItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteSimpleItemModelMasterTask>> DeleteSimpleItemModelMaster(
+            const Request::FDeleteSimpleItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleItemModelsTask>> DescribeSimpleItemModels(
+            const Request::FDescribeSimpleItemModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemModelTask>> GetSimpleItemModel(
+            const Request::FGetSimpleItemModelRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(
@@ -376,6 +484,54 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifyReferenceOfByStampTaskTask>> VerifyReferenceOfByStampTask(
             const Request::FVerifyReferenceOfByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleItemsTask>> DescribeSimpleItems(
+            const Request::FDescribeSimpleItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeSimpleItemsByUserIdTask>> DescribeSimpleItemsByUserId(
+            const Request::FDescribeSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemTask>> GetSimpleItem(
+            const Request::FGetSimpleItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemByUserIdTask>> GetSimpleItemByUserId(
+            const Request::FGetSimpleItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemWithSignatureTask>> GetSimpleItemWithSignature(
+            const Request::FGetSimpleItemWithSignatureRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemWithSignatureByUserIdTask>> GetSimpleItemWithSignatureByUserId(
+            const Request::FGetSimpleItemWithSignatureByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAcquireSimpleItemsByUserIdTask>> AcquireSimpleItemsByUserId(
+            const Request::FAcquireSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FConsumeSimpleItemsTask>> ConsumeSimpleItems(
+            const Request::FConsumeSimpleItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FConsumeSimpleItemsByUserIdTask>> ConsumeSimpleItemsByUserId(
+            const Request::FConsumeSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteSimpleItemsByUserIdTask>> DeleteSimpleItemsByUserId(
+            const Request::FDeleteSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAcquireSimpleItemsByStampSheetTask>> AcquireSimpleItemsByStampSheet(
+            const Request::FAcquireSimpleItemsByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FConsumeSimpleItemsByStampTaskTask>> ConsumeSimpleItemsByStampTask(
+            const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2InventoryRestClient, ESPMode::ThreadSafe> FGs2InventoryRestClientPtr;

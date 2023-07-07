@@ -44,4 +44,10 @@ class BPGS2_API UGs2InventoryNamespaceFunctionLibrary : public UBlueprintFunctio
         FGs2InventoryNamespace Namespace,
         FGs2AccessToken AccessToken
     );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Inventory::SimpleInventoryModel", Category="Game Server Services|GS2-Inventory|Namespace|SimpleInventoryModel", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="SimpleInventoryModel") FGs2InventorySimpleInventoryModel SimpleInventoryModel(
+        FGs2InventoryNamespace Namespace,
+        FString InventoryName
+    );
 };

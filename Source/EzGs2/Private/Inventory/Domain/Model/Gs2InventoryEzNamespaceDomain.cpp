@@ -85,4 +85,25 @@ namespace Gs2::UE5::Inventory::Domain::Model
             ProfileValue
         );
     }
+
+    Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeSimpleInventoryModelsIteratorPtr FEzNamespaceDomain::SimpleInventoryModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeSimpleInventoryModelsIterator>(
+            Domain->SimpleInventoryModels(
+            )
+        );
+    }
+
+    Gs2::UE5::Inventory::Domain::Model::FEzSimpleInventoryModelDomainPtr FEzNamespaceDomain::SimpleInventoryModel(
+        const FString InventoryName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Inventory::Domain::Model::FEzSimpleInventoryModelDomain>(
+            Domain->SimpleInventoryModel(
+                InventoryName
+            ),
+            ProfileValue
+        );
+    }
 }

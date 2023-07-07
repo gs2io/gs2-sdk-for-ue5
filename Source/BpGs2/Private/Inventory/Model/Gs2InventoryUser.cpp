@@ -18,6 +18,7 @@
 #include "BpGs2/Public/Inventory/Model/Gs2InventoryInventory.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Inventory/Model/Gs2InventoryInventory.h"
+#include "Inventory/Model/Gs2InventorySimpleInventory.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2InventoryOwnInventory UGs2InventoryUserFunctionLibrary::OwnInventory(
@@ -35,6 +36,26 @@ FGs2InventoryOwnInventory UGs2InventoryUserFunctionLibrary::OwnInventory(
         return Return;
     }
     Return.Value = User.Value->Inventory(
+        InventoryName
+    );
+    return Return;
+}
+
+FGs2InventoryOwnSimpleInventory UGs2InventoryUserFunctionLibrary::OwnSimpleInventory(
+    FGs2InventoryOwnUser User,
+    FString InventoryName
+)
+{
+    FGs2InventoryOwnSimpleInventory Return;
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InventoryUserFunctionLibrary::OwnSimpleInventory] User parameter specification is missing."))
+        return Return;
+    }
+    if (InventoryName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InventoryUserFunctionLibrary::OwnSimpleInventory] InventoryName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = User.Value->SimpleInventory(
         InventoryName
     );
     return Return;

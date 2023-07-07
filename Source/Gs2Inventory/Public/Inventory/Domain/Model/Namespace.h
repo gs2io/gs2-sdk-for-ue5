@@ -26,12 +26,18 @@
 #include "Inventory/Domain/Iterator/DescribeInventoryModelsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemModelMastersIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleInventoryModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleInventoryModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemModelsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoriesIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoriesByUserIdIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemSetsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemSetsByUserIdIterator.h"
 #include "Inventory/Domain/Iterator/DescribeReferenceOfIterator.h"
 #include "Inventory/Domain/Iterator/DescribeReferenceOfByUserIdIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemsByUserIdIterator.h"
 
 namespace Gs2::Inventory::Domain::Model
 {
@@ -40,6 +46,10 @@ namespace Gs2::Inventory::Domain::Model
     class FInventoryModelDomain;
     class FItemModelMasterDomain;
     class FItemModelDomain;
+    class FSimpleInventoryModelMasterDomain;
+    class FSimpleInventoryModelDomain;
+    class FSimpleItemModelMasterDomain;
+    class FSimpleItemModelDomain;
     class FCurrentItemModelMasterDomain;
     class FInventoryDomain;
     class FInventoryAccessTokenDomain;
@@ -47,6 +57,10 @@ namespace Gs2::Inventory::Domain::Model
     class FItemSetAccessTokenDomain;
     class FReferenceOfDomain;
     class FReferenceOfAccessTokenDomain;
+    class FSimpleInventoryDomain;
+    class FSimpleInventoryAccessTokenDomain;
+    class FSimpleItemDomain;
+    class FSimpleItemAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
     class FItemSetEntry;
@@ -195,6 +209,32 @@ namespace Gs2::Inventory::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+        class GS2INVENTORY_API FCreateSimpleInventoryModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain>,
+            public TSharedFromThis<FCreateSimpleInventoryModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateSimpleInventoryModelMasterRequestPtr Request;
+        public:
+            explicit FCreateSimpleInventoryModelMasterTask(
+                const TSharedPtr<FNamespaceDomain> Self,
+                const Request::FCreateSimpleInventoryModelMasterRequestPtr Request
+            );
+
+            FCreateSimpleInventoryModelMasterTask(
+                const FCreateSimpleInventoryModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateSimpleInventoryModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateSimpleInventoryModelMasterTask>> CreateSimpleInventoryModelMaster(
+            Request::FCreateSimpleInventoryModelMasterRequestPtr Request
+        );
+
         class GS2INVENTORY_API FCreateInventoryModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain>,
             public TSharedFromThis<FCreateInventoryModelMasterTask>
@@ -237,6 +277,20 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        ) const;
+
+        Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelMastersIteratorPtr SimpleInventoryModelMasters(
+        ) const;
+
+        TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain> SimpleInventoryModelMaster(
+            const FString InventoryName
+        ) const;
+
+        Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelsIteratorPtr SimpleInventoryModels(
+        ) const;
+
+        TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain> SimpleInventoryModel(
+            const FString InventoryName
         ) const;
 
         Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelMastersIteratorPtr InventoryModelMasters(
