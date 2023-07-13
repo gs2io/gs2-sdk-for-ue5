@@ -35,6 +35,14 @@ namespace Gs2::UE5::LoginReward::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzBonusModel> FEzBonusModel::WithMode(
+        const TOptional<FString> Mode
+    )
+    {
+        this->ModeValue = Mode;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzBonusModel> FEzBonusModel::WithPeriodEventId(
         const TOptional<FString> PeriodEventId
     )
@@ -48,6 +56,14 @@ namespace Gs2::UE5::LoginReward::Model
     )
     {
         this->ResetHourValue = ResetHour;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzBonusModel> FEzBonusModel::WithRepeat(
+        const TOptional<FString> Repeat
+    )
+    {
+        this->RepeatValue = Repeat;
         return SharedThis(this);
     }
 
@@ -82,6 +98,10 @@ namespace Gs2::UE5::LoginReward::Model
     {
         return MetadataValue;
     }
+    TOptional<FString> FEzBonusModel::GetMode() const
+    {
+        return ModeValue;
+    }
     TOptional<FString> FEzBonusModel::GetPeriodEventId() const
     {
         return PeriodEventIdValue;
@@ -98,6 +118,10 @@ namespace Gs2::UE5::LoginReward::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), ResetHourValue.GetValue());
+    }
+    TOptional<FString> FEzBonusModel::GetRepeat() const
+    {
+        return RepeatValue;
     }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzReward>>> FEzBonusModel::GetRewards() const
     {
@@ -117,8 +141,10 @@ namespace Gs2::UE5::LoginReward::Model
         return MakeShared<Gs2::LoginReward::Model::FBonusModel>()
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
+            ->WithMode(ModeValue)
             ->WithPeriodEventId(PeriodEventIdValue)
             ->WithResetHour(ResetHourValue)
+            ->WithRepeat(RepeatValue)
             ->WithRewards([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::LoginReward::Model::FReward>>>();
@@ -159,8 +185,10 @@ namespace Gs2::UE5::LoginReward::Model
         return MakeShared<FEzBonusModel>()
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
+            ->WithMode(Model->GetMode())
             ->WithPeriodEventId(Model->GetPeriodEventId())
             ->WithResetHour(Model->GetResetHour())
+            ->WithRepeat(Model->GetRepeat())
             ->WithRewards([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzReward>>>();

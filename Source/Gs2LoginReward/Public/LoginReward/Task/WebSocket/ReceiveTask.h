@@ -39,6 +39,8 @@ namespace Gs2::LoginReward::Task::WebSocket
         virtual ~FReceiveTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FReceiveResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FReceiveTask, ESPMode::ThreadSafe> FReceiveTaskPtr;
 }

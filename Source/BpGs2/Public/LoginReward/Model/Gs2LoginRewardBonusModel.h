@@ -41,9 +41,13 @@ struct FGs2LoginRewardBonusModelValue
     UPROPERTY(BlueprintReadOnly)
     FString Metadata = "";
     UPROPERTY(BlueprintReadOnly)
+    FString Mode = "";
+    UPROPERTY(BlueprintReadOnly)
     FString PeriodEventId = "";
     UPROPERTY(BlueprintReadOnly)
     int32 ResetHour = 0;
+    UPROPERTY(BlueprintReadOnly)
+    FString Repeat = "";
     UPROPERTY(BlueprintReadOnly)
     TArray<FGs2LoginRewardReward> Rewards = TArray<FGs2LoginRewardReward>();
     UPROPERTY(BlueprintReadOnly)
@@ -63,8 +67,10 @@ inline FGs2LoginRewardBonusModelValue EzBonusModelToFGs2LoginRewardBonusModelVal
     }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
+    Value.Mode = Model->GetMode() ? *Model->GetMode() : "";
     Value.PeriodEventId = Model->GetPeriodEventId() ? *Model->GetPeriodEventId() : "";
     Value.ResetHour = Model->GetResetHour() ? *Model->GetResetHour() : 0;
+    Value.Repeat = Model->GetRepeat() ? *Model->GetRepeat() : "";
     Value.Rewards = Model->GetRewards() ? [&]
     {
         TArray<FGs2LoginRewardReward> r;
@@ -94,8 +100,10 @@ inline Gs2::UE5::LoginReward::Model::FEzBonusModelPtr FGs2LoginRewardBonusModelV
     return MakeShared<Gs2::UE5::LoginReward::Model::FEzBonusModel>()
         ->WithName(Model.Name)
         ->WithMetadata(Model.Metadata)
+        ->WithMode(Model.Mode)
         ->WithPeriodEventId(Model.PeriodEventId)
         ->WithResetHour(Model.ResetHour)
+        ->WithRepeat(Model.Repeat)
         ->WithRewards([&]{
             auto r = MakeShared<TArray<Gs2::UE5::LoginReward::Model::FEzRewardPtr>>();
             for (auto v : Model.Rewards) {

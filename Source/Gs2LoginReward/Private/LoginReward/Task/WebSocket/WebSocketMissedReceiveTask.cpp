@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "LoginReward/Error/AlreadyReceivedError.h"
 
 namespace Gs2::LoginReward::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::LoginReward::Task::WebSocket
         *Result = Result::FMissedReceiveResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FMissedReceiveTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "loginReward.bonus.alreadyReceived") {
+            TGs2Future<Result::FMissedReceiveResult>::OnError(MakeShared<LoginReward::Error::FAlreadyReceivedError>(Error));
+        }
+        else {
+            TGs2Future<Result::FMissedReceiveResult>::OnError(Error);
+        }
     }
 }

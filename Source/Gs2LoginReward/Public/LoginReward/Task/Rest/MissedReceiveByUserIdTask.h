@@ -39,6 +39,8 @@ namespace Gs2::LoginReward::Task::Rest
         virtual ~FMissedReceiveByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FMissedReceiveByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FMissedReceiveByUserIdTask, ESPMode::ThreadSafe> FMissedReceiveByUserIdTaskPtr;
 }

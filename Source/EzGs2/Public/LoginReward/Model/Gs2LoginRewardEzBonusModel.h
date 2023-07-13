@@ -27,8 +27,10 @@ namespace Gs2::UE5::LoginReward::Model
 	{
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TOptional<FString> ModeValue;
         TOptional<FString> PeriodEventIdValue;
         TOptional<int32> ResetHourValue;
+        TOptional<FString> RepeatValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzReward>>> RewardsValue;
         TOptional<FString> MissedReceiveReliefValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeAction>>> MissedReceiveReliefConsumeActionsValue;
@@ -36,8 +38,10 @@ namespace Gs2::UE5::LoginReward::Model
 	public:
         TSharedPtr<FEzBonusModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzBonusModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FEzBonusModel> WithMode(const TOptional<FString> Mode);
         TSharedPtr<FEzBonusModel> WithPeriodEventId(const TOptional<FString> PeriodEventId);
         TSharedPtr<FEzBonusModel> WithResetHour(const TOptional<int32> ResetHour);
+        TSharedPtr<FEzBonusModel> WithRepeat(const TOptional<FString> Repeat);
         TSharedPtr<FEzBonusModel> WithRewards(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzReward>>> Rewards);
         TSharedPtr<FEzBonusModel> WithMissedReceiveRelief(const TOptional<FString> MissedReceiveRelief);
         TSharedPtr<FEzBonusModel> WithMissedReceiveReliefConsumeActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzConsumeAction>>> MissedReceiveReliefConsumeActions);
@@ -46,10 +50,14 @@ namespace Gs2::UE5::LoginReward::Model
 
         TOptional<FString> GetMetadata() const;
 
+        TOptional<FString> GetMode() const;
+
         TOptional<FString> GetPeriodEventId() const;
 
         TOptional<int32> GetResetHour() const;
         FString GetResetHourString() const;
+
+        TOptional<FString> GetRepeat() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzReward>>> GetRewards() const;
 
