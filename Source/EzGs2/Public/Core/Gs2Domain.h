@@ -35,6 +35,7 @@
 #include "Inventory/Domain/EzGs2Inventory.h"
 #include "JobQueue/Domain/EzGs2JobQueue.h"
 #include "Limit/Domain/EzGs2Limit.h"
+#include "LoginReward/Domain/EzGs2LoginReward.h"
 #include "Lottery/Domain/EzGs2Lottery.h"
 #include "Matchmaking/Domain/EzGs2Matchmaking.h"
 #include "MegaField/Domain/EzGs2MegaField.h"
@@ -81,6 +82,7 @@ namespace Gs2::UE5::Core::Domain
         Gs2::UE5::Inventory::Domain::FEzGs2InventoryPtr Inventory;
         Gs2::UE5::JobQueue::Domain::FEzGs2JobQueuePtr JobQueue;
         Gs2::UE5::Limit::Domain::FEzGs2LimitPtr Limit;
+        Gs2::UE5::LoginReward::Domain::FEzGs2LoginRewardPtr LoginReward;
         Gs2::UE5::Lottery::Domain::FEzGs2LotteryPtr Lottery;
         Gs2::UE5::Matchmaking::Domain::FEzGs2MatchmakingPtr Matchmaking;
         Gs2::UE5::MegaField::Domain::FEzGs2MegaFieldPtr MegaField;

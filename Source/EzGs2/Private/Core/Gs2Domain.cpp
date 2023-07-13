@@ -42,9 +42,11 @@ namespace Gs2::UE5::Core::Domain
         Friend = MakeShared<Gs2::UE5::Friend::Domain::FEzGs2Friend>(Super->Friend, Profile);
         Gateway = MakeShared<Gs2::UE5::Gateway::Domain::FEzGs2Gateway>(Super->Gateway, Profile);
         Inbox = MakeShared<Gs2::UE5::Inbox::Domain::FEzGs2Inbox>(Super->Inbox, Profile);
+        Idle = MakeShared<Gs2::UE5::Idle::Domain::FEzGs2Idle>(Super->Idle, Profile);
         Inventory = MakeShared<Gs2::UE5::Inventory::Domain::FEzGs2Inventory>(Super->Inventory, Profile);
         JobQueue = MakeShared<Gs2::UE5::JobQueue::Domain::FEzGs2JobQueue>(Super->JobQueue, Profile);
         Limit = MakeShared<Gs2::UE5::Limit::Domain::FEzGs2Limit>(Super->Limit, Profile);
+        LoginReward = MakeShared<Gs2::UE5::LoginReward::Domain::FEzGs2LoginReward>(Super->LoginReward, Profile);
         Lottery = MakeShared<Gs2::UE5::Lottery::Domain::FEzGs2Lottery>(Super->Lottery, Profile);
         Matchmaking = MakeShared<Gs2::UE5::Matchmaking::Domain::FEzGs2Matchmaking>(Super->Matchmaking, Profile);
         MegaField = MakeShared<Gs2::UE5::MegaField::Domain::FEzGs2MegaField>(Super->MegaField, Profile);

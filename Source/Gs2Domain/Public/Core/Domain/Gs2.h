@@ -38,6 +38,7 @@
 #include "JobQueue/Domain/Gs2JobQueue.h"
 #include "Key/Domain/Gs2Key.h"
 #include "Limit/Domain/Gs2Limit.h"
+#include "LoginReward/Domain/Gs2LoginReward.h"
 #include "Lock/Domain/Gs2Lock.h"
 #include "Lottery/Domain/Gs2Lottery.h"
 #include "Matchmaking/Domain/Gs2Matchmaking.h"
@@ -89,6 +90,7 @@ namespace Gs2::Core::Domain
         const Gs2::JobQueue::Domain::FGs2JobQueueDomainPtr JobQueue;
         const Gs2::Key::Domain::FGs2KeyDomainPtr Key;
         const Gs2::Limit::Domain::FGs2LimitDomainPtr Limit;
+        const Gs2::LoginReward::Domain::FGs2LoginRewardDomainPtr LoginReward;
         const Gs2::Lock::Domain::FGs2LockDomainPtr Lock;
         const Gs2::Lottery::Domain::FGs2LotteryDomainPtr Lottery;
         const Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr Matchmaking;

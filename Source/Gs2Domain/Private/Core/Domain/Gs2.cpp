@@ -88,6 +88,7 @@ namespace Gs2::Core::Domain
         JobQueue(MakeShared<JobQueue::Domain::FGs2JobQueueDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Key(MakeShared<Key::Domain::FGs2KeyDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Limit(MakeShared<Limit::Domain::FGs2LimitDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
+        LoginReward(MakeShared<LoginReward::Domain::FGs2LoginRewardDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Lock(MakeShared<Lock::Domain::FGs2LockDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Lottery(MakeShared<Lottery::Domain::FGs2LotteryDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Matchmaking(MakeShared<Matchmaking::Domain::FGs2MatchmakingDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
@@ -200,6 +201,10 @@ namespace Gs2::Core::Domain
                     {
                         Limit->HandleNotification(Method, *Message->GetPayload());
                     }
+                    if (Service == "Gs2LoginReward")
+                    {
+                        LoginReward->HandleNotification(Method, *Message->GetPayload());
+                    }
                     if (Service == "Gs2Lock")
                     {
                         Lock->HandleNotification(Method, *Message->GetPayload());
@@ -305,6 +310,7 @@ namespace Gs2::Core::Domain
         JobQueue(From.JobQueue),
         Key(From.Key),
         Limit(From.Limit),
+        LoginReward(From.LoginReward),
         Lock(From.Lock),
         Lottery(From.Lottery),
         Matchmaking(From.Matchmaking),
@@ -422,6 +428,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Limit")
             {
                 Limit->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2LoginReward")
+            {
+                LoginReward->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2Lock")
             {
@@ -582,6 +592,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Limit")
             {
                 Limit->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2LoginReward")
+            {
+                LoginReward->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2Lock")
             {
@@ -761,6 +775,10 @@ namespace Gs2::Core::Domain
             if (Service == "limit")
             {
                 Limit->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "login_reward")
+            {
+                LoginReward->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "lock")
             {

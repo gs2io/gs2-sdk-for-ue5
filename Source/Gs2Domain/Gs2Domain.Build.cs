@@ -37,6 +37,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2JobQueue",
 			"Gs2Key",
 			"Gs2Limit",
+			"Gs2LoginReward",
 			"Gs2Lock",
 			"Gs2Lottery",
 			"Gs2Matchmaking",
