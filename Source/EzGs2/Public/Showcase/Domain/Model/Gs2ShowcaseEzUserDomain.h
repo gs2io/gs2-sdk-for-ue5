@@ -22,6 +22,7 @@
 #include "Showcase/Model/Gs2ShowcaseEzSalesItemGroup.h"
 #include "Showcase/Model/Gs2ShowcaseEzShowcase.h"
 #include "Showcase/Model/Gs2ShowcaseEzDisplayItem.h"
+#include "Showcase/Model/Gs2ShowcaseEzRandomDisplayItem.h"
 #include "Showcase/Model/Gs2ShowcaseEzConfig.h"
 #include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"

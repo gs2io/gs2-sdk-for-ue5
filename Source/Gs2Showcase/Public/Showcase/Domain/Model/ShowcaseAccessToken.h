@@ -27,6 +27,9 @@
 #include "Showcase/Domain/Iterator/DescribeShowcaseMastersIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesByUserIdIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomShowcaseMastersIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsByUserIdIterator.h"
 
 namespace Gs2::Showcase::Domain::Model
 {
@@ -37,8 +40,15 @@ namespace Gs2::Showcase::Domain::Model
     class FCurrentShowcaseMasterDomain;
     class FShowcaseDomain;
     class FShowcaseAccessTokenDomain;
+    class FRandomShowcaseMasterDomain;
+    class FRandomShowcaseDomain;
+    class FRandomShowcaseAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
+    class FRandomShowcaseStatusDomain;
+    class FRandomShowcaseStatusAccessTokenDomain;
+    class FRandomDisplayItemDomain;
+    class FRandomDisplayItemAccessTokenDomain;
 
     class GS2SHOWCASE_API FShowcaseAccessTokenDomain:
         public TSharedFromThis<FShowcaseAccessTokenDomain>

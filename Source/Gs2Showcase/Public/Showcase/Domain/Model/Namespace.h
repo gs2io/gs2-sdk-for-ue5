@@ -27,6 +27,9 @@
 #include "Showcase/Domain/Iterator/DescribeShowcaseMastersIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesByUserIdIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomShowcaseMastersIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsByUserIdIterator.h"
 
 namespace Gs2::Showcase::Domain::Model
 {
@@ -37,8 +40,15 @@ namespace Gs2::Showcase::Domain::Model
     class FCurrentShowcaseMasterDomain;
     class FShowcaseDomain;
     class FShowcaseAccessTokenDomain;
+    class FRandomShowcaseMasterDomain;
+    class FRandomShowcaseDomain;
+    class FRandomShowcaseAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
+    class FRandomShowcaseStatusDomain;
+    class FRandomShowcaseStatusAccessTokenDomain;
+    class FRandomDisplayItemDomain;
+    class FRandomDisplayItemAccessTokenDomain;
 
     class GS2SHOWCASE_API FNamespaceDomain:
         public TSharedFromThis<FNamespaceDomain>
@@ -184,6 +194,32 @@ namespace Gs2::Showcase::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+        class GS2SHOWCASE_API FCreateRandomShowcaseMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>,
+            public TSharedFromThis<FCreateRandomShowcaseMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateRandomShowcaseMasterRequestPtr Request;
+        public:
+            explicit FCreateRandomShowcaseMasterTask(
+                const TSharedPtr<FNamespaceDomain> Self,
+                const Request::FCreateRandomShowcaseMasterRequestPtr Request
+            );
+
+            FCreateRandomShowcaseMasterTask(
+                const FCreateRandomShowcaseMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateRandomShowcaseMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateRandomShowcaseMasterTask>> CreateRandomShowcaseMaster(
+            Request::FCreateRandomShowcaseMasterRequestPtr Request
+        );
+
         class GS2SHOWCASE_API FCreateSalesItemMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FSalesItemMasterDomain>,
             public TSharedFromThis<FCreateSalesItemMasterTask>
@@ -262,15 +298,11 @@ namespace Gs2::Showcase::Domain::Model
             Request::FCreateShowcaseMasterRequestPtr Request
         );
 
-        TSharedPtr<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain> CurrentShowcaseMaster(
+        Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIteratorPtr RandomShowcaseMasters(
         ) const;
 
-        TSharedPtr<Gs2::Showcase::Domain::Model::FUserDomain> User(
-            const FString UserId
-        ) const;
-
-        TSharedPtr<Gs2::Showcase::Domain::Model::FUserAccessTokenDomain> AccessToken(
-            Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain> RandomShowcaseMaster(
+            const FString ShowcaseName
         ) const;
 
         Gs2::Showcase::Domain::Iterator::FDescribeSalesItemMastersIteratorPtr SalesItemMasters(
@@ -285,6 +317,17 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain> SalesItemGroupMaster(
             const FString SalesItemGroupName
+        ) const;
+
+        TSharedPtr<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain> CurrentShowcaseMaster(
+        ) const;
+
+        TSharedPtr<Gs2::Showcase::Domain::Model::FUserDomain> User(
+            const FString UserId
+        ) const;
+
+        TSharedPtr<Gs2::Showcase::Domain::Model::FUserAccessTokenDomain> AccessToken(
+            Gs2::Auth::Model::FAccessTokenPtr AccessToken
         ) const;
 
         Gs2::Showcase::Domain::Iterator::FDescribeShowcaseMastersIteratorPtr ShowcaseMasters(

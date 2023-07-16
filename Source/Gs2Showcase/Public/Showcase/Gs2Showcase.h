@@ -27,6 +27,11 @@
 #include "Model/Showcase.h"
 #include "Model/DisplayItem.h"
 #include "Model/DisplayItemMaster.h"
+#include "Model/RandomShowcaseMaster.h"
+#include "Model/RandomShowcase.h"
+#include "Model/PurchaseCount.h"
+#include "Model/RandomDisplayItem.h"
+#include "Model/RandomDisplayItemModel.h"
 #include "Model/ConsumeAction.h"
 #include "Model/AcquireAction.h"
 #include "Model/Config.h"
@@ -220,6 +225,96 @@
 #include "Result/BuyByUserIdResult.h"
 #include "Task/Rest/BuyByUserIdTask.h"
 #include "Task/WebSocket/BuyByUserIdTask.h"
+
+// DescribeRandomShowcaseMasters
+#include "Request/DescribeRandomShowcaseMastersRequest.h"
+#include "Result/DescribeRandomShowcaseMastersResult.h"
+#include "Task/Rest/DescribeRandomShowcaseMastersTask.h"
+#include "Task/WebSocket/DescribeRandomShowcaseMastersTask.h"
+
+// CreateRandomShowcaseMaster
+#include "Request/CreateRandomShowcaseMasterRequest.h"
+#include "Result/CreateRandomShowcaseMasterResult.h"
+#include "Task/Rest/CreateRandomShowcaseMasterTask.h"
+#include "Task/WebSocket/CreateRandomShowcaseMasterTask.h"
+
+// GetRandomShowcaseMaster
+#include "Request/GetRandomShowcaseMasterRequest.h"
+#include "Result/GetRandomShowcaseMasterResult.h"
+#include "Task/Rest/GetRandomShowcaseMasterTask.h"
+#include "Task/WebSocket/GetRandomShowcaseMasterTask.h"
+
+// UpdateRandomShowcaseMaster
+#include "Request/UpdateRandomShowcaseMasterRequest.h"
+#include "Result/UpdateRandomShowcaseMasterResult.h"
+#include "Task/Rest/UpdateRandomShowcaseMasterTask.h"
+#include "Task/WebSocket/UpdateRandomShowcaseMasterTask.h"
+
+// DeleteRandomShowcaseMaster
+#include "Request/DeleteRandomShowcaseMasterRequest.h"
+#include "Result/DeleteRandomShowcaseMasterResult.h"
+#include "Task/Rest/DeleteRandomShowcaseMasterTask.h"
+#include "Task/WebSocket/DeleteRandomShowcaseMasterTask.h"
+
+// DescribeRandomShowcaseSalesItems
+#include "Request/DescribeRandomShowcaseSalesItemsRequest.h"
+#include "Result/DescribeRandomShowcaseSalesItemsResult.h"
+#include "Task/Rest/DescribeRandomShowcaseSalesItemsTask.h"
+#include "Task/WebSocket/DescribeRandomShowcaseSalesItemsTask.h"
+
+// DescribeRandomShowcaseSalesItemsByUserId
+#include "Request/DescribeRandomShowcaseSalesItemsByUserIdRequest.h"
+#include "Result/DescribeRandomShowcaseSalesItemsByUserIdResult.h"
+#include "Task/Rest/DescribeRandomShowcaseSalesItemsByUserIdTask.h"
+#include "Task/WebSocket/DescribeRandomShowcaseSalesItemsByUserIdTask.h"
+
+// GetRandomShowcaseSalesItem
+#include "Request/GetRandomShowcaseSalesItemRequest.h"
+#include "Result/GetRandomShowcaseSalesItemResult.h"
+#include "Task/Rest/GetRandomShowcaseSalesItemTask.h"
+#include "Task/WebSocket/GetRandomShowcaseSalesItemTask.h"
+
+// GetRandomShowcaseSalesItemByUserId
+#include "Request/GetRandomShowcaseSalesItemByUserIdRequest.h"
+#include "Result/GetRandomShowcaseSalesItemByUserIdResult.h"
+#include "Task/Rest/GetRandomShowcaseSalesItemByUserIdTask.h"
+#include "Task/WebSocket/GetRandomShowcaseSalesItemByUserIdTask.h"
+
+// IncrementPurchaseCountByUserId
+#include "Request/IncrementPurchaseCountByUserIdRequest.h"
+#include "Result/IncrementPurchaseCountByUserIdResult.h"
+#include "Task/Rest/IncrementPurchaseCountByUserIdTask.h"
+#include "Task/WebSocket/IncrementPurchaseCountByUserIdTask.h"
+
+// IncrementPurchaseCountByStampTask
+#include "Request/IncrementPurchaseCountByStampTaskRequest.h"
+#include "Result/IncrementPurchaseCountByStampTaskResult.h"
+#include "Task/Rest/IncrementPurchaseCountByStampTaskTask.h"
+#include "Task/WebSocket/IncrementPurchaseCountByStampTaskTask.h"
+
+// ForceReDrawByUserId
+#include "Request/ForceReDrawByUserIdRequest.h"
+#include "Result/ForceReDrawByUserIdResult.h"
+#include "Task/Rest/ForceReDrawByUserIdTask.h"
+#include "Task/WebSocket/ForceReDrawByUserIdTask.h"
+
+// ForceReDrawByUserIdByStampSheet
+#include "Request/ForceReDrawByUserIdByStampSheetRequest.h"
+#include "Result/ForceReDrawByUserIdByStampSheetResult.h"
+#include "Task/Rest/ForceReDrawByUserIdByStampSheetTask.h"
+#include "Task/WebSocket/ForceReDrawByUserIdByStampSheetTask.h"
+
+// RandomShowcaseBuy
+#include "Request/RandomShowcaseBuyRequest.h"
+#include "Result/RandomShowcaseBuyResult.h"
+#include "Task/Rest/RandomShowcaseBuyTask.h"
+#include "Task/WebSocket/RandomShowcaseBuyTask.h"
+
+// RandomShowcaseBuyByUserId
+#include "Request/RandomShowcaseBuyByUserIdRequest.h"
+#include "Result/RandomShowcaseBuyByUserIdResult.h"
+#include "Task/Rest/RandomShowcaseBuyByUserIdTask.h"
+#include "Task/WebSocket/RandomShowcaseBuyByUserIdTask.h"
 
 // Client
 #include "Gs2ShowcaseRestClient.h"

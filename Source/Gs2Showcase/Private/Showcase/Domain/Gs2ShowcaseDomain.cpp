@@ -31,8 +31,12 @@
 #include "Showcase/Domain/Model/ShowcaseMaster.h"
 #include "Showcase/Domain/Model/CurrentShowcaseMaster.h"
 #include "Showcase/Domain/Model/Showcase.h"
+#include "Showcase/Domain/Model/RandomShowcaseMaster.h"
+#include "Showcase/Domain/Model/RandomShowcase.h"
 #include "Showcase/Domain/Model/User.h"
 #include "Showcase/Domain/Model/UserAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatus.h"
+#include "Showcase/Domain/Model/RandomDisplayItem.h"
 
 namespace Gs2::Showcase::Domain
 {
@@ -154,6 +158,43 @@ namespace Gs2::Showcase::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "ForceReDrawByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Showcase::Request::FForceReDrawByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Showcase::Result::FForceReDrawByUserIdResult::FromJson(ResultModelJson);
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        RequestModel->GetShowcaseName(),
+                        "RandomDisplayItem"
+                    );
+                    const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                        Item->GetName()
+                    );
+                    Cache->Put(
+                        Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
+        }
     }
 
     void FGs2ShowcaseDomain::UpdateCacheFromStampTask(
@@ -161,6 +202,42 @@ namespace Gs2::Showcase::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "IncrementPurchaseCountByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Showcase::Request::FIncrementPurchaseCountByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Showcase::Result::FIncrementPurchaseCountByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetShowcaseName(),
+                    "RandomDisplayItem"
+                );
+                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2ShowcaseDomain::UpdateCacheFromJobResult(
@@ -168,6 +245,51 @@ namespace Gs2::Showcase::Domain
         const Gs2::JobQueue::Model::FJobPtr Job,
         const Gs2::JobQueue::Model::FJobResultBodyPtr Result
     ) {
+        if (Method == "force_re_draw_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Showcase::Request::FForceReDrawByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Showcase::Result::FForceReDrawByUserIdResult::FromJson(ResultModelJson);
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        RequestModel->GetShowcaseName(),
+                        "RandomDisplayItem"
+                    );
+                    const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                        Item->GetName()
+                    );
+                    Cache->Put(
+                        Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
+        }
     }
 
     void FGs2ShowcaseDomain::HandleNotification(

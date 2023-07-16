@@ -22,9 +22,11 @@
 #include "Showcase/Model/Gs2ShowcaseEzSalesItemGroup.h"
 #include "Showcase/Model/Gs2ShowcaseEzShowcase.h"
 #include "Showcase/Model/Gs2ShowcaseEzDisplayItem.h"
+#include "Showcase/Model/Gs2ShowcaseEzRandomDisplayItem.h"
 #include "Showcase/Model/Gs2ShowcaseEzConfig.h"
 #include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
+#include "Gs2ShowcaseEzRandomShowcaseGameSessionDomain.h"
 #include "Gs2ShowcaseEzShowcaseGameSessionDomain.h"
 #include "Gs2ShowcaseEzUserGameSessionDomain.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
@@ -47,6 +49,10 @@ namespace Gs2::UE5::Showcase::Domain::Model
             Gs2::Showcase::Domain::Model::FUserAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::FProfilePtr Profile
         );
+
+        Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseGameSessionDomainPtr RandomShowcase(
+            const FString ShowcaseName
+        ) const;
 
         Gs2::UE5::Showcase::Domain::Model::FEzShowcaseGameSessionDomainPtr Showcase(
             const FString ShowcaseName

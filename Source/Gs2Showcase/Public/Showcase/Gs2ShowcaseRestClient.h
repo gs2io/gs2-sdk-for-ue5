@@ -80,6 +80,36 @@
 #include "Task/Rest/BuyTask.h"
 #include "Request/BuyByUserIdRequest.h"
 #include "Task/Rest/BuyByUserIdTask.h"
+#include "Request/DescribeRandomShowcaseMastersRequest.h"
+#include "Task/Rest/DescribeRandomShowcaseMastersTask.h"
+#include "Request/CreateRandomShowcaseMasterRequest.h"
+#include "Task/Rest/CreateRandomShowcaseMasterTask.h"
+#include "Request/GetRandomShowcaseMasterRequest.h"
+#include "Task/Rest/GetRandomShowcaseMasterTask.h"
+#include "Request/UpdateRandomShowcaseMasterRequest.h"
+#include "Task/Rest/UpdateRandomShowcaseMasterTask.h"
+#include "Request/DeleteRandomShowcaseMasterRequest.h"
+#include "Task/Rest/DeleteRandomShowcaseMasterTask.h"
+#include "Request/DescribeRandomShowcaseSalesItemsRequest.h"
+#include "Task/Rest/DescribeRandomShowcaseSalesItemsTask.h"
+#include "Request/DescribeRandomShowcaseSalesItemsByUserIdRequest.h"
+#include "Task/Rest/DescribeRandomShowcaseSalesItemsByUserIdTask.h"
+#include "Request/GetRandomShowcaseSalesItemRequest.h"
+#include "Task/Rest/GetRandomShowcaseSalesItemTask.h"
+#include "Request/GetRandomShowcaseSalesItemByUserIdRequest.h"
+#include "Task/Rest/GetRandomShowcaseSalesItemByUserIdTask.h"
+#include "Request/IncrementPurchaseCountByUserIdRequest.h"
+#include "Task/Rest/IncrementPurchaseCountByUserIdTask.h"
+#include "Request/IncrementPurchaseCountByStampTaskRequest.h"
+#include "Task/Rest/IncrementPurchaseCountByStampTaskTask.h"
+#include "Request/ForceReDrawByUserIdRequest.h"
+#include "Task/Rest/ForceReDrawByUserIdTask.h"
+#include "Request/ForceReDrawByUserIdByStampSheetRequest.h"
+#include "Task/Rest/ForceReDrawByUserIdByStampSheetTask.h"
+#include "Request/RandomShowcaseBuyRequest.h"
+#include "Task/Rest/RandomShowcaseBuyTask.h"
+#include "Request/RandomShowcaseBuyByUserIdRequest.h"
+#include "Task/Rest/RandomShowcaseBuyByUserIdTask.h"
 
 namespace Gs2::Showcase
 {
@@ -214,6 +244,66 @@ namespace Gs2::Showcase
 
         TSharedPtr<FAsyncTask<Task::Rest::FBuyByUserIdTask>> BuyByUserId(
             const Request::FBuyByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseMastersTask>> DescribeRandomShowcaseMasters(
+            const Request::FDescribeRandomShowcaseMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateRandomShowcaseMasterTask>> CreateRandomShowcaseMaster(
+            const Request::FCreateRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseMasterTask>> GetRandomShowcaseMaster(
+            const Request::FGetRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateRandomShowcaseMasterTask>> UpdateRandomShowcaseMaster(
+            const Request::FUpdateRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteRandomShowcaseMasterTask>> DeleteRandomShowcaseMaster(
+            const Request::FDeleteRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsTask>> DescribeRandomShowcaseSalesItems(
+            const Request::FDescribeRandomShowcaseSalesItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsByUserIdTask>> DescribeRandomShowcaseSalesItemsByUserId(
+            const Request::FDescribeRandomShowcaseSalesItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemTask>> GetRandomShowcaseSalesItem(
+            const Request::FGetRandomShowcaseSalesItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemByUserIdTask>> GetRandomShowcaseSalesItemByUserId(
+            const Request::FGetRandomShowcaseSalesItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByUserIdTask>> IncrementPurchaseCountByUserId(
+            const Request::FIncrementPurchaseCountByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByStampTaskTask>> IncrementPurchaseCountByStampTask(
+            const Request::FIncrementPurchaseCountByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FForceReDrawByUserIdTask>> ForceReDrawByUserId(
+            const Request::FForceReDrawByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FForceReDrawByUserIdByStampSheetTask>> ForceReDrawByUserIdByStampSheet(
+            const Request::FForceReDrawByUserIdByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRandomShowcaseBuyTask>> RandomShowcaseBuy(
+            const Request::FRandomShowcaseBuyRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRandomShowcaseBuyByUserIdTask>> RandomShowcaseBuyByUserId(
+            const Request::FRandomShowcaseBuyByUserIdRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ShowcaseRestClient, ESPMode::ThreadSafe> FGs2ShowcaseRestClientPtr;

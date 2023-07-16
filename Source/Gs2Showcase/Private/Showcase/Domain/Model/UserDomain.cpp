@@ -30,8 +30,15 @@
 #include "Showcase/Domain/Model/CurrentShowcaseMaster.h"
 #include "Showcase/Domain/Model/Showcase.h"
 #include "Showcase/Domain/Model/ShowcaseAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseMaster.h"
+#include "Showcase/Domain/Model/RandomShowcase.h"
+#include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"
 #include "Showcase/Domain/Model/User.h"
 #include "Showcase/Domain/Model/UserAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatus.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatusAccessToken.h"
+#include "Showcase/Domain/Model/RandomDisplayItem.h"
+#include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
@@ -72,6 +79,49 @@ namespace Gs2::Showcase::Domain::Model
         Client(From.Client)
     {
 
+    }
+
+    Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseSalesItemsByUserIdIteratorPtr FUserDomain::RandomShowcaseSalesItems(
+        const FString ShowcaseName
+    ) const
+    {
+        return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseSalesItemsByUserIdIterator>(
+            Cache,
+            Client,
+            NamespaceName,
+            ShowcaseName,
+            UserId
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain> FUserDomain::RandomShowcase(
+        const FString ShowcaseName
+    ) const
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            UserId,
+            ShowcaseName
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusDomain> FUserDomain::RandomShowcaseStatus(
+        const FString ShowcaseName
+    ) const
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            UserId,
+            ShowcaseName
+        );
     }
 
     Gs2::Showcase::Domain::Iterator::FDescribeShowcasesByUserIdIteratorPtr FUserDomain::Showcases(

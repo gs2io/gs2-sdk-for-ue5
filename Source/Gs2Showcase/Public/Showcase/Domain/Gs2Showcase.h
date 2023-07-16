@@ -31,8 +31,15 @@
 #include "Showcase/Domain/Model/CurrentShowcaseMaster.h"
 #include "Showcase/Domain/Model/Showcase.h"
 #include "Showcase/Domain/Model/ShowcaseAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseMaster.h"
+#include "Showcase/Domain/Model/RandomShowcase.h"
+#include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"
 #include "Showcase/Domain/Model/User.h"
 #include "Showcase/Domain/Model/UserAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatus.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatusAccessToken.h"
+#include "Showcase/Domain/Model/RandomDisplayItem.h"
+#include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 
 // Iterator
 #include "Showcase/Domain/Iterator/DescribeNamespacesIterator.h"
@@ -41,6 +48,9 @@
 #include "Showcase/Domain/Iterator/DescribeShowcaseMastersIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesByUserIdIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomShowcaseMastersIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsByUserIdIterator.h"
 
 // Notification
 

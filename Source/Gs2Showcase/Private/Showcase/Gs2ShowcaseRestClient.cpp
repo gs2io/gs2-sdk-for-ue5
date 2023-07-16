@@ -297,4 +297,139 @@ namespace Gs2::Showcase
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseMastersTask>> FGs2ShowcaseRestClient::DescribeRandomShowcaseMasters(
+        const Request::FDescribeRandomShowcaseMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeRandomShowcaseMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateRandomShowcaseMasterTask>> FGs2ShowcaseRestClient::CreateRandomShowcaseMaster(
+        const Request::FCreateRandomShowcaseMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateRandomShowcaseMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseMasterTask>> FGs2ShowcaseRestClient::GetRandomShowcaseMaster(
+        const Request::FGetRandomShowcaseMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetRandomShowcaseMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateRandomShowcaseMasterTask>> FGs2ShowcaseRestClient::UpdateRandomShowcaseMaster(
+        const Request::FUpdateRandomShowcaseMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateRandomShowcaseMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteRandomShowcaseMasterTask>> FGs2ShowcaseRestClient::DeleteRandomShowcaseMaster(
+        const Request::FDeleteRandomShowcaseMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteRandomShowcaseMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsTask>> FGs2ShowcaseRestClient::DescribeRandomShowcaseSalesItems(
+        const Request::FDescribeRandomShowcaseSalesItemsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsByUserIdTask>> FGs2ShowcaseRestClient::DescribeRandomShowcaseSalesItemsByUserId(
+        const Request::FDescribeRandomShowcaseSalesItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemTask>> FGs2ShowcaseRestClient::GetRandomShowcaseSalesItem(
+        const Request::FGetRandomShowcaseSalesItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemByUserIdTask>> FGs2ShowcaseRestClient::GetRandomShowcaseSalesItemByUserId(
+        const Request::FGetRandomShowcaseSalesItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByUserIdTask>> FGs2ShowcaseRestClient::IncrementPurchaseCountByUserId(
+        const Request::FIncrementPurchaseCountByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncrementPurchaseCountByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByStampTaskTask>> FGs2ShowcaseRestClient::IncrementPurchaseCountByStampTask(
+        const Request::FIncrementPurchaseCountByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncrementPurchaseCountByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FForceReDrawByUserIdTask>> FGs2ShowcaseRestClient::ForceReDrawByUserId(
+        const Request::FForceReDrawByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FForceReDrawByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FForceReDrawByUserIdByStampSheetTask>> FGs2ShowcaseRestClient::ForceReDrawByUserIdByStampSheet(
+        const Request::FForceReDrawByUserIdByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FForceReDrawByUserIdByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FRandomShowcaseBuyTask>> FGs2ShowcaseRestClient::RandomShowcaseBuy(
+        const Request::FRandomShowcaseBuyRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRandomShowcaseBuyTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FRandomShowcaseBuyByUserIdTask>> FGs2ShowcaseRestClient::RandomShowcaseBuyByUserId(
+        const Request::FRandomShowcaseBuyByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRandomShowcaseBuyByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
 }

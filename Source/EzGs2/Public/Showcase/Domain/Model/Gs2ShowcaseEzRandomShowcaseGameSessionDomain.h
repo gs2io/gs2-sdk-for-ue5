@@ -1,0 +1,82 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"
+#include "Showcase/Model/Gs2ShowcaseEzSalesItem.h"
+#include "Showcase/Model/Gs2ShowcaseEzSalesItemGroup.h"
+#include "Showcase/Model/Gs2ShowcaseEzShowcase.h"
+#include "Showcase/Model/Gs2ShowcaseEzDisplayItem.h"
+#include "Showcase/Model/Gs2ShowcaseEzRandomDisplayItem.h"
+#include "Showcase/Model/Gs2ShowcaseEzConfig.h"
+#include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
+#include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
+#include "Gs2ShowcaseEzRandomDisplayItemGameSessionDomain.h"
+#include "Gs2ShowcaseEzRandomShowcaseGameSessionDomain.h"
+#include "Auth/Model/Gs2AuthEzAccessToken.h"
+#include "Util/Profile.h"
+
+namespace Gs2::UE5::Showcase::Domain::Model
+{
+
+    class EZGS2_API FEzRandomShowcaseGameSessionDomain final :
+        public TSharedFromThis<FEzRandomShowcaseGameSessionDomain>
+    {
+        Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FProfilePtr ProfileValue;
+
+        public:
+        TOptional<FString> NamespaceName() const;
+        TOptional<FString> UserId() const;
+        TOptional<FString> ShowcaseName() const;
+
+        FEzRandomShowcaseGameSessionDomain(
+            Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FProfilePtr Profile
+        );
+
+        class FGetRandomShowcaseDisplayItemTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>,
+            public TSharedFromThis<FGetRandomShowcaseDisplayItemTask>
+        {
+            TSharedPtr<FEzRandomShowcaseGameSessionDomain> Self;
+            TOptional<FString> DisplayItemName;
+
+        public:
+            explicit FGetRandomShowcaseDisplayItemTask(
+                TSharedPtr<FEzRandomShowcaseGameSessionDomain> Self,
+                TOptional<FString> DisplayItemName = TOptional<FString>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>> Result
+            ) override;
+        };
+        friend FGetRandomShowcaseDisplayItemTask;
+
+        TSharedPtr<FAsyncTask<FGetRandomShowcaseDisplayItemTask>> GetRandomShowcaseDisplayItem(
+            TOptional<FString> DisplayItemName = TOptional<FString>()
+        );
+
+        Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomainPtr RandomDisplayItem(
+            const FString DisplayItemName
+        ) const;
+
+    };
+    typedef TSharedPtr<FEzRandomShowcaseGameSessionDomain> FEzRandomShowcaseGameSessionDomainPtr;
+}

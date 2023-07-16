@@ -31,8 +31,15 @@
 #include "Showcase/Domain/Model/CurrentShowcaseMaster.h"
 #include "Showcase/Domain/Model/Showcase.h"
 #include "Showcase/Domain/Model/ShowcaseAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseMaster.h"
+#include "Showcase/Domain/Model/RandomShowcase.h"
+#include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"
 #include "Showcase/Domain/Model/User.h"
 #include "Showcase/Domain/Model/UserAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatus.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatusAccessToken.h"
+#include "Showcase/Domain/Model/RandomDisplayItem.h"
+#include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
@@ -73,6 +80,49 @@ namespace Gs2::Showcase::Domain::Model
         Client(From.Client)
     {
 
+    }
+
+    Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseSalesItemsIteratorPtr FUserAccessTokenDomain::RandomShowcaseSalesItems(
+        const FString ShowcaseName
+    ) const
+    {
+        return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseSalesItemsIterator>(
+            Cache,
+            Client,
+            NamespaceName,
+            ShowcaseName,
+            AccessToken
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomain> FUserAccessTokenDomain::RandomShowcase(
+        const FString ShowcaseName
+    ) const
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            AccessToken,
+            ShowcaseName
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusAccessTokenDomain> FUserAccessTokenDomain::RandomShowcaseStatus(
+        const FString ShowcaseName
+    ) const
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusAccessTokenDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            AccessToken,
+            ShowcaseName
+        );
     }
 
     Gs2::Showcase::Domain::Iterator::FDescribeShowcasesIteratorPtr FUserAccessTokenDomain::Showcases(

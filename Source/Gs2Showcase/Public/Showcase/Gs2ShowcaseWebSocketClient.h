@@ -80,6 +80,36 @@
 #include "Task/WebSocket/BuyTask.h"
 #include "Request/BuyByUserIdRequest.h"
 #include "Task/WebSocket/BuyByUserIdTask.h"
+#include "Request/DescribeRandomShowcaseMastersRequest.h"
+#include "Task/WebSocket/DescribeRandomShowcaseMastersTask.h"
+#include "Request/CreateRandomShowcaseMasterRequest.h"
+#include "Task/WebSocket/CreateRandomShowcaseMasterTask.h"
+#include "Request/GetRandomShowcaseMasterRequest.h"
+#include "Task/WebSocket/GetRandomShowcaseMasterTask.h"
+#include "Request/UpdateRandomShowcaseMasterRequest.h"
+#include "Task/WebSocket/UpdateRandomShowcaseMasterTask.h"
+#include "Request/DeleteRandomShowcaseMasterRequest.h"
+#include "Task/WebSocket/DeleteRandomShowcaseMasterTask.h"
+#include "Request/DescribeRandomShowcaseSalesItemsRequest.h"
+#include "Task/WebSocket/DescribeRandomShowcaseSalesItemsTask.h"
+#include "Request/DescribeRandomShowcaseSalesItemsByUserIdRequest.h"
+#include "Task/WebSocket/DescribeRandomShowcaseSalesItemsByUserIdTask.h"
+#include "Request/GetRandomShowcaseSalesItemRequest.h"
+#include "Task/WebSocket/GetRandomShowcaseSalesItemTask.h"
+#include "Request/GetRandomShowcaseSalesItemByUserIdRequest.h"
+#include "Task/WebSocket/GetRandomShowcaseSalesItemByUserIdTask.h"
+#include "Request/IncrementPurchaseCountByUserIdRequest.h"
+#include "Task/WebSocket/IncrementPurchaseCountByUserIdTask.h"
+#include "Request/IncrementPurchaseCountByStampTaskRequest.h"
+#include "Task/WebSocket/IncrementPurchaseCountByStampTaskTask.h"
+#include "Request/ForceReDrawByUserIdRequest.h"
+#include "Task/WebSocket/ForceReDrawByUserIdTask.h"
+#include "Request/ForceReDrawByUserIdByStampSheetRequest.h"
+#include "Task/WebSocket/ForceReDrawByUserIdByStampSheetTask.h"
+#include "Request/RandomShowcaseBuyRequest.h"
+#include "Task/WebSocket/RandomShowcaseBuyTask.h"
+#include "Request/RandomShowcaseBuyByUserIdRequest.h"
+#include "Task/WebSocket/RandomShowcaseBuyByUserIdTask.h"
 
 namespace Gs2::Showcase
 {
@@ -214,6 +244,66 @@ namespace Gs2::Showcase
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FBuyByUserIdTask>> BuyByUserId(
             const Request::FBuyByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomShowcaseMastersTask>> DescribeRandomShowcaseMasters(
+            const Request::FDescribeRandomShowcaseMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateRandomShowcaseMasterTask>> CreateRandomShowcaseMaster(
+            const Request::FCreateRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomShowcaseMasterTask>> GetRandomShowcaseMaster(
+            const Request::FGetRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateRandomShowcaseMasterTask>> UpdateRandomShowcaseMaster(
+            const Request::FUpdateRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteRandomShowcaseMasterTask>> DeleteRandomShowcaseMaster(
+            const Request::FDeleteRandomShowcaseMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomShowcaseSalesItemsTask>> DescribeRandomShowcaseSalesItems(
+            const Request::FDescribeRandomShowcaseSalesItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomShowcaseSalesItemsByUserIdTask>> DescribeRandomShowcaseSalesItemsByUserId(
+            const Request::FDescribeRandomShowcaseSalesItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomShowcaseSalesItemTask>> GetRandomShowcaseSalesItem(
+            const Request::FGetRandomShowcaseSalesItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomShowcaseSalesItemByUserIdTask>> GetRandomShowcaseSalesItemByUserId(
+            const Request::FGetRandomShowcaseSalesItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementPurchaseCountByUserIdTask>> IncrementPurchaseCountByUserId(
+            const Request::FIncrementPurchaseCountByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementPurchaseCountByStampTaskTask>> IncrementPurchaseCountByStampTask(
+            const Request::FIncrementPurchaseCountByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FForceReDrawByUserIdTask>> ForceReDrawByUserId(
+            const Request::FForceReDrawByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FForceReDrawByUserIdByStampSheetTask>> ForceReDrawByUserIdByStampSheet(
+            const Request::FForceReDrawByUserIdByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRandomShowcaseBuyTask>> RandomShowcaseBuy(
+            const Request::FRandomShowcaseBuyRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRandomShowcaseBuyByUserIdTask>> RandomShowcaseBuyByUserId(
+            const Request::FRandomShowcaseBuyByUserIdRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ShowcaseWebSocketClient, ESPMode::ThreadSafe> FGs2ShowcaseWebSocketClientPtr;

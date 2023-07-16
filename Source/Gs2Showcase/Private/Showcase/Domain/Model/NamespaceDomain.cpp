@@ -30,8 +30,15 @@
 #include "Showcase/Domain/Model/CurrentShowcaseMaster.h"
 #include "Showcase/Domain/Model/Showcase.h"
 #include "Showcase/Domain/Model/ShowcaseAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseMaster.h"
+#include "Showcase/Domain/Model/RandomShowcase.h"
+#include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"
 #include "Showcase/Domain/Model/User.h"
 #include "Showcase/Domain/Model/UserAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatus.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatusAccessToken.h"
+#include "Showcase/Domain/Model/RandomDisplayItem.h"
+#include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
@@ -284,6 +291,76 @@ namespace Gs2::Showcase::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FCreateRandomShowcaseMasterTask::FCreateRandomShowcaseMasterTask(
+        const TSharedPtr<FNamespaceDomain> Self,
+        const Request::FCreateRandomShowcaseMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateRandomShowcaseMasterTask::FCreateRandomShowcaseMasterTask(
+        const FCreateRandomShowcaseMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateRandomShowcaseMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateRandomShowcaseMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "RandomShowcaseMaster"
+                );
+                const auto Key = Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FRandomShowcaseMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>(
+            Self->Cache,
+            Self->JobQueueDomain,
+            Self->StampSheetConfiguration,
+            Self->Session,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateRandomShowcaseMasterTask>> FNamespaceDomain::CreateRandomShowcaseMaster(
+        Request::FCreateRandomShowcaseMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateRandomShowcaseMasterTask>>(this->AsShared(), Request);
+    }
+
     FNamespaceDomain::FCreateSalesItemMasterTask::FCreateSalesItemMasterTask(
         const TSharedPtr<FNamespaceDomain> Self,
         const Request::FCreateSalesItemMasterRequestPtr Request
@@ -494,43 +571,27 @@ namespace Gs2::Showcase::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateShowcaseMasterTask>>(this->AsShared(), Request);
     }
 
-    TSharedPtr<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain> FNamespaceDomain::CurrentShowcaseMaster(
+    Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIteratorPtr FNamespaceDomain::RandomShowcaseMasters(
     ) const
     {
-        return MakeShared<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain>(
+        return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIterator>(
             Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Client,
             NamespaceName
         );
     }
 
-    TSharedPtr<Gs2::Showcase::Domain::Model::FUserDomain> FNamespaceDomain::User(
-        const FString UserId
+    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain> FNamespaceDomain::RandomShowcaseMaster(
+        const FString ShowcaseName
     ) const
     {
-        return MakeShared<Gs2::Showcase::Domain::Model::FUserDomain>(
+        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>(
             Cache,
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
-        );
-    }
-
-    TSharedPtr<Gs2::Showcase::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
-        Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
-    {
-        return MakeShared<Gs2::Showcase::Domain::Model::FUserAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
-            NamespaceName,
-            AccessToken
+            ShowcaseName
         );
     }
 
@@ -579,6 +640,46 @@ namespace Gs2::Showcase::Domain::Model
             Session,
             NamespaceName,
             SalesItemGroupName
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain> FNamespaceDomain::CurrentShowcaseMaster(
+    ) const
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FUserDomain> FNamespaceDomain::User(
+        const FString UserId
+    ) const
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FUserDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            UserId
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
+        Gs2::Auth::Model::FAccessTokenPtr AccessToken
+    ) const
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FUserAccessTokenDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            AccessToken
         );
     }
 

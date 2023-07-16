@@ -34,6 +34,12 @@ class BPGS2_API UGs2ShowcaseUserFunctionLibrary : public UBlueprintFunctionLibra
 {
     GENERATED_BODY()
 
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Showcase::OwnRandomShowcase", Category="Game Server Services|GS2-Showcase|Namespace|User|RandomShowcase", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="RandomShowcase") FGs2ShowcaseOwnRandomShowcase OwnRandomShowcase(
+        FGs2ShowcaseOwnUser User,
+        FString ShowcaseName
+    );
+
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Showcase::OwnShowcase", Category="Game Server Services|GS2-Showcase|Namespace|User|Showcase", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Showcase") FGs2ShowcaseOwnShowcase OwnShowcase(
         FGs2ShowcaseOwnUser User,
