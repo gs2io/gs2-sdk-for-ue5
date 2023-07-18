@@ -81,19 +81,6 @@ namespace Gs2::Showcase::Domain::Model
 
     }
 
-    Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseSalesItemsByUserIdIteratorPtr FUserDomain::RandomShowcaseSalesItems(
-        const FString ShowcaseName
-    ) const
-    {
-        return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseSalesItemsByUserIdIterator>(
-            Cache,
-            Client,
-            NamespaceName,
-            ShowcaseName,
-            UserId
-        );
-    }
-
     TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain> FUserDomain::RandomShowcase(
         const FString ShowcaseName
     ) const

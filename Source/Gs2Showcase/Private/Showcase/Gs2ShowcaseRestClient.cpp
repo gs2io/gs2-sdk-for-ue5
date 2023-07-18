@@ -343,42 +343,6 @@ namespace Gs2::Showcase
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsTask>> FGs2ShowcaseRestClient::DescribeRandomShowcaseSalesItems(
-        const Request::FDescribeRandomShowcaseSalesItemsRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsByUserIdTask>> FGs2ShowcaseRestClient::DescribeRandomShowcaseSalesItemsByUserId(
-        const Request::FDescribeRandomShowcaseSalesItemsByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemTask>> FGs2ShowcaseRestClient::GetRandomShowcaseSalesItem(
-        const Request::FGetRandomShowcaseSalesItemRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemByUserIdTask>> FGs2ShowcaseRestClient::GetRandomShowcaseSalesItemByUserId(
-        const Request::FGetRandomShowcaseSalesItemByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByUserIdTask>> FGs2ShowcaseRestClient::IncrementPurchaseCountByUserId(
         const Request::FIncrementPurchaseCountByUserIdRequestPtr Request) const
     {
@@ -410,6 +374,42 @@ namespace Gs2::Showcase
         const Request::FForceReDrawByUserIdByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FForceReDrawByUserIdByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomDisplayItemsTask>> FGs2ShowcaseRestClient::DescribeRandomDisplayItems(
+        const Request::FDescribeRandomDisplayItemsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeRandomDisplayItemsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomDisplayItemsByUserIdTask>> FGs2ShowcaseRestClient::DescribeRandomDisplayItemsByUserId(
+        const Request::FDescribeRandomDisplayItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeRandomDisplayItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetRandomDisplayItemTask>> FGs2ShowcaseRestClient::GetRandomDisplayItem(
+        const Request::FGetRandomDisplayItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetRandomDisplayItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetRandomDisplayItemByUserIdTask>> FGs2ShowcaseRestClient::GetRandomDisplayItemByUserId(
+        const Request::FGetRandomDisplayItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetRandomDisplayItemByUserIdTask>>(
             Session,
             Request
         );

@@ -28,8 +28,8 @@
 #include "Showcase/Domain/Iterator/DescribeShowcasesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesByUserIdIterator.h"
 #include "Showcase/Domain/Iterator/DescribeRandomShowcaseMastersIterator.h"
-#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsIterator.h"
-#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsByUserIdIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsByUserIdIterator.h"
 
 namespace Gs2::Showcase::Domain::Model
 {
@@ -82,10 +82,6 @@ namespace Gs2::Showcase::Domain::Model
         FUserAccessTokenDomain(
             const FUserAccessTokenDomain& From
         );
-
-        Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseSalesItemsIteratorPtr RandomShowcaseSalesItems(
-            const FString ShowcaseName
-        ) const;
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomain> RandomShowcase(
             const FString ShowcaseName

@@ -28,8 +28,8 @@
 #include "Showcase/Domain/Iterator/DescribeShowcasesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesByUserIdIterator.h"
 #include "Showcase/Domain/Iterator/DescribeRandomShowcaseMastersIterator.h"
-#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsIterator.h"
-#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsByUserIdIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsByUserIdIterator.h"
 
 namespace Gs2::Showcase::Domain::Model
 {
@@ -94,6 +94,32 @@ namespace Gs2::Showcase::Domain::Model
 
         FRandomDisplayItemDomain(
             const FRandomDisplayItemDomain& From
+        );
+
+        class GS2SHOWCASE_API FGetTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Model::FRandomDisplayItem>,
+            public TSharedFromThis<FGetTask>
+        {
+            const TSharedPtr<FRandomDisplayItemDomain> Self;
+            const Request::FGetRandomDisplayItemByUserIdRequestPtr Request;
+        public:
+            explicit FGetTask(
+                const TSharedPtr<FRandomDisplayItemDomain> Self,
+                const Request::FGetRandomDisplayItemByUserIdRequestPtr Request
+            );
+
+            FGetTask(
+                const FGetTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FRandomDisplayItem>> Result
+            ) override;
+        };
+        friend FGetTask;
+
+        TSharedPtr<FAsyncTask<FGetTask>> Get(
+            Request::FGetRandomDisplayItemByUserIdRequestPtr Request
         );
 
         class GS2SHOWCASE_API FRandomShowcaseBuyTask final :

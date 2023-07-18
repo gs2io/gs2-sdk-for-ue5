@@ -90,14 +90,6 @@
 #include "Task/Rest/UpdateRandomShowcaseMasterTask.h"
 #include "Request/DeleteRandomShowcaseMasterRequest.h"
 #include "Task/Rest/DeleteRandomShowcaseMasterTask.h"
-#include "Request/DescribeRandomShowcaseSalesItemsRequest.h"
-#include "Task/Rest/DescribeRandomShowcaseSalesItemsTask.h"
-#include "Request/DescribeRandomShowcaseSalesItemsByUserIdRequest.h"
-#include "Task/Rest/DescribeRandomShowcaseSalesItemsByUserIdTask.h"
-#include "Request/GetRandomShowcaseSalesItemRequest.h"
-#include "Task/Rest/GetRandomShowcaseSalesItemTask.h"
-#include "Request/GetRandomShowcaseSalesItemByUserIdRequest.h"
-#include "Task/Rest/GetRandomShowcaseSalesItemByUserIdTask.h"
 #include "Request/IncrementPurchaseCountByUserIdRequest.h"
 #include "Task/Rest/IncrementPurchaseCountByUserIdTask.h"
 #include "Request/IncrementPurchaseCountByStampTaskRequest.h"
@@ -106,6 +98,14 @@
 #include "Task/Rest/ForceReDrawByUserIdTask.h"
 #include "Request/ForceReDrawByUserIdByStampSheetRequest.h"
 #include "Task/Rest/ForceReDrawByUserIdByStampSheetTask.h"
+#include "Request/DescribeRandomDisplayItemsRequest.h"
+#include "Task/Rest/DescribeRandomDisplayItemsTask.h"
+#include "Request/DescribeRandomDisplayItemsByUserIdRequest.h"
+#include "Task/Rest/DescribeRandomDisplayItemsByUserIdTask.h"
+#include "Request/GetRandomDisplayItemRequest.h"
+#include "Task/Rest/GetRandomDisplayItemTask.h"
+#include "Request/GetRandomDisplayItemByUserIdRequest.h"
+#include "Task/Rest/GetRandomDisplayItemByUserIdTask.h"
 #include "Request/RandomShowcaseBuyRequest.h"
 #include "Task/Rest/RandomShowcaseBuyTask.h"
 #include "Request/RandomShowcaseBuyByUserIdRequest.h"
@@ -266,22 +266,6 @@ namespace Gs2::Showcase
             const Request::FDeleteRandomShowcaseMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsTask>> DescribeRandomShowcaseSalesItems(
-            const Request::FDescribeRandomShowcaseSalesItemsRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomShowcaseSalesItemsByUserIdTask>> DescribeRandomShowcaseSalesItemsByUserId(
-            const Request::FDescribeRandomShowcaseSalesItemsByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemTask>> GetRandomShowcaseSalesItem(
-            const Request::FGetRandomShowcaseSalesItemRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FGetRandomShowcaseSalesItemByUserIdTask>> GetRandomShowcaseSalesItemByUserId(
-            const Request::FGetRandomShowcaseSalesItemByUserIdRequestPtr Request
-        ) const;
-
         TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByUserIdTask>> IncrementPurchaseCountByUserId(
             const Request::FIncrementPurchaseCountByUserIdRequestPtr Request
         ) const;
@@ -296,6 +280,22 @@ namespace Gs2::Showcase
 
         TSharedPtr<FAsyncTask<Task::Rest::FForceReDrawByUserIdByStampSheetTask>> ForceReDrawByUserIdByStampSheet(
             const Request::FForceReDrawByUserIdByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomDisplayItemsTask>> DescribeRandomDisplayItems(
+            const Request::FDescribeRandomDisplayItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeRandomDisplayItemsByUserIdTask>> DescribeRandomDisplayItemsByUserId(
+            const Request::FDescribeRandomDisplayItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetRandomDisplayItemTask>> GetRandomDisplayItem(
+            const Request::FGetRandomDisplayItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetRandomDisplayItemByUserIdTask>> GetRandomDisplayItemByUserId(
+            const Request::FGetRandomDisplayItemByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FRandomShowcaseBuyTask>> RandomShowcaseBuy(

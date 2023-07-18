@@ -256,30 +256,6 @@
 #include "Task/Rest/DeleteRandomShowcaseMasterTask.h"
 #include "Task/WebSocket/DeleteRandomShowcaseMasterTask.h"
 
-// DescribeRandomShowcaseSalesItems
-#include "Request/DescribeRandomShowcaseSalesItemsRequest.h"
-#include "Result/DescribeRandomShowcaseSalesItemsResult.h"
-#include "Task/Rest/DescribeRandomShowcaseSalesItemsTask.h"
-#include "Task/WebSocket/DescribeRandomShowcaseSalesItemsTask.h"
-
-// DescribeRandomShowcaseSalesItemsByUserId
-#include "Request/DescribeRandomShowcaseSalesItemsByUserIdRequest.h"
-#include "Result/DescribeRandomShowcaseSalesItemsByUserIdResult.h"
-#include "Task/Rest/DescribeRandomShowcaseSalesItemsByUserIdTask.h"
-#include "Task/WebSocket/DescribeRandomShowcaseSalesItemsByUserIdTask.h"
-
-// GetRandomShowcaseSalesItem
-#include "Request/GetRandomShowcaseSalesItemRequest.h"
-#include "Result/GetRandomShowcaseSalesItemResult.h"
-#include "Task/Rest/GetRandomShowcaseSalesItemTask.h"
-#include "Task/WebSocket/GetRandomShowcaseSalesItemTask.h"
-
-// GetRandomShowcaseSalesItemByUserId
-#include "Request/GetRandomShowcaseSalesItemByUserIdRequest.h"
-#include "Result/GetRandomShowcaseSalesItemByUserIdResult.h"
-#include "Task/Rest/GetRandomShowcaseSalesItemByUserIdTask.h"
-#include "Task/WebSocket/GetRandomShowcaseSalesItemByUserIdTask.h"
-
 // IncrementPurchaseCountByUserId
 #include "Request/IncrementPurchaseCountByUserIdRequest.h"
 #include "Result/IncrementPurchaseCountByUserIdResult.h"
@@ -303,6 +279,30 @@
 #include "Result/ForceReDrawByUserIdByStampSheetResult.h"
 #include "Task/Rest/ForceReDrawByUserIdByStampSheetTask.h"
 #include "Task/WebSocket/ForceReDrawByUserIdByStampSheetTask.h"
+
+// DescribeRandomDisplayItems
+#include "Request/DescribeRandomDisplayItemsRequest.h"
+#include "Result/DescribeRandomDisplayItemsResult.h"
+#include "Task/Rest/DescribeRandomDisplayItemsTask.h"
+#include "Task/WebSocket/DescribeRandomDisplayItemsTask.h"
+
+// DescribeRandomDisplayItemsByUserId
+#include "Request/DescribeRandomDisplayItemsByUserIdRequest.h"
+#include "Result/DescribeRandomDisplayItemsByUserIdResult.h"
+#include "Task/Rest/DescribeRandomDisplayItemsByUserIdTask.h"
+#include "Task/WebSocket/DescribeRandomDisplayItemsByUserIdTask.h"
+
+// GetRandomDisplayItem
+#include "Request/GetRandomDisplayItemRequest.h"
+#include "Result/GetRandomDisplayItemResult.h"
+#include "Task/Rest/GetRandomDisplayItemTask.h"
+#include "Task/WebSocket/GetRandomDisplayItemTask.h"
+
+// GetRandomDisplayItemByUserId
+#include "Request/GetRandomDisplayItemByUserIdRequest.h"
+#include "Result/GetRandomDisplayItemByUserIdResult.h"
+#include "Task/Rest/GetRandomDisplayItemByUserIdTask.h"
+#include "Task/WebSocket/GetRandomDisplayItemByUserIdTask.h"
 
 // RandomShowcaseBuy
 #include "Request/RandomShowcaseBuyRequest.h"

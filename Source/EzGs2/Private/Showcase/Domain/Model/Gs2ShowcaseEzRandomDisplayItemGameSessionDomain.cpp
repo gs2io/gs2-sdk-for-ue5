@@ -56,6 +56,54 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
     }
 
+    FEzRandomDisplayItemGameSessionDomain::FGetRandomShowcaseDisplayItemTask::FGetRandomShowcaseDisplayItemTask(
+        TSharedPtr<FEzRandomDisplayItemGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzRandomDisplayItemGameSessionDomain::FGetRandomShowcaseDisplayItemTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Model::FEzRandomDisplayItem>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FGetRandomShowcaseDisplayItemTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Get(
+                    MakeShared<Gs2::Showcase::Request::FGetRandomDisplayItemRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = Gs2::UE5::Showcase::Model::FEzRandomDisplayItem::FromModel(
+                    Task->GetTask().Result()
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzRandomDisplayItemGameSessionDomain::FGetRandomShowcaseDisplayItemTask>> FEzRandomDisplayItemGameSessionDomain::GetRandomShowcaseDisplayItem(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FGetRandomShowcaseDisplayItemTask>>(
+            this->AsShared()
+        );
+    }
+
     FEzRandomDisplayItemGameSessionDomain::FRandomShowcaseBuyTask::FRandomShowcaseBuyTask(
         TSharedPtr<FEzRandomDisplayItemGameSessionDomain> Self,
         TOptional<int32> Quantity,

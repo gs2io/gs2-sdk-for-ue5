@@ -84,80 +84,16 @@ namespace Gs2::Showcase::Domain::Model
 
     }
 
-    FRandomShowcaseDomain::FGetSalesItemTask::FGetSalesItemTask(
-        const TSharedPtr<FRandomShowcaseDomain> Self,
-        const Request::FGetRandomShowcaseSalesItemByUserIdRequestPtr Request
-    ): Self(Self), Request(Request)
+    Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsByUserIdIteratorPtr FRandomShowcaseDomain::RandomDisplayItems(
+    ) const
     {
-
-    }
-
-    FRandomShowcaseDomain::FGetSalesItemTask::FGetSalesItemTask(
-        const FGetSalesItemTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FRandomShowcaseDomain::FGetSalesItemTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithShowcaseName(Self->ShowcaseName);
-        const auto Future = Self->Client->GetRandomShowcaseSalesItemByUserId(
-            Request
+        return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsByUserIdIterator>(
+            Cache,
+            Client,
+            NamespaceName,
+            ShowcaseName,
+            UserId
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->ShowcaseName,
-                    "RandomDisplayItem"
-                );
-                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Cache->Put(
-                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
-            Request->GetNamespaceName(),
-            Request->GetUserId(),
-            ResultModel->GetItem()->GetShowcaseName(),
-            Request->GetDisplayItemName()
-        );
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FRandomShowcaseDomain::FGetSalesItemTask>> FRandomShowcaseDomain::GetSalesItem(
-        Request::FGetRandomShowcaseSalesItemByUserIdRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FGetSalesItemTask>>(this->AsShared(), Request);
     }
 
     TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain> FRandomShowcaseDomain::RandomDisplayItem(

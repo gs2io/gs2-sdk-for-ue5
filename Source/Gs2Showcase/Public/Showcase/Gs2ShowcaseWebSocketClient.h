@@ -90,14 +90,6 @@
 #include "Task/WebSocket/UpdateRandomShowcaseMasterTask.h"
 #include "Request/DeleteRandomShowcaseMasterRequest.h"
 #include "Task/WebSocket/DeleteRandomShowcaseMasterTask.h"
-#include "Request/DescribeRandomShowcaseSalesItemsRequest.h"
-#include "Task/WebSocket/DescribeRandomShowcaseSalesItemsTask.h"
-#include "Request/DescribeRandomShowcaseSalesItemsByUserIdRequest.h"
-#include "Task/WebSocket/DescribeRandomShowcaseSalesItemsByUserIdTask.h"
-#include "Request/GetRandomShowcaseSalesItemRequest.h"
-#include "Task/WebSocket/GetRandomShowcaseSalesItemTask.h"
-#include "Request/GetRandomShowcaseSalesItemByUserIdRequest.h"
-#include "Task/WebSocket/GetRandomShowcaseSalesItemByUserIdTask.h"
 #include "Request/IncrementPurchaseCountByUserIdRequest.h"
 #include "Task/WebSocket/IncrementPurchaseCountByUserIdTask.h"
 #include "Request/IncrementPurchaseCountByStampTaskRequest.h"
@@ -106,6 +98,14 @@
 #include "Task/WebSocket/ForceReDrawByUserIdTask.h"
 #include "Request/ForceReDrawByUserIdByStampSheetRequest.h"
 #include "Task/WebSocket/ForceReDrawByUserIdByStampSheetTask.h"
+#include "Request/DescribeRandomDisplayItemsRequest.h"
+#include "Task/WebSocket/DescribeRandomDisplayItemsTask.h"
+#include "Request/DescribeRandomDisplayItemsByUserIdRequest.h"
+#include "Task/WebSocket/DescribeRandomDisplayItemsByUserIdTask.h"
+#include "Request/GetRandomDisplayItemRequest.h"
+#include "Task/WebSocket/GetRandomDisplayItemTask.h"
+#include "Request/GetRandomDisplayItemByUserIdRequest.h"
+#include "Task/WebSocket/GetRandomDisplayItemByUserIdTask.h"
 #include "Request/RandomShowcaseBuyRequest.h"
 #include "Task/WebSocket/RandomShowcaseBuyTask.h"
 #include "Request/RandomShowcaseBuyByUserIdRequest.h"
@@ -266,22 +266,6 @@ namespace Gs2::Showcase
             const Request::FDeleteRandomShowcaseMasterRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomShowcaseSalesItemsTask>> DescribeRandomShowcaseSalesItems(
-            const Request::FDescribeRandomShowcaseSalesItemsRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomShowcaseSalesItemsByUserIdTask>> DescribeRandomShowcaseSalesItemsByUserId(
-            const Request::FDescribeRandomShowcaseSalesItemsByUserIdRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomShowcaseSalesItemTask>> GetRandomShowcaseSalesItem(
-            const Request::FGetRandomShowcaseSalesItemRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomShowcaseSalesItemByUserIdTask>> GetRandomShowcaseSalesItemByUserId(
-            const Request::FGetRandomShowcaseSalesItemByUserIdRequestPtr Request
-        ) const;
-
         TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementPurchaseCountByUserIdTask>> IncrementPurchaseCountByUserId(
             const Request::FIncrementPurchaseCountByUserIdRequestPtr Request
         ) const;
@@ -296,6 +280,22 @@ namespace Gs2::Showcase
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FForceReDrawByUserIdByStampSheetTask>> ForceReDrawByUserIdByStampSheet(
             const Request::FForceReDrawByUserIdByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomDisplayItemsTask>> DescribeRandomDisplayItems(
+            const Request::FDescribeRandomDisplayItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomDisplayItemsByUserIdTask>> DescribeRandomDisplayItemsByUserId(
+            const Request::FDescribeRandomDisplayItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomDisplayItemTask>> GetRandomDisplayItem(
+            const Request::FGetRandomDisplayItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomDisplayItemByUserIdTask>> GetRandomDisplayItemByUserId(
+            const Request::FGetRandomDisplayItemByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRandomShowcaseBuyTask>> RandomShowcaseBuy(

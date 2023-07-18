@@ -41,56 +41,12 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
     }
 
-    FEzRandomShowcaseGameSessionDomain::FGetRandomShowcaseDisplayItemTask::FGetRandomShowcaseDisplayItemTask(
-        TSharedPtr<FEzRandomShowcaseGameSessionDomain> Self,
-        TOptional<FString> DisplayItemName
-    ): Self(Self), DisplayItemName(DisplayItemName)
+    Gs2::UE5::Showcase::Domain::Iterator::FEzDescribeRandomDisplayItemsIteratorPtr FEzRandomShowcaseGameSessionDomain::RandomDisplayItems(
+    ) const
     {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzRandomShowcaseGameSessionDomain::FGetRandomShowcaseDisplayItemTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetRandomShowcaseDisplayItemTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->GetSalesItem(
-                    MakeShared<Gs2::Showcase::Request::FGetRandomShowcaseSalesItemRequest>()
-                        ->WithDisplayItemName(DisplayItemName)
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>(
-                    Task->GetTask().Result(),
-                    Self->ProfileValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzRandomShowcaseGameSessionDomain::FGetRandomShowcaseDisplayItemTask>> FEzRandomShowcaseGameSessionDomain::GetRandomShowcaseDisplayItem(
-        TOptional<FString> DisplayItemName
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetRandomShowcaseDisplayItemTask>>(
-            this->AsShared(),
-            DisplayItemName
+        return MakeShared<Gs2::UE5::Showcase::Domain::Iterator::FEzDescribeRandomDisplayItemsIterator>(
+            Domain->RandomDisplayItems(
+            )
         );
     }
 

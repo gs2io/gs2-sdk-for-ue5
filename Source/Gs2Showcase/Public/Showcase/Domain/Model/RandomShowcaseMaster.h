@@ -28,8 +28,8 @@
 #include "Showcase/Domain/Iterator/DescribeShowcasesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesByUserIdIterator.h"
 #include "Showcase/Domain/Iterator/DescribeRandomShowcaseMastersIterator.h"
-#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsIterator.h"
-#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsByUserIdIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsByUserIdIterator.h"
 
 namespace Gs2::Showcase::Domain::Model
 {

@@ -343,42 +343,6 @@ namespace Gs2::Showcase
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomShowcaseSalesItemsTask>> FGs2ShowcaseWebSocketClient::DescribeRandomShowcaseSalesItems(
-        const Request::FDescribeRandomShowcaseSalesItemsRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeRandomShowcaseSalesItemsTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomShowcaseSalesItemsByUserIdTask>> FGs2ShowcaseWebSocketClient::DescribeRandomShowcaseSalesItemsByUserId(
-        const Request::FDescribeRandomShowcaseSalesItemsByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeRandomShowcaseSalesItemsByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomShowcaseSalesItemTask>> FGs2ShowcaseWebSocketClient::GetRandomShowcaseSalesItem(
-        const Request::FGetRandomShowcaseSalesItemRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetRandomShowcaseSalesItemTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomShowcaseSalesItemByUserIdTask>> FGs2ShowcaseWebSocketClient::GetRandomShowcaseSalesItemByUserId(
-        const Request::FGetRandomShowcaseSalesItemByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetRandomShowcaseSalesItemByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementPurchaseCountByUserIdTask>> FGs2ShowcaseWebSocketClient::IncrementPurchaseCountByUserId(
         const Request::FIncrementPurchaseCountByUserIdRequestPtr Request) const
     {
@@ -410,6 +374,42 @@ namespace Gs2::Showcase
         const Request::FForceReDrawByUserIdByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FForceReDrawByUserIdByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomDisplayItemsTask>> FGs2ShowcaseWebSocketClient::DescribeRandomDisplayItems(
+        const Request::FDescribeRandomDisplayItemsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeRandomDisplayItemsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRandomDisplayItemsByUserIdTask>> FGs2ShowcaseWebSocketClient::DescribeRandomDisplayItemsByUserId(
+        const Request::FDescribeRandomDisplayItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeRandomDisplayItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomDisplayItemTask>> FGs2ShowcaseWebSocketClient::GetRandomDisplayItem(
+        const Request::FGetRandomDisplayItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetRandomDisplayItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetRandomDisplayItemByUserIdTask>> FGs2ShowcaseWebSocketClient::GetRandomDisplayItemByUserId(
+        const Request::FGetRandomDisplayItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetRandomDisplayItemByUserIdTask>>(
             Session,
             Request
         );

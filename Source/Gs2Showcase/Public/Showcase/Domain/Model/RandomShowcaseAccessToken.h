@@ -28,8 +28,8 @@
 #include "Showcase/Domain/Iterator/DescribeShowcasesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeShowcasesByUserIdIterator.h"
 #include "Showcase/Domain/Iterator/DescribeRandomShowcaseMastersIterator.h"
-#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsIterator.h"
-#include "Showcase/Domain/Iterator/DescribeRandomShowcaseSalesItemsByUserIdIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsIterator.h"
+#include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsByUserIdIterator.h"
 
 namespace Gs2::Showcase::Domain::Model
 {
@@ -85,31 +85,8 @@ namespace Gs2::Showcase::Domain::Model
             const FRandomShowcaseAccessTokenDomain& From
         );
 
-        class GS2SHOWCASE_API FGetSalesItemTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomain>,
-            public TSharedFromThis<FGetSalesItemTask>
-        {
-            const TSharedPtr<FRandomShowcaseAccessTokenDomain> Self;
-            const Request::FGetRandomShowcaseSalesItemRequestPtr Request;
-        public:
-            explicit FGetSalesItemTask(
-                const TSharedPtr<FRandomShowcaseAccessTokenDomain> Self,
-                const Request::FGetRandomShowcaseSalesItemRequestPtr Request
-            );
-
-            FGetSalesItemTask(
-                const FGetSalesItemTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FGetSalesItemTask;
-
-        TSharedPtr<FAsyncTask<FGetSalesItemTask>> GetSalesItem(
-            Request::FGetRandomShowcaseSalesItemRequestPtr Request
-        );
+        Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsIteratorPtr RandomDisplayItems(
+        ) const;
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomain> RandomDisplayItem(
             const FString DisplayItemName

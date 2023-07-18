@@ -87,6 +87,72 @@ namespace Gs2::Showcase::Domain::Model
 
     }
 
+    FRandomDisplayItemDomain::FGetTask::FGetTask(
+        const TSharedPtr<FRandomDisplayItemDomain> Self,
+        const Request::FGetRandomDisplayItemByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FRandomDisplayItemDomain::FGetTask::FGetTask(
+        const FGetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRandomDisplayItemDomain::FGetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FRandomDisplayItem>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithShowcaseName(Self->ShowcaseName)
+            ->WithDisplayItemName(Self->DisplayItemName);
+        const auto Future = Self->Client->GetRandomDisplayItemByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->ShowcaseName,
+                    "RandomDisplayItem"
+                );
+                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRandomDisplayItemDomain::FGetTask>> FRandomDisplayItemDomain::Get(
+        Request::FGetRandomDisplayItemByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
+    }
+
     FRandomDisplayItemDomain::FRandomShowcaseBuyTask::FRandomShowcaseBuyTask(
         const TSharedPtr<FRandomDisplayItemDomain> Self,
         const Request::FRandomShowcaseBuyByUserIdRequestPtr Request
@@ -235,6 +301,43 @@ namespace Gs2::Showcase::Domain::Model
             ),
             &Value
         );
+        if (!bCacheHit) {
+            const auto Future = Self->Get(
+                MakeShared<Gs2::Showcase::Request::FGetRandomDisplayItemByUserIdRequest>()
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                {
+                    return Future->GetTask().Error();
+                }
+
+                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                    Self->DisplayItemName
+                );
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "randomDisplayItem")
+                {
+                    return Future->GetTask().Error();
+                }
+            }
+            Self->Cache->TryGet<Gs2::Showcase::Model::FRandomDisplayItem>(
+                Self->ParentKey,
+                Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                    Self->DisplayItemName
+                ),
+                &Value
+            );
+            Future->EnsureCompletion();
+        }
         *Result = Value;
 
         return nullptr;

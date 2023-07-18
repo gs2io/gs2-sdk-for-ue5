@@ -27,6 +27,7 @@
 #include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
 #include "Gs2ShowcaseEzRandomDisplayItemGameSessionDomain.h"
+#include "Showcase/Domain/Iterator/Gs2ShowcaseEzDescribeRandomDisplayItemsIterator.h"
 #include "Gs2ShowcaseEzRandomShowcaseGameSessionDomain.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
@@ -50,28 +51,8 @@ namespace Gs2::UE5::Showcase::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetRandomShowcaseDisplayItemTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>,
-            public TSharedFromThis<FGetRandomShowcaseDisplayItemTask>
-        {
-            TSharedPtr<FEzRandomShowcaseGameSessionDomain> Self;
-            TOptional<FString> DisplayItemName;
-
-        public:
-            explicit FGetRandomShowcaseDisplayItemTask(
-                TSharedPtr<FEzRandomShowcaseGameSessionDomain> Self,
-                TOptional<FString> DisplayItemName = TOptional<FString>()
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>> Result
-            ) override;
-        };
-        friend FGetRandomShowcaseDisplayItemTask;
-
-        TSharedPtr<FAsyncTask<FGetRandomShowcaseDisplayItemTask>> GetRandomShowcaseDisplayItem(
-            TOptional<FString> DisplayItemName = TOptional<FString>()
-        );
+        Gs2::UE5::Showcase::Domain::Iterator::FEzDescribeRandomDisplayItemsIteratorPtr RandomDisplayItems(
+        ) const;
 
         Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomainPtr RandomDisplayItem(
             const FString DisplayItemName
