@@ -30,6 +30,17 @@ namespace Gs2::Matchmaking::Model
         return NamespaceNameValue;
     }
 
+    TSharedPtr<FChangeRatingNotification> FChangeRatingNotification::WithRatingName(
+        const TOptional<FString> RatingName
+    ) {
+        RatingNameValue = RatingName;
+        return SharedThis(this);
+    }
+    TOptional<FString> FChangeRatingNotification::GetRatingName() const
+    {
+        return RatingNameValue;
+    }
+
     TSharedPtr<FChangeRatingNotification> FChangeRatingNotification::WithUserId(
         const TOptional<FString> UserId
     ) {
@@ -62,6 +73,15 @@ namespace Gs2::Matchmaking::Model
                 {
                     FString v;
                     if (Data->TryGetStringField("namespaceName", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithRatingName(Data->HasField("ratingName") ? [Data]() -> TOptional<FString>
+                {
+                    FString v;
+                    if (Data->TryGetStringField("ratingName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

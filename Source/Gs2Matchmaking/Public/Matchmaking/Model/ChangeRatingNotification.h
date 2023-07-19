@@ -22,6 +22,7 @@ namespace Gs2::Matchmaking::Model
 	{
 	public:
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> RatingNameValue;
         TOptional<FString> UserIdValue;
         TOptional<float> RateValueValue;
 
@@ -29,6 +30,11 @@ namespace Gs2::Matchmaking::Model
             const TOptional<FString> NamespaceName
         );
         TOptional<FString> GetNamespaceName() const;
+
+        TSharedPtr<FChangeRatingNotification> WithRatingName(
+            const TOptional<FString> RatingName
+        );
+        TOptional<FString> GetRatingName() const;
 
         TSharedPtr<FChangeRatingNotification> WithUserId(
             const TOptional<FString> UserId
