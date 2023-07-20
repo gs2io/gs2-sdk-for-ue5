@@ -24,6 +24,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2Deploy",
 			"Gs2Dictionary",
 			"Gs2Distributor",
+			"Gs2Enchant",
 			"Gs2Enhance",
 			"Gs2Exchange",
 			"Gs2Experience",

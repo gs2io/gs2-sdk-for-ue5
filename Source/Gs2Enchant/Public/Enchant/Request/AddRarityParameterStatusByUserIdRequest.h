@@ -1,0 +1,64 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#pragma once
+
+#include "CoreMinimal.h"
+
+namespace Gs2::Enchant::Request
+{
+    class FAddRarityParameterStatusByUserIdRequest;
+
+    class GS2ENCHANT_API FAddRarityParameterStatusByUserIdRequest final : public TSharedFromThis<FAddRarityParameterStatusByUserIdRequest>
+    {
+        TOptional<FString> ContextStackValue;
+        TOptional<FString> NamespaceNameValue;
+        TOptional<FString> UserIdValue;
+        TOptional<FString> ParameterNameValue;
+        TOptional<FString> PropertyIdValue;
+        TOptional<int32> CountValue;
+        TOptional<FString> DuplicationAvoiderValue;
+        
+    public:
+        
+        FAddRarityParameterStatusByUserIdRequest();
+        FAddRarityParameterStatusByUserIdRequest(
+            const FAddRarityParameterStatusByUserIdRequest& From
+        );
+        ~FAddRarityParameterStatusByUserIdRequest() = default;
+
+        TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
+        TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
+        TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithParameterName(const TOptional<FString> ParameterName);
+        TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
+        TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithCount(const TOptional<int32> Count);
+        TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
+
+        TOptional<FString> GetContextStack() const;
+        TOptional<FString> GetNamespaceName() const;
+        TOptional<FString> GetUserId() const;
+        TOptional<FString> GetParameterName() const;
+        TOptional<FString> GetPropertyId() const;
+        TOptional<int32> GetCount() const;
+        FString GetCountString() const;
+        TOptional<FString> GetDuplicationAvoider() const;
+
+        static TSharedPtr<FAddRarityParameterStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
+        TSharedPtr<FJsonObject> ToJson() const;
+    };
+    typedef TSharedPtr<FAddRarityParameterStatusByUserIdRequest, ESPMode::ThreadSafe> FAddRarityParameterStatusByUserIdRequestPtr;
+}

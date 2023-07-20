@@ -75,6 +75,7 @@ namespace Gs2::Core::Domain
         Deploy(MakeShared<Deploy::Domain::FGs2DeployDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Dictionary(MakeShared<Dictionary::Domain::FGs2DictionaryDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Distributor(MakeShared<Distributor::Domain::FGs2DistributorDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
+        Enchant(MakeShared<Enchant::Domain::FGs2EnchantDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Enhance(MakeShared<Enhance::Domain::FGs2EnhanceDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Exchange(MakeShared<Exchange::Domain::FGs2ExchangeDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Experience(MakeShared<Experience::Domain::FGs2ExperienceDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
@@ -148,6 +149,10 @@ namespace Gs2::Core::Domain
                     if (Service == "Gs2Distributor")
                     {
                         Distributor->HandleNotification(Method, *Message->GetPayload());
+                    }
+                    if (Service == "Gs2Enchant")
+                    {
+                        Enchant->HandleNotification(Method, *Message->GetPayload());
                     }
                     if (Service == "Gs2Enhance")
                     {
@@ -297,6 +302,7 @@ namespace Gs2::Core::Domain
         Datastore(From.Datastore),
         Dictionary(From.Dictionary),
         Distributor(From.Distributor),
+        Enchant(From.Enchant),
         Enhance(From.Enhance),
         Exchange(From.Exchange),
         Experience(From.Experience),
@@ -376,6 +382,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Distributor")
             {
                 Distributor->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2Enchant")
+            {
+                Enchant->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2Enhance")
             {
@@ -540,6 +550,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Distributor")
             {
                 Distributor->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2Enchant")
+            {
+                Enchant->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2Enhance")
             {
@@ -723,6 +737,10 @@ namespace Gs2::Core::Domain
             if (Service == "distributor")
             {
                 Distributor->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "enchant")
+            {
+                Enchant->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "enhance")
             {

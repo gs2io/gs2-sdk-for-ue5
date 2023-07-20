@@ -35,6 +35,7 @@ namespace Gs2::UE5::Core::Domain
         Datastore = MakeShared<Gs2::UE5::Datastore::Domain::FEzGs2Datastore>(Super->Datastore, Profile);
         Dictionary = MakeShared<Gs2::UE5::Dictionary::Domain::FEzGs2Dictionary>(Super->Dictionary, Profile);
         Distributor = MakeShared<Gs2::UE5::Distributor::Domain::FEzGs2Distributor>(Super->Distributor, Profile);
+        Enchant = MakeShared<Gs2::UE5::Enchant::Domain::FEzGs2Enchant>(Super->Enchant, Profile);
         Enhance = MakeShared<Gs2::UE5::Enhance::Domain::FEzGs2Enhance>(Super->Enhance, Profile);
         Exchange = MakeShared<Gs2::UE5::Exchange::Domain::FEzGs2Exchange>(Super->Exchange, Profile);
         Experience = MakeShared<Gs2::UE5::Experience::Domain::FEzGs2Experience>(Super->Experience, Profile);

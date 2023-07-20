@@ -24,6 +24,7 @@
 #include "Datastore/Domain/EzGs2Datastore.h"
 #include "Dictionary/Domain/EzGs2Dictionary.h"
 #include "Distributor/Domain/EzGs2Distributor.h"
+#include "Enchant/Domain/EzGs2Enchant.h"
 #include "Enhance/Domain/EzGs2Enhance.h"
 #include "Exchange/Domain/EzGs2Exchange.h"
 #include "Experience/Domain/EzGs2Experience.h"
@@ -71,6 +72,7 @@ namespace Gs2::UE5::Core::Domain
         Gs2::UE5::Datastore::Domain::FEzGs2DatastorePtr Datastore;
         Gs2::UE5::Dictionary::Domain::FEzGs2DictionaryPtr Dictionary;
         Gs2::UE5::Distributor::Domain::FEzGs2DistributorPtr Distributor;
+        Gs2::UE5::Enchant::Domain::FEzGs2EnchantPtr Enchant;
         Gs2::UE5::Enhance::Domain::FEzGs2EnhancePtr Enhance;
         Gs2::UE5::Exchange::Domain::FEzGs2ExchangePtr Exchange;
         Gs2::UE5::Experience::Domain::FEzGs2ExperiencePtr Experience;

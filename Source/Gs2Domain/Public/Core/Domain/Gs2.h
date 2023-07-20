@@ -25,6 +25,7 @@
 #include "Deploy/Domain/Gs2Deploy.h"
 #include "Dictionary/Domain/Gs2Dictionary.h"
 #include "Distributor/Domain/Gs2Distributor.h"
+#include "Enchant/Domain/Gs2Enchant.h"
 #include "Enhance/Domain/Gs2Enhance.h"
 #include "Exchange/Domain/Gs2Exchange.h"
 #include "Experience/Domain/Gs2Experience.h"
@@ -77,6 +78,7 @@ namespace Gs2::Core::Domain
         const Gs2::Deploy::Domain::FGs2DeployDomainPtr Deploy;
         const Gs2::Dictionary::Domain::FGs2DictionaryDomainPtr Dictionary;
         const Gs2::Distributor::Domain::FGs2DistributorDomainPtr Distributor;
+        const Gs2::Enchant::Domain::FGs2EnchantDomainPtr Enchant;
         const Gs2::Enhance::Domain::FGs2EnhanceDomainPtr Enhance;
         const Gs2::Exchange::Domain::FGs2ExchangeDomainPtr Exchange;
         const Gs2::Experience::Domain::FGs2ExperienceDomainPtr Experience;
