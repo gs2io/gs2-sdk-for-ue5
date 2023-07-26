@@ -292,6 +292,11 @@ namespace Gs2::Inbox::Domain::Model
             }
             Future3->EnsureCompletion();
         }
+        if (ResultModel != nullptr)
+        {
+            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
+            Self->TransactionId = ResultModel->GetTransactionId();
+        }
         *Result = Self;
         return nullptr;
     }

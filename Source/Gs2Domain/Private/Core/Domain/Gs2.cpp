@@ -105,6 +105,7 @@ namespace Gs2::Core::Domain
         SerialKey(MakeShared<SerialKey::Domain::FGs2SerialKeyDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Showcase(MakeShared<Showcase::Domain::FGs2ShowcaseDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Stamina(MakeShared<Stamina::Domain::FGs2StaminaDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
+        StateMachine(MakeShared<StateMachine::Domain::FGs2StateMachineDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Version(MakeShared<Version::Domain::FGs2VersionDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Disposed(false)
     {
@@ -270,6 +271,10 @@ namespace Gs2::Core::Domain
                     {
                         Stamina->HandleNotification(Method, *Message->GetPayload());
                     }
+                    if (Service == "Gs2StateMachine")
+                    {
+                        StateMachine->HandleNotification(Method, *Message->GetPayload());
+                    }
                     if (Service == "Gs2Version")
                     {
                         Version->HandleNotification(Method, *Message->GetPayload());
@@ -332,6 +337,7 @@ namespace Gs2::Core::Domain
         SerialKey(From.SerialKey),
         Showcase(From.Showcase),
         Stamina(From.Stamina),
+        StateMachine(From.StateMachine),
         Version(From.Version),
         Disposed(From.Disposed)
     {
@@ -503,6 +509,10 @@ namespace Gs2::Core::Domain
             {
                 Stamina->UpdateCacheFromStampSheet(Method, Request, Result);
             }
+            if (Service == "Gs2StateMachine")
+            {
+                StateMachine->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
             if (Service == "Gs2Version")
             {
                 Version->UpdateCacheFromStampSheet(Method, Request, Result);
@@ -670,6 +680,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Stamina")
             {
                 Stamina->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2StateMachine")
+            {
+                StateMachine->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2Version")
             {
@@ -857,6 +871,10 @@ namespace Gs2::Core::Domain
             if (Service == "stamina")
             {
                 Stamina->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "state_machine")
+            {
+                StateMachine->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "version")
             {

@@ -273,6 +273,11 @@ namespace Gs2::Idle::Domain::Model
             }
             Future3->EnsureCompletion();
         }
+        if (ResultModel != nullptr)
+        {
+            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
+            Self->TransactionId = ResultModel->GetTransactionId();
+        }
         *Result = Self;
         return nullptr;
     }
@@ -390,8 +395,8 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::Idle::Model::FStatusPtr Value;
-        const auto bCacheHit = Self->Cache->TryGet<Gs2::Idle::Model::FStatus>(
+        TSharedPtr<Gs2::Idle::Model::FStatus> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Idle::Model::FStatus>(
             Self->ParentKey,
             Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
                 Self->CategoryName
@@ -410,12 +415,13 @@ namespace Gs2::Idle::Domain::Model
                     return Future->GetTask().Error();
                 }
 
+                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                    Self->CategoryName
+                );
                 Self->Cache->Put(
                     Gs2::Idle::Model::FStatus::TypeName,
                     Self->ParentKey,
-                    Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                        Self->CategoryName
-                    ),
+                    Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );

@@ -54,6 +54,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2SerialKey",
 			"Gs2Showcase",
 			"Gs2Stamina",
+			"Gs2StateMachine",
 			"Gs2Version",
 		});
 	}

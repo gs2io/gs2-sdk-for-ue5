@@ -64,6 +64,7 @@ public class Gs2Core : ModuleRules
 			"Gs2SerialKey",
 			"Gs2Showcase",
 			"Gs2Stamina",
+			"Gs2StateMachine",
 			"Gs2Version",
 		});
 
@@ -133,6 +134,7 @@ public class Gs2Plugin
 			"Gs2SerialKey",
 			"Gs2Showcase",
 			"Gs2Stamina",
+			"Gs2StateMachine",
 			"Gs2Version",
 			"Gs2Domain",
 		};
