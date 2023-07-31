@@ -24,6 +24,7 @@
 #include "Stamina/Model/Gs2StaminaEzRecoverValueTable.h"
 #include "Stamina/Model/Gs2StaminaEzStamina.h"
 #include "Gs2StaminaEzStaminaGameSessionDomain.h"
+#include "Stamina/Domain/Iterator/Gs2StaminaEzDescribeStaminasIterator.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
 

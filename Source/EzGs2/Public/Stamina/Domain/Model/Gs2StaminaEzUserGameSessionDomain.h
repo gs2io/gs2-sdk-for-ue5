@@ -24,6 +24,7 @@
 #include "Stamina/Model/Gs2StaminaEzRecoverValueTable.h"
 #include "Stamina/Model/Gs2StaminaEzStamina.h"
 #include "Gs2StaminaEzStaminaGameSessionDomain.h"
+#include "Stamina/Domain/Iterator/Gs2StaminaEzDescribeStaminasIterator.h"
 #include "Gs2StaminaEzUserGameSessionDomain.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
@@ -47,6 +48,9 @@ namespace Gs2::UE5::Stamina::Domain::Model
             Gs2::Stamina::Domain::Model::FUserAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::FProfilePtr Profile
         );
+
+        Gs2::UE5::Stamina::Domain::Iterator::FEzDescribeStaminasIteratorPtr Staminas(
+        ) const;
 
         Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomainPtr Stamina(
             const FString StaminaName

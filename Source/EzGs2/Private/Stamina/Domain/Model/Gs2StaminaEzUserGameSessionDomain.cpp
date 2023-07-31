@@ -46,6 +46,15 @@ namespace Gs2::UE5::Stamina::Domain::Model
 
     }
 
+    Gs2::UE5::Stamina::Domain::Iterator::FEzDescribeStaminasIteratorPtr FEzUserGameSessionDomain::Staminas(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Stamina::Domain::Iterator::FEzDescribeStaminasIterator>(
+            Domain->Staminas(
+            )
+        );
+    }
+
     Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomainPtr FEzUserGameSessionDomain::Stamina(
         const FString StaminaName
     ) const
