@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Experience/Task/Rest/UpdateNamespaceTask.h"
+#include "Experience/Task/Rest/MultiplyAcquireActionsByUserIdTask.h"
 
 #include "HttpManager.h"
 #include "HttpModule.h"
@@ -25,21 +25,21 @@
 
 namespace Gs2::Experience::Task::Rest
 {
-    FUpdateNamespaceTask::FUpdateNamespaceTask(
+    FMultiplyAcquireActionsByUserIdTask::FMultiplyAcquireActionsByUserIdTask(
         const Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Request::FUpdateNamespaceRequestPtr Request
+        const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FUpdateNamespaceTask::FUpdateNamespaceTask(
-        const FUpdateNamespaceTask& From
+    FMultiplyAcquireActionsByUserIdTask::FMultiplyAcquireActionsByUserIdTask(
+        const FMultiplyAcquireActionsByUserIdTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FUpdateNamespaceTask::Action(
-        const TSharedPtr<Result::FUpdateNamespaceResultPtr> Result
+    Core::Model::FGs2ErrorPtr FMultiplyAcquireActionsByUserIdTask::Action(
+        const TSharedPtr<Result::FMultiplyAcquireActionsByUserIdResultPtr> Result
     )
     {
 
@@ -69,52 +69,49 @@ namespace Gs2::Experience::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("experience"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}");
+                .Append("/{namespaceName}/user/{userId}/status/model/{experienceName}/property/{propertyId}/acquire/rate/{rateName}/multiply");
 
             Url = Url.Replace(
                 TEXT("{namespaceName}"),
                 !this->Request->GetNamespaceName().IsSet() || this->Request->GetNamespaceName().GetValue().Len() == 0 ?
                     TEXT("null") : ToCStr(*this->Request->GetNamespaceName())
             );
+            Url = Url.Replace(
+                TEXT("{userId}"),
+                !this->Request->GetUserId().IsSet() || this->Request->GetUserId().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetUserId())
+            );
+            Url = Url.Replace(
+                TEXT("{experienceName}"),
+                !this->Request->GetExperienceName().IsSet() || this->Request->GetExperienceName().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetExperienceName())
+            );
+            Url = Url.Replace(
+                TEXT("{propertyId}"),
+                !this->Request->GetPropertyId().IsSet() || this->Request->GetPropertyId().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetPropertyId())
+            );
+            Url = Url.Replace(
+                TEXT("{rateName}"),
+                !this->Request->GetRateName().IsSet() || this->Request->GetRateName().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetRateName())
+            );
 
             request->SetURL(Url);
 
-            request->SetVerb(TEXT("PUT"));
+            request->SetVerb(TEXT("POST"));
 
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetAcquireActions() != nullptr && this->Request->GetAcquireActions().IsValid())
             {
-                JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
-            }
-            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
-            {
-                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
-            }
-            if (this->Request->GetExperienceCapScriptId().IsSet() && !this->Request->GetExperienceCapScriptId().GetValue().IsEmpty())
-            {
-                JsonRootObject->SetStringField("experienceCapScriptId", this->Request->GetExperienceCapScriptId().GetValue());
-            }
-            if (this->Request->GetChangeExperienceScript() != nullptr && this->Request->GetChangeExperienceScript().IsValid())
-            {
-                JsonRootObject->SetObjectField("changeExperienceScript", this->Request->GetChangeExperienceScript()->ToJson());
-            }
-            if (this->Request->GetChangeRankScript() != nullptr && this->Request->GetChangeRankScript().IsValid())
-            {
-                JsonRootObject->SetObjectField("changeRankScript", this->Request->GetChangeRankScript()->ToJson());
-            }
-            if (this->Request->GetChangeRankCapScript() != nullptr && this->Request->GetChangeRankCapScript().IsValid())
-            {
-                JsonRootObject->SetObjectField("changeRankCapScript", this->Request->GetChangeRankCapScript()->ToJson());
-            }
-            if (this->Request->GetOverflowExperienceScript() != nullptr && this->Request->GetOverflowExperienceScript().IsValid())
-            {
-                JsonRootObject->SetObjectField("overflowExperienceScript", this->Request->GetOverflowExperienceScript()->ToJson());
-            }
-            if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
-            {
-                JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetAcquireActions())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("acquireActions", v);
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
@@ -122,9 +119,13 @@ namespace Gs2::Experience::Task::Rest
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
+            if (this->Request->GetDuplicationAvoider().IsSet())
+            {
+                request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());
+            }
 
             request->ProcessRequest();
-            UE_LOG(Gs2Log, Log, TEXT("[%s] %s %s"), TEXT("PUT"), ToCStr(Url), ToCStr(Body));
+            UE_LOG(Gs2Log, Log, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
         }
 
         if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
@@ -148,7 +149,7 @@ namespace Gs2::Experience::Task::Rest
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Details = TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>();
-                *Result = Result::FUpdateNamespaceResult::FromJson(JsonRootObject);
+                *Result = Result::FMultiplyAcquireActionsByUserIdResult::FromJson(JsonRootObject);
                 return nullptr;
             }
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();

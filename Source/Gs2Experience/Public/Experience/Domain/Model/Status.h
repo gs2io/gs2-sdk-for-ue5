@@ -52,6 +52,8 @@ namespace Gs2::Experience::Domain::Model
         public:
         TOptional<FString> Body;
         TOptional<FString> Signature;
+        TOptional<FString> TransactionId;
+        TOptional<bool> AutoRunStampSheet;
         TOptional<FString> GetBody() const
         {
             return Body;
@@ -59,6 +61,14 @@ namespace Gs2::Experience::Domain::Model
         TOptional<FString> GetSignature() const
         {
             return Signature;
+        }
+        TOptional<FString> GetTransactionId() const
+        {
+            return TransactionId;
+        }
+        TOptional<bool> GetAutoRunStampSheet() const
+        {
+            return AutoRunStampSheet;
         }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
@@ -266,6 +276,32 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteStatusByUserIdRequestPtr Request
+        );
+
+        class GS2EXPERIENCE_API FMultiplyAcquireActionsTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
+            public TSharedFromThis<FMultiplyAcquireActionsTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request;
+        public:
+            explicit FMultiplyAcquireActionsTask(
+                const TSharedPtr<FStatusDomain> Self,
+                const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request
+            );
+
+            FMultiplyAcquireActionsTask(
+                const FMultiplyAcquireActionsTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain>> Result
+            ) override;
+        };
+        friend FMultiplyAcquireActionsTask;
+
+        TSharedPtr<FAsyncTask<FMultiplyAcquireActionsTask>> MultiplyAcquireActions(
+            Request::FMultiplyAcquireActionsByUserIdRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

@@ -27,6 +27,7 @@ namespace Gs2::Experience::Model
         DefaultRankCapValue(TOptional<int64>()),
         MaxRankCapValue(TOptional<int64>()),
         RankThresholdNameValue(TOptional<FString>()),
+        AcquireActionRatesValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>())
     {
@@ -43,6 +44,7 @@ namespace Gs2::Experience::Model
         DefaultRankCapValue(From.DefaultRankCapValue),
         MaxRankCapValue(From.MaxRankCapValue),
         RankThresholdNameValue(From.RankThresholdNameValue),
+        AcquireActionRatesValue(From.AcquireActionRatesValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue)
     {
@@ -109,6 +111,14 @@ namespace Gs2::Experience::Model
     )
     {
         this->RankThresholdNameValue = RankThresholdName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FExperienceModelMaster> FExperienceModelMaster::WithAcquireActionRates(
+        const TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionRate>>> AcquireActionRates
+    )
+    {
+        this->AcquireActionRatesValue = AcquireActionRates;
         return SharedThis(this);
     }
 
@@ -185,6 +195,10 @@ namespace Gs2::Experience::Model
     TOptional<FString> FExperienceModelMaster::GetRankThresholdName() const
     {
         return RankThresholdNameValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionRate>>> FExperienceModelMaster::GetAcquireActionRates() const
+    {
+        return AcquireActionRatesValue;
     }
     TOptional<int64> FExperienceModelMaster::GetCreatedAt() const
     {
@@ -335,6 +349,18 @@ namespace Gs2::Experience::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithAcquireActionRates(Data->HasField("acquireActionRates") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionRatePtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FAcquireActionRatePtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("acquireActionRates") && Data->HasTypedField<EJson::Array>("acquireActionRates"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("acquireActionRates"))
+                        {
+                            v->Add(Model::FAcquireActionRate::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FAcquireActionRatePtr>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -389,6 +415,15 @@ namespace Gs2::Experience::Model
         if (RankThresholdNameValue.IsSet())
         {
             JsonRootObject->SetStringField("rankThresholdName", RankThresholdNameValue.GetValue());
+        }
+        if (AcquireActionRatesValue != nullptr && AcquireActionRatesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *AcquireActionRatesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("acquireActionRates", v);
         }
         if (CreatedAtValue.IsSet())
         {

@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "Threshold.h"
+#include "AcquireActionRate.h"
 
 namespace Gs2::Experience::Model
 {
@@ -31,6 +32,7 @@ namespace Gs2::Experience::Model
         TOptional<int64> DefaultRankCapValue;
         TOptional<int64> MaxRankCapValue;
         TSharedPtr<FThreshold> RankThresholdValue;
+        TSharedPtr<TArray<TSharedPtr<FAcquireActionRate>>> AcquireActionRatesValue;
 
     public:
         FExperienceModel();
@@ -46,6 +48,7 @@ namespace Gs2::Experience::Model
         TSharedPtr<FExperienceModel> WithDefaultRankCap(const TOptional<int64> DefaultRankCap);
         TSharedPtr<FExperienceModel> WithMaxRankCap(const TOptional<int64> MaxRankCap);
         TSharedPtr<FExperienceModel> WithRankThreshold(const TSharedPtr<FThreshold> RankThreshold);
+        TSharedPtr<FExperienceModel> WithAcquireActionRates(const TSharedPtr<TArray<TSharedPtr<FAcquireActionRate>>> AcquireActionRates);
 
         TOptional<FString> GetExperienceModelId() const;
         TOptional<FString> GetName() const;
@@ -57,6 +60,7 @@ namespace Gs2::Experience::Model
         TOptional<int64> GetMaxRankCap() const;
         FString GetMaxRankCapString() const;
         TSharedPtr<FThreshold> GetRankThreshold() const;
+        TSharedPtr<TArray<TSharedPtr<FAcquireActionRate>>> GetAcquireActionRates() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

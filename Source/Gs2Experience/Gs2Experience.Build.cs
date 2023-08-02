@@ -18,6 +18,7 @@ public class Gs2Experience : ModuleRules
 			"JsonUtilities",
 			"Gs2Core",
 			"Gs2Auth",
+			"Gs2Distributor",
 			"Gs2JobQueue"
 		});
 	}

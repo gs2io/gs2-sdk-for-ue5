@@ -342,4 +342,22 @@ namespace Gs2::Experience
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FMultiplyAcquireActionsByUserIdTask>> FGs2ExperienceRestClient::MultiplyAcquireActionsByUserId(
+        const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FMultiplyAcquireActionsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FMultiplyAcquireActionsByStampSheetTask>> FGs2ExperienceRestClient::MultiplyAcquireActionsByStampSheet(
+        const Request::FMultiplyAcquireActionsByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FMultiplyAcquireActionsByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
 }

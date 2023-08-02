@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -29,6 +30,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TOptional<FString> ExperienceCapScriptIdValue;
         TSharedPtr<Model::FScriptSetting> ChangeExperienceScriptValue;
         TSharedPtr<Model::FScriptSetting> ChangeRankScriptValue;
@@ -47,6 +49,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FUpdateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithExperienceCapScriptId(const TOptional<FString> ExperienceCapScriptId);
         TSharedPtr<FUpdateNamespaceRequest> WithChangeExperienceScript(const TSharedPtr<Model::FScriptSetting> ChangeExperienceScript);
         TSharedPtr<FUpdateNamespaceRequest> WithChangeRankScript(const TSharedPtr<Model::FScriptSetting> ChangeRankScript);
@@ -57,6 +60,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TOptional<FString> GetExperienceCapScriptId() const;
         TSharedPtr<Model::FScriptSetting> GetChangeExperienceScript() const;
         TSharedPtr<Model::FScriptSetting> GetChangeRankScript() const;

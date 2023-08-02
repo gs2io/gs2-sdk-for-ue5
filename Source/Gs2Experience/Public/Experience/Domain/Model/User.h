@@ -50,7 +50,17 @@ namespace Gs2::Experience::Domain::Model
         Gs2::Experience::FGs2ExperienceRestClientPtr Client;
 
         public:
+        TOptional<FString> TransactionId;
+        TOptional<bool> AutoRunStampSheet;
         TOptional<FString> NextPageToken;
+        TOptional<FString> GetTransactionId() const
+        {
+            return TransactionId;
+        }
+        TOptional<bool> GetAutoRunStampSheet() const
+        {
+            return AutoRunStampSheet;
+        }
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;

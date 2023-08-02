@@ -22,11 +22,14 @@
 #include "Model/ExperienceModel.h"
 #include "Model/ThresholdMaster.h"
 #include "Model/Threshold.h"
+#include "Model/AcquireActionRate.h"
 #include "Model/CurrentExperienceMaster.h"
 #include "Model/Status.h"
+#include "Model/AcquireAction.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/TransactionSetting.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"
@@ -243,6 +246,18 @@
 #include "Result/SetRankCapByStampSheetResult.h"
 #include "Task/Rest/SetRankCapByStampSheetTask.h"
 #include "Task/WebSocket/SetRankCapByStampSheetTask.h"
+
+// MultiplyAcquireActionsByUserId
+#include "Request/MultiplyAcquireActionsByUserIdRequest.h"
+#include "Result/MultiplyAcquireActionsByUserIdResult.h"
+#include "Task/Rest/MultiplyAcquireActionsByUserIdTask.h"
+#include "Task/WebSocket/MultiplyAcquireActionsByUserIdTask.h"
+
+// MultiplyAcquireActionsByStampSheet
+#include "Request/MultiplyAcquireActionsByStampSheetRequest.h"
+#include "Result/MultiplyAcquireActionsByStampSheetResult.h"
+#include "Task/Rest/MultiplyAcquireActionsByStampSheetTask.h"
+#include "Task/WebSocket/MultiplyAcquireActionsByStampSheetTask.h"
 
 // Client
 #include "Gs2ExperienceRestClient.h"

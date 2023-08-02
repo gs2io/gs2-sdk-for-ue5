@@ -86,6 +86,10 @@ namespace Gs2::Experience::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetExperienceCapScriptId().IsSet() && !this->Request->GetExperienceCapScriptId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("experienceCapScriptId", this->Request->GetExperienceCapScriptId().GetValue());

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/AcquireActionRate.h"
 
 namespace Gs2::Experience::Request
 {
@@ -33,6 +34,7 @@ namespace Gs2::Experience::Request
         TOptional<int64> DefaultRankCapValue;
         TOptional<int64> MaxRankCapValue;
         TOptional<FString> RankThresholdNameValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionRate>>> AcquireActionRatesValue;
         
     public:
         
@@ -51,6 +53,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FCreateExperienceModelMasterRequest> WithDefaultRankCap(const TOptional<int64> DefaultRankCap);
         TSharedPtr<FCreateExperienceModelMasterRequest> WithMaxRankCap(const TOptional<int64> MaxRankCap);
         TSharedPtr<FCreateExperienceModelMasterRequest> WithRankThresholdName(const TOptional<FString> RankThresholdName);
+        TSharedPtr<FCreateExperienceModelMasterRequest> WithAcquireActionRates(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionRate>>> AcquireActionRates);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -63,7 +66,7 @@ namespace Gs2::Experience::Request
         FString GetDefaultRankCapString() const;
         TOptional<int64> GetMaxRankCap() const;
         FString GetMaxRankCapString() const;
-        TOptional<FString> GetRankThresholdName() const;
+        TOptional<FString> GetRankThresholdName() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionRate>>> GetAcquireActionRates() const;
 
         static TSharedPtr<FCreateExperienceModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

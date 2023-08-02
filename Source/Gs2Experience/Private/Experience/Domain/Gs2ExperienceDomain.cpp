@@ -262,6 +262,23 @@ namespace Gs2::Experience::Domain
                 );
             }
         }
+        if (Method == "MultiplyAcquireActionsByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Experience::Request::FMultiplyAcquireActionsByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Experience::Result::FMultiplyAcquireActionsByUserIdResult::FromJson(ResultModelJson);
+            
+        }
     }
 
     void FGs2ExperienceDomain::UpdateCacheFromStampTask(
@@ -407,6 +424,31 @@ namespace Gs2::Experience::Domain
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+        }
+        if (Method == "multiply_acquire_actions_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Experience::Request::FMultiplyAcquireActionsByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Experience::Result::FMultiplyAcquireActionsByUserIdResult::FromJson(ResultModelJson);
+            
         }
     }
 

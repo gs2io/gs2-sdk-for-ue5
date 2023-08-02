@@ -38,6 +38,8 @@ namespace Gs2::UE5::Experience::Domain::Model
         Gs2::UE5::Util::FProfilePtr ProfileValue;
 
         public:
+        TOptional<FString> TransactionId() const;
+        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "TransactionSetting.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -28,6 +29,7 @@ namespace Gs2::Experience::Model
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TSharedPtr<FTransactionSetting> TransactionSettingValue;
         TOptional<FString> ExperienceCapScriptIdValue;
         TSharedPtr<FScriptSetting> ChangeExperienceScriptValue;
         TSharedPtr<FScriptSetting> ChangeRankScriptValue;
@@ -47,6 +49,7 @@ namespace Gs2::Experience::Model
         TSharedPtr<FNamespace> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
         TSharedPtr<FNamespace> WithExperienceCapScriptId(const TOptional<FString> ExperienceCapScriptId);
         TSharedPtr<FNamespace> WithChangeExperienceScript(const TSharedPtr<FScriptSetting> ChangeExperienceScript);
         TSharedPtr<FNamespace> WithChangeRankScript(const TSharedPtr<FScriptSetting> ChangeRankScript);
@@ -59,6 +62,7 @@ namespace Gs2::Experience::Model
         TOptional<FString> GetNamespaceId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
         TOptional<FString> GetExperienceCapScriptId() const;
         TSharedPtr<FScriptSetting> GetChangeExperienceScript() const;
         TSharedPtr<FScriptSetting> GetChangeRankScript() const;

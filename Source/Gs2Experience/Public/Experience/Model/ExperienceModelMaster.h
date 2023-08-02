@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "AcquireActionRate.h"
 
 namespace Gs2::Experience::Model
 {
@@ -31,6 +32,7 @@ namespace Gs2::Experience::Model
         TOptional<int64> DefaultRankCapValue;
         TOptional<int64> MaxRankCapValue;
         TOptional<FString> RankThresholdNameValue;
+        TSharedPtr<TArray<TSharedPtr<FAcquireActionRate>>> AcquireActionRatesValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
 
@@ -49,6 +51,7 @@ namespace Gs2::Experience::Model
         TSharedPtr<FExperienceModelMaster> WithDefaultRankCap(const TOptional<int64> DefaultRankCap);
         TSharedPtr<FExperienceModelMaster> WithMaxRankCap(const TOptional<int64> MaxRankCap);
         TSharedPtr<FExperienceModelMaster> WithRankThresholdName(const TOptional<FString> RankThresholdName);
+        TSharedPtr<FExperienceModelMaster> WithAcquireActionRates(const TSharedPtr<TArray<TSharedPtr<FAcquireActionRate>>> AcquireActionRates);
         TSharedPtr<FExperienceModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FExperienceModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
 
@@ -63,6 +66,7 @@ namespace Gs2::Experience::Model
         TOptional<int64> GetMaxRankCap() const;
         FString GetMaxRankCapString() const;
         TOptional<FString> GetRankThresholdName() const;
+        TSharedPtr<TArray<TSharedPtr<FAcquireActionRate>>> GetAcquireActionRates() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

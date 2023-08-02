@@ -38,6 +38,8 @@ namespace Gs2::UE5::Experience::Domain::Model
         public:
         TOptional<FString> Body() const;
         TOptional<FString> Signature() const;
+        TOptional<FString> TransactionId() const;
+        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> ExperienceName() const;

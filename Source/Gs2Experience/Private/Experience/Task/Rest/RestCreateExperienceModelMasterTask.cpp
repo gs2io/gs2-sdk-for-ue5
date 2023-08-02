@@ -112,6 +112,15 @@ namespace Gs2::Experience::Task::Rest
             {
                 JsonRootObject->SetStringField("rankThresholdName", this->Request->GetRankThresholdName().GetValue());
             }
+            if (this->Request->GetAcquireActionRates() != nullptr && this->Request->GetAcquireActionRates().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetAcquireActionRates())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("acquireActionRates", v);
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

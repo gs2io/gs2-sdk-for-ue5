@@ -549,6 +549,89 @@ namespace Gs2::Experience::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FStatusDomain::FMultiplyAcquireActionsTask::FMultiplyAcquireActionsTask(
+        const TSharedPtr<FStatusDomain> Self,
+        const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusDomain::FMultiplyAcquireActionsTask::FMultiplyAcquireActionsTask(
+        const FMultiplyAcquireActionsTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusDomain::FMultiplyAcquireActionsTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithExperienceName(Self->ExperienceName)
+            ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->MultiplyAcquireActionsByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        if (ResultModel && ResultModel->GetStampSheet())
+        {
+            const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                Self->Cache,
+                Self->JobQueueDomain,
+                Self->Session,
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId(),
+                Self->StampSheetConfiguration
+            );
+            const auto Future3 = StampSheet->Run();
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return MakeShared<Core::Model::FTransactionError<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>(
+                    Future3->GetTask().Error()->GetErrors(),
+                    [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
+                    {
+                        return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                            Self->Cache,
+                            Self->JobQueueDomain,
+                            Self->Session,
+                            *ResultModel->GetStampSheet(),
+                            *ResultModel->GetStampSheetEncryptionKeyId(),
+                            Self->StampSheetConfiguration
+                        )->Run();
+                    }
+                );
+            }
+            Future3->EnsureCompletion();
+        }
+        if (ResultModel != nullptr)
+        {
+            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
+            Self->TransactionId = ResultModel->GetTransactionId();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusDomain::FMultiplyAcquireActionsTask>> FStatusDomain::MultiplyAcquireActions(
+        Request::FMultiplyAcquireActionsByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FMultiplyAcquireActionsTask>>(this->AsShared(), Request);
+    }
+
     FString FStatusDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

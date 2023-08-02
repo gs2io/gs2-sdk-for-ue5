@@ -90,6 +90,10 @@
 #include "Task/Rest/AddRankCapByStampSheetTask.h"
 #include "Request/SetRankCapByStampSheetRequest.h"
 #include "Task/Rest/SetRankCapByStampSheetTask.h"
+#include "Request/MultiplyAcquireActionsByUserIdRequest.h"
+#include "Task/Rest/MultiplyAcquireActionsByUserIdTask.h"
+#include "Request/MultiplyAcquireActionsByStampSheetRequest.h"
+#include "Task/Rest/MultiplyAcquireActionsByStampSheetTask.h"
 
 namespace Gs2::Experience
 {
@@ -244,6 +248,14 @@ namespace Gs2::Experience
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetRankCapByStampSheetTask>> SetRankCapByStampSheet(
             const Request::FSetRankCapByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FMultiplyAcquireActionsByUserIdTask>> MultiplyAcquireActionsByUserId(
+            const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FMultiplyAcquireActionsByStampSheetTask>> MultiplyAcquireActionsByStampSheet(
+            const Request::FMultiplyAcquireActionsByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ExperienceRestClient, ESPMode::ThreadSafe> FGs2ExperienceRestClientPtr;

@@ -90,6 +90,10 @@
 #include "Task/WebSocket/AddRankCapByStampSheetTask.h"
 #include "Request/SetRankCapByStampSheetRequest.h"
 #include "Task/WebSocket/SetRankCapByStampSheetTask.h"
+#include "Request/MultiplyAcquireActionsByUserIdRequest.h"
+#include "Task/WebSocket/MultiplyAcquireActionsByUserIdTask.h"
+#include "Request/MultiplyAcquireActionsByStampSheetRequest.h"
+#include "Task/WebSocket/MultiplyAcquireActionsByStampSheetTask.h"
 
 namespace Gs2::Experience
 {
@@ -244,6 +248,14 @@ namespace Gs2::Experience
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetRankCapByStampSheetTask>> SetRankCapByStampSheet(
             const Request::FSetRankCapByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FMultiplyAcquireActionsByUserIdTask>> MultiplyAcquireActionsByUserId(
+            const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FMultiplyAcquireActionsByStampSheetTask>> MultiplyAcquireActionsByStampSheet(
+            const Request::FMultiplyAcquireActionsByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ExperienceWebSocketClient, ESPMode::ThreadSafe> FGs2ExperienceWebSocketClientPtr;
