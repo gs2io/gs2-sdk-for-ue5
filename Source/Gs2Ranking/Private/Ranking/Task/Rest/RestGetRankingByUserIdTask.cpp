@@ -101,6 +101,9 @@ namespace Gs2::Ranking::Task::Rest
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
             }
+            if (this->Request->GetAdditionalScopeName().IsSet()) {
+                queryStrings.Add("additionalScopeName=" + FGenericPlatformHttp::UrlEncode(this->Request->GetAdditionalScopeName().GetValue()));
+            }
             Url += "?" + FString::Join(queryStrings, TEXT("&"));
 
             request->SetURL(Url);

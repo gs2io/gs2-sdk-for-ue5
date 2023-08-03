@@ -185,7 +185,8 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     Gs2::Ranking::Domain::Iterator::FDescribeRankingsByUserIdIteratorPtr FUserDomain::Rankings(
-        const FString CategoryName
+        const FString CategoryName,
+        const TOptional<FString> AdditionalScopeName
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeRankingsByUserIdIterator>(
@@ -193,13 +194,15 @@ namespace Gs2::Ranking::Domain::Model
             Client,
             NamespaceName,
             CategoryName,
-            UserId
+            UserId,
+            AdditionalScopeName
         );
     }
 
     Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIteratorPtr FUserDomain::NearRankings(
         const FString CategoryName,
-        const int64 Score
+        const int64 Score,
+        const TOptional<FString> AdditionalScopeName
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIterator>(
@@ -207,6 +210,7 @@ namespace Gs2::Ranking::Domain::Model
             Client,
             NamespaceName,
             CategoryName,
+            AdditionalScopeName,
             Score
         );
     }

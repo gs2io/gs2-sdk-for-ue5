@@ -186,7 +186,8 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr FUserAccessTokenDomain::Rankings(
-        const FString CategoryName
+        const FString CategoryName,
+        const TOptional<FString> AdditionalScopeName
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator>(
@@ -194,7 +195,8 @@ namespace Gs2::Ranking::Domain::Model
             Client,
             NamespaceName,
             CategoryName,
-            AccessToken
+            AccessToken,
+            AdditionalScopeName
         );
     }
 

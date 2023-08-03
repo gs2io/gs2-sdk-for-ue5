@@ -23,7 +23,8 @@ namespace Gs2::Ranking::Request
         CategoryNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         ScorerUserIdValue(TOptional<FString>()),
-        UniqueIdValue(TOptional<FString>())
+        UniqueIdValue(TOptional<FString>()),
+        AdditionalScopeNameValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Ranking::Request
         CategoryNameValue(From.CategoryNameValue),
         UserIdValue(From.UserIdValue),
         ScorerUserIdValue(From.ScorerUserIdValue),
-        UniqueIdValue(From.UniqueIdValue)
+        UniqueIdValue(From.UniqueIdValue),
+        AdditionalScopeNameValue(From.AdditionalScopeNameValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Ranking::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetRankingByUserIdRequest> FGetRankingByUserIdRequest::WithAdditionalScopeName(
+        const TOptional<FString> AdditionalScopeName
+    )
+    {
+        this->AdditionalScopeNameValue = AdditionalScopeName;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetRankingByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -114,6 +124,11 @@ namespace Gs2::Ranking::Request
     TOptional<FString> FGetRankingByUserIdRequest::GetUniqueId() const
     {
         return UniqueIdValue;
+    }
+
+    TOptional<FString> FGetRankingByUserIdRequest::GetAdditionalScopeName() const
+    {
+        return AdditionalScopeNameValue;
     }
 
     TSharedPtr<FGetRankingByUserIdRequest> FGetRankingByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -167,6 +182,15 @@ namespace Gs2::Ranking::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithAdditionalScopeName(Data->HasField("additionalScopeName") ? [Data]() -> TOptional<FString>
+              {
+                  FString v;
+                    if (Data->TryGetStringField("additionalScopeName", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -196,6 +220,10 @@ namespace Gs2::Ranking::Request
         if (UniqueIdValue.IsSet())
         {
             JsonRootObject->SetStringField("uniqueId", UniqueIdValue.GetValue());
+        }
+        if (AdditionalScopeNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("additionalScopeName", AdditionalScopeNameValue.GetValue());
         }
         return JsonRootObject;
     }

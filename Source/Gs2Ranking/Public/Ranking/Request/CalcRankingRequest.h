@@ -27,6 +27,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> CategoryNameValue;
+        TOptional<FString> AdditionalScopeNameValue;
         
     public:
         
@@ -39,10 +40,12 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FCalcRankingRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCalcRankingRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FCalcRankingRequest> WithCategoryName(const TOptional<FString> CategoryName);
+        TSharedPtr<FCalcRankingRequest> WithAdditionalScopeName(const TOptional<FString> AdditionalScopeName);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetCategoryName() const;
+        TOptional<FString> GetAdditionalScopeName() const;
 
         static TSharedPtr<FCalcRankingRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -21,6 +21,7 @@ namespace Gs2::Ranking::Request
     FDescribeNearRankingsRequest::FDescribeNearRankingsRequest():
         NamespaceNameValue(TOptional<FString>()),
         CategoryNameValue(TOptional<FString>()),
+        AdditionalScopeNameValue(TOptional<FString>()),
         ScoreValue(TOptional<int64>())
     {
     }
@@ -30,6 +31,7 @@ namespace Gs2::Ranking::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         CategoryNameValue(From.CategoryNameValue),
+        AdditionalScopeNameValue(From.AdditionalScopeNameValue),
         ScoreValue(From.ScoreValue)
     {
     }
@@ -58,6 +60,14 @@ namespace Gs2::Ranking::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDescribeNearRankingsRequest> FDescribeNearRankingsRequest::WithAdditionalScopeName(
+        const TOptional<FString> AdditionalScopeName
+    )
+    {
+        this->AdditionalScopeNameValue = AdditionalScopeName;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FDescribeNearRankingsRequest> FDescribeNearRankingsRequest::WithScore(
         const TOptional<int64> Score
     )
@@ -79,6 +89,11 @@ namespace Gs2::Ranking::Request
     TOptional<FString> FDescribeNearRankingsRequest::GetCategoryName() const
     {
         return CategoryNameValue;
+    }
+
+    TOptional<FString> FDescribeNearRankingsRequest::GetAdditionalScopeName() const
+    {
+        return AdditionalScopeNameValue;
     }
 
     TOptional<int64> FDescribeNearRankingsRequest::GetScore() const
@@ -120,6 +135,15 @@ namespace Gs2::Ranking::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithAdditionalScopeName(Data->HasField("additionalScopeName") ? [Data]() -> TOptional<FString>
+              {
+                  FString v;
+                    if (Data->TryGetStringField("additionalScopeName", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithScore(Data->HasField("score") ? [Data]() -> TOptional<int64>
               {
                   int64 v;
@@ -145,6 +169,10 @@ namespace Gs2::Ranking::Request
         if (CategoryNameValue.IsSet())
         {
             JsonRootObject->SetStringField("categoryName", CategoryNameValue.GetValue());
+        }
+        if (AdditionalScopeNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("additionalScopeName", AdditionalScopeNameValue.GetValue());
         }
         if (ScoreValue.IsSet())
         {

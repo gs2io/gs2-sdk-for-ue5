@@ -31,6 +31,7 @@ namespace Gs2::Ranking::Model
         CalculateFixedTimingHourValue(TOptional<int32>()),
         CalculateFixedTimingMinuteValue(TOptional<int32>()),
         CalculateIntervalMinutesValue(TOptional<int32>()),
+        AdditionalScopesValue(nullptr),
         EntryPeriodEventIdValue(TOptional<FString>()),
         AccessPeriodEventIdValue(TOptional<FString>()),
         IgnoreUserIdsValue(nullptr),
@@ -53,6 +54,7 @@ namespace Gs2::Ranking::Model
         CalculateFixedTimingHourValue(From.CalculateFixedTimingHourValue),
         CalculateFixedTimingMinuteValue(From.CalculateFixedTimingMinuteValue),
         CalculateIntervalMinutesValue(From.CalculateIntervalMinutesValue),
+        AdditionalScopesValue(From.AdditionalScopesValue),
         EntryPeriodEventIdValue(From.EntryPeriodEventIdValue),
         AccessPeriodEventIdValue(From.AccessPeriodEventIdValue),
         IgnoreUserIdsValue(From.IgnoreUserIdsValue),
@@ -153,6 +155,14 @@ namespace Gs2::Ranking::Model
     )
     {
         this->CalculateIntervalMinutesValue = CalculateIntervalMinutes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCategoryModel> FCategoryModel::WithAdditionalScopes(
+        const TSharedPtr<TArray<TSharedPtr<Model::FScope>>> AdditionalScopes
+    )
+    {
+        this->AdditionalScopesValue = AdditionalScopes;
         return SharedThis(this);
     }
 
@@ -297,6 +307,10 @@ namespace Gs2::Ranking::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), CalculateIntervalMinutesValue.GetValue());
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FScope>>> FCategoryModel::GetAdditionalScopes() const
+    {
+        return AdditionalScopesValue;
     }
     TOptional<FString> FCategoryModel::GetEntryPeriodEventId() const
     {
@@ -473,6 +487,18 @@ namespace Gs2::Ranking::Model
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
+            ->WithAdditionalScopes(Data->HasField("additionalScopes") ? [Data]() -> TSharedPtr<TArray<Model::FScopePtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FScopePtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("additionalScopes") && Data->HasTypedField<EJson::Array>("additionalScopes"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("additionalScopes"))
+                        {
+                            v->Add(Model::FScope::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FScopePtr>>())
             ->WithEntryPeriodEventId(Data->HasField("entryPeriodEventId") ? [Data]() -> TOptional<FString>
                 {
                     FString v;
@@ -564,6 +590,15 @@ namespace Gs2::Ranking::Model
         if (CalculateIntervalMinutesValue.IsSet())
         {
             JsonRootObject->SetNumberField("calculateIntervalMinutes", CalculateIntervalMinutesValue.GetValue());
+        }
+        if (AdditionalScopesValue != nullptr && AdditionalScopesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *AdditionalScopesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("additionalScopes", v);
         }
         if (EntryPeriodEventIdValue.IsSet())
         {

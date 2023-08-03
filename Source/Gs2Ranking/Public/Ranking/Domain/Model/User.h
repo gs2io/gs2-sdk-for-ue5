@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -127,12 +129,14 @@ namespace Gs2::Ranking::Domain::Model
         ) const;
 
         Gs2::Ranking::Domain::Iterator::FDescribeRankingsByUserIdIteratorPtr Rankings(
-            const FString CategoryName
+            const FString CategoryName,
+            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         ) const;
 
         Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIteratorPtr NearRankings(
             const FString CategoryName,
-            const int64 Score
+            const int64 Score,
+            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         ) const;
 
         TSharedPtr<Gs2::Ranking::Domain::Model::FRankingDomain> Ranking(

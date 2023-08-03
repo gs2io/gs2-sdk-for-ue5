@@ -59,7 +59,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
         Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeNearRankingsIteratorPtr NearRankings(
             const FString CategoryName,
-            const int64 Score
+            const int64 Score,
+            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         ) const;
 
         Gs2::UE5::Ranking::Domain::Model::FEzRankingDomainPtr Ranking(

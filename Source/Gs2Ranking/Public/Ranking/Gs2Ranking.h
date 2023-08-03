@@ -23,6 +23,7 @@
 #include "Model/Subscribe.h"
 #include "Model/Score.h"
 #include "Model/Ranking.h"
+#include "Model/Scope.h"
 #include "Model/CurrentRankingMaster.h"
 #include "Model/CalculatedAt.h"
 #include "Model/SubscribeUser.h"

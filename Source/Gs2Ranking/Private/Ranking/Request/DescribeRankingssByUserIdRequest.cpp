@@ -22,6 +22,7 @@ namespace Gs2::Ranking::Request
         NamespaceNameValue(TOptional<FString>()),
         CategoryNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
+        AdditionalScopeNameValue(TOptional<FString>()),
         StartIndexValue(TOptional<int64>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
@@ -34,6 +35,7 @@ namespace Gs2::Ranking::Request
         NamespaceNameValue(From.NamespaceNameValue),
         CategoryNameValue(From.CategoryNameValue),
         UserIdValue(From.UserIdValue),
+        AdditionalScopeNameValue(From.AdditionalScopeNameValue),
         StartIndexValue(From.StartIndexValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
@@ -69,6 +71,14 @@ namespace Gs2::Ranking::Request
     )
     {
         this->UserIdValue = UserId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeRankingssByUserIdRequest> FDescribeRankingssByUserIdRequest::WithAdditionalScopeName(
+        const TOptional<FString> AdditionalScopeName
+    )
+    {
+        this->AdditionalScopeNameValue = AdditionalScopeName;
         return SharedThis(this);
     }
 
@@ -114,6 +124,11 @@ namespace Gs2::Ranking::Request
     TOptional<FString> FDescribeRankingssByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FDescribeRankingssByUserIdRequest::GetAdditionalScopeName() const
+    {
+        return AdditionalScopeNameValue;
     }
 
     TOptional<int64> FDescribeRankingssByUserIdRequest::GetStartIndex() const
@@ -183,6 +198,15 @@ namespace Gs2::Ranking::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithAdditionalScopeName(Data->HasField("additionalScopeName") ? [Data]() -> TOptional<FString>
+              {
+                  FString v;
+                    if (Data->TryGetStringField("additionalScopeName", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithStartIndex(Data->HasField("startIndex") ? [Data]() -> TOptional<int64>
               {
                   int64 v;
@@ -230,6 +254,10 @@ namespace Gs2::Ranking::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (AdditionalScopeNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("additionalScopeName", AdditionalScopeNameValue.GetValue());
         }
         if (StartIndexValue.IsSet())
         {

@@ -88,7 +88,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
         ) const;
 
         Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeRankingsIteratorPtr Rankings(
-            const FString CategoryName
+            const FString CategoryName,
+            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         ) const;
 
         Gs2::UE5::Ranking::Domain::Model::FEzRankingGameSessionDomainPtr Ranking(

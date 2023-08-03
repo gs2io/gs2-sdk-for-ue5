@@ -28,6 +28,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> CategoryNameValue;
         TOptional<FString> AccessTokenValue;
+        TOptional<FString> AdditionalScopeNameValue;
         TOptional<int64> StartIndexValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
@@ -44,6 +45,7 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FDescribeRankingsRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribeRankingsRequest> WithCategoryName(const TOptional<FString> CategoryName);
         TSharedPtr<FDescribeRankingsRequest> WithAccessToken(const TOptional<FString> AccessToken);
+        TSharedPtr<FDescribeRankingsRequest> WithAdditionalScopeName(const TOptional<FString> AdditionalScopeName);
         TSharedPtr<FDescribeRankingsRequest> WithStartIndex(const TOptional<int64> StartIndex);
         TSharedPtr<FDescribeRankingsRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeRankingsRequest> WithLimit(const TOptional<int32> Limit);
@@ -52,6 +54,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetCategoryName() const;
         TOptional<FString> GetAccessToken() const;
+        TOptional<FString> GetAdditionalScopeName() const;
         TOptional<int64> GetStartIndex() const;
         FString GetStartIndexString() const;
         TOptional<FString> GetPageToken() const;

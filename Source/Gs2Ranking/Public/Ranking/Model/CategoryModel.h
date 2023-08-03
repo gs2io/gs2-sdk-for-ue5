@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "Scope.h"
 
 namespace Gs2::Ranking::Model
 {
@@ -35,6 +36,7 @@ namespace Gs2::Ranking::Model
         TOptional<int32> CalculateFixedTimingHourValue;
         TOptional<int32> CalculateFixedTimingMinuteValue;
         TOptional<int32> CalculateIntervalMinutesValue;
+        TSharedPtr<TArray<TSharedPtr<FScope>>> AdditionalScopesValue;
         TOptional<FString> EntryPeriodEventIdValue;
         TOptional<FString> AccessPeriodEventIdValue;
         TSharedPtr<TArray<FString>> IgnoreUserIdsValue;
@@ -59,6 +61,7 @@ namespace Gs2::Ranking::Model
         TSharedPtr<FCategoryModel> WithCalculateFixedTimingHour(const TOptional<int32> CalculateFixedTimingHour);
         TSharedPtr<FCategoryModel> WithCalculateFixedTimingMinute(const TOptional<int32> CalculateFixedTimingMinute);
         TSharedPtr<FCategoryModel> WithCalculateIntervalMinutes(const TOptional<int32> CalculateIntervalMinutes);
+        TSharedPtr<FCategoryModel> WithAdditionalScopes(const TSharedPtr<TArray<TSharedPtr<FScope>>> AdditionalScopes);
         TSharedPtr<FCategoryModel> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FCategoryModel> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
         TSharedPtr<FCategoryModel> WithIgnoreUserIds(const TSharedPtr<TArray<FString>> IgnoreUserIds);
@@ -83,6 +86,7 @@ namespace Gs2::Ranking::Model
         FString GetCalculateFixedTimingMinuteString() const;
         TOptional<int32> GetCalculateIntervalMinutes() const;
         FString GetCalculateIntervalMinutesString() const;
+        TSharedPtr<TArray<TSharedPtr<FScope>>> GetAdditionalScopes() const;
         TOptional<FString> GetEntryPeriodEventId() const;
         TOptional<FString> GetAccessPeriodEventId() const;
         TSharedPtr<TArray<FString>> GetIgnoreUserIds() const;

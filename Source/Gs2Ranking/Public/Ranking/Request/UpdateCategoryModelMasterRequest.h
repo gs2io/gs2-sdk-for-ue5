@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Scope.h"
 
 namespace Gs2::Ranking::Request
 {
@@ -38,6 +39,7 @@ namespace Gs2::Ranking::Request
         TOptional<int32> CalculateFixedTimingHourValue;
         TOptional<int32> CalculateFixedTimingMinuteValue;
         TOptional<int32> CalculateIntervalMinutesValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FScope>>> AdditionalScopesValue;
         TOptional<FString> EntryPeriodEventIdValue;
         TOptional<FString> AccessPeriodEventIdValue;
         TSharedPtr<TArray<FString>> IgnoreUserIdsValue;
@@ -65,6 +67,7 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithCalculateFixedTimingHour(const TOptional<int32> CalculateFixedTimingHour);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithCalculateFixedTimingMinute(const TOptional<int32> CalculateFixedTimingMinute);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithCalculateIntervalMinutes(const TOptional<int32> CalculateIntervalMinutes);
+        TSharedPtr<FUpdateCategoryModelMasterRequest> WithAdditionalScopes(const TSharedPtr<TArray<TSharedPtr<Model::FScope>>> AdditionalScopes);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
         TSharedPtr<FUpdateCategoryModelMasterRequest> WithIgnoreUserIds(
@@ -91,7 +94,7 @@ namespace Gs2::Ranking::Request
         TOptional<int32> GetCalculateFixedTimingMinute() const;
         FString GetCalculateFixedTimingMinuteString() const;
         TOptional<int32> GetCalculateIntervalMinutes() const;
-        FString GetCalculateIntervalMinutesString() const;
+        FString GetCalculateIntervalMinutesString() const;TSharedPtr<TArray<TSharedPtr<Model::FScope>>> GetAdditionalScopes() const;
         TOptional<FString> GetEntryPeriodEventId() const;
         TOptional<FString> GetAccessPeriodEventId() const;
         TSharedPtr<TArray<FString>> GetIgnoreUserIds() const;

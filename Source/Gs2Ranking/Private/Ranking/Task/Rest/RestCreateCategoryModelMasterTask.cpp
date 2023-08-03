@@ -132,6 +132,15 @@ namespace Gs2::Ranking::Task::Rest
             {
                 JsonRootObject->SetNumberField("calculateIntervalMinutes", this->Request->GetCalculateIntervalMinutes().GetValue());
             }
+            if (this->Request->GetAdditionalScopes() != nullptr && this->Request->GetAdditionalScopes().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetAdditionalScopes())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("additionalScopes", v);
+            }
             if (this->Request->GetEntryPeriodEventId().IsSet() && !this->Request->GetEntryPeriodEventId().GetValue().IsEmpty())
             {
                 JsonRootObject->SetStringField("entryPeriodEventId", this->Request->GetEntryPeriodEventId().GetValue());

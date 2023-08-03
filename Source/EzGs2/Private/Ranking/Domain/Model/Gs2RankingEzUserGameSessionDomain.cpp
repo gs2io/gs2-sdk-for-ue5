@@ -129,12 +129,14 @@ namespace Gs2::UE5::Ranking::Domain::Model
     }
 
     Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeRankingsIteratorPtr FEzUserGameSessionDomain::Rankings(
-          const FString CategoryName
+          const FString CategoryName,
+          const TOptional<FString> AdditionalScopeName
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeRankingsIterator>(
             Domain->Rankings(
-                CategoryName
+                CategoryName,
+                AdditionalScopeName
             )
         );
     }

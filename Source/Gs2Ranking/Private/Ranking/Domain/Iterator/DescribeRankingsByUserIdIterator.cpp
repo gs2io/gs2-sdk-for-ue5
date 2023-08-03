@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -36,14 +38,16 @@ namespace Gs2::Ranking::Domain::Iterator
         const Gs2::Ranking::FGs2RankingRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CategoryName,
-        const TOptional<FString> UserId
+        const TOptional<FString> UserId,
+        const TOptional<FString> AdditionalScopeName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         CategoryName(CategoryName),
-        UserId(UserId)
+        UserId(UserId),
+        AdditionalScopeName(AdditionalScopeName)
     {
     }
 
@@ -82,11 +86,12 @@ namespace Gs2::Ranking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Ranking"
-            );
+            const auto ListParentKey = FString() +
+                (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
+                (Self->UserId.IsSet() ? *Self->UserId : "null") + ":" +
+                (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
+                (Self->AdditionalScopeName.IsSet() ? *Self->AdditionalScopeName : "null") + ":" +
+                "Ranking";
 
             if (!RangeIteratorOpt)
             {
@@ -108,6 +113,7 @@ namespace Gs2::Ranking::Domain::Iterator
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithCategoryName(Self->CategoryName)
                     ->WithUserId(Self->UserId)
+                    ->WithAdditionalScopeName(Self->AdditionalScopeName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

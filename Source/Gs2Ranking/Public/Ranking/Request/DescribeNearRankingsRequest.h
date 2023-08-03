@@ -27,6 +27,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> CategoryNameValue;
+        TOptional<FString> AdditionalScopeNameValue;
         TOptional<int64> ScoreValue;
         
     public:
@@ -40,11 +41,13 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FDescribeNearRankingsRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeNearRankingsRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribeNearRankingsRequest> WithCategoryName(const TOptional<FString> CategoryName);
+        TSharedPtr<FDescribeNearRankingsRequest> WithAdditionalScopeName(const TOptional<FString> AdditionalScopeName);
         TSharedPtr<FDescribeNearRankingsRequest> WithScore(const TOptional<int64> Score);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetCategoryName() const;
+        TOptional<FString> GetAdditionalScopeName() const;
         TOptional<int64> GetScore() const;
         FString GetScoreString() const;
 

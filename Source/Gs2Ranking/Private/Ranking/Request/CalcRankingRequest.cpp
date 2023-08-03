@@ -20,7 +20,8 @@ namespace Gs2::Ranking::Request
 {
     FCalcRankingRequest::FCalcRankingRequest():
         NamespaceNameValue(TOptional<FString>()),
-        CategoryNameValue(TOptional<FString>())
+        CategoryNameValue(TOptional<FString>()),
+        AdditionalScopeNameValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::Ranking::Request
         const FCalcRankingRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        CategoryNameValue(From.CategoryNameValue)
+        CategoryNameValue(From.CategoryNameValue),
+        AdditionalScopeNameValue(From.AdditionalScopeNameValue)
     {
     }
 
@@ -56,6 +58,14 @@ namespace Gs2::Ranking::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCalcRankingRequest> FCalcRankingRequest::WithAdditionalScopeName(
+        const TOptional<FString> AdditionalScopeName
+    )
+    {
+        this->AdditionalScopeNameValue = AdditionalScopeName;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FCalcRankingRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -69,6 +79,11 @@ namespace Gs2::Ranking::Request
     TOptional<FString> FCalcRankingRequest::GetCategoryName() const
     {
         return CategoryNameValue;
+    }
+
+    TOptional<FString> FCalcRankingRequest::GetAdditionalScopeName() const
+    {
+        return AdditionalScopeNameValue;
     }
 
     TSharedPtr<FCalcRankingRequest> FCalcRankingRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -95,6 +110,15 @@ namespace Gs2::Ranking::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithAdditionalScopeName(Data->HasField("additionalScopeName") ? [Data]() -> TOptional<FString>
+              {
+                  FString v;
+                    if (Data->TryGetStringField("additionalScopeName", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -112,6 +136,10 @@ namespace Gs2::Ranking::Request
         if (CategoryNameValue.IsSet())
         {
             JsonRootObject->SetStringField("categoryName", CategoryNameValue.GetValue());
+        }
+        if (AdditionalScopeNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("additionalScopeName", AdditionalScopeNameValue.GetValue());
         }
         return JsonRootObject;
     }

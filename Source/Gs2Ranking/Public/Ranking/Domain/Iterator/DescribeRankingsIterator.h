@@ -34,6 +34,7 @@ namespace Gs2::Ranking::Domain::Iterator
         const TOptional<FString> CategoryName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
+        const TOptional<FString> AdditionalScopeName;
 
     public:
         FDescribeRankingsIterator(
@@ -41,7 +42,8 @@ namespace Gs2::Ranking::Domain::Iterator
             const Gs2::Ranking::FGs2RankingRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CategoryName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const TOptional<FString> AdditionalScopeName
         );
 
         class FIterator;
