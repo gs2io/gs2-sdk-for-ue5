@@ -192,6 +192,42 @@ namespace Gs2::Enchant::Domain
                 );
             }
         }
+        if (Method == "SetBalanceParameterStatusByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Enchant::Request::FSetBalanceParameterStatusByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Enchant::Result::FSetBalanceParameterStatusByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "BalanceParameterStatus"
+                );
+                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetParameterName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Cache->Put(
+                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "ReDrawRarityParameterStatusByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -243,6 +279,42 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FAddRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FAddRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "RarityParameterStatus"
+                );
+                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetParameterName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Cache->Put(
+                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "SetRarityParameterStatusByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Enchant::Request::FSetRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Enchant::Result::FSetRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
             
             if (ResultModel->GetItem() != nullptr)
             {
@@ -358,6 +430,50 @@ namespace Gs2::Enchant::Domain
                 );
             }
         }
+        if (Method == "set_balance_parameter_status_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Enchant::Request::FSetBalanceParameterStatusByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Enchant::Result::FSetBalanceParameterStatusByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "BalanceParameterStatus"
+                );
+                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetParameterName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Cache->Put(
+                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "re_draw_rarity_parameter_status_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (!Job->GetArgs().IsSet())
@@ -425,6 +541,50 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FAddRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FAddRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "RarityParameterStatus"
+                );
+                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetParameterName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Cache->Put(
+                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "set_rarity_parameter_status_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Enchant::Request::FSetRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Enchant::Result::FSetRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
             
             if (ResultModel->GetItem() != nullptr)
             {

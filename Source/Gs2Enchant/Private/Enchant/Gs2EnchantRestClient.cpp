@@ -298,6 +298,24 @@ namespace Gs2::Enchant
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSetBalanceParameterStatusByUserIdTask>> FGs2EnchantRestClient::SetBalanceParameterStatusByUserId(
+        const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetBalanceParameterStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSetBalanceParameterStatusByStampSheetTask>> FGs2EnchantRestClient::SetBalanceParameterStatusByStampSheet(
+        const Request::FSetBalanceParameterStatusByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetBalanceParameterStatusByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeRarityParameterStatusesTask>> FGs2EnchantRestClient::DescribeRarityParameterStatuses(
         const Request::FDescribeRarityParameterStatusesRequestPtr Request) const
     {
@@ -401,6 +419,24 @@ namespace Gs2::Enchant
         const Request::FVerifyRarityParameterStatusByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRarityParameterStatusByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSetRarityParameterStatusByUserIdTask>> FGs2EnchantRestClient::SetRarityParameterStatusByUserId(
+        const Request::FSetRarityParameterStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetRarityParameterStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSetRarityParameterStatusByStampSheetTask>> FGs2EnchantRestClient::SetRarityParameterStatusByStampSheet(
+        const Request::FSetRarityParameterStatusByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetRarityParameterStatusByStampSheetTask>>(
             Session,
             Request
         );

@@ -298,6 +298,24 @@ namespace Gs2::Enchant
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetBalanceParameterStatusByUserIdTask>> FGs2EnchantWebSocketClient::SetBalanceParameterStatusByUserId(
+        const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetBalanceParameterStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetBalanceParameterStatusByStampSheetTask>> FGs2EnchantWebSocketClient::SetBalanceParameterStatusByStampSheet(
+        const Request::FSetBalanceParameterStatusByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetBalanceParameterStatusByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRarityParameterStatusesTask>> FGs2EnchantWebSocketClient::DescribeRarityParameterStatuses(
         const Request::FDescribeRarityParameterStatusesRequestPtr Request) const
     {
@@ -401,6 +419,24 @@ namespace Gs2::Enchant
         const Request::FVerifyRarityParameterStatusByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyRarityParameterStatusByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetRarityParameterStatusByUserIdTask>> FGs2EnchantWebSocketClient::SetRarityParameterStatusByUserId(
+        const Request::FSetRarityParameterStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetRarityParameterStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetRarityParameterStatusByStampSheetTask>> FGs2EnchantWebSocketClient::SetRarityParameterStatusByStampSheet(
+        const Request::FSetRarityParameterStatusByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetRarityParameterStatusByStampSheetTask>>(
             Session,
             Request
         );

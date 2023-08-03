@@ -160,6 +160,32 @@ namespace Gs2::Enchant::Domain::Model
             Request::FReDrawBalanceParameterStatusByUserIdRequestPtr Request
         );
 
+        class GS2ENCHANT_API FSetTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>,
+            public TSharedFromThis<FSetTask>
+        {
+            const TSharedPtr<FBalanceParameterStatusDomain> Self;
+            const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request;
+        public:
+            explicit FSetTask(
+                const TSharedPtr<FBalanceParameterStatusDomain> Self,
+                const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request
+            );
+
+            FSetTask(
+                const FSetTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>> Result
+            ) override;
+        };
+        friend FSetTask;
+
+        TSharedPtr<FAsyncTask<FSetTask>> Set(
+            Request::FSetBalanceParameterStatusByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

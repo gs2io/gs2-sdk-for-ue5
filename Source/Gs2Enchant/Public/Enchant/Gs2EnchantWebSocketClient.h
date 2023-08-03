@@ -80,6 +80,10 @@
 #include "Task/WebSocket/ReDrawBalanceParameterStatusByUserIdTask.h"
 #include "Request/ReDrawBalanceParameterStatusByStampSheetRequest.h"
 #include "Task/WebSocket/ReDrawBalanceParameterStatusByStampSheetTask.h"
+#include "Request/SetBalanceParameterStatusByUserIdRequest.h"
+#include "Task/WebSocket/SetBalanceParameterStatusByUserIdTask.h"
+#include "Request/SetBalanceParameterStatusByStampSheetRequest.h"
+#include "Task/WebSocket/SetBalanceParameterStatusByStampSheetTask.h"
 #include "Request/DescribeRarityParameterStatusesRequest.h"
 #include "Task/WebSocket/DescribeRarityParameterStatusesTask.h"
 #include "Request/DescribeRarityParameterStatusesByUserIdRequest.h"
@@ -104,6 +108,10 @@
 #include "Task/WebSocket/VerifyRarityParameterStatusByUserIdTask.h"
 #include "Request/VerifyRarityParameterStatusByStampTaskRequest.h"
 #include "Task/WebSocket/VerifyRarityParameterStatusByStampTaskTask.h"
+#include "Request/SetRarityParameterStatusByUserIdRequest.h"
+#include "Task/WebSocket/SetRarityParameterStatusByUserIdTask.h"
+#include "Request/SetRarityParameterStatusByStampSheetRequest.h"
+#include "Task/WebSocket/SetRarityParameterStatusByStampSheetTask.h"
 
 namespace Gs2::Enchant
 {
@@ -240,6 +248,14 @@ namespace Gs2::Enchant
             const Request::FReDrawBalanceParameterStatusByStampSheetRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetBalanceParameterStatusByUserIdTask>> SetBalanceParameterStatusByUserId(
+            const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetBalanceParameterStatusByStampSheetTask>> SetBalanceParameterStatusByStampSheet(
+            const Request::FSetBalanceParameterStatusByStampSheetRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRarityParameterStatusesTask>> DescribeRarityParameterStatuses(
             const Request::FDescribeRarityParameterStatusesRequestPtr Request
         ) const;
@@ -286,6 +302,14 @@ namespace Gs2::Enchant
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRarityParameterStatusByStampTaskTask>> VerifyRarityParameterStatusByStampTask(
             const Request::FVerifyRarityParameterStatusByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetRarityParameterStatusByUserIdTask>> SetRarityParameterStatusByUserId(
+            const Request::FSetRarityParameterStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetRarityParameterStatusByStampSheetTask>> SetRarityParameterStatusByStampSheet(
+            const Request::FSetRarityParameterStatusByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2EnchantWebSocketClient, ESPMode::ThreadSafe> FGs2EnchantWebSocketClientPtr;

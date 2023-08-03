@@ -278,6 +278,74 @@ namespace Gs2::Enchant::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FReDrawTask>>(this->AsShared(), Request);
     }
 
+    FBalanceParameterStatusDomain::FSetTask::FSetTask(
+        const TSharedPtr<FBalanceParameterStatusDomain> Self,
+        const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FBalanceParameterStatusDomain::FSetTask::FSetTask(
+        const FSetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FBalanceParameterStatusDomain::FSetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithParameterName(Self->ParameterName)
+            ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SetBalanceParameterStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "BalanceParameterStatus"
+                );
+                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetParameterName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Self->Cache->Put(
+                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FBalanceParameterStatusDomain::FSetTask>> FBalanceParameterStatusDomain::Set(
+        Request::FSetBalanceParameterStatusByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSetTask>>(this->AsShared(), Request);
+    }
+
     FString FBalanceParameterStatusDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

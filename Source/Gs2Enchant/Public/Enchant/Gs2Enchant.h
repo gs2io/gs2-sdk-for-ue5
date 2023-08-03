@@ -222,6 +222,18 @@
 #include "Task/Rest/ReDrawBalanceParameterStatusByStampSheetTask.h"
 #include "Task/WebSocket/ReDrawBalanceParameterStatusByStampSheetTask.h"
 
+// SetBalanceParameterStatusByUserId
+#include "Request/SetBalanceParameterStatusByUserIdRequest.h"
+#include "Result/SetBalanceParameterStatusByUserIdResult.h"
+#include "Task/Rest/SetBalanceParameterStatusByUserIdTask.h"
+#include "Task/WebSocket/SetBalanceParameterStatusByUserIdTask.h"
+
+// SetBalanceParameterStatusByStampSheet
+#include "Request/SetBalanceParameterStatusByStampSheetRequest.h"
+#include "Result/SetBalanceParameterStatusByStampSheetResult.h"
+#include "Task/Rest/SetBalanceParameterStatusByStampSheetTask.h"
+#include "Task/WebSocket/SetBalanceParameterStatusByStampSheetTask.h"
+
 // DescribeRarityParameterStatuses
 #include "Request/DescribeRarityParameterStatusesRequest.h"
 #include "Result/DescribeRarityParameterStatusesResult.h"
@@ -293,6 +305,18 @@
 #include "Result/VerifyRarityParameterStatusByStampTaskResult.h"
 #include "Task/Rest/VerifyRarityParameterStatusByStampTaskTask.h"
 #include "Task/WebSocket/VerifyRarityParameterStatusByStampTaskTask.h"
+
+// SetRarityParameterStatusByUserId
+#include "Request/SetRarityParameterStatusByUserIdRequest.h"
+#include "Result/SetRarityParameterStatusByUserIdResult.h"
+#include "Task/Rest/SetRarityParameterStatusByUserIdTask.h"
+#include "Task/WebSocket/SetRarityParameterStatusByUserIdTask.h"
+
+// SetRarityParameterStatusByStampSheet
+#include "Request/SetRarityParameterStatusByStampSheetRequest.h"
+#include "Result/SetRarityParameterStatusByStampSheetResult.h"
+#include "Task/Rest/SetRarityParameterStatusByStampSheetTask.h"
+#include "Task/WebSocket/SetRarityParameterStatusByStampSheetTask.h"
 
 // Client
 #include "Gs2EnchantRestClient.h"

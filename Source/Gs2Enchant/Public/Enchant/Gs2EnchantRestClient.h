@@ -80,6 +80,10 @@
 #include "Task/Rest/ReDrawBalanceParameterStatusByUserIdTask.h"
 #include "Request/ReDrawBalanceParameterStatusByStampSheetRequest.h"
 #include "Task/Rest/ReDrawBalanceParameterStatusByStampSheetTask.h"
+#include "Request/SetBalanceParameterStatusByUserIdRequest.h"
+#include "Task/Rest/SetBalanceParameterStatusByUserIdTask.h"
+#include "Request/SetBalanceParameterStatusByStampSheetRequest.h"
+#include "Task/Rest/SetBalanceParameterStatusByStampSheetTask.h"
 #include "Request/DescribeRarityParameterStatusesRequest.h"
 #include "Task/Rest/DescribeRarityParameterStatusesTask.h"
 #include "Request/DescribeRarityParameterStatusesByUserIdRequest.h"
@@ -104,6 +108,10 @@
 #include "Task/Rest/VerifyRarityParameterStatusByUserIdTask.h"
 #include "Request/VerifyRarityParameterStatusByStampTaskRequest.h"
 #include "Task/Rest/VerifyRarityParameterStatusByStampTaskTask.h"
+#include "Request/SetRarityParameterStatusByUserIdRequest.h"
+#include "Task/Rest/SetRarityParameterStatusByUserIdTask.h"
+#include "Request/SetRarityParameterStatusByStampSheetRequest.h"
+#include "Task/Rest/SetRarityParameterStatusByStampSheetTask.h"
 
 namespace Gs2::Enchant
 {
@@ -240,6 +248,14 @@ namespace Gs2::Enchant
             const Request::FReDrawBalanceParameterStatusByStampSheetRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSetBalanceParameterStatusByUserIdTask>> SetBalanceParameterStatusByUserId(
+            const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetBalanceParameterStatusByStampSheetTask>> SetBalanceParameterStatusByStampSheet(
+            const Request::FSetBalanceParameterStatusByStampSheetRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeRarityParameterStatusesTask>> DescribeRarityParameterStatuses(
             const Request::FDescribeRarityParameterStatusesRequestPtr Request
         ) const;
@@ -286,6 +302,14 @@ namespace Gs2::Enchant
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifyRarityParameterStatusByStampTaskTask>> VerifyRarityParameterStatusByStampTask(
             const Request::FVerifyRarityParameterStatusByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetRarityParameterStatusByUserIdTask>> SetRarityParameterStatusByUserId(
+            const Request::FSetRarityParameterStatusByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetRarityParameterStatusByStampSheetTask>> SetRarityParameterStatusByStampSheet(
+            const Request::FSetRarityParameterStatusByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2EnchantRestClient, ESPMode::ThreadSafe> FGs2EnchantRestClientPtr;

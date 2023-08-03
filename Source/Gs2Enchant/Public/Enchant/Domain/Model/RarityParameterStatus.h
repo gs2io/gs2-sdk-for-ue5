@@ -212,6 +212,32 @@ namespace Gs2::Enchant::Domain::Model
             Request::FVerifyRarityParameterStatusByUserIdRequestPtr Request
         );
 
+        class GS2ENCHANT_API FSetTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain>,
+            public TSharedFromThis<FSetTask>
+        {
+            const TSharedPtr<FRarityParameterStatusDomain> Self;
+            const Request::FSetRarityParameterStatusByUserIdRequestPtr Request;
+        public:
+            explicit FSetTask(
+                const TSharedPtr<FRarityParameterStatusDomain> Self,
+                const Request::FSetRarityParameterStatusByUserIdRequestPtr Request
+            );
+
+            FSetTask(
+                const FSetTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain>> Result
+            ) override;
+        };
+        friend FSetTask;
+
+        TSharedPtr<FAsyncTask<FSetTask>> Set(
+            Request::FSetRarityParameterStatusByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
