@@ -105,6 +105,10 @@ namespace Gs2::Mission::Task::Rest
             {
                 JsonRootObject->SetStringField("counterName", this->Request->GetCounterName().GetValue());
             }
+            if (this->Request->GetTargetResetType().IsSet() && !this->Request->GetTargetResetType().GetValue().IsEmpty())
+            {
+                JsonRootObject->SetStringField("targetResetType", this->Request->GetTargetResetType().GetValue());
+            }
             if (this->Request->GetTargetValue().IsSet())
             {
                 JsonRootObject->SetStringField("targetValue", FString::Printf(TEXT("%lld"), this->Request->GetTargetValue().GetValue()));

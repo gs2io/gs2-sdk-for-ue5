@@ -66,6 +66,14 @@ namespace Gs2::UE5::Experience::Model
         this->RankThresholdValue = RankThreshold;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzExperienceModel> FEzExperienceModel::WithAcquireActionRates(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Experience::Model::FEzAcquireActionRate>>> AcquireActionRates
+    )
+    {
+        this->AcquireActionRatesValue = AcquireActionRates;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzExperienceModel::GetName() const
     {
         return NameValue;
@@ -117,6 +125,10 @@ namespace Gs2::UE5::Experience::Model
     {
         return RankThresholdValue;
     }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Experience::Model::FEzAcquireActionRate>>> FEzExperienceModel::GetAcquireActionRates() const
+    {
+        return AcquireActionRatesValue;
+    }
 
     Gs2::Experience::Model::FExperienceModelPtr FEzExperienceModel::ToModel() const
     {
@@ -126,7 +138,21 @@ namespace Gs2::UE5::Experience::Model
             ->WithDefaultExperience(DefaultExperienceValue)
             ->WithDefaultRankCap(DefaultRankCapValue)
             ->WithMaxRankCap(MaxRankCapValue)
-            ->WithRankThreshold(RankThresholdValue == nullptr ? nullptr : RankThresholdValue->ToModel());
+            ->WithRankThreshold(RankThresholdValue == nullptr ? nullptr : RankThresholdValue->ToModel())
+            ->WithAcquireActionRates([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Experience::Model::FAcquireActionRate>>>();
+                    if (AcquireActionRatesValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *AcquireActionRatesValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            );
     }
 
     TSharedPtr<FEzExperienceModel> FEzExperienceModel::FromModel(const Gs2::Experience::Model::FExperienceModelPtr Model)
@@ -141,6 +167,20 @@ namespace Gs2::UE5::Experience::Model
             ->WithDefaultExperience(Model->GetDefaultExperience())
             ->WithDefaultRankCap(Model->GetDefaultRankCap())
             ->WithMaxRankCap(Model->GetMaxRankCap())
-            ->WithRankThreshold(Model->GetRankThreshold() != nullptr ? Gs2::UE5::Experience::Model::FEzThreshold::FromModel(Model->GetRankThreshold()) : nullptr);
+            ->WithRankThreshold(Model->GetRankThreshold() != nullptr ? Gs2::UE5::Experience::Model::FEzThreshold::FromModel(Model->GetRankThreshold()) : nullptr)
+            ->WithAcquireActionRates([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzAcquireActionRate>>>();
+                    if (Model->GetAcquireActionRates() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetAcquireActionRates())
+                    {
+                        v->Add(FEzAcquireActionRate::FromModel(v2));
+                    }
+                    return v;
+                }()
+            );
     }
 }

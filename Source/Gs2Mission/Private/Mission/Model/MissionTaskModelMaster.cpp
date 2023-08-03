@@ -24,6 +24,7 @@ namespace Gs2::Mission::Model
         MetadataValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         CounterNameValue(TOptional<FString>()),
+        TargetResetTypeValue(TOptional<FString>()),
         TargetValueValue(TOptional<int64>()),
         CompleteAcquireActionsValue(nullptr),
         ChallengePeriodEventIdValue(TOptional<FString>()),
@@ -41,6 +42,7 @@ namespace Gs2::Mission::Model
         MetadataValue(From.MetadataValue),
         DescriptionValue(From.DescriptionValue),
         CounterNameValue(From.CounterNameValue),
+        TargetResetTypeValue(From.TargetResetTypeValue),
         TargetValueValue(From.TargetValueValue),
         CompleteAcquireActionsValue(From.CompleteAcquireActionsValue),
         ChallengePeriodEventIdValue(From.ChallengePeriodEventIdValue),
@@ -87,6 +89,14 @@ namespace Gs2::Mission::Model
     )
     {
         this->CounterNameValue = CounterName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FMissionTaskModelMaster> FMissionTaskModelMaster::WithTargetResetType(
+        const TOptional<FString> TargetResetType
+    )
+    {
+        this->TargetResetTypeValue = TargetResetType;
         return SharedThis(this);
     }
 
@@ -156,6 +166,10 @@ namespace Gs2::Mission::Model
     TOptional<FString> FMissionTaskModelMaster::GetCounterName() const
     {
         return CounterNameValue;
+    }
+    TOptional<FString> FMissionTaskModelMaster::GetTargetResetType() const
+    {
+        return TargetResetTypeValue;
     }
     TOptional<int64> FMissionTaskModelMaster::GetTargetValue() const
     {
@@ -315,6 +329,15 @@ namespace Gs2::Mission::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTargetResetType(Data->HasField("targetResetType") ? [Data]() -> TOptional<FString>
+                {
+                    FString v;
+                    if (Data->TryGetStringField("targetResetType", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithTargetValue(Data->HasField("targetValue") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -396,6 +419,10 @@ namespace Gs2::Mission::Model
         if (CounterNameValue.IsSet())
         {
             JsonRootObject->SetStringField("counterName", CounterNameValue.GetValue());
+        }
+        if (TargetResetTypeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("targetResetType", TargetResetTypeValue.GetValue());
         }
         if (TargetValueValue.IsSet())
         {

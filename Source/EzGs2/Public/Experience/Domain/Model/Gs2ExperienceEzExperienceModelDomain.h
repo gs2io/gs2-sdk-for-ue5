@@ -21,6 +21,8 @@
 #include "Experience/Model/Gs2ExperienceEzExperienceModel.h"
 #include "Experience/Model/Gs2ExperienceEzThreshold.h"
 #include "Experience/Model/Gs2ExperienceEzStatus.h"
+#include "Experience/Model/Gs2ExperienceEzAcquireAction.h"
+#include "Experience/Model/Gs2ExperienceEzAcquireActionRate.h"
 #include "Gs2ExperienceEzExperienceModelDomain.h"
 #include "Experience/Domain/Iterator/Gs2ExperienceEzDescribeExperienceModelsIterator.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"

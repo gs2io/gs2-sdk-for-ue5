@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Experience/Model/ExperienceModel.h"
 #include "Gs2ExperienceEzThreshold.h"
+#include "Gs2ExperienceEzAcquireActionRate.h"
 
 namespace Gs2::UE5::Experience::Model
 {
@@ -30,6 +31,7 @@ namespace Gs2::UE5::Experience::Model
         TOptional<int64> DefaultRankCapValue;
         TOptional<int64> MaxRankCapValue;
         TSharedPtr<Gs2::UE5::Experience::Model::FEzThreshold> RankThresholdValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Experience::Model::FEzAcquireActionRate>>> AcquireActionRatesValue;
 
 	public:
         TSharedPtr<FEzExperienceModel> WithName(const TOptional<FString> Name);
@@ -38,6 +40,7 @@ namespace Gs2::UE5::Experience::Model
         TSharedPtr<FEzExperienceModel> WithDefaultRankCap(const TOptional<int64> DefaultRankCap);
         TSharedPtr<FEzExperienceModel> WithMaxRankCap(const TOptional<int64> MaxRankCap);
         TSharedPtr<FEzExperienceModel> WithRankThreshold(const TSharedPtr<Gs2::UE5::Experience::Model::FEzThreshold> RankThreshold);
+        TSharedPtr<FEzExperienceModel> WithAcquireActionRates(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Experience::Model::FEzAcquireActionRate>>> AcquireActionRates);
 
         TOptional<FString> GetName() const;
 
@@ -53,6 +56,8 @@ namespace Gs2::UE5::Experience::Model
         FString GetMaxRankCapString() const;
 
         TSharedPtr<Gs2::UE5::Experience::Model::FEzThreshold> GetRankThreshold() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Experience::Model::FEzAcquireActionRate>>> GetAcquireActionRates() const;
 
         Gs2::Experience::Model::FExperienceModelPtr ToModel() const;
         static TSharedPtr<FEzExperienceModel> FromModel(Gs2::Experience::Model::FExperienceModelPtr Model);

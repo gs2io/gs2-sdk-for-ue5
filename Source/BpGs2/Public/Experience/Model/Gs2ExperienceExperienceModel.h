@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Experience/Domain/Model/Gs2ExperienceEzExperienceModelDomain.h"
 #include "Experience/Model/Gs2ExperienceThreshold.h"
+#include "Experience/Model/Gs2ExperienceAcquireActionRate.h"
 #include "Core/BpGs2Constant.h"
 #include "Gs2ExperienceExperienceModel.generated.h"
 
@@ -47,6 +48,8 @@ struct FGs2ExperienceExperienceModelValue
     int64 MaxRankCap = 0;
     UPROPERTY(BlueprintReadOnly)
     FGs2ExperienceThreshold RankThreshold = FGs2ExperienceThreshold();
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FGs2ExperienceAcquireActionRate> AcquireActionRates = TArray<FGs2ExperienceAcquireActionRate>();
 };
 
 inline FGs2ExperienceExperienceModelValue EzExperienceModelToFGs2ExperienceExperienceModelValue(
@@ -64,6 +67,15 @@ inline FGs2ExperienceExperienceModelValue EzExperienceModelToFGs2ExperienceExper
     Value.DefaultRankCap = Model->GetDefaultRankCap() ? *Model->GetDefaultRankCap() : 0;
     Value.MaxRankCap = Model->GetMaxRankCap() ? *Model->GetMaxRankCap() : 0;
     Value.RankThreshold = Model->GetRankThreshold() ? EzThresholdToFGs2ExperienceThreshold(Model->GetRankThreshold()) : FGs2ExperienceThreshold();
+    Value.AcquireActionRates = Model->GetAcquireActionRates() ? [&]
+    {
+        TArray<FGs2ExperienceAcquireActionRate> r;
+        for (auto v : *Model->GetAcquireActionRates())
+        {
+            r.Add(EzAcquireActionRateToFGs2ExperienceAcquireActionRate(v));
+        }
+        return r;
+    }() : TArray<FGs2ExperienceAcquireActionRate>();
     return Value;
 }
 
@@ -77,7 +89,14 @@ inline Gs2::UE5::Experience::Model::FEzExperienceModelPtr FGs2ExperienceExperien
         ->WithDefaultExperience(Model.DefaultExperience)
         ->WithDefaultRankCap(Model.DefaultRankCap)
         ->WithMaxRankCap(Model.MaxRankCap)
-        ->WithRankThreshold(FGs2ExperienceThresholdToEzThreshold(Model.RankThreshold));
+        ->WithRankThreshold(FGs2ExperienceThresholdToEzThreshold(Model.RankThreshold))
+        ->WithAcquireActionRates([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Experience::Model::FEzAcquireActionRatePtr>>();
+            for (auto v : Model.AcquireActionRates) {
+                r->Add(FGs2ExperienceAcquireActionRateToEzAcquireActionRate(v));
+            }
+            return r;
+        }());
 }
 
 UCLASS()

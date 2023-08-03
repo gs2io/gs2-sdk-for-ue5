@@ -42,6 +42,8 @@ struct FGs2MissionMissionTaskModelValue
     UPROPERTY(BlueprintReadOnly)
     FString CounterName = "";
     UPROPERTY(BlueprintReadOnly)
+    FString TargetResetType = "";
+    UPROPERTY(BlueprintReadOnly)
     int64 TargetValue = 0;
     UPROPERTY(BlueprintReadOnly)
     TArray<FGs2MissionAcquireAction> CompleteAcquireActions = TArray<FGs2MissionAcquireAction>();
@@ -63,6 +65,7 @@ inline FGs2MissionMissionTaskModelValue EzMissionTaskModelToFGs2MissionMissionTa
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.CounterName = Model->GetCounterName() ? *Model->GetCounterName() : "";
+    Value.TargetResetType = Model->GetTargetResetType() ? *Model->GetTargetResetType() : "";
     Value.TargetValue = Model->GetTargetValue() ? *Model->GetTargetValue() : 0;
     Value.CompleteAcquireActions = Model->GetCompleteAcquireActions() ? [&]
     {
@@ -86,6 +89,7 @@ inline Gs2::UE5::Mission::Model::FEzMissionTaskModelPtr FGs2MissionMissionTaskMo
         ->WithName(Model.Name)
         ->WithMetadata(Model.Metadata)
         ->WithCounterName(Model.CounterName)
+        ->WithTargetResetType(Model.TargetResetType)
         ->WithTargetValue(Model.TargetValue)
         ->WithCompleteAcquireActions([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Mission::Model::FEzAcquireActionPtr>>();

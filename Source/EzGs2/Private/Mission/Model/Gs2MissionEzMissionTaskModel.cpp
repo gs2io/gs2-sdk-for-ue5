@@ -43,6 +43,14 @@ namespace Gs2::UE5::Mission::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithTargetResetType(
+        const TOptional<FString> TargetResetType
+    )
+    {
+        this->TargetResetTypeValue = TargetResetType;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzMissionTaskModel> FEzMissionTaskModel::WithTargetValue(
         const TOptional<int64> TargetValue
     )
@@ -86,6 +94,10 @@ namespace Gs2::UE5::Mission::Model
     {
         return CounterNameValue;
     }
+    TOptional<FString> FEzMissionTaskModel::GetTargetResetType() const
+    {
+        return TargetResetTypeValue;
+    }
     TOptional<int64> FEzMissionTaskModel::GetTargetValue() const
     {
         return TargetValueValue;
@@ -118,6 +130,7 @@ namespace Gs2::UE5::Mission::Model
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
             ->WithCounterName(CounterNameValue)
+            ->WithTargetResetType(TargetResetTypeValue)
             ->WithTargetValue(TargetValueValue)
             ->WithCompleteAcquireActions([&]
                 {
@@ -147,6 +160,7 @@ namespace Gs2::UE5::Mission::Model
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
             ->WithCounterName(Model->GetCounterName())
+            ->WithTargetResetType(Model->GetTargetResetType())
             ->WithTargetValue(Model->GetTargetValue())
             ->WithCompleteAcquireActions([&]
                 {

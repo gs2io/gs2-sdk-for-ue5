@@ -32,6 +32,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> MetadataValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> CounterNameValue;
+        TOptional<FString> TargetResetTypeValue;
         TOptional<int64> TargetValueValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> CompleteAcquireActionsValue;
         TOptional<FString> ChallengePeriodEventIdValue;
@@ -52,6 +53,7 @@ namespace Gs2::Mission::Request
         TSharedPtr<FCreateMissionTaskModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FCreateMissionTaskModelMasterRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateMissionTaskModelMasterRequest> WithCounterName(const TOptional<FString> CounterName);
+        TSharedPtr<FCreateMissionTaskModelMasterRequest> WithTargetResetType(const TOptional<FString> TargetResetType);
         TSharedPtr<FCreateMissionTaskModelMasterRequest> WithTargetValue(const TOptional<int64> TargetValue);
         TSharedPtr<FCreateMissionTaskModelMasterRequest> WithCompleteAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> CompleteAcquireActions);
         TSharedPtr<FCreateMissionTaskModelMasterRequest> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
@@ -64,6 +66,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetCounterName() const;
+        TOptional<FString> GetTargetResetType() const;
         TOptional<int64> GetTargetValue() const;
         FString GetTargetValueString() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetCompleteAcquireActions() const;
         TOptional<FString> GetChallengePeriodEventId() const;
