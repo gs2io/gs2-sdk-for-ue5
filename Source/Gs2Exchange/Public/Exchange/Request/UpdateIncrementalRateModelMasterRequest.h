@@ -37,6 +37,7 @@ namespace Gs2::Exchange::Request
         TOptional<int64> CoefficientValueValue;
         TOptional<FString> CalculateScriptIdValue;
         TOptional<FString> ExchangeCountIdValue;
+        TOptional<int32> MaximumExchangeCountValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActionsValue;
         
     public:
@@ -58,6 +59,7 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FUpdateIncrementalRateModelMasterRequest> WithCoefficientValue(const TOptional<int64> CoefficientValue);
         TSharedPtr<FUpdateIncrementalRateModelMasterRequest> WithCalculateScriptId(const TOptional<FString> CalculateScriptId);
         TSharedPtr<FUpdateIncrementalRateModelMasterRequest> WithExchangeCountId(const TOptional<FString> ExchangeCountId);
+        TSharedPtr<FUpdateIncrementalRateModelMasterRequest> WithMaximumExchangeCount(const TOptional<int32> MaximumExchangeCount);
         TSharedPtr<FUpdateIncrementalRateModelMasterRequest> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActions);
 
         TOptional<FString> GetContextStack() const;
@@ -72,7 +74,9 @@ namespace Gs2::Exchange::Request
         TOptional<int64> GetCoefficientValue() const;
         FString GetCoefficientValueString() const;
         TOptional<FString> GetCalculateScriptId() const;
-        TOptional<FString> GetExchangeCountId() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;
+        TOptional<FString> GetExchangeCountId() const;
+        TOptional<int32> GetMaximumExchangeCount() const;
+        FString GetMaximumExchangeCountString() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;
 
         static TSharedPtr<FUpdateIncrementalRateModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

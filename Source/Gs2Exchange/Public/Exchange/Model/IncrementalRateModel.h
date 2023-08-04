@@ -34,6 +34,7 @@ namespace Gs2::Exchange::Model
         TOptional<int64> CoefficientValueValue;
         TOptional<FString> CalculateScriptIdValue;
         TOptional<FString> ExchangeCountIdValue;
+        TOptional<int32> MaximumExchangeCountValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
 
     public:
@@ -52,6 +53,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FIncrementalRateModel> WithCoefficientValue(const TOptional<int64> CoefficientValue);
         TSharedPtr<FIncrementalRateModel> WithCalculateScriptId(const TOptional<FString> CalculateScriptId);
         TSharedPtr<FIncrementalRateModel> WithExchangeCountId(const TOptional<FString> ExchangeCountId);
+        TSharedPtr<FIncrementalRateModel> WithMaximumExchangeCount(const TOptional<int32> MaximumExchangeCount);
         TSharedPtr<FIncrementalRateModel> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
 
         TOptional<FString> GetIncrementalRateModelId() const;
@@ -65,6 +67,8 @@ namespace Gs2::Exchange::Model
         FString GetCoefficientValueString() const;
         TOptional<FString> GetCalculateScriptId() const;
         TOptional<FString> GetExchangeCountId() const;
+        TOptional<int32> GetMaximumExchangeCount() const;
+        FString GetMaximumExchangeCountString() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);

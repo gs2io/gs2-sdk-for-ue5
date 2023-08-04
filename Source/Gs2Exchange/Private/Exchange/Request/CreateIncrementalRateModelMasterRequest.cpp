@@ -29,6 +29,7 @@ namespace Gs2::Exchange::Request
         CoefficientValueValue(TOptional<int64>()),
         CalculateScriptIdValue(TOptional<FString>()),
         ExchangeCountIdValue(TOptional<FString>()),
+        MaximumExchangeCountValue(TOptional<int32>()),
         AcquireActionsValue(nullptr)
     {
     }
@@ -46,6 +47,7 @@ namespace Gs2::Exchange::Request
         CoefficientValueValue(From.CoefficientValueValue),
         CalculateScriptIdValue(From.CalculateScriptIdValue),
         ExchangeCountIdValue(From.ExchangeCountIdValue),
+        MaximumExchangeCountValue(From.MaximumExchangeCountValue),
         AcquireActionsValue(From.AcquireActionsValue)
     {
     }
@@ -138,6 +140,14 @@ namespace Gs2::Exchange::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateIncrementalRateModelMasterRequest> FCreateIncrementalRateModelMasterRequest::WithMaximumExchangeCount(
+        const TOptional<int32> MaximumExchangeCount
+    )
+    {
+        this->MaximumExchangeCountValue = MaximumExchangeCount;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateIncrementalRateModelMasterRequest> FCreateIncrementalRateModelMasterRequest::WithAcquireActions(
         const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActions
     )
@@ -221,6 +231,20 @@ namespace Gs2::Exchange::Request
     TOptional<FString> FCreateIncrementalRateModelMasterRequest::GetExchangeCountId() const
     {
         return ExchangeCountIdValue;
+    }
+
+    TOptional<int32> FCreateIncrementalRateModelMasterRequest::GetMaximumExchangeCount() const
+    {
+        return MaximumExchangeCountValue;
+    }
+
+    FString FCreateIncrementalRateModelMasterRequest::GetMaximumExchangeCountString() const
+    {
+        if (!MaximumExchangeCountValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), MaximumExchangeCountValue.GetValue());
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FCreateIncrementalRateModelMasterRequest::GetAcquireActions() const
@@ -328,6 +352,15 @@ namespace Gs2::Exchange::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithMaximumExchangeCount(Data->HasField("maximumExchangeCount") ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField("maximumExchangeCount", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>())
           ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
@@ -388,6 +421,10 @@ namespace Gs2::Exchange::Request
         if (ExchangeCountIdValue.IsSet())
         {
             JsonRootObject->SetStringField("exchangeCountId", ExchangeCountIdValue.GetValue());
+        }
+        if (MaximumExchangeCountValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("maximumExchangeCount", MaximumExchangeCountValue.GetValue());
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {

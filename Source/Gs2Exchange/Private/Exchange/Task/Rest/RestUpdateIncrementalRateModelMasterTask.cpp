@@ -121,6 +121,10 @@ namespace Gs2::Exchange::Task::Rest
             {
                 JsonRootObject->SetStringField("exchangeCountId", this->Request->GetExchangeCountId().GetValue());
             }
+            if (this->Request->GetMaximumExchangeCount().IsSet())
+            {
+                JsonRootObject->SetNumberField("maximumExchangeCount", this->Request->GetMaximumExchangeCount().GetValue());
+            }
             if (this->Request->GetAcquireActions() != nullptr && this->Request->GetAcquireActions().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;
