@@ -17,34 +17,44 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-#include "Showcase/Model/Gs2ShowcaseEzDisplayItem.h"
+#include "Showcase/Domain/Model/Gs2ShowcaseEzDisplayItemGameSessionDomain.h"
 #include "Showcase/Model/Gs2ShowcaseSalesItem.h"
 #include "Showcase/Model/Gs2ShowcaseSalesItemGroup.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2ShowcaseDisplayItem.generated.h"
 
 USTRUCT(BlueprintType)
-struct FGs2ShowcaseDisplayItem
+struct FGs2ShowcaseOwnDisplayItem
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
-    FString DisplayItemId = "";
-    UPROPERTY(BlueprintReadWrite)
-    FString Type = "";
-    UPROPERTY(BlueprintReadWrite)
-    FGs2ShowcaseSalesItem SalesItem = FGs2ShowcaseSalesItem();
-    UPROPERTY(BlueprintReadWrite)
-    FGs2ShowcaseSalesItemGroup SalesItemGroup = FGs2ShowcaseSalesItemGroup();
-    UPROPERTY(BlueprintReadWrite)
-    FString SalesPeriodEventId = "";
+    Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomainPtr Value = nullptr;
 };
 
-inline FGs2ShowcaseDisplayItem EzDisplayItemToFGs2ShowcaseDisplayItem(
+USTRUCT(BlueprintType)
+struct FGs2ShowcaseDisplayItemValue
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly)
+    FString DisplayItemId = "";
+    UPROPERTY(BlueprintReadOnly)
+    FString Type = "";
+    UPROPERTY(BlueprintReadOnly)
+    FGs2ShowcaseSalesItem SalesItem = FGs2ShowcaseSalesItem();
+    UPROPERTY(BlueprintReadOnly)
+    FGs2ShowcaseSalesItemGroup SalesItemGroup = FGs2ShowcaseSalesItemGroup();
+};
+
+inline FGs2ShowcaseDisplayItemValue EzDisplayItemToFGs2ShowcaseDisplayItemValue(
     const Gs2::UE5::Showcase::Model::FEzDisplayItemPtr Model
 )
 {
-    FGs2ShowcaseDisplayItem Value;
+    FGs2ShowcaseDisplayItemValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseDisplayItemFunctionLibrary::EzDisplayItemToFGs2ShowcaseDisplayItemValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.DisplayItemId = Model->GetDisplayItemId() ? *Model->GetDisplayItemId() : "";
     Value.Type = Model->GetType() ? *Model->GetType() : "";
     Value.SalesItem = Model->GetSalesItem() ? EzSalesItemToFGs2ShowcaseSalesItem(Model->GetSalesItem()) : FGs2ShowcaseSalesItem();
@@ -52,8 +62,8 @@ inline FGs2ShowcaseDisplayItem EzDisplayItemToFGs2ShowcaseDisplayItem(
     return Value;
 }
 
-inline Gs2::UE5::Showcase::Model::FEzDisplayItemPtr FGs2ShowcaseDisplayItemToEzDisplayItem(
-    const FGs2ShowcaseDisplayItem Model
+inline Gs2::UE5::Showcase::Model::FEzDisplayItemPtr FGs2ShowcaseDisplayItemValueToEzDisplayItem(
+    const FGs2ShowcaseDisplayItemValue Model
 )
 {
     return MakeShared<Gs2::UE5::Showcase::Model::FEzDisplayItem>()
@@ -62,3 +72,9 @@ inline Gs2::UE5::Showcase::Model::FEzDisplayItemPtr FGs2ShowcaseDisplayItemToEzD
         ->WithSalesItem(FGs2ShowcaseSalesItemToEzSalesItem(Model.SalesItem))
         ->WithSalesItemGroup(FGs2ShowcaseSalesItemGroupToEzSalesItemGroup(Model.SalesItemGroup));
 }
+
+UCLASS()
+class BPGS2_API UGs2ShowcaseDisplayItemFunctionLibrary : public UBlueprintFunctionLibrary
+{
+    GENERATED_BODY()
+};

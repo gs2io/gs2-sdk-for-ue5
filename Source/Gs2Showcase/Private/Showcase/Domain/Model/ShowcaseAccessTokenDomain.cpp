@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -33,8 +31,17 @@
 #include "Showcase/Domain/Model/CurrentShowcaseMaster.h"
 #include "Showcase/Domain/Model/Showcase.h"
 #include "Showcase/Domain/Model/ShowcaseAccessToken.h"
+#include "Showcase/Domain/Model/DisplayItem.h"
+#include "Showcase/Domain/Model/DisplayItemAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseMaster.h"
+#include "Showcase/Domain/Model/RandomShowcase.h"
+#include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"
 #include "Showcase/Domain/Model/User.h"
 #include "Showcase/Domain/Model/UserAccessToken.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatus.h"
+#include "Showcase/Domain/Model/RandomShowcaseStatusAccessToken.h"
+#include "Showcase/Domain/Model/RandomDisplayItem.h"
+#include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 #include "Showcase/Domain/Model/SalesItem.h"
 
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -145,97 +152,20 @@ namespace Gs2::Showcase::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
-    FShowcaseAccessTokenDomain::FBuyTask::FBuyTask(
-        const TSharedPtr<FShowcaseAccessTokenDomain> Self,
-        const Request::FBuyRequestPtr Request
-    ): Self(Self), Request(Request)
+    TSharedPtr<Gs2::Showcase::Domain::Model::FDisplayItemAccessTokenDomain> FShowcaseAccessTokenDomain::DisplayItem(
+        const FString DisplayItemId
+    ) const
     {
-
-    }
-
-    FShowcaseAccessTokenDomain::FBuyTask::FBuyTask(
-        const FBuyTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FShowcaseAccessTokenDomain::FBuyTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomain>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithShowcaseName(Self->ShowcaseName);
-        const auto Future = Self->Client->Buy(
-            Request
+        return MakeShared<Gs2::Showcase::Domain::Model::FDisplayItemAccessTokenDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            AccessToken,
+            ShowcaseName,
+            DisplayItemId
         );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "SalesItem"
-                );
-                const auto Key = Gs2::Showcase::Domain::Model::FSalesItemDomain::CreateCacheKey(
-                );
-                Self->Cache->Put(
-                    Gs2::Showcase::Model::FSalesItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        if (!*ResultModel->GetAutoRunStampSheet())
-        {
-            const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                Self->Cache,
-                Self->JobQueueDomain,
-                Self->Session,
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId(),
-                Self->StampSheetConfiguration
-            );
-            const auto Future3 = StampSheet->Run();
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return MakeShared<Core::Model::FTransactionError<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>(
-                    Future3->GetTask().Error()->GetErrors(),
-                    [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
-                    {
-                        return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                            Self->Cache,
-                            Self->JobQueueDomain,
-                            Self->Session,
-                            *ResultModel->GetStampSheet(),
-                            *ResultModel->GetStampSheetEncryptionKeyId(),
-                            Self->StampSheetConfiguration
-                        )->Run();
-                    }
-                );
-            }
-            Future3->EnsureCompletion();
-        }
-        *Result = Self;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FShowcaseAccessTokenDomain::FBuyTask>> FShowcaseAccessTokenDomain::Buy(
-        Request::FBuyRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FBuyTask>>(this->AsShared(), Request);
     }
 
     FString FShowcaseAccessTokenDomain::CreateCacheParentKey(
@@ -279,8 +209,8 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::Showcase::Model::FShowcasePtr Value;
-        const auto bCacheHit = Self->Cache->TryGet<Gs2::Showcase::Model::FShowcase>(
+        TSharedPtr<Gs2::Showcase::Model::FShowcase> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Showcase::Model::FShowcase>(
             Self->ParentKey,
             Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
                 Self->ShowcaseName
@@ -299,12 +229,13 @@ namespace Gs2::Showcase::Domain::Model
                     return Future->GetTask().Error();
                 }
 
+                const auto Key = Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
+                    Self->ShowcaseName
+                );
                 Self->Cache->Put(
                     Gs2::Showcase::Model::FShowcase::TypeName,
                     Self->ParentKey,
-                    Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
-                        Self->ShowcaseName
-                    ),
+                    Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );

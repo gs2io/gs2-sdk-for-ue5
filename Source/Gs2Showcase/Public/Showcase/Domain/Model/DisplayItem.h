@@ -40,6 +40,8 @@ namespace Gs2::Showcase::Domain::Model
     class FCurrentShowcaseMasterDomain;
     class FShowcaseDomain;
     class FShowcaseAccessTokenDomain;
+    class FDisplayItemDomain;
+    class FDisplayItemAccessTokenDomain;
     class FRandomShowcaseMasterDomain;
     class FRandomShowcaseDomain;
     class FRandomShowcaseAccessTokenDomain;
@@ -60,6 +62,16 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
+        TOptional<FString> TransactionId;
+        TOptional<bool> AutoRunStampSheet;
+        TOptional<FString> GetTransactionId() const
+        {
+            return TransactionId;
+        }
+        TOptional<bool> GetAutoRunStampSheet() const
+        {
+            return AutoRunStampSheet;
+        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> ShowcaseName;
@@ -84,6 +96,32 @@ namespace Gs2::Showcase::Domain::Model
 
         FDisplayItemDomain(
             const FDisplayItemDomain& From
+        );
+
+        class GS2SHOWCASE_API FBuyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FDisplayItemDomain>,
+            public TSharedFromThis<FBuyTask>
+        {
+            const TSharedPtr<FDisplayItemDomain> Self;
+            const Request::FBuyByUserIdRequestPtr Request;
+        public:
+            explicit FBuyTask(
+                const TSharedPtr<FDisplayItemDomain> Self,
+                const Request::FBuyByUserIdRequestPtr Request
+            );
+
+            FBuyTask(
+                const FBuyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FDisplayItemDomain>> Result
+            ) override;
+        };
+        friend FBuyTask;
+
+        TSharedPtr<FAsyncTask<FBuyTask>> Buy(
+            Request::FBuyByUserIdRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

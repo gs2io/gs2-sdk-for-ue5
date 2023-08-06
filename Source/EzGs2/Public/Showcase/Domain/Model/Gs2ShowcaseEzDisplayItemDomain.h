@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Showcase/Domain/Model/ShowcaseAccessToken.h"
+#include "Showcase/Domain/Model/DisplayItem.h"
 #include "Showcase/Model/Gs2ShowcaseEzSalesItem.h"
 #include "Showcase/Model/Gs2ShowcaseEzSalesItemGroup.h"
 #include "Showcase/Model/Gs2ShowcaseEzShowcase.h"
@@ -26,72 +26,50 @@
 #include "Showcase/Model/Gs2ShowcaseEzConfig.h"
 #include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
-#include "Gs2ShowcaseEzDisplayItemGameSessionDomain.h"
-#include "Gs2ShowcaseEzShowcaseGameSessionDomain.h"
+#include "Gs2ShowcaseEzDisplayItemDomain.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
 
 namespace Gs2::UE5::Showcase::Domain::Model
 {
 
-    class EZGS2_API FEzShowcaseGameSessionDomain final :
-        public TSharedFromThis<FEzShowcaseGameSessionDomain>
+    class EZGS2_API FEzDisplayItemDomain final :
+        public TSharedFromThis<FEzDisplayItemDomain>
     {
-        Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomainPtr Domain;
+        Gs2::Showcase::Domain::Model::FDisplayItemDomainPtr Domain;
         Gs2::UE5::Util::FProfilePtr ProfileValue;
 
         public:
+        TOptional<FString> TransactionId() const;
+        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> ShowcaseName() const;
+        TOptional<FString> DisplayItemId() const;
 
-        FEzShowcaseGameSessionDomain(
-            Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomainPtr Domain,
+        FEzDisplayItemDomain(
+            Gs2::Showcase::Domain::Model::FDisplayItemDomainPtr Domain,
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetShowcaseTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Model::FEzShowcase>,
-            public TSharedFromThis<FGetShowcaseTask>
-        {
-            TSharedPtr<FEzShowcaseGameSessionDomain> Self;
-
-        public:
-            explicit FGetShowcaseTask(
-                TSharedPtr<FEzShowcaseGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Model::FEzShowcase>> Result
-            ) override;
-        };
-        friend FGetShowcaseTask;
-
-        TSharedPtr<FAsyncTask<FGetShowcaseTask>> GetShowcase(
-        );
-
-        Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomainPtr DisplayItem(
-            const FString DisplayItemId
-        ) const;
-
         class FModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Model::FEzShowcase>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Model::FEzDisplayItem>,
             public TSharedFromThis<FModelTask>
         {
-            TSharedPtr<FEzShowcaseGameSessionDomain> Self;
+            TSharedPtr<FEzDisplayItemDomain> Self;
 
         public:
             explicit FModelTask(
-                TSharedPtr<FEzShowcaseGameSessionDomain> Self
+                TSharedPtr<FEzDisplayItemDomain> Self
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<Gs2::UE5::Showcase::Model::FEzShowcasePtr> Result
+                TSharedPtr<Gs2::UE5::Showcase::Model::FEzDisplayItemPtr> Result
             ) override;
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
     };
-    typedef TSharedPtr<FEzShowcaseGameSessionDomain> FEzShowcaseGameSessionDomainPtr;
+    typedef TSharedPtr<FEzDisplayItemDomain> FEzDisplayItemDomainPtr;
 }

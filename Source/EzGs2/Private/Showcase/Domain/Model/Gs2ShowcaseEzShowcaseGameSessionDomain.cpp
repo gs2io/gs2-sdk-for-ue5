@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Showcase::Domain::Model
 {
 
-    TOptional<FString> FEzShowcaseGameSessionDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzShowcaseGameSessionDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzShowcaseGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
@@ -99,73 +89,15 @@ namespace Gs2::UE5::Showcase::Domain::Model
         );
     }
 
-    FEzShowcaseGameSessionDomain::FBuyTask::FBuyTask(
-        TSharedPtr<FEzShowcaseGameSessionDomain> Self,
-        TOptional<FString> DisplayItemId,
-        TOptional<int32> Quantity,
-        TOptional<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConfig>>> Config
-    ): Self(Self), DisplayItemId(DisplayItemId), Quantity(Quantity), Config(Config)
+    Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomainPtr FEzShowcaseGameSessionDomain::DisplayItem(
+        const FString DisplayItemId
+    ) const
     {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzShowcaseGameSessionDomain::FBuyTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Domain::Model::FEzShowcaseGameSessionDomain>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FBuyTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Buy(
-                    MakeShared<Gs2::Showcase::Request::FBuyRequest>()
-                        ->WithDisplayItemId(DisplayItemId)
-                        ->WithQuantity(Quantity)
-                        ->WithConfig([&]{
-                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Showcase::Model::FConfig>>>();
-                            if (!Config.IsSet()) {
-                                return Arr;
-                            }
-                            for (auto Value : *Config) {
-                                Arr->Add(Value->ToModel());
-                            }
-                            return Arr;
-                        }())
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzShowcaseGameSessionDomain>(
-                    Task->GetTask().Result(),
-                    Self->ProfileValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzShowcaseGameSessionDomain::FBuyTask>> FEzShowcaseGameSessionDomain::Buy(
-        TOptional<FString> DisplayItemId,
-        TOptional<int32> Quantity,
-        TOptional<TArray<TSharedPtr<Gs2::UE5::Showcase::Model::FEzConfig>>> Config
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FBuyTask>>(
-            this->AsShared(),
-            DisplayItemId,
-            Quantity,
-            Config
+        return MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomain>(
+            Domain->DisplayItem(
+                DisplayItemId
+            ),
+            ProfileValue
         );
     }
 

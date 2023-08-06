@@ -80,7 +80,7 @@ namespace Gs2::Dictionary::Domain::Model
         ) const;
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain> Entry(
-            const FString EntryModelName
+            const FString EntryName
         ) const;
 
         static FString CreateCacheParentKey(

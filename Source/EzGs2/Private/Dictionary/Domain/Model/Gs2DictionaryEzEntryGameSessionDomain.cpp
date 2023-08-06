@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Dictionary/Domain/Model/Gs2DictionaryEzEntryGameSessionDomain.h"
@@ -39,9 +41,9 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         return Domain->UserId();
     }
 
-    TOptional<FString> FEzEntryGameSessionDomain::EntryModelName() const
+    TOptional<FString> FEzEntryGameSessionDomain::EntryName() const
     {
-        return Domain->EntryModelName;
+        return Domain->EntryName;
     }
 
     FEzEntryGameSessionDomain::FEzEntryGameSessionDomain(
@@ -66,6 +68,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Get(
                     MakeShared<Gs2::Dictionary::Request::FGetEntryRequest>()
+                        ->WithEntryModelName(Self->EntryName())
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -115,6 +118,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->GetWithSignature(
                     MakeShared<Gs2::Dictionary::Request::FGetEntryWithSignatureRequest>()
+                        ->WithEntryModelName(Self->EntryName())
                         ->WithKeyId(KeyId)
                 );
                 Task->StartSynchronousTask();

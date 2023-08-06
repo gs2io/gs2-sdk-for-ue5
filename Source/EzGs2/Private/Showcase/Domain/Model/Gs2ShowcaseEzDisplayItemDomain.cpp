@@ -14,52 +14,57 @@
  * permissions and limitations under the License.
  */
 
-#include "Dictionary/Domain/Model/Gs2DictionaryEzEntryDomain.h"
+#include "Showcase/Domain/Model/Gs2ShowcaseEzDisplayItemDomain.h"
 
-namespace Gs2::UE5::Dictionary::Domain::Model
+namespace Gs2::UE5::Showcase::Domain::Model
 {
 
-    TOptional<FString> FEzEntryDomain::Body() const
+    TOptional<FString> FEzDisplayItemDomain::TransactionId() const
     {
-        return Domain->Body;
+        return Domain->TransactionId;
     }
 
-    TOptional<FString> FEzEntryDomain::Signature() const
+    TOptional<bool> FEzDisplayItemDomain::AutoRunStampSheet() const
     {
-        return Domain->Signature;
+        return Domain->AutoRunStampSheet;
     }
 
-    TOptional<FString> FEzEntryDomain::NamespaceName() const
+    TOptional<FString> FEzDisplayItemDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
     }
 
-    TOptional<FString> FEzEntryDomain::UserId() const
+    TOptional<FString> FEzDisplayItemDomain::UserId() const
     {
         return Domain->UserId;
     }
 
-    TOptional<FString> FEzEntryDomain::EntryName() const
+    TOptional<FString> FEzDisplayItemDomain::ShowcaseName() const
     {
-        return Domain->EntryName;
+        return Domain->ShowcaseName;
     }
 
-    FEzEntryDomain::FEzEntryDomain(
-        Gs2::Dictionary::Domain::Model::FEntryDomainPtr Domain,
+    TOptional<FString> FEzDisplayItemDomain::DisplayItemId() const
+    {
+        return Domain->DisplayItemId;
+    }
+
+    FEzDisplayItemDomain::FEzDisplayItemDomain(
+        Gs2::Showcase::Domain::Model::FDisplayItemDomainPtr Domain,
         Gs2::UE5::Util::FProfilePtr Profile
     ): Domain(Domain), ProfileValue(Profile) {
 
     }
 
-    FEzEntryDomain::FModelTask::FModelTask(
-        TSharedPtr<FEzEntryDomain> Self
+    FEzDisplayItemDomain::FModelTask::FModelTask(
+        TSharedPtr<FEzDisplayItemDomain> Self
     ): Self(Self)
     {
 
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FEzEntryDomain::FModelTask::Action(
-        TSharedPtr<Gs2::UE5::Dictionary::Model::FEzEntryPtr> Result
+    Gs2::Core::Model::FGs2ErrorPtr FEzDisplayItemDomain::FModelTask::Action(
+        TSharedPtr<Gs2::UE5::Showcase::Model::FEzDisplayItemPtr> Result
     )
     {
         const auto Future = Self->ProfileValue->Run<FModelTask>(
@@ -71,7 +76,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = Gs2::UE5::Dictionary::Model::FEzEntry::FromModel(Task->GetTask().Result());
+                *Result = Gs2::UE5::Showcase::Model::FEzDisplayItem::FromModel(Task->GetTask().Result());
                 Task->EnsureCompletion();
                 return nullptr;
             },
@@ -87,7 +92,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FEzEntryDomain::FModelTask>> FEzEntryDomain::Model() {
+    TSharedPtr<FAsyncTask<FEzDisplayItemDomain::FModelTask>> FEzDisplayItemDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
 }

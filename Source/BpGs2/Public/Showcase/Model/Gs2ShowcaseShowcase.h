@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -42,7 +40,7 @@ struct FGs2ShowcaseShowcaseValue
     UPROPERTY(BlueprintReadOnly)
     FString Metadata = "";
     UPROPERTY(BlueprintReadOnly)
-    TArray<FGs2ShowcaseDisplayItem> DisplayItems = TArray<FGs2ShowcaseDisplayItem>();
+    TArray<FGs2ShowcaseDisplayItemValue> DisplayItems = TArray<FGs2ShowcaseDisplayItemValue>();
 };
 
 inline FGs2ShowcaseShowcaseValue EzShowcaseToFGs2ShowcaseShowcaseValue(
@@ -58,13 +56,13 @@ inline FGs2ShowcaseShowcaseValue EzShowcaseToFGs2ShowcaseShowcaseValue(
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.DisplayItems = Model->GetDisplayItems() ? [&]
     {
-        TArray<FGs2ShowcaseDisplayItem> r;
+        TArray<FGs2ShowcaseDisplayItemValue> r;
         for (auto v : *Model->GetDisplayItems())
         {
-            r.Add(EzDisplayItemToFGs2ShowcaseDisplayItem(v));
+            r.Add(EzDisplayItemToFGs2ShowcaseDisplayItemValue(v));
         }
         return r;
-    }() : TArray<FGs2ShowcaseDisplayItem>();
+    }() : TArray<FGs2ShowcaseDisplayItemValue>();
     return Value;
 }
 
@@ -78,7 +76,7 @@ inline Gs2::UE5::Showcase::Model::FEzShowcasePtr FGs2ShowcaseShowcaseValueToEzSh
         ->WithDisplayItems([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Showcase::Model::FEzDisplayItemPtr>>();
             for (auto v : Model.DisplayItems) {
-                r->Add(FGs2ShowcaseDisplayItemToEzDisplayItem(v));
+                r->Add(FGs2ShowcaseDisplayItemValueToEzDisplayItem(v));
             }
             return r;
         }());
@@ -88,4 +86,10 @@ UCLASS()
 class BPGS2_API UGs2ShowcaseShowcaseFunctionLibrary : public UBlueprintFunctionLibrary
 {
     GENERATED_BODY()
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Showcase::OwnDisplayItem", Category="Game Server Services|GS2-Showcase|Namespace|User|Showcase|DisplayItem", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="DisplayItem") FGs2ShowcaseOwnDisplayItem OwnDisplayItem(
+        FGs2ShowcaseOwnShowcase Showcase,
+        FString DisplayItemId
+    );
 };

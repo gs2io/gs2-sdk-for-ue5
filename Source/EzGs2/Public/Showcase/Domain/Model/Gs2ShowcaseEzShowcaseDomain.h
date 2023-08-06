@@ -26,6 +26,7 @@
 #include "Showcase/Model/Gs2ShowcaseEzConfig.h"
 #include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
+#include "Gs2ShowcaseEzDisplayItemDomain.h"
 #include "Gs2ShowcaseEzShowcaseDomain.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
@@ -40,8 +41,6 @@ namespace Gs2::UE5::Showcase::Domain::Model
         Gs2::UE5::Util::FProfilePtr ProfileValue;
 
         public:
-        TOptional<FString> TransactionId() const;
-        TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> ShowcaseName() const;
@@ -50,6 +49,10 @@ namespace Gs2::UE5::Showcase::Domain::Model
             Gs2::Showcase::Domain::Model::FShowcaseDomainPtr Domain,
             Gs2::UE5::Util::FProfilePtr Profile
         );
+
+        Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemDomainPtr DisplayItem(
+            const FString DisplayItemId
+        ) const;
 
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Model::FEzShowcase>,

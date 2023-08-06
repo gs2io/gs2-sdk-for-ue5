@@ -243,7 +243,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain> FUserDomain::Entry(
-        const FString EntryModelName
+        const FString EntryName
     ) const
     {
         return MakeShared<Gs2::Dictionary::Domain::Model::FEntryDomain>(
@@ -253,7 +253,7 @@ namespace Gs2::Dictionary::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            EntryModelName
+            EntryName
         );
     }
 

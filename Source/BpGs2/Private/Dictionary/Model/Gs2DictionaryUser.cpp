@@ -22,7 +22,7 @@
 
 FGs2DictionaryOwnEntry UGs2DictionaryUserFunctionLibrary::OwnEntry(
     FGs2DictionaryOwnUser User,
-    FString EntryModelName
+    FString EntryName
 )
 {
     FGs2DictionaryOwnEntry Return;
@@ -30,12 +30,12 @@ FGs2DictionaryOwnEntry UGs2DictionaryUserFunctionLibrary::OwnEntry(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2DictionaryUserFunctionLibrary::OwnEntry] User parameter specification is missing."))
         return Return;
     }
-    if (EntryModelName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2DictionaryUserFunctionLibrary::OwnEntry] EntryModelName parameter specification is missing."))
+    if (EntryName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2DictionaryUserFunctionLibrary::OwnEntry] EntryName parameter specification is missing."))
         return Return;
     }
     Return.Value = User.Value->Entry(
-        EntryModelName
+        EntryName
     );
     return Return;
 }

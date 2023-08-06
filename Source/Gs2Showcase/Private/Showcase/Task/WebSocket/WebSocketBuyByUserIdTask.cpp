@@ -51,12 +51,12 @@ namespace Gs2::Showcase::Task::WebSocket
             Session->Credential()->ClientId(),
             Session->Credential()->ProjectToken(),
             "showcase",
-            "showcase",
+            "displayItem",
             "buyByUserId"
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, Log, TEXT("[%s:%s:%s] %s"), TEXT("showcase"), TEXT("showcase"), TEXT("buyByUserId"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, Log, TEXT("[%s:%s:%s] %s"), TEXT("showcase"), TEXT("displayItem"), TEXT("buyByUserId"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

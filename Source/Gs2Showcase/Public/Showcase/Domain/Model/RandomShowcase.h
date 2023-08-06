@@ -40,6 +40,8 @@ namespace Gs2::Showcase::Domain::Model
     class FCurrentShowcaseMasterDomain;
     class FShowcaseDomain;
     class FShowcaseAccessTokenDomain;
+    class FDisplayItemDomain;
+    class FDisplayItemAccessTokenDomain;
     class FRandomShowcaseMasterDomain;
     class FRandomShowcaseDomain;
     class FRandomShowcaseAccessTokenDomain;

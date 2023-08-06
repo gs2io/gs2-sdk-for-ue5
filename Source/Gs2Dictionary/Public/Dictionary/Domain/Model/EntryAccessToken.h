@@ -61,7 +61,7 @@ namespace Gs2::Dictionary::Domain::Model
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
-        TOptional<FString> EntryModelName;
+        TOptional<FString> EntryName;
     private:
 
         FString ParentKey;
@@ -75,7 +75,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<FString> EntryModelName
+            const TOptional<FString> EntryName
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -138,12 +138,12 @@ namespace Gs2::Dictionary::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
-            TOptional<FString> EntryModelName,
+            TOptional<FString> EntryName,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> EntryModelName
+            TOptional<FString> EntryName
         );
 
         class GS2DICTIONARY_API FModelTask final :

@@ -44,6 +44,8 @@ struct FGs2ExperienceStatusValue
     int64 RankValue = 0;
     UPROPERTY(BlueprintReadOnly)
     int64 RankCapValue = 0;
+    UPROPERTY(BlueprintReadOnly)
+    int64 NextRankUpExperienceValue = 0;
 };
 
 inline FGs2ExperienceStatusValue EzStatusToFGs2ExperienceStatusValue(
@@ -60,6 +62,7 @@ inline FGs2ExperienceStatusValue EzStatusToFGs2ExperienceStatusValue(
     Value.ExperienceValue = Model->GetExperienceValue() ? *Model->GetExperienceValue() : 0;
     Value.RankValue = Model->GetRankValue() ? *Model->GetRankValue() : 0;
     Value.RankCapValue = Model->GetRankCapValue() ? *Model->GetRankCapValue() : 0;
+    Value.NextRankUpExperienceValue = Model->GetNextRankUpExperienceValue() ? *Model->GetNextRankUpExperienceValue() : 0;
     return Value;
 }
 
@@ -72,7 +75,8 @@ inline Gs2::UE5::Experience::Model::FEzStatusPtr FGs2ExperienceStatusValueToEzSt
         ->WithPropertyId(Model.PropertyId)
         ->WithExperienceValue(Model.ExperienceValue)
         ->WithRankValue(Model.RankValue)
-        ->WithRankCapValue(Model.RankCapValue);
+        ->WithRankCapValue(Model.RankCapValue)
+        ->WithNextRankUpExperienceValue(Model.NextRankUpExperienceValue);
 }
 
 UCLASS()

@@ -39,7 +39,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         TOptional<FString> Signature() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
-        TOptional<FString> EntryModelName() const;
+        TOptional<FString> EntryName() const;
 
         FEzEntryDomain(
             Gs2::Dictionary::Domain::Model::FEntryDomainPtr Domain,

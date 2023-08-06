@@ -86,7 +86,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain> FUserAccessTokenDomain::Entry(
-        const FString EntryModelName
+        const FString EntryName
     ) const
     {
         return MakeShared<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>(
@@ -96,7 +96,7 @@ namespace Gs2::Dictionary::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            EntryModelName
+            EntryName
         );
     }
 

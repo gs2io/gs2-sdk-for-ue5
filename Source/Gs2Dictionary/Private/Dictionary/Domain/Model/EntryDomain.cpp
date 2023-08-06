@@ -45,7 +45,7 @@ namespace Gs2::Dictionary::Domain::Model
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> EntryModelName
+        const TOptional<FString> EntryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -55,7 +55,7 @@ namespace Gs2::Dictionary::Domain::Model
         Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Session)),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        EntryModelName(EntryModelName),
+        EntryName(EntryName),
         ParentKey(Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
@@ -97,7 +97,7 @@ namespace Gs2::Dictionary::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithEntryModelName(Self->EntryModelName);
+            ->WithEntryModelName(Self->EntryName);
         const auto Future = Self->Client->GetEntryByUserId(
             Request
         );
@@ -161,7 +161,7 @@ namespace Gs2::Dictionary::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithEntryModelName(Self->EntryModelName);
+            ->WithEntryModelName(Self->EntryName);
         const auto Future = Self->Client->GetEntryWithSignatureByUserId(
             Request
         );
@@ -211,23 +211,23 @@ namespace Gs2::Dictionary::Domain::Model
     FString FEntryDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
-        TOptional<FString> EntryModelName,
+        TOptional<FString> EntryName,
         FString ChildType
     )
     {
         return FString() +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
-            (EntryModelName.IsSet() ? *EntryModelName : "null") + ":" +
+            (EntryName.IsSet() ? *EntryName : "null") + ":" +
             ChildType;
     }
 
     FString FEntryDomain::CreateCacheKey(
-        TOptional<FString> EntryModelName
+        TOptional<FString> EntryName
     )
     {
         return FString() +
-            (EntryModelName.IsSet() ? *EntryModelName : "null");
+            (EntryName.IsSet() ? *EntryName : "null");
     }
 
     FEntryDomain::FModelTask::FModelTask(
@@ -253,7 +253,7 @@ namespace Gs2::Dictionary::Domain::Model
         auto bCacheHit = Self->Cache->TryGet<Gs2::Dictionary::Model::FEntry>(
             Self->ParentKey,
             Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
-                Self->EntryModelName
+                Self->EntryName
             ),
             &Value
         );
@@ -270,7 +270,7 @@ namespace Gs2::Dictionary::Domain::Model
                 }
 
                 const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
-                    Self->EntryModelName
+                    Self->EntryName
                 );
                 Self->Cache->Put(
                     Gs2::Dictionary::Model::FEntry::TypeName,
@@ -288,7 +288,7 @@ namespace Gs2::Dictionary::Domain::Model
             Self->Cache->TryGet<Gs2::Dictionary::Model::FEntry>(
                 Self->ParentKey,
                 Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
-                    Self->EntryModelName
+                    Self->EntryName
                 ),
                 &Value
             );

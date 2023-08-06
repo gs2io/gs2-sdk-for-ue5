@@ -19,22 +19,21 @@
 #include "CoreMinimal.h"
 #include "BpGs2/Public/Showcase/Model/Gs2ShowcaseSalesItem.h"
 #include "BpGs2/Public/Showcase/Model/Gs2ShowcaseConfig.h"
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseShowcase.h"
+#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseDisplayItem.h"
 #include "BpGs2/Public/Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ShowcaseActionBuy.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ShowcaseBuySuccessDelegate, FGs2ShowcaseOwnShowcase, Showcase, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ShowcaseBuyErrorDelegate, FGs2ShowcaseOwnShowcase, Showcase, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ShowcaseBuySuccessDelegate, FGs2ShowcaseOwnDisplayItem, DisplayItem, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ShowcaseBuyErrorDelegate, FGs2ShowcaseOwnDisplayItem, DisplayItem, const FGs2Error, Error);
 
 UCLASS()
 class BPGS2_API UGs2ShowcaseBuyAsyncFunction : public UBlueprintAsyncActionBase
 {
     GENERATED_BODY()
 
-    FGs2ShowcaseOwnShowcase Showcase;
-    FString DisplayItemId;
+    FGs2ShowcaseOwnDisplayItem DisplayItem;
     int32 Quantity;
     TArray<FGs2ShowcaseConfig> Config;
 
@@ -48,11 +47,10 @@ public:
 
     UGs2ShowcaseBuyAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Showcase::Showcase::Action::Buy", Category="Game Server Services|GS2-Showcase|Namespace|User|Showcase|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Showcase::DisplayItem::Action::Buy", Category="Game Server Services|GS2-Showcase|Namespace|User|Showcase|DisplayItem|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2ShowcaseBuyAsyncFunction* Buy(
         UObject* WorldContextObject,
-        FGs2ShowcaseOwnShowcase Showcase,
-        FString DisplayItemId,
+        FGs2ShowcaseOwnDisplayItem DisplayItem,
         int32 Quantity,
         TArray<FGs2ShowcaseConfig> Config
     );

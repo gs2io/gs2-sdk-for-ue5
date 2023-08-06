@@ -17,4 +17,25 @@
 #include "BpGs2/Public/Showcase/Model/Gs2ShowcaseShowcase.h"
 #include "BpGs2/Public/Showcase/Model/Gs2ShowcaseDisplayItem.h"
 #include "Core/Model/Gs2AccessToken.h"
+#include "Showcase/Model/Gs2ShowcaseDisplayItem.h"
 #include "Core/BpGs2Constant.h"
+
+FGs2ShowcaseOwnDisplayItem UGs2ShowcaseShowcaseFunctionLibrary::OwnDisplayItem(
+    FGs2ShowcaseOwnShowcase Showcase,
+    FString DisplayItemId
+)
+{
+    FGs2ShowcaseOwnDisplayItem Return;
+    if (Showcase.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseShowcaseFunctionLibrary::OwnDisplayItem] Showcase parameter specification is missing."))
+        return Return;
+    }
+    if (DisplayItemId == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseShowcaseFunctionLibrary::OwnDisplayItem] DisplayItemId parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = Showcase.Value->DisplayItem(
+        DisplayItemId
+    );
+    return Return;
+}

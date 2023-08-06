@@ -131,7 +131,7 @@ namespace Gs2::Dictionary::Domain::Model
         ) const;
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain> Entry(
-            const FString EntryModelName
+            const FString EntryName
         ) const;
 
         static FString CreateCacheParentKey(

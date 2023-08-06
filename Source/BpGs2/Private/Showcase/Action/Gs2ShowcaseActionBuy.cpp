@@ -26,20 +26,18 @@ UGs2ShowcaseBuyAsyncFunction::UGs2ShowcaseBuyAsyncFunction(
 
 UGs2ShowcaseBuyAsyncFunction* UGs2ShowcaseBuyAsyncFunction::Buy(
     UObject* WorldContextObject,
-    FGs2ShowcaseOwnShowcase Showcase,
-    FString DisplayItemId,
+    FGs2ShowcaseOwnDisplayItem DisplayItem,
     int32 Quantity,
     TArray<FGs2ShowcaseConfig> Config
 )
 {
     UGs2ShowcaseBuyAsyncFunction* Action = NewObject<UGs2ShowcaseBuyAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (Showcase.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseBuyAsyncFunction::Buy] Showcase parameter specification is missing."))
+    if (DisplayItem.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseBuyAsyncFunction::Buy] DisplayItem parameter specification is missing."))
         return Action;
     }
-    Action->Showcase = Showcase;
-    Action->DisplayItemId = DisplayItemId;
+    Action->DisplayItem = DisplayItem;
     Action->Quantity = Quantity;
     Action->Config = Config;
     return Action;
@@ -47,13 +45,12 @@ UGs2ShowcaseBuyAsyncFunction* UGs2ShowcaseBuyAsyncFunction::Buy(
 
 void UGs2ShowcaseBuyAsyncFunction::Activate()
 {
-    if (Showcase.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseBuyAsyncFunction] Showcase parameter specification is missing."))
+    if (DisplayItem.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseBuyAsyncFunction] DisplayItem parameter specification is missing."))
         return;
     }
 
-    auto Future = Showcase.Value->Buy(
-        DisplayItemId,
+    auto Future = DisplayItem.Value->Buy(
         Quantity,
         [&]
         {
@@ -67,18 +64,18 @@ void UGs2ShowcaseBuyAsyncFunction::Activate()
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
-        FGs2ShowcaseOwnShowcase ReturnShowcase;
-        ReturnShowcase.Value = Result;
+        FGs2ShowcaseOwnDisplayItem ReturnDisplayItem;
+        ReturnDisplayItem.Value = Result;
         const FGs2Error ReturnError;
-        OnError.Broadcast(ReturnShowcase, ReturnError);
+        OnError.Broadcast(ReturnDisplayItem, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
     {
-        FGs2ShowcaseOwnShowcase ReturnShowcase;
+        FGs2ShowcaseOwnDisplayItem ReturnDisplayItem;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
-        OnError.Broadcast(ReturnShowcase, ReturnError);
+        OnError.Broadcast(ReturnDisplayItem, ReturnError);
         SetReadyToDestroy();
     });
     Future->StartBackgroundTask();

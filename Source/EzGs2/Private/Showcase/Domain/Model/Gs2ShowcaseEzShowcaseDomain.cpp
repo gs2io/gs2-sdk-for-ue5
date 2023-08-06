@@ -19,16 +19,6 @@
 namespace Gs2::UE5::Showcase::Domain::Model
 {
 
-    TOptional<FString> FEzShowcaseDomain::TransactionId() const
-    {
-        return Domain->TransactionId;
-    }
-
-    TOptional<bool> FEzShowcaseDomain::AutoRunStampSheet() const
-    {
-        return Domain->AutoRunStampSheet;
-    }
-
     TOptional<FString> FEzShowcaseDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
@@ -49,6 +39,18 @@ namespace Gs2::UE5::Showcase::Domain::Model
         Gs2::UE5::Util::FProfilePtr Profile
     ): Domain(Domain), ProfileValue(Profile) {
 
+    }
+
+    Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemDomainPtr FEzShowcaseDomain::DisplayItem(
+        const FString DisplayItemId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemDomain>(
+            Domain->DisplayItem(
+                DisplayItemId
+            ),
+            ProfileValue
+        );
     }
 
     FEzShowcaseDomain::FModelTask::FModelTask(

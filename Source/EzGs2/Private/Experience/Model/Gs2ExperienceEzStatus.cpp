@@ -58,6 +58,14 @@ namespace Gs2::UE5::Experience::Model
         this->RankCapValueValue = RankCapValue;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzStatus> FEzStatus::WithNextRankUpExperienceValue(
+        const TOptional<int64> NextRankUpExperienceValue
+    )
+    {
+        this->NextRankUpExperienceValueValue = NextRankUpExperienceValue;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzStatus::GetExperienceName() const
     {
         return ExperienceNameValue;
@@ -105,6 +113,19 @@ namespace Gs2::UE5::Experience::Model
         }
         return FString::Printf(TEXT("%lld"), RankCapValueValue.GetValue());
     }
+    TOptional<int64> FEzStatus::GetNextRankUpExperienceValue() const
+    {
+        return NextRankUpExperienceValueValue;
+    }
+
+    FString FEzStatus::GetNextRankUpExperienceValueString() const
+    {
+        if (!NextRankUpExperienceValueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), NextRankUpExperienceValueValue.GetValue());
+    }
 
     Gs2::Experience::Model::FStatusPtr FEzStatus::ToModel() const
     {
@@ -113,7 +134,8 @@ namespace Gs2::UE5::Experience::Model
             ->WithPropertyId(PropertyIdValue)
             ->WithExperienceValue(ExperienceValueValue)
             ->WithRankValue(RankValueValue)
-            ->WithRankCapValue(RankCapValueValue);
+            ->WithRankCapValue(RankCapValueValue)
+            ->WithNextRankUpExperienceValue(NextRankUpExperienceValueValue);
     }
 
     TSharedPtr<FEzStatus> FEzStatus::FromModel(const Gs2::Experience::Model::FStatusPtr Model)
@@ -127,6 +149,7 @@ namespace Gs2::UE5::Experience::Model
             ->WithPropertyId(Model->GetPropertyId())
             ->WithExperienceValue(Model->GetExperienceValue())
             ->WithRankValue(Model->GetRankValue())
-            ->WithRankCapValue(Model->GetRankCapValue());
+            ->WithRankCapValue(Model->GetRankCapValue())
+            ->WithNextRankUpExperienceValue(Model->GetNextRankUpExperienceValue());
     }
 }

@@ -50,7 +50,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         ) const;
 
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr Entry(
-            const FString EntryModelName
+            const FString EntryName
         ) const;
 
     };

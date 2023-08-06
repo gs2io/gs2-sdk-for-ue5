@@ -28,6 +28,7 @@ namespace Gs2::UE5::Experience::Model
         TOptional<int64> ExperienceValueValue;
         TOptional<int64> RankValueValue;
         TOptional<int64> RankCapValueValue;
+        TOptional<int64> NextRankUpExperienceValueValue;
 
 	public:
         TSharedPtr<FEzStatus> WithExperienceName(const TOptional<FString> ExperienceName);
@@ -35,6 +36,7 @@ namespace Gs2::UE5::Experience::Model
         TSharedPtr<FEzStatus> WithExperienceValue(const TOptional<int64> ExperienceValue);
         TSharedPtr<FEzStatus> WithRankValue(const TOptional<int64> RankValue);
         TSharedPtr<FEzStatus> WithRankCapValue(const TOptional<int64> RankCapValue);
+        TSharedPtr<FEzStatus> WithNextRankUpExperienceValue(const TOptional<int64> NextRankUpExperienceValue);
 
         TOptional<FString> GetExperienceName() const;
 
@@ -48,6 +50,9 @@ namespace Gs2::UE5::Experience::Model
 
         TOptional<int64> GetRankCapValue() const;
         FString GetRankCapValueString() const;
+
+        TOptional<int64> GetNextRankUpExperienceValue() const;
+        FString GetNextRankUpExperienceValueString() const;
 
         Gs2::Experience::Model::FStatusPtr ToModel() const;
         static TSharedPtr<FEzStatus> FromModel(Gs2::Experience::Model::FStatusPtr Model);

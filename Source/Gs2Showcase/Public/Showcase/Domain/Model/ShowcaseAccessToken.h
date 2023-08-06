@@ -40,6 +40,8 @@ namespace Gs2::Showcase::Domain::Model
     class FCurrentShowcaseMasterDomain;
     class FShowcaseDomain;
     class FShowcaseAccessTokenDomain;
+    class FDisplayItemDomain;
+    class FDisplayItemAccessTokenDomain;
     class FRandomShowcaseMasterDomain;
     class FRandomShowcaseDomain;
     class FRandomShowcaseAccessTokenDomain;
@@ -60,16 +62,6 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
-        TOptional<FString> TransactionId;
-        TOptional<bool> AutoRunStampSheet;
-        TOptional<FString> GetTransactionId() const
-        {
-            return TransactionId;
-        }
-        TOptional<bool> GetAutoRunStampSheet() const
-        {
-            return AutoRunStampSheet;
-        }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
@@ -121,31 +113,9 @@ namespace Gs2::Showcase::Domain::Model
             Request::FGetShowcaseRequestPtr Request
         );
 
-        class GS2SHOWCASE_API FBuyTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomain>,
-            public TSharedFromThis<FBuyTask>
-        {
-            const TSharedPtr<FShowcaseAccessTokenDomain> Self;
-            const Request::FBuyRequestPtr Request;
-        public:
-            explicit FBuyTask(
-                const TSharedPtr<FShowcaseAccessTokenDomain> Self,
-                const Request::FBuyRequestPtr Request
-            );
-
-            FBuyTask(
-                const FBuyTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FBuyTask;
-
-        TSharedPtr<FAsyncTask<FBuyTask>> Buy(
-            Request::FBuyRequestPtr Request
-        );
+        TSharedPtr<Gs2::Showcase::Domain::Model::FDisplayItemAccessTokenDomain> DisplayItem(
+            const FString DisplayItemId
+        ) const;
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

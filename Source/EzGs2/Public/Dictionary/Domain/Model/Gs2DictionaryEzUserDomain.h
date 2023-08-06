@@ -48,7 +48,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         );
 
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryDomainPtr Entry(
-            const FString EntryModelName
+            const FString EntryName
         ) const;
 
     };

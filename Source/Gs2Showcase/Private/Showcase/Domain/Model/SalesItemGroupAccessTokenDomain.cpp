@@ -31,6 +31,8 @@
 #include "Showcase/Domain/Model/CurrentShowcaseMaster.h"
 #include "Showcase/Domain/Model/Showcase.h"
 #include "Showcase/Domain/Model/ShowcaseAccessToken.h"
+#include "Showcase/Domain/Model/DisplayItem.h"
+#include "Showcase/Domain/Model/DisplayItemAccessToken.h"
 #include "Showcase/Domain/Model/RandomShowcaseMaster.h"
 #include "Showcase/Domain/Model/RandomShowcase.h"
 #include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -30,6 +32,8 @@
 #include "Showcase/Domain/Model/CurrentShowcaseMaster.h"
 #include "Showcase/Domain/Model/Showcase.h"
 #include "Showcase/Domain/Model/ShowcaseAccessToken.h"
+#include "Showcase/Domain/Model/DisplayItem.h"
+#include "Showcase/Domain/Model/DisplayItemAccessToken.h"
 #include "Showcase/Domain/Model/RandomShowcaseMaster.h"
 #include "Showcase/Domain/Model/RandomShowcase.h"
 #include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"
@@ -85,6 +89,86 @@ namespace Gs2::Showcase::Domain::Model
         Client(From.Client)
     {
 
+    }
+
+    FDisplayItemDomain::FBuyTask::FBuyTask(
+        const TSharedPtr<FDisplayItemDomain> Self,
+        const Request::FBuyByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FDisplayItemDomain::FBuyTask::FBuyTask(
+        const FBuyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDisplayItemDomain::FBuyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FDisplayItemDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithShowcaseName(Self->ShowcaseName)
+            ->WithDisplayItemId(Self->DisplayItemId);
+        const auto Future = Self->Client->BuyByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel && ResultModel->GetStampSheet())
+        {
+            const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                Self->Cache,
+                Self->JobQueueDomain,
+                Self->Session,
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId(),
+                Self->StampSheetConfiguration
+            );
+            const auto Future3 = StampSheet->Run();
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return MakeShared<Core::Model::FTransactionError<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>(
+                    Future3->GetTask().Error()->GetErrors(),
+                    [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
+                    {
+                        return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
+                            Self->Cache,
+                            Self->JobQueueDomain,
+                            Self->Session,
+                            *ResultModel->GetStampSheet(),
+                            *ResultModel->GetStampSheetEncryptionKeyId(),
+                            Self->StampSheetConfiguration
+                        )->Run();
+                    }
+                );
+            }
+            Future3->EnsureCompletion();
+        }
+        if (ResultModel != nullptr)
+        {
+            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
+            Self->TransactionId = ResultModel->GetTransactionId();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDisplayItemDomain::FBuyTask>> FDisplayItemDomain::Buy(
+        Request::FBuyByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FBuyTask>>(this->AsShared(), Request);
     }
 
     FString FDisplayItemDomain::CreateCacheParentKey(
