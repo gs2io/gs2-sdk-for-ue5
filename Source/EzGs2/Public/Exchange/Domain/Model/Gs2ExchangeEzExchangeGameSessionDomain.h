@@ -77,6 +77,35 @@ namespace Gs2::UE5::Exchange::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>>()
         );
 
+        class FIncrementalExchangeTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>,
+            public TSharedFromThis<FIncrementalExchangeTask>
+        {
+            TSharedPtr<FEzExchangeGameSessionDomain> Self;
+            FString RateName;
+            int32 Count;
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> Config;
+
+        public:
+            explicit FIncrementalExchangeTask(
+                TSharedPtr<FEzExchangeGameSessionDomain> Self,
+                FString RateName,
+                int32 Count,
+                TOptional<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>> Result
+            ) override;
+        };
+        friend FIncrementalExchangeTask;
+
+        TSharedPtr<FAsyncTask<FIncrementalExchangeTask>> IncrementalExchange(
+            FString RateName,
+            int32 Count,
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>>()
+        );
+
     };
     typedef TSharedPtr<FEzExchangeGameSessionDomain> FEzExchangeGameSessionDomainPtr;
 }
