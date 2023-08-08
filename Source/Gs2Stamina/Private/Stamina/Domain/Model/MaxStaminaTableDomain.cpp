@@ -45,9 +45,7 @@ namespace Gs2::Stamina::Domain::Model
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
         const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
-        const TOptional<FString> NamespaceName,
-        const TOptional<FString> MaxStaminaTableName
+        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -55,12 +53,7 @@ namespace Gs2::Stamina::Domain::Model
         StampSheetConfiguration(StampSheetConfiguration),
         Session(Session),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Session)),
-        NamespaceName(NamespaceName),
-        MaxStaminaTableName(MaxStaminaTableName),
-        ParentKey(Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            NamespaceName,
-            "MaxStaminaTable"
-        ))
+        ParentKey("stamina:MaxStaminaTable")
     {
     }
 
@@ -77,23 +70,17 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FString FMaxStaminaTableDomain::CreateCacheParentKey(
-        TOptional<FString> NamespaceName,
-        TOptional<FString> MaxStaminaTableName,
         FString ChildType
     )
     {
         return FString() +
-            (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (MaxStaminaTableName.IsSet() ? *MaxStaminaTableName : "null") + ":" +
             ChildType;
     }
 
     FString FMaxStaminaTableDomain::CreateCacheKey(
-        TOptional<FString> MaxStaminaTableName
     )
     {
-        return FString() +
-            (MaxStaminaTableName.IsSet() ? *MaxStaminaTableName : "null");
+        return "Singleton";
     }
 
     FMaxStaminaTableDomain::FModelTask::FModelTask(
@@ -119,7 +106,6 @@ namespace Gs2::Stamina::Domain::Model
         auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FMaxStaminaTable>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FMaxStaminaTableDomain::CreateCacheKey(
-                Self->MaxStaminaTableName
             ),
             &Value
         );

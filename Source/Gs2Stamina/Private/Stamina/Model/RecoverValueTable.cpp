@@ -19,7 +19,6 @@
 namespace Gs2::Stamina::Model
 {
     FRecoverValueTable::FRecoverValueTable():
-        RecoverValueTableIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
         ExperienceModelIdValue(TOptional<FString>()),
@@ -30,20 +29,11 @@ namespace Gs2::Stamina::Model
     FRecoverValueTable::FRecoverValueTable(
         const FRecoverValueTable& From
     ):
-        RecoverValueTableIdValue(From.RecoverValueTableIdValue),
         NameValue(From.NameValue),
         MetadataValue(From.MetadataValue),
         ExperienceModelIdValue(From.ExperienceModelIdValue),
         ValuesValue(From.ValuesValue)
     {
-    }
-
-    TSharedPtr<FRecoverValueTable> FRecoverValueTable::WithRecoverValueTableId(
-        const TOptional<FString> RecoverValueTableId
-    )
-    {
-        this->RecoverValueTableIdValue = RecoverValueTableId;
-        return SharedThis(this);
     }
 
     TSharedPtr<FRecoverValueTable> FRecoverValueTable::WithName(
@@ -77,10 +67,6 @@ namespace Gs2::Stamina::Model
         this->ValuesValue = Values;
         return SharedThis(this);
     }
-    TOptional<FString> FRecoverValueTable::GetRecoverValueTableId() const
-    {
-        return RecoverValueTableIdValue;
-    }
     TOptional<FString> FRecoverValueTable::GetName() const
     {
         return NameValue;
@@ -98,65 +84,12 @@ namespace Gs2::Stamina::Model
         return ValuesValue;
     }
 
-    TOptional<FString> FRecoverValueTable::GetRegionFromGrn(const FString Grn)
-    {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):stamina:(?<namespaceName>.+):recoverValueTable:(?<recoverValueTableName>.+)"));
-        FRegexMatcher Matcher(Pattern, Grn);
-        while (Matcher.FindNext())
-        {
-            return Matcher.GetCaptureGroup(1);
-        }
-        return TOptional<FString>();
-    }
-
-    TOptional<FString> FRecoverValueTable::GetOwnerIdFromGrn(const FString Grn)
-    {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):stamina:(?<namespaceName>.+):recoverValueTable:(?<recoverValueTableName>.+)"));
-        FRegexMatcher Matcher(Pattern, Grn);
-        while (Matcher.FindNext())
-        {
-            return Matcher.GetCaptureGroup(2);
-        }
-        return TOptional<FString>();
-    }
-
-    TOptional<FString> FRecoverValueTable::GetNamespaceNameFromGrn(const FString Grn)
-    {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):stamina:(?<namespaceName>.+):recoverValueTable:(?<recoverValueTableName>.+)"));
-        FRegexMatcher Matcher(Pattern, Grn);
-        while (Matcher.FindNext())
-        {
-            return Matcher.GetCaptureGroup(3);
-        }
-        return TOptional<FString>();
-    }
-
-    TOptional<FString> FRecoverValueTable::GetRecoverValueTableNameFromGrn(const FString Grn)
-    {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):stamina:(?<namespaceName>.+):recoverValueTable:(?<recoverValueTableName>.+)"));
-        FRegexMatcher Matcher(Pattern, Grn);
-        while (Matcher.FindNext())
-        {
-            return Matcher.GetCaptureGroup(4);
-        }
-        return TOptional<FString>();
-    }
-
     TSharedPtr<FRecoverValueTable> FRecoverValueTable::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
             return nullptr;
         }
         return MakeShared<FRecoverValueTable>()
-            ->WithRecoverValueTableId(Data->HasField("recoverValueTableId") ? [Data]() -> TOptional<FString>
-                {
-                    FString v;
-                    if (Data->TryGetStringField("recoverValueTableId", v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
                     FString v;
@@ -201,10 +134,6 @@ namespace Gs2::Stamina::Model
     TSharedPtr<FJsonObject> FRecoverValueTable::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-        if (RecoverValueTableIdValue.IsSet())
-        {
-            JsonRootObject->SetStringField("recoverValueTableId", RecoverValueTableIdValue.GetValue());
-        }
         if (NameValue.IsSet())
         {
             JsonRootObject->SetStringField("name", NameValue.GetValue());

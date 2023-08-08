@@ -45,9 +45,7 @@ namespace Gs2::Stamina::Domain::Model
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
         const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
-        const TOptional<FString> NamespaceName,
-        const TOptional<FString> RecoverValueTableName
+        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -55,12 +53,7 @@ namespace Gs2::Stamina::Domain::Model
         StampSheetConfiguration(StampSheetConfiguration),
         Session(Session),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Session)),
-        NamespaceName(NamespaceName),
-        RecoverValueTableName(RecoverValueTableName),
-        ParentKey(Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            NamespaceName,
-            "RecoverValueTable"
-        ))
+        ParentKey("stamina:RecoverValueTable")
     {
     }
 
@@ -77,23 +70,17 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FString FRecoverValueTableDomain::CreateCacheParentKey(
-        TOptional<FString> NamespaceName,
-        TOptional<FString> RecoverValueTableName,
         FString ChildType
     )
     {
         return FString() +
-            (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (RecoverValueTableName.IsSet() ? *RecoverValueTableName : "null") + ":" +
             ChildType;
     }
 
     FString FRecoverValueTableDomain::CreateCacheKey(
-        TOptional<FString> RecoverValueTableName
     )
     {
-        return FString() +
-            (RecoverValueTableName.IsSet() ? *RecoverValueTableName : "null");
+        return "Singleton";
     }
 
     FRecoverValueTableDomain::FModelTask::FModelTask(
@@ -119,7 +106,6 @@ namespace Gs2::Stamina::Domain::Model
         auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FRecoverValueTable>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FRecoverValueTableDomain::CreateCacheKey(
-                Self->RecoverValueTableName
             ),
             &Value
         );

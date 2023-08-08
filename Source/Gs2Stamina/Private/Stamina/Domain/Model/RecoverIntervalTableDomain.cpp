@@ -45,9 +45,7 @@ namespace Gs2::Stamina::Domain::Model
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
         const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
-        const TOptional<FString> NamespaceName,
-        const TOptional<FString> RecoverIntervalTableName
+        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -55,12 +53,7 @@ namespace Gs2::Stamina::Domain::Model
         StampSheetConfiguration(StampSheetConfiguration),
         Session(Session),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Session)),
-        NamespaceName(NamespaceName),
-        RecoverIntervalTableName(RecoverIntervalTableName),
-        ParentKey(Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-            NamespaceName,
-            "RecoverIntervalTable"
-        ))
+        ParentKey("stamina:RecoverIntervalTable")
     {
     }
 
@@ -77,23 +70,17 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FString FRecoverIntervalTableDomain::CreateCacheParentKey(
-        TOptional<FString> NamespaceName,
-        TOptional<FString> RecoverIntervalTableName,
         FString ChildType
     )
     {
         return FString() +
-            (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (RecoverIntervalTableName.IsSet() ? *RecoverIntervalTableName : "null") + ":" +
             ChildType;
     }
 
     FString FRecoverIntervalTableDomain::CreateCacheKey(
-        TOptional<FString> RecoverIntervalTableName
     )
     {
-        return FString() +
-            (RecoverIntervalTableName.IsSet() ? *RecoverIntervalTableName : "null");
+        return "Singleton";
     }
 
     FRecoverIntervalTableDomain::FModelTask::FModelTask(
@@ -119,7 +106,6 @@ namespace Gs2::Stamina::Domain::Model
         auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FRecoverIntervalTable>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FRecoverIntervalTableDomain::CreateCacheKey(
-                Self->RecoverIntervalTableName
             ),
             &Value
         );

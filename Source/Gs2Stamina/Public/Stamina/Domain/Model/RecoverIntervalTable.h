@@ -54,8 +54,6 @@ namespace Gs2::Stamina::Domain::Model
         Gs2::Stamina::FGs2StaminaRestClientPtr Client;
 
         public:
-        TOptional<FString> NamespaceName;
-        TOptional<FString> RecoverIntervalTableName;
     private:
 
         FString ParentKey;
@@ -66,9 +64,7 @@ namespace Gs2::Stamina::Domain::Model
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
             const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
-            const TOptional<FString> NamespaceName,
-            const TOptional<FString> RecoverIntervalTableName
+            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -77,13 +73,10 @@ namespace Gs2::Stamina::Domain::Model
         );
 
         static FString CreateCacheParentKey(
-            TOptional<FString> NamespaceName,
-            TOptional<FString> RecoverIntervalTableName,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> RecoverIntervalTableName
         );
 
         class GS2STAMINA_API FModelTask final :

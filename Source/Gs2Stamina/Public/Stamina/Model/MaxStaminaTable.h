@@ -23,7 +23,6 @@ namespace Gs2::Stamina::Model
 {
     class GS2STAMINA_API FMaxStaminaTable final : public Gs2Object, public TSharedFromThis<FMaxStaminaTable>
     {
-        TOptional<FString> MaxStaminaTableIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
         TOptional<FString> ExperienceModelIdValue;
@@ -36,22 +35,16 @@ namespace Gs2::Stamina::Model
         );
         virtual ~FMaxStaminaTable() override = default;
 
-        TSharedPtr<FMaxStaminaTable> WithMaxStaminaTableId(const TOptional<FString> MaxStaminaTableId);
         TSharedPtr<FMaxStaminaTable> WithName(const TOptional<FString> Name);
         TSharedPtr<FMaxStaminaTable> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FMaxStaminaTable> WithExperienceModelId(const TOptional<FString> ExperienceModelId);
         TSharedPtr<FMaxStaminaTable> WithValues(const TSharedPtr<TArray<int32>> Values);
 
-        TOptional<FString> GetMaxStaminaTableId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetExperienceModelId() const;
         TSharedPtr<TArray<int32>> GetValues() const;
 
-        static TOptional<FString> GetRegionFromGrn(const FString Grn);
-        static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
-        static TOptional<FString> GetNamespaceNameFromGrn(const FString Grn);
-        static TOptional<FString> GetMaxStaminaTableNameFromGrn(const FString Grn);
 
         static TSharedPtr<FMaxStaminaTable> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

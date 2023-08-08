@@ -23,7 +23,6 @@ namespace Gs2::Stamina::Model
 {
     class GS2STAMINA_API FRecoverValueTable final : public Gs2Object, public TSharedFromThis<FRecoverValueTable>
     {
-        TOptional<FString> RecoverValueTableIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
         TOptional<FString> ExperienceModelIdValue;
@@ -36,22 +35,16 @@ namespace Gs2::Stamina::Model
         );
         virtual ~FRecoverValueTable() override = default;
 
-        TSharedPtr<FRecoverValueTable> WithRecoverValueTableId(const TOptional<FString> RecoverValueTableId);
         TSharedPtr<FRecoverValueTable> WithName(const TOptional<FString> Name);
         TSharedPtr<FRecoverValueTable> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FRecoverValueTable> WithExperienceModelId(const TOptional<FString> ExperienceModelId);
         TSharedPtr<FRecoverValueTable> WithValues(const TSharedPtr<TArray<int32>> Values);
 
-        TOptional<FString> GetRecoverValueTableId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetExperienceModelId() const;
         TSharedPtr<TArray<int32>> GetValues() const;
 
-        static TOptional<FString> GetRegionFromGrn(const FString Grn);
-        static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
-        static TOptional<FString> GetNamespaceNameFromGrn(const FString Grn);
-        static TOptional<FString> GetRecoverValueTableNameFromGrn(const FString Grn);
 
         static TSharedPtr<FRecoverValueTable> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

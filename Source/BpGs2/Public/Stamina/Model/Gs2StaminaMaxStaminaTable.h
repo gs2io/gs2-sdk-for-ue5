@@ -27,8 +27,6 @@ struct FGs2StaminaMaxStaminaTable
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadWrite)
-    FString MaxStaminaTableId = "";
-    UPROPERTY(BlueprintReadWrite)
     FString Name = "";
     UPROPERTY(BlueprintReadWrite)
     FString Metadata = "";

@@ -15,9 +15,6 @@
  */
 
 #include "BpGs2/Public/Stamina/Model/Gs2StaminaNamespace.h"
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaMaxStaminaTable.h"
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaRecoverIntervalTable.h"
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaRecoverValueTable.h"
 #include "BpGs2/Public/Stamina/Model/Gs2StaminaStaminaModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Stamina/Model/Gs2StaminaStaminaModel.h"

@@ -27,8 +27,6 @@ struct FGs2StaminaRecoverIntervalTable
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadWrite)
-    FString RecoverIntervalTableId = "";
-    UPROPERTY(BlueprintReadWrite)
     FString Name = "";
     UPROPERTY(BlueprintReadWrite)
     FString Metadata = "";
