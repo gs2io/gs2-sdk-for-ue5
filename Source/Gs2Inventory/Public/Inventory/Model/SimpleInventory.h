@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "SimpleItem.h"
 
 namespace Gs2::Inventory::Model
 {
@@ -26,8 +27,10 @@ namespace Gs2::Inventory::Model
         TOptional<FString> InventoryIdValue;
         TOptional<FString> InventoryNameValue;
         TOptional<FString> UserIdValue;
+        TSharedPtr<TArray<TSharedPtr<FSimpleItem>>> SimpleItemsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FSimpleInventory();
@@ -39,16 +42,21 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FSimpleInventory> WithInventoryId(const TOptional<FString> InventoryId);
         TSharedPtr<FSimpleInventory> WithInventoryName(const TOptional<FString> InventoryName);
         TSharedPtr<FSimpleInventory> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FSimpleInventory> WithSimpleItems(const TSharedPtr<TArray<TSharedPtr<FSimpleItem>>> SimpleItems);
         TSharedPtr<FSimpleInventory> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FSimpleInventory> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FSimpleInventory> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetInventoryId() const;
         TOptional<FString> GetInventoryName() const;
         TOptional<FString> GetUserId() const;
+        TSharedPtr<TArray<TSharedPtr<FSimpleItem>>> GetSimpleItems() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

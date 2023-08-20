@@ -86,6 +86,34 @@
 #include "Task/Rest/DescribeSimpleItemModelsTask.h"
 #include "Request/GetSimpleItemModelRequest.h"
 #include "Task/Rest/GetSimpleItemModelTask.h"
+#include "Request/DescribeBigInventoryModelMastersRequest.h"
+#include "Task/Rest/DescribeBigInventoryModelMastersTask.h"
+#include "Request/CreateBigInventoryModelMasterRequest.h"
+#include "Task/Rest/CreateBigInventoryModelMasterTask.h"
+#include "Request/GetBigInventoryModelMasterRequest.h"
+#include "Task/Rest/GetBigInventoryModelMasterTask.h"
+#include "Request/UpdateBigInventoryModelMasterRequest.h"
+#include "Task/Rest/UpdateBigInventoryModelMasterTask.h"
+#include "Request/DeleteBigInventoryModelMasterRequest.h"
+#include "Task/Rest/DeleteBigInventoryModelMasterTask.h"
+#include "Request/DescribeBigInventoryModelsRequest.h"
+#include "Task/Rest/DescribeBigInventoryModelsTask.h"
+#include "Request/GetBigInventoryModelRequest.h"
+#include "Task/Rest/GetBigInventoryModelTask.h"
+#include "Request/DescribeBigItemModelMastersRequest.h"
+#include "Task/Rest/DescribeBigItemModelMastersTask.h"
+#include "Request/CreateBigItemModelMasterRequest.h"
+#include "Task/Rest/CreateBigItemModelMasterTask.h"
+#include "Request/GetBigItemModelMasterRequest.h"
+#include "Task/Rest/GetBigItemModelMasterTask.h"
+#include "Request/UpdateBigItemModelMasterRequest.h"
+#include "Task/Rest/UpdateBigItemModelMasterTask.h"
+#include "Request/DeleteBigItemModelMasterRequest.h"
+#include "Task/Rest/DeleteBigItemModelMasterTask.h"
+#include "Request/DescribeBigItemModelsRequest.h"
+#include "Task/Rest/DescribeBigItemModelsTask.h"
+#include "Request/GetBigItemModelRequest.h"
+#include "Task/Rest/GetBigItemModelTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentItemModelMasterRequest.h"
@@ -186,6 +214,26 @@
 #include "Task/Rest/AcquireSimpleItemsByStampSheetTask.h"
 #include "Request/ConsumeSimpleItemsByStampTaskRequest.h"
 #include "Task/Rest/ConsumeSimpleItemsByStampTaskTask.h"
+#include "Request/DescribeBigItemsRequest.h"
+#include "Task/Rest/DescribeBigItemsTask.h"
+#include "Request/DescribeBigItemsByUserIdRequest.h"
+#include "Task/Rest/DescribeBigItemsByUserIdTask.h"
+#include "Request/GetBigItemRequest.h"
+#include "Task/Rest/GetBigItemTask.h"
+#include "Request/GetBigItemByUserIdRequest.h"
+#include "Task/Rest/GetBigItemByUserIdTask.h"
+#include "Request/AcquireBigItemByUserIdRequest.h"
+#include "Task/Rest/AcquireBigItemByUserIdTask.h"
+#include "Request/ConsumeBigItemRequest.h"
+#include "Task/Rest/ConsumeBigItemTask.h"
+#include "Request/ConsumeBigItemByUserIdRequest.h"
+#include "Task/Rest/ConsumeBigItemByUserIdTask.h"
+#include "Request/DeleteBigItemByUserIdRequest.h"
+#include "Task/Rest/DeleteBigItemByUserIdTask.h"
+#include "Request/AcquireBigItemByStampSheetRequest.h"
+#include "Task/Rest/AcquireBigItemByStampSheetTask.h"
+#include "Request/ConsumeBigItemByStampTaskRequest.h"
+#include "Task/Rest/ConsumeBigItemByStampTaskTask.h"
 
 namespace Gs2::Inventory
 {
@@ -332,6 +380,62 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetSimpleItemModelTask>> GetSimpleItemModel(
             const Request::FGetSimpleItemModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigInventoryModelMastersTask>> DescribeBigInventoryModelMasters(
+            const Request::FDescribeBigInventoryModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateBigInventoryModelMasterTask>> CreateBigInventoryModelMaster(
+            const Request::FCreateBigInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetBigInventoryModelMasterTask>> GetBigInventoryModelMaster(
+            const Request::FGetBigInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateBigInventoryModelMasterTask>> UpdateBigInventoryModelMaster(
+            const Request::FUpdateBigInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteBigInventoryModelMasterTask>> DeleteBigInventoryModelMaster(
+            const Request::FDeleteBigInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigInventoryModelsTask>> DescribeBigInventoryModels(
+            const Request::FDescribeBigInventoryModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetBigInventoryModelTask>> GetBigInventoryModel(
+            const Request::FGetBigInventoryModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigItemModelMastersTask>> DescribeBigItemModelMasters(
+            const Request::FDescribeBigItemModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateBigItemModelMasterTask>> CreateBigItemModelMaster(
+            const Request::FCreateBigItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetBigItemModelMasterTask>> GetBigItemModelMaster(
+            const Request::FGetBigItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateBigItemModelMasterTask>> UpdateBigItemModelMaster(
+            const Request::FUpdateBigItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteBigItemModelMasterTask>> DeleteBigItemModelMaster(
+            const Request::FDeleteBigItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigItemModelsTask>> DescribeBigItemModels(
+            const Request::FDescribeBigItemModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetBigItemModelTask>> GetBigItemModel(
+            const Request::FGetBigItemModelRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(
@@ -532,6 +636,46 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::Rest::FConsumeSimpleItemsByStampTaskTask>> ConsumeSimpleItemsByStampTask(
             const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigItemsTask>> DescribeBigItems(
+            const Request::FDescribeBigItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigItemsByUserIdTask>> DescribeBigItemsByUserId(
+            const Request::FDescribeBigItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetBigItemTask>> GetBigItem(
+            const Request::FGetBigItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetBigItemByUserIdTask>> GetBigItemByUserId(
+            const Request::FGetBigItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAcquireBigItemByUserIdTask>> AcquireBigItemByUserId(
+            const Request::FAcquireBigItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FConsumeBigItemTask>> ConsumeBigItem(
+            const Request::FConsumeBigItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FConsumeBigItemByUserIdTask>> ConsumeBigItemByUserId(
+            const Request::FConsumeBigItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteBigItemByUserIdTask>> DeleteBigItemByUserId(
+            const Request::FDeleteBigItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAcquireBigItemByStampSheetTask>> AcquireBigItemByStampSheet(
+            const Request::FAcquireBigItemByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FConsumeBigItemByStampTaskTask>> ConsumeBigItemByStampTask(
+            const Request::FConsumeBigItemByStampTaskRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2InventoryRestClient, ESPMode::ThreadSafe> FGs2InventoryRestClientPtr;

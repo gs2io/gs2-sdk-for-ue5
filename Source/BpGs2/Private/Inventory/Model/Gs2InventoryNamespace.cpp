@@ -17,10 +17,12 @@
 #include "BpGs2/Public/Inventory/Model/Gs2InventoryNamespace.h"
 #include "BpGs2/Public/Inventory/Model/Gs2InventoryInventoryModel.h"
 #include "BpGs2/Public/Inventory/Model/Gs2InventorySimpleInventoryModel.h"
+#include "BpGs2/Public/Inventory/Model/Gs2InventoryBigInventoryModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Inventory/Model/Gs2InventoryInventoryModel.h"
 #include "Inventory/Model/Gs2InventoryUser.h"
 #include "Inventory/Model/Gs2InventorySimpleInventoryModel.h"
+#include "Inventory/Model/Gs2InventoryBigInventoryModel.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2InventoryInventoryModel UGs2InventoryNamespaceFunctionLibrary::InventoryModel(
@@ -76,6 +78,26 @@ FGs2InventorySimpleInventoryModel UGs2InventoryNamespaceFunctionLibrary::SimpleI
         return Return;
     }
     Return.Value = Namespace.Value->SimpleInventoryModel(
+        InventoryName
+    );
+    return Return;
+}
+
+FGs2InventoryBigInventoryModel UGs2InventoryNamespaceFunctionLibrary::BigInventoryModel(
+    FGs2InventoryNamespace Namespace,
+    FString InventoryName
+)
+{
+    FGs2InventoryBigInventoryModel Return;
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InventoryNamespaceFunctionLibrary::BigInventoryModel] Namespace parameter specification is missing."))
+        return Return;
+    }
+    if (InventoryName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2InventoryNamespaceFunctionLibrary::BigInventoryModel] InventoryName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = Namespace.Value->BigInventoryModel(
         InventoryName
     );
     return Return;

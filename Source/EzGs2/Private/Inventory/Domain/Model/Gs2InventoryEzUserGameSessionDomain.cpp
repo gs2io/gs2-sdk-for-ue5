@@ -73,4 +73,16 @@ namespace Gs2::UE5::Inventory::Domain::Model
             ProfileValue
         );
     }
+
+    Gs2::UE5::Inventory::Domain::Model::FEzBigInventoryGameSessionDomainPtr FEzUserGameSessionDomain::BigInventory(
+        const FString InventoryName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Inventory::Domain::Model::FEzBigInventoryGameSessionDomain>(
+            Domain->BigInventory(
+                InventoryName
+            ),
+            ProfileValue
+        );
+    }
 }

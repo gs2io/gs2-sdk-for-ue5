@@ -29,6 +29,7 @@ namespace Gs2::Inventory::Model
         TOptional<FString> MetadataValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FSimpleItemModelMaster();
@@ -43,6 +44,7 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FSimpleItemModelMaster> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FSimpleItemModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FSimpleItemModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FSimpleItemModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetItemModelId() const;
         TOptional<FString> GetName() const;
@@ -52,6 +54,8 @@ namespace Gs2::Inventory::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -50,4 +50,10 @@ class BPGS2_API UGs2InventoryNamespaceFunctionLibrary : public UBlueprintFunctio
         FGs2InventoryNamespace Namespace,
         FString InventoryName
     );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Inventory::BigInventoryModel", Category="Game Server Services|GS2-Inventory|Namespace|BigInventoryModel", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="BigInventoryModel") FGs2InventoryBigInventoryModel BigInventoryModel(
+        FGs2InventoryNamespace Namespace,
+        FString InventoryName
+    );
 };

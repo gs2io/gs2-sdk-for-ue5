@@ -45,4 +45,10 @@ class BPGS2_API UGs2InventoryUserFunctionLibrary : public UBlueprintFunctionLibr
         FGs2InventoryOwnUser User,
         FString InventoryName
     );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Inventory::OwnBigInventory", Category="Game Server Services|GS2-Inventory|Namespace|User|BigInventory", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="BigInventory") FGs2InventoryOwnBigInventory OwnBigInventory(
+        FGs2InventoryOwnUser User,
+        FString InventoryName
+    );
 };

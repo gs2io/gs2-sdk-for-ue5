@@ -325,6 +325,132 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigInventoryModelMastersTask>> FGs2InventoryRestClient::DescribeBigInventoryModelMasters(
+        const Request::FDescribeBigInventoryModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeBigInventoryModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateBigInventoryModelMasterTask>> FGs2InventoryRestClient::CreateBigInventoryModelMaster(
+        const Request::FCreateBigInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateBigInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetBigInventoryModelMasterTask>> FGs2InventoryRestClient::GetBigInventoryModelMaster(
+        const Request::FGetBigInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetBigInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateBigInventoryModelMasterTask>> FGs2InventoryRestClient::UpdateBigInventoryModelMaster(
+        const Request::FUpdateBigInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateBigInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteBigInventoryModelMasterTask>> FGs2InventoryRestClient::DeleteBigInventoryModelMaster(
+        const Request::FDeleteBigInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteBigInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigInventoryModelsTask>> FGs2InventoryRestClient::DescribeBigInventoryModels(
+        const Request::FDescribeBigInventoryModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeBigInventoryModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetBigInventoryModelTask>> FGs2InventoryRestClient::GetBigInventoryModel(
+        const Request::FGetBigInventoryModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetBigInventoryModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigItemModelMastersTask>> FGs2InventoryRestClient::DescribeBigItemModelMasters(
+        const Request::FDescribeBigItemModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeBigItemModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateBigItemModelMasterTask>> FGs2InventoryRestClient::CreateBigItemModelMaster(
+        const Request::FCreateBigItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateBigItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetBigItemModelMasterTask>> FGs2InventoryRestClient::GetBigItemModelMaster(
+        const Request::FGetBigItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetBigItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateBigItemModelMasterTask>> FGs2InventoryRestClient::UpdateBigItemModelMaster(
+        const Request::FUpdateBigItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateBigItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteBigItemModelMasterTask>> FGs2InventoryRestClient::DeleteBigItemModelMaster(
+        const Request::FDeleteBigItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteBigItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigItemModelsTask>> FGs2InventoryRestClient::DescribeBigItemModels(
+        const Request::FDescribeBigItemModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeBigItemModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetBigItemModelTask>> FGs2InventoryRestClient::GetBigItemModel(
+        const Request::FGetBigItemModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetBigItemModelTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2InventoryRestClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {
@@ -770,6 +896,96 @@ namespace Gs2::Inventory
         const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeSimpleItemsByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigItemsTask>> FGs2InventoryRestClient::DescribeBigItems(
+        const Request::FDescribeBigItemsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeBigItemsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeBigItemsByUserIdTask>> FGs2InventoryRestClient::DescribeBigItemsByUserId(
+        const Request::FDescribeBigItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeBigItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetBigItemTask>> FGs2InventoryRestClient::GetBigItem(
+        const Request::FGetBigItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetBigItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetBigItemByUserIdTask>> FGs2InventoryRestClient::GetBigItemByUserId(
+        const Request::FGetBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAcquireBigItemByUserIdTask>> FGs2InventoryRestClient::AcquireBigItemByUserId(
+        const Request::FAcquireBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAcquireBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FConsumeBigItemTask>> FGs2InventoryRestClient::ConsumeBigItem(
+        const Request::FConsumeBigItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeBigItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FConsumeBigItemByUserIdTask>> FGs2InventoryRestClient::ConsumeBigItemByUserId(
+        const Request::FConsumeBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteBigItemByUserIdTask>> FGs2InventoryRestClient::DeleteBigItemByUserId(
+        const Request::FDeleteBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAcquireBigItemByStampSheetTask>> FGs2InventoryRestClient::AcquireBigItemByStampSheet(
+        const Request::FAcquireBigItemByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAcquireBigItemByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FConsumeBigItemByStampTaskTask>> FGs2InventoryRestClient::ConsumeBigItemByStampTask(
+        const Request::FConsumeBigItemByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeBigItemByStampTaskTask>>(
             Session,
             Request
         );

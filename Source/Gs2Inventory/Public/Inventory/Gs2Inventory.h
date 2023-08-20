@@ -26,12 +26,18 @@
 #include "Model/SimpleInventoryModel.h"
 #include "Model/SimpleItemModelMaster.h"
 #include "Model/SimpleItemModel.h"
+#include "Model/BigInventoryModelMaster.h"
+#include "Model/BigInventoryModel.h"
+#include "Model/BigItemModelMaster.h"
+#include "Model/BigItemModel.h"
 #include "Model/CurrentItemModelMaster.h"
 #include "Model/Inventory.h"
 #include "Model/ItemSet.h"
 #include "Model/ReferenceOf.h"
 #include "Model/SimpleInventory.h"
 #include "Model/SimpleItem.h"
+#include "Model/BigInventory.h"
+#include "Model/BigItem.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
@@ -241,6 +247,90 @@
 #include "Result/GetSimpleItemModelResult.h"
 #include "Task/Rest/GetSimpleItemModelTask.h"
 #include "Task/WebSocket/GetSimpleItemModelTask.h"
+
+// DescribeBigInventoryModelMasters
+#include "Request/DescribeBigInventoryModelMastersRequest.h"
+#include "Result/DescribeBigInventoryModelMastersResult.h"
+#include "Task/Rest/DescribeBigInventoryModelMastersTask.h"
+#include "Task/WebSocket/DescribeBigInventoryModelMastersTask.h"
+
+// CreateBigInventoryModelMaster
+#include "Request/CreateBigInventoryModelMasterRequest.h"
+#include "Result/CreateBigInventoryModelMasterResult.h"
+#include "Task/Rest/CreateBigInventoryModelMasterTask.h"
+#include "Task/WebSocket/CreateBigInventoryModelMasterTask.h"
+
+// GetBigInventoryModelMaster
+#include "Request/GetBigInventoryModelMasterRequest.h"
+#include "Result/GetBigInventoryModelMasterResult.h"
+#include "Task/Rest/GetBigInventoryModelMasterTask.h"
+#include "Task/WebSocket/GetBigInventoryModelMasterTask.h"
+
+// UpdateBigInventoryModelMaster
+#include "Request/UpdateBigInventoryModelMasterRequest.h"
+#include "Result/UpdateBigInventoryModelMasterResult.h"
+#include "Task/Rest/UpdateBigInventoryModelMasterTask.h"
+#include "Task/WebSocket/UpdateBigInventoryModelMasterTask.h"
+
+// DeleteBigInventoryModelMaster
+#include "Request/DeleteBigInventoryModelMasterRequest.h"
+#include "Result/DeleteBigInventoryModelMasterResult.h"
+#include "Task/Rest/DeleteBigInventoryModelMasterTask.h"
+#include "Task/WebSocket/DeleteBigInventoryModelMasterTask.h"
+
+// DescribeBigInventoryModels
+#include "Request/DescribeBigInventoryModelsRequest.h"
+#include "Result/DescribeBigInventoryModelsResult.h"
+#include "Task/Rest/DescribeBigInventoryModelsTask.h"
+#include "Task/WebSocket/DescribeBigInventoryModelsTask.h"
+
+// GetBigInventoryModel
+#include "Request/GetBigInventoryModelRequest.h"
+#include "Result/GetBigInventoryModelResult.h"
+#include "Task/Rest/GetBigInventoryModelTask.h"
+#include "Task/WebSocket/GetBigInventoryModelTask.h"
+
+// DescribeBigItemModelMasters
+#include "Request/DescribeBigItemModelMastersRequest.h"
+#include "Result/DescribeBigItemModelMastersResult.h"
+#include "Task/Rest/DescribeBigItemModelMastersTask.h"
+#include "Task/WebSocket/DescribeBigItemModelMastersTask.h"
+
+// CreateBigItemModelMaster
+#include "Request/CreateBigItemModelMasterRequest.h"
+#include "Result/CreateBigItemModelMasterResult.h"
+#include "Task/Rest/CreateBigItemModelMasterTask.h"
+#include "Task/WebSocket/CreateBigItemModelMasterTask.h"
+
+// GetBigItemModelMaster
+#include "Request/GetBigItemModelMasterRequest.h"
+#include "Result/GetBigItemModelMasterResult.h"
+#include "Task/Rest/GetBigItemModelMasterTask.h"
+#include "Task/WebSocket/GetBigItemModelMasterTask.h"
+
+// UpdateBigItemModelMaster
+#include "Request/UpdateBigItemModelMasterRequest.h"
+#include "Result/UpdateBigItemModelMasterResult.h"
+#include "Task/Rest/UpdateBigItemModelMasterTask.h"
+#include "Task/WebSocket/UpdateBigItemModelMasterTask.h"
+
+// DeleteBigItemModelMaster
+#include "Request/DeleteBigItemModelMasterRequest.h"
+#include "Result/DeleteBigItemModelMasterResult.h"
+#include "Task/Rest/DeleteBigItemModelMasterTask.h"
+#include "Task/WebSocket/DeleteBigItemModelMasterTask.h"
+
+// DescribeBigItemModels
+#include "Request/DescribeBigItemModelsRequest.h"
+#include "Result/DescribeBigItemModelsResult.h"
+#include "Task/Rest/DescribeBigItemModelsTask.h"
+#include "Task/WebSocket/DescribeBigItemModelsTask.h"
+
+// GetBigItemModel
+#include "Request/GetBigItemModelRequest.h"
+#include "Result/GetBigItemModelResult.h"
+#include "Task/Rest/GetBigItemModelTask.h"
+#include "Task/WebSocket/GetBigItemModelTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"
@@ -541,6 +631,66 @@
 #include "Result/ConsumeSimpleItemsByStampTaskResult.h"
 #include "Task/Rest/ConsumeSimpleItemsByStampTaskTask.h"
 #include "Task/WebSocket/ConsumeSimpleItemsByStampTaskTask.h"
+
+// DescribeBigItems
+#include "Request/DescribeBigItemsRequest.h"
+#include "Result/DescribeBigItemsResult.h"
+#include "Task/Rest/DescribeBigItemsTask.h"
+#include "Task/WebSocket/DescribeBigItemsTask.h"
+
+// DescribeBigItemsByUserId
+#include "Request/DescribeBigItemsByUserIdRequest.h"
+#include "Result/DescribeBigItemsByUserIdResult.h"
+#include "Task/Rest/DescribeBigItemsByUserIdTask.h"
+#include "Task/WebSocket/DescribeBigItemsByUserIdTask.h"
+
+// GetBigItem
+#include "Request/GetBigItemRequest.h"
+#include "Result/GetBigItemResult.h"
+#include "Task/Rest/GetBigItemTask.h"
+#include "Task/WebSocket/GetBigItemTask.h"
+
+// GetBigItemByUserId
+#include "Request/GetBigItemByUserIdRequest.h"
+#include "Result/GetBigItemByUserIdResult.h"
+#include "Task/Rest/GetBigItemByUserIdTask.h"
+#include "Task/WebSocket/GetBigItemByUserIdTask.h"
+
+// AcquireBigItemByUserId
+#include "Request/AcquireBigItemByUserIdRequest.h"
+#include "Result/AcquireBigItemByUserIdResult.h"
+#include "Task/Rest/AcquireBigItemByUserIdTask.h"
+#include "Task/WebSocket/AcquireBigItemByUserIdTask.h"
+
+// ConsumeBigItem
+#include "Request/ConsumeBigItemRequest.h"
+#include "Result/ConsumeBigItemResult.h"
+#include "Task/Rest/ConsumeBigItemTask.h"
+#include "Task/WebSocket/ConsumeBigItemTask.h"
+
+// ConsumeBigItemByUserId
+#include "Request/ConsumeBigItemByUserIdRequest.h"
+#include "Result/ConsumeBigItemByUserIdResult.h"
+#include "Task/Rest/ConsumeBigItemByUserIdTask.h"
+#include "Task/WebSocket/ConsumeBigItemByUserIdTask.h"
+
+// DeleteBigItemByUserId
+#include "Request/DeleteBigItemByUserIdRequest.h"
+#include "Result/DeleteBigItemByUserIdResult.h"
+#include "Task/Rest/DeleteBigItemByUserIdTask.h"
+#include "Task/WebSocket/DeleteBigItemByUserIdTask.h"
+
+// AcquireBigItemByStampSheet
+#include "Request/AcquireBigItemByStampSheetRequest.h"
+#include "Result/AcquireBigItemByStampSheetResult.h"
+#include "Task/Rest/AcquireBigItemByStampSheetTask.h"
+#include "Task/WebSocket/AcquireBigItemByStampSheetTask.h"
+
+// ConsumeBigItemByStampTask
+#include "Request/ConsumeBigItemByStampTaskRequest.h"
+#include "Result/ConsumeBigItemByStampTaskResult.h"
+#include "Task/Rest/ConsumeBigItemByStampTaskTask.h"
+#include "Task/WebSocket/ConsumeBigItemByStampTaskTask.h"
 
 // Client
 #include "Gs2InventoryRestClient.h"

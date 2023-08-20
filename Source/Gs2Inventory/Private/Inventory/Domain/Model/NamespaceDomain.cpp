@@ -32,6 +32,10 @@
 #include "Inventory/Domain/Model/SimpleInventoryModel.h"
 #include "Inventory/Domain/Model/SimpleItemModelMaster.h"
 #include "Inventory/Domain/Model/SimpleItemModel.h"
+#include "Inventory/Domain/Model/BigInventoryModelMaster.h"
+#include "Inventory/Domain/Model/BigInventoryModel.h"
+#include "Inventory/Domain/Model/BigItemModelMaster.h"
+#include "Inventory/Domain/Model/BigItemModel.h"
 #include "Inventory/Domain/Model/CurrentItemModelMaster.h"
 #include "Inventory/Domain/Model/Inventory.h"
 #include "Inventory/Domain/Model/InventoryAccessToken.h"
@@ -43,6 +47,10 @@
 #include "Inventory/Domain/Model/SimpleInventoryAccessToken.h"
 #include "Inventory/Domain/Model/SimpleItem.h"
 #include "Inventory/Domain/Model/SimpleItemAccessToken.h"
+#include "Inventory/Domain/Model/BigInventory.h"
+#include "Inventory/Domain/Model/BigInventoryAccessToken.h"
+#include "Inventory/Domain/Model/BigItem.h"
+#include "Inventory/Domain/Model/BigItemAccessToken.h"
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
 #include "Inventory/Domain/Model/ItemSetEntry.h"
@@ -368,6 +376,76 @@ namespace Gs2::Inventory::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateSimpleInventoryModelMasterTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FCreateBigInventoryModelMasterTask::FCreateBigInventoryModelMasterTask(
+        const TSharedPtr<FNamespaceDomain> Self,
+        const Request::FCreateBigInventoryModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateBigInventoryModelMasterTask::FCreateBigInventoryModelMasterTask(
+        const FCreateBigInventoryModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateBigInventoryModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateBigInventoryModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "BigInventoryModelMaster"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Put(
+                    Gs2::Inventory::Model::FBigInventoryModelMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain>(
+            Self->Cache,
+            Self->JobQueueDomain,
+            Self->StampSheetConfiguration,
+            Self->Session,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateBigInventoryModelMasterTask>> FNamespaceDomain::CreateBigInventoryModelMaster(
+        Request::FCreateBigInventoryModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateBigInventoryModelMasterTask>>(this->AsShared(), Request);
+    }
+
     FNamespaceDomain::FCreateInventoryModelMasterTask::FCreateInventoryModelMasterTask(
         const TSharedPtr<FNamespaceDomain> Self,
         const Request::FCreateInventoryModelMasterRequestPtr Request
@@ -541,6 +619,54 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            InventoryName
+        );
+    }
+
+    Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIteratorPtr FNamespaceDomain::BigInventoryModelMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIterator>(
+            Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain> FNamespaceDomain::BigInventoryModelMaster(
+        const FString InventoryName
+    ) const
+    {
+        return MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            InventoryName
+        );
+    }
+
+    Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelsIteratorPtr FNamespaceDomain::BigInventoryModels(
+    ) const
+    {
+        return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelsIterator>(
+            Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelDomain> FNamespaceDomain::BigInventoryModel(
+        const FString InventoryName
+    ) const
+    {
+        return MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelDomain>(
             Cache,
             JobQueueDomain,
             StampSheetConfiguration,

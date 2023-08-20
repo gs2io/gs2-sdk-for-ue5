@@ -22,8 +22,10 @@ namespace Gs2::Inventory::Model
         InventoryIdValue(TOptional<FString>()),
         InventoryNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
+        SimpleItemsValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -33,8 +35,10 @@ namespace Gs2::Inventory::Model
         InventoryIdValue(From.InventoryIdValue),
         InventoryNameValue(From.InventoryNameValue),
         UserIdValue(From.UserIdValue),
+        SimpleItemsValue(From.SimpleItemsValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -62,6 +66,14 @@ namespace Gs2::Inventory::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FSimpleInventory> FSimpleInventory::WithSimpleItems(
+        const TSharedPtr<TArray<TSharedPtr<Model::FSimpleItem>>> SimpleItems
+    )
+    {
+        this->SimpleItemsValue = SimpleItems;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSimpleInventory> FSimpleInventory::WithCreatedAt(
         const TOptional<int64> CreatedAt
     )
@@ -77,6 +89,14 @@ namespace Gs2::Inventory::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FSimpleInventory> FSimpleInventory::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FSimpleInventory::GetInventoryId() const
     {
         return InventoryIdValue;
@@ -88,6 +108,10 @@ namespace Gs2::Inventory::Model
     TOptional<FString> FSimpleInventory::GetUserId() const
     {
         return UserIdValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FSimpleItem>>> FSimpleInventory::GetSimpleItems() const
+    {
+        return SimpleItemsValue;
     }
     TOptional<int64> FSimpleInventory::GetCreatedAt() const
     {
@@ -114,6 +138,19 @@ namespace Gs2::Inventory::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FSimpleInventory::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FSimpleInventory::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FSimpleInventory::GetRegionFromGrn(const FString Grn)
@@ -204,6 +241,18 @@ namespace Gs2::Inventory::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithSimpleItems(Data->HasField("simpleItems") ? [Data]() -> TSharedPtr<TArray<Model::FSimpleItemPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FSimpleItemPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("simpleItems") && Data->HasTypedField<EJson::Array>("simpleItems"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("simpleItems"))
+                        {
+                            v->Add(Model::FSimpleItem::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FSimpleItemPtr>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -217,6 +266,15 @@ namespace Gs2::Inventory::Model
                 {
                     int64 v;
                     if (Data->TryGetNumberField("updatedAt", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
                     {
                         return TOptional(v);
                     }
@@ -239,6 +297,15 @@ namespace Gs2::Inventory::Model
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
         }
+        if (SimpleItemsValue != nullptr && SimpleItemsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *SimpleItemsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("simpleItems", v);
+        }
         if (CreatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
@@ -246,6 +313,10 @@ namespace Gs2::Inventory::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

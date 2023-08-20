@@ -33,6 +33,10 @@
 #include "Inventory/Domain/Model/SimpleInventoryModel.h"
 #include "Inventory/Domain/Model/SimpleItemModelMaster.h"
 #include "Inventory/Domain/Model/SimpleItemModel.h"
+#include "Inventory/Domain/Model/BigInventoryModelMaster.h"
+#include "Inventory/Domain/Model/BigInventoryModel.h"
+#include "Inventory/Domain/Model/BigItemModelMaster.h"
+#include "Inventory/Domain/Model/BigItemModel.h"
 #include "Inventory/Domain/Model/CurrentItemModelMaster.h"
 #include "Inventory/Domain/Model/Inventory.h"
 #include "Inventory/Domain/Model/InventoryAccessToken.h"
@@ -44,6 +48,10 @@
 #include "Inventory/Domain/Model/SimpleInventoryAccessToken.h"
 #include "Inventory/Domain/Model/SimpleItem.h"
 #include "Inventory/Domain/Model/SimpleItemAccessToken.h"
+#include "Inventory/Domain/Model/BigInventory.h"
+#include "Inventory/Domain/Model/BigInventoryAccessToken.h"
+#include "Inventory/Domain/Model/BigItem.h"
+#include "Inventory/Domain/Model/BigItemAccessToken.h"
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
 
@@ -57,6 +65,10 @@
 #include "Inventory/Domain/Iterator/DescribeSimpleInventoryModelsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeSimpleItemModelMastersIterator.h"
 #include "Inventory/Domain/Iterator/DescribeSimpleItemModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigInventoryModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigInventoryModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigItemModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigItemModelsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoriesIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoriesByUserIdIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemSetsIterator.h"
@@ -65,6 +77,8 @@
 #include "Inventory/Domain/Iterator/DescribeReferenceOfByUserIdIterator.h"
 #include "Inventory/Domain/Iterator/DescribeSimpleItemsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeSimpleItemsByUserIdIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigItemsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigItemsByUserIdIterator.h"
 
 // Notification
 

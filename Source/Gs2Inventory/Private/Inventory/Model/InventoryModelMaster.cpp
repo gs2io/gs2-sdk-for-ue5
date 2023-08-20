@@ -27,7 +27,8 @@ namespace Gs2::Inventory::Model
         MaxCapacityValue(TOptional<int32>()),
         ProtectReferencedItemValue(TOptional<bool>()),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -42,7 +43,8 @@ namespace Gs2::Inventory::Model
         MaxCapacityValue(From.MaxCapacityValue),
         ProtectReferencedItemValue(From.ProtectReferencedItemValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -115,6 +117,14 @@ namespace Gs2::Inventory::Model
     )
     {
         this->UpdatedAtValue = UpdatedAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FInventoryModelMaster> FInventoryModelMaster::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
         return SharedThis(this);
     }
     TOptional<FString> FInventoryModelMaster::GetInventoryModelId() const
@@ -197,6 +207,19 @@ namespace Gs2::Inventory::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FInventoryModelMaster::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FInventoryModelMaster::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FInventoryModelMaster::GetRegionFromGrn(const FString Grn)
@@ -329,6 +352,15 @@ namespace Gs2::Inventory::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -370,6 +402,10 @@ namespace Gs2::Inventory::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

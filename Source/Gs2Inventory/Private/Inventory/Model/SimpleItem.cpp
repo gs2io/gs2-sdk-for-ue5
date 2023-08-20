@@ -22,7 +22,8 @@ namespace Gs2::Inventory::Model
         ItemIdValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         ItemNameValue(TOptional<FString>()),
-        CountValue(TOptional<int64>())
+        CountValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Inventory::Model
         ItemIdValue(From.ItemIdValue),
         UserIdValue(From.UserIdValue),
         ItemNameValue(From.ItemNameValue),
-        CountValue(From.CountValue)
+        CountValue(From.CountValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -67,6 +69,14 @@ namespace Gs2::Inventory::Model
         this->CountValue = Count;
         return SharedThis(this);
     }
+
+    TSharedPtr<FSimpleItem> FSimpleItem::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FSimpleItem::GetItemId() const
     {
         return ItemIdValue;
@@ -91,6 +101,19 @@ namespace Gs2::Inventory::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CountValue.GetValue());
+    }
+    TOptional<int64> FSimpleItem::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FSimpleItem::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FSimpleItem::GetRegionFromGrn(const FString Grn)
@@ -200,6 +223,15 @@ namespace Gs2::Inventory::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -221,6 +253,10 @@ namespace Gs2::Inventory::Model
         if (CountValue.IsSet())
         {
             JsonRootObject->SetStringField("count", FString::Printf(TEXT("%lld"), CountValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

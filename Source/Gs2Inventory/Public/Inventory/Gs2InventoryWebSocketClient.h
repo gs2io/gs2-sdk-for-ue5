@@ -86,6 +86,34 @@
 #include "Task/WebSocket/DescribeSimpleItemModelsTask.h"
 #include "Request/GetSimpleItemModelRequest.h"
 #include "Task/WebSocket/GetSimpleItemModelTask.h"
+#include "Request/DescribeBigInventoryModelMastersRequest.h"
+#include "Task/WebSocket/DescribeBigInventoryModelMastersTask.h"
+#include "Request/CreateBigInventoryModelMasterRequest.h"
+#include "Task/WebSocket/CreateBigInventoryModelMasterTask.h"
+#include "Request/GetBigInventoryModelMasterRequest.h"
+#include "Task/WebSocket/GetBigInventoryModelMasterTask.h"
+#include "Request/UpdateBigInventoryModelMasterRequest.h"
+#include "Task/WebSocket/UpdateBigInventoryModelMasterTask.h"
+#include "Request/DeleteBigInventoryModelMasterRequest.h"
+#include "Task/WebSocket/DeleteBigInventoryModelMasterTask.h"
+#include "Request/DescribeBigInventoryModelsRequest.h"
+#include "Task/WebSocket/DescribeBigInventoryModelsTask.h"
+#include "Request/GetBigInventoryModelRequest.h"
+#include "Task/WebSocket/GetBigInventoryModelTask.h"
+#include "Request/DescribeBigItemModelMastersRequest.h"
+#include "Task/WebSocket/DescribeBigItemModelMastersTask.h"
+#include "Request/CreateBigItemModelMasterRequest.h"
+#include "Task/WebSocket/CreateBigItemModelMasterTask.h"
+#include "Request/GetBigItemModelMasterRequest.h"
+#include "Task/WebSocket/GetBigItemModelMasterTask.h"
+#include "Request/UpdateBigItemModelMasterRequest.h"
+#include "Task/WebSocket/UpdateBigItemModelMasterTask.h"
+#include "Request/DeleteBigItemModelMasterRequest.h"
+#include "Task/WebSocket/DeleteBigItemModelMasterTask.h"
+#include "Request/DescribeBigItemModelsRequest.h"
+#include "Task/WebSocket/DescribeBigItemModelsTask.h"
+#include "Request/GetBigItemModelRequest.h"
+#include "Task/WebSocket/GetBigItemModelTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentItemModelMasterRequest.h"
@@ -186,6 +214,26 @@
 #include "Task/WebSocket/AcquireSimpleItemsByStampSheetTask.h"
 #include "Request/ConsumeSimpleItemsByStampTaskRequest.h"
 #include "Task/WebSocket/ConsumeSimpleItemsByStampTaskTask.h"
+#include "Request/DescribeBigItemsRequest.h"
+#include "Task/WebSocket/DescribeBigItemsTask.h"
+#include "Request/DescribeBigItemsByUserIdRequest.h"
+#include "Task/WebSocket/DescribeBigItemsByUserIdTask.h"
+#include "Request/GetBigItemRequest.h"
+#include "Task/WebSocket/GetBigItemTask.h"
+#include "Request/GetBigItemByUserIdRequest.h"
+#include "Task/WebSocket/GetBigItemByUserIdTask.h"
+#include "Request/AcquireBigItemByUserIdRequest.h"
+#include "Task/WebSocket/AcquireBigItemByUserIdTask.h"
+#include "Request/ConsumeBigItemRequest.h"
+#include "Task/WebSocket/ConsumeBigItemTask.h"
+#include "Request/ConsumeBigItemByUserIdRequest.h"
+#include "Task/WebSocket/ConsumeBigItemByUserIdTask.h"
+#include "Request/DeleteBigItemByUserIdRequest.h"
+#include "Task/WebSocket/DeleteBigItemByUserIdTask.h"
+#include "Request/AcquireBigItemByStampSheetRequest.h"
+#include "Task/WebSocket/AcquireBigItemByStampSheetTask.h"
+#include "Request/ConsumeBigItemByStampTaskRequest.h"
+#include "Task/WebSocket/ConsumeBigItemByStampTaskTask.h"
 
 namespace Gs2::Inventory
 {
@@ -332,6 +380,62 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetSimpleItemModelTask>> GetSimpleItemModel(
             const Request::FGetSimpleItemModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigInventoryModelMastersTask>> DescribeBigInventoryModelMasters(
+            const Request::FDescribeBigInventoryModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateBigInventoryModelMasterTask>> CreateBigInventoryModelMaster(
+            const Request::FCreateBigInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigInventoryModelMasterTask>> GetBigInventoryModelMaster(
+            const Request::FGetBigInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateBigInventoryModelMasterTask>> UpdateBigInventoryModelMaster(
+            const Request::FUpdateBigInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBigInventoryModelMasterTask>> DeleteBigInventoryModelMaster(
+            const Request::FDeleteBigInventoryModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigInventoryModelsTask>> DescribeBigInventoryModels(
+            const Request::FDescribeBigInventoryModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigInventoryModelTask>> GetBigInventoryModel(
+            const Request::FGetBigInventoryModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigItemModelMastersTask>> DescribeBigItemModelMasters(
+            const Request::FDescribeBigItemModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateBigItemModelMasterTask>> CreateBigItemModelMaster(
+            const Request::FCreateBigItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigItemModelMasterTask>> GetBigItemModelMaster(
+            const Request::FGetBigItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateBigItemModelMasterTask>> UpdateBigItemModelMaster(
+            const Request::FUpdateBigItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBigItemModelMasterTask>> DeleteBigItemModelMaster(
+            const Request::FDeleteBigItemModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigItemModelsTask>> DescribeBigItemModels(
+            const Request::FDescribeBigItemModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigItemModelTask>> GetBigItemModel(
+            const Request::FGetBigItemModelRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(
@@ -532,6 +636,46 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByStampTaskTask>> ConsumeSimpleItemsByStampTask(
             const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigItemsTask>> DescribeBigItems(
+            const Request::FDescribeBigItemsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigItemsByUserIdTask>> DescribeBigItemsByUserId(
+            const Request::FDescribeBigItemsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigItemTask>> GetBigItem(
+            const Request::FGetBigItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigItemByUserIdTask>> GetBigItemByUserId(
+            const Request::FGetBigItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireBigItemByUserIdTask>> AcquireBigItemByUserId(
+            const Request::FAcquireBigItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeBigItemTask>> ConsumeBigItem(
+            const Request::FConsumeBigItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeBigItemByUserIdTask>> ConsumeBigItemByUserId(
+            const Request::FConsumeBigItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBigItemByUserIdTask>> DeleteBigItemByUserId(
+            const Request::FDeleteBigItemByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireBigItemByStampSheetTask>> AcquireBigItemByStampSheet(
+            const Request::FAcquireBigItemByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeBigItemByStampTaskTask>> ConsumeBigItemByStampTask(
+            const Request::FConsumeBigItemByStampTaskRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2InventoryWebSocketClient, ESPMode::ThreadSafe> FGs2InventoryWebSocketClientPtr;

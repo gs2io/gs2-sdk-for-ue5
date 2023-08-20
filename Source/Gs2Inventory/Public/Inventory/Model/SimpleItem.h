@@ -27,6 +27,7 @@ namespace Gs2::Inventory::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> ItemNameValue;
         TOptional<int64> CountValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FSimpleItem();
@@ -39,12 +40,15 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FSimpleItem> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSimpleItem> WithItemName(const TOptional<FString> ItemName);
         TSharedPtr<FSimpleItem> WithCount(const TOptional<int64> Count);
+        TSharedPtr<FSimpleItem> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetItemId() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetItemName() const;
         TOptional<int64> GetCount() const;
         FString GetCountString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

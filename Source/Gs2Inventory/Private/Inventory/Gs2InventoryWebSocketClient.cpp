@@ -325,6 +325,132 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigInventoryModelMastersTask>> FGs2InventoryWebSocketClient::DescribeBigInventoryModelMasters(
+        const Request::FDescribeBigInventoryModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeBigInventoryModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateBigInventoryModelMasterTask>> FGs2InventoryWebSocketClient::CreateBigInventoryModelMaster(
+        const Request::FCreateBigInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateBigInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigInventoryModelMasterTask>> FGs2InventoryWebSocketClient::GetBigInventoryModelMaster(
+        const Request::FGetBigInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetBigInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateBigInventoryModelMasterTask>> FGs2InventoryWebSocketClient::UpdateBigInventoryModelMaster(
+        const Request::FUpdateBigInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateBigInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBigInventoryModelMasterTask>> FGs2InventoryWebSocketClient::DeleteBigInventoryModelMaster(
+        const Request::FDeleteBigInventoryModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteBigInventoryModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigInventoryModelsTask>> FGs2InventoryWebSocketClient::DescribeBigInventoryModels(
+        const Request::FDescribeBigInventoryModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeBigInventoryModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigInventoryModelTask>> FGs2InventoryWebSocketClient::GetBigInventoryModel(
+        const Request::FGetBigInventoryModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetBigInventoryModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigItemModelMastersTask>> FGs2InventoryWebSocketClient::DescribeBigItemModelMasters(
+        const Request::FDescribeBigItemModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeBigItemModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateBigItemModelMasterTask>> FGs2InventoryWebSocketClient::CreateBigItemModelMaster(
+        const Request::FCreateBigItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateBigItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigItemModelMasterTask>> FGs2InventoryWebSocketClient::GetBigItemModelMaster(
+        const Request::FGetBigItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetBigItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateBigItemModelMasterTask>> FGs2InventoryWebSocketClient::UpdateBigItemModelMaster(
+        const Request::FUpdateBigItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateBigItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBigItemModelMasterTask>> FGs2InventoryWebSocketClient::DeleteBigItemModelMaster(
+        const Request::FDeleteBigItemModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteBigItemModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigItemModelsTask>> FGs2InventoryWebSocketClient::DescribeBigItemModels(
+        const Request::FDescribeBigItemModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeBigItemModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigItemModelTask>> FGs2InventoryWebSocketClient::GetBigItemModel(
+        const Request::FGetBigItemModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetBigItemModelTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2InventoryWebSocketClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {
@@ -770,6 +896,96 @@ namespace Gs2::Inventory
         const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigItemsTask>> FGs2InventoryWebSocketClient::DescribeBigItems(
+        const Request::FDescribeBigItemsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeBigItemsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigItemsByUserIdTask>> FGs2InventoryWebSocketClient::DescribeBigItemsByUserId(
+        const Request::FDescribeBigItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeBigItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigItemTask>> FGs2InventoryWebSocketClient::GetBigItem(
+        const Request::FGetBigItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetBigItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetBigItemByUserIdTask>> FGs2InventoryWebSocketClient::GetBigItemByUserId(
+        const Request::FGetBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireBigItemByUserIdTask>> FGs2InventoryWebSocketClient::AcquireBigItemByUserId(
+        const Request::FAcquireBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAcquireBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeBigItemTask>> FGs2InventoryWebSocketClient::ConsumeBigItem(
+        const Request::FConsumeBigItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeBigItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeBigItemByUserIdTask>> FGs2InventoryWebSocketClient::ConsumeBigItemByUserId(
+        const Request::FConsumeBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBigItemByUserIdTask>> FGs2InventoryWebSocketClient::DeleteBigItemByUserId(
+        const Request::FDeleteBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireBigItemByStampSheetTask>> FGs2InventoryWebSocketClient::AcquireBigItemByStampSheet(
+        const Request::FAcquireBigItemByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAcquireBigItemByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeBigItemByStampTaskTask>> FGs2InventoryWebSocketClient::ConsumeBigItemByStampTask(
+        const Request::FConsumeBigItemByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeBigItemByStampTaskTask>>(
             Session,
             Request
         );
