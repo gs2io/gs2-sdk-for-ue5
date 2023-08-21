@@ -29,6 +29,7 @@ namespace Gs2::Gateway::Model
         TOptional<FString> UserIdValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FWebSocketSession();
@@ -43,6 +44,7 @@ namespace Gs2::Gateway::Model
         TSharedPtr<FWebSocketSession> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FWebSocketSession> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FWebSocketSession> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FWebSocketSession> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetWebSocketSessionId() const;
         TOptional<FString> GetConnectionId() const;
@@ -52,6 +54,8 @@ namespace Gs2::Gateway::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

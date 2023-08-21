@@ -29,6 +29,7 @@ namespace Gs2::Account::Model
         TOptional<FString> UserIdentifierValue;
         TOptional<FString> PasswordValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FTakeOver();
@@ -43,6 +44,7 @@ namespace Gs2::Account::Model
         TSharedPtr<FTakeOver> WithUserIdentifier(const TOptional<FString> UserIdentifier);
         TSharedPtr<FTakeOver> WithPassword(const TOptional<FString> Password);
         TSharedPtr<FTakeOver> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FTakeOver> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetTakeOverId() const;
         TOptional<FString> GetUserId() const;
@@ -52,6 +54,8 @@ namespace Gs2::Account::Model
         TOptional<FString> GetPassword() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -24,7 +24,8 @@ namespace Gs2::Account::Model
         TypeValue(TOptional<int32>()),
         UserIdentifierValue(TOptional<FString>()),
         PasswordValue(TOptional<FString>()),
-        CreatedAtValue(TOptional<int64>())
+        CreatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Account::Model
         TypeValue(From.TypeValue),
         UserIdentifierValue(From.UserIdentifierValue),
         PasswordValue(From.PasswordValue),
-        CreatedAtValue(From.CreatedAtValue)
+        CreatedAtValue(From.CreatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -87,6 +89,14 @@ namespace Gs2::Account::Model
         this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FTakeOver> FTakeOver::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FTakeOver::GetTakeOverId() const
     {
         return TakeOverIdValue;
@@ -128,6 +138,19 @@ namespace Gs2::Account::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+    }
+    TOptional<int64> FTakeOver::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FTakeOver::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FTakeOver::GetRegionFromGrn(const FString Grn)
@@ -244,6 +267,15 @@ namespace Gs2::Account::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -273,6 +305,10 @@ namespace Gs2::Account::Model
         if (CreatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

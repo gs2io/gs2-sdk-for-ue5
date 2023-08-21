@@ -27,6 +27,7 @@ namespace Gs2::News::Model
         TOptional<FString> NameValue;
         TOptional<FString> TextValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FOutput();
@@ -39,12 +40,15 @@ namespace Gs2::News::Model
         TSharedPtr<FOutput> WithName(const TOptional<FString> Name);
         TSharedPtr<FOutput> WithText(const TOptional<FString> Text);
         TSharedPtr<FOutput> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FOutput> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetOutputId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetText() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -30,7 +30,8 @@ namespace Gs2::Enhance::Model
         ExperienceModelIdValue(TOptional<FString>()),
         BonusRatesValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -48,7 +49,8 @@ namespace Gs2::Enhance::Model
         ExperienceModelIdValue(From.ExperienceModelIdValue),
         BonusRatesValue(From.BonusRatesValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -147,6 +149,14 @@ namespace Gs2::Enhance::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FRateModelMaster> FRateModelMaster::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FRateModelMaster::GetRateModelId() const
     {
         return RateModelIdValue;
@@ -212,6 +222,19 @@ namespace Gs2::Enhance::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FRateModelMaster::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FRateModelMaster::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FRateModelMaster::GetRegionFromGrn(const FString Grn)
@@ -377,6 +400,15 @@ namespace Gs2::Enhance::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -440,6 +472,10 @@ namespace Gs2::Enhance::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

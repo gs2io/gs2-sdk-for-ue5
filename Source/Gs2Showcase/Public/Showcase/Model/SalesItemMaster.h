@@ -33,6 +33,7 @@ namespace Gs2::Showcase::Model
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FSalesItemMaster();
@@ -49,6 +50,7 @@ namespace Gs2::Showcase::Model
         TSharedPtr<FSalesItemMaster> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
         TSharedPtr<FSalesItemMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FSalesItemMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FSalesItemMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetSalesItemId() const;
         TOptional<FString> GetName() const;
@@ -60,6 +62,8 @@ namespace Gs2::Showcase::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -30,6 +30,7 @@ namespace Gs2::Experience::Model
         TSharedPtr<TArray<int64>> ValuesValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FThresholdMaster();
@@ -45,6 +46,7 @@ namespace Gs2::Experience::Model
         TSharedPtr<FThresholdMaster> WithValues(const TSharedPtr<TArray<int64>> Values);
         TSharedPtr<FThresholdMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FThresholdMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FThresholdMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetThresholdId() const;
         TOptional<FString> GetName() const;
@@ -55,6 +57,8 @@ namespace Gs2::Experience::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

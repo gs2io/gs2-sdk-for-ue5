@@ -27,6 +27,7 @@ namespace Gs2::Dictionary::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> NameValue;
         TOptional<int64> AcquiredAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FEntry();
@@ -39,12 +40,15 @@ namespace Gs2::Dictionary::Model
         TSharedPtr<FEntry> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FEntry> WithName(const TOptional<FString> Name);
         TSharedPtr<FEntry> WithAcquiredAt(const TOptional<int64> AcquiredAt);
+        TSharedPtr<FEntry> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetEntryId() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetName() const;
         TOptional<int64> GetAcquiredAt() const;
         FString GetAcquiredAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

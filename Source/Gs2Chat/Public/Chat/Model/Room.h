@@ -31,6 +31,7 @@ namespace Gs2::Chat::Model
         TSharedPtr<TArray<FString>> WhiteListUserIdsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FRoom();
@@ -47,6 +48,7 @@ namespace Gs2::Chat::Model
         TSharedPtr<FRoom> WithWhiteListUserIds(const TSharedPtr<TArray<FString>> WhiteListUserIds);
         TSharedPtr<FRoom> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FRoom> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FRoom> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetRoomId() const;
         TOptional<FString> GetName() const;
@@ -58,6 +60,8 @@ namespace Gs2::Chat::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

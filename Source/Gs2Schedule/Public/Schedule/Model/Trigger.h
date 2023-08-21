@@ -28,6 +28,7 @@ namespace Gs2::Schedule::Model
         TOptional<FString> UserIdValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> ExpiresAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FTrigger();
@@ -41,6 +42,7 @@ namespace Gs2::Schedule::Model
         TSharedPtr<FTrigger> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FTrigger> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FTrigger> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FTrigger> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetTriggerId() const;
         TOptional<FString> GetName() const;
@@ -49,6 +51,8 @@ namespace Gs2::Schedule::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

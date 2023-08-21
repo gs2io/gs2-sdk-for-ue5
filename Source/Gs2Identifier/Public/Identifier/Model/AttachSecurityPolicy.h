@@ -26,6 +26,7 @@ namespace Gs2::Identifier::Model
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<FString>> SecurityPolicyIdsValue;
         TOptional<int64> AttachedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FAttachSecurityPolicy();
@@ -37,11 +38,14 @@ namespace Gs2::Identifier::Model
         TSharedPtr<FAttachSecurityPolicy> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FAttachSecurityPolicy> WithSecurityPolicyIds(const TSharedPtr<TArray<FString>> SecurityPolicyIds);
         TSharedPtr<FAttachSecurityPolicy> WithAttachedAt(const TOptional<int64> AttachedAt);
+        TSharedPtr<FAttachSecurityPolicy> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetUserId() const;
         TSharedPtr<TArray<FString>> GetSecurityPolicyIds() const;
         TOptional<int64> GetAttachedAt() const;
         FString GetAttachedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
         static TOptional<FString> GetUserNameFromGrn(const FString Grn);

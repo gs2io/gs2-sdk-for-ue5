@@ -35,6 +35,7 @@ namespace Gs2::Showcase::Model
         TOptional<FString> SalesPeriodEventIdValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FRandomShowcaseMaster();
@@ -54,6 +55,7 @@ namespace Gs2::Showcase::Model
         TSharedPtr<FRandomShowcaseMaster> WithSalesPeriodEventId(const TOptional<FString> SalesPeriodEventId);
         TSharedPtr<FRandomShowcaseMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FRandomShowcaseMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FRandomShowcaseMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetShowcaseId() const;
         TOptional<FString> GetName() const;
@@ -71,6 +73,8 @@ namespace Gs2::Showcase::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

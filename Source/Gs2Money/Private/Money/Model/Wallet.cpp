@@ -26,7 +26,8 @@ namespace Gs2::Money::Model
         FreeValue(TOptional<int32>()),
         DetailValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -40,7 +41,8 @@ namespace Gs2::Money::Model
         FreeValue(From.FreeValue),
         DetailValue(From.DetailValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -105,6 +107,14 @@ namespace Gs2::Money::Model
     )
     {
         this->UpdatedAtValue = UpdatedAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FWallet> FWallet::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
         return SharedThis(this);
     }
     TOptional<FString> FWallet::GetWalletId() const
@@ -183,6 +193,19 @@ namespace Gs2::Money::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FWallet::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FWallet::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FWallet::GetRegionFromGrn(const FString Grn)
@@ -320,6 +343,15 @@ namespace Gs2::Money::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -362,6 +394,10 @@ namespace Gs2::Money::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

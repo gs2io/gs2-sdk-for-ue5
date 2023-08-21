@@ -25,7 +25,8 @@ namespace Gs2::Formation::Model
         MetadataValue(TOptional<FString>()),
         SlotsValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::Formation::Model
         MetadataValue(From.MetadataValue),
         SlotsValue(From.SlotsValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -97,6 +99,14 @@ namespace Gs2::Formation::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FFormModelMaster> FFormModelMaster::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FFormModelMaster::GetFormModelId() const
     {
         return FormModelIdValue;
@@ -142,6 +152,19 @@ namespace Gs2::Formation::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FFormModelMaster::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FFormModelMaster::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FFormModelMaster::GetRegionFromGrn(const FString Grn)
@@ -259,6 +282,15 @@ namespace Gs2::Formation::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -297,6 +329,10 @@ namespace Gs2::Formation::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

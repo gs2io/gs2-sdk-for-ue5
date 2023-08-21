@@ -33,6 +33,7 @@ namespace Gs2::Limit::Model
         TOptional<int32> ResetHourValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FLimitModelMaster();
@@ -51,6 +52,7 @@ namespace Gs2::Limit::Model
         TSharedPtr<FLimitModelMaster> WithResetHour(const TOptional<int32> ResetHour);
         TSharedPtr<FLimitModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FLimitModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FLimitModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetLimitModelId() const;
         TOptional<FString> GetName() const;
@@ -66,6 +68,8 @@ namespace Gs2::Limit::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

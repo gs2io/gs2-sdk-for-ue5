@@ -34,6 +34,7 @@ namespace Gs2::Distributor::Model
         TOptional<FString> SheetResultValue;
         TOptional<FString> NextTransactionIdValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FStampSheetResult();
@@ -51,6 +52,7 @@ namespace Gs2::Distributor::Model
         TSharedPtr<FStampSheetResult> WithSheetResult(const TOptional<FString> SheetResult);
         TSharedPtr<FStampSheetResult> WithNextTransactionId(const TOptional<FString> NextTransactionId);
         TSharedPtr<FStampSheetResult> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FStampSheetResult> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetStampSheetResultId() const;
         TOptional<FString> GetUserId() const;
@@ -62,6 +64,8 @@ namespace Gs2::Distributor::Model
         TOptional<FString> GetNextTransactionId() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -22,7 +22,8 @@ namespace Gs2::News::Model
         OutputIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         TextValue(TOptional<FString>()),
-        CreatedAtValue(TOptional<int64>())
+        CreatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::News::Model
         OutputIdValue(From.OutputIdValue),
         NameValue(From.NameValue),
         TextValue(From.TextValue),
-        CreatedAtValue(From.CreatedAtValue)
+        CreatedAtValue(From.CreatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -67,6 +69,14 @@ namespace Gs2::News::Model
         this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FOutput> FOutput::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FOutput::GetOutputId() const
     {
         return OutputIdValue;
@@ -91,6 +101,19 @@ namespace Gs2::News::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+    }
+    TOptional<int64> FOutput::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FOutput::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FOutput::GetRegionFromGrn(const FString Grn)
@@ -189,6 +212,15 @@ namespace Gs2::News::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -210,6 +242,10 @@ namespace Gs2::News::Model
         if (CreatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

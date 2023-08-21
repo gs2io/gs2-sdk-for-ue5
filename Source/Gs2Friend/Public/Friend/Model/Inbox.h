@@ -28,6 +28,7 @@ namespace Gs2::Friend::Model
         TSharedPtr<TArray<FString>> FromUserIdsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FInbox();
@@ -41,6 +42,7 @@ namespace Gs2::Friend::Model
         TSharedPtr<FInbox> WithFromUserIds(const TSharedPtr<TArray<FString>> FromUserIds);
         TSharedPtr<FInbox> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FInbox> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FInbox> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetInboxId() const;
         TOptional<FString> GetUserId() const;
@@ -49,6 +51,8 @@ namespace Gs2::Friend::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

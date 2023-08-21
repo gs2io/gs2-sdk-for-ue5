@@ -31,6 +31,7 @@ namespace Gs2::Formation::Model
         TSharedPtr<TArray<TSharedPtr<FSlotModel>>> SlotsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FFormModelMaster();
@@ -46,6 +47,7 @@ namespace Gs2::Formation::Model
         TSharedPtr<FFormModelMaster> WithSlots(const TSharedPtr<TArray<TSharedPtr<FSlotModel>>> Slots);
         TSharedPtr<FFormModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FFormModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FFormModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetFormModelId() const;
         TOptional<FString> GetName() const;
@@ -56,6 +58,8 @@ namespace Gs2::Formation::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

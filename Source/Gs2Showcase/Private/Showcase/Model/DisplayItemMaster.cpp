@@ -23,7 +23,8 @@ namespace Gs2::Showcase::Model
         TypeValue(TOptional<FString>()),
         SalesItemNameValue(TOptional<FString>()),
         SalesItemGroupNameValue(TOptional<FString>()),
-        SalesPeriodEventIdValue(TOptional<FString>())
+        SalesPeriodEventIdValue(TOptional<FString>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Showcase::Model
         TypeValue(From.TypeValue),
         SalesItemNameValue(From.SalesItemNameValue),
         SalesItemGroupNameValue(From.SalesItemGroupNameValue),
-        SalesPeriodEventIdValue(From.SalesPeriodEventIdValue)
+        SalesPeriodEventIdValue(From.SalesPeriodEventIdValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -77,6 +79,14 @@ namespace Gs2::Showcase::Model
         this->SalesPeriodEventIdValue = SalesPeriodEventId;
         return SharedThis(this);
     }
+
+    TSharedPtr<FDisplayItemMaster> FDisplayItemMaster::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FDisplayItemMaster::GetDisplayItemId() const
     {
         return DisplayItemIdValue;
@@ -96,6 +106,19 @@ namespace Gs2::Showcase::Model
     TOptional<FString> FDisplayItemMaster::GetSalesPeriodEventId() const
     {
         return SalesPeriodEventIdValue;
+    }
+    TOptional<int64> FDisplayItemMaster::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FDisplayItemMaster::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TSharedPtr<FDisplayItemMaster> FDisplayItemMaster::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -148,7 +171,16 @@ namespace Gs2::Showcase::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
-                }() : TOptional<FString>());
+                }() : TOptional<FString>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>());
     }
 
     TSharedPtr<FJsonObject> FDisplayItemMaster::ToJson() const
@@ -173,6 +205,10 @@ namespace Gs2::Showcase::Model
         if (SalesPeriodEventIdValue.IsSet())
         {
             JsonRootObject->SetStringField("salesPeriodEventId", SalesPeriodEventIdValue.GetValue());
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

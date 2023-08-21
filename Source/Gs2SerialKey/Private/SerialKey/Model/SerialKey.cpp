@@ -27,7 +27,8 @@ namespace Gs2::SerialKey::Model
         UsedUserIdValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
         UsedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -42,7 +43,8 @@ namespace Gs2::SerialKey::Model
         UsedUserIdValue(From.UsedUserIdValue),
         CreatedAtValue(From.CreatedAtValue),
         UsedAtValue(From.UsedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -117,6 +119,14 @@ namespace Gs2::SerialKey::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FSerialKey> FSerialKey::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FSerialKey::GetSerialKeyId() const
     {
         return SerialKeyIdValue;
@@ -179,6 +189,19 @@ namespace Gs2::SerialKey::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FSerialKey::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FSerialKey::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FSerialKey::GetRegionFromGrn(const FString Grn)
@@ -311,6 +334,15 @@ namespace Gs2::SerialKey::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -352,6 +384,10 @@ namespace Gs2::SerialKey::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

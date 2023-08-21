@@ -31,6 +31,7 @@ namespace Gs2::Limit::Model
         TOptional<int64> NextResetAtValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FCounter();
@@ -47,6 +48,7 @@ namespace Gs2::Limit::Model
         TSharedPtr<FCounter> WithNextResetAt(const TOptional<int64> NextResetAt);
         TSharedPtr<FCounter> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FCounter> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FCounter> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetCounterId() const;
         TOptional<FString> GetLimitName() const;
@@ -60,6 +62,8 @@ namespace Gs2::Limit::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

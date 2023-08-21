@@ -27,6 +27,7 @@ namespace Gs2::Identifier::Model
         TOptional<FString> UserNameValue;
         TOptional<FString> ClientSecretValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FIdentifier();
@@ -39,12 +40,15 @@ namespace Gs2::Identifier::Model
         TSharedPtr<FIdentifier> WithUserName(const TOptional<FString> UserName);
         TSharedPtr<FIdentifier> WithClientSecret(const TOptional<FString> ClientSecret);
         TSharedPtr<FIdentifier> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FIdentifier> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetClientId() const;
         TOptional<FString> GetUserName() const;
         TOptional<FString> GetClientSecret() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
 
         static TSharedPtr<FIdentifier> FromJson(const TSharedPtr<FJsonObject> Data);

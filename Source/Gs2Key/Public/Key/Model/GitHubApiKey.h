@@ -29,6 +29,7 @@ namespace Gs2::Key::Model
         TOptional<FString> EncryptionKeyNameValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FGitHubApiKey();
@@ -43,6 +44,7 @@ namespace Gs2::Key::Model
         TSharedPtr<FGitHubApiKey> WithEncryptionKeyName(const TOptional<FString> EncryptionKeyName);
         TSharedPtr<FGitHubApiKey> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FGitHubApiKey> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FGitHubApiKey> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetApiKeyId() const;
         TOptional<FString> GetName() const;
@@ -52,6 +54,8 @@ namespace Gs2::Key::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

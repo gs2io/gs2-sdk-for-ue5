@@ -28,6 +28,7 @@ namespace Gs2::Friend::Model
         TSharedPtr<TArray<FString>> TargetUserIdsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FFollow();
@@ -41,6 +42,7 @@ namespace Gs2::Friend::Model
         TSharedPtr<FFollow> WithTargetUserIds(const TSharedPtr<TArray<FString>> TargetUserIds);
         TSharedPtr<FFollow> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FFollow> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FFollow> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetFollowId() const;
         TOptional<FString> GetUserId() const;
@@ -49,6 +51,8 @@ namespace Gs2::Friend::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

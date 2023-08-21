@@ -24,7 +24,8 @@ namespace Gs2::StateMachine::Model
         PayloadValue(TOptional<FString>()),
         VersionValue(TOptional<int64>()),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::StateMachine::Model
         PayloadValue(From.PayloadValue),
         VersionValue(From.VersionValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -85,6 +87,14 @@ namespace Gs2::StateMachine::Model
     )
     {
         this->UpdatedAtValue = UpdatedAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStateMachineMaster> FStateMachineMaster::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
         return SharedThis(this);
     }
     TOptional<FString> FStateMachineMaster::GetStateMachineId() const
@@ -137,6 +147,19 @@ namespace Gs2::StateMachine::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FStateMachineMaster::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FStateMachineMaster::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FStateMachineMaster::GetRegionFromGrn(const FString Grn)
@@ -242,6 +265,15 @@ namespace Gs2::StateMachine::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -271,6 +303,10 @@ namespace Gs2::StateMachine::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

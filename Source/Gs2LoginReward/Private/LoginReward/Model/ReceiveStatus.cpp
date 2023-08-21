@@ -25,7 +25,8 @@ namespace Gs2::LoginReward::Model
         ReceivedStepsValue(nullptr),
         LastReceivedAtValue(TOptional<int64>()),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::LoginReward::Model
         ReceivedStepsValue(From.ReceivedStepsValue),
         LastReceivedAtValue(From.LastReceivedAtValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -97,6 +99,14 @@ namespace Gs2::LoginReward::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FReceiveStatus> FReceiveStatus::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FReceiveStatus::GetReceiveStatusId() const
     {
         return ReceiveStatusIdValue;
@@ -151,6 +161,19 @@ namespace Gs2::LoginReward::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FReceiveStatus::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FReceiveStatus::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FReceiveStatus::GetRegionFromGrn(const FString Grn)
@@ -279,6 +302,15 @@ namespace Gs2::LoginReward::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -317,6 +349,10 @@ namespace Gs2::LoginReward::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

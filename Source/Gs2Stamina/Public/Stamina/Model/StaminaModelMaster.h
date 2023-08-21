@@ -37,6 +37,7 @@ namespace Gs2::Stamina::Model
         TOptional<FString> RecoverValueTableNameValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FStaminaModelMaster();
@@ -59,6 +60,7 @@ namespace Gs2::Stamina::Model
         TSharedPtr<FStaminaModelMaster> WithRecoverValueTableName(const TOptional<FString> RecoverValueTableName);
         TSharedPtr<FStaminaModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FStaminaModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FStaminaModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetStaminaModelId() const;
         TOptional<FString> GetName() const;
@@ -81,6 +83,8 @@ namespace Gs2::Stamina::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

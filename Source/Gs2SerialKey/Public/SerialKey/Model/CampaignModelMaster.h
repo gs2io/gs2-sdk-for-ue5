@@ -30,6 +30,7 @@ namespace Gs2::SerialKey::Model
         TOptional<bool> EnableCampaignCodeValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FCampaignModelMaster();
@@ -45,6 +46,7 @@ namespace Gs2::SerialKey::Model
         TSharedPtr<FCampaignModelMaster> WithEnableCampaignCode(const TOptional<bool> EnableCampaignCode);
         TSharedPtr<FCampaignModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FCampaignModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FCampaignModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetCampaignId() const;
         TOptional<FString> GetName() const;
@@ -56,6 +58,8 @@ namespace Gs2::SerialKey::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

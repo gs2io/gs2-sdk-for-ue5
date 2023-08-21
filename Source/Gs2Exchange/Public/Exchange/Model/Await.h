@@ -29,6 +29,7 @@ namespace Gs2::Exchange::Model
         TOptional<FString> NameValue;
         TOptional<int32> CountValue;
         TOptional<int64> ExchangedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FAwait();
@@ -43,6 +44,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FAwait> WithName(const TOptional<FString> Name);
         TSharedPtr<FAwait> WithCount(const TOptional<int32> Count);
         TSharedPtr<FAwait> WithExchangedAt(const TOptional<int64> ExchangedAt);
+        TSharedPtr<FAwait> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetAwaitId() const;
         TOptional<FString> GetUserId() const;
@@ -52,6 +54,8 @@ namespace Gs2::Exchange::Model
         FString GetCountString() const;
         TOptional<int64> GetExchangedAt() const;
         FString GetExchangedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

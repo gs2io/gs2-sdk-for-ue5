@@ -32,6 +32,7 @@ namespace Gs2::Money::Model
         TSharedPtr<TArray<TSharedPtr<FWalletDetail>>> DetailValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FWallet();
@@ -48,6 +49,7 @@ namespace Gs2::Money::Model
         TSharedPtr<FWallet> WithDetail(const TSharedPtr<TArray<TSharedPtr<FWalletDetail>>> Detail);
         TSharedPtr<FWallet> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FWallet> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FWallet> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetWalletId() const;
         TOptional<FString> GetUserId() const;
@@ -62,6 +64,8 @@ namespace Gs2::Money::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

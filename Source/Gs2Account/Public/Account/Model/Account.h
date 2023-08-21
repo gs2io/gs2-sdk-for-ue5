@@ -29,6 +29,7 @@ namespace Gs2::Account::Model
         TOptional<int32> TimeOffsetValue;
         TOptional<bool> BannedValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FAccount();
@@ -43,6 +44,7 @@ namespace Gs2::Account::Model
         TSharedPtr<FAccount> WithTimeOffset(const TOptional<int32> TimeOffset);
         TSharedPtr<FAccount> WithBanned(const TOptional<bool> Banned);
         TSharedPtr<FAccount> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FAccount> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetAccountId() const;
         TOptional<FString> GetUserId() const;
@@ -53,6 +55,8 @@ namespace Gs2::Account::Model
         FString GetBannedString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -31,6 +31,7 @@ namespace Gs2::Lottery::Model
         TSharedPtr<TArray<TSharedPtr<FPrize>>> PrizesValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FPrizeTableMaster();
@@ -46,6 +47,7 @@ namespace Gs2::Lottery::Model
         TSharedPtr<FPrizeTableMaster> WithPrizes(const TSharedPtr<TArray<TSharedPtr<FPrize>>> Prizes);
         TSharedPtr<FPrizeTableMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FPrizeTableMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FPrizeTableMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetPrizeTableId() const;
         TOptional<FString> GetName() const;
@@ -56,6 +58,8 @@ namespace Gs2::Lottery::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

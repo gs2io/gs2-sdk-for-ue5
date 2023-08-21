@@ -29,6 +29,7 @@ namespace Gs2::Chat::Model
         TOptional<FString> RoomNameValue;
         TSharedPtr<TArray<TSharedPtr<FNotificationType>>> NotificationTypesValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FSubscribe();
@@ -42,6 +43,7 @@ namespace Gs2::Chat::Model
         TSharedPtr<FSubscribe> WithRoomName(const TOptional<FString> RoomName);
         TSharedPtr<FSubscribe> WithNotificationTypes(const TSharedPtr<TArray<TSharedPtr<FNotificationType>>> NotificationTypes);
         TSharedPtr<FSubscribe> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FSubscribe> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetSubscribeId() const;
         TOptional<FString> GetUserId() const;
@@ -49,6 +51,8 @@ namespace Gs2::Chat::Model
         TSharedPtr<TArray<TSharedPtr<FNotificationType>>> GetNotificationTypes() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

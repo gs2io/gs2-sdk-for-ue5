@@ -31,6 +31,7 @@ namespace Gs2::Distributor::Model
         TSharedPtr<TArray<FString>> WhiteListTargetIdsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FDistributorModelMaster();
@@ -47,6 +48,7 @@ namespace Gs2::Distributor::Model
         TSharedPtr<FDistributorModelMaster> WithWhiteListTargetIds(const TSharedPtr<TArray<FString>> WhiteListTargetIds);
         TSharedPtr<FDistributorModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FDistributorModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FDistributorModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetDistributorModelId() const;
         TOptional<FString> GetName() const;
@@ -58,6 +60,8 @@ namespace Gs2::Distributor::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

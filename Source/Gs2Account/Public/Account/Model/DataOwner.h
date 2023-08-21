@@ -27,6 +27,7 @@ namespace Gs2::Account::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> NameValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FDataOwner();
@@ -39,12 +40,15 @@ namespace Gs2::Account::Model
         TSharedPtr<FDataOwner> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDataOwner> WithName(const TOptional<FString> Name);
         TSharedPtr<FDataOwner> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FDataOwner> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetDataOwnerId() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetName() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

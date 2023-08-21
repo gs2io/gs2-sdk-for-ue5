@@ -39,6 +39,7 @@ namespace Gs2::Quest::Model
         TSharedPtr<TArray<FString>> PremiseQuestNamesValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FQuestModelMaster();
@@ -60,6 +61,7 @@ namespace Gs2::Quest::Model
         TSharedPtr<FQuestModelMaster> WithPremiseQuestNames(const TSharedPtr<TArray<FString>> PremiseQuestNames);
         TSharedPtr<FQuestModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FQuestModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FQuestModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetQuestModelId() const;
         TOptional<FString> GetQuestGroupName() const;
@@ -76,6 +78,8 @@ namespace Gs2::Quest::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

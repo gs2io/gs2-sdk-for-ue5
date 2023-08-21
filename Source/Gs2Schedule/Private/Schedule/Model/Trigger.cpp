@@ -23,7 +23,8 @@ namespace Gs2::Schedule::Model
         NameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
-        ExpiresAtValue(TOptional<int64>())
+        ExpiresAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Schedule::Model
         NameValue(From.NameValue),
         UserIdValue(From.UserIdValue),
         CreatedAtValue(From.CreatedAtValue),
-        ExpiresAtValue(From.ExpiresAtValue)
+        ExpiresAtValue(From.ExpiresAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -77,6 +79,14 @@ namespace Gs2::Schedule::Model
         this->ExpiresAtValue = ExpiresAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FTrigger> FTrigger::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FTrigger::GetTriggerId() const
     {
         return TriggerIdValue;
@@ -114,6 +124,19 @@ namespace Gs2::Schedule::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue());
+    }
+    TOptional<int64> FTrigger::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FTrigger::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FTrigger::GetRegionFromGrn(const FString Grn)
@@ -221,6 +244,15 @@ namespace Gs2::Schedule::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -246,6 +278,10 @@ namespace Gs2::Schedule::Model
         if (ExpiresAtValue.IsSet())
         {
             JsonRootObject->SetStringField("expiresAt", FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

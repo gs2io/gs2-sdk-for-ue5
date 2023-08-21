@@ -24,7 +24,8 @@ namespace Gs2::Exchange::Model
         RateNameValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         CountValue(TOptional<int32>()),
-        ExchangedAtValue(TOptional<int64>())
+        ExchangedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Exchange::Model
         RateNameValue(From.RateNameValue),
         NameValue(From.NameValue),
         CountValue(From.CountValue),
-        ExchangedAtValue(From.ExchangedAtValue)
+        ExchangedAtValue(From.ExchangedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -87,6 +89,14 @@ namespace Gs2::Exchange::Model
         this->ExchangedAtValue = ExchangedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FAwait> FAwait::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FAwait::GetAwaitId() const
     {
         return AwaitIdValue;
@@ -128,6 +138,19 @@ namespace Gs2::Exchange::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), ExchangedAtValue.GetValue());
+    }
+    TOptional<int64> FAwait::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FAwait::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FAwait::GetRegionFromGrn(const FString Grn)
@@ -244,6 +267,15 @@ namespace Gs2::Exchange::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -273,6 +305,10 @@ namespace Gs2::Exchange::Model
         if (ExchangedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("exchangedAt", FString::Printf(TEXT("%lld"), ExchangedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

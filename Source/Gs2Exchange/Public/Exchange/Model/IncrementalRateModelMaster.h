@@ -39,6 +39,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FIncrementalRateModelMaster();
@@ -61,6 +62,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FIncrementalRateModelMaster> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
         TSharedPtr<FIncrementalRateModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FIncrementalRateModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FIncrementalRateModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetIncrementalRateModelId() const;
         TOptional<FString> GetName() const;
@@ -81,6 +83,8 @@ namespace Gs2::Exchange::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

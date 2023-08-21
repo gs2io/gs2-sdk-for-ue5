@@ -36,6 +36,7 @@ namespace Gs2::Lottery::Model
         TOptional<int64> UpdatedAtValue;
         TOptional<FString> QueueNamespaceIdValue;
         TOptional<FString> KeyIdValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FNamespace();
@@ -55,6 +56,7 @@ namespace Gs2::Lottery::Model
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FNamespace> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
         TSharedPtr<FNamespace> WithKeyId(const TOptional<FString> KeyId);
+        TSharedPtr<FNamespace> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetNamespaceId() const;
         TOptional<FString> GetName() const;
@@ -69,6 +71,8 @@ namespace Gs2::Lottery::Model
         FString GetUpdatedAtString() const;
         TOptional<FString> GetQueueNamespaceId() const;
         TOptional<FString> GetKeyId() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

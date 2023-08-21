@@ -38,6 +38,7 @@ namespace Gs2::LoginReward::Model
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> MissedReceiveReliefConsumeActionsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FBonusModelMaster();
@@ -59,6 +60,7 @@ namespace Gs2::LoginReward::Model
         TSharedPtr<FBonusModelMaster> WithMissedReceiveReliefConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> MissedReceiveReliefConsumeActions);
         TSharedPtr<FBonusModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FBonusModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FBonusModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetBonusModelId() const;
         TOptional<FString> GetName() const;
@@ -76,6 +78,8 @@ namespace Gs2::LoginReward::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

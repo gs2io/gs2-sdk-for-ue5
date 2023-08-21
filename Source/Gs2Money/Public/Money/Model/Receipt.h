@@ -35,6 +35,7 @@ namespace Gs2::Money::Model
         TOptional<int32> TotalValue;
         TOptional<FString> ContentsIdValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FReceipt();
@@ -55,6 +56,7 @@ namespace Gs2::Money::Model
         TSharedPtr<FReceipt> WithTotal(const TOptional<int32> Total);
         TSharedPtr<FReceipt> WithContentsId(const TOptional<FString> ContentsId);
         TSharedPtr<FReceipt> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FReceipt> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetReceiptId() const;
         TOptional<FString> GetTransactionId() const;
@@ -74,6 +76,8 @@ namespace Gs2::Money::Model
         TOptional<FString> GetContentsId() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

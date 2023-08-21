@@ -22,7 +22,8 @@ namespace Gs2::Dictionary::Model
         EntryIdValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
-        AcquiredAtValue(TOptional<int64>())
+        AcquiredAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Dictionary::Model
         EntryIdValue(From.EntryIdValue),
         UserIdValue(From.UserIdValue),
         NameValue(From.NameValue),
-        AcquiredAtValue(From.AcquiredAtValue)
+        AcquiredAtValue(From.AcquiredAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -67,6 +69,14 @@ namespace Gs2::Dictionary::Model
         this->AcquiredAtValue = AcquiredAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEntry> FEntry::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FEntry::GetEntryId() const
     {
         return EntryIdValue;
@@ -91,6 +101,19 @@ namespace Gs2::Dictionary::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), AcquiredAtValue.GetValue());
+    }
+    TOptional<int64> FEntry::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FEntry::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FEntry::GetRegionFromGrn(const FString Grn)
@@ -189,6 +212,15 @@ namespace Gs2::Dictionary::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -210,6 +242,10 @@ namespace Gs2::Dictionary::Model
         if (AcquiredAtValue.IsSet())
         {
             JsonRootObject->SetStringField("acquiredAt", FString::Printf(TEXT("%lld"), AcquiredAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

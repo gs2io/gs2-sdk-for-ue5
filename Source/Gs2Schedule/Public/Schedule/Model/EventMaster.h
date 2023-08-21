@@ -40,6 +40,7 @@ namespace Gs2::Schedule::Model
         TOptional<FString> RelativeTriggerNameValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FEventMaster();
@@ -65,6 +66,7 @@ namespace Gs2::Schedule::Model
         TSharedPtr<FEventMaster> WithRelativeTriggerName(const TOptional<FString> RelativeTriggerName);
         TSharedPtr<FEventMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FEventMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FEventMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetEventId() const;
         TOptional<FString> GetName() const;
@@ -91,6 +93,8 @@ namespace Gs2::Schedule::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

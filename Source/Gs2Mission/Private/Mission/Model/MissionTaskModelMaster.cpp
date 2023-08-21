@@ -30,7 +30,8 @@ namespace Gs2::Mission::Model
         ChallengePeriodEventIdValue(TOptional<FString>()),
         PremiseMissionTaskNameValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -48,7 +49,8 @@ namespace Gs2::Mission::Model
         ChallengePeriodEventIdValue(From.ChallengePeriodEventIdValue),
         PremiseMissionTaskNameValue(From.PremiseMissionTaskNameValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -147,6 +149,14 @@ namespace Gs2::Mission::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FMissionTaskModelMaster> FMissionTaskModelMaster::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FMissionTaskModelMaster::GetMissionTaskId() const
     {
         return MissionTaskIdValue;
@@ -221,6 +231,19 @@ namespace Gs2::Mission::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FMissionTaskModelMaster::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FMissionTaskModelMaster::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FMissionTaskModelMaster::GetRegionFromGrn(const FString Grn)
@@ -394,6 +417,15 @@ namespace Gs2::Mission::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -452,6 +484,10 @@ namespace Gs2::Mission::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

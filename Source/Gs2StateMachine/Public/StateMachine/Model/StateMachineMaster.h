@@ -29,6 +29,7 @@ namespace Gs2::StateMachine::Model
         TOptional<int64> VersionValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FStateMachineMaster();
@@ -43,6 +44,7 @@ namespace Gs2::StateMachine::Model
         TSharedPtr<FStateMachineMaster> WithVersion(const TOptional<int64> Version);
         TSharedPtr<FStateMachineMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FStateMachineMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FStateMachineMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetStateMachineId() const;
         TOptional<FString> GetMainStateMachineName() const;
@@ -53,6 +55,8 @@ namespace Gs2::StateMachine::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

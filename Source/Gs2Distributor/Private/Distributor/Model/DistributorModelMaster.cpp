@@ -26,7 +26,8 @@ namespace Gs2::Distributor::Model
         InboxNamespaceIdValue(TOptional<FString>()),
         WhiteListTargetIdsValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -40,7 +41,8 @@ namespace Gs2::Distributor::Model
         InboxNamespaceIdValue(From.InboxNamespaceIdValue),
         WhiteListTargetIdsValue(From.WhiteListTargetIdsValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -107,6 +109,14 @@ namespace Gs2::Distributor::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FDistributorModelMaster> FDistributorModelMaster::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FDistributorModelMaster::GetDistributorModelId() const
     {
         return DistributorModelIdValue;
@@ -156,6 +166,19 @@ namespace Gs2::Distributor::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FDistributorModelMaster::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FDistributorModelMaster::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FDistributorModelMaster::GetRegionFromGrn(const FString Grn)
@@ -282,6 +305,15 @@ namespace Gs2::Distributor::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -324,6 +356,10 @@ namespace Gs2::Distributor::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

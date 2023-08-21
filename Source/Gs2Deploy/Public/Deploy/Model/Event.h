@@ -29,6 +29,7 @@ namespace Gs2::Deploy::Model
         TOptional<FString> TypeValue;
         TOptional<FString> MessageValue;
         TOptional<int64> EventAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FEvent();
@@ -43,6 +44,7 @@ namespace Gs2::Deploy::Model
         TSharedPtr<FEvent> WithType(const TOptional<FString> Type);
         TSharedPtr<FEvent> WithMessage(const TOptional<FString> Message);
         TSharedPtr<FEvent> WithEventAt(const TOptional<int64> EventAt);
+        TSharedPtr<FEvent> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetEventId() const;
         TOptional<FString> GetName() const;
@@ -51,6 +53,8 @@ namespace Gs2::Deploy::Model
         TOptional<FString> GetMessage() const;
         TOptional<int64> GetEventAt() const;
         FString GetEventAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -23,7 +23,8 @@ namespace Gs2::Lock::Model
         UserIdValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
         TransactionIdValue(TOptional<FString>()),
-        CreatedAtValue(TOptional<int64>())
+        CreatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Lock::Model
         UserIdValue(From.UserIdValue),
         PropertyIdValue(From.PropertyIdValue),
         TransactionIdValue(From.TransactionIdValue),
-        CreatedAtValue(From.CreatedAtValue)
+        CreatedAtValue(From.CreatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -77,6 +79,14 @@ namespace Gs2::Lock::Model
         this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FMutex> FMutex::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FMutex::GetMutexId() const
     {
         return MutexIdValue;
@@ -105,6 +115,19 @@ namespace Gs2::Lock::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+    }
+    TOptional<int64> FMutex::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FMutex::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FMutex::GetRegionFromGrn(const FString Grn)
@@ -212,6 +235,15 @@ namespace Gs2::Lock::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -237,6 +269,10 @@ namespace Gs2::Lock::Model
         if (CreatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

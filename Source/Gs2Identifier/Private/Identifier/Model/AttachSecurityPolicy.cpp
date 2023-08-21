@@ -21,7 +21,8 @@ namespace Gs2::Identifier::Model
     FAttachSecurityPolicy::FAttachSecurityPolicy():
         UserIdValue(TOptional<FString>()),
         SecurityPolicyIdsValue(nullptr),
-        AttachedAtValue(TOptional<int64>())
+        AttachedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Identifier::Model
     ):
         UserIdValue(From.UserIdValue),
         SecurityPolicyIdsValue(From.SecurityPolicyIdsValue),
-        AttachedAtValue(From.AttachedAtValue)
+        AttachedAtValue(From.AttachedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -57,6 +59,14 @@ namespace Gs2::Identifier::Model
         this->AttachedAtValue = AttachedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FAttachSecurityPolicy> FAttachSecurityPolicy::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FAttachSecurityPolicy::GetUserId() const
     {
         return UserIdValue;
@@ -77,6 +87,19 @@ namespace Gs2::Identifier::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), AttachedAtValue.GetValue());
+    }
+    TOptional<int64> FAttachSecurityPolicy::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FAttachSecurityPolicy::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FAttachSecurityPolicy::GetOwnerIdFromGrn(const FString Grn)
@@ -136,6 +159,15 @@ namespace Gs2::Identifier::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -158,6 +190,10 @@ namespace Gs2::Identifier::Model
         if (AttachedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("attachedAt", FString::Printf(TEXT("%lld"), AttachedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

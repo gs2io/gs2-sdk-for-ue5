@@ -24,7 +24,8 @@ namespace Gs2::Deploy::Model
         ResourceNameValue(TOptional<FString>()),
         TypeValue(TOptional<FString>()),
         MessageValue(TOptional<FString>()),
-        EventAtValue(TOptional<int64>())
+        EventAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Deploy::Model
         ResourceNameValue(From.ResourceNameValue),
         TypeValue(From.TypeValue),
         MessageValue(From.MessageValue),
-        EventAtValue(From.EventAtValue)
+        EventAtValue(From.EventAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -87,6 +89,14 @@ namespace Gs2::Deploy::Model
         this->EventAtValue = EventAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEvent> FEvent::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FEvent::GetEventId() const
     {
         return EventIdValue;
@@ -119,6 +129,19 @@ namespace Gs2::Deploy::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), EventAtValue.GetValue());
+    }
+    TOptional<int64> FEvent::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FEvent::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FEvent::GetRegionFromGrn(const FString Grn)
@@ -224,6 +247,15 @@ namespace Gs2::Deploy::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -253,6 +285,10 @@ namespace Gs2::Deploy::Model
         if (EventAtValue.IsSet())
         {
             JsonRootObject->SetStringField("eventAt", FString::Printf(TEXT("%lld"), EventAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

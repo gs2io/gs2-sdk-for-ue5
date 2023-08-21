@@ -23,7 +23,8 @@ namespace Gs2::Chat::Model
         UserIdValue(TOptional<FString>()),
         RoomNameValue(TOptional<FString>()),
         NotificationTypesValue(nullptr),
-        CreatedAtValue(TOptional<int64>())
+        CreatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Chat::Model
         UserIdValue(From.UserIdValue),
         RoomNameValue(From.RoomNameValue),
         NotificationTypesValue(From.NotificationTypesValue),
-        CreatedAtValue(From.CreatedAtValue)
+        CreatedAtValue(From.CreatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -77,6 +79,14 @@ namespace Gs2::Chat::Model
         this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FSubscribe> FSubscribe::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FSubscribe::GetSubscribeId() const
     {
         return SubscribeIdValue;
@@ -105,6 +115,19 @@ namespace Gs2::Chat::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+    }
+    TOptional<int64> FSubscribe::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FSubscribe::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FSubscribe::GetRegionFromGrn(const FString Grn)
@@ -215,6 +238,15 @@ namespace Gs2::Chat::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -245,6 +277,10 @@ namespace Gs2::Chat::Model
         if (CreatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

@@ -32,6 +32,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FTimeSpan> ExpiresTimeSpanValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> ExpiresAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FGlobalMessageMaster();
@@ -47,6 +48,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FGlobalMessageMaster> WithExpiresTimeSpan(const TSharedPtr<FTimeSpan> ExpiresTimeSpan);
         TSharedPtr<FGlobalMessageMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FGlobalMessageMaster> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FGlobalMessageMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetGlobalMessageId() const;
         TOptional<FString> GetName() const;
@@ -57,6 +59,8 @@ namespace Gs2::Inbox::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

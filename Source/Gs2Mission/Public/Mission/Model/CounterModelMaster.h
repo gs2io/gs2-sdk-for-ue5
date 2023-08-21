@@ -32,6 +32,7 @@ namespace Gs2::Mission::Model
         TOptional<FString> ChallengePeriodEventIdValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FCounterModelMaster();
@@ -48,6 +49,7 @@ namespace Gs2::Mission::Model
         TSharedPtr<FCounterModelMaster> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
         TSharedPtr<FCounterModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FCounterModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FCounterModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetCounterId() const;
         TOptional<FString> GetName() const;
@@ -59,6 +61,8 @@ namespace Gs2::Mission::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

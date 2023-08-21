@@ -30,6 +30,7 @@ namespace Gs2::SerialKey::Model
         TOptional<int32> IssueRequestCountValue;
         TOptional<FString> StatusValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FIssueJob();
@@ -45,6 +46,7 @@ namespace Gs2::SerialKey::Model
         TSharedPtr<FIssueJob> WithIssueRequestCount(const TOptional<int32> IssueRequestCount);
         TSharedPtr<FIssueJob> WithStatus(const TOptional<FString> Status);
         TSharedPtr<FIssueJob> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FIssueJob> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetIssueJobId() const;
         TOptional<FString> GetName() const;
@@ -56,6 +58,8 @@ namespace Gs2::SerialKey::Model
         TOptional<FString> GetStatus() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

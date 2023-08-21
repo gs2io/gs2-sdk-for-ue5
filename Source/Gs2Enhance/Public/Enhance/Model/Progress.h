@@ -32,6 +32,7 @@ namespace Gs2::Enhance::Model
         TOptional<float> RateValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FProgress();
@@ -49,6 +50,7 @@ namespace Gs2::Enhance::Model
         TSharedPtr<FProgress> WithRate(const TOptional<float> Rate);
         TSharedPtr<FProgress> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FProgress> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FProgress> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetProgressId() const;
         TOptional<FString> GetUserId() const;
@@ -63,6 +65,8 @@ namespace Gs2::Enhance::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

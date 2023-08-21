@@ -30,6 +30,7 @@ namespace Gs2::Mission::Model
         TSharedPtr<TArray<TSharedPtr<FScopedValue>>> ValuesValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FCounter();
@@ -44,6 +45,7 @@ namespace Gs2::Mission::Model
         TSharedPtr<FCounter> WithValues(const TSharedPtr<TArray<TSharedPtr<FScopedValue>>> Values);
         TSharedPtr<FCounter> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FCounter> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FCounter> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetCounterId() const;
         TOptional<FString> GetUserId() const;
@@ -53,6 +55,8 @@ namespace Gs2::Mission::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

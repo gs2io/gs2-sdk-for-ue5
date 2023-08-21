@@ -33,6 +33,7 @@ namespace Gs2::Datastore::Model
         TOptional<FString> PreviousGenerationValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FDataObject();
@@ -51,6 +52,7 @@ namespace Gs2::Datastore::Model
         TSharedPtr<FDataObject> WithPreviousGeneration(const TOptional<FString> PreviousGeneration);
         TSharedPtr<FDataObject> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FDataObject> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FDataObject> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetDataObjectId() const;
         TOptional<FString> GetName() const;
@@ -64,6 +66,8 @@ namespace Gs2::Datastore::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

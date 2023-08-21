@@ -29,6 +29,7 @@ namespace Gs2::MegaField::Model
         TOptional<FString> MetadataValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FLayerModelMaster();
@@ -43,6 +44,7 @@ namespace Gs2::MegaField::Model
         TSharedPtr<FLayerModelMaster> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FLayerModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FLayerModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FLayerModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetLayerModelMasterId() const;
         TOptional<FString> GetName() const;
@@ -52,6 +54,8 @@ namespace Gs2::MegaField::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

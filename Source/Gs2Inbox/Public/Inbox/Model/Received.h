@@ -28,6 +28,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<TArray<FString>> ReceivedGlobalMessageNamesValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FReceived();
@@ -41,6 +42,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FReceived> WithReceivedGlobalMessageNames(const TSharedPtr<TArray<FString>> ReceivedGlobalMessageNames);
         TSharedPtr<FReceived> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FReceived> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FReceived> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetReceivedId() const;
         TOptional<FString> GetUserId() const;
@@ -49,6 +51,8 @@ namespace Gs2::Inbox::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

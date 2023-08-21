@@ -30,6 +30,7 @@ namespace Gs2::Chat::Model
         TOptional<int32> CategoryValue;
         TOptional<FString> MetadataValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FMessage();
@@ -45,6 +46,7 @@ namespace Gs2::Chat::Model
         TSharedPtr<FMessage> WithCategory(const TOptional<int32> Category);
         TSharedPtr<FMessage> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FMessage> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FMessage> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetMessageId() const;
         TOptional<FString> GetRoomName() const;
@@ -55,6 +57,8 @@ namespace Gs2::Chat::Model
         TOptional<FString> GetMetadata() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

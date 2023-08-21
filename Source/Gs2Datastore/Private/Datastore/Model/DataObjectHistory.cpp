@@ -23,7 +23,8 @@ namespace Gs2::Datastore::Model
         DataObjectNameValue(TOptional<FString>()),
         GenerationValue(TOptional<FString>()),
         ContentLengthValue(TOptional<int64>()),
-        CreatedAtValue(TOptional<int64>())
+        CreatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Datastore::Model
         DataObjectNameValue(From.DataObjectNameValue),
         GenerationValue(From.GenerationValue),
         ContentLengthValue(From.ContentLengthValue),
-        CreatedAtValue(From.CreatedAtValue)
+        CreatedAtValue(From.CreatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -77,6 +79,14 @@ namespace Gs2::Datastore::Model
         this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FDataObjectHistory> FDataObjectHistory::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FDataObjectHistory::GetDataObjectHistoryId() const
     {
         return DataObjectHistoryIdValue;
@@ -114,6 +124,19 @@ namespace Gs2::Datastore::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+    }
+    TOptional<int64> FDataObjectHistory::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FDataObjectHistory::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FDataObjectHistory::GetRegionFromGrn(const FString Grn)
@@ -232,6 +255,15 @@ namespace Gs2::Datastore::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -257,6 +289,10 @@ namespace Gs2::Datastore::Model
         if (CreatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("createdAt", FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

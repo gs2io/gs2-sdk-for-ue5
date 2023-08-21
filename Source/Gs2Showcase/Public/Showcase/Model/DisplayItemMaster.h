@@ -28,6 +28,7 @@ namespace Gs2::Showcase::Model
         TOptional<FString> SalesItemNameValue;
         TOptional<FString> SalesItemGroupNameValue;
         TOptional<FString> SalesPeriodEventIdValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FDisplayItemMaster();
@@ -41,12 +42,15 @@ namespace Gs2::Showcase::Model
         TSharedPtr<FDisplayItemMaster> WithSalesItemName(const TOptional<FString> SalesItemName);
         TSharedPtr<FDisplayItemMaster> WithSalesItemGroupName(const TOptional<FString> SalesItemGroupName);
         TSharedPtr<FDisplayItemMaster> WithSalesPeriodEventId(const TOptional<FString> SalesPeriodEventId);
+        TSharedPtr<FDisplayItemMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetDisplayItemId() const;
         TOptional<FString> GetType() const;
         TOptional<FString> GetSalesItemName() const;
         TOptional<FString> GetSalesItemGroupName() const;
         TOptional<FString> GetSalesPeriodEventId() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
 
         static TSharedPtr<FDisplayItemMaster> FromJson(const TSharedPtr<FJsonObject> Data);

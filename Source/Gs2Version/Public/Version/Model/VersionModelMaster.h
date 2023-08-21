@@ -36,6 +36,7 @@ namespace Gs2::Version::Model
         TOptional<FString> SignatureKeyIdValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FVersionModelMaster();
@@ -56,6 +57,7 @@ namespace Gs2::Version::Model
         TSharedPtr<FVersionModelMaster> WithSignatureKeyId(const TOptional<FString> SignatureKeyId);
         TSharedPtr<FVersionModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FVersionModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FVersionModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetVersionModelId() const;
         TOptional<FString> GetName() const;
@@ -72,6 +74,8 @@ namespace Gs2::Version::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

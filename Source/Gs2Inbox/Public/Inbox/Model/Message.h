@@ -33,6 +33,7 @@ namespace Gs2::Inbox::Model
         TOptional<int64> ReceivedAtValue;
         TOptional<int64> ReadAtValue;
         TOptional<int64> ExpiresAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FMessage();
@@ -50,6 +51,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FMessage> WithReceivedAt(const TOptional<int64> ReceivedAt);
         TSharedPtr<FMessage> WithReadAt(const TOptional<int64> ReadAt);
         TSharedPtr<FMessage> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FMessage> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetMessageId() const;
         TOptional<FString> GetName() const;
@@ -64,6 +66,8 @@ namespace Gs2::Inbox::Model
         FString GetReadAtString() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -33,6 +33,7 @@ namespace Gs2::Enchant::Model
         TSharedPtr<TArray<TSharedPtr<FBalanceParameterValueModel>>> ParametersValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FBalanceParameterModelMaster();
@@ -50,6 +51,7 @@ namespace Gs2::Enchant::Model
         TSharedPtr<FBalanceParameterModelMaster> WithParameters(const TSharedPtr<TArray<TSharedPtr<FBalanceParameterValueModel>>> Parameters);
         TSharedPtr<FBalanceParameterModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FBalanceParameterModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FBalanceParameterModelMaster> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetBalanceParameterModelId() const;
         TOptional<FString> GetName() const;
@@ -63,6 +65,8 @@ namespace Gs2::Enchant::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

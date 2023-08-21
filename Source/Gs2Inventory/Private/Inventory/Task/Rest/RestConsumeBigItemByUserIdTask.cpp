@@ -71,7 +71,7 @@ namespace Gs2::Inventory::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("inventory"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/user/{userId}/big/inventory/{inventoryName}/{itemName}/consume");
+                .Append("/{namespaceName}/user/{userId}/big/inventory/{inventoryName}/item/{itemName}/consume");
 
             Url = Url.Replace(
                 TEXT("{namespaceName}"),

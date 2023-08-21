@@ -30,6 +30,7 @@ namespace Gs2::Version::Model
         TSharedPtr<FVersion> VersionValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FAcceptVersion();
@@ -44,6 +45,7 @@ namespace Gs2::Version::Model
         TSharedPtr<FAcceptVersion> WithVersion(const TSharedPtr<FVersion> Version);
         TSharedPtr<FAcceptVersion> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FAcceptVersion> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FAcceptVersion> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetAcceptVersionId() const;
         TOptional<FString> GetVersionName() const;
@@ -53,6 +55,8 @@ namespace Gs2::Version::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

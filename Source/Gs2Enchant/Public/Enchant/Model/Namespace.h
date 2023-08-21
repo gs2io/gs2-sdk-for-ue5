@@ -32,6 +32,7 @@ namespace Gs2::Enchant::Model
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FNamespace();
@@ -47,6 +48,7 @@ namespace Gs2::Enchant::Model
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FNamespace> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetNamespaceId() const;
         TOptional<FString> GetName() const;
@@ -57,6 +59,8 @@ namespace Gs2::Enchant::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

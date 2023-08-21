@@ -25,7 +25,8 @@ namespace Gs2::Showcase::Model
         MetadataValue(TOptional<FString>()),
         SalesItemNamesValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
-        UpdatedAtValue(TOptional<int64>())
+        UpdatedAtValue(TOptional<int64>()),
+        RevisionValue(TOptional<int64>())
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::Showcase::Model
         MetadataValue(From.MetadataValue),
         SalesItemNamesValue(From.SalesItemNamesValue),
         CreatedAtValue(From.CreatedAtValue),
-        UpdatedAtValue(From.UpdatedAtValue)
+        UpdatedAtValue(From.UpdatedAtValue),
+        RevisionValue(From.RevisionValue)
     {
     }
 
@@ -97,6 +99,14 @@ namespace Gs2::Showcase::Model
         this->UpdatedAtValue = UpdatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FSalesItemGroupMaster> FSalesItemGroupMaster::WithRevision(
+        const TOptional<int64> Revision
+    )
+    {
+        this->RevisionValue = Revision;
+        return SharedThis(this);
+    }
     TOptional<FString> FSalesItemGroupMaster::GetSalesItemGroupId() const
     {
         return SalesItemGroupIdValue;
@@ -142,6 +152,19 @@ namespace Gs2::Showcase::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue());
+    }
+    TOptional<int64> FSalesItemGroupMaster::GetRevision() const
+    {
+        return RevisionValue;
+    }
+
+    FString FSalesItemGroupMaster::GetRevisionString() const
+    {
+        if (!RevisionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), RevisionValue.GetValue());
     }
 
     TOptional<FString> FSalesItemGroupMaster::GetRegionFromGrn(const FString Grn)
@@ -259,6 +282,15 @@ namespace Gs2::Showcase::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithRevision(Data->HasField("revision") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("revision", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
                 }() : TOptional<int64>());
     }
 
@@ -297,6 +329,10 @@ namespace Gs2::Showcase::Model
         if (UpdatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField("updatedAt", FString::Printf(TEXT("%lld"), UpdatedAtValue.GetValue()));
+        }
+        if (RevisionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("revision", FString::Printf(TEXT("%lld"), RevisionValue.GetValue()));
         }
         return JsonRootObject;
     }

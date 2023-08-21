@@ -29,6 +29,7 @@ namespace Gs2::Matchmaking::Model
         TOptional<float> RateValueValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FRating();
@@ -43,6 +44,7 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FRating> WithRateValue(const TOptional<float> RateValue);
         TSharedPtr<FRating> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FRating> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FRating> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetRatingId() const;
         TOptional<FString> GetName() const;
@@ -53,6 +55,8 @@ namespace Gs2::Matchmaking::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

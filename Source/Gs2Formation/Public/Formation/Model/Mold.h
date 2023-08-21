@@ -29,6 +29,7 @@ namespace Gs2::Formation::Model
         TOptional<int32> CapacityValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FMold();
@@ -43,6 +44,7 @@ namespace Gs2::Formation::Model
         TSharedPtr<FMold> WithCapacity(const TOptional<int32> Capacity);
         TSharedPtr<FMold> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FMold> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FMold> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetMoldId() const;
         TOptional<FString> GetName() const;
@@ -53,6 +55,8 @@ namespace Gs2::Formation::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

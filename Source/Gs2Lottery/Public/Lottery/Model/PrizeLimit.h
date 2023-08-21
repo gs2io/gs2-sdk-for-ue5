@@ -28,6 +28,7 @@ namespace Gs2::Lottery::Model
         TOptional<int32> DrawnCountValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
+        TOptional<int64> RevisionValue;
 
     public:
         FPrizeLimit();
@@ -41,6 +42,7 @@ namespace Gs2::Lottery::Model
         TSharedPtr<FPrizeLimit> WithDrawnCount(const TOptional<int32> DrawnCount);
         TSharedPtr<FPrizeLimit> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FPrizeLimit> WithUpdatedAt(const TOptional<int64> UpdatedAt);
+        TSharedPtr<FPrizeLimit> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetPrizeLimitId() const;
         TOptional<FString> GetPrizeId() const;
@@ -50,6 +52,8 @@ namespace Gs2::Lottery::Model
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;
+        TOptional<int64> GetRevision() const;
+        FString GetRevisionString() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
