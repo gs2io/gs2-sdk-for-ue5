@@ -56,7 +56,7 @@ namespace Gs2::Enchant::Task::WebSocket
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, Log, TEXT("[%s:%s:%s] %s"), TEXT("enchant"), TEXT("rarityParameterStatus"), TEXT("addRarityParameterStatusByStampSheet"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("enchant"), TEXT("rarityParameterStatus"), TEXT("addRarityParameterStatusByStampSheet"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

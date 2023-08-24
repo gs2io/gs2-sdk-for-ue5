@@ -56,7 +56,7 @@ namespace Gs2::StateMachine::Task::WebSocket
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, Log, TEXT("[%s:%s:%s] %s"), TEXT("stateMachine"), TEXT("namespace"), TEXT("createNamespace"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("stateMachine"), TEXT("namespace"), TEXT("createNamespace"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

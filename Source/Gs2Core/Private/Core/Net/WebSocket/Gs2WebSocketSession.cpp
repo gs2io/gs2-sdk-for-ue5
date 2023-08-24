@@ -99,7 +99,7 @@ namespace Gs2::Core::Net::WebSocket
         });
         Socket->OnMessage().AddLambda([&](const FString& Message)
         {
-            UE_LOG(Gs2Log, Log, TEXT("%s"), ToCStr(Message));
+            UE_LOG(Gs2Log, VeryVerbose, TEXT("%s"), ToCStr(Message));
             if (Disposed)
             {
                 UE_LOG(Gs2Log, Error, TEXT("[Socket::OnMessage] FGs2WebSocketSession is already disposed."));
@@ -168,7 +168,7 @@ namespace Gs2::Core::Net::WebSocket
     void FGs2WebSocketSession::Send(const TSharedPtr<Task::FWebSocketSessionRequest> Request)
     {
         auto Body = Request->Payload();
-        UE_LOG(Gs2Log, Log, TEXT("%s"), ToCStr(Body));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("%s"), ToCStr(Body));
 
         Mutex->Lock();
         InflightRequests.Add(Request->TaskId(), Request);

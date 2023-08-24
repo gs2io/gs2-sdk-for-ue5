@@ -79,7 +79,7 @@ namespace Gs2::Core::Net::Rest::Task
             Request->SetHeader("Content-Type", "application/json");
             Request->ProcessRequest();
             
-            UE_LOG(Gs2Log, Log, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
+            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
         }
         
 		if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
@@ -96,7 +96,7 @@ namespace Gs2::Core::Net::Rest::Task
 
         if (ResponseCode / 100 == 2)
         {
-            UE_LOG(Gs2Log, Log, TEXT("[%d] %s"), ResponseCode, ToCStr(ResponseBody));
+            UE_LOG(Gs2Log, Verbose, TEXT("[%d] %s"), ResponseCode, ToCStr(ResponseBody));
 
             TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(ResponseBody);

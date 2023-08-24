@@ -114,7 +114,7 @@ namespace Gs2::Ranking::Task::Rest
             }
 
             request->ProcessRequest();
-            UE_LOG(Gs2Log, Log, TEXT("[%s] %s"), TEXT("GET"), ToCStr(Url));
+            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s"), TEXT("GET"), ToCStr(Url));
         }
 
         if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
@@ -131,7 +131,7 @@ namespace Gs2::Ranking::Task::Rest
 
         if (ResponseCode / 100 == 2)
         {
-            UE_LOG(Gs2Log, Log, TEXT("[%d] %s"), ResponseCode, ToCStr(ResponseBody));
+            UE_LOG(Gs2Log, Verbose, TEXT("[%d] %s"), ResponseCode, ToCStr(ResponseBody));
 
             TSharedPtr<FJsonObject> JsonRootObject;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(ResponseBody);

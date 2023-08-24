@@ -59,7 +59,7 @@ namespace Gs2::Chat::Task::WebSocket
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, Log, TEXT("[%s:%s:%s] %s"), TEXT("chat"), TEXT("message"), TEXT("getMessageByUserId"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("chat"), TEXT("message"), TEXT("getMessageByUserId"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

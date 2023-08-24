@@ -56,7 +56,7 @@ namespace Gs2::Key::Task::WebSocket
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, Log, TEXT("[%s:%s:%s] %s"), TEXT("key"), TEXT("gitHubApiKey"), TEXT("getGitHubApiKey"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("key"), TEXT("gitHubApiKey"), TEXT("getGitHubApiKey"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

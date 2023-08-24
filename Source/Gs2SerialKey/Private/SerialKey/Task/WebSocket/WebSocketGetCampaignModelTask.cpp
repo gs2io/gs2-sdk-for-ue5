@@ -56,7 +56,7 @@ namespace Gs2::SerialKey::Task::WebSocket
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, Log, TEXT("[%s:%s:%s] %s"), TEXT("serialKey"), TEXT("campaignModel"), TEXT("getCampaignModel"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("serialKey"), TEXT("campaignModel"), TEXT("getCampaignModel"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

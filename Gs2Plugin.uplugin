@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "2023.8.10",
+	"VersionName": "2023.8.11",
 	"FriendlyName": "GS2 Plugin",
 	"Description": "Plugin for Game Server Services",
 	"Category": "Online Service",
@@ -12,7 +12,7 @@
 	"SupportURL": "",
 	"EnabledByDefault": false,
 	"CanContainContent": false,
-	"IsBetaVersion": true,
+	"IsBetaVersion": false,
 	"Installed": false,
 	"Modules": [
 		{
@@ -56,6 +56,11 @@
 			"LoadingPhase": "PostEngineInit"
 		},
 		{
+			"Name": "Gs2Enchant",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
 			"Name": "Gs2Enhance",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
@@ -91,6 +96,11 @@
 			"LoadingPhase": "PostEngineInit"
 		},
 		{
+			"Name": "Gs2Idle",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
 			"Name": "Gs2Inbox",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
@@ -112,6 +122,11 @@
 		},
 		{
 			"Name": "Gs2Limit",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "Gs2LoginReward",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
 		},
@@ -187,6 +202,11 @@
 		},
 		{
 			"Name": "Gs2Stamina",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "Gs2StateMachine",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
 		},

@@ -56,7 +56,7 @@ namespace Gs2::Formation::Task::WebSocket
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, Log, TEXT("[%s:%s:%s] %s"), TEXT("formation"), TEXT("propertyForm"), TEXT("getPropertyFormWithSignatureByUserId"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("formation"), TEXT("propertyForm"), TEXT("getPropertyFormWithSignatureByUserId"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {

@@ -87,7 +87,7 @@ void FCacheDatabase::ClearListCache(
     FParentCacheKey ParentKey
 )
 {
-    UE_LOG(Gs2Log, Log, TEXT("[%s][%s]: ClearListCache"), ToCStr(Kind), ToCStr(ParentKey));
+    UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s]: ClearListCache"), ToCStr(Kind), ToCStr(ParentKey));
 
     auto* Cache0 = Cache.Find(Kind);
     if (Cache0 != nullptr) Cache0->Remove(ParentKey);
@@ -115,7 +115,7 @@ void FCacheDatabase::Put(
         UE_LOG(Gs2Log, Error, TEXT("invalid ttl"))
     }
 
-    UE_LOG(Gs2Log, Log, TEXT("[%s][%s][%s]: Put %p"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), &Obj);
+    UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Put %p"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), &Obj);
     Ensure(Ensure(Cache, Kind), ParentKey).Add(Key, TTuple<TSharedPtr<Gs2Object>, int64>(Obj, Ttl.ToUnixTimestamp()));
 }
 
@@ -129,7 +129,7 @@ void FCacheDatabase::Delete(
     if (Cache0 == nullptr) return;
     auto* Cache1 = Cache0->Find(ParentKey);
     if (Cache1 == nullptr) return;
-    UE_LOG(Gs2Log, Log, TEXT("[%s][%s][%s]: Remove"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key));
+    UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Remove"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key));
     Cache1->Remove(Key);
 }
 
@@ -151,7 +151,7 @@ bool FCacheDatabase::TryGet(
         Delete(Kind, ParentKey, Key);
         return false;
     }
-    UE_LOG(Gs2Log, Log, TEXT("[%s][%s][%s]: Get %p"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), &Data->Key);
+    UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Get %p"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), &Data->Key);
     *OutObject = Data->Key;
     return true;
 }

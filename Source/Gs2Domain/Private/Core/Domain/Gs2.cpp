@@ -56,12 +56,12 @@ namespace Gs2::Core::Domain
             DistributorNamespaceName,
             [&](const FString Action, const FString Request, const FString Result)
             {
-                UE_LOG(Gs2Log, Log, TEXT("StampTaskResult [%s][%s] %s"), ToCStr(Action), ToCStr(Request), ToCStr(Result));
+                UE_LOG(Gs2Log, Verbose, TEXT("StampTaskResult [%s][%s] %s"), ToCStr(Action), ToCStr(Request), ToCStr(Result));
                 UpdateCacheFromStampTask(Action, Request, Result);
             },
             [&](const FString Action, const FString Request, const FString Result)
             {
-                UE_LOG(Gs2Log, Log, TEXT("StampSheetResult [%s][%s] %s"), ToCStr(Action), ToCStr(Request), ToCStr(Result));
+                UE_LOG(Gs2Log, Verbose, TEXT("StampSheetResult [%s][%s] %s"), ToCStr(Action), ToCStr(Request), ToCStr(Result));
                 UpdateCacheFromStampSheet(Action, Request, Result);
             }
         )),
