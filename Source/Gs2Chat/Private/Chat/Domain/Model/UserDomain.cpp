@@ -96,7 +96,7 @@ namespace Gs2::Chat::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            RoomName,
+            RoomName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RoomName),
             Password
         );
     }
@@ -135,7 +135,7 @@ namespace Gs2::Chat::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            RoomName
+            RoomName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RoomName)
         );
     }
 

@@ -234,7 +234,7 @@ namespace Gs2::Friend::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            TargetUserId,
+            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId),
             WithProfile
         );
     }
@@ -289,7 +289,7 @@ namespace Gs2::Friend::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            TargetUserId
+            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
         );
     }
 
@@ -315,7 +315,7 @@ namespace Gs2::Friend::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            FromUserId
+            FromUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(FromUserId)
         );
     }
 

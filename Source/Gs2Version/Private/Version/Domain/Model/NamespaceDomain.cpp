@@ -387,7 +387,7 @@ namespace Gs2::Version::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            VersionName
+            VersionName == TEXT("") ? TOptional<FString>() : TOptional<FString>(VersionName)
         );
     }
 
@@ -401,7 +401,7 @@ namespace Gs2::Version::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -439,7 +439,7 @@ namespace Gs2::Version::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            VersionName
+            VersionName == TEXT("") ? TOptional<FString>() : TOptional<FString>(VersionName)
         );
     }
 

@@ -389,7 +389,7 @@ namespace Gs2::Quest::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            QuestGroupName
+            QuestGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestGroupName)
         );
     }
 
@@ -403,7 +403,7 @@ namespace Gs2::Quest::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -441,7 +441,7 @@ namespace Gs2::Quest::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            QuestGroupName
+            QuestGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestGroupName)
         );
     }
 

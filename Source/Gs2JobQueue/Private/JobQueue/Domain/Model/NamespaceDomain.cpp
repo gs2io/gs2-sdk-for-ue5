@@ -294,7 +294,7 @@ namespace Gs2::JobQueue::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 

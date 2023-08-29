@@ -146,7 +146,7 @@ namespace Gs2::MegaField::Domain
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
-            NamespaceName
+            NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
 

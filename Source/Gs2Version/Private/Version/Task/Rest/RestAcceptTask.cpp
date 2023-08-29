@@ -84,7 +84,7 @@ namespace Gs2::Version::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetVersionName().IsSet() && !this->Request->GetVersionName().GetValue().IsEmpty())
+            if (this->Request->GetVersionName().IsSet())
             {
                 JsonRootObject->SetStringField("versionName", this->Request->GetVersionName().GetValue());
             }

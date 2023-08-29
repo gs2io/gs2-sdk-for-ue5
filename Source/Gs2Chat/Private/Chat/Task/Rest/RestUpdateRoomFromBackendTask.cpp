@@ -89,11 +89,11 @@ namespace Gs2::Chat::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetPassword().IsSet() && !this->Request->GetPassword().GetValue().IsEmpty())
+            if (this->Request->GetPassword().IsSet())
             {
                 JsonRootObject->SetStringField("password", this->Request->GetPassword().GetValue());
             }
@@ -106,7 +106,7 @@ namespace Gs2::Chat::Task::Rest
                 }
                 JsonRootObject->SetArrayField("whiteListUserIds", v);
             }
-            if (this->Request->GetUserId().IsSet() && !this->Request->GetUserId().GetValue().IsEmpty())
+            if (this->Request->GetUserId().IsSet())
             {
                 JsonRootObject->SetStringField("userId", this->Request->GetUserId().GetValue());
             }

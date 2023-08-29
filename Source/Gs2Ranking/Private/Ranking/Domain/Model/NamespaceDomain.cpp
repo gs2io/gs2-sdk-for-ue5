@@ -391,7 +391,7 @@ namespace Gs2::Ranking::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            CategoryName
+            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
         );
     }
 
@@ -405,7 +405,7 @@ namespace Gs2::Ranking::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -443,7 +443,7 @@ namespace Gs2::Ranking::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            CategoryName
+            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
         );
     }
 

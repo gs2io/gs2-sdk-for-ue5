@@ -102,8 +102,8 @@ namespace Gs2::Enchant::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            ParameterName,
-            PropertyId
+            ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName),
+            PropertyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyId)
         );
     }
 
@@ -132,8 +132,8 @@ namespace Gs2::Enchant::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            ParameterName,
-            PropertyId
+            ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName),
+            PropertyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyId)
         );
     }
 

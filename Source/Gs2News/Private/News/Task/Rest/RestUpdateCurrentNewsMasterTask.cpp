@@ -84,7 +84,7 @@ namespace Gs2::News::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetUploadToken().IsSet() && !this->Request->GetUploadToken().GetValue().IsEmpty())
+            if (this->Request->GetUploadToken().IsSet())
             {
                 JsonRootObject->SetStringField("uploadToken", this->Request->GetUploadToken().GetValue());
             }

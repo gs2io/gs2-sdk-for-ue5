@@ -141,7 +141,7 @@ namespace Gs2::Lock::Domain
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
-            NamespaceName
+            NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
 

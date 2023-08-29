@@ -111,7 +111,7 @@ namespace Gs2::LoginReward::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            BonusModelName
+            BonusModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(BonusModelName)
         );
     }
 

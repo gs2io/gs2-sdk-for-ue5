@@ -89,15 +89,15 @@ namespace Gs2::Limit::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetResetType().IsSet() && !this->Request->GetResetType().GetValue().IsEmpty())
+            if (this->Request->GetResetType().IsSet())
             {
                 JsonRootObject->SetStringField("resetType", this->Request->GetResetType().GetValue());
             }
@@ -105,7 +105,7 @@ namespace Gs2::Limit::Task::Rest
             {
                 JsonRootObject->SetNumberField("resetDayOfMonth", this->Request->GetResetDayOfMonth().GetValue());
             }
-            if (this->Request->GetResetDayOfWeek().IsSet() && !this->Request->GetResetDayOfWeek().GetValue().IsEmpty())
+            if (this->Request->GetResetDayOfWeek().IsSet())
             {
                 JsonRootObject->SetStringField("resetDayOfWeek", this->Request->GetResetDayOfWeek().GetValue());
             }

@@ -100,7 +100,7 @@ namespace Gs2::Friend::Domain::Model
             NamespaceName,
             UserId,
             WithProfile,
-            TargetUserId
+            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
         );
     }
 

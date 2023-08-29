@@ -84,15 +84,15 @@ namespace Gs2::Version::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetName().IsSet() && !this->Request->GetName().GetValue().IsEmpty())
+            if (this->Request->GetName().IsSet())
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
@@ -104,7 +104,7 @@ namespace Gs2::Version::Task::Rest
             {
                 JsonRootObject->SetObjectField("errorVersion", this->Request->GetErrorVersion()->ToJson());
             }
-            if (this->Request->GetScope().IsSet() && !this->Request->GetScope().GetValue().IsEmpty())
+            if (this->Request->GetScope().IsSet())
             {
                 JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
             }
@@ -116,7 +116,7 @@ namespace Gs2::Version::Task::Rest
             {
                 JsonRootObject->SetBoolField("needSignature", this->Request->GetNeedSignature().GetValue());
             }
-            if (this->Request->GetSignatureKeyId().IsSet() && !this->Request->GetSignatureKeyId().GetValue().IsEmpty())
+            if (this->Request->GetSignatureKeyId().IsSet())
             {
                 JsonRootObject->SetStringField("signatureKeyId", this->Request->GetSignatureKeyId().GetValue());
             }

@@ -110,7 +110,7 @@ namespace Gs2::Money::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            TransactionId
+            TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)
         );
     }
 

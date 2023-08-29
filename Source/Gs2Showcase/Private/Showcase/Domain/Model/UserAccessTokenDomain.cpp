@@ -95,7 +95,7 @@ namespace Gs2::Showcase::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            ShowcaseName
+            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
         );
     }
 
@@ -110,7 +110,7 @@ namespace Gs2::Showcase::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            ShowcaseName
+            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
         );
     }
 
@@ -136,7 +136,7 @@ namespace Gs2::Showcase::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            ShowcaseName
+            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
         );
     }
 

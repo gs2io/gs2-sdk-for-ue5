@@ -84,19 +84,19 @@ namespace Gs2::Money::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetPriority().IsSet() && !this->Request->GetPriority().GetValue().IsEmpty())
+            if (this->Request->GetPriority().IsSet())
             {
                 JsonRootObject->SetStringField("priority", this->Request->GetPriority().GetValue());
             }
-            if (this->Request->GetAppleKey().IsSet() && !this->Request->GetAppleKey().GetValue().IsEmpty())
+            if (this->Request->GetAppleKey().IsSet())
             {
                 JsonRootObject->SetStringField("appleKey", this->Request->GetAppleKey().GetValue());
             }
-            if (this->Request->GetGoogleKey().IsSet() && !this->Request->GetGoogleKey().GetValue().IsEmpty())
+            if (this->Request->GetGoogleKey().IsSet())
             {
                 JsonRootObject->SetStringField("googleKey", this->Request->GetGoogleKey().GetValue());
             }

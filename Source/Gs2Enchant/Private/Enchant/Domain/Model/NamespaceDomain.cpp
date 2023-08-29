@@ -459,7 +459,7 @@ namespace Gs2::Enchant::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ParameterName
+            ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName)
         );
     }
 
@@ -483,7 +483,7 @@ namespace Gs2::Enchant::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ParameterName
+            ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName)
         );
     }
 
@@ -507,7 +507,7 @@ namespace Gs2::Enchant::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ParameterName
+            ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName)
         );
     }
 
@@ -531,7 +531,7 @@ namespace Gs2::Enchant::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ParameterName
+            ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName)
         );
     }
 
@@ -545,7 +545,7 @@ namespace Gs2::Enchant::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 

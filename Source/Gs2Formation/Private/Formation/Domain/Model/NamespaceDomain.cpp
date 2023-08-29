@@ -461,7 +461,7 @@ namespace Gs2::Formation::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            MoldName
+            MoldName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldName)
         );
     }
 
@@ -485,7 +485,7 @@ namespace Gs2::Formation::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            FormModelName
+            FormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(FormModelName)
         );
     }
 
@@ -499,7 +499,7 @@ namespace Gs2::Formation::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -537,7 +537,7 @@ namespace Gs2::Formation::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            FormModelName
+            FormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(FormModelName)
         );
     }
 
@@ -561,7 +561,7 @@ namespace Gs2::Formation::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            MoldName
+            MoldName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldName)
         );
     }
 

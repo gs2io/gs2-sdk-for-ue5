@@ -375,7 +375,7 @@ namespace Gs2::LoginReward::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            BonusModelName
+            BonusModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(BonusModelName)
         );
     }
 
@@ -401,7 +401,7 @@ namespace Gs2::LoginReward::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -439,7 +439,7 @@ namespace Gs2::LoginReward::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            BonusModelName
+            BonusModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(BonusModelName)
         );
     }
 

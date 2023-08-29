@@ -94,7 +94,7 @@ namespace Gs2::Schedule::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetTriggerStrategy().IsSet() && !this->Request->GetTriggerStrategy().GetValue().IsEmpty())
+            if (this->Request->GetTriggerStrategy().IsSet())
             {
                 JsonRootObject->SetStringField("triggerStrategy", this->Request->GetTriggerStrategy().GetValue());
             }

@@ -510,7 +510,7 @@ namespace Gs2::Datastore::Domain::Model
             NamespaceName,
             AccessToken,
             DataObjectName,
-            Generation
+            Generation == TEXT("") ? TOptional<FString>() : TOptional<FString>(Generation)
         );
     }
 

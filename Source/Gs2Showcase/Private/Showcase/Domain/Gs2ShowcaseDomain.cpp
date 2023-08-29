@@ -150,7 +150,7 @@ namespace Gs2::Showcase::Domain
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
-            NamespaceName
+            NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
 

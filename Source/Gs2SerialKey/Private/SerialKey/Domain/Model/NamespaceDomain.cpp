@@ -386,7 +386,7 @@ namespace Gs2::SerialKey::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            CampaignModelName
+            CampaignModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CampaignModelName)
         );
     }
 
@@ -400,7 +400,7 @@ namespace Gs2::SerialKey::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -438,7 +438,7 @@ namespace Gs2::SerialKey::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            CampaignModelName
+            CampaignModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CampaignModelName)
         );
     }
 

@@ -84,7 +84,7 @@ namespace Gs2::Lottery::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
@@ -92,11 +92,11 @@ namespace Gs2::Lottery::Task::Rest
             {
                 JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
             }
-            if (this->Request->GetLotteryTriggerScriptId().IsSet() && !this->Request->GetLotteryTriggerScriptId().GetValue().IsEmpty())
+            if (this->Request->GetLotteryTriggerScriptId().IsSet())
             {
                 JsonRootObject->SetStringField("lotteryTriggerScriptId", this->Request->GetLotteryTriggerScriptId().GetValue());
             }
-            if (this->Request->GetChoicePrizeTableScriptId().IsSet() && !this->Request->GetChoicePrizeTableScriptId().GetValue().IsEmpty())
+            if (this->Request->GetChoicePrizeTableScriptId().IsSet())
             {
                 JsonRootObject->SetStringField("choicePrizeTableScriptId", this->Request->GetChoicePrizeTableScriptId().GetValue());
             }

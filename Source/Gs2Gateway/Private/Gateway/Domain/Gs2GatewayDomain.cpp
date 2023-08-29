@@ -147,7 +147,7 @@ namespace Gs2::Gateway::Domain
             StampSheetConfiguration,
             Session,
             Wssession,
-            NamespaceName
+            NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
 

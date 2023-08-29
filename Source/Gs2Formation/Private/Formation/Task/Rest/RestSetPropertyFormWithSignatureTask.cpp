@@ -103,7 +103,7 @@ namespace Gs2::Formation::Task::Rest
                 }
                 JsonRootObject->SetArrayField("slots", v);
             }
-            if (this->Request->GetKeyId().IsSet() && !this->Request->GetKeyId().GetValue().IsEmpty())
+            if (this->Request->GetKeyId().IsSet())
             {
                 JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
             }

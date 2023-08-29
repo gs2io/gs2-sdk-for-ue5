@@ -367,7 +367,7 @@ namespace Gs2::Realtime::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RoomName
+            RoomName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RoomName)
         );
     }
 

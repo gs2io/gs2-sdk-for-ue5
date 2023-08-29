@@ -325,7 +325,7 @@ namespace Gs2::Identifier::Domain::Model
             StampSheetConfiguration,
             Session,
             UserName,
-            ClientId
+            ClientId == TEXT("") ? TOptional<FString>() : TOptional<FString>(ClientId)
         );
     }
 

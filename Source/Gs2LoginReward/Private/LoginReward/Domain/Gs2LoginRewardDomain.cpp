@@ -145,7 +145,7 @@ namespace Gs2::LoginReward::Domain
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
-            NamespaceName
+            NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
 

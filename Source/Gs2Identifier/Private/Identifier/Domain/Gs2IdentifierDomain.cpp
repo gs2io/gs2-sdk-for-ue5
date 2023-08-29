@@ -204,7 +204,7 @@ namespace Gs2::Identifier::Domain
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
-            UserName
+            UserName == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserName)
         );
     }
 
@@ -235,7 +235,7 @@ namespace Gs2::Identifier::Domain
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
-            SecurityPolicyName
+            SecurityPolicyName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SecurityPolicyName)
         );
     }
 

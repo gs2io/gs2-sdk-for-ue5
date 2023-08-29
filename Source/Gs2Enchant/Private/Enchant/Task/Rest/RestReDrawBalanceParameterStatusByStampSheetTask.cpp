@@ -78,11 +78,11 @@ namespace Gs2::Enchant::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetStampSheet().IsSet() && !this->Request->GetStampSheet().GetValue().IsEmpty())
+            if (this->Request->GetStampSheet().IsSet())
             {
                 JsonRootObject->SetStringField("stampSheet", this->Request->GetStampSheet().GetValue());
             }
-            if (this->Request->GetKeyId().IsSet() && !this->Request->GetKeyId().GetValue().IsEmpty())
+            if (this->Request->GetKeyId().IsSet())
             {
                 JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
             }

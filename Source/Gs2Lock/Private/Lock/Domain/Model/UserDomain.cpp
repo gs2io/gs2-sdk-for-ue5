@@ -92,7 +92,7 @@ namespace Gs2::Lock::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            PropertyId
+            PropertyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyId)
         );
     }
 

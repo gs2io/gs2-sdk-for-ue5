@@ -99,8 +99,8 @@ namespace Gs2::Experience::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            ExperienceName,
-            PropertyId
+            ExperienceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ExperienceName),
+            PropertyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyId)
         );
     }
 

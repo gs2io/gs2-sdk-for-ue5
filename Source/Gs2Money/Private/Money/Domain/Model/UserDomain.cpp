@@ -199,7 +199,7 @@ namespace Gs2::Money::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            TransactionId
+            TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)
         );
     }
 

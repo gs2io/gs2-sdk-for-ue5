@@ -202,7 +202,7 @@ namespace Gs2::Inbox::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            MessageName
+            MessageName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MessageName)
         );
     }
 

@@ -84,11 +84,11 @@ namespace Gs2::StateMachine::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetMainStateMachineName().IsSet() && !this->Request->GetMainStateMachineName().GetValue().IsEmpty())
+            if (this->Request->GetMainStateMachineName().IsSet())
             {
                 JsonRootObject->SetStringField("mainStateMachineName", this->Request->GetMainStateMachineName().GetValue());
             }
-            if (this->Request->GetPayload().IsSet() && !this->Request->GetPayload().GetValue().IsEmpty())
+            if (this->Request->GetPayload().IsSet())
             {
                 JsonRootObject->SetStringField("payload", this->Request->GetPayload().GetValue());
             }

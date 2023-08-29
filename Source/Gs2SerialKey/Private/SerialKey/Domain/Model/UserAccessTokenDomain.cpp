@@ -86,7 +86,7 @@ namespace Gs2::SerialKey::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            SerialKeyCode
+            SerialKeyCode == TEXT("") ? TOptional<FString>() : TOptional<FString>(SerialKeyCode)
         );
     }
 

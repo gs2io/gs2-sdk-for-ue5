@@ -89,11 +89,11 @@ namespace Gs2::Ranking::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
@@ -105,11 +105,11 @@ namespace Gs2::Ranking::Task::Rest
             {
                 JsonRootObject->SetStringField("maximumValue", FString::Printf(TEXT("%lld"), this->Request->GetMaximumValue().GetValue()));
             }
-            if (this->Request->GetOrderDirection().IsSet() && !this->Request->GetOrderDirection().GetValue().IsEmpty())
+            if (this->Request->GetOrderDirection().IsSet())
             {
                 JsonRootObject->SetStringField("orderDirection", this->Request->GetOrderDirection().GetValue());
             }
-            if (this->Request->GetScope().IsSet() && !this->Request->GetScope().GetValue().IsEmpty())
+            if (this->Request->GetScope().IsSet())
             {
                 JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
             }
@@ -142,11 +142,11 @@ namespace Gs2::Ranking::Task::Rest
                 }
                 JsonRootObject->SetArrayField("additionalScopes", v);
             }
-            if (this->Request->GetEntryPeriodEventId().IsSet() && !this->Request->GetEntryPeriodEventId().GetValue().IsEmpty())
+            if (this->Request->GetEntryPeriodEventId().IsSet())
             {
                 JsonRootObject->SetStringField("entryPeriodEventId", this->Request->GetEntryPeriodEventId().GetValue());
             }
-            if (this->Request->GetAccessPeriodEventId().IsSet() && !this->Request->GetAccessPeriodEventId().GetValue().IsEmpty())
+            if (this->Request->GetAccessPeriodEventId().IsSet())
             {
                 JsonRootObject->SetStringField("accessPeriodEventId", this->Request->GetAccessPeriodEventId().GetValue());
             }
@@ -159,7 +159,7 @@ namespace Gs2::Ranking::Task::Rest
                 }
                 JsonRootObject->SetArrayField("ignoreUserIds", v);
             }
-            if (this->Request->GetGeneration().IsSet() && !this->Request->GetGeneration().GetValue().IsEmpty())
+            if (this->Request->GetGeneration().IsSet())
             {
                 JsonRootObject->SetStringField("generation", this->Request->GetGeneration().GetValue());
             }

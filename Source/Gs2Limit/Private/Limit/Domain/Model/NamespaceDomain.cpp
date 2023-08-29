@@ -385,7 +385,7 @@ namespace Gs2::Limit::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            LimitName
+            LimitName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LimitName)
         );
     }
 
@@ -399,7 +399,7 @@ namespace Gs2::Limit::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -437,7 +437,7 @@ namespace Gs2::Limit::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            LimitName
+            LimitName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LimitName)
         );
     }
 

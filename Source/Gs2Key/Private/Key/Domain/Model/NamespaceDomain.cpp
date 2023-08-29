@@ -438,7 +438,7 @@ namespace Gs2::Key::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            KeyName
+            KeyName == TEXT("") ? TOptional<FString>() : TOptional<FString>(KeyName)
         );
     }
 
@@ -462,7 +462,7 @@ namespace Gs2::Key::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ApiKeyName
+            ApiKeyName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ApiKeyName)
         );
     }
 

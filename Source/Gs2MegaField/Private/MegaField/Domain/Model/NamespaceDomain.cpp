@@ -387,7 +387,7 @@ namespace Gs2::MegaField::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            AreaModelName
+            AreaModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AreaModelName)
         );
     }
 
@@ -401,7 +401,7 @@ namespace Gs2::MegaField::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -439,7 +439,7 @@ namespace Gs2::MegaField::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            AreaModelName
+            AreaModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AreaModelName)
         );
     }
 

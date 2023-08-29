@@ -456,7 +456,7 @@ namespace Gs2::Experience::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ExperienceName
+            ExperienceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ExperienceName)
         );
     }
 
@@ -470,7 +470,7 @@ namespace Gs2::Experience::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -508,7 +508,7 @@ namespace Gs2::Experience::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ThresholdName
+            ThresholdName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ThresholdName)
         );
     }
 
@@ -532,7 +532,7 @@ namespace Gs2::Experience::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ExperienceName
+            ExperienceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ExperienceName)
         );
     }
 

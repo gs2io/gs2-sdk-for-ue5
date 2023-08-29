@@ -88,8 +88,8 @@ namespace Gs2::MegaField::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            AreaModelName,
-            LayerModelName
+            AreaModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AreaModelName),
+            LayerModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LayerModelName)
         );
     }
 

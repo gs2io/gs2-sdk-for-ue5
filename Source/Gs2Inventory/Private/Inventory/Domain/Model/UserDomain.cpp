@@ -118,7 +118,7 @@ namespace Gs2::Inventory::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            InventoryName
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
     }
 
@@ -133,7 +133,7 @@ namespace Gs2::Inventory::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            InventoryName
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
     }
 
@@ -148,7 +148,7 @@ namespace Gs2::Inventory::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            InventoryName
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
     }
 

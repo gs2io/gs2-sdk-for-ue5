@@ -115,7 +115,7 @@ namespace Gs2::Exchange::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            AwaitName
+            AwaitName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AwaitName)
         );
     }
 

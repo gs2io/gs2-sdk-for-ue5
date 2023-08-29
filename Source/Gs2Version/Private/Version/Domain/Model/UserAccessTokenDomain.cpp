@@ -98,7 +98,7 @@ namespace Gs2::Version::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            VersionName
+            VersionName == TEXT("") ? TOptional<FString>() : TOptional<FString>(VersionName)
         );
     }
 

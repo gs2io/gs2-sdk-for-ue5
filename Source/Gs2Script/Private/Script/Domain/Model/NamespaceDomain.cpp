@@ -533,7 +533,7 @@ namespace Gs2::Script::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ScriptName
+            ScriptName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ScriptName)
         );
     }
 

@@ -317,7 +317,7 @@ namespace Gs2::News::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UploadToken
+            UploadToken == TEXT("") ? TOptional<FString>() : TOptional<FString>(UploadToken)
         );
     }
 
@@ -331,7 +331,7 @@ namespace Gs2::News::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 

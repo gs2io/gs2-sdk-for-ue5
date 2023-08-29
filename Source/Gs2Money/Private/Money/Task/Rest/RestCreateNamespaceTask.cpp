@@ -78,15 +78,15 @@ namespace Gs2::Money::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetName().IsSet() && !this->Request->GetName().GetValue().IsEmpty())
+            if (this->Request->GetName().IsSet())
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetPriority().IsSet() && !this->Request->GetPriority().GetValue().IsEmpty())
+            if (this->Request->GetPriority().IsSet())
             {
                 JsonRootObject->SetStringField("priority", this->Request->GetPriority().GetValue());
             }
@@ -94,15 +94,15 @@ namespace Gs2::Money::Task::Rest
             {
                 JsonRootObject->SetBoolField("shareFree", this->Request->GetShareFree().GetValue());
             }
-            if (this->Request->GetCurrency().IsSet() && !this->Request->GetCurrency().GetValue().IsEmpty())
+            if (this->Request->GetCurrency().IsSet())
             {
                 JsonRootObject->SetStringField("currency", this->Request->GetCurrency().GetValue());
             }
-            if (this->Request->GetAppleKey().IsSet() && !this->Request->GetAppleKey().GetValue().IsEmpty())
+            if (this->Request->GetAppleKey().IsSet())
             {
                 JsonRootObject->SetStringField("appleKey", this->Request->GetAppleKey().GetValue());
             }
-            if (this->Request->GetGoogleKey().IsSet() && !this->Request->GetGoogleKey().GetValue().IsEmpty())
+            if (this->Request->GetGoogleKey().IsSet())
             {
                 JsonRootObject->SetStringField("googleKey", this->Request->GetGoogleKey().GetValue());
             }

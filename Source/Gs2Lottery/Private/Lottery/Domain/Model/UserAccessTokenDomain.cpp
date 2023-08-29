@@ -116,7 +116,7 @@ namespace Gs2::Lottery::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            PrizeTableName
+            PrizeTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PrizeTableName)
         );
     }
 

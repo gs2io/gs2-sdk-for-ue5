@@ -253,7 +253,7 @@ namespace Gs2::Dictionary::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            EntryName
+            EntryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryName)
         );
     }
 

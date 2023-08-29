@@ -159,7 +159,7 @@ namespace Gs2::MegaField::Domain::Model
             Session,
             NamespaceName,
             AreaModelName,
-            LayerModelName
+            LayerModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LayerModelName)
         );
     }
 

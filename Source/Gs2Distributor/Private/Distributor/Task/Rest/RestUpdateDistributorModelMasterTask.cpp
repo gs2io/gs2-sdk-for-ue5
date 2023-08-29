@@ -89,15 +89,15 @@ namespace Gs2::Distributor::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetInboxNamespaceId().IsSet() && !this->Request->GetInboxNamespaceId().GetValue().IsEmpty())
+            if (this->Request->GetInboxNamespaceId().IsSet())
             {
                 JsonRootObject->SetStringField("inboxNamespaceId", this->Request->GetInboxNamespaceId().GetValue());
             }

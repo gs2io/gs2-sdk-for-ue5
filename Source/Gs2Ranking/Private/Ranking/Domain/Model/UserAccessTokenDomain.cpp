@@ -180,8 +180,8 @@ namespace Gs2::Ranking::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            CategoryName,
-            TargetUserId
+            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),
+            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
         );
     }
 
@@ -211,7 +211,7 @@ namespace Gs2::Ranking::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            CategoryName
+            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
         );
     }
 
@@ -243,9 +243,9 @@ namespace Gs2::Ranking::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            CategoryName,
-            ScorerUserId,
-            UniqueId
+            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),
+            ScorerUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(ScorerUserId),
+            UniqueId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UniqueId)
         );
     }
 

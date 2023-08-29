@@ -98,7 +98,7 @@ namespace Gs2::Stamina::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            StaminaName
+            StaminaName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StaminaName)
         );
     }
 

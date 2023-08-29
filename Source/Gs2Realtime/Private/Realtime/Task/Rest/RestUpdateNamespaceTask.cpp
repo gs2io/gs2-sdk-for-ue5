@@ -84,15 +84,15 @@ namespace Gs2::Realtime::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetServerType().IsSet() && !this->Request->GetServerType().GetValue().IsEmpty())
+            if (this->Request->GetServerType().IsSet())
             {
                 JsonRootObject->SetStringField("serverType", this->Request->GetServerType().GetValue());
             }
-            if (this->Request->GetServerSpec().IsSet() && !this->Request->GetServerSpec().GetValue().IsEmpty())
+            if (this->Request->GetServerSpec().IsSet())
             {
                 JsonRootObject->SetStringField("serverSpec", this->Request->GetServerSpec().GetValue());
             }

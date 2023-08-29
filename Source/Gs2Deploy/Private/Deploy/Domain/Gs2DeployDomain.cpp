@@ -246,7 +246,7 @@ namespace Gs2::Deploy::Domain
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
-            StackName
+            StackName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StackName)
         );
     }
 

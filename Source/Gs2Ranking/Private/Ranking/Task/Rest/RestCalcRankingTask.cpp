@@ -89,7 +89,7 @@ namespace Gs2::Ranking::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetAdditionalScopeName().IsSet() && !this->Request->GetAdditionalScopeName().GetValue().IsEmpty())
+            if (this->Request->GetAdditionalScopeName().IsSet())
             {
                 JsonRootObject->SetStringField("additionalScopeName", this->Request->GetAdditionalScopeName().GetValue());
             }

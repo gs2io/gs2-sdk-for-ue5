@@ -358,7 +358,7 @@ namespace Gs2::Mission::Domain::Model
             Session,
             NamespaceName,
             MissionGroupName,
-            MissionTaskName
+            MissionTaskName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MissionTaskName)
         );
     }
 

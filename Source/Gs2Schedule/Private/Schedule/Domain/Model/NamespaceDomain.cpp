@@ -364,7 +364,7 @@ namespace Gs2::Schedule::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -414,7 +414,7 @@ namespace Gs2::Schedule::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            EventName
+            EventName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EventName)
         );
     }
 

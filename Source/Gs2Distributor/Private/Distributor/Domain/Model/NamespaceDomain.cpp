@@ -386,7 +386,7 @@ namespace Gs2::Distributor::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            DistributorName
+            DistributorName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DistributorName)
         );
     }
 
@@ -422,7 +422,7 @@ namespace Gs2::Distributor::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            DistributorName
+            DistributorName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DistributorName)
         );
     }
 
@@ -436,7 +436,7 @@ namespace Gs2::Distributor::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 

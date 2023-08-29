@@ -593,7 +593,7 @@ namespace Gs2::Showcase::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ShowcaseName
+            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
         );
     }
 
@@ -617,7 +617,7 @@ namespace Gs2::Showcase::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            SalesItemName
+            SalesItemName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SalesItemName)
         );
     }
 
@@ -641,7 +641,7 @@ namespace Gs2::Showcase::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            SalesItemGroupName
+            SalesItemGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SalesItemGroupName)
         );
     }
 
@@ -667,7 +667,7 @@ namespace Gs2::Showcase::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -705,7 +705,7 @@ namespace Gs2::Showcase::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            ShowcaseName
+            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
         );
     }
 

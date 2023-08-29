@@ -440,7 +440,7 @@ namespace Gs2::Lottery::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -490,7 +490,7 @@ namespace Gs2::Lottery::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            PrizeTableName
+            PrizeTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PrizeTableName)
         );
     }
 
@@ -514,7 +514,7 @@ namespace Gs2::Lottery::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            LotteryName
+            LotteryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LotteryName)
         );
     }
 
@@ -538,7 +538,7 @@ namespace Gs2::Lottery::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            PrizeTableName
+            PrizeTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PrizeTableName)
         );
     }
 
@@ -562,7 +562,7 @@ namespace Gs2::Lottery::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            LotteryName
+            LotteryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LotteryName)
         );
     }
 

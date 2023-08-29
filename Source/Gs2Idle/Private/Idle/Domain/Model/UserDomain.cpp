@@ -95,7 +95,7 @@ namespace Gs2::Idle::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            CategoryName
+            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
         );
     }
 

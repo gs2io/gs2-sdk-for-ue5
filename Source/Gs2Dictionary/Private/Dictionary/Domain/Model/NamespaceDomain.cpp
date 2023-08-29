@@ -385,7 +385,7 @@ namespace Gs2::Dictionary::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            EntryName
+            EntryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryName)
         );
     }
 
@@ -399,7 +399,7 @@ namespace Gs2::Dictionary::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -437,7 +437,7 @@ namespace Gs2::Dictionary::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            EntryName
+            EntryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryName)
         );
     }
 

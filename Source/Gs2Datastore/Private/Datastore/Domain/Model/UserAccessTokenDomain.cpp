@@ -321,7 +321,7 @@ namespace Gs2::Datastore::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            DataObjectName
+            DataObjectName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DataObjectName)
         );
     }
 

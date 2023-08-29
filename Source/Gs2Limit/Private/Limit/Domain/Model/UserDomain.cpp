@@ -98,8 +98,8 @@ namespace Gs2::Limit::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            LimitName,
-            CounterName
+            LimitName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LimitName),
+            CounterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CounterName)
         );
     }
 

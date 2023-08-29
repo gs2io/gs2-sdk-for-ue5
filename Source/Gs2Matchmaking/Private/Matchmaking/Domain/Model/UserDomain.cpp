@@ -341,7 +341,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            GatheringName
+            GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName)
         );
     }
 
@@ -359,10 +359,10 @@ namespace Gs2::Matchmaking::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            RatingName,
-            GatheringName,
+            RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName),
+            GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName),
             NumberOfPlayer,
-            KeyId
+            KeyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(KeyId)
         );
     }
 
@@ -388,7 +388,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            RatingName
+            RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName)
         );
     }
 

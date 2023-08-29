@@ -110,7 +110,7 @@ namespace Gs2::Showcase::Domain::Model
             NamespaceName,
             UserId,
             ShowcaseName,
-            DisplayItemName
+            DisplayItemName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DisplayItemName)
         );
     }
 

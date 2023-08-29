@@ -231,7 +231,7 @@ namespace Gs2::SerialKey::Domain::Model
             Session,
             NamespaceName,
             CampaignModelName,
-            IssueJobName
+            IssueJobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(IssueJobName)
         );
     }
 

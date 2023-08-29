@@ -96,7 +96,7 @@ namespace Gs2::Dictionary::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            EntryName
+            EntryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryName)
         );
     }
 

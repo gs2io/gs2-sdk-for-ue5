@@ -89,19 +89,19 @@ namespace Gs2::LoginReward::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetMode().IsSet() && !this->Request->GetMode().GetValue().IsEmpty())
+            if (this->Request->GetMode().IsSet())
             {
                 JsonRootObject->SetStringField("mode", this->Request->GetMode().GetValue());
             }
-            if (this->Request->GetPeriodEventId().IsSet() && !this->Request->GetPeriodEventId().GetValue().IsEmpty())
+            if (this->Request->GetPeriodEventId().IsSet())
             {
                 JsonRootObject->SetStringField("periodEventId", this->Request->GetPeriodEventId().GetValue());
             }
@@ -109,7 +109,7 @@ namespace Gs2::LoginReward::Task::Rest
             {
                 JsonRootObject->SetNumberField("resetHour", this->Request->GetResetHour().GetValue());
             }
-            if (this->Request->GetRepeat().IsSet() && !this->Request->GetRepeat().GetValue().IsEmpty())
+            if (this->Request->GetRepeat().IsSet())
             {
                 JsonRootObject->SetStringField("repeat", this->Request->GetRepeat().GetValue());
             }
@@ -122,7 +122,7 @@ namespace Gs2::LoginReward::Task::Rest
                 }
                 JsonRootObject->SetArrayField("rewards", v);
             }
-            if (this->Request->GetMissedReceiveRelief().IsSet() && !this->Request->GetMissedReceiveRelief().GetValue().IsEmpty())
+            if (this->Request->GetMissedReceiveRelief().IsSet())
             {
                 JsonRootObject->SetStringField("missedReceiveRelief", this->Request->GetMissedReceiveRelief().GetValue());
             }

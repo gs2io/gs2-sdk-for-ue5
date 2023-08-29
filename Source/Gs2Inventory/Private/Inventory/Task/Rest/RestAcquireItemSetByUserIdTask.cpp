@@ -112,7 +112,7 @@ namespace Gs2::Inventory::Task::Rest
             {
                 JsonRootObject->SetBoolField("createNewItemSet", this->Request->GetCreateNewItemSet().GetValue());
             }
-            if (this->Request->GetItemSetName().IsSet() && !this->Request->GetItemSetName().GetValue().IsEmpty())
+            if (this->Request->GetItemSetName().IsSet())
             {
                 JsonRootObject->SetStringField("itemSetName", this->Request->GetItemSetName().GetValue());
             }

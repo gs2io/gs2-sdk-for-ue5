@@ -84,19 +84,19 @@ namespace Gs2::Schedule::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetName().IsSet() && !this->Request->GetName().GetValue().IsEmpty())
+            if (this->Request->GetName().IsSet())
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetScheduleType().IsSet() && !this->Request->GetScheduleType().GetValue().IsEmpty())
+            if (this->Request->GetScheduleType().IsSet())
             {
                 JsonRootObject->SetStringField("scheduleType", this->Request->GetScheduleType().GetValue());
             }
@@ -108,7 +108,7 @@ namespace Gs2::Schedule::Task::Rest
             {
                 JsonRootObject->SetStringField("absoluteEnd", FString::Printf(TEXT("%lld"), this->Request->GetAbsoluteEnd().GetValue()));
             }
-            if (this->Request->GetRepeatType().IsSet() && !this->Request->GetRepeatType().GetValue().IsEmpty())
+            if (this->Request->GetRepeatType().IsSet())
             {
                 JsonRootObject->SetStringField("repeatType", this->Request->GetRepeatType().GetValue());
             }
@@ -120,11 +120,11 @@ namespace Gs2::Schedule::Task::Rest
             {
                 JsonRootObject->SetNumberField("repeatEndDayOfMonth", this->Request->GetRepeatEndDayOfMonth().GetValue());
             }
-            if (this->Request->GetRepeatBeginDayOfWeek().IsSet() && !this->Request->GetRepeatBeginDayOfWeek().GetValue().IsEmpty())
+            if (this->Request->GetRepeatBeginDayOfWeek().IsSet())
             {
                 JsonRootObject->SetStringField("repeatBeginDayOfWeek", this->Request->GetRepeatBeginDayOfWeek().GetValue());
             }
-            if (this->Request->GetRepeatEndDayOfWeek().IsSet() && !this->Request->GetRepeatEndDayOfWeek().GetValue().IsEmpty())
+            if (this->Request->GetRepeatEndDayOfWeek().IsSet())
             {
                 JsonRootObject->SetStringField("repeatEndDayOfWeek", this->Request->GetRepeatEndDayOfWeek().GetValue());
             }
@@ -136,7 +136,7 @@ namespace Gs2::Schedule::Task::Rest
             {
                 JsonRootObject->SetNumberField("repeatEndHour", this->Request->GetRepeatEndHour().GetValue());
             }
-            if (this->Request->GetRelativeTriggerName().IsSet() && !this->Request->GetRelativeTriggerName().GetValue().IsEmpty())
+            if (this->Request->GetRelativeTriggerName().IsSet())
             {
                 JsonRootObject->SetStringField("relativeTriggerName", this->Request->GetRelativeTriggerName().GetValue());
             }

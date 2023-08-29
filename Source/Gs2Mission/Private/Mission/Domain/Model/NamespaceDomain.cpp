@@ -461,7 +461,7 @@ namespace Gs2::Mission::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            MissionGroupName
+            MissionGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MissionGroupName)
         );
     }
 
@@ -485,7 +485,7 @@ namespace Gs2::Mission::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            CounterName
+            CounterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CounterName)
         );
     }
 
@@ -499,7 +499,7 @@ namespace Gs2::Mission::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -537,7 +537,7 @@ namespace Gs2::Mission::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            MissionGroupName
+            MissionGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MissionGroupName)
         );
     }
 
@@ -561,7 +561,7 @@ namespace Gs2::Mission::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            CounterName
+            CounterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CounterName)
         );
     }
 

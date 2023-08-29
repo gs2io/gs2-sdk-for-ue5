@@ -180,7 +180,7 @@ namespace Gs2::Inventory::Domain::Model
             Session,
             NamespaceName,
             InventoryName,
-            ItemName
+            ItemName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ItemName)
         );
     }
 

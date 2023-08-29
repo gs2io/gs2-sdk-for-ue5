@@ -110,7 +110,7 @@ namespace Gs2::LoginReward::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            BonusModelName
+            BonusModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(BonusModelName)
         );
     }
 

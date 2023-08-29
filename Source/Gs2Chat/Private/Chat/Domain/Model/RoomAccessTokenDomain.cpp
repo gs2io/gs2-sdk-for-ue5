@@ -311,7 +311,7 @@ namespace Gs2::Chat::Domain::Model
             AccessToken,
             RoomName,
             Password,
-            MessageName
+            MessageName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MessageName)
         );
     }
 

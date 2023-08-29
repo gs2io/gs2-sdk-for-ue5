@@ -94,7 +94,7 @@ namespace Gs2::Exchange::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetLockTransactionId().IsSet() && !this->Request->GetLockTransactionId().GetValue().IsEmpty())
+            if (this->Request->GetLockTransactionId().IsSet())
             {
                 JsonRootObject->SetStringField("lockTransactionId", this->Request->GetLockTransactionId().GetValue());
             }

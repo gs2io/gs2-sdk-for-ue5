@@ -447,7 +447,7 @@ namespace Gs2::Exchange::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RateName
+            RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
         );
     }
 
@@ -483,7 +483,7 @@ namespace Gs2::Exchange::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RateName
+            RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
         );
     }
 
@@ -497,7 +497,7 @@ namespace Gs2::Exchange::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -535,7 +535,7 @@ namespace Gs2::Exchange::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RateName
+            RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
         );
     }
 
@@ -559,7 +559,7 @@ namespace Gs2::Exchange::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RateName
+            RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
         );
     }
 

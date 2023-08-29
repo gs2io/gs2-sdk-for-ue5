@@ -548,7 +548,7 @@ namespace Gs2::Inventory::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            InventoryName
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
     }
 
@@ -562,7 +562,7 @@ namespace Gs2::Inventory::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -600,7 +600,7 @@ namespace Gs2::Inventory::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            InventoryName
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
     }
 
@@ -624,7 +624,7 @@ namespace Gs2::Inventory::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            InventoryName
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
     }
 
@@ -648,7 +648,7 @@ namespace Gs2::Inventory::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            InventoryName
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
     }
 
@@ -672,7 +672,7 @@ namespace Gs2::Inventory::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            InventoryName
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
     }
 
@@ -696,7 +696,7 @@ namespace Gs2::Inventory::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            InventoryName
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
     }
 

@@ -159,7 +159,7 @@ namespace Gs2::News::Domain::Model
             Session,
             NamespaceName,
             UploadToken,
-            OutputName
+            OutputName == TEXT("") ? TOptional<FString>() : TOptional<FString>(OutputName)
         );
     }
 

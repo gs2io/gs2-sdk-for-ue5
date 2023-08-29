@@ -101,7 +101,7 @@ namespace Gs2::Friend::Domain::Model
             NamespaceName,
             AccessToken,
             WithProfile,
-            TargetUserId
+            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
         );
     }
 

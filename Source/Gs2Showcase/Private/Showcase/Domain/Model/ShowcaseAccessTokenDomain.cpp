@@ -164,7 +164,7 @@ namespace Gs2::Showcase::Domain::Model
             NamespaceName,
             AccessToken,
             ShowcaseName,
-            DisplayItemId
+            DisplayItemId == TEXT("") ? TOptional<FString>() : TOptional<FString>(DisplayItemId)
         );
     }
 

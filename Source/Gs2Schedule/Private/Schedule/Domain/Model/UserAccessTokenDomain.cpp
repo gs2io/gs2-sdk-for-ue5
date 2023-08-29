@@ -97,7 +97,7 @@ namespace Gs2::Schedule::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            TriggerName
+            TriggerName == TEXT("") ? TOptional<FString>() : TOptional<FString>(TriggerName)
         );
     }
 
@@ -123,7 +123,7 @@ namespace Gs2::Schedule::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            EventName
+            EventName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EventName)
         );
     }
 

@@ -84,11 +84,11 @@ namespace Gs2::Version::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetAssumeUserId().IsSet() && !this->Request->GetAssumeUserId().GetValue().IsEmpty())
+            if (this->Request->GetAssumeUserId().IsSet())
             {
                 JsonRootObject->SetStringField("assumeUserId", this->Request->GetAssumeUserId().GetValue());
             }
@@ -96,7 +96,7 @@ namespace Gs2::Version::Task::Rest
             {
                 JsonRootObject->SetObjectField("acceptVersionScript", this->Request->GetAcceptVersionScript()->ToJson());
             }
-            if (this->Request->GetCheckVersionTriggerScriptId().IsSet() && !this->Request->GetCheckVersionTriggerScriptId().GetValue().IsEmpty())
+            if (this->Request->GetCheckVersionTriggerScriptId().IsSet())
             {
                 JsonRootObject->SetStringField("checkVersionTriggerScriptId", this->Request->GetCheckVersionTriggerScriptId().GetValue());
             }

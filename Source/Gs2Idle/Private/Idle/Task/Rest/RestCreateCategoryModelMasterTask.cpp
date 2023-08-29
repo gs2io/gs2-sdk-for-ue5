@@ -84,15 +84,15 @@ namespace Gs2::Idle::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetName().IsSet() && !this->Request->GetName().GetValue().IsEmpty())
+            if (this->Request->GetName().IsSet())
             {
                 JsonRootObject->SetStringField("name", this->Request->GetName().GetValue());
             }
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
@@ -113,11 +113,11 @@ namespace Gs2::Idle::Task::Rest
                 }
                 JsonRootObject->SetArrayField("acquireActions", v);
             }
-            if (this->Request->GetIdlePeriodScheduleId().IsSet() && !this->Request->GetIdlePeriodScheduleId().GetValue().IsEmpty())
+            if (this->Request->GetIdlePeriodScheduleId().IsSet())
             {
                 JsonRootObject->SetStringField("idlePeriodScheduleId", this->Request->GetIdlePeriodScheduleId().GetValue());
             }
-            if (this->Request->GetReceivePeriodScheduleId().IsSet() && !this->Request->GetReceivePeriodScheduleId().GetValue().IsEmpty())
+            if (this->Request->GetReceivePeriodScheduleId().IsSet())
             {
                 JsonRootObject->SetStringField("receivePeriodScheduleId", this->Request->GetReceivePeriodScheduleId().GetValue());
             }

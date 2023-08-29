@@ -89,23 +89,23 @@ namespace Gs2::Enhance::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetTargetInventoryModelId().IsSet() && !this->Request->GetTargetInventoryModelId().GetValue().IsEmpty())
+            if (this->Request->GetTargetInventoryModelId().IsSet())
             {
                 JsonRootObject->SetStringField("targetInventoryModelId", this->Request->GetTargetInventoryModelId().GetValue());
             }
-            if (this->Request->GetAcquireExperienceSuffix().IsSet() && !this->Request->GetAcquireExperienceSuffix().GetValue().IsEmpty())
+            if (this->Request->GetAcquireExperienceSuffix().IsSet())
             {
                 JsonRootObject->SetStringField("acquireExperienceSuffix", this->Request->GetAcquireExperienceSuffix().GetValue());
             }
-            if (this->Request->GetMaterialInventoryModelId().IsSet() && !this->Request->GetMaterialInventoryModelId().GetValue().IsEmpty())
+            if (this->Request->GetMaterialInventoryModelId().IsSet())
             {
                 JsonRootObject->SetStringField("materialInventoryModelId", this->Request->GetMaterialInventoryModelId().GetValue());
             }
@@ -118,7 +118,7 @@ namespace Gs2::Enhance::Task::Rest
                 }
                 JsonRootObject->SetArrayField("acquireExperienceHierarchy", v);
             }
-            if (this->Request->GetExperienceModelId().IsSet() && !this->Request->GetExperienceModelId().GetValue().IsEmpty())
+            if (this->Request->GetExperienceModelId().IsSet())
             {
                 JsonRootObject->SetStringField("experienceModelId", this->Request->GetExperienceModelId().GetValue());
             }

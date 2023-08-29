@@ -102,7 +102,7 @@ namespace Gs2::Formation::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            MoldName
+            MoldName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldName)
         );
     }
 
@@ -131,8 +131,8 @@ namespace Gs2::Formation::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            FormModelName,
-            PropertyId
+            FormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(FormModelName),
+            PropertyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyId)
         );
     }
 

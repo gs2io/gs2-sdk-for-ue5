@@ -84,11 +84,11 @@ namespace Gs2::Matchmaking::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetBallotBody().IsSet() && !this->Request->GetBallotBody().GetValue().IsEmpty())
+            if (this->Request->GetBallotBody().IsSet())
             {
                 JsonRootObject->SetStringField("ballotBody", this->Request->GetBallotBody().GetValue());
             }
-            if (this->Request->GetBallotSignature().IsSet() && !this->Request->GetBallotSignature().GetValue().IsEmpty())
+            if (this->Request->GetBallotSignature().IsSet())
             {
                 JsonRootObject->SetStringField("ballotSignature", this->Request->GetBallotSignature().GetValue());
             }
@@ -101,7 +101,7 @@ namespace Gs2::Matchmaking::Task::Rest
                 }
                 JsonRootObject->SetArrayField("gameResults", v);
             }
-            if (this->Request->GetKeyId().IsSet() && !this->Request->GetKeyId().GetValue().IsEmpty())
+            if (this->Request->GetKeyId().IsSet())
             {
                 JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
             }

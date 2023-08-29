@@ -86,7 +86,7 @@ namespace Gs2::Distributor::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            TransactionId
+            TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)
         );
     }
 

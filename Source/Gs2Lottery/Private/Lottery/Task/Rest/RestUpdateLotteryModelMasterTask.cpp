@@ -89,27 +89,27 @@ namespace Gs2::Lottery::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
-            if (this->Request->GetMode().IsSet() && !this->Request->GetMode().GetValue().IsEmpty())
+            if (this->Request->GetMode().IsSet())
             {
                 JsonRootObject->SetStringField("mode", this->Request->GetMode().GetValue());
             }
-            if (this->Request->GetMethod().IsSet() && !this->Request->GetMethod().GetValue().IsEmpty())
+            if (this->Request->GetMethod().IsSet())
             {
                 JsonRootObject->SetStringField("method", this->Request->GetMethod().GetValue());
             }
-            if (this->Request->GetPrizeTableName().IsSet() && !this->Request->GetPrizeTableName().GetValue().IsEmpty())
+            if (this->Request->GetPrizeTableName().IsSet())
             {
                 JsonRootObject->SetStringField("prizeTableName", this->Request->GetPrizeTableName().GetValue());
             }
-            if (this->Request->GetChoicePrizeTableScriptId().IsSet() && !this->Request->GetChoicePrizeTableScriptId().GetValue().IsEmpty())
+            if (this->Request->GetChoicePrizeTableScriptId().IsSet())
             {
                 JsonRootObject->SetStringField("choicePrizeTableScriptId", this->Request->GetChoicePrizeTableScriptId().GetValue());
             }

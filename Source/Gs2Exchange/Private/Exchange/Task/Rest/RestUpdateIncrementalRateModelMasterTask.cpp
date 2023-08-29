@@ -89,11 +89,11 @@ namespace Gs2::Exchange::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetDescription().IsSet() && !this->Request->GetDescription().GetValue().IsEmpty())
+            if (this->Request->GetDescription().IsSet())
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetMetadata().IsSet() && !this->Request->GetMetadata().GetValue().IsEmpty())
+            if (this->Request->GetMetadata().IsSet())
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
@@ -101,7 +101,7 @@ namespace Gs2::Exchange::Task::Rest
             {
                 JsonRootObject->SetObjectField("consumeAction", this->Request->GetConsumeAction()->ToJson());
             }
-            if (this->Request->GetCalculateType().IsSet() && !this->Request->GetCalculateType().GetValue().IsEmpty())
+            if (this->Request->GetCalculateType().IsSet())
             {
                 JsonRootObject->SetStringField("calculateType", this->Request->GetCalculateType().GetValue());
             }
@@ -113,11 +113,11 @@ namespace Gs2::Exchange::Task::Rest
             {
                 JsonRootObject->SetStringField("coefficientValue", FString::Printf(TEXT("%lld"), this->Request->GetCoefficientValue().GetValue()));
             }
-            if (this->Request->GetCalculateScriptId().IsSet() && !this->Request->GetCalculateScriptId().GetValue().IsEmpty())
+            if (this->Request->GetCalculateScriptId().IsSet())
             {
                 JsonRootObject->SetStringField("calculateScriptId", this->Request->GetCalculateScriptId().GetValue());
             }
-            if (this->Request->GetExchangeCountId().IsSet() && !this->Request->GetExchangeCountId().GetValue().IsEmpty())
+            if (this->Request->GetExchangeCountId().IsSet())
             {
                 JsonRootObject->SetStringField("exchangeCountId", this->Request->GetExchangeCountId().GetValue());
             }

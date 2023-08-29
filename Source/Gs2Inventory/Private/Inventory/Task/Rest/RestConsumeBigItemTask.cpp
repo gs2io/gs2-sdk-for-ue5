@@ -96,7 +96,7 @@ namespace Gs2::Inventory::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetConsumeCount().IsSet() && !this->Request->GetConsumeCount().GetValue().IsEmpty())
+            if (this->Request->GetConsumeCount().IsSet())
             {
                 JsonRootObject->SetStringField("consumeCount", this->Request->GetConsumeCount().GetValue());
             }

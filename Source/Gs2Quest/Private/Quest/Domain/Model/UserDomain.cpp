@@ -275,7 +275,7 @@ namespace Gs2::Quest::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            QuestGroupName
+            QuestGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestGroupName)
         );
     }
 

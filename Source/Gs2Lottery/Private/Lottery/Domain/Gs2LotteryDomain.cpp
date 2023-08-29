@@ -149,7 +149,7 @@ namespace Gs2::Lottery::Domain
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
-            NamespaceName
+            NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
     FDrawnResultEvent& FGs2LotteryDomain::OnDrawnResult()

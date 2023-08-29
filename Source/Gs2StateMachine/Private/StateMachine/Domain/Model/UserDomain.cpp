@@ -168,7 +168,7 @@ namespace Gs2::StateMachine::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            StatusName
+            StatusName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StatusName)
         );
     }
 

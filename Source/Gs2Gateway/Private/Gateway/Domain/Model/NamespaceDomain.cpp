@@ -296,7 +296,7 @@ namespace Gs2::Gateway::Domain::Model
             Session,
             Wssession,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 

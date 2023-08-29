@@ -84,7 +84,7 @@ namespace Gs2::Identifier::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetSecurityPolicyId().IsSet() && !this->Request->GetSecurityPolicyId().GetValue().IsEmpty())
+            if (this->Request->GetSecurityPolicyId().IsSet())
             {
                 JsonRootObject->SetStringField("securityPolicyId", this->Request->GetSecurityPolicyId().GetValue());
             }

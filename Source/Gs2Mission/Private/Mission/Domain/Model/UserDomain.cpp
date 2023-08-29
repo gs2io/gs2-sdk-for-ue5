@@ -101,7 +101,7 @@ namespace Gs2::Mission::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            CounterName
+            CounterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CounterName)
         );
     }
 
@@ -127,7 +127,7 @@ namespace Gs2::Mission::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            MissionGroupName
+            MissionGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MissionGroupName)
         );
     }
 

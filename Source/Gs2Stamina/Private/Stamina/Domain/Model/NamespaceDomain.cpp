@@ -598,7 +598,7 @@ namespace Gs2::Stamina::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            StaminaName
+            StaminaName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StaminaName)
         );
     }
 
@@ -612,7 +612,7 @@ namespace Gs2::Stamina::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -650,7 +650,7 @@ namespace Gs2::Stamina::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RecoverIntervalTableName
+            RecoverIntervalTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RecoverIntervalTableName)
         );
     }
 
@@ -674,7 +674,7 @@ namespace Gs2::Stamina::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            MaxStaminaTableName
+            MaxStaminaTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MaxStaminaTableName)
         );
     }
 
@@ -698,7 +698,7 @@ namespace Gs2::Stamina::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RecoverValueTableName
+            RecoverValueTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RecoverValueTableName)
         );
     }
 
@@ -722,7 +722,7 @@ namespace Gs2::Stamina::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            StaminaName
+            StaminaName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StaminaName)
         );
     }
 

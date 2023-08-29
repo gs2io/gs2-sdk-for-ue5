@@ -99,7 +99,7 @@ namespace Gs2::Inventory::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetReferenceOf().IsSet() && !this->Request->GetReferenceOf().GetValue().IsEmpty())
+            if (this->Request->GetReferenceOf().IsSet())
             {
                 JsonRootObject->SetStringField("referenceOf", this->Request->GetReferenceOf().GetValue());
             }

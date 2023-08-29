@@ -366,7 +366,7 @@ namespace Gs2::Inventory::Domain::Model
             NamespaceName,
             UserId,
             InventoryName,
-            ItemName
+            ItemName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ItemName)
         );
     }
 

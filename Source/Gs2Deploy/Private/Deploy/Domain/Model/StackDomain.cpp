@@ -523,7 +523,7 @@ namespace Gs2::Deploy::Domain::Model
             StampSheetConfiguration,
             Session,
             StackName,
-            ResourceName
+            ResourceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ResourceName)
         );
     }
 
@@ -547,7 +547,7 @@ namespace Gs2::Deploy::Domain::Model
             StampSheetConfiguration,
             Session,
             StackName,
-            EventName
+            EventName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EventName)
         );
     }
 
@@ -571,7 +571,7 @@ namespace Gs2::Deploy::Domain::Model
             StampSheetConfiguration,
             Session,
             StackName,
-            OutputName
+            OutputName == TEXT("") ? TOptional<FString>() : TOptional<FString>(OutputName)
         );
     }
 

@@ -524,7 +524,7 @@ namespace Gs2::Matchmaking::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -574,7 +574,7 @@ namespace Gs2::Matchmaking::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RatingName
+            RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName)
         );
     }
 
@@ -589,8 +589,8 @@ namespace Gs2::Matchmaking::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RatingName,
-            GatheringName
+            RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName),
+            GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName)
         );
     }
 
@@ -614,7 +614,7 @@ namespace Gs2::Matchmaking::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            RatingName
+            RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName)
         );
     }
 

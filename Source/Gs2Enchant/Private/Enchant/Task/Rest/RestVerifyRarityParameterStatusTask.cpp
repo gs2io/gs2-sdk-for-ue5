@@ -99,7 +99,7 @@ namespace Gs2::Enchant::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetParameterValueName().IsSet() && !this->Request->GetParameterValueName().GetValue().IsEmpty())
+            if (this->Request->GetParameterValueName().IsSet())
             {
                 JsonRootObject->SetStringField("parameterValueName", this->Request->GetParameterValueName().GetValue());
             }

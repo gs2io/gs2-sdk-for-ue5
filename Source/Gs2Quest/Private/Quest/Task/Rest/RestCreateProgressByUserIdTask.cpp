@@ -89,7 +89,7 @@ namespace Gs2::Quest::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetQuestModelId().IsSet() && !this->Request->GetQuestModelId().GetValue().IsEmpty())
+            if (this->Request->GetQuestModelId().IsSet())
             {
                 JsonRootObject->SetStringField("questModelId", this->Request->GetQuestModelId().GetValue());
             }

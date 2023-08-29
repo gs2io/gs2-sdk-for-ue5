@@ -365,7 +365,7 @@ namespace Gs2::Inbox::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            UserId
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
     }
 
@@ -415,7 +415,7 @@ namespace Gs2::Inbox::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            GlobalMessageName
+            GlobalMessageName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GlobalMessageName)
         );
     }
 
@@ -439,7 +439,7 @@ namespace Gs2::Inbox::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            GlobalMessageName
+            GlobalMessageName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GlobalMessageName)
         );
     }
 
