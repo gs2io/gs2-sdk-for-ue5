@@ -18,6 +18,7 @@ public class Gs2Schedule : ModuleRules
 			"JsonUtilities",
 			"Gs2Core",
 			"Gs2Auth",
+			"Gs2JobQueue",
 		});
 	}
 }

@@ -122,6 +122,12 @@
 #include "Task/Rest/TriggerByUserIdTask.h"
 #include "Task/WebSocket/TriggerByUserIdTask.h"
 
+// TriggerByStampSheet
+#include "Request/TriggerByStampSheetRequest.h"
+#include "Result/TriggerByStampSheetResult.h"
+#include "Task/Rest/TriggerByStampSheetTask.h"
+#include "Task/WebSocket/TriggerByStampSheetTask.h"
+
 // DeleteTrigger
 #include "Request/DeleteTriggerRequest.h"
 #include "Result/DeleteTriggerResult.h"

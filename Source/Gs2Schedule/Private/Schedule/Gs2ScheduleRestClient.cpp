@@ -163,6 +163,15 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FTriggerByStampSheetTask>> FGs2ScheduleRestClient::TriggerByStampSheet(
+        const Request::FTriggerByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FTriggerByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteTriggerTask>> FGs2ScheduleRestClient::DeleteTrigger(
         const Request::FDeleteTriggerRequestPtr Request) const
     {

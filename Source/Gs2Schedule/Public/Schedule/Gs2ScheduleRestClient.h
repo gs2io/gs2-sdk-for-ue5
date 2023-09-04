@@ -50,6 +50,8 @@
 #include "Task/Rest/GetTriggerByUserIdTask.h"
 #include "Request/TriggerByUserIdRequest.h"
 #include "Task/Rest/TriggerByUserIdTask.h"
+#include "Request/TriggerByStampSheetRequest.h"
+#include "Task/Rest/TriggerByStampSheetTask.h"
 #include "Request/DeleteTriggerRequest.h"
 #include "Task/Rest/DeleteTriggerTask.h"
 #include "Request/DeleteTriggerByUserIdRequest.h"
@@ -148,6 +150,10 @@ namespace Gs2::Schedule
 
         TSharedPtr<FAsyncTask<Task::Rest::FTriggerByUserIdTask>> TriggerByUserId(
             const Request::FTriggerByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FTriggerByStampSheetTask>> TriggerByStampSheet(
+            const Request::FTriggerByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteTriggerTask>> DeleteTrigger(

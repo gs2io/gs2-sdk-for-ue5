@@ -153,6 +153,45 @@ namespace Gs2::Schedule::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "TriggerByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Schedule::Request::FTriggerByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Schedule::Result::FTriggerByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Trigger"
+                );
+                const auto Key = Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Schedule::Model::FTrigger::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+                Cache->ClearListCache(
+                    Gs2::Schedule::Model::FEvent::TypeName,
+                    ParentKey.Replace(TEXT("Trigger"), TEXT("Event"))
+                );
+            }
+        }
     }
 
     void FGs2ScheduleDomain::UpdateCacheFromStampTask(
@@ -167,6 +206,53 @@ namespace Gs2::Schedule::Domain
         const Gs2::JobQueue::Model::FJobPtr Job,
         const Gs2::JobQueue::Model::FJobResultBodyPtr Result
     ) {
+        if (Method == "trigger_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Schedule::Request::FTriggerByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Schedule::Result::FTriggerByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Trigger"
+                );
+                const auto Key = Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Schedule::Model::FTrigger::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+                Cache->ClearListCache(
+                    Gs2::Schedule::Model::FEvent::TypeName,
+                    ParentKey.Replace(TEXT("Trigger"), TEXT("Event"))
+                );
+            }
+        }
     }
 
     void FGs2ScheduleDomain::HandleNotification(
