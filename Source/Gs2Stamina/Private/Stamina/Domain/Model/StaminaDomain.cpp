@@ -493,6 +493,89 @@ namespace Gs2::Stamina::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FRaiseMaxValueTask>>(this->AsShared(), Request);
     }
 
+    FStaminaDomain::FDecreaseMaxValueTask::FDecreaseMaxValueTask(
+        const TSharedPtr<FStaminaDomain> Self,
+        const Request::FDecreaseMaxValueByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStaminaDomain::FDecreaseMaxValueTask::FDecreaseMaxValueTask(
+        const FDecreaseMaxValueTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStaminaDomain::FDecreaseMaxValueTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithStaminaName(Self->StaminaName);
+        const auto Future = Self->Client->DecreaseMaxValueByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Stamina::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "Stamina"
+                );
+                const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetStaminaName()
+                );
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetStaminaModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "StaminaModel"
+                );
+                const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
+                    ResultModel->GetStaminaModel()->GetName()
+                );
+                Self->Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetStaminaModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStaminaDomain::FDecreaseMaxValueTask>> FStaminaDomain::DecreaseMaxValue(
+        Request::FDecreaseMaxValueByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDecreaseMaxValueTask>>(this->AsShared(), Request);
+    }
+
     FStaminaDomain::FSetMaxValueTask::FSetMaxValueTask(
         const TSharedPtr<FStaminaDomain> Self,
         const Request::FSetMaxValueByUserIdRequestPtr Request

@@ -24,6 +24,7 @@ namespace Gs2::Enchant::Result
     class GS2ENCHANT_API FAddRarityParameterStatusByUserIdResult final : public TSharedFromThis<FAddRarityParameterStatusByUserIdResult>
     {
         TSharedPtr<Model::FRarityParameterStatus> ItemValue;
+        TSharedPtr<Model::FRarityParameterStatus> OldValue;
         
     public:
         
@@ -34,8 +35,10 @@ namespace Gs2::Enchant::Result
         ~FAddRarityParameterStatusByUserIdResult() = default;
 
         TSharedPtr<FAddRarityParameterStatusByUserIdResult> WithItem(const TSharedPtr<Model::FRarityParameterStatus> Item);
+        TSharedPtr<FAddRarityParameterStatusByUserIdResult> WithOld(const TSharedPtr<Model::FRarityParameterStatus> Old);
 
         TSharedPtr<Model::FRarityParameterStatus> GetItem() const;
+        TSharedPtr<Model::FRarityParameterStatus> GetOld() const;
 
         static TSharedPtr<FAddRarityParameterStatusByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

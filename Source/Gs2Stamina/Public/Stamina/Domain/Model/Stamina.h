@@ -213,6 +213,32 @@ namespace Gs2::Stamina::Domain::Model
             Request::FRaiseMaxValueByUserIdRequestPtr Request
         );
 
+        class GS2STAMINA_API FDecreaseMaxValueTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaDomain>,
+            public TSharedFromThis<FDecreaseMaxValueTask>
+        {
+            const TSharedPtr<FStaminaDomain> Self;
+            const Request::FDecreaseMaxValueByUserIdRequestPtr Request;
+        public:
+            explicit FDecreaseMaxValueTask(
+                const TSharedPtr<FStaminaDomain> Self,
+                const Request::FDecreaseMaxValueByUserIdRequestPtr Request
+            );
+
+            FDecreaseMaxValueTask(
+                const FDecreaseMaxValueTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaDomain>> Result
+            ) override;
+        };
+        friend FDecreaseMaxValueTask;
+
+        TSharedPtr<FAsyncTask<FDecreaseMaxValueTask>> DecreaseMaxValue(
+            Request::FDecreaseMaxValueByUserIdRequestPtr Request
+        );
+
         class GS2STAMINA_API FSetMaxValueTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaDomain>,
             public TSharedFromThis<FSetMaxValueTask>

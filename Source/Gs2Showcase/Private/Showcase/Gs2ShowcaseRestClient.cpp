@@ -352,10 +352,28 @@ namespace Gs2::Showcase
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDecrementPurchaseCountByUserIdTask>> FGs2ShowcaseRestClient::DecrementPurchaseCountByUserId(
+        const Request::FDecrementPurchaseCountByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecrementPurchaseCountByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByStampTaskTask>> FGs2ShowcaseRestClient::IncrementPurchaseCountByStampTask(
         const Request::FIncrementPurchaseCountByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncrementPurchaseCountByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDecrementPurchaseCountByStampSheetTask>> FGs2ShowcaseRestClient::DecrementPurchaseCountByStampSheet(
+        const Request::FDecrementPurchaseCountByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecrementPurchaseCountByStampSheetTask>>(
             Session,
             Request
         );

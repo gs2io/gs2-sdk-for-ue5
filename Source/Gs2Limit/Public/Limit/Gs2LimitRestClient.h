@@ -42,10 +42,14 @@
 #include "Task/Rest/CountUpTask.h"
 #include "Request/CountUpByUserIdRequest.h"
 #include "Task/Rest/CountUpByUserIdTask.h"
+#include "Request/CountDownByUserIdRequest.h"
+#include "Task/Rest/CountDownByUserIdTask.h"
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Task/Rest/DeleteCounterByUserIdTask.h"
 #include "Request/CountUpByStampTaskRequest.h"
 #include "Task/Rest/CountUpByStampTaskTask.h"
+#include "Request/CountDownByStampSheetRequest.h"
+#include "Task/Rest/CountDownByStampSheetTask.h"
 #include "Request/DeleteByStampSheetRequest.h"
 #include "Task/Rest/DeleteByStampSheetTask.h"
 #include "Request/DescribeLimitModelMastersRequest.h"
@@ -130,12 +134,20 @@ namespace Gs2::Limit
             const Request::FCountUpByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FCountDownByUserIdTask>> CountDownByUserId(
+            const Request::FCountDownByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteCounterByUserIdTask>> DeleteCounterByUserId(
             const Request::FDeleteCounterByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FCountUpByStampTaskTask>> CountUpByStampTask(
             const Request::FCountUpByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCountDownByStampSheetTask>> CountDownByStampSheet(
+            const Request::FCountDownByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteByStampSheetTask>> DeleteByStampSheet(

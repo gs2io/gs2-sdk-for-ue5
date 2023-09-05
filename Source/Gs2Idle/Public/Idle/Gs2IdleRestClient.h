@@ -62,8 +62,12 @@
 #include "Task/Rest/ReceiveByUserIdTask.h"
 #include "Request/IncreaseMaximumIdleMinutesByUserIdRequest.h"
 #include "Task/Rest/IncreaseMaximumIdleMinutesByUserIdTask.h"
+#include "Request/DecreaseMaximumIdleMinutesByUserIdRequest.h"
+#include "Task/Rest/DecreaseMaximumIdleMinutesByUserIdTask.h"
 #include "Request/IncreaseMaximumIdleMinutesByStampSheetRequest.h"
 #include "Task/Rest/IncreaseMaximumIdleMinutesByStampSheetTask.h"
+#include "Request/DecreaseMaximumIdleMinutesByStampTaskRequest.h"
+#include "Task/Rest/DecreaseMaximumIdleMinutesByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentCategoryMasterRequest.h"
@@ -172,8 +176,16 @@ namespace Gs2::Idle
             const Request::FIncreaseMaximumIdleMinutesByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaximumIdleMinutesByUserIdTask>> DecreaseMaximumIdleMinutesByUserId(
+            const Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FIncreaseMaximumIdleMinutesByStampSheetTask>> IncreaseMaximumIdleMinutesByStampSheet(
             const Request::FIncreaseMaximumIdleMinutesByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaximumIdleMinutesByStampTaskTask>> DecreaseMaximumIdleMinutesByStampTask(
+            const Request::FDecreaseMaximumIdleMinutesByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

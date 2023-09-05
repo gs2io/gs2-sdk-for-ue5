@@ -54,8 +54,12 @@
 #include "Task/Rest/GetByUserIdAndTransactionIdTask.h"
 #include "Request/RecordReceiptRequest.h"
 #include "Task/Rest/RecordReceiptTask.h"
+#include "Request/RevertRecordReceiptRequest.h"
+#include "Task/Rest/RevertRecordReceiptTask.h"
 #include "Request/RecordReceiptByStampTaskRequest.h"
 #include "Task/Rest/RecordReceiptByStampTaskTask.h"
+#include "Request/RevertRecordReceiptByStampSheetRequest.h"
+#include "Task/Rest/RevertRecordReceiptByStampSheetTask.h"
 
 namespace Gs2::Money
 {
@@ -140,8 +144,16 @@ namespace Gs2::Money
             const Request::FRecordReceiptRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FRevertRecordReceiptTask>> RevertRecordReceipt(
+            const Request::FRevertRecordReceiptRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FRecordReceiptByStampTaskTask>> RecordReceiptByStampTask(
             const Request::FRecordReceiptByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRevertRecordReceiptByStampSheetTask>> RevertRecordReceiptByStampSheet(
+            const Request::FRevertRecordReceiptByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2MoneyRestClient, ESPMode::ThreadSafe> FGs2MoneyRestClientPtr;

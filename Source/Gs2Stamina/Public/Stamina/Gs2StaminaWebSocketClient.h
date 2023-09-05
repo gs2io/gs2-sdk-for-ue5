@@ -100,6 +100,8 @@
 #include "Task/WebSocket/RecoverStaminaByUserIdTask.h"
 #include "Request/RaiseMaxValueByUserIdRequest.h"
 #include "Task/WebSocket/RaiseMaxValueByUserIdTask.h"
+#include "Request/DecreaseMaxValueByUserIdRequest.h"
+#include "Task/WebSocket/DecreaseMaxValueByUserIdTask.h"
 #include "Request/SetMaxValueByUserIdRequest.h"
 #include "Task/WebSocket/SetMaxValueByUserIdTask.h"
 #include "Request/SetRecoverIntervalByUserIdRequest.h"
@@ -118,6 +120,8 @@
 #include "Task/WebSocket/RecoverStaminaByStampSheetTask.h"
 #include "Request/RaiseMaxValueByStampSheetRequest.h"
 #include "Task/WebSocket/RaiseMaxValueByStampSheetTask.h"
+#include "Request/DecreaseMaxValueByStampTaskRequest.h"
+#include "Task/WebSocket/DecreaseMaxValueByStampTaskTask.h"
 #include "Request/SetMaxValueByStampSheetRequest.h"
 #include "Task/WebSocket/SetMaxValueByStampSheetTask.h"
 #include "Request/SetRecoverIntervalByStampSheetRequest.h"
@@ -302,6 +306,10 @@ namespace Gs2::Stamina
             const Request::FRaiseMaxValueByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaxValueByUserIdTask>> DecreaseMaxValueByUserId(
+            const Request::FDecreaseMaxValueByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetMaxValueByUserIdTask>> SetMaxValueByUserId(
             const Request::FSetMaxValueByUserIdRequestPtr Request
         ) const;
@@ -336,6 +344,10 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRaiseMaxValueByStampSheetTask>> RaiseMaxValueByStampSheet(
             const Request::FRaiseMaxValueByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaxValueByStampTaskTask>> DecreaseMaxValueByStampTask(
+            const Request::FDecreaseMaxValueByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetMaxValueByStampSheetTask>> SetMaxValueByStampSheet(

@@ -153,6 +153,42 @@ namespace Gs2::Limit::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "CountDownByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Limit::Request::FCountDownByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Limit::Result::FCountDownByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Counter"
+                );
+                const auto Key = Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetLimitName(),
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Limit::Model::FCounter::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "DeleteCounterByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -233,6 +269,50 @@ namespace Gs2::Limit::Domain
         const Gs2::JobQueue::Model::FJobPtr Job,
         const Gs2::JobQueue::Model::FJobResultBodyPtr Result
     ) {
+        if (Method == "count_down_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Limit::Request::FCountDownByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Limit::Result::FCountDownByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Counter"
+                );
+                const auto Key = Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetLimitName(),
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Limit::Model::FCounter::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "delete_counter_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (!Job->GetArgs().IsSet())

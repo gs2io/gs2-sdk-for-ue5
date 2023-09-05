@@ -140,6 +140,12 @@
 #include "Task/Rest/DeleteTriggerByUserIdTask.h"
 #include "Task/WebSocket/DeleteTriggerByUserIdTask.h"
 
+// DeleteTriggerByStampTask
+#include "Request/DeleteTriggerByStampTaskRequest.h"
+#include "Result/DeleteTriggerByStampTaskResult.h"
+#include "Task/Rest/DeleteTriggerByStampTaskTask.h"
+#include "Task/WebSocket/DeleteTriggerByStampTaskTask.h"
+
 // DescribeEvents
 #include "Request/DescribeEventsRequest.h"
 #include "Result/DescribeEventsResult.h"

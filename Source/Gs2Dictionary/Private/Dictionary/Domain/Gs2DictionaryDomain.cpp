@@ -196,6 +196,40 @@ namespace Gs2::Dictionary::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "DeleteEntriesByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Dictionary::Request::FDeleteEntriesByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Dictionary::Result::FDeleteEntriesByUserIdResult::FromJson(ResultModelJson);
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        "Entry"
+                    );
+                    const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
+                        Item->GetName()
+                    );
+                    Cache->Delete(
+                        Gs2::Dictionary::Model::FEntry::TypeName,
+                        ParentKey,
+                        Key
+                    );
+                }
+            }
+        }
     }
 
     void FGs2DictionaryDomain::UpdateCacheFromJobResult(

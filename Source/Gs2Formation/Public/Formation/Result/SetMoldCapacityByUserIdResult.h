@@ -25,6 +25,7 @@ namespace Gs2::Formation::Result
     class GS2FORMATION_API FSetMoldCapacityByUserIdResult final : public TSharedFromThis<FSetMoldCapacityByUserIdResult>
     {
         TSharedPtr<Model::FMold> ItemValue;
+        TSharedPtr<Model::FMold> OldValue;
         TSharedPtr<Model::FMoldModel> MoldModelValue;
         
     public:
@@ -36,9 +37,11 @@ namespace Gs2::Formation::Result
         ~FSetMoldCapacityByUserIdResult() = default;
 
         TSharedPtr<FSetMoldCapacityByUserIdResult> WithItem(const TSharedPtr<Model::FMold> Item);
+        TSharedPtr<FSetMoldCapacityByUserIdResult> WithOld(const TSharedPtr<Model::FMold> Old);
         TSharedPtr<FSetMoldCapacityByUserIdResult> WithMoldModel(const TSharedPtr<Model::FMoldModel> MoldModel);
 
         TSharedPtr<Model::FMold> GetItem() const;
+        TSharedPtr<Model::FMold> GetOld() const;
         TSharedPtr<Model::FMoldModel> GetMoldModel() const;
 
         static TSharedPtr<FSetMoldCapacityByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);

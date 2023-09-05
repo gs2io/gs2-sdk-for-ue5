@@ -217,10 +217,28 @@ namespace Gs2::Idle
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaximumIdleMinutesByUserIdTask>> FGs2IdleRestClient::DecreaseMaximumIdleMinutesByUserId(
+        const Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseMaximumIdleMinutesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FIncreaseMaximumIdleMinutesByStampSheetTask>> FGs2IdleRestClient::IncreaseMaximumIdleMinutesByStampSheet(
         const Request::FIncreaseMaximumIdleMinutesByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncreaseMaximumIdleMinutesByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaximumIdleMinutesByStampTaskTask>> FGs2IdleRestClient::DecreaseMaximumIdleMinutesByStampTask(
+        const Request::FDecreaseMaximumIdleMinutesByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseMaximumIdleMinutesByStampTaskTask>>(
             Session,
             Request
         );

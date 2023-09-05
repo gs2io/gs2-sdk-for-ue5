@@ -205,11 +205,23 @@
 #include "Task/Rest/MarkReceivedByUserIdTask.h"
 #include "Task/WebSocket/MarkReceivedByUserIdTask.h"
 
+// UnmarkReceivedByUserId
+#include "Request/UnmarkReceivedByUserIdRequest.h"
+#include "Result/UnmarkReceivedByUserIdResult.h"
+#include "Task/Rest/UnmarkReceivedByUserIdTask.h"
+#include "Task/WebSocket/UnmarkReceivedByUserIdTask.h"
+
 // MarkReceivedByStampTask
 #include "Request/MarkReceivedByStampTaskRequest.h"
 #include "Result/MarkReceivedByStampTaskResult.h"
 #include "Task/Rest/MarkReceivedByStampTaskTask.h"
 #include "Task/WebSocket/MarkReceivedByStampTaskTask.h"
+
+// UnmarkReceivedByStampSheet
+#include "Request/UnmarkReceivedByStampSheetRequest.h"
+#include "Result/UnmarkReceivedByStampSheetResult.h"
+#include "Task/Rest/UnmarkReceivedByStampSheetTask.h"
+#include "Task/WebSocket/UnmarkReceivedByStampSheetTask.h"
 
 // Client
 #include "Gs2LoginRewardRestClient.h"

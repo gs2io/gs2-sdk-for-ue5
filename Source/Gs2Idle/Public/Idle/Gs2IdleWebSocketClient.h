@@ -62,8 +62,12 @@
 #include "Task/WebSocket/ReceiveByUserIdTask.h"
 #include "Request/IncreaseMaximumIdleMinutesByUserIdRequest.h"
 #include "Task/WebSocket/IncreaseMaximumIdleMinutesByUserIdTask.h"
+#include "Request/DecreaseMaximumIdleMinutesByUserIdRequest.h"
+#include "Task/WebSocket/DecreaseMaximumIdleMinutesByUserIdTask.h"
 #include "Request/IncreaseMaximumIdleMinutesByStampSheetRequest.h"
 #include "Task/WebSocket/IncreaseMaximumIdleMinutesByStampSheetTask.h"
+#include "Request/DecreaseMaximumIdleMinutesByStampTaskRequest.h"
+#include "Task/WebSocket/DecreaseMaximumIdleMinutesByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentCategoryMasterRequest.h"
@@ -172,8 +176,16 @@ namespace Gs2::Idle
             const Request::FIncreaseMaximumIdleMinutesByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumIdleMinutesByUserIdTask>> DecreaseMaximumIdleMinutesByUserId(
+            const Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FIncreaseMaximumIdleMinutesByStampSheetTask>> IncreaseMaximumIdleMinutesByStampSheet(
             const Request::FIncreaseMaximumIdleMinutesByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaximumIdleMinutesByStampTaskTask>> DecreaseMaximumIdleMinutesByStampTask(
+            const Request::FDecreaseMaximumIdleMinutesByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

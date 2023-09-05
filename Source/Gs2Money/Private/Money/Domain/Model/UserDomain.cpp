@@ -145,6 +145,79 @@ namespace Gs2::Money::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FRecordReceiptTask>>(this->AsShared(), Request);
     }
 
+    FUserDomain::FRevertRecordReceiptTask::FRevertRecordReceiptTask(
+        const TSharedPtr<FUserDomain> Self,
+        const Request::FRevertRecordReceiptRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FRevertRecordReceiptTask::FRevertRecordReceiptTask(
+        const FRevertRecordReceiptTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FRevertRecordReceiptTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Money::Domain::Model::FReceiptDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->RevertRecordReceipt(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "Receipt"
+                );
+                const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetTransactionId()
+                );
+                Self->Cache->Put(
+                    Gs2::Money::Model::FReceipt::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
+            Self->Cache,
+            Self->JobQueueDomain,
+            Self->StampSheetConfiguration,
+            Self->Session,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetTransactionId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FRevertRecordReceiptTask>> FUserDomain::RevertRecordReceipt(
+        Request::FRevertRecordReceiptRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FRevertRecordReceiptTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIteratorPtr FUserDomain::Wallets(
     ) const
     {

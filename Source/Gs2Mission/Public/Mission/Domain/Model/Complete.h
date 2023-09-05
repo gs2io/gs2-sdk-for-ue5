@@ -146,6 +146,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FReceiveByUserIdRequestPtr Request
         );
 
+        class GS2MISSION_API FRevertReceiveTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
+            public TSharedFromThis<FRevertReceiveTask>
+        {
+            const TSharedPtr<FCompleteDomain> Self;
+            const Request::FRevertReceiveByUserIdRequestPtr Request;
+        public:
+            explicit FRevertReceiveTask(
+                const TSharedPtr<FCompleteDomain> Self,
+                const Request::FRevertReceiveByUserIdRequestPtr Request
+            );
+
+            FRevertReceiveTask(
+                const FRevertReceiveTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+            ) override;
+        };
+        friend FRevertReceiveTask;
+
+        TSharedPtr<FAsyncTask<FRevertReceiveTask>> RevertReceive(
+            Request::FRevertReceiveByUserIdRequestPtr Request
+        );
+
         class GS2MISSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Model::FComplete>,
             public TSharedFromThis<FGetTask>

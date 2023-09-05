@@ -110,11 +110,23 @@
 #include "Task/Rest/UseByUserIdTask.h"
 #include "Task/WebSocket/UseByUserIdTask.h"
 
+// RevertUseByUserId
+#include "Request/RevertUseByUserIdRequest.h"
+#include "Result/RevertUseByUserIdResult.h"
+#include "Task/Rest/RevertUseByUserIdTask.h"
+#include "Task/WebSocket/RevertUseByUserIdTask.h"
+
 // UseByStampTask
 #include "Request/UseByStampTaskRequest.h"
 #include "Result/UseByStampTaskResult.h"
 #include "Task/Rest/UseByStampTaskTask.h"
 #include "Task/WebSocket/UseByStampTaskTask.h"
+
+// RevertUseByStampSheet
+#include "Request/RevertUseByStampSheetRequest.h"
+#include "Result/RevertUseByStampSheetResult.h"
+#include "Task/Rest/RevertUseByStampSheetTask.h"
+#include "Task/WebSocket/RevertUseByStampSheetTask.h"
 
 // DescribeCampaignModels
 #include "Request/DescribeCampaignModelsRequest.h"

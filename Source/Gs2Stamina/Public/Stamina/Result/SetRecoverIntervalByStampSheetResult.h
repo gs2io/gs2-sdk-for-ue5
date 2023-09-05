@@ -25,6 +25,7 @@ namespace Gs2::Stamina::Result
     class GS2STAMINA_API FSetRecoverIntervalByStampSheetResult final : public TSharedFromThis<FSetRecoverIntervalByStampSheetResult>
     {
         TSharedPtr<Model::FStamina> ItemValue;
+        TSharedPtr<Model::FStamina> OldValue;
         TSharedPtr<Model::FStaminaModel> StaminaModelValue;
         
     public:
@@ -36,9 +37,11 @@ namespace Gs2::Stamina::Result
         ~FSetRecoverIntervalByStampSheetResult() = default;
 
         TSharedPtr<FSetRecoverIntervalByStampSheetResult> WithItem(const TSharedPtr<Model::FStamina> Item);
+        TSharedPtr<FSetRecoverIntervalByStampSheetResult> WithOld(const TSharedPtr<Model::FStamina> Old);
         TSharedPtr<FSetRecoverIntervalByStampSheetResult> WithStaminaModel(const TSharedPtr<Model::FStaminaModel> StaminaModel);
 
         TSharedPtr<Model::FStamina> GetItem() const;
+        TSharedPtr<Model::FStamina> GetOld() const;
         TSharedPtr<Model::FStaminaModel> GetStaminaModel() const;
 
         static TSharedPtr<FSetRecoverIntervalByStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);

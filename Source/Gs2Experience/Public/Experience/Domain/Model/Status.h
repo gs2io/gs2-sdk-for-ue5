@@ -174,6 +174,32 @@ namespace Gs2::Experience::Domain::Model
             Request::FAddExperienceByUserIdRequestPtr Request
         );
 
+        class GS2EXPERIENCE_API FSubExperienceTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
+            public TSharedFromThis<FSubExperienceTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const Request::FSubExperienceByUserIdRequestPtr Request;
+        public:
+            explicit FSubExperienceTask(
+                const TSharedPtr<FStatusDomain> Self,
+                const Request::FSubExperienceByUserIdRequestPtr Request
+            );
+
+            FSubExperienceTask(
+                const FSubExperienceTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain>> Result
+            ) override;
+        };
+        friend FSubExperienceTask;
+
+        TSharedPtr<FAsyncTask<FSubExperienceTask>> SubExperience(
+            Request::FSubExperienceByUserIdRequestPtr Request
+        );
+
         class GS2EXPERIENCE_API FSetExperienceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FSetExperienceTask>
@@ -224,6 +250,32 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<FAsyncTask<FAddRankCapTask>> AddRankCap(
             Request::FAddRankCapByUserIdRequestPtr Request
+        );
+
+        class GS2EXPERIENCE_API FSubRankCapTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
+            public TSharedFromThis<FSubRankCapTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const Request::FSubRankCapByUserIdRequestPtr Request;
+        public:
+            explicit FSubRankCapTask(
+                const TSharedPtr<FStatusDomain> Self,
+                const Request::FSubRankCapByUserIdRequestPtr Request
+            );
+
+            FSubRankCapTask(
+                const FSubRankCapTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain>> Result
+            ) override;
+        };
+        friend FSubRankCapTask;
+
+        TSharedPtr<FAsyncTask<FSubRankCapTask>> SubRankCap(
+            Request::FSubRankCapByUserIdRequestPtr Request
         );
 
         class GS2EXPERIENCE_API FSetRankCapTask final :

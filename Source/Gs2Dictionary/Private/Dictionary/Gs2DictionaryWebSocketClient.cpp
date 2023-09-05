@@ -208,10 +208,28 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteEntriesByUserIdTask>> FGs2DictionaryWebSocketClient::DeleteEntriesByUserId(
+        const Request::FDeleteEntriesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteEntriesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FAddEntriesByStampSheetTask>> FGs2DictionaryWebSocketClient::AddEntriesByStampSheet(
         const Request::FAddEntriesByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddEntriesByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteEntriesByStampTaskTask>> FGs2DictionaryWebSocketClient::DeleteEntriesByStampTask(
+        const Request::FDeleteEntriesByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteEntriesByStampTaskTask>>(
             Session,
             Request
         );

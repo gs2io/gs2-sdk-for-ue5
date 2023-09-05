@@ -208,6 +208,15 @@ namespace Gs2::Inbox
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteMessageByStampTaskTask>> FGs2InboxWebSocketClient::DeleteMessageByStampTask(
+        const Request::FDeleteMessageByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteMessageByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2InboxWebSocketClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

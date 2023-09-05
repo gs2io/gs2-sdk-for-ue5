@@ -44,6 +44,8 @@
 #include "Task/Rest/DeleteJobByUserIdTask.h"
 #include "Request/PushByStampSheetRequest.h"
 #include "Task/Rest/PushByStampSheetTask.h"
+#include "Request/DeleteByStampTaskRequest.h"
+#include "Task/Rest/DeleteByStampTaskTask.h"
 #include "Request/GetJobResultRequest.h"
 #include "Task/Rest/GetJobResultTask.h"
 #include "Request/GetJobResultByUserIdRequest.h"
@@ -116,6 +118,10 @@ namespace Gs2::JobQueue
 
         TSharedPtr<FAsyncTask<Task::Rest::FPushByStampSheetTask>> PushByStampSheet(
             const Request::FPushByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteByStampTaskTask>> DeleteByStampTask(
+            const Request::FDeleteByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetJobResultTask>> GetJobResult(

@@ -42,10 +42,14 @@
 #include "Task/WebSocket/CountUpTask.h"
 #include "Request/CountUpByUserIdRequest.h"
 #include "Task/WebSocket/CountUpByUserIdTask.h"
+#include "Request/CountDownByUserIdRequest.h"
+#include "Task/WebSocket/CountDownByUserIdTask.h"
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Task/WebSocket/DeleteCounterByUserIdTask.h"
 #include "Request/CountUpByStampTaskRequest.h"
 #include "Task/WebSocket/CountUpByStampTaskTask.h"
+#include "Request/CountDownByStampSheetRequest.h"
+#include "Task/WebSocket/CountDownByStampSheetTask.h"
 #include "Request/DeleteByStampSheetRequest.h"
 #include "Task/WebSocket/DeleteByStampSheetTask.h"
 #include "Request/DescribeLimitModelMastersRequest.h"
@@ -130,12 +134,20 @@ namespace Gs2::Limit
             const Request::FCountUpByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCountDownByUserIdTask>> CountDownByUserId(
+            const Request::FCountDownByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCounterByUserIdTask>> DeleteCounterByUserId(
             const Request::FDeleteCounterByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FCountUpByStampTaskTask>> CountUpByStampTask(
             const Request::FCountUpByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCountDownByStampSheetTask>> CountDownByStampSheet(
+            const Request::FCountDownByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteByStampSheetTask>> DeleteByStampSheet(

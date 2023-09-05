@@ -153,11 +153,23 @@
 #include "Task/Rest/ResetByUserIdTask.h"
 #include "Task/WebSocket/ResetByUserIdTask.h"
 
+// DeleteEntriesByUserId
+#include "Request/DeleteEntriesByUserIdRequest.h"
+#include "Result/DeleteEntriesByUserIdResult.h"
+#include "Task/Rest/DeleteEntriesByUserIdTask.h"
+#include "Task/WebSocket/DeleteEntriesByUserIdTask.h"
+
 // AddEntriesByStampSheet
 #include "Request/AddEntriesByStampSheetRequest.h"
 #include "Result/AddEntriesByStampSheetResult.h"
 #include "Task/Rest/AddEntriesByStampSheetTask.h"
 #include "Task/WebSocket/AddEntriesByStampSheetTask.h"
+
+// DeleteEntriesByStampTask
+#include "Request/DeleteEntriesByStampTaskRequest.h"
+#include "Result/DeleteEntriesByStampTaskResult.h"
+#include "Task/Rest/DeleteEntriesByStampTaskTask.h"
+#include "Task/WebSocket/DeleteEntriesByStampTaskTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

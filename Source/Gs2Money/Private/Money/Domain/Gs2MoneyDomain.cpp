@@ -186,6 +186,41 @@ namespace Gs2::Money::Domain
                 );
             }
         }
+        if (Method == "RevertRecordReceipt") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Money::Request::FRevertRecordReceiptRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Money::Result::FRevertRecordReceiptResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Receipt"
+                );
+                const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetTransactionId()
+                );
+                Cache->Put(
+                    Gs2::Money::Model::FReceipt::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2MoneyDomain::UpdateCacheFromStampTask(
@@ -306,6 +341,49 @@ namespace Gs2::Money::Domain
                 );
                 Cache->Put(
                     Gs2::Money::Model::FWallet::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "revert_record_receipt") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Money::Request::FRevertRecordReceiptRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Money::Result::FRevertRecordReceiptResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Receipt"
+                );
+                const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetTransactionId()
+                );
+                Cache->Put(
+                    Gs2::Money::Model::FReceipt::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

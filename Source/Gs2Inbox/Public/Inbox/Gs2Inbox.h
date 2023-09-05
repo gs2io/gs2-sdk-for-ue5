@@ -158,6 +158,12 @@
 #include "Task/Rest/OpenByStampTaskTask.h"
 #include "Task/WebSocket/OpenByStampTaskTask.h"
 
+// DeleteMessageByStampTask
+#include "Request/DeleteMessageByStampTaskRequest.h"
+#include "Result/DeleteMessageByStampTaskResult.h"
+#include "Task/Rest/DeleteMessageByStampTaskTask.h"
+#include "Task/WebSocket/DeleteMessageByStampTaskTask.h"
+
 // ExportMaster
 #include "Request/ExportMasterRequest.h"
 #include "Result/ExportMasterResult.h"

@@ -24,6 +24,7 @@ namespace Gs2::Experience::Result
     class GS2EXPERIENCE_API FSetRankCapByUserIdResult final : public TSharedFromThis<FSetRankCapByUserIdResult>
     {
         TSharedPtr<Model::FStatus> ItemValue;
+        TSharedPtr<Model::FStatus> OldValue;
         
     public:
         
@@ -34,8 +35,10 @@ namespace Gs2::Experience::Result
         ~FSetRankCapByUserIdResult() = default;
 
         TSharedPtr<FSetRankCapByUserIdResult> WithItem(const TSharedPtr<Model::FStatus> Item);
+        TSharedPtr<FSetRankCapByUserIdResult> WithOld(const TSharedPtr<Model::FStatus> Old);
 
         TSharedPtr<Model::FStatus> GetItem() const;
+        TSharedPtr<Model::FStatus> GetOld() const;
 
         static TSharedPtr<FSetRankCapByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -132,11 +132,23 @@
 #include "Task/Rest/RecordReceiptTask.h"
 #include "Task/WebSocket/RecordReceiptTask.h"
 
+// RevertRecordReceipt
+#include "Request/RevertRecordReceiptRequest.h"
+#include "Result/RevertRecordReceiptResult.h"
+#include "Task/Rest/RevertRecordReceiptTask.h"
+#include "Task/WebSocket/RevertRecordReceiptTask.h"
+
 // RecordReceiptByStampTask
 #include "Request/RecordReceiptByStampTaskRequest.h"
 #include "Result/RecordReceiptByStampTaskResult.h"
 #include "Task/Rest/RecordReceiptByStampTaskTask.h"
 #include "Task/WebSocket/RecordReceiptByStampTaskTask.h"
+
+// RevertRecordReceiptByStampSheet
+#include "Request/RevertRecordReceiptByStampSheetRequest.h"
+#include "Result/RevertRecordReceiptByStampSheetResult.h"
+#include "Task/Rest/RevertRecordReceiptByStampSheetTask.h"
+#include "Task/WebSocket/RevertRecordReceiptByStampSheetTask.h"
 
 // Client
 #include "Gs2MoneyRestClient.h"

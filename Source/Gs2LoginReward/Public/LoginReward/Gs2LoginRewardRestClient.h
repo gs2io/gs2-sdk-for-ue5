@@ -76,8 +76,12 @@
 #include "Task/Rest/MarkReceivedTask.h"
 #include "Request/MarkReceivedByUserIdRequest.h"
 #include "Task/Rest/MarkReceivedByUserIdTask.h"
+#include "Request/UnmarkReceivedByUserIdRequest.h"
+#include "Task/Rest/UnmarkReceivedByUserIdTask.h"
 #include "Request/MarkReceivedByStampTaskRequest.h"
 #include "Task/Rest/MarkReceivedByStampTaskTask.h"
+#include "Request/UnmarkReceivedByStampSheetRequest.h"
+#include "Task/Rest/UnmarkReceivedByStampSheetTask.h"
 
 namespace Gs2::LoginReward
 {
@@ -206,8 +210,16 @@ namespace Gs2::LoginReward
             const Request::FMarkReceivedByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FUnmarkReceivedByUserIdTask>> UnmarkReceivedByUserId(
+            const Request::FUnmarkReceivedByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FMarkReceivedByStampTaskTask>> MarkReceivedByStampTask(
             const Request::FMarkReceivedByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUnmarkReceivedByStampSheetTask>> UnmarkReceivedByStampSheet(
+            const Request::FUnmarkReceivedByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2LoginRewardRestClient, ESPMode::ThreadSafe> FGs2LoginRewardRestClientPtr;

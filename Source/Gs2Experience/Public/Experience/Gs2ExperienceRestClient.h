@@ -76,18 +76,26 @@
 #include "Task/Rest/GetStatusWithSignatureByUserIdTask.h"
 #include "Request/AddExperienceByUserIdRequest.h"
 #include "Task/Rest/AddExperienceByUserIdTask.h"
+#include "Request/SubExperienceByUserIdRequest.h"
+#include "Task/Rest/SubExperienceByUserIdTask.h"
 #include "Request/SetExperienceByUserIdRequest.h"
 #include "Task/Rest/SetExperienceByUserIdTask.h"
 #include "Request/AddRankCapByUserIdRequest.h"
 #include "Task/Rest/AddRankCapByUserIdTask.h"
+#include "Request/SubRankCapByUserIdRequest.h"
+#include "Task/Rest/SubRankCapByUserIdTask.h"
 #include "Request/SetRankCapByUserIdRequest.h"
 #include "Task/Rest/SetRankCapByUserIdTask.h"
 #include "Request/DeleteStatusByUserIdRequest.h"
 #include "Task/Rest/DeleteStatusByUserIdTask.h"
 #include "Request/AddExperienceByStampSheetRequest.h"
 #include "Task/Rest/AddExperienceByStampSheetTask.h"
+#include "Request/SubExperienceByStampTaskRequest.h"
+#include "Task/Rest/SubExperienceByStampTaskTask.h"
 #include "Request/AddRankCapByStampSheetRequest.h"
 #include "Task/Rest/AddRankCapByStampSheetTask.h"
+#include "Request/SubRankCapByStampTaskRequest.h"
+#include "Task/Rest/SubRankCapByStampTaskTask.h"
 #include "Request/SetRankCapByStampSheetRequest.h"
 #include "Task/Rest/SetRankCapByStampSheetTask.h"
 #include "Request/MultiplyAcquireActionsByUserIdRequest.h"
@@ -222,12 +230,20 @@ namespace Gs2::Experience
             const Request::FAddExperienceByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceByUserIdTask>> SubExperienceByUserId(
+            const Request::FSubExperienceByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FSetExperienceByUserIdTask>> SetExperienceByUserId(
             const Request::FSetExperienceByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FAddRankCapByUserIdTask>> AddRankCapByUserId(
             const Request::FAddRankCapByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSubRankCapByUserIdTask>> SubRankCapByUserId(
+            const Request::FSubRankCapByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetRankCapByUserIdTask>> SetRankCapByUserId(
@@ -242,8 +258,16 @@ namespace Gs2::Experience
             const Request::FAddExperienceByStampSheetRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceByStampTaskTask>> SubExperienceByStampTask(
+            const Request::FSubExperienceByStampTaskRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FAddRankCapByStampSheetTask>> AddRankCapByStampSheet(
             const Request::FAddRankCapByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSubRankCapByStampTaskTask>> SubRankCapByStampTask(
+            const Request::FSubRankCapByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetRankCapByStampSheetTask>> SetRankCapByStampSheet(

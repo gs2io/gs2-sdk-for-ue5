@@ -46,8 +46,12 @@
 #include "Task/WebSocket/UseTask.h"
 #include "Request/UseByUserIdRequest.h"
 #include "Task/WebSocket/UseByUserIdTask.h"
+#include "Request/RevertUseByUserIdRequest.h"
+#include "Task/WebSocket/RevertUseByUserIdTask.h"
 #include "Request/UseByStampTaskRequest.h"
 #include "Task/WebSocket/UseByStampTaskTask.h"
+#include "Request/RevertUseByStampSheetRequest.h"
+#include "Task/WebSocket/RevertUseByStampSheetTask.h"
 #include "Request/DescribeCampaignModelsRequest.h"
 #include "Task/WebSocket/DescribeCampaignModelsTask.h"
 #include "Request/GetCampaignModelRequest.h"
@@ -138,8 +142,16 @@ namespace Gs2::SerialKey
             const Request::FUseByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRevertUseByUserIdTask>> RevertUseByUserId(
+            const Request::FRevertUseByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FUseByStampTaskTask>> UseByStampTask(
             const Request::FUseByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRevertUseByStampSheetTask>> RevertUseByStampSheet(
+            const Request::FRevertUseByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCampaignModelsTask>> DescribeCampaignModels(

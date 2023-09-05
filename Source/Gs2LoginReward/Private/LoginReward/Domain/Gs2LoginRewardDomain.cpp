@@ -194,6 +194,58 @@ namespace Gs2::LoginReward::Domain
                 Cache->Delete(Gs2::LoginReward::Model::FBonusModel::TypeName, ParentKey, Key);
             }
         }
+        if (Method == "UnmarkReceivedByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::LoginReward::Request::FUnmarkReceivedByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::LoginReward::Result::FUnmarkReceivedByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "ReceiveStatus"
+                );
+                const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetBonusModelName()
+                );
+                Cache->Put(
+                    Gs2::LoginReward::Model::FReceiveStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetBonusModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "BonusModel"
+                );
+                const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
+                    ResultModel->GetBonusModel()->GetName()
+                );
+                Cache->Put(
+                    Gs2::LoginReward::Model::FBonusModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetBonusModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2LoginRewardDomain::UpdateCacheFromStampTask(
@@ -306,6 +358,66 @@ namespace Gs2::LoginReward::Domain
                     ResultModel->GetBonusModel()->GetName()
                 );
                 Cache->Delete(Gs2::LoginReward::Model::FBonusModel::TypeName, ParentKey, Key);
+            }
+        }
+        if (Method == "unmark_received_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::LoginReward::Request::FUnmarkReceivedByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::LoginReward::Result::FUnmarkReceivedByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "ReceiveStatus"
+                );
+                const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetBonusModelName()
+                );
+                Cache->Put(
+                    Gs2::LoginReward::Model::FReceiveStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetBonusModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "BonusModel"
+                );
+                const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
+                    ResultModel->GetBonusModel()->GetName()
+                );
+                Cache->Put(
+                    Gs2::LoginReward::Model::FBonusModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetBonusModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
             }
         }
     }

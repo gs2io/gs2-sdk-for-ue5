@@ -112,6 +112,32 @@ namespace Gs2::Showcase::Domain::Model
             Request::FIncrementPurchaseCountByUserIdRequestPtr Request
         );
 
+        class GS2SHOWCASE_API FDecrementPurchaseCountTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>,
+            public TSharedFromThis<FDecrementPurchaseCountTask>
+        {
+            const TSharedPtr<FRandomShowcaseStatusDomain> Self;
+            const Request::FDecrementPurchaseCountByUserIdRequestPtr Request;
+        public:
+            explicit FDecrementPurchaseCountTask(
+                const TSharedPtr<FRandomShowcaseStatusDomain> Self,
+                const Request::FDecrementPurchaseCountByUserIdRequestPtr Request
+            );
+
+            FDecrementPurchaseCountTask(
+                const FDecrementPurchaseCountTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>> Result
+            ) override;
+        };
+        friend FDecrementPurchaseCountTask;
+
+        TSharedPtr<FAsyncTask<FDecrementPurchaseCountTask>> DecrementPurchaseCount(
+            Request::FDecrementPurchaseCountByUserIdRequestPtr Request
+        );
+
         class GS2SHOWCASE_API FForceReDrawTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>>>,
             public TSharedFromThis<FForceReDrawTask>

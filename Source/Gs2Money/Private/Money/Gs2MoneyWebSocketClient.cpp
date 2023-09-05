@@ -181,10 +181,28 @@ namespace Gs2::Money
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRevertRecordReceiptTask>> FGs2MoneyWebSocketClient::RevertRecordReceipt(
+        const Request::FRevertRecordReceiptRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRevertRecordReceiptTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FRecordReceiptByStampTaskTask>> FGs2MoneyWebSocketClient::RecordReceiptByStampTask(
         const Request::FRecordReceiptByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRecordReceiptByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRevertRecordReceiptByStampSheetTask>> FGs2MoneyWebSocketClient::RevertRecordReceiptByStampSheet(
+        const Request::FRevertRecordReceiptByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRevertRecordReceiptByStampSheetTask>>(
             Session,
             Request
         );

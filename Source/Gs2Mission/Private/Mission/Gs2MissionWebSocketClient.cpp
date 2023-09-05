@@ -64,6 +64,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRevertReceiveByUserIdTask>> FGs2MissionWebSocketClient::RevertReceiveByUserId(
+        const Request::FRevertReceiveByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRevertReceiveByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetCompleteTask>> FGs2MissionWebSocketClient::GetComplete(
         const Request::FGetCompleteRequestPtr Request) const
     {
@@ -95,6 +104,15 @@ namespace Gs2::Mission
         const Request::FReceiveByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FReceiveByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRevertReceiveByStampSheetTask>> FGs2MissionWebSocketClient::RevertReceiveByStampSheet(
+        const Request::FRevertReceiveByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRevertReceiveByStampSheetTask>>(
             Session,
             Request
         );
@@ -271,6 +289,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseCounterByUserIdTask>> FGs2MissionWebSocketClient::DecreaseCounterByUserId(
+        const Request::FDecreaseCounterByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetCounterTask>> FGs2MissionWebSocketClient::GetCounter(
         const Request::FGetCounterRequestPtr Request) const
     {
@@ -302,6 +329,15 @@ namespace Gs2::Mission
         const Request::FIncreaseByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIncreaseByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseByStampTaskTask>> FGs2MissionWebSocketClient::DecreaseByStampTask(
+        const Request::FDecreaseByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseByStampTaskTask>>(
             Session,
             Request
         );

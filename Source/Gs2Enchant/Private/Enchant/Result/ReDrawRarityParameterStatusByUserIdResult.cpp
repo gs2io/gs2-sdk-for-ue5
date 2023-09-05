@@ -19,14 +19,16 @@
 namespace Gs2::Enchant::Result
 {
     FReDrawRarityParameterStatusByUserIdResult::FReDrawRarityParameterStatusByUserIdResult():
-        ItemValue(nullptr)
+        ItemValue(nullptr),
+        OldValue(nullptr)
     {
     }
 
     FReDrawRarityParameterStatusByUserIdResult::FReDrawRarityParameterStatusByUserIdResult(
         const FReDrawRarityParameterStatusByUserIdResult& From
     ):
-        ItemValue(From.ItemValue)
+        ItemValue(From.ItemValue),
+        OldValue(From.OldValue)
     {
     }
 
@@ -38,6 +40,14 @@ namespace Gs2::Enchant::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FReDrawRarityParameterStatusByUserIdResult> FReDrawRarityParameterStatusByUserIdResult::WithOld(
+        const TSharedPtr<Model::FRarityParameterStatus> Old
+    )
+    {
+        this->OldValue = Old;
+        return SharedThis(this);
+    }
+
     TSharedPtr<Model::FRarityParameterStatus> FReDrawRarityParameterStatusByUserIdResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -45,6 +55,15 @@ namespace Gs2::Enchant::Result
             return nullptr;
         }
         return ItemValue;
+    }
+
+    TSharedPtr<Model::FRarityParameterStatus> FReDrawRarityParameterStatusByUserIdResult::GetOld() const
+    {
+        if (!OldValue.IsValid())
+        {
+            return nullptr;
+        }
+        return OldValue;
     }
 
     TSharedPtr<FReDrawRarityParameterStatusByUserIdResult> FReDrawRarityParameterStatusByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -60,6 +79,14 @@ namespace Gs2::Enchant::Result
                         return nullptr;
                     }
                     return Model::FRarityParameterStatus::FromJson(Data->GetObjectField("item"));
+                 }() : nullptr)
+            ->WithOld(Data->HasField("old") ? [Data]() -> Model::FRarityParameterStatusPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("old"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FRarityParameterStatus::FromJson(Data->GetObjectField("old"));
                  }() : nullptr);
     }
 
@@ -69,6 +96,10 @@ namespace Gs2::Enchant::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (OldValue != nullptr && OldValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("old", OldValue->ToJson());
         }
         return JsonRootObject;
     }

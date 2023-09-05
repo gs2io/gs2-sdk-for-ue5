@@ -278,6 +278,12 @@
 #include "Task/Rest/RaiseMaxValueByUserIdTask.h"
 #include "Task/WebSocket/RaiseMaxValueByUserIdTask.h"
 
+// DecreaseMaxValueByUserId
+#include "Request/DecreaseMaxValueByUserIdRequest.h"
+#include "Result/DecreaseMaxValueByUserIdResult.h"
+#include "Task/Rest/DecreaseMaxValueByUserIdTask.h"
+#include "Task/WebSocket/DecreaseMaxValueByUserIdTask.h"
+
 // SetMaxValueByUserId
 #include "Request/SetMaxValueByUserIdRequest.h"
 #include "Result/SetMaxValueByUserIdResult.h"
@@ -331,6 +337,12 @@
 #include "Result/RaiseMaxValueByStampSheetResult.h"
 #include "Task/Rest/RaiseMaxValueByStampSheetTask.h"
 #include "Task/WebSocket/RaiseMaxValueByStampSheetTask.h"
+
+// DecreaseMaxValueByStampTask
+#include "Request/DecreaseMaxValueByStampTaskRequest.h"
+#include "Result/DecreaseMaxValueByStampTaskResult.h"
+#include "Task/Rest/DecreaseMaxValueByStampTaskTask.h"
+#include "Task/WebSocket/DecreaseMaxValueByStampTaskTask.h"
 
 // SetMaxValueByStampSheet
 #include "Request/SetMaxValueByStampSheetRequest.h"

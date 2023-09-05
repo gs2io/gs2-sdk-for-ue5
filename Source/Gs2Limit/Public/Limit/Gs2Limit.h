@@ -97,6 +97,12 @@
 #include "Task/Rest/CountUpByUserIdTask.h"
 #include "Task/WebSocket/CountUpByUserIdTask.h"
 
+// CountDownByUserId
+#include "Request/CountDownByUserIdRequest.h"
+#include "Result/CountDownByUserIdResult.h"
+#include "Task/Rest/CountDownByUserIdTask.h"
+#include "Task/WebSocket/CountDownByUserIdTask.h"
+
 // DeleteCounterByUserId
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Result/DeleteCounterByUserIdResult.h"
@@ -108,6 +114,12 @@
 #include "Result/CountUpByStampTaskResult.h"
 #include "Task/Rest/CountUpByStampTaskTask.h"
 #include "Task/WebSocket/CountUpByStampTaskTask.h"
+
+// CountDownByStampSheet
+#include "Request/CountDownByStampSheetRequest.h"
+#include "Result/CountDownByStampSheetResult.h"
+#include "Task/Rest/CountDownByStampSheetTask.h"
+#include "Task/WebSocket/CountDownByStampSheetTask.h"
 
 // DeleteByStampSheet
 #include "Request/DeleteByStampSheetRequest.h"

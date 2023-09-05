@@ -239,6 +239,24 @@ namespace Gs2::Inventory::Domain
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (ResultModel->GetOld() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Inventory"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                    ResultModel->GetOld()->GetInventoryName()
+                );
+                Cache->Put(
+                    Gs2::Inventory::Model::FInventory::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetOld(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
         if (Method == "AcquireItemSetByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -957,6 +975,24 @@ namespace Gs2::Inventory::Domain
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetOld() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Inventory"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                    ResultModel->GetOld()->GetInventoryName()
+                );
+                Cache->Put(
+                    Gs2::Inventory::Model::FInventory::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetOld(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }

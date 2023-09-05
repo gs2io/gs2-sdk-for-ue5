@@ -388,6 +388,15 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaxValueByUserIdTask>> FGs2StaminaRestClient::DecreaseMaxValueByUserId(
+        const Request::FDecreaseMaxValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseMaxValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FSetMaxValueByUserIdTask>> FGs2StaminaRestClient::SetMaxValueByUserId(
         const Request::FSetMaxValueByUserIdRequestPtr Request) const
     {
@@ -464,6 +473,15 @@ namespace Gs2::Stamina
         const Request::FRaiseMaxValueByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRaiseMaxValueByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaxValueByStampTaskTask>> FGs2StaminaRestClient::DecreaseMaxValueByStampTask(
+        const Request::FDecreaseMaxValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseMaxValueByStampTaskTask>>(
             Session,
             Request
         );

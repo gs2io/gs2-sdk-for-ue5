@@ -158,6 +158,41 @@ namespace Gs2::Mission::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "RevertReceiveByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Mission::Request::FRevertReceiveByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Mission::Result::FRevertReceiveByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Complete"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetMissionGroupName()
+                );
+                Cache->Put(
+                    Gs2::Mission::Model::FComplete::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "IncreaseCounterByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -239,6 +274,41 @@ namespace Gs2::Mission::Domain
                 );
             }
         }
+        if (Method == "DecreaseCounterByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Mission::Request::FDecreaseCounterByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Mission::Result::FDecreaseCounterByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Counter"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Mission::Model::FCounter::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2MissionDomain::UpdateCacheFromJobResult(
@@ -246,6 +316,49 @@ namespace Gs2::Mission::Domain
         const Gs2::JobQueue::Model::FJobPtr Job,
         const Gs2::JobQueue::Model::FJobResultBodyPtr Result
     ) {
+        if (Method == "revert_receive_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Mission::Request::FRevertReceiveByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Mission::Result::FRevertReceiveByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Complete"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetMissionGroupName()
+                );
+                Cache->Put(
+                    Gs2::Mission::Model::FComplete::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "increase_counter_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (!Job->GetArgs().IsSet())

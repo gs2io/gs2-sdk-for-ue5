@@ -280,6 +280,15 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSubExperienceByUserIdTask>> FGs2ExperienceWebSocketClient::SubExperienceByUserId(
+        const Request::FSubExperienceByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSubExperienceByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FSetExperienceByUserIdTask>> FGs2ExperienceWebSocketClient::SetExperienceByUserId(
         const Request::FSetExperienceByUserIdRequestPtr Request) const
     {
@@ -293,6 +302,15 @@ namespace Gs2::Experience
         const Request::FAddRankCapByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddRankCapByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSubRankCapByUserIdTask>> FGs2ExperienceWebSocketClient::SubRankCapByUserId(
+        const Request::FSubRankCapByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSubRankCapByUserIdTask>>(
             Session,
             Request
         );
@@ -325,10 +343,28 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSubExperienceByStampTaskTask>> FGs2ExperienceWebSocketClient::SubExperienceByStampTask(
+        const Request::FSubExperienceByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSubExperienceByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FAddRankCapByStampSheetTask>> FGs2ExperienceWebSocketClient::AddRankCapByStampSheet(
         const Request::FAddRankCapByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddRankCapByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSubRankCapByStampTaskTask>> FGs2ExperienceWebSocketClient::SubRankCapByStampTask(
+        const Request::FSubRankCapByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSubRankCapByStampTaskTask>>(
             Session,
             Request
         );

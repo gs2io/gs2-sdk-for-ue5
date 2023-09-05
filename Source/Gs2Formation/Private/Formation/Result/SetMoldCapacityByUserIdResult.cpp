@@ -20,6 +20,7 @@ namespace Gs2::Formation::Result
 {
     FSetMoldCapacityByUserIdResult::FSetMoldCapacityByUserIdResult():
         ItemValue(nullptr),
+        OldValue(nullptr),
         MoldModelValue(nullptr)
     {
     }
@@ -28,6 +29,7 @@ namespace Gs2::Formation::Result
         const FSetMoldCapacityByUserIdResult& From
     ):
         ItemValue(From.ItemValue),
+        OldValue(From.OldValue),
         MoldModelValue(From.MoldModelValue)
     {
     }
@@ -37,6 +39,14 @@ namespace Gs2::Formation::Result
     )
     {
         this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSetMoldCapacityByUserIdResult> FSetMoldCapacityByUserIdResult::WithOld(
+        const TSharedPtr<Model::FMold> Old
+    )
+    {
+        this->OldValue = Old;
         return SharedThis(this);
     }
 
@@ -55,6 +65,15 @@ namespace Gs2::Formation::Result
             return nullptr;
         }
         return ItemValue;
+    }
+
+    TSharedPtr<Model::FMold> FSetMoldCapacityByUserIdResult::GetOld() const
+    {
+        if (!OldValue.IsValid())
+        {
+            return nullptr;
+        }
+        return OldValue;
     }
 
     TSharedPtr<Model::FMoldModel> FSetMoldCapacityByUserIdResult::GetMoldModel() const
@@ -80,6 +99,14 @@ namespace Gs2::Formation::Result
                     }
                     return Model::FMold::FromJson(Data->GetObjectField("item"));
                  }() : nullptr)
+            ->WithOld(Data->HasField("old") ? [Data]() -> Model::FMoldPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("old"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FMold::FromJson(Data->GetObjectField("old"));
+                 }() : nullptr)
             ->WithMoldModel(Data->HasField("moldModel") ? [Data]() -> Model::FMoldModelPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("moldModel"))
@@ -96,6 +123,10 @@ namespace Gs2::Formation::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (OldValue != nullptr && OldValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("old", OldValue->ToJson());
         }
         if (MoldModelValue != nullptr && MoldModelValue.IsValid())
         {

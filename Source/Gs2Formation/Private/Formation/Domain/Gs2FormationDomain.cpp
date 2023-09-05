@@ -358,6 +358,58 @@ namespace Gs2::Formation::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "SubMoldCapacityByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Formation::Request::FSubMoldCapacityByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Formation::Result::FSubMoldCapacityByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Mold"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetMoldModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "MoldModel"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
+                    ResultModel->GetMoldModel()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetMoldModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2FormationDomain::UpdateCacheFromJobResult(

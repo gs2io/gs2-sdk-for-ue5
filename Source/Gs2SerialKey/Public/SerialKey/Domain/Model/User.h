@@ -133,6 +133,32 @@ namespace Gs2::SerialKey::Domain::Model
             Request::FGetSerialKeyRequestPtr Request
         );
 
+        class GS2SERIALKEY_API FRevertUseTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>,
+            public TSharedFromThis<FRevertUseTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FRevertUseByUserIdRequestPtr Request;
+        public:
+            explicit FRevertUseTask(
+                const TSharedPtr<FUserDomain> Self,
+                const Request::FRevertUseByUserIdRequestPtr Request
+            );
+
+            FRevertUseTask(
+                const FRevertUseTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>> Result
+            ) override;
+        };
+        friend FRevertUseTask;
+
+        TSharedPtr<FAsyncTask<FRevertUseTask>> RevertUse(
+            Request::FRevertUseByUserIdRequestPtr Request
+        );
+
         Gs2::SerialKey::Domain::Iterator::FDescribeSerialKeysIteratorPtr SerialKeys(
             const FString CampaignModelName,
             const TOptional<FString> IssueJobName

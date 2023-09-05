@@ -28,6 +28,8 @@
 #include "Task/Rest/CompleteByUserIdTask.h"
 #include "Request/ReceiveByUserIdRequest.h"
 #include "Task/Rest/ReceiveByUserIdTask.h"
+#include "Request/RevertReceiveByUserIdRequest.h"
+#include "Task/Rest/RevertReceiveByUserIdTask.h"
 #include "Request/GetCompleteRequest.h"
 #include "Task/Rest/GetCompleteTask.h"
 #include "Request/GetCompleteByUserIdRequest.h"
@@ -36,6 +38,8 @@
 #include "Task/Rest/DeleteCompleteByUserIdTask.h"
 #include "Request/ReceiveByStampTaskRequest.h"
 #include "Task/Rest/ReceiveByStampTaskTask.h"
+#include "Request/RevertReceiveByStampSheetRequest.h"
+#include "Task/Rest/RevertReceiveByStampSheetTask.h"
 #include "Request/DescribeCounterModelMastersRequest.h"
 #include "Task/Rest/DescribeCounterModelMastersTask.h"
 #include "Request/CreateCounterModelMasterRequest.h"
@@ -74,6 +78,8 @@
 #include "Task/Rest/DescribeCountersByUserIdTask.h"
 #include "Request/IncreaseCounterByUserIdRequest.h"
 #include "Task/Rest/IncreaseCounterByUserIdTask.h"
+#include "Request/DecreaseCounterByUserIdRequest.h"
+#include "Task/Rest/DecreaseCounterByUserIdTask.h"
 #include "Request/GetCounterRequest.h"
 #include "Task/Rest/GetCounterTask.h"
 #include "Request/GetCounterByUserIdRequest.h"
@@ -82,6 +88,8 @@
 #include "Task/Rest/DeleteCounterByUserIdTask.h"
 #include "Request/IncreaseByStampSheetRequest.h"
 #include "Task/Rest/IncreaseByStampSheetTask.h"
+#include "Request/DecreaseByStampTaskRequest.h"
+#include "Task/Rest/DecreaseByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentMissionMasterRequest.h"
@@ -144,6 +152,10 @@ namespace Gs2::Mission
             const Request::FReceiveByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FRevertReceiveByUserIdTask>> RevertReceiveByUserId(
+            const Request::FRevertReceiveByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FGetCompleteTask>> GetComplete(
             const Request::FGetCompleteRequestPtr Request
         ) const;
@@ -158,6 +170,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FReceiveByStampTaskTask>> ReceiveByStampTask(
             const Request::FReceiveByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRevertReceiveByStampSheetTask>> RevertReceiveByStampSheet(
+            const Request::FRevertReceiveByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeCounterModelMastersTask>> DescribeCounterModelMasters(
@@ -236,6 +252,10 @@ namespace Gs2::Mission
             const Request::FIncreaseCounterByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseCounterByUserIdTask>> DecreaseCounterByUserId(
+            const Request::FDecreaseCounterByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FGetCounterTask>> GetCounter(
             const Request::FGetCounterRequestPtr Request
         ) const;
@@ -250,6 +270,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FIncreaseByStampSheetTask>> IncreaseByStampSheet(
             const Request::FIncreaseByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseByStampTaskTask>> DecreaseByStampTask(
+            const Request::FDecreaseByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

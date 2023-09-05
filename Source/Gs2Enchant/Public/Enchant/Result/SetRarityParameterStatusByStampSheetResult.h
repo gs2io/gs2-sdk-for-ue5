@@ -24,6 +24,7 @@ namespace Gs2::Enchant::Result
     class GS2ENCHANT_API FSetRarityParameterStatusByStampSheetResult final : public TSharedFromThis<FSetRarityParameterStatusByStampSheetResult>
     {
         TSharedPtr<Model::FRarityParameterStatus> ItemValue;
+        TSharedPtr<Model::FRarityParameterStatus> OldValue;
         
     public:
         
@@ -34,8 +35,10 @@ namespace Gs2::Enchant::Result
         ~FSetRarityParameterStatusByStampSheetResult() = default;
 
         TSharedPtr<FSetRarityParameterStatusByStampSheetResult> WithItem(const TSharedPtr<Model::FRarityParameterStatus> Item);
+        TSharedPtr<FSetRarityParameterStatusByStampSheetResult> WithOld(const TSharedPtr<Model::FRarityParameterStatus> Old);
 
         TSharedPtr<Model::FRarityParameterStatus> GetItem() const;
+        TSharedPtr<Model::FRarityParameterStatus> GetOld() const;
 
         static TSharedPtr<FSetRarityParameterStatusByStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

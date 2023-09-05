@@ -190,6 +190,15 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteTriggerByStampTaskTask>> FGs2ScheduleWebSocketClient::DeleteTriggerByStampTask(
+        const Request::FDeleteTriggerByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteTriggerByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeEventsTask>> FGs2ScheduleWebSocketClient::DescribeEvents(
         const Request::FDescribeEventsRequestPtr Request) const
     {

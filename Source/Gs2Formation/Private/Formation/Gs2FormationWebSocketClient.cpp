@@ -289,6 +289,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSubMoldCapacityByUserIdTask>> FGs2FormationWebSocketClient::SubMoldCapacityByUserId(
+        const Request::FSubMoldCapacityByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSubMoldCapacityByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteMoldTask>> FGs2FormationWebSocketClient::DeleteMold(
         const Request::FDeleteMoldRequestPtr Request) const
     {
@@ -311,6 +320,15 @@ namespace Gs2::Formation
         const Request::FAddCapacityByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FAddCapacityByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSubCapacityByStampTaskTask>> FGs2FormationWebSocketClient::SubCapacityByStampTask(
+        const Request::FSubCapacityByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSubCapacityByStampTaskTask>>(
             Session,
             Request
         );

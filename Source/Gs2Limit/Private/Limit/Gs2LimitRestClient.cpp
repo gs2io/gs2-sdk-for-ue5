@@ -127,6 +127,15 @@ namespace Gs2::Limit
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FCountDownByUserIdTask>> FGs2LimitRestClient::CountDownByUserId(
+        const Request::FCountDownByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCountDownByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteCounterByUserIdTask>> FGs2LimitRestClient::DeleteCounterByUserId(
         const Request::FDeleteCounterByUserIdRequestPtr Request) const
     {
@@ -140,6 +149,15 @@ namespace Gs2::Limit
         const Request::FCountUpByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCountUpByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCountDownByStampSheetTask>> FGs2LimitRestClient::CountDownByStampSheet(
+        const Request::FCountDownByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCountDownByStampSheetTask>>(
             Session,
             Request
         );

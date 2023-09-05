@@ -127,6 +127,15 @@ namespace Gs2::Limit
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCountDownByUserIdTask>> FGs2LimitWebSocketClient::CountDownByUserId(
+        const Request::FCountDownByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCountDownByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCounterByUserIdTask>> FGs2LimitWebSocketClient::DeleteCounterByUserId(
         const Request::FDeleteCounterByUserIdRequestPtr Request) const
     {
@@ -140,6 +149,15 @@ namespace Gs2::Limit
         const Request::FCountUpByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCountUpByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCountDownByStampSheetTask>> FGs2LimitWebSocketClient::CountDownByStampSheet(
+        const Request::FCountDownByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCountDownByStampSheetTask>>(
             Session,
             Request
         );

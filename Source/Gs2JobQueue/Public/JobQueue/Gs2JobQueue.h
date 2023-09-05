@@ -104,6 +104,12 @@
 #include "Task/Rest/PushByStampSheetTask.h"
 #include "Task/WebSocket/PushByStampSheetTask.h"
 
+// DeleteByStampTask
+#include "Request/DeleteByStampTaskRequest.h"
+#include "Result/DeleteByStampTaskResult.h"
+#include "Task/Rest/DeleteByStampTaskTask.h"
+#include "Task/WebSocket/DeleteByStampTaskTask.h"
+
 // GetJobResult
 #include "Request/GetJobResultRequest.h"
 #include "Result/GetJobResultResult.h"

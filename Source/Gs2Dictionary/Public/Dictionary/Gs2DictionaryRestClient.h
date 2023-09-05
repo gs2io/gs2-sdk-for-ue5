@@ -60,8 +60,12 @@
 #include "Task/Rest/GetEntryWithSignatureByUserIdTask.h"
 #include "Request/ResetByUserIdRequest.h"
 #include "Task/Rest/ResetByUserIdTask.h"
+#include "Request/DeleteEntriesByUserIdRequest.h"
+#include "Task/Rest/DeleteEntriesByUserIdTask.h"
 #include "Request/AddEntriesByStampSheetRequest.h"
 #include "Task/Rest/AddEntriesByStampSheetTask.h"
+#include "Request/DeleteEntriesByStampTaskRequest.h"
+#include "Task/Rest/DeleteEntriesByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentEntryMasterRequest.h"
@@ -166,8 +170,16 @@ namespace Gs2::Dictionary
             const Request::FResetByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteEntriesByUserIdTask>> DeleteEntriesByUserId(
+            const Request::FDeleteEntriesByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FAddEntriesByStampSheetTask>> AddEntriesByStampSheet(
             const Request::FAddEntriesByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteEntriesByStampTaskTask>> DeleteEntriesByStampTask(
+            const Request::FDeleteEntriesByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

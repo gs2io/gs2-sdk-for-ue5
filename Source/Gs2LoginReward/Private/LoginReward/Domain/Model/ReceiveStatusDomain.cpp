@@ -313,6 +313,89 @@ namespace Gs2::LoginReward::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FMarkReceivedTask>>(this->AsShared(), Request);
     }
 
+    FReceiveStatusDomain::FUnmarkReceivedTask::FUnmarkReceivedTask(
+        const TSharedPtr<FReceiveStatusDomain> Self,
+        const Request::FUnmarkReceivedByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FReceiveStatusDomain::FUnmarkReceivedTask::FUnmarkReceivedTask(
+        const FUnmarkReceivedTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FReceiveStatusDomain::FUnmarkReceivedTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::LoginReward::Domain::Model::FReceiveStatusDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithBonusModelName(Self->BonusModelName);
+        const auto Future = Self->Client->UnmarkReceivedByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "ReceiveStatus"
+                );
+                const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetBonusModelName()
+                );
+                Self->Cache->Put(
+                    Gs2::LoginReward::Model::FReceiveStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetBonusModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "BonusModel"
+                );
+                const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
+                    ResultModel->GetBonusModel()->GetName()
+                );
+                Self->Cache->Put(
+                    Gs2::LoginReward::Model::FBonusModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetBonusModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FReceiveStatusDomain::FUnmarkReceivedTask>> FReceiveStatusDomain::UnmarkReceived(
+        Request::FUnmarkReceivedByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FUnmarkReceivedTask>>(this->AsShared(), Request);
+    }
+
     FString FReceiveStatusDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

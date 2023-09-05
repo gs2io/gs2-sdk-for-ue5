@@ -205,6 +205,12 @@
 #include "Task/Rest/AddExperienceByUserIdTask.h"
 #include "Task/WebSocket/AddExperienceByUserIdTask.h"
 
+// SubExperienceByUserId
+#include "Request/SubExperienceByUserIdRequest.h"
+#include "Result/SubExperienceByUserIdResult.h"
+#include "Task/Rest/SubExperienceByUserIdTask.h"
+#include "Task/WebSocket/SubExperienceByUserIdTask.h"
+
 // SetExperienceByUserId
 #include "Request/SetExperienceByUserIdRequest.h"
 #include "Result/SetExperienceByUserIdResult.h"
@@ -216,6 +222,12 @@
 #include "Result/AddRankCapByUserIdResult.h"
 #include "Task/Rest/AddRankCapByUserIdTask.h"
 #include "Task/WebSocket/AddRankCapByUserIdTask.h"
+
+// SubRankCapByUserId
+#include "Request/SubRankCapByUserIdRequest.h"
+#include "Result/SubRankCapByUserIdResult.h"
+#include "Task/Rest/SubRankCapByUserIdTask.h"
+#include "Task/WebSocket/SubRankCapByUserIdTask.h"
 
 // SetRankCapByUserId
 #include "Request/SetRankCapByUserIdRequest.h"
@@ -235,11 +247,23 @@
 #include "Task/Rest/AddExperienceByStampSheetTask.h"
 #include "Task/WebSocket/AddExperienceByStampSheetTask.h"
 
+// SubExperienceByStampTask
+#include "Request/SubExperienceByStampTaskRequest.h"
+#include "Result/SubExperienceByStampTaskResult.h"
+#include "Task/Rest/SubExperienceByStampTaskTask.h"
+#include "Task/WebSocket/SubExperienceByStampTaskTask.h"
+
 // AddRankCapByStampSheet
 #include "Request/AddRankCapByStampSheetRequest.h"
 #include "Result/AddRankCapByStampSheetResult.h"
 #include "Task/Rest/AddRankCapByStampSheetTask.h"
 #include "Task/WebSocket/AddRankCapByStampSheetTask.h"
+
+// SubRankCapByStampTask
+#include "Request/SubRankCapByStampTaskRequest.h"
+#include "Result/SubRankCapByStampTaskResult.h"
+#include "Task/Rest/SubRankCapByStampTaskTask.h"
+#include "Task/WebSocket/SubRankCapByStampTaskTask.h"
 
 // SetRankCapByStampSheet
 #include "Request/SetRankCapByStampSheetRequest.h"

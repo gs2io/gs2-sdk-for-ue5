@@ -195,6 +195,41 @@ namespace Gs2::Idle::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "DecreaseMaximumIdleMinutesByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Idle::Request::FDecreaseMaximumIdleMinutesByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Idle::Result::FDecreaseMaximumIdleMinutesByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCategoryName()
+                );
+                Cache->Put(
+                    Gs2::Idle::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2IdleDomain::UpdateCacheFromJobResult(

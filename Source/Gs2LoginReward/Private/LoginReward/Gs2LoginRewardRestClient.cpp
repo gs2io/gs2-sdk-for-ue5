@@ -280,10 +280,28 @@ namespace Gs2::LoginReward
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FUnmarkReceivedByUserIdTask>> FGs2LoginRewardRestClient::UnmarkReceivedByUserId(
+        const Request::FUnmarkReceivedByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUnmarkReceivedByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FMarkReceivedByStampTaskTask>> FGs2LoginRewardRestClient::MarkReceivedByStampTask(
         const Request::FMarkReceivedByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FMarkReceivedByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUnmarkReceivedByStampSheetTask>> FGs2LoginRewardRestClient::UnmarkReceivedByStampSheet(
+        const Request::FUnmarkReceivedByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUnmarkReceivedByStampSheetTask>>(
             Session,
             Request
         );

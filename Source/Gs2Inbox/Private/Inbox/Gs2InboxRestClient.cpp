@@ -208,6 +208,15 @@ namespace Gs2::Inbox
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteMessageByStampTaskTask>> FGs2InboxRestClient::DeleteMessageByStampTask(
+        const Request::FDeleteMessageByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteMessageByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2InboxRestClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

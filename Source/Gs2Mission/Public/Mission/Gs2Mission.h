@@ -67,6 +67,12 @@
 #include "Task/Rest/ReceiveByUserIdTask.h"
 #include "Task/WebSocket/ReceiveByUserIdTask.h"
 
+// RevertReceiveByUserId
+#include "Request/RevertReceiveByUserIdRequest.h"
+#include "Result/RevertReceiveByUserIdResult.h"
+#include "Task/Rest/RevertReceiveByUserIdTask.h"
+#include "Task/WebSocket/RevertReceiveByUserIdTask.h"
+
 // GetComplete
 #include "Request/GetCompleteRequest.h"
 #include "Result/GetCompleteResult.h"
@@ -90,6 +96,12 @@
 #include "Result/ReceiveByStampTaskResult.h"
 #include "Task/Rest/ReceiveByStampTaskTask.h"
 #include "Task/WebSocket/ReceiveByStampTaskTask.h"
+
+// RevertReceiveByStampSheet
+#include "Request/RevertReceiveByStampSheetRequest.h"
+#include "Result/RevertReceiveByStampSheetResult.h"
+#include "Task/Rest/RevertReceiveByStampSheetTask.h"
+#include "Task/WebSocket/RevertReceiveByStampSheetTask.h"
 
 // DescribeCounterModelMasters
 #include "Request/DescribeCounterModelMastersRequest.h"
@@ -205,6 +217,12 @@
 #include "Task/Rest/IncreaseCounterByUserIdTask.h"
 #include "Task/WebSocket/IncreaseCounterByUserIdTask.h"
 
+// DecreaseCounterByUserId
+#include "Request/DecreaseCounterByUserIdRequest.h"
+#include "Result/DecreaseCounterByUserIdResult.h"
+#include "Task/Rest/DecreaseCounterByUserIdTask.h"
+#include "Task/WebSocket/DecreaseCounterByUserIdTask.h"
+
 // GetCounter
 #include "Request/GetCounterRequest.h"
 #include "Result/GetCounterResult.h"
@@ -228,6 +246,12 @@
 #include "Result/IncreaseByStampSheetResult.h"
 #include "Task/Rest/IncreaseByStampSheetTask.h"
 #include "Task/WebSocket/IncreaseByStampSheetTask.h"
+
+// DecreaseByStampTask
+#include "Request/DecreaseByStampTaskRequest.h"
+#include "Result/DecreaseByStampTaskResult.h"
+#include "Task/Rest/DecreaseByStampTaskTask.h"
+#include "Task/WebSocket/DecreaseByStampTaskTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

@@ -64,6 +64,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FRevertReceiveByUserIdTask>> FGs2MissionRestClient::RevertReceiveByUserId(
+        const Request::FRevertReceiveByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRevertReceiveByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetCompleteTask>> FGs2MissionRestClient::GetComplete(
         const Request::FGetCompleteRequestPtr Request) const
     {
@@ -95,6 +104,15 @@ namespace Gs2::Mission
         const Request::FReceiveByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FReceiveByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FRevertReceiveByStampSheetTask>> FGs2MissionRestClient::RevertReceiveByStampSheet(
+        const Request::FRevertReceiveByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRevertReceiveByStampSheetTask>>(
             Session,
             Request
         );
@@ -271,6 +289,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDecreaseCounterByUserIdTask>> FGs2MissionRestClient::DecreaseCounterByUserId(
+        const Request::FDecreaseCounterByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetCounterTask>> FGs2MissionRestClient::GetCounter(
         const Request::FGetCounterRequestPtr Request) const
     {
@@ -302,6 +329,15 @@ namespace Gs2::Mission
         const Request::FIncreaseByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncreaseByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDecreaseByStampTaskTask>> FGs2MissionRestClient::DecreaseByStampTask(
+        const Request::FDecreaseByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseByStampTaskTask>>(
             Session,
             Request
         );

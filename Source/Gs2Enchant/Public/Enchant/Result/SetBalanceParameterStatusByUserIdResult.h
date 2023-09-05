@@ -24,6 +24,7 @@ namespace Gs2::Enchant::Result
     class GS2ENCHANT_API FSetBalanceParameterStatusByUserIdResult final : public TSharedFromThis<FSetBalanceParameterStatusByUserIdResult>
     {
         TSharedPtr<Model::FBalanceParameterStatus> ItemValue;
+        TSharedPtr<Model::FBalanceParameterStatus> OldValue;
         
     public:
         
@@ -34,8 +35,10 @@ namespace Gs2::Enchant::Result
         ~FSetBalanceParameterStatusByUserIdResult() = default;
 
         TSharedPtr<FSetBalanceParameterStatusByUserIdResult> WithItem(const TSharedPtr<Model::FBalanceParameterStatus> Item);
+        TSharedPtr<FSetBalanceParameterStatusByUserIdResult> WithOld(const TSharedPtr<Model::FBalanceParameterStatus> Old);
 
         TSharedPtr<Model::FBalanceParameterStatus> GetItem() const;
+        TSharedPtr<Model::FBalanceParameterStatus> GetOld() const;
 
         static TSharedPtr<FSetBalanceParameterStatusByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

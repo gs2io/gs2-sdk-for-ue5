@@ -24,6 +24,7 @@ namespace Gs2::Experience::Result
     class GS2EXPERIENCE_API FSetExperienceByUserIdResult final : public TSharedFromThis<FSetExperienceByUserIdResult>
     {
         TSharedPtr<Model::FStatus> ItemValue;
+        TSharedPtr<Model::FStatus> OldValue;
         
     public:
         
@@ -34,8 +35,10 @@ namespace Gs2::Experience::Result
         ~FSetExperienceByUserIdResult() = default;
 
         TSharedPtr<FSetExperienceByUserIdResult> WithItem(const TSharedPtr<Model::FStatus> Item);
+        TSharedPtr<FSetExperienceByUserIdResult> WithOld(const TSharedPtr<Model::FStatus> Old);
 
         TSharedPtr<Model::FStatus> GetItem() const;
+        TSharedPtr<Model::FStatus> GetOld() const;
 
         static TSharedPtr<FSetExperienceByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

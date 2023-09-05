@@ -262,11 +262,23 @@
 #include "Task/Rest/IncrementPurchaseCountByUserIdTask.h"
 #include "Task/WebSocket/IncrementPurchaseCountByUserIdTask.h"
 
+// DecrementPurchaseCountByUserId
+#include "Request/DecrementPurchaseCountByUserIdRequest.h"
+#include "Result/DecrementPurchaseCountByUserIdResult.h"
+#include "Task/Rest/DecrementPurchaseCountByUserIdTask.h"
+#include "Task/WebSocket/DecrementPurchaseCountByUserIdTask.h"
+
 // IncrementPurchaseCountByStampTask
 #include "Request/IncrementPurchaseCountByStampTaskRequest.h"
 #include "Result/IncrementPurchaseCountByStampTaskResult.h"
 #include "Task/Rest/IncrementPurchaseCountByStampTaskTask.h"
 #include "Task/WebSocket/IncrementPurchaseCountByStampTaskTask.h"
+
+// DecrementPurchaseCountByStampSheet
+#include "Request/DecrementPurchaseCountByStampSheetRequest.h"
+#include "Result/DecrementPurchaseCountByStampSheetResult.h"
+#include "Task/Rest/DecrementPurchaseCountByStampSheetTask.h"
+#include "Task/WebSocket/DecrementPurchaseCountByStampSheetTask.h"
 
 // ForceReDrawByUserId
 #include "Request/ForceReDrawByUserIdRequest.h"

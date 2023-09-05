@@ -145,10 +145,28 @@ namespace Gs2::SerialKey
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FRevertUseByUserIdTask>> FGs2SerialKeyRestClient::RevertUseByUserId(
+        const Request::FRevertUseByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRevertUseByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUseByStampTaskTask>> FGs2SerialKeyRestClient::UseByStampTask(
         const Request::FUseByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUseByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FRevertUseByStampSheetTask>> FGs2SerialKeyRestClient::RevertUseByStampSheet(
+        const Request::FRevertUseByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRevertUseByStampSheetTask>>(
             Session,
             Request
         );

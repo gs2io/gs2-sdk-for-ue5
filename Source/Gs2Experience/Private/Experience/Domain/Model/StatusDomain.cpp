@@ -283,6 +283,74 @@ namespace Gs2::Experience::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FAddExperienceTask>>(this->AsShared(), Request);
     }
 
+    FStatusDomain::FSubExperienceTask::FSubExperienceTask(
+        const TSharedPtr<FStatusDomain> Self,
+        const Request::FSubExperienceByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusDomain::FSubExperienceTask::FSubExperienceTask(
+        const FSubExperienceTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusDomain::FSubExperienceTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithExperienceName(Self->ExperienceName)
+            ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SubExperienceByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetExperienceName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusDomain::FSubExperienceTask>> FStatusDomain::SubExperience(
+        Request::FSubExperienceByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSubExperienceTask>>(this->AsShared(), Request);
+    }
+
     FStatusDomain::FSetExperienceTask::FSetExperienceTask(
         const TSharedPtr<FStatusDomain> Self,
         const Request::FSetExperienceByUserIdRequestPtr Request
@@ -417,6 +485,74 @@ namespace Gs2::Experience::Domain::Model
         Request::FAddRankCapByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FAddRankCapTask>>(this->AsShared(), Request);
+    }
+
+    FStatusDomain::FSubRankCapTask::FSubRankCapTask(
+        const TSharedPtr<FStatusDomain> Self,
+        const Request::FSubRankCapByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusDomain::FSubRankCapTask::FSubRankCapTask(
+        const FSubRankCapTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusDomain::FSubRankCapTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithExperienceName(Self->ExperienceName)
+            ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->SubRankCapByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetExperienceName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Self->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusDomain::FSubRankCapTask>> FStatusDomain::SubRankCap(
+        Request::FSubRankCapByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSubRankCapTask>>(this->AsShared(), Request);
     }
 
     FStatusDomain::FSetRankCapTask::FSetRankCapTask(

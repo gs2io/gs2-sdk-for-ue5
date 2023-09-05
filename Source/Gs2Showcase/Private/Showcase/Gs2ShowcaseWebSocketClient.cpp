@@ -352,10 +352,28 @@ namespace Gs2::Showcase
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecrementPurchaseCountByUserIdTask>> FGs2ShowcaseWebSocketClient::DecrementPurchaseCountByUserId(
+        const Request::FDecrementPurchaseCountByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecrementPurchaseCountByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementPurchaseCountByStampTaskTask>> FGs2ShowcaseWebSocketClient::IncrementPurchaseCountByStampTask(
         const Request::FIncrementPurchaseCountByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIncrementPurchaseCountByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecrementPurchaseCountByStampSheetTask>> FGs2ShowcaseWebSocketClient::DecrementPurchaseCountByStampSheet(
+        const Request::FDecrementPurchaseCountByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecrementPurchaseCountByStampSheetTask>>(
             Session,
             Request
         );

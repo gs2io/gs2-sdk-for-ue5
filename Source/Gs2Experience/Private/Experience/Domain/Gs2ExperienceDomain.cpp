@@ -286,6 +286,78 @@ namespace Gs2::Experience::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "SubExperienceByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Experience::Request::FSubExperienceByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Experience::Result::FSubExperienceByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetExperienceName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "SubRankCapByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Experience::Request::FSubRankCapByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Experience::Result::FSubRankCapByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetExperienceName(),
+                    ResultModel->GetItem()->GetPropertyId()
+                );
+                Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2ExperienceDomain::UpdateCacheFromJobResult(

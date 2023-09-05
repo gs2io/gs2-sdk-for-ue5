@@ -46,8 +46,12 @@
 #include "Task/Rest/UseTask.h"
 #include "Request/UseByUserIdRequest.h"
 #include "Task/Rest/UseByUserIdTask.h"
+#include "Request/RevertUseByUserIdRequest.h"
+#include "Task/Rest/RevertUseByUserIdTask.h"
 #include "Request/UseByStampTaskRequest.h"
 #include "Task/Rest/UseByStampTaskTask.h"
+#include "Request/RevertUseByStampSheetRequest.h"
+#include "Task/Rest/RevertUseByStampSheetTask.h"
 #include "Request/DescribeCampaignModelsRequest.h"
 #include "Task/Rest/DescribeCampaignModelsTask.h"
 #include "Request/GetCampaignModelRequest.h"
@@ -138,8 +142,16 @@ namespace Gs2::SerialKey
             const Request::FUseByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FRevertUseByUserIdTask>> RevertUseByUserId(
+            const Request::FRevertUseByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FUseByStampTaskTask>> UseByStampTask(
             const Request::FUseByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRevertUseByStampSheetTask>> RevertUseByStampSheet(
+            const Request::FRevertUseByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeCampaignModelsTask>> DescribeCampaignModels(

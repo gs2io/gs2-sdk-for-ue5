@@ -92,8 +92,12 @@
 #include "Task/Rest/DeleteRandomShowcaseMasterTask.h"
 #include "Request/IncrementPurchaseCountByUserIdRequest.h"
 #include "Task/Rest/IncrementPurchaseCountByUserIdTask.h"
+#include "Request/DecrementPurchaseCountByUserIdRequest.h"
+#include "Task/Rest/DecrementPurchaseCountByUserIdTask.h"
 #include "Request/IncrementPurchaseCountByStampTaskRequest.h"
 #include "Task/Rest/IncrementPurchaseCountByStampTaskTask.h"
+#include "Request/DecrementPurchaseCountByStampSheetRequest.h"
+#include "Task/Rest/DecrementPurchaseCountByStampSheetTask.h"
 #include "Request/ForceReDrawByUserIdRequest.h"
 #include "Task/Rest/ForceReDrawByUserIdTask.h"
 #include "Request/ForceReDrawByUserIdByStampSheetRequest.h"
@@ -270,8 +274,16 @@ namespace Gs2::Showcase
             const Request::FIncrementPurchaseCountByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FDecrementPurchaseCountByUserIdTask>> DecrementPurchaseCountByUserId(
+            const Request::FDecrementPurchaseCountByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FIncrementPurchaseCountByStampTaskTask>> IncrementPurchaseCountByStampTask(
             const Request::FIncrementPurchaseCountByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDecrementPurchaseCountByStampSheetTask>> DecrementPurchaseCountByStampSheet(
+            const Request::FDecrementPurchaseCountByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FForceReDrawByUserIdTask>> ForceReDrawByUserId(

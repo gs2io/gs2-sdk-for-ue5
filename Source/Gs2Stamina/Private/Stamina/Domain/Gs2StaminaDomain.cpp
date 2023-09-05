@@ -423,6 +423,58 @@ namespace Gs2::Stamina::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "DecreaseMaxValueByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Stamina::Request::FDecreaseMaxValueByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Stamina::Result::FDecreaseMaxValueByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Stamina::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Stamina"
+                );
+                const auto Key = Gs2::Stamina::Domain::Model::FStaminaDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetStaminaName()
+                );
+                Cache->Put(
+                    Gs2::Stamina::Model::FStamina::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetStaminaModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "StaminaModel"
+                );
+                const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
+                    ResultModel->GetStaminaModel()->GetName()
+                );
+                Cache->Put(
+                    Gs2::Stamina::Model::FStaminaModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetStaminaModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "ConsumeStaminaByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);

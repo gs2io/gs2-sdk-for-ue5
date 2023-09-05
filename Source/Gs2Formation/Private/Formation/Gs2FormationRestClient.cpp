@@ -289,6 +289,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSubMoldCapacityByUserIdTask>> FGs2FormationRestClient::SubMoldCapacityByUserId(
+        const Request::FSubMoldCapacityByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubMoldCapacityByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteMoldTask>> FGs2FormationRestClient::DeleteMold(
         const Request::FDeleteMoldRequestPtr Request) const
     {
@@ -311,6 +320,15 @@ namespace Gs2::Formation
         const Request::FAddCapacityByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAddCapacityByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSubCapacityByStampTaskTask>> FGs2FormationRestClient::SubCapacityByStampTask(
+        const Request::FSubCapacityByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubCapacityByStampTaskTask>>(
             Session,
             Request
         );

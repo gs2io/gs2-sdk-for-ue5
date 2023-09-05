@@ -217,6 +217,12 @@
 #include "Task/Rest/AddMoldCapacityByUserIdTask.h"
 #include "Task/WebSocket/AddMoldCapacityByUserIdTask.h"
 
+// SubMoldCapacityByUserId
+#include "Request/SubMoldCapacityByUserIdRequest.h"
+#include "Result/SubMoldCapacityByUserIdResult.h"
+#include "Task/Rest/SubMoldCapacityByUserIdTask.h"
+#include "Task/WebSocket/SubMoldCapacityByUserIdTask.h"
+
 // DeleteMold
 #include "Request/DeleteMoldRequest.h"
 #include "Result/DeleteMoldResult.h"
@@ -234,6 +240,12 @@
 #include "Result/AddCapacityByStampSheetResult.h"
 #include "Task/Rest/AddCapacityByStampSheetTask.h"
 #include "Task/WebSocket/AddCapacityByStampSheetTask.h"
+
+// SubCapacityByStampTask
+#include "Request/SubCapacityByStampTaskRequest.h"
+#include "Result/SubCapacityByStampTaskResult.h"
+#include "Task/Rest/SubCapacityByStampTaskTask.h"
+#include "Task/WebSocket/SubCapacityByStampTaskTask.h"
 
 // SetCapacityByStampSheet
 #include "Request/SetCapacityByStampSheetRequest.h"

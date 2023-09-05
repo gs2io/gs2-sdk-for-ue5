@@ -60,8 +60,12 @@
 #include "Task/WebSocket/GetEntryWithSignatureByUserIdTask.h"
 #include "Request/ResetByUserIdRequest.h"
 #include "Task/WebSocket/ResetByUserIdTask.h"
+#include "Request/DeleteEntriesByUserIdRequest.h"
+#include "Task/WebSocket/DeleteEntriesByUserIdTask.h"
 #include "Request/AddEntriesByStampSheetRequest.h"
 #include "Task/WebSocket/AddEntriesByStampSheetTask.h"
+#include "Request/DeleteEntriesByStampTaskRequest.h"
+#include "Task/WebSocket/DeleteEntriesByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentEntryMasterRequest.h"
@@ -166,8 +170,16 @@ namespace Gs2::Dictionary
             const Request::FResetByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteEntriesByUserIdTask>> DeleteEntriesByUserId(
+            const Request::FDeleteEntriesByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FAddEntriesByStampSheetTask>> AddEntriesByStampSheet(
             const Request::FAddEntriesByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteEntriesByStampTaskTask>> DeleteEntriesByStampTask(
+            const Request::FDeleteEntriesByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

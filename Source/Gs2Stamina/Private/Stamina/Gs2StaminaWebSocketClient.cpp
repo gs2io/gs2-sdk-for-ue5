@@ -388,6 +388,15 @@ namespace Gs2::Stamina
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaxValueByUserIdTask>> FGs2StaminaWebSocketClient::DecreaseMaxValueByUserId(
+        const Request::FDecreaseMaxValueByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseMaxValueByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FSetMaxValueByUserIdTask>> FGs2StaminaWebSocketClient::SetMaxValueByUserId(
         const Request::FSetMaxValueByUserIdRequestPtr Request) const
     {
@@ -464,6 +473,15 @@ namespace Gs2::Stamina
         const Request::FRaiseMaxValueByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRaiseMaxValueByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseMaxValueByStampTaskTask>> FGs2StaminaWebSocketClient::DecreaseMaxValueByStampTask(
+        const Request::FDecreaseMaxValueByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseMaxValueByStampTaskTask>>(
             Session,
             Request
         );

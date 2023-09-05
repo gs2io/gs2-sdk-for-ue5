@@ -19,14 +19,16 @@
 namespace Gs2::Inventory::Result
 {
     FSetCapacityByUserIdResult::FSetCapacityByUserIdResult():
-        ItemValue(nullptr)
+        ItemValue(nullptr),
+        OldValue(nullptr)
     {
     }
 
     FSetCapacityByUserIdResult::FSetCapacityByUserIdResult(
         const FSetCapacityByUserIdResult& From
     ):
-        ItemValue(From.ItemValue)
+        ItemValue(From.ItemValue),
+        OldValue(From.OldValue)
     {
     }
 
@@ -38,6 +40,14 @@ namespace Gs2::Inventory::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FSetCapacityByUserIdResult> FSetCapacityByUserIdResult::WithOld(
+        const TSharedPtr<Model::FInventory> Old
+    )
+    {
+        this->OldValue = Old;
+        return SharedThis(this);
+    }
+
     TSharedPtr<Model::FInventory> FSetCapacityByUserIdResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -45,6 +55,15 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return ItemValue;
+    }
+
+    TSharedPtr<Model::FInventory> FSetCapacityByUserIdResult::GetOld() const
+    {
+        if (!OldValue.IsValid())
+        {
+            return nullptr;
+        }
+        return OldValue;
     }
 
     TSharedPtr<FSetCapacityByUserIdResult> FSetCapacityByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -60,6 +79,14 @@ namespace Gs2::Inventory::Result
                         return nullptr;
                     }
                     return Model::FInventory::FromJson(Data->GetObjectField("item"));
+                 }() : nullptr)
+            ->WithOld(Data->HasField("old") ? [Data]() -> Model::FInventoryPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("old"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FInventory::FromJson(Data->GetObjectField("old"));
                  }() : nullptr);
     }
 
@@ -69,6 +96,10 @@ namespace Gs2::Inventory::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (OldValue != nullptr && OldValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("old", OldValue->ToJson());
         }
         return JsonRootObject;
     }

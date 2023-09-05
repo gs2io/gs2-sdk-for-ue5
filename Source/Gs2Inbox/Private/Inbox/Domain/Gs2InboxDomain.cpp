@@ -229,6 +229,35 @@ namespace Gs2::Inbox::Domain
                 );
             }
         }
+        if (Method == "DeleteMessageByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inbox::Request::FDeleteMessageByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inbox::Result::FDeleteMessageByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Message"
+                );
+                const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Delete(Gs2::Inbox::Model::FMessage::TypeName, ParentKey, Key);
+            }
+        }
     }
 
     void FGs2InboxDomain::UpdateCacheFromJobResult(

@@ -78,12 +78,16 @@
 #include "Task/Rest/SetMoldCapacityByUserIdTask.h"
 #include "Request/AddMoldCapacityByUserIdRequest.h"
 #include "Task/Rest/AddMoldCapacityByUserIdTask.h"
+#include "Request/SubMoldCapacityByUserIdRequest.h"
+#include "Task/Rest/SubMoldCapacityByUserIdTask.h"
 #include "Request/DeleteMoldRequest.h"
 #include "Task/Rest/DeleteMoldTask.h"
 #include "Request/DeleteMoldByUserIdRequest.h"
 #include "Task/Rest/DeleteMoldByUserIdTask.h"
 #include "Request/AddCapacityByStampSheetRequest.h"
 #include "Task/Rest/AddCapacityByStampSheetTask.h"
+#include "Request/SubCapacityByStampTaskRequest.h"
+#include "Task/Rest/SubCapacityByStampTaskTask.h"
 #include "Request/SetCapacityByStampSheetRequest.h"
 #include "Task/Rest/SetCapacityByStampSheetTask.h"
 #include "Request/DescribeFormsRequest.h"
@@ -266,6 +270,10 @@ namespace Gs2::Formation
             const Request::FAddMoldCapacityByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSubMoldCapacityByUserIdTask>> SubMoldCapacityByUserId(
+            const Request::FSubMoldCapacityByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteMoldTask>> DeleteMold(
             const Request::FDeleteMoldRequestPtr Request
         ) const;
@@ -276,6 +284,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::Rest::FAddCapacityByStampSheetTask>> AddCapacityByStampSheet(
             const Request::FAddCapacityByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSubCapacityByStampTaskTask>> SubCapacityByStampTask(
+            const Request::FSubCapacityByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetCapacityByStampSheetTask>> SetCapacityByStampSheet(

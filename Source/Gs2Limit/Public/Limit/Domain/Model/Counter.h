@@ -126,6 +126,32 @@ namespace Gs2::Limit::Domain::Model
             Request::FCountUpByUserIdRequestPtr Request
         );
 
+        class GS2LIMIT_API FCountDownTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCounterDomain>,
+            public TSharedFromThis<FCountDownTask>
+        {
+            const TSharedPtr<FCounterDomain> Self;
+            const Request::FCountDownByUserIdRequestPtr Request;
+        public:
+            explicit FCountDownTask(
+                const TSharedPtr<FCounterDomain> Self,
+                const Request::FCountDownByUserIdRequestPtr Request
+            );
+
+            FCountDownTask(
+                const FCountDownTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Limit::Domain::Model::FCounterDomain>> Result
+            ) override;
+        };
+        friend FCountDownTask;
+
+        TSharedPtr<FAsyncTask<FCountDownTask>> CountDown(
+            Request::FCountDownByUserIdRequestPtr Request
+        );
+
         class GS2LIMIT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCounterDomain>,
             public TSharedFromThis<FDeleteTask>

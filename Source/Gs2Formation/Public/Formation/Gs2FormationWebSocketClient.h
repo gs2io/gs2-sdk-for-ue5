@@ -78,12 +78,16 @@
 #include "Task/WebSocket/SetMoldCapacityByUserIdTask.h"
 #include "Request/AddMoldCapacityByUserIdRequest.h"
 #include "Task/WebSocket/AddMoldCapacityByUserIdTask.h"
+#include "Request/SubMoldCapacityByUserIdRequest.h"
+#include "Task/WebSocket/SubMoldCapacityByUserIdTask.h"
 #include "Request/DeleteMoldRequest.h"
 #include "Task/WebSocket/DeleteMoldTask.h"
 #include "Request/DeleteMoldByUserIdRequest.h"
 #include "Task/WebSocket/DeleteMoldByUserIdTask.h"
 #include "Request/AddCapacityByStampSheetRequest.h"
 #include "Task/WebSocket/AddCapacityByStampSheetTask.h"
+#include "Request/SubCapacityByStampTaskRequest.h"
+#include "Task/WebSocket/SubCapacityByStampTaskTask.h"
 #include "Request/SetCapacityByStampSheetRequest.h"
 #include "Task/WebSocket/SetCapacityByStampSheetTask.h"
 #include "Request/DescribeFormsRequest.h"
@@ -266,6 +270,10 @@ namespace Gs2::Formation
             const Request::FAddMoldCapacityByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSubMoldCapacityByUserIdTask>> SubMoldCapacityByUserId(
+            const Request::FSubMoldCapacityByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteMoldTask>> DeleteMold(
             const Request::FDeleteMoldRequestPtr Request
         ) const;
@@ -276,6 +284,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAddCapacityByStampSheetTask>> AddCapacityByStampSheet(
             const Request::FAddCapacityByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSubCapacityByStampTaskTask>> SubCapacityByStampTask(
+            const Request::FSubCapacityByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetCapacityByStampSheetTask>> SetCapacityByStampSheet(

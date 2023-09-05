@@ -25,6 +25,7 @@ namespace Gs2::Stamina::Result
     class GS2STAMINA_API FSetRecoverValueByStatusResult final : public TSharedFromThis<FSetRecoverValueByStatusResult>
     {
         TSharedPtr<Model::FStamina> ItemValue;
+        TSharedPtr<Model::FStamina> OldValue;
         TSharedPtr<Model::FStaminaModel> StaminaModelValue;
         
     public:
@@ -36,9 +37,11 @@ namespace Gs2::Stamina::Result
         ~FSetRecoverValueByStatusResult() = default;
 
         TSharedPtr<FSetRecoverValueByStatusResult> WithItem(const TSharedPtr<Model::FStamina> Item);
+        TSharedPtr<FSetRecoverValueByStatusResult> WithOld(const TSharedPtr<Model::FStamina> Old);
         TSharedPtr<FSetRecoverValueByStatusResult> WithStaminaModel(const TSharedPtr<Model::FStaminaModel> StaminaModel);
 
         TSharedPtr<Model::FStamina> GetItem() const;
+        TSharedPtr<Model::FStamina> GetOld() const;
         TSharedPtr<Model::FStaminaModel> GetStaminaModel() const;
 
         static TSharedPtr<FSetRecoverValueByStatusResult> FromJson(const TSharedPtr<FJsonObject> Data);

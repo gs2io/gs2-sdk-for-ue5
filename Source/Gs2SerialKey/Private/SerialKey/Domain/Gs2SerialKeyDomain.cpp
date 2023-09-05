@@ -154,6 +154,58 @@ namespace Gs2::SerialKey::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "RevertUseByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::SerialKey::Request::FRevertUseByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::SerialKey::Result::FRevertUseByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "SerialKey"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCode()
+                );
+                Cache->Put(
+                    Gs2::SerialKey::Model::FSerialKey::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetCampaignModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "CampaignModel"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
+                    ResultModel->GetCampaignModel()->GetName()
+                );
+                Cache->Put(
+                    Gs2::SerialKey::Model::FCampaignModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetCampaignModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2SerialKeyDomain::UpdateCacheFromStampTask(
@@ -220,6 +272,66 @@ namespace Gs2::SerialKey::Domain
         const Gs2::JobQueue::Model::FJobPtr Job,
         const Gs2::JobQueue::Model::FJobResultBodyPtr Result
     ) {
+        if (Method == "revert_use_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::SerialKey::Request::FRevertUseByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::SerialKey::Result::FRevertUseByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "SerialKey"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCode()
+                );
+                Cache->Put(
+                    Gs2::SerialKey::Model::FSerialKey::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetCampaignModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "CampaignModel"
+                );
+                const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
+                    ResultModel->GetCampaignModel()->GetName()
+                );
+                Cache->Put(
+                    Gs2::SerialKey::Model::FCampaignModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetCampaignModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2SerialKeyDomain::HandleNotification(

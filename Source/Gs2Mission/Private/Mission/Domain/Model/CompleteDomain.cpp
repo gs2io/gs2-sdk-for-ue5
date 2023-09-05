@@ -230,6 +230,72 @@ namespace Gs2::Mission::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FReceiveTask>>(this->AsShared(), Request);
     }
 
+    FCompleteDomain::FRevertReceiveTask::FRevertReceiveTask(
+        const TSharedPtr<FCompleteDomain> Self,
+        const Request::FRevertReceiveByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FCompleteDomain::FRevertReceiveTask::FRevertReceiveTask(
+        const FRevertReceiveTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCompleteDomain::FRevertReceiveTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithMissionGroupName(Self->MissionGroupName);
+        const auto Future = Self->Client->RevertReceiveByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "Complete"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetMissionGroupName()
+                );
+                Self->Cache->Put(
+                    Gs2::Mission::Model::FComplete::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetNextResetAt().IsSet() && *ResultModel->GetItem()->GetNextResetAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetNextResetAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCompleteDomain::FRevertReceiveTask>> FCompleteDomain::RevertReceive(
+        Request::FRevertReceiveByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FRevertReceiveTask>>(this->AsShared(), Request);
+    }
+
     FCompleteDomain::FGetTask::FGetTask(
         const TSharedPtr<FCompleteDomain> Self,
         const Request::FGetCompleteByUserIdRequestPtr Request

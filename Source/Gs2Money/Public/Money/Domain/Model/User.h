@@ -104,6 +104,32 @@ namespace Gs2::Money::Domain::Model
             Request::FRecordReceiptRequestPtr Request
         );
 
+        class GS2MONEY_API FRevertRecordReceiptTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Money::Domain::Model::FReceiptDomain>,
+            public TSharedFromThis<FRevertRecordReceiptTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const Request::FRevertRecordReceiptRequestPtr Request;
+        public:
+            explicit FRevertRecordReceiptTask(
+                const TSharedPtr<FUserDomain> Self,
+                const Request::FRevertRecordReceiptRequestPtr Request
+            );
+
+            FRevertRecordReceiptTask(
+                const FRevertRecordReceiptTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Money::Domain::Model::FReceiptDomain>> Result
+            ) override;
+        };
+        friend FRevertRecordReceiptTask;
+
+        TSharedPtr<FAsyncTask<FRevertRecordReceiptTask>> RevertRecordReceipt(
+            Request::FRevertRecordReceiptRequestPtr Request
+        );
+
         Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIteratorPtr Wallets(
         ) const;
 

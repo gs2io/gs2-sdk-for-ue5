@@ -25,6 +25,7 @@ namespace Gs2::Stamina::Result
     class GS2STAMINA_API FSetMaxValueByStampSheetResult final : public TSharedFromThis<FSetMaxValueByStampSheetResult>
     {
         TSharedPtr<Model::FStamina> ItemValue;
+        TSharedPtr<Model::FStamina> OldValue;
         TSharedPtr<Model::FStaminaModel> StaminaModelValue;
         
     public:
@@ -36,9 +37,11 @@ namespace Gs2::Stamina::Result
         ~FSetMaxValueByStampSheetResult() = default;
 
         TSharedPtr<FSetMaxValueByStampSheetResult> WithItem(const TSharedPtr<Model::FStamina> Item);
+        TSharedPtr<FSetMaxValueByStampSheetResult> WithOld(const TSharedPtr<Model::FStamina> Old);
         TSharedPtr<FSetMaxValueByStampSheetResult> WithStaminaModel(const TSharedPtr<Model::FStaminaModel> StaminaModel);
 
         TSharedPtr<Model::FStamina> GetItem() const;
+        TSharedPtr<Model::FStamina> GetOld() const;
         TSharedPtr<Model::FStaminaModel> GetStaminaModel() const;
 
         static TSharedPtr<FSetMaxValueByStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);

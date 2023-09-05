@@ -110,6 +110,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FIncreaseCounterByUserIdRequestPtr Request
         );
 
+        class GS2MISSION_API FDecreaseTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterDomain>,
+            public TSharedFromThis<FDecreaseTask>
+        {
+            const TSharedPtr<FCounterDomain> Self;
+            const Request::FDecreaseCounterByUserIdRequestPtr Request;
+        public:
+            explicit FDecreaseTask(
+                const TSharedPtr<FCounterDomain> Self,
+                const Request::FDecreaseCounterByUserIdRequestPtr Request
+            );
+
+            FDecreaseTask(
+                const FDecreaseTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FCounterDomain>> Result
+            ) override;
+        };
+        friend FDecreaseTask;
+
+        TSharedPtr<FAsyncTask<FDecreaseTask>> Decrease(
+            Request::FDecreaseCounterByUserIdRequestPtr Request
+        );
+
         class GS2MISSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Model::FCounter>,
             public TSharedFromThis<FGetTask>

@@ -54,8 +54,12 @@
 #include "Task/WebSocket/GetByUserIdAndTransactionIdTask.h"
 #include "Request/RecordReceiptRequest.h"
 #include "Task/WebSocket/RecordReceiptTask.h"
+#include "Request/RevertRecordReceiptRequest.h"
+#include "Task/WebSocket/RevertRecordReceiptTask.h"
 #include "Request/RecordReceiptByStampTaskRequest.h"
 #include "Task/WebSocket/RecordReceiptByStampTaskTask.h"
+#include "Request/RevertRecordReceiptByStampSheetRequest.h"
+#include "Task/WebSocket/RevertRecordReceiptByStampSheetTask.h"
 
 namespace Gs2::Money
 {
@@ -140,8 +144,16 @@ namespace Gs2::Money
             const Request::FRecordReceiptRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRevertRecordReceiptTask>> RevertRecordReceipt(
+            const Request::FRevertRecordReceiptRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FRecordReceiptByStampTaskTask>> RecordReceiptByStampTask(
             const Request::FRecordReceiptByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRevertRecordReceiptByStampSheetTask>> RevertRecordReceiptByStampSheet(
+            const Request::FRevertRecordReceiptByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2MoneyWebSocketClient, ESPMode::ThreadSafe> FGs2MoneyWebSocketClientPtr;

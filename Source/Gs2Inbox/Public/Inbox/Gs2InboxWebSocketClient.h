@@ -60,6 +60,8 @@
 #include "Task/WebSocket/SendByStampSheetTask.h"
 #include "Request/OpenByStampTaskRequest.h"
 #include "Task/WebSocket/OpenByStampTaskTask.h"
+#include "Request/DeleteMessageByStampTaskRequest.h"
+#include "Task/WebSocket/DeleteMessageByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentMessageMasterRequest.h"
@@ -182,6 +184,10 @@ namespace Gs2::Inbox
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FOpenByStampTaskTask>> OpenByStampTask(
             const Request::FOpenByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteMessageByStampTaskTask>> DeleteMessageByStampTask(
+            const Request::FDeleteMessageByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

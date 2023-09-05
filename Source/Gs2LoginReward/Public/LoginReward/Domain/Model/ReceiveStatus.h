@@ -152,6 +152,32 @@ namespace Gs2::LoginReward::Domain::Model
             Request::FMarkReceivedByUserIdRequestPtr Request
         );
 
+        class GS2LOGINREWARD_API FUnmarkReceivedTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Domain::Model::FReceiveStatusDomain>,
+            public TSharedFromThis<FUnmarkReceivedTask>
+        {
+            const TSharedPtr<FReceiveStatusDomain> Self;
+            const Request::FUnmarkReceivedByUserIdRequestPtr Request;
+        public:
+            explicit FUnmarkReceivedTask(
+                const TSharedPtr<FReceiveStatusDomain> Self,
+                const Request::FUnmarkReceivedByUserIdRequestPtr Request
+            );
+
+            FUnmarkReceivedTask(
+                const FUnmarkReceivedTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::LoginReward::Domain::Model::FReceiveStatusDomain>> Result
+            ) override;
+        };
+        friend FUnmarkReceivedTask;
+
+        TSharedPtr<FAsyncTask<FUnmarkReceivedTask>> UnmarkReceived(
+            Request::FUnmarkReceivedByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

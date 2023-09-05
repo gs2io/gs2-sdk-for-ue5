@@ -100,6 +100,8 @@
 #include "Task/Rest/RecoverStaminaByUserIdTask.h"
 #include "Request/RaiseMaxValueByUserIdRequest.h"
 #include "Task/Rest/RaiseMaxValueByUserIdTask.h"
+#include "Request/DecreaseMaxValueByUserIdRequest.h"
+#include "Task/Rest/DecreaseMaxValueByUserIdTask.h"
 #include "Request/SetMaxValueByUserIdRequest.h"
 #include "Task/Rest/SetMaxValueByUserIdTask.h"
 #include "Request/SetRecoverIntervalByUserIdRequest.h"
@@ -118,6 +120,8 @@
 #include "Task/Rest/RecoverStaminaByStampSheetTask.h"
 #include "Request/RaiseMaxValueByStampSheetRequest.h"
 #include "Task/Rest/RaiseMaxValueByStampSheetTask.h"
+#include "Request/DecreaseMaxValueByStampTaskRequest.h"
+#include "Task/Rest/DecreaseMaxValueByStampTaskTask.h"
 #include "Request/SetMaxValueByStampSheetRequest.h"
 #include "Task/Rest/SetMaxValueByStampSheetTask.h"
 #include "Request/SetRecoverIntervalByStampSheetRequest.h"
@@ -302,6 +306,10 @@ namespace Gs2::Stamina
             const Request::FRaiseMaxValueByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaxValueByUserIdTask>> DecreaseMaxValueByUserId(
+            const Request::FDecreaseMaxValueByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FSetMaxValueByUserIdTask>> SetMaxValueByUserId(
             const Request::FSetMaxValueByUserIdRequestPtr Request
         ) const;
@@ -336,6 +344,10 @@ namespace Gs2::Stamina
 
         TSharedPtr<FAsyncTask<Task::Rest::FRaiseMaxValueByStampSheetTask>> RaiseMaxValueByStampSheet(
             const Request::FRaiseMaxValueByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDecreaseMaxValueByStampTaskTask>> DecreaseMaxValueByStampTask(
+            const Request::FDecreaseMaxValueByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetMaxValueByStampSheetTask>> SetMaxValueByStampSheet(

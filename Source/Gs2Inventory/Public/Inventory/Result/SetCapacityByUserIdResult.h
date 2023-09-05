@@ -24,6 +24,7 @@ namespace Gs2::Inventory::Result
     class GS2INVENTORY_API FSetCapacityByUserIdResult final : public TSharedFromThis<FSetCapacityByUserIdResult>
     {
         TSharedPtr<Model::FInventory> ItemValue;
+        TSharedPtr<Model::FInventory> OldValue;
         
     public:
         
@@ -34,8 +35,10 @@ namespace Gs2::Inventory::Result
         ~FSetCapacityByUserIdResult() = default;
 
         TSharedPtr<FSetCapacityByUserIdResult> WithItem(const TSharedPtr<Model::FInventory> Item);
+        TSharedPtr<FSetCapacityByUserIdResult> WithOld(const TSharedPtr<Model::FInventory> Old);
 
         TSharedPtr<Model::FInventory> GetItem() const;
+        TSharedPtr<Model::FInventory> GetOld() const;
 
         static TSharedPtr<FSetCapacityByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

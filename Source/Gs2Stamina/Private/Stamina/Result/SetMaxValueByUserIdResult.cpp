@@ -20,6 +20,7 @@ namespace Gs2::Stamina::Result
 {
     FSetMaxValueByUserIdResult::FSetMaxValueByUserIdResult():
         ItemValue(nullptr),
+        OldValue(nullptr),
         StaminaModelValue(nullptr)
     {
     }
@@ -28,6 +29,7 @@ namespace Gs2::Stamina::Result
         const FSetMaxValueByUserIdResult& From
     ):
         ItemValue(From.ItemValue),
+        OldValue(From.OldValue),
         StaminaModelValue(From.StaminaModelValue)
     {
     }
@@ -37,6 +39,14 @@ namespace Gs2::Stamina::Result
     )
     {
         this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSetMaxValueByUserIdResult> FSetMaxValueByUserIdResult::WithOld(
+        const TSharedPtr<Model::FStamina> Old
+    )
+    {
+        this->OldValue = Old;
         return SharedThis(this);
     }
 
@@ -55,6 +65,15 @@ namespace Gs2::Stamina::Result
             return nullptr;
         }
         return ItemValue;
+    }
+
+    TSharedPtr<Model::FStamina> FSetMaxValueByUserIdResult::GetOld() const
+    {
+        if (!OldValue.IsValid())
+        {
+            return nullptr;
+        }
+        return OldValue;
     }
 
     TSharedPtr<Model::FStaminaModel> FSetMaxValueByUserIdResult::GetStaminaModel() const
@@ -80,6 +99,14 @@ namespace Gs2::Stamina::Result
                     }
                     return Model::FStamina::FromJson(Data->GetObjectField("item"));
                  }() : nullptr)
+            ->WithOld(Data->HasField("old") ? [Data]() -> Model::FStaminaPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("old"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FStamina::FromJson(Data->GetObjectField("old"));
+                 }() : nullptr)
             ->WithStaminaModel(Data->HasField("staminaModel") ? [Data]() -> Model::FStaminaModelPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("staminaModel"))
@@ -96,6 +123,10 @@ namespace Gs2::Stamina::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (OldValue != nullptr && OldValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("old", OldValue->ToJson());
         }
         if (StaminaModelValue != nullptr && StaminaModelValue.IsValid())
         {

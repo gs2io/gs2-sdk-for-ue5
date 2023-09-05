@@ -76,18 +76,26 @@
 #include "Task/WebSocket/GetStatusWithSignatureByUserIdTask.h"
 #include "Request/AddExperienceByUserIdRequest.h"
 #include "Task/WebSocket/AddExperienceByUserIdTask.h"
+#include "Request/SubExperienceByUserIdRequest.h"
+#include "Task/WebSocket/SubExperienceByUserIdTask.h"
 #include "Request/SetExperienceByUserIdRequest.h"
 #include "Task/WebSocket/SetExperienceByUserIdTask.h"
 #include "Request/AddRankCapByUserIdRequest.h"
 #include "Task/WebSocket/AddRankCapByUserIdTask.h"
+#include "Request/SubRankCapByUserIdRequest.h"
+#include "Task/WebSocket/SubRankCapByUserIdTask.h"
 #include "Request/SetRankCapByUserIdRequest.h"
 #include "Task/WebSocket/SetRankCapByUserIdTask.h"
 #include "Request/DeleteStatusByUserIdRequest.h"
 #include "Task/WebSocket/DeleteStatusByUserIdTask.h"
 #include "Request/AddExperienceByStampSheetRequest.h"
 #include "Task/WebSocket/AddExperienceByStampSheetTask.h"
+#include "Request/SubExperienceByStampTaskRequest.h"
+#include "Task/WebSocket/SubExperienceByStampTaskTask.h"
 #include "Request/AddRankCapByStampSheetRequest.h"
 #include "Task/WebSocket/AddRankCapByStampSheetTask.h"
+#include "Request/SubRankCapByStampTaskRequest.h"
+#include "Task/WebSocket/SubRankCapByStampTaskTask.h"
 #include "Request/SetRankCapByStampSheetRequest.h"
 #include "Task/WebSocket/SetRankCapByStampSheetTask.h"
 #include "Request/MultiplyAcquireActionsByUserIdRequest.h"
@@ -222,12 +230,20 @@ namespace Gs2::Experience
             const Request::FAddExperienceByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSubExperienceByUserIdTask>> SubExperienceByUserId(
+            const Request::FSubExperienceByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetExperienceByUserIdTask>> SetExperienceByUserId(
             const Request::FSetExperienceByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAddRankCapByUserIdTask>> AddRankCapByUserId(
             const Request::FAddRankCapByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSubRankCapByUserIdTask>> SubRankCapByUserId(
+            const Request::FSubRankCapByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetRankCapByUserIdTask>> SetRankCapByUserId(
@@ -242,8 +258,16 @@ namespace Gs2::Experience
             const Request::FAddExperienceByStampSheetRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSubExperienceByStampTaskTask>> SubExperienceByStampTask(
+            const Request::FSubExperienceByStampTaskRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FAddRankCapByStampSheetTask>> AddRankCapByStampSheet(
             const Request::FAddRankCapByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSubRankCapByStampTaskTask>> SubRankCapByStampTask(
+            const Request::FSubRankCapByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetRankCapByStampSheetTask>> SetRankCapByStampSheet(

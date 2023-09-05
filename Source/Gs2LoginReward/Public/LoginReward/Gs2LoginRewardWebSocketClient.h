@@ -76,8 +76,12 @@
 #include "Task/WebSocket/MarkReceivedTask.h"
 #include "Request/MarkReceivedByUserIdRequest.h"
 #include "Task/WebSocket/MarkReceivedByUserIdTask.h"
+#include "Request/UnmarkReceivedByUserIdRequest.h"
+#include "Task/WebSocket/UnmarkReceivedByUserIdTask.h"
 #include "Request/MarkReceivedByStampTaskRequest.h"
 #include "Task/WebSocket/MarkReceivedByStampTaskTask.h"
+#include "Request/UnmarkReceivedByStampSheetRequest.h"
+#include "Task/WebSocket/UnmarkReceivedByStampSheetTask.h"
 
 namespace Gs2::LoginReward
 {
@@ -206,8 +210,16 @@ namespace Gs2::LoginReward
             const Request::FMarkReceivedByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUnmarkReceivedByUserIdTask>> UnmarkReceivedByUserId(
+            const Request::FUnmarkReceivedByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FMarkReceivedByStampTaskTask>> MarkReceivedByStampTask(
             const Request::FMarkReceivedByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUnmarkReceivedByStampSheetTask>> UnmarkReceivedByStampSheet(
+            const Request::FUnmarkReceivedByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2LoginRewardWebSocketClient, ESPMode::ThreadSafe> FGs2LoginRewardWebSocketClientPtr;

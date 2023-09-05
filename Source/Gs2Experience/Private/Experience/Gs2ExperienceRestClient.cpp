@@ -280,6 +280,15 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceByUserIdTask>> FGs2ExperienceRestClient::SubExperienceByUserId(
+        const Request::FSubExperienceByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubExperienceByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FSetExperienceByUserIdTask>> FGs2ExperienceRestClient::SetExperienceByUserId(
         const Request::FSetExperienceByUserIdRequestPtr Request) const
     {
@@ -293,6 +302,15 @@ namespace Gs2::Experience
         const Request::FAddRankCapByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAddRankCapByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSubRankCapByUserIdTask>> FGs2ExperienceRestClient::SubRankCapByUserId(
+        const Request::FSubRankCapByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubRankCapByUserIdTask>>(
             Session,
             Request
         );
@@ -325,10 +343,28 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceByStampTaskTask>> FGs2ExperienceRestClient::SubExperienceByStampTask(
+        const Request::FSubExperienceByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubExperienceByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FAddRankCapByStampSheetTask>> FGs2ExperienceRestClient::AddRankCapByStampSheet(
         const Request::FAddRankCapByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAddRankCapByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSubRankCapByStampTaskTask>> FGs2ExperienceRestClient::SubRankCapByStampTask(
+        const Request::FSubRankCapByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSubRankCapByStampTaskTask>>(
             Session,
             Request
         );

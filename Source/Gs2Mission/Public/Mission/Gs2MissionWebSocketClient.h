@@ -28,6 +28,8 @@
 #include "Task/WebSocket/CompleteByUserIdTask.h"
 #include "Request/ReceiveByUserIdRequest.h"
 #include "Task/WebSocket/ReceiveByUserIdTask.h"
+#include "Request/RevertReceiveByUserIdRequest.h"
+#include "Task/WebSocket/RevertReceiveByUserIdTask.h"
 #include "Request/GetCompleteRequest.h"
 #include "Task/WebSocket/GetCompleteTask.h"
 #include "Request/GetCompleteByUserIdRequest.h"
@@ -36,6 +38,8 @@
 #include "Task/WebSocket/DeleteCompleteByUserIdTask.h"
 #include "Request/ReceiveByStampTaskRequest.h"
 #include "Task/WebSocket/ReceiveByStampTaskTask.h"
+#include "Request/RevertReceiveByStampSheetRequest.h"
+#include "Task/WebSocket/RevertReceiveByStampSheetTask.h"
 #include "Request/DescribeCounterModelMastersRequest.h"
 #include "Task/WebSocket/DescribeCounterModelMastersTask.h"
 #include "Request/CreateCounterModelMasterRequest.h"
@@ -74,6 +78,8 @@
 #include "Task/WebSocket/DescribeCountersByUserIdTask.h"
 #include "Request/IncreaseCounterByUserIdRequest.h"
 #include "Task/WebSocket/IncreaseCounterByUserIdTask.h"
+#include "Request/DecreaseCounterByUserIdRequest.h"
+#include "Task/WebSocket/DecreaseCounterByUserIdTask.h"
 #include "Request/GetCounterRequest.h"
 #include "Task/WebSocket/GetCounterTask.h"
 #include "Request/GetCounterByUserIdRequest.h"
@@ -82,6 +88,8 @@
 #include "Task/WebSocket/DeleteCounterByUserIdTask.h"
 #include "Request/IncreaseByStampSheetRequest.h"
 #include "Task/WebSocket/IncreaseByStampSheetTask.h"
+#include "Request/DecreaseByStampTaskRequest.h"
+#include "Task/WebSocket/DecreaseByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentMissionMasterRequest.h"
@@ -144,6 +152,10 @@ namespace Gs2::Mission
             const Request::FReceiveByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRevertReceiveByUserIdTask>> RevertReceiveByUserId(
+            const Request::FRevertReceiveByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCompleteTask>> GetComplete(
             const Request::FGetCompleteRequestPtr Request
         ) const;
@@ -158,6 +170,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FReceiveByStampTaskTask>> ReceiveByStampTask(
             const Request::FReceiveByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRevertReceiveByStampSheetTask>> RevertReceiveByStampSheet(
+            const Request::FRevertReceiveByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeCounterModelMastersTask>> DescribeCounterModelMasters(
@@ -236,6 +252,10 @@ namespace Gs2::Mission
             const Request::FIncreaseCounterByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseCounterByUserIdTask>> DecreaseCounterByUserId(
+            const Request::FDecreaseCounterByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetCounterTask>> GetCounter(
             const Request::FGetCounterRequestPtr Request
         ) const;
@@ -250,6 +270,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FIncreaseByStampSheetTask>> IncreaseByStampSheet(
             const Request::FIncreaseByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseByStampTaskTask>> DecreaseByStampTask(
+            const Request::FDecreaseByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

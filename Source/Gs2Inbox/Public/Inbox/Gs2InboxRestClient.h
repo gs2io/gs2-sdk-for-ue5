@@ -60,6 +60,8 @@
 #include "Task/Rest/SendByStampSheetTask.h"
 #include "Request/OpenByStampTaskRequest.h"
 #include "Task/Rest/OpenByStampTaskTask.h"
+#include "Request/DeleteMessageByStampTaskRequest.h"
+#include "Task/Rest/DeleteMessageByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentMessageMasterRequest.h"
@@ -182,6 +184,10 @@ namespace Gs2::Inbox
 
         TSharedPtr<FAsyncTask<Task::Rest::FOpenByStampTaskTask>> OpenByStampTask(
             const Request::FOpenByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteMessageByStampTaskTask>> DeleteMessageByStampTask(
+            const Request::FDeleteMessageByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

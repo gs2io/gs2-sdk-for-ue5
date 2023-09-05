@@ -162,11 +162,23 @@
 #include "Task/Rest/IncreaseMaximumIdleMinutesByUserIdTask.h"
 #include "Task/WebSocket/IncreaseMaximumIdleMinutesByUserIdTask.h"
 
+// DecreaseMaximumIdleMinutesByUserId
+#include "Request/DecreaseMaximumIdleMinutesByUserIdRequest.h"
+#include "Result/DecreaseMaximumIdleMinutesByUserIdResult.h"
+#include "Task/Rest/DecreaseMaximumIdleMinutesByUserIdTask.h"
+#include "Task/WebSocket/DecreaseMaximumIdleMinutesByUserIdTask.h"
+
 // IncreaseMaximumIdleMinutesByStampSheet
 #include "Request/IncreaseMaximumIdleMinutesByStampSheetRequest.h"
 #include "Result/IncreaseMaximumIdleMinutesByStampSheetResult.h"
 #include "Task/Rest/IncreaseMaximumIdleMinutesByStampSheetTask.h"
 #include "Task/WebSocket/IncreaseMaximumIdleMinutesByStampSheetTask.h"
+
+// DecreaseMaximumIdleMinutesByStampTask
+#include "Request/DecreaseMaximumIdleMinutesByStampTaskRequest.h"
+#include "Result/DecreaseMaximumIdleMinutesByStampTaskResult.h"
+#include "Task/Rest/DecreaseMaximumIdleMinutesByStampTaskTask.h"
+#include "Task/WebSocket/DecreaseMaximumIdleMinutesByStampTaskTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

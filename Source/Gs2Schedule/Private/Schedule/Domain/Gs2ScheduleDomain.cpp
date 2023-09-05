@@ -199,6 +199,35 @@ namespace Gs2::Schedule::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "DeleteTriggerByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Schedule::Request::FDeleteTriggerByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Schedule::Result::FDeleteTriggerByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Trigger"
+                );
+                const auto Key = Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Delete(Gs2::Schedule::Model::FTrigger::TypeName, ParentKey, Key);
+            }
+        }
     }
 
     void FGs2ScheduleDomain::UpdateCacheFromJobResult(

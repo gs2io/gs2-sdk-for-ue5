@@ -92,8 +92,12 @@
 #include "Task/WebSocket/DeleteRandomShowcaseMasterTask.h"
 #include "Request/IncrementPurchaseCountByUserIdRequest.h"
 #include "Task/WebSocket/IncrementPurchaseCountByUserIdTask.h"
+#include "Request/DecrementPurchaseCountByUserIdRequest.h"
+#include "Task/WebSocket/DecrementPurchaseCountByUserIdTask.h"
 #include "Request/IncrementPurchaseCountByStampTaskRequest.h"
 #include "Task/WebSocket/IncrementPurchaseCountByStampTaskTask.h"
+#include "Request/DecrementPurchaseCountByStampSheetRequest.h"
+#include "Task/WebSocket/DecrementPurchaseCountByStampSheetTask.h"
 #include "Request/ForceReDrawByUserIdRequest.h"
 #include "Task/WebSocket/ForceReDrawByUserIdTask.h"
 #include "Request/ForceReDrawByUserIdByStampSheetRequest.h"
@@ -270,8 +274,16 @@ namespace Gs2::Showcase
             const Request::FIncrementPurchaseCountByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecrementPurchaseCountByUserIdTask>> DecrementPurchaseCountByUserId(
+            const Request::FDecrementPurchaseCountByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FIncrementPurchaseCountByStampTaskTask>> IncrementPurchaseCountByStampTask(
             const Request::FIncrementPurchaseCountByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDecrementPurchaseCountByStampSheetTask>> DecrementPurchaseCountByStampSheet(
+            const Request::FDecrementPurchaseCountByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FForceReDrawByUserIdTask>> ForceReDrawByUserId(

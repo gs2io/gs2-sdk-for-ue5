@@ -44,6 +44,8 @@
 #include "Task/WebSocket/DeleteJobByUserIdTask.h"
 #include "Request/PushByStampSheetRequest.h"
 #include "Task/WebSocket/PushByStampSheetTask.h"
+#include "Request/DeleteByStampTaskRequest.h"
+#include "Task/WebSocket/DeleteByStampTaskTask.h"
 #include "Request/GetJobResultRequest.h"
 #include "Task/WebSocket/GetJobResultTask.h"
 #include "Request/GetJobResultByUserIdRequest.h"
@@ -116,6 +118,10 @@ namespace Gs2::JobQueue
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FPushByStampSheetTask>> PushByStampSheet(
             const Request::FPushByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteByStampTaskTask>> DeleteByStampTask(
+            const Request::FDeleteByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetJobResultTask>> GetJobResult(
