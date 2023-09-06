@@ -282,24 +282,6 @@ namespace Gs2::Inventory::Domain::Model
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
-            if (ResultModel->GetOld() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Inventory"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetOld()->GetInventoryName()
-                );
-                Self->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetOld(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
         }
         auto Domain = Self;
 
