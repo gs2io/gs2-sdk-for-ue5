@@ -24,7 +24,7 @@
 
 FGs2FormationOwnMold UGs2FormationUserFunctionLibrary::OwnMold(
     FGs2FormationOwnUser User,
-    FString MoldName
+    FString MoldModelName
 )
 {
     FGs2FormationOwnMold Return;
@@ -32,19 +32,19 @@ FGs2FormationOwnMold UGs2FormationUserFunctionLibrary::OwnMold(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationUserFunctionLibrary::OwnMold] User parameter specification is missing."))
         return Return;
     }
-    if (MoldName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationUserFunctionLibrary::OwnMold] MoldName parameter specification is missing."))
+    if (MoldModelName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationUserFunctionLibrary::OwnMold] MoldModelName parameter specification is missing."))
         return Return;
     }
     Return.Value = User.Value->Mold(
-        MoldName
+        MoldModelName
     );
     return Return;
 }
 
 FGs2FormationOwnPropertyForm UGs2FormationUserFunctionLibrary::OwnPropertyForm(
     FGs2FormationOwnUser User,
-    FString FormModelName,
+    FString PropertyFormModelName,
     FString PropertyId
 )
 {
@@ -53,8 +53,8 @@ FGs2FormationOwnPropertyForm UGs2FormationUserFunctionLibrary::OwnPropertyForm(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationUserFunctionLibrary::OwnPropertyForm] User parameter specification is missing."))
         return Return;
     }
-    if (FormModelName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationUserFunctionLibrary::OwnPropertyForm] FormModelName parameter specification is missing."))
+    if (PropertyFormModelName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationUserFunctionLibrary::OwnPropertyForm] PropertyFormModelName parameter specification is missing."))
         return Return;
     }
     if (PropertyId == "") {
@@ -62,7 +62,7 @@ FGs2FormationOwnPropertyForm UGs2FormationUserFunctionLibrary::OwnPropertyForm(
         return Return;
     }
     Return.Value = User.Value->PropertyForm(
-        FormModelName,
+        PropertyFormModelName,
         PropertyId
     );
     return Return;

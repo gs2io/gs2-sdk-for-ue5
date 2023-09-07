@@ -70,7 +70,10 @@ namespace Gs2::Enhance::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        RateName(From.RateName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -143,7 +146,7 @@ namespace Gs2::Enhance::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (RateName.IsSet() ? *RateName : "null") + ":" +
             ChildType;
@@ -153,7 +156,7 @@ namespace Gs2::Enhance::Domain::Model
         TOptional<FString> RateName
     )
     {
-        return FString() +
+        return FString("") +
             (RateName.IsSet() ? *RateName : "null");
     }
 

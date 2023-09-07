@@ -30,8 +30,6 @@
 #include "Task/Rest/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/Rest/DeleteNamespaceTask.h"
-#include "Request/DescribeFormModelsRequest.h"
-#include "Task/Rest/DescribeFormModelsTask.h"
 #include "Request/GetFormModelRequest.h"
 #include "Task/Rest/GetFormModelTask.h"
 #include "Request/DescribeFormModelMastersRequest.h"
@@ -58,6 +56,20 @@
 #include "Task/Rest/UpdateMoldModelMasterTask.h"
 #include "Request/DeleteMoldModelMasterRequest.h"
 #include "Task/Rest/DeleteMoldModelMasterTask.h"
+#include "Request/DescribePropertyFormModelsRequest.h"
+#include "Task/Rest/DescribePropertyFormModelsTask.h"
+#include "Request/GetPropertyFormModelRequest.h"
+#include "Task/Rest/GetPropertyFormModelTask.h"
+#include "Request/DescribePropertyFormModelMastersRequest.h"
+#include "Task/Rest/DescribePropertyFormModelMastersTask.h"
+#include "Request/CreatePropertyFormModelMasterRequest.h"
+#include "Task/Rest/CreatePropertyFormModelMasterTask.h"
+#include "Request/GetPropertyFormModelMasterRequest.h"
+#include "Task/Rest/GetPropertyFormModelMasterTask.h"
+#include "Request/UpdatePropertyFormModelMasterRequest.h"
+#include "Task/Rest/UpdatePropertyFormModelMasterTask.h"
+#include "Request/DeletePropertyFormModelMasterRequest.h"
+#include "Task/Rest/DeletePropertyFormModelMasterTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentFormMasterRequest.h"
@@ -174,10 +186,6 @@ namespace Gs2::Formation
             const Request::FDeleteNamespaceRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FDescribeFormModelsTask>> DescribeFormModels(
-            const Request::FDescribeFormModelsRequestPtr Request
-        ) const;
-
         TSharedPtr<FAsyncTask<Task::Rest::FGetFormModelTask>> GetFormModel(
             const Request::FGetFormModelRequestPtr Request
         ) const;
@@ -228,6 +236,34 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteMoldModelMasterTask>> DeleteMoldModelMaster(
             const Request::FDeleteMoldModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribePropertyFormModelsTask>> DescribePropertyFormModels(
+            const Request::FDescribePropertyFormModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetPropertyFormModelTask>> GetPropertyFormModel(
+            const Request::FGetPropertyFormModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribePropertyFormModelMastersTask>> DescribePropertyFormModelMasters(
+            const Request::FDescribePropertyFormModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreatePropertyFormModelMasterTask>> CreatePropertyFormModelMaster(
+            const Request::FCreatePropertyFormModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetPropertyFormModelMasterTask>> GetPropertyFormModelMaster(
+            const Request::FGetPropertyFormModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdatePropertyFormModelMasterTask>> UpdatePropertyFormModelMaster(
+            const Request::FUpdatePropertyFormModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeletePropertyFormModelMasterTask>> DeletePropertyFormModelMaster(
+            const Request::FDeletePropertyFormModelMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

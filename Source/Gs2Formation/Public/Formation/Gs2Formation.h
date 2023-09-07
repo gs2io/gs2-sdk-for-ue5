@@ -22,6 +22,8 @@
 #include "Model/FormModelMaster.h"
 #include "Model/MoldModel.h"
 #include "Model/MoldModelMaster.h"
+#include "Model/PropertyFormModel.h"
+#include "Model/PropertyFormModelMaster.h"
 #include "Model/CurrentFormMaster.h"
 #include "Model/Mold.h"
 #include "Model/Form.h"
@@ -72,12 +74,6 @@
 #include "Result/DeleteNamespaceResult.h"
 #include "Task/Rest/DeleteNamespaceTask.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
-
-// DescribeFormModels
-#include "Request/DescribeFormModelsRequest.h"
-#include "Result/DescribeFormModelsResult.h"
-#include "Task/Rest/DescribeFormModelsTask.h"
-#include "Task/WebSocket/DescribeFormModelsTask.h"
 
 // GetFormModel
 #include "Request/GetFormModelRequest.h"
@@ -156,6 +152,48 @@
 #include "Result/DeleteMoldModelMasterResult.h"
 #include "Task/Rest/DeleteMoldModelMasterTask.h"
 #include "Task/WebSocket/DeleteMoldModelMasterTask.h"
+
+// DescribePropertyFormModels
+#include "Request/DescribePropertyFormModelsRequest.h"
+#include "Result/DescribePropertyFormModelsResult.h"
+#include "Task/Rest/DescribePropertyFormModelsTask.h"
+#include "Task/WebSocket/DescribePropertyFormModelsTask.h"
+
+// GetPropertyFormModel
+#include "Request/GetPropertyFormModelRequest.h"
+#include "Result/GetPropertyFormModelResult.h"
+#include "Task/Rest/GetPropertyFormModelTask.h"
+#include "Task/WebSocket/GetPropertyFormModelTask.h"
+
+// DescribePropertyFormModelMasters
+#include "Request/DescribePropertyFormModelMastersRequest.h"
+#include "Result/DescribePropertyFormModelMastersResult.h"
+#include "Task/Rest/DescribePropertyFormModelMastersTask.h"
+#include "Task/WebSocket/DescribePropertyFormModelMastersTask.h"
+
+// CreatePropertyFormModelMaster
+#include "Request/CreatePropertyFormModelMasterRequest.h"
+#include "Result/CreatePropertyFormModelMasterResult.h"
+#include "Task/Rest/CreatePropertyFormModelMasterTask.h"
+#include "Task/WebSocket/CreatePropertyFormModelMasterTask.h"
+
+// GetPropertyFormModelMaster
+#include "Request/GetPropertyFormModelMasterRequest.h"
+#include "Result/GetPropertyFormModelMasterResult.h"
+#include "Task/Rest/GetPropertyFormModelMasterTask.h"
+#include "Task/WebSocket/GetPropertyFormModelMasterTask.h"
+
+// UpdatePropertyFormModelMaster
+#include "Request/UpdatePropertyFormModelMasterRequest.h"
+#include "Result/UpdatePropertyFormModelMasterResult.h"
+#include "Task/Rest/UpdatePropertyFormModelMasterTask.h"
+#include "Task/WebSocket/UpdatePropertyFormModelMasterTask.h"
+
+// DeletePropertyFormModelMaster
+#include "Request/DeletePropertyFormModelMasterRequest.h"
+#include "Result/DeletePropertyFormModelMasterResult.h"
+#include "Task/Rest/DeletePropertyFormModelMasterTask.h"
+#include "Task/WebSocket/DeletePropertyFormModelMasterTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

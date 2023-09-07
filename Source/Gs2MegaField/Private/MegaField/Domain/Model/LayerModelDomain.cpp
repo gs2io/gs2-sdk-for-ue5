@@ -73,7 +73,11 @@ namespace Gs2::MegaField::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AreaModelName(From.AreaModelName),
+        LayerModelName(From.LayerModelName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -149,7 +153,7 @@ namespace Gs2::MegaField::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (AreaModelName.IsSet() ? *AreaModelName : "null") + ":" +
             (LayerModelName.IsSet() ? *LayerModelName : "null") + ":" +
@@ -160,7 +164,7 @@ namespace Gs2::MegaField::Domain::Model
         TOptional<FString> LayerModelName
     )
     {
-        return FString() +
+        return FString("") +
             (LayerModelName.IsSet() ? *LayerModelName : "null");
     }
 

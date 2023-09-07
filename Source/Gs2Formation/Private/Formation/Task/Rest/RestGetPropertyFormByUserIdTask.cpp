@@ -69,7 +69,7 @@ namespace Gs2::Formation::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("formation"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/user/{userId}/property/{formModelName}/form/{propertyId}");
+                .Append("/{namespaceName}/user/{userId}/property/{propertyFormModelName}/form/{propertyId}");
 
             Url = Url.Replace(
                 TEXT("{namespaceName}"),
@@ -82,9 +82,9 @@ namespace Gs2::Formation::Task::Rest
                     TEXT("null") : ToCStr(*this->Request->GetUserId())
             );
             Url = Url.Replace(
-                TEXT("{formModelName}"),
-                !this->Request->GetFormModelName().IsSet() || this->Request->GetFormModelName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetFormModelName())
+                TEXT("{propertyFormModelName}"),
+                !this->Request->GetPropertyFormModelName().IsSet() || this->Request->GetPropertyFormModelName().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetPropertyFormModelName())
             );
             Url = Url.Replace(
                 TEXT("{propertyId}"),

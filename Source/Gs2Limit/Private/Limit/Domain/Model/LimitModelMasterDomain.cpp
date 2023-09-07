@@ -68,7 +68,10 @@ namespace Gs2::Limit::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        LimitName(From.LimitName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -263,7 +266,7 @@ namespace Gs2::Limit::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (LimitName.IsSet() ? *LimitName : "null") + ":" +
             ChildType;
@@ -273,7 +276,7 @@ namespace Gs2::Limit::Domain::Model
         TOptional<FString> LimitName
     )
     {
-        return FString() +
+        return FString("") +
             (LimitName.IsSet() ? *LimitName : "null");
     }
 

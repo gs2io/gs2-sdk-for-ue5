@@ -18,14 +18,14 @@
 
 #include "CoreMinimal.h"
 #include "../Model/PropertyForm.h"
-#include "../Model/FormModel.h"
+#include "../Model/PropertyFormModel.h"
 
 namespace Gs2::Formation::Result
 {
     class GS2FORMATION_API FGetPropertyFormResult final : public TSharedFromThis<FGetPropertyFormResult>
     {
         TSharedPtr<Model::FPropertyForm> ItemValue;
-        TSharedPtr<Model::FFormModel> FormModelValue;
+        TSharedPtr<Model::FPropertyFormModel> PropertyFormModelValue;
         
     public:
         
@@ -36,10 +36,10 @@ namespace Gs2::Formation::Result
         ~FGetPropertyFormResult() = default;
 
         TSharedPtr<FGetPropertyFormResult> WithItem(const TSharedPtr<Model::FPropertyForm> Item);
-        TSharedPtr<FGetPropertyFormResult> WithFormModel(const TSharedPtr<Model::FFormModel> FormModel);
+        TSharedPtr<FGetPropertyFormResult> WithPropertyFormModel(const TSharedPtr<Model::FPropertyFormModel> PropertyFormModel);
 
         TSharedPtr<Model::FPropertyForm> GetItem() const;
-        TSharedPtr<Model::FFormModel> GetFormModel() const;
+        TSharedPtr<Model::FPropertyFormModel> GetPropertyFormModel() const;
 
         static TSharedPtr<FGetPropertyFormResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

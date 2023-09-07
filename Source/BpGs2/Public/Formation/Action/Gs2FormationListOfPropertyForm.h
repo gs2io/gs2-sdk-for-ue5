@@ -33,7 +33,7 @@ class BPGS2_API UGs2FormationListOfPropertyFormAsyncFunction : public UBlueprint
     FGs2FormationOwnUser User;
 
 public:
-    FString FormModelName;
+    FString PropertyFormModelName;
 
     UPROPERTY(BlueprintAssignable)
     FGs2FormationListOfPropertyFormSuccessDelegate OnSuccess;
@@ -47,7 +47,7 @@ public:
     static UGs2FormationListOfPropertyFormAsyncFunction* ListOfPropertyForm(
         UObject* WorldContextObject,
         FGs2FormationOwnUser User,
-        FString FormModelName
+        FString PropertyFormModelName
     );
 
     virtual void Activate() override;

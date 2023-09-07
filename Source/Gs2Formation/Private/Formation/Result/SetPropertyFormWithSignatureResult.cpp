@@ -20,7 +20,7 @@ namespace Gs2::Formation::Result
 {
     FSetPropertyFormWithSignatureResult::FSetPropertyFormWithSignatureResult():
         ItemValue(nullptr),
-        FormModelValue(nullptr)
+        ProeprtyFormModelValue(nullptr)
     {
     }
 
@@ -28,7 +28,7 @@ namespace Gs2::Formation::Result
         const FSetPropertyFormWithSignatureResult& From
     ):
         ItemValue(From.ItemValue),
-        FormModelValue(From.FormModelValue)
+        ProeprtyFormModelValue(From.ProeprtyFormModelValue)
     {
     }
 
@@ -40,11 +40,11 @@ namespace Gs2::Formation::Result
         return SharedThis(this);
     }
 
-    TSharedPtr<FSetPropertyFormWithSignatureResult> FSetPropertyFormWithSignatureResult::WithFormModel(
-        const TSharedPtr<Model::FFormModel> FormModel
+    TSharedPtr<FSetPropertyFormWithSignatureResult> FSetPropertyFormWithSignatureResult::WithProeprtyFormModel(
+        const TSharedPtr<Model::FPropertyFormModel> ProeprtyFormModel
     )
     {
-        this->FormModelValue = FormModel;
+        this->ProeprtyFormModelValue = ProeprtyFormModel;
         return SharedThis(this);
     }
 
@@ -57,13 +57,13 @@ namespace Gs2::Formation::Result
         return ItemValue;
     }
 
-    TSharedPtr<Model::FFormModel> FSetPropertyFormWithSignatureResult::GetFormModel() const
+    TSharedPtr<Model::FPropertyFormModel> FSetPropertyFormWithSignatureResult::GetProeprtyFormModel() const
     {
-        if (!FormModelValue.IsValid())
+        if (!ProeprtyFormModelValue.IsValid())
         {
             return nullptr;
         }
-        return FormModelValue;
+        return ProeprtyFormModelValue;
     }
 
     TSharedPtr<FSetPropertyFormWithSignatureResult> FSetPropertyFormWithSignatureResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -80,13 +80,13 @@ namespace Gs2::Formation::Result
                     }
                     return Model::FPropertyForm::FromJson(Data->GetObjectField("item"));
                  }() : nullptr)
-            ->WithFormModel(Data->HasField("formModel") ? [Data]() -> Model::FFormModelPtr
+            ->WithProeprtyFormModel(Data->HasField("proeprtyFormModel") ? [Data]() -> Model::FPropertyFormModelPtr
                  {
-                    if (Data->HasTypedField<EJson::Null>("formModel"))
+                    if (Data->HasTypedField<EJson::Null>("proeprtyFormModel"))
                     {
                         return nullptr;
                     }
-                    return Model::FFormModel::FromJson(Data->GetObjectField("formModel"));
+                    return Model::FPropertyFormModel::FromJson(Data->GetObjectField("proeprtyFormModel"));
                  }() : nullptr);
     }
 
@@ -97,9 +97,9 @@ namespace Gs2::Formation::Result
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
         }
-        if (FormModelValue != nullptr && FormModelValue.IsValid())
+        if (ProeprtyFormModelValue != nullptr && ProeprtyFormModelValue.IsValid())
         {
-            JsonRootObject->SetObjectField("formModel", FormModelValue->ToJson());
+            JsonRootObject->SetObjectField("proeprtyFormModel", ProeprtyFormModelValue->ToJson());
         }
         return JsonRootObject;
     }

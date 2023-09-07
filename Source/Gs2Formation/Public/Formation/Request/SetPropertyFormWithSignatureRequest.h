@@ -28,7 +28,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
-        TOptional<FString> FormModelNameValue;
+        TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FSlotWithSignature>>> SlotsValue;
         TOptional<FString> KeyIdValue;
@@ -45,7 +45,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FSetPropertyFormWithSignatureRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FSetPropertyFormWithSignatureRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSetPropertyFormWithSignatureRequest> WithAccessToken(const TOptional<FString> AccessToken);
-        TSharedPtr<FSetPropertyFormWithSignatureRequest> WithFormModelName(const TOptional<FString> FormModelName);
+        TSharedPtr<FSetPropertyFormWithSignatureRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FSetPropertyFormWithSignatureRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FSetPropertyFormWithSignatureRequest> WithSlots(const TSharedPtr<TArray<TSharedPtr<Model::FSlotWithSignature>>> Slots);
         TSharedPtr<FSetPropertyFormWithSignatureRequest> WithKeyId(const TOptional<FString> KeyId);
@@ -54,7 +54,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
-        TOptional<FString> GetFormModelName() const;
+        TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;TSharedPtr<TArray<TSharedPtr<Model::FSlotWithSignature>>> GetSlots() const;
         TOptional<FString> GetKeyId() const;
         TOptional<FString> GetDuplicationAvoider() const;

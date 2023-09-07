@@ -22,10 +22,11 @@
 #include "Auth/Gs2Auth.h"
 #include "Formation/Gs2Formation.h"
 #include "Formation/Domain/Iterator/DescribeNamespacesIterator.h"
-#include "Formation/Domain/Iterator/DescribeFormModelsIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelsIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelMastersIterator.h"
+#include "Formation/Domain/Iterator/DescribePropertyFormModelsIterator.h"
+#include "Formation/Domain/Iterator/DescribePropertyFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldsIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldsByUserIdIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormsIterator.h"
@@ -40,6 +41,8 @@ namespace Gs2::Formation::Domain::Model
     class FFormModelMasterDomain;
     class FMoldModelDomain;
     class FMoldModelMasterDomain;
+    class FPropertyFormModelDomain;
+    class FPropertyFormModelMasterDomain;
     class FCurrentFormMasterDomain;
     class FMoldDomain;
     class FMoldAccessTokenDomain;
@@ -61,7 +64,7 @@ namespace Gs2::Formation::Domain::Model
 
         public:
         TOptional<FString> NamespaceName;
-        TOptional<FString> MoldName;
+        TOptional<FString> MoldModelName;
     private:
 
         FString ParentKey;
@@ -74,7 +77,7 @@ namespace Gs2::Formation::Domain::Model
             const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
             const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> MoldName
+            const TOptional<FString> MoldModelName
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -162,12 +165,12 @@ namespace Gs2::Formation::Domain::Model
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
-            TOptional<FString> MoldName,
+            TOptional<FString> MoldModelName,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> MoldName
+            TOptional<FString> MoldModelName
         );
 
         class GS2FORMATION_API FModelTask final :

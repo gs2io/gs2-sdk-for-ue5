@@ -20,7 +20,7 @@ namespace Gs2::Formation::Request
 {
     FDescribeFormsRequest::FDescribeFormsRequest():
         NamespaceNameValue(TOptional<FString>()),
-        MoldNameValue(TOptional<FString>()),
+        MoldModelNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
@@ -31,7 +31,7 @@ namespace Gs2::Formation::Request
         const FDescribeFormsRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        MoldNameValue(From.MoldNameValue),
+        MoldModelNameValue(From.MoldModelNameValue),
         AccessTokenValue(From.AccessTokenValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
@@ -54,11 +54,11 @@ namespace Gs2::Formation::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FDescribeFormsRequest> FDescribeFormsRequest::WithMoldName(
-        const TOptional<FString> MoldName
+    TSharedPtr<FDescribeFormsRequest> FDescribeFormsRequest::WithMoldModelName(
+        const TOptional<FString> MoldModelName
     )
     {
-        this->MoldNameValue = MoldName;
+        this->MoldModelNameValue = MoldModelName;
         return SharedThis(this);
     }
 
@@ -96,9 +96,9 @@ namespace Gs2::Formation::Request
         return NamespaceNameValue;
     }
 
-    TOptional<FString> FDescribeFormsRequest::GetMoldName() const
+    TOptional<FString> FDescribeFormsRequest::GetMoldModelName() const
     {
-        return MoldNameValue;
+        return MoldModelNameValue;
     }
 
     TOptional<FString> FDescribeFormsRequest::GetAccessToken() const
@@ -141,10 +141,10 @@ namespace Gs2::Formation::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMoldName(Data->HasField("moldName") ? [Data]() -> TOptional<FString>
+            ->WithMoldModelName(Data->HasField("moldModelName") ? [Data]() -> TOptional<FString>
               {
                   FString v;
-                    if (Data->TryGetStringField("moldName", v))
+                    if (Data->TryGetStringField("moldModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -190,9 +190,9 @@ namespace Gs2::Formation::Request
         {
             JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
         }
-        if (MoldNameValue.IsSet())
+        if (MoldModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("moldName", MoldNameValue.GetValue());
+            JsonRootObject->SetStringField("moldModelName", MoldModelNameValue.GetValue());
         }
         if (AccessTokenValue.IsSet())
         {

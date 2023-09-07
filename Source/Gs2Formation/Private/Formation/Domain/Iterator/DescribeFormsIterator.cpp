@@ -35,14 +35,14 @@ namespace Gs2::Formation::Domain::Iterator
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Formation::FGs2FormationRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> MoldName,
+        const TOptional<FString> MoldModelName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        MoldName(MoldName),
+        MoldModelName(MoldModelName),
         AccessToken(AccessToken)
     {
     }
@@ -85,7 +85,7 @@ namespace Gs2::Formation::Domain::Iterator
             const auto ListParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId(),
-                Self->MoldName,
+                Self->MoldModelName,
                 "Form"
             );
 
@@ -106,7 +106,7 @@ namespace Gs2::Formation::Domain::Iterator
             const auto Future = Self->Client->DescribeForms(
                 MakeShared<Gs2::Formation::Request::FDescribeFormsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
-                    ->WithMoldName(Self->MoldName)
+                    ->WithMoldModelName(Self->MoldModelName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)

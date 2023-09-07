@@ -22,6 +22,7 @@ namespace Gs2::Inventory::Model
         InventoryIdValue(TOptional<FString>()),
         InventoryNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
+        BigItemsValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>())
     {
@@ -33,6 +34,7 @@ namespace Gs2::Inventory::Model
         InventoryIdValue(From.InventoryIdValue),
         InventoryNameValue(From.InventoryNameValue),
         UserIdValue(From.UserIdValue),
+        BigItemsValue(From.BigItemsValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue)
     {
@@ -62,6 +64,14 @@ namespace Gs2::Inventory::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FBigInventory> FBigInventory::WithBigItems(
+        const TSharedPtr<TArray<TSharedPtr<Model::FBigItem>>> BigItems
+    )
+    {
+        this->BigItemsValue = BigItems;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FBigInventory> FBigInventory::WithCreatedAt(
         const TOptional<int64> CreatedAt
     )
@@ -88,6 +98,10 @@ namespace Gs2::Inventory::Model
     TOptional<FString> FBigInventory::GetUserId() const
     {
         return UserIdValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FBigItem>>> FBigInventory::GetBigItems() const
+    {
+        return BigItemsValue;
     }
     TOptional<int64> FBigInventory::GetCreatedAt() const
     {
@@ -204,6 +218,18 @@ namespace Gs2::Inventory::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithBigItems(Data->HasField("bigItems") ? [Data]() -> TSharedPtr<TArray<Model::FBigItemPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FBigItemPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("bigItems") && Data->HasTypedField<EJson::Array>("bigItems"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("bigItems"))
+                        {
+                            v->Add(Model::FBigItem::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FBigItemPtr>>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -238,6 +264,15 @@ namespace Gs2::Inventory::Model
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (BigItemsValue != nullptr && BigItemsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *BigItemsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("bigItems", v);
         }
         if (CreatedAtValue.IsSet())
         {

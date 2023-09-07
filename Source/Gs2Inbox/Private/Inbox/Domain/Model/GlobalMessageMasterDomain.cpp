@@ -70,7 +70,10 @@ namespace Gs2::Inbox::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        GlobalMessageName(From.GlobalMessageName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -265,7 +268,7 @@ namespace Gs2::Inbox::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (GlobalMessageName.IsSet() ? *GlobalMessageName : "null") + ":" +
             ChildType;
@@ -275,7 +278,7 @@ namespace Gs2::Inbox::Domain::Model
         TOptional<FString> GlobalMessageName
     )
     {
-        return FString() +
+        return FString("") +
             (GlobalMessageName.IsSet() ? *GlobalMessageName : "null");
     }
 

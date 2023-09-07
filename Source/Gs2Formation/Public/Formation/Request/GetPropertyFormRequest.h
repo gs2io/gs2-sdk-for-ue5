@@ -27,7 +27,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
-        TOptional<FString> FormModelNameValue;
+        TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
         
     public:
@@ -41,13 +41,13 @@ namespace Gs2::Formation::Request
         TSharedPtr<FGetPropertyFormRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FGetPropertyFormRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetPropertyFormRequest> WithAccessToken(const TOptional<FString> AccessToken);
-        TSharedPtr<FGetPropertyFormRequest> WithFormModelName(const TOptional<FString> FormModelName);
+        TSharedPtr<FGetPropertyFormRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FGetPropertyFormRequest> WithPropertyId(const TOptional<FString> PropertyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
-        TOptional<FString> GetFormModelName() const;
+        TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;
 
         static TSharedPtr<FGetPropertyFormRequest> FromJson(const TSharedPtr<FJsonObject> Data);

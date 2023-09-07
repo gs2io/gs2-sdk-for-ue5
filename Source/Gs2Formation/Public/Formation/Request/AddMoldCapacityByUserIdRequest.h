@@ -27,7 +27,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
-        TOptional<FString> MoldNameValue;
+        TOptional<FString> MoldModelNameValue;
         TOptional<int32> CapacityValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -42,14 +42,14 @@ namespace Gs2::Formation::Request
         TSharedPtr<FAddMoldCapacityByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FAddMoldCapacityByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FAddMoldCapacityByUserIdRequest> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FAddMoldCapacityByUserIdRequest> WithMoldName(const TOptional<FString> MoldName);
+        TSharedPtr<FAddMoldCapacityByUserIdRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FAddMoldCapacityByUserIdRequest> WithCapacity(const TOptional<int32> Capacity);
         TSharedPtr<FAddMoldCapacityByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
-        TOptional<FString> GetMoldName() const;
+        TOptional<FString> GetMoldModelName() const;
         TOptional<int32> GetCapacity() const;
         FString GetCapacityString() const;
         TOptional<FString> GetDuplicationAvoider() const;

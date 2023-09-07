@@ -28,6 +28,8 @@
 #include "Formation/Domain/Model/FormModelMaster.h"
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Domain/Model/MoldModelMaster.h"
+#include "Formation/Domain/Model/PropertyFormModel.h"
+#include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/CurrentFormMaster.h"
 #include "Formation/Domain/Model/Mold.h"
 #include "Formation/Domain/Model/MoldAccessToken.h"
@@ -72,7 +74,9 @@ namespace Gs2::Formation::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -328,7 +332,7 @@ namespace Gs2::Formation::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             ChildType;
     }

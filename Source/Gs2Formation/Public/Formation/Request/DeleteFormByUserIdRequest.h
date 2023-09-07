@@ -27,7 +27,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
-        TOptional<FString> MoldNameValue;
+        TOptional<FString> MoldModelNameValue;
         TOptional<int32> IndexValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -42,14 +42,14 @@ namespace Gs2::Formation::Request
         TSharedPtr<FDeleteFormByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDeleteFormByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteFormByUserIdRequest> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FDeleteFormByUserIdRequest> WithMoldName(const TOptional<FString> MoldName);
+        TSharedPtr<FDeleteFormByUserIdRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FDeleteFormByUserIdRequest> WithIndex(const TOptional<int32> Index);
         TSharedPtr<FDeleteFormByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
-        TOptional<FString> GetMoldName() const;
+        TOptional<FString> GetMoldModelName() const;
         TOptional<int32> GetIndex() const;
         FString GetIndexString() const;
         TOptional<FString> GetDuplicationAvoider() const;

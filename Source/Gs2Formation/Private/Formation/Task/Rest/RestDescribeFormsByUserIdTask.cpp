@@ -69,7 +69,7 @@ namespace Gs2::Formation::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("formation"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/user/{userId}/mold/{moldName}/form");
+                .Append("/{namespaceName}/user/{userId}/mold/{moldModelName}/form");
 
             Url = Url.Replace(
                 TEXT("{namespaceName}"),
@@ -77,9 +77,9 @@ namespace Gs2::Formation::Task::Rest
                     TEXT("null") : ToCStr(*this->Request->GetNamespaceName())
             );
             Url = Url.Replace(
-                TEXT("{moldName}"),
-                !this->Request->GetMoldName().IsSet() || this->Request->GetMoldName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetMoldName())
+                TEXT("{moldModelName}"),
+                !this->Request->GetMoldModelName().IsSet() || this->Request->GetMoldModelName().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetMoldModelName())
             );
             Url = Url.Replace(
                 TEXT("{userId}"),

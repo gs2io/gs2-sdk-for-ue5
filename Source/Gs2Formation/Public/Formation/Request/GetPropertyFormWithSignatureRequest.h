@@ -27,7 +27,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
-        TOptional<FString> FormModelNameValue;
+        TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
         TOptional<FString> KeyIdValue;
         
@@ -42,14 +42,14 @@ namespace Gs2::Formation::Request
         TSharedPtr<FGetPropertyFormWithSignatureRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FGetPropertyFormWithSignatureRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetPropertyFormWithSignatureRequest> WithAccessToken(const TOptional<FString> AccessToken);
-        TSharedPtr<FGetPropertyFormWithSignatureRequest> WithFormModelName(const TOptional<FString> FormModelName);
+        TSharedPtr<FGetPropertyFormWithSignatureRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FGetPropertyFormWithSignatureRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FGetPropertyFormWithSignatureRequest> WithKeyId(const TOptional<FString> KeyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
-        TOptional<FString> GetFormModelName() const;
+        TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;
         TOptional<FString> GetKeyId() const;
 

@@ -28,6 +28,8 @@
 #include "Formation/Domain/Model/FormModelMaster.h"
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Domain/Model/MoldModelMaster.h"
+#include "Formation/Domain/Model/PropertyFormModel.h"
+#include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/CurrentFormMaster.h"
 #include "Formation/Domain/Model/Mold.h"
 #include "Formation/Domain/Model/MoldAccessToken.h"
@@ -50,6 +52,7 @@ namespace Gs2::Formation::Domain::Model
         const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
         const TOptional<FString> NamespaceName,
+        const TOptional<FString> MoldModelName,
         const TOptional<FString> FormModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -59,9 +62,11 @@ namespace Gs2::Formation::Domain::Model
         Session(Session),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Session)),
         NamespaceName(NamespaceName),
+        MoldModelName(MoldModelName),
         FormModelName(FormModelName),
-        ParentKey(Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
             NamespaceName,
+            MoldModelName,
             "FormModel"
         ))
     {
@@ -74,7 +79,11 @@ namespace Gs2::Formation::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        MoldModelName(From.MoldModelName),
+        FormModelName(From.FormModelName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -99,6 +108,7 @@ namespace Gs2::Formation::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
+            ->WithMoldModelName(Self->MoldModelName)
             ->WithFormModelName(Self->FormModelName);
         const auto Future = Self->Client->GetFormModel(
             Request
@@ -115,8 +125,9 @@ namespace Gs2::Formation::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
                     Self->NamespaceName,
+                    Self->MoldModelName,
                     "FormModel"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
@@ -143,12 +154,14 @@ namespace Gs2::Formation::Domain::Model
 
     FString FFormModelDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
+        TOptional<FString> MoldModelName,
         TOptional<FString> FormModelName,
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
+            (MoldModelName.IsSet() ? *MoldModelName : "null") + ":" +
             (FormModelName.IsSet() ? *FormModelName : "null") + ":" +
             ChildType;
     }
@@ -157,7 +170,7 @@ namespace Gs2::Formation::Domain::Model
         TOptional<FString> FormModelName
     )
     {
-        return FString() +
+        return FString("") +
             (FormModelName.IsSet() ? *FormModelName : "null");
     }
 

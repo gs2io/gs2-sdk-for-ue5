@@ -69,7 +69,10 @@ namespace Gs2::Experience::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        ThresholdName(From.ThresholdName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -264,7 +267,7 @@ namespace Gs2::Experience::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (ThresholdName.IsSet() ? *ThresholdName : "null") + ":" +
             ChildType;
@@ -274,7 +277,7 @@ namespace Gs2::Experience::Domain::Model
         TOptional<FString> ThresholdName
     )
     {
-        return FString() +
+        return FString("") +
             (ThresholdName.IsSet() ? *ThresholdName : "null");
     }
 

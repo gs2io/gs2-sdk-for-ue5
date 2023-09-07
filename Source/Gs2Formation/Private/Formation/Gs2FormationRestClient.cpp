@@ -73,15 +73,6 @@ namespace Gs2::Formation
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FDescribeFormModelsTask>> FGs2FormationRestClient::DescribeFormModels(
-        const Request::FDescribeFormModelsRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeFormModelsTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::Rest::FGetFormModelTask>> FGs2FormationRestClient::GetFormModel(
         const Request::FGetFormModelRequestPtr Request) const
     {
@@ -194,6 +185,69 @@ namespace Gs2::Formation
         const Request::FDeleteMoldModelMasterRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteMoldModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribePropertyFormModelsTask>> FGs2FormationRestClient::DescribePropertyFormModels(
+        const Request::FDescribePropertyFormModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribePropertyFormModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetPropertyFormModelTask>> FGs2FormationRestClient::GetPropertyFormModel(
+        const Request::FGetPropertyFormModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetPropertyFormModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribePropertyFormModelMastersTask>> FGs2FormationRestClient::DescribePropertyFormModelMasters(
+        const Request::FDescribePropertyFormModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribePropertyFormModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreatePropertyFormModelMasterTask>> FGs2FormationRestClient::CreatePropertyFormModelMaster(
+        const Request::FCreatePropertyFormModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreatePropertyFormModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetPropertyFormModelMasterTask>> FGs2FormationRestClient::GetPropertyFormModelMaster(
+        const Request::FGetPropertyFormModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetPropertyFormModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdatePropertyFormModelMasterTask>> FGs2FormationRestClient::UpdatePropertyFormModelMaster(
+        const Request::FUpdatePropertyFormModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdatePropertyFormModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeletePropertyFormModelMasterTask>> FGs2FormationRestClient::DeletePropertyFormModelMaster(
+        const Request::FDeletePropertyFormModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeletePropertyFormModelMasterTask>>(
             Session,
             Request
         );

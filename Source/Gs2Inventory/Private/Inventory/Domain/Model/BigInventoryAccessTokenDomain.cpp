@@ -95,7 +95,11 @@ namespace Gs2::Inventory::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        InventoryName(From.InventoryName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -135,7 +139,7 @@ namespace Gs2::Inventory::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (InventoryName.IsSet() ? *InventoryName : "null") + ":" +
@@ -146,7 +150,7 @@ namespace Gs2::Inventory::Domain::Model
         TOptional<FString> InventoryName
     )
     {
-        return FString() +
+        return FString("") +
             (InventoryName.IsSet() ? *InventoryName : "null");
     }
 

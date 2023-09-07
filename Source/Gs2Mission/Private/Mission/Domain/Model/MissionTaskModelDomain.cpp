@@ -77,7 +77,11 @@ namespace Gs2::Mission::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        MissionGroupName(From.MissionGroupName),
+        MissionTaskName(From.MissionTaskName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -153,7 +157,7 @@ namespace Gs2::Mission::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (MissionGroupName.IsSet() ? *MissionGroupName : "null") + ":" +
             (MissionTaskName.IsSet() ? *MissionTaskName : "null") + ":" +
@@ -164,7 +168,7 @@ namespace Gs2::Mission::Domain::Model
         TOptional<FString> MissionTaskName
     )
     {
-        return FString() +
+        return FString("") +
             (MissionTaskName.IsSet() ? *MissionTaskName : "null");
     }
 

@@ -24,9 +24,9 @@ namespace Gs2::UE5::Formation::Domain::Model
         return Domain->NamespaceName;
     }
 
-    TOptional<FString> FEzMoldModelDomain::MoldName() const
+    TOptional<FString> FEzMoldModelDomain::MoldModelName() const
     {
-        return Domain->MoldName;
+        return Domain->MoldModelName;
     }
 
     FEzMoldModelDomain::FEzMoldModelDomain(
@@ -81,6 +81,18 @@ namespace Gs2::UE5::Formation::Domain::Model
     {
         return Gs2::Core::Util::New<FAsyncTask<FGetMoldModelTask>>(
             this->AsShared()
+        );
+    }
+
+    Gs2::UE5::Formation::Domain::Model::FEzFormModelDomainPtr FEzMoldModelDomain::FormModel(
+        const FString FormModelName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzFormModelDomain>(
+            Domain->FormModel(
+                FormModelName
+            ),
+            ProfileValue
         );
     }
 

@@ -28,6 +28,8 @@
 #include "Formation/Domain/Model/FormModelMaster.h"
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Domain/Model/MoldModelMaster.h"
+#include "Formation/Domain/Model/PropertyFormModel.h"
+#include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/CurrentFormMaster.h"
 #include "Formation/Domain/Model/Mold.h"
 #include "Formation/Domain/Model/MoldAccessToken.h"
@@ -51,7 +53,7 @@ namespace Gs2::Formation::Domain::Model
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> MoldName
+        const TOptional<FString> MoldModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -61,7 +63,7 @@ namespace Gs2::Formation::Domain::Model
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Session)),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        MoldName(MoldName),
+        MoldModelName(MoldModelName),
         ParentKey(Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
@@ -77,7 +79,11 @@ namespace Gs2::Formation::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        MoldModelName(From.MoldModelName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -103,7 +109,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithMoldName(Self->MoldName);
+            ->WithMoldModelName(Self->MoldModelName);
         const auto Future = Self->Client->GetMoldByUserId(
             Request
         );
@@ -184,7 +190,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithMoldName(Self->MoldName);
+            ->WithMoldModelName(Self->MoldModelName);
         const auto Future = Self->Client->SetMoldCapacityByUserId(
             Request
         );
@@ -267,7 +273,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithMoldName(Self->MoldName);
+            ->WithMoldModelName(Self->MoldModelName);
         const auto Future = Self->Client->AddMoldCapacityByUserId(
             Request
         );
@@ -350,7 +356,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithMoldName(Self->MoldName);
+            ->WithMoldModelName(Self->MoldModelName);
         const auto Future = Self->Client->SubMoldCapacityByUserId(
             Request
         );
@@ -433,7 +439,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithMoldName(Self->MoldName);
+            ->WithMoldModelName(Self->MoldModelName);
         const auto Future = Self->Client->DeleteMoldByUserId(
             Request
         );
@@ -479,7 +485,7 @@ namespace Gs2::Formation::Domain::Model
             Cache,
             Client,
             NamespaceName,
-            MoldName,
+            MoldModelName,
             UserId
         );
     }
@@ -495,7 +501,7 @@ namespace Gs2::Formation::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            MoldName,
+            MoldModelName,
             Index
         );
     }
@@ -503,23 +509,23 @@ namespace Gs2::Formation::Domain::Model
     FString FMoldDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
-        TOptional<FString> MoldName,
+        TOptional<FString> MoldModelName,
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
-            (MoldName.IsSet() ? *MoldName : "null") + ":" +
+            (MoldModelName.IsSet() ? *MoldModelName : "null") + ":" +
             ChildType;
     }
 
     FString FMoldDomain::CreateCacheKey(
-        TOptional<FString> MoldName
+        TOptional<FString> MoldModelName
     )
     {
-        return FString() +
-            (MoldName.IsSet() ? *MoldName : "null");
+        return FString("") +
+            (MoldModelName.IsSet() ? *MoldModelName : "null");
     }
 
     FMoldDomain::FModelTask::FModelTask(
@@ -545,7 +551,7 @@ namespace Gs2::Formation::Domain::Model
         auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FMold>(
             Self->ParentKey,
             Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                Self->MoldName
+                Self->MoldModelName
             ),
             &Value
         );
@@ -562,7 +568,7 @@ namespace Gs2::Formation::Domain::Model
                 }
 
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                    Self->MoldName
+                    Self->MoldModelName
                 );
                 Self->Cache->Put(
                     Gs2::Formation::Model::FMold::TypeName,
@@ -580,7 +586,7 @@ namespace Gs2::Formation::Domain::Model
             Self->Cache->TryGet<Gs2::Formation::Model::FMold>(
                 Self->ParentKey,
                 Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                    Self->MoldName
+                    Self->MoldModelName
                 ),
                 &Value
             );

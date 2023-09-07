@@ -78,7 +78,10 @@ namespace Gs2::Showcase::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        ShowcaseName(From.ShowcaseName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -273,7 +276,7 @@ namespace Gs2::Showcase::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (ShowcaseName.IsSet() ? *ShowcaseName : "null") + ":" +
             ChildType;
@@ -283,7 +286,7 @@ namespace Gs2::Showcase::Domain::Model
         TOptional<FString> ShowcaseName
     )
     {
-        return FString() +
+        return FString("") +
             (ShowcaseName.IsSet() ? *ShowcaseName : "null");
     }
 

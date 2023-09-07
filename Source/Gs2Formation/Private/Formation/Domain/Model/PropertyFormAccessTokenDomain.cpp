@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -31,6 +29,8 @@
 #include "Formation/Domain/Model/FormModelMaster.h"
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Domain/Model/MoldModelMaster.h"
+#include "Formation/Domain/Model/PropertyFormModel.h"
+#include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/CurrentFormMaster.h"
 #include "Formation/Domain/Model/Mold.h"
 #include "Formation/Domain/Model/MoldAccessToken.h"
@@ -54,7 +54,7 @@ namespace Gs2::Formation::Domain::Model
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-        const TOptional<FString> FormModelName,
+        const TOptional<FString> PropertyFormModelName,
         const TOptional<FString> PropertyId
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -65,7 +65,7 @@ namespace Gs2::Formation::Domain::Model
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Session)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
-        FormModelName(FormModelName),
+        PropertyFormModelName(PropertyFormModelName),
         PropertyId(PropertyId),
         ParentKey(Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
@@ -82,7 +82,12 @@ namespace Gs2::Formation::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        PropertyFormModelName(From.PropertyFormModelName),
+        PropertyId(From.PropertyId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -108,7 +113,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithFormModelName(Self->FormModelName)
+            ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->GetPropertyForm(
             Request
@@ -142,21 +147,20 @@ namespace Gs2::Formation::Domain::Model
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
-            if (ResultModel->GetFormModel() != nullptr)
+            if (ResultModel->GetPropertyFormModel() != nullptr)
             {
-                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                     Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    "FormModel"
+                    "PropertyFormModel"
                 );
-                const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                    ResultModel->GetFormModel()->GetName()
+                const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelDomain::CreateCacheKey(
+                    ResultModel->GetPropertyFormModel()->GetName()
                 );
                 Self->Cache->Put(
-                    Gs2::Formation::Model::FFormModel::TypeName,
+                    Gs2::Formation::Model::FPropertyFormModel::TypeName,
                     ParentKey,
                     Key,
-                    ResultModel->GetFormModel(),
+                    ResultModel->GetPropertyFormModel(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
@@ -192,7 +196,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithFormModelName(Self->FormModelName)
+            ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->GetPropertyFormWithSignature(
             Request
@@ -226,21 +230,20 @@ namespace Gs2::Formation::Domain::Model
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
-            if (ResultModel->GetFormModel() != nullptr)
+            if (ResultModel->GetPropertyFormModel() != nullptr)
             {
-                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                     Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    "FormModel"
+                    "PropertyFormModel"
                 );
-                const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                    ResultModel->GetFormModel()->GetName()
+                const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelDomain::CreateCacheKey(
+                    ResultModel->GetPropertyFormModel()->GetName()
                 );
                 Self->Cache->Put(
-                    Gs2::Formation::Model::FFormModel::TypeName,
+                    Gs2::Formation::Model::FPropertyFormModel::TypeName,
                     ParentKey,
                     Key,
-                    ResultModel->GetFormModel(),
+                    ResultModel->GetPropertyFormModel(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
@@ -280,7 +283,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithFormModelName(Self->FormModelName)
+            ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->SetPropertyFormWithSignature(
             Request
@@ -314,21 +317,20 @@ namespace Gs2::Formation::Domain::Model
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
-            if (ResultModel->GetFormModel() != nullptr)
+            if (ResultModel->GetProeprtyFormModel() != nullptr)
             {
-                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                     Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    "FormModel"
+                    "PropertyFormModel"
                 );
-                const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                    ResultModel->GetFormModel()->GetName()
+                const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelDomain::CreateCacheKey(
+                    ResultModel->GetProeprtyFormModel()->GetName()
                 );
                 Self->Cache->Put(
-                    Gs2::Formation::Model::FFormModel::TypeName,
+                    Gs2::Formation::Model::FPropertyFormModel::TypeName,
                     ParentKey,
                     Key,
-                    ResultModel->GetFormModel(),
+                    ResultModel->GetProeprtyFormModel(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
@@ -366,7 +368,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithFormModelName(Self->FormModelName)
+            ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->DeletePropertyForm(
             Request
@@ -394,17 +396,16 @@ namespace Gs2::Formation::Domain::Model
                 );
                 Self->Cache->Delete(Gs2::Formation::Model::FPropertyForm::TypeName, ParentKey, Key);
             }
-            if (ResultModel->GetFormModel() != nullptr)
+            if (ResultModel->GetPropertyFormModel() != nullptr)
             {
-                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                     Self->NamespaceName,
-                    TOptional<FString>("Singleton"),
-                    "FormModel"
+                    "PropertyFormModel"
                 );
-                const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                    ResultModel->GetFormModel()->GetName()
+                const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelDomain::CreateCacheKey(
+                    ResultModel->GetPropertyFormModel()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Formation::Model::FFormModel::TypeName, ParentKey, Key);
+                Self->Cache->Delete(Gs2::Formation::Model::FPropertyFormModel::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -422,26 +423,26 @@ namespace Gs2::Formation::Domain::Model
     FString FPropertyFormAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
-        TOptional<FString> FormModelName,
+        TOptional<FString> PropertyFormModelName,
         TOptional<FString> PropertyId,
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
-            (FormModelName.IsSet() ? *FormModelName : "null") + ":" +
+            (PropertyFormModelName.IsSet() ? *PropertyFormModelName : "null") + ":" +
             (PropertyId.IsSet() ? *PropertyId : "null") + ":" +
             ChildType;
     }
 
     FString FPropertyFormAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> FormModelName,
+        TOptional<FString> PropertyFormModelName,
         TOptional<FString> PropertyId
     )
     {
-        return FString() +
-            (FormModelName.IsSet() ? *FormModelName : "null") + ":" + 
+        return FString("") +
+            (PropertyFormModelName.IsSet() ? *PropertyFormModelName : "null") + ":" + 
             (PropertyId.IsSet() ? *PropertyId : "null");
     }
 
@@ -464,11 +465,11 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::Formation::Model::FPropertyFormPtr Value;
-        const auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FPropertyForm>(
+        TSharedPtr<Gs2::Formation::Model::FPropertyForm> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FPropertyForm>(
             Self->ParentKey,
             Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                Self->FormModelName,
+                Self->PropertyFormModelName,
                 Self->PropertyId
             ),
             &Value
@@ -485,13 +486,14 @@ namespace Gs2::Formation::Domain::Model
                     return Future->GetTask().Error();
                 }
 
+                const auto Key = Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
+                    Self->PropertyFormModelName,
+                    Self->PropertyId
+                );
                 Self->Cache->Put(
                     Gs2::Formation::Model::FPropertyForm::TypeName,
                     Self->ParentKey,
-                    Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                        Self->FormModelName,
-                        Self->PropertyId
-                    ),
+                    Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
@@ -504,7 +506,7 @@ namespace Gs2::Formation::Domain::Model
             Self->Cache->TryGet<Gs2::Formation::Model::FPropertyForm>(
                 Self->ParentKey,
                 Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                    Self->FormModelName,
+                    Self->PropertyFormModelName,
                     Self->PropertyId
                 ),
                 &Value

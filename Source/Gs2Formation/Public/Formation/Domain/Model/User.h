@@ -22,10 +22,11 @@
 #include "Auth/Gs2Auth.h"
 #include "Formation/Gs2Formation.h"
 #include "Formation/Domain/Iterator/DescribeNamespacesIterator.h"
-#include "Formation/Domain/Iterator/DescribeFormModelsIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelsIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelMastersIterator.h"
+#include "Formation/Domain/Iterator/DescribePropertyFormModelsIterator.h"
+#include "Formation/Domain/Iterator/DescribePropertyFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldsIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldsByUserIdIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormsIterator.h"
@@ -40,6 +41,8 @@ namespace Gs2::Formation::Domain::Model
     class FFormModelMasterDomain;
     class FMoldModelDomain;
     class FMoldModelMasterDomain;
+    class FPropertyFormModelDomain;
+    class FPropertyFormModelMasterDomain;
     class FCurrentFormMasterDomain;
     class FMoldDomain;
     class FMoldAccessTokenDomain;
@@ -101,15 +104,15 @@ namespace Gs2::Formation::Domain::Model
         ) const;
 
         TSharedPtr<Gs2::Formation::Domain::Model::FMoldDomain> Mold(
-            const FString MoldName
+            const FString MoldModelName
         ) const;
 
         Gs2::Formation::Domain::Iterator::FDescribePropertyFormsByUserIdIteratorPtr PropertyForms(
-            const FString FormModelName
+            const FString PropertyFormModelName
         ) const;
 
         TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormDomain> PropertyForm(
-            const FString FormModelName,
+            const FString PropertyFormModelName,
             const FString PropertyId
         ) const;
 

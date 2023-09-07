@@ -75,7 +75,11 @@ namespace Gs2::Stamina::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        StaminaName(From.StaminaName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -500,7 +504,7 @@ namespace Gs2::Stamina::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (StaminaName.IsSet() ? *StaminaName : "null") + ":" +
@@ -511,7 +515,7 @@ namespace Gs2::Stamina::Domain::Model
         TOptional<FString> StaminaName
     )
     {
-        return FString() +
+        return FString("") +
             (StaminaName.IsSet() ? *StaminaName : "null");
     }
 

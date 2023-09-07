@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "BigItem.h"
 
 namespace Gs2::Inventory::Model
 {
@@ -26,6 +27,7 @@ namespace Gs2::Inventory::Model
         TOptional<FString> InventoryIdValue;
         TOptional<FString> InventoryNameValue;
         TOptional<FString> UserIdValue;
+        TSharedPtr<TArray<TSharedPtr<FBigItem>>> BigItemsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
 
@@ -39,12 +41,14 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FBigInventory> WithInventoryId(const TOptional<FString> InventoryId);
         TSharedPtr<FBigInventory> WithInventoryName(const TOptional<FString> InventoryName);
         TSharedPtr<FBigInventory> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FBigInventory> WithBigItems(const TSharedPtr<TArray<TSharedPtr<FBigItem>>> BigItems);
         TSharedPtr<FBigInventory> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FBigInventory> WithUpdatedAt(const TOptional<int64> UpdatedAt);
 
         TOptional<FString> GetInventoryId() const;
         TOptional<FString> GetInventoryName() const;
         TOptional<FString> GetUserId() const;
+        TSharedPtr<TArray<TSharedPtr<FBigItem>>> GetBigItems() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

@@ -20,6 +20,7 @@
 #include "Formation/Domain/Model/UserAccessToken.h"
 #include "Formation/Model/Gs2FormationEzFormModel.h"
 #include "Formation/Model/Gs2FormationEzMoldModel.h"
+#include "Formation/Model/Gs2FormationEzPropertyFormModel.h"
 #include "Formation/Model/Gs2FormationEzMold.h"
 #include "Formation/Model/Gs2FormationEzForm.h"
 #include "Formation/Model/Gs2FormationEzPropertyForm.h"
@@ -62,15 +63,15 @@ namespace Gs2::UE5::Formation::Domain::Model
         ) const;
 
         Gs2::UE5::Formation::Domain::Model::FEzMoldGameSessionDomainPtr Mold(
-            const FString MoldName
+            const FString MoldModelName
         ) const;
 
         Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormsIteratorPtr PropertyForms(
-            const FString FormModelName
+            const FString PropertyFormModelName
         ) const;
 
         Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomainPtr PropertyForm(
-            const FString FormModelName,
+            const FString PropertyFormModelName,
             const FString PropertyId
         ) const;
 

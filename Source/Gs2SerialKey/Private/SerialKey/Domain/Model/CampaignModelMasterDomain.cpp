@@ -69,7 +69,10 @@ namespace Gs2::SerialKey::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        CampaignModelName(From.CampaignModelName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -264,7 +267,7 @@ namespace Gs2::SerialKey::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (CampaignModelName.IsSet() ? *CampaignModelName : "null") + ":" +
             ChildType;
@@ -274,7 +277,7 @@ namespace Gs2::SerialKey::Domain::Model
         TOptional<FString> CampaignModelName
     )
     {
-        return FString() +
+        return FString("") +
             (CampaignModelName.IsSet() ? *CampaignModelName : "null");
     }
 

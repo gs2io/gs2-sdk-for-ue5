@@ -27,7 +27,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
-        TOptional<FString> MoldNameValue;
+        TOptional<FString> MoldModelNameValue;
         TOptional<int32> IndexValue;
         TOptional<FString> KeyIdValue;
         
@@ -42,14 +42,14 @@ namespace Gs2::Formation::Request
         TSharedPtr<FGetFormWithSignatureByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FGetFormWithSignatureByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetFormWithSignatureByUserIdRequest> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FGetFormWithSignatureByUserIdRequest> WithMoldName(const TOptional<FString> MoldName);
+        TSharedPtr<FGetFormWithSignatureByUserIdRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FGetFormWithSignatureByUserIdRequest> WithIndex(const TOptional<int32> Index);
         TSharedPtr<FGetFormWithSignatureByUserIdRequest> WithKeyId(const TOptional<FString> KeyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
-        TOptional<FString> GetMoldName() const;
+        TOptional<FString> GetMoldModelName() const;
         TOptional<int32> GetIndex() const;
         FString GetIndexString() const;
         TOptional<FString> GetKeyId() const;

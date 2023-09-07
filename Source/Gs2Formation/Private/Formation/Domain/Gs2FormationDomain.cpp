@@ -30,6 +30,8 @@
 #include "Formation/Domain/Model/FormModelMaster.h"
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Domain/Model/MoldModelMaster.h"
+#include "Formation/Domain/Model/PropertyFormModel.h"
+#include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/CurrentFormMaster.h"
 #include "Formation/Domain/Model/Mold.h"
 #include "Formation/Domain/Model/Form.h"
@@ -63,7 +65,8 @@ namespace Gs2::Formation::Domain
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -282,7 +285,7 @@ namespace Gs2::Formation::Domain
                 const auto ParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    RequestModel->GetMoldName(),
+                    RequestModel->GetMoldModelName(),
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
@@ -566,7 +569,7 @@ namespace Gs2::Formation::Domain
                 const auto ParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    RequestModel->GetMoldName(),
+                    RequestModel->GetMoldModelName(),
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(

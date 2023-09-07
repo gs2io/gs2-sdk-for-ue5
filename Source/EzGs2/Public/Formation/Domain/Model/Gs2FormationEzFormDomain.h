@@ -20,6 +20,7 @@
 #include "Formation/Domain/Model/Form.h"
 #include "Formation/Model/Gs2FormationEzFormModel.h"
 #include "Formation/Model/Gs2FormationEzMoldModel.h"
+#include "Formation/Model/Gs2FormationEzPropertyFormModel.h"
 #include "Formation/Model/Gs2FormationEzMold.h"
 #include "Formation/Model/Gs2FormationEzForm.h"
 #include "Formation/Model/Gs2FormationEzPropertyForm.h"
@@ -49,7 +50,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
-        TOptional<FString> MoldName() const;
+        TOptional<FString> MoldModelName() const;
         TOptional<int32> Index() const;
 
         FEzFormDomain(

@@ -26,7 +26,7 @@ namespace Gs2::Formation::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
-        TOptional<FString> MoldNameValue;
+        TOptional<FString> MoldModelNameValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> MetadataValue;
         TOptional<FString> FormModelNameValue;
@@ -43,7 +43,7 @@ namespace Gs2::Formation::Request
 
         TSharedPtr<FUpdateMoldModelMasterRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateMoldModelMasterRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
-        TSharedPtr<FUpdateMoldModelMasterRequest> WithMoldName(const TOptional<FString> MoldName);
+        TSharedPtr<FUpdateMoldModelMasterRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FUpdateMoldModelMasterRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateMoldModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FUpdateMoldModelMasterRequest> WithFormModelName(const TOptional<FString> FormModelName);
@@ -52,7 +52,7 @@ namespace Gs2::Formation::Request
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
-        TOptional<FString> GetMoldName() const;
+        TOptional<FString> GetMoldModelName() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetFormModelName() const;

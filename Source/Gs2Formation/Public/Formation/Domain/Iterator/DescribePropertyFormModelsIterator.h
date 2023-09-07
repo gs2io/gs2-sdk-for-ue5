@@ -25,15 +25,15 @@
 namespace Gs2::Formation::Domain::Iterator
 {
 
-    class GS2FORMATION_API FDescribeFormModelsIterator :
-        public TSharedFromThis<FDescribeFormModelsIterator>
+    class GS2FORMATION_API FDescribePropertyFormModelsIterator :
+        public TSharedFromThis<FDescribePropertyFormModelsIterator>
     {
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Formation::FGs2FormationRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
-        FDescribeFormModelsIterator(
+        FDescribePropertyFormModelsIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Formation::FGs2FormationRestClientPtr Client,
             const TOptional<FString> NamespaceName
@@ -42,7 +42,7 @@ namespace Gs2::Formation::Domain::Iterator
         class FIterator;
 
         class GS2FORMATION_API FIteratorNextTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Model::FFormModel>
+            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Model::FPropertyFormModel>
         {
         private:
             FIterator& Iterator;
@@ -52,7 +52,7 @@ namespace Gs2::Formation::Domain::Iterator
                 Iterator(Iterator)
             {}
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FFormModel>> Result) override;
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Formation::Model::FPropertyFormModel>> Result) override;
 
             static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
             {
@@ -62,9 +62,9 @@ namespace Gs2::Formation::Domain::Iterator
 
         class GS2FORMATION_API FIterator
         {
-            TSharedRef<FDescribeFormModelsIterator> Self;
-            TSharedPtr<TArray<Gs2::Formation::Model::FFormModelPtr>> Range;
-            TOptional<TArray<Gs2::Formation::Model::FFormModelPtr>::TIterator> RangeIteratorOpt;
+            TSharedRef<FDescribePropertyFormModelsIterator> Self;
+            TSharedPtr<TArray<Gs2::Formation::Model::FPropertyFormModelPtr>> Range;
+            TOptional<TArray<Gs2::Formation::Model::FPropertyFormModelPtr>::TIterator> RangeIteratorOpt;
             Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
             bool bLast;
             bool bEnd;
@@ -74,12 +74,12 @@ namespace Gs2::Formation::Domain::Iterator
             class FEnd {};
 
             FIterator(
-                const TSharedRef<FDescribeFormModelsIterator> Iterable,
+                const TSharedRef<FDescribePropertyFormModelsIterator> Iterable,
                 FOneBeforeBegin
             );
 
             explicit FIterator(
-                const TSharedRef<FDescribeFormModelsIterator> Iterable
+                const TSharedRef<FDescribePropertyFormModelsIterator> Iterable
             ) :
                 FIterator(Iterable, FOneBeforeBegin())
             {
@@ -87,7 +87,7 @@ namespace Gs2::Formation::Domain::Iterator
             }
 
             FIterator(
-                const TSharedRef<FDescribeFormModelsIterator> Iterable,
+                const TSharedRef<FDescribePropertyFormModelsIterator> Iterable,
                 FEnd
             ) : Self(Iterable), bEnd(true)
             {}
@@ -146,7 +146,7 @@ namespace Gs2::Formation::Domain::Iterator
                 return FIteratorNextTask::Issue(*this);
             }
 
-            Gs2::Formation::Model::FFormModelPtr& Current()
+            Gs2::Formation::Model::FPropertyFormModelPtr& Current()
             {
                 return **RangeIteratorOpt;
             }
@@ -174,17 +174,17 @@ namespace Gs2::Formation::Domain::Iterator
                 }
             }
 
-            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribeFormModelsIterator> Iterable)
+            static FIterator OneBeforeBeginOf(const TSharedRef<FDescribePropertyFormModelsIterator> Iterable)
             {
                 return FIterator(Iterable, FOneBeforeBegin());
             }
 
-            static FIterator BeginOf(const TSharedRef<FDescribeFormModelsIterator> Iterable)
+            static FIterator BeginOf(const TSharedRef<FDescribePropertyFormModelsIterator> Iterable)
             {
                 return FIterator(Iterable);
             }
 
-            static FIterator EndOf(const TSharedRef<FDescribeFormModelsIterator> Iterable)
+            static FIterator EndOf(const TSharedRef<FDescribePropertyFormModelsIterator> Iterable)
             {
                 return FIterator(Iterable, FEnd());
             }
@@ -194,5 +194,5 @@ namespace Gs2::Formation::Domain::Iterator
         FIterator begin();
         FIterator end();
     };
-    typedef TSharedPtr<FDescribeFormModelsIterator> FDescribeFormModelsIteratorPtr;
+    typedef TSharedPtr<FDescribePropertyFormModelsIterator> FDescribePropertyFormModelsIteratorPtr;
 }

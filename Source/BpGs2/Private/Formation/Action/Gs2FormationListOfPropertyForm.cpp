@@ -28,7 +28,7 @@ UGs2FormationListOfPropertyFormAsyncFunction::UGs2FormationListOfPropertyFormAsy
 UGs2FormationListOfPropertyFormAsyncFunction* UGs2FormationListOfPropertyFormAsyncFunction::ListOfPropertyForm(
     UObject* WorldContextObject,
     FGs2FormationOwnUser User,
-    FString FormModelName
+    FString PropertyFormModelName
 )
 {
     UGs2FormationListOfPropertyFormAsyncFunction* Action = NewObject<UGs2FormationListOfPropertyFormAsyncFunction>();
@@ -38,7 +38,7 @@ UGs2FormationListOfPropertyFormAsyncFunction* UGs2FormationListOfPropertyFormAsy
         return Action;
     }
     Action->User = User;
-    Action->FormModelName = FormModelName;
+    Action->PropertyFormModelName = PropertyFormModelName;
     return Action;
 }
 
@@ -52,7 +52,7 @@ void UGs2FormationListOfPropertyFormAsyncFunction::Activate()
         return;
     }
     const auto It = User.Value->PropertyForms(
-        FormModelName
+        PropertyFormModelName
     );
     for (auto v : *It)
     {

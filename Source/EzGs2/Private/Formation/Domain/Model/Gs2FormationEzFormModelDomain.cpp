@@ -24,6 +24,11 @@ namespace Gs2::UE5::Formation::Domain::Model
         return Domain->NamespaceName;
     }
 
+    TOptional<FString> FEzFormModelDomain::MoldModelName() const
+    {
+        return Domain->MoldModelName;
+    }
+
     TOptional<FString> FEzFormModelDomain::FormModelName() const
     {
         return Domain->FormModelName;

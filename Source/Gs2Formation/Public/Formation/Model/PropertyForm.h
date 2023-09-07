@@ -65,7 +65,7 @@ namespace Gs2::Formation::Model
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
         static TOptional<FString> GetNamespaceNameFromGrn(const FString Grn);
         static TOptional<FString> GetUserIdFromGrn(const FString Grn);
-        static TOptional<FString> GetFormModelNameFromGrn(const FString Grn);
+        static TOptional<FString> GetPropertyFormModelNameFromGrn(const FString Grn);
         static TOptional<FString> GetPropertyIdFromGrn(const FString Grn);
 
         static TSharedPtr<FPropertyForm> FromJson(const TSharedPtr<FJsonObject> Data);

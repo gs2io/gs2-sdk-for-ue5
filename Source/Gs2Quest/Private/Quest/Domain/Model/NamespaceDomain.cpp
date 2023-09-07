@@ -67,7 +67,9 @@ namespace Gs2::Quest::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -450,7 +452,7 @@ namespace Gs2::Quest::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             ChildType;
     }
@@ -459,7 +461,7 @@ namespace Gs2::Quest::Domain::Model
         TOptional<FString> NamespaceName
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null");
     }
 

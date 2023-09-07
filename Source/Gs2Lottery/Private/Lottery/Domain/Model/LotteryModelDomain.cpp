@@ -75,7 +75,10 @@ namespace Gs2::Lottery::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        LotteryName(From.LotteryName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -148,7 +151,7 @@ namespace Gs2::Lottery::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (LotteryName.IsSet() ? *LotteryName : "null") + ":" +
             ChildType;
@@ -158,7 +161,7 @@ namespace Gs2::Lottery::Domain::Model
         TOptional<FString> LotteryName
     )
     {
-        return FString() +
+        return FString("") +
             (LotteryName.IsSet() ? *LotteryName : "null");
     }
 

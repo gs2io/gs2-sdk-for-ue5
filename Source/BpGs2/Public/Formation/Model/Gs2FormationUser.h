@@ -37,13 +37,13 @@ class BPGS2_API UGs2FormationUserFunctionLibrary : public UBlueprintFunctionLibr
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Formation::OwnMold", Category="Game Server Services|GS2-Formation|Namespace|User|Mold", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Mold") FGs2FormationOwnMold OwnMold(
         FGs2FormationOwnUser User,
-        FString MoldName
+        FString MoldModelName
     );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Formation::OwnPropertyForm", Category="Game Server Services|GS2-Formation|Namespace|User|PropertyForm", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="PropertyForm") FGs2FormationOwnPropertyForm OwnPropertyForm(
         FGs2FormationOwnUser User,
-        FString FormModelName,
+        FString PropertyFormModelName,
         FString PropertyId
     );
 };

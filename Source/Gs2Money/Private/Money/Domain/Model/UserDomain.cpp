@@ -67,7 +67,10 @@ namespace Gs2::Money::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -282,7 +285,7 @@ namespace Gs2::Money::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
@@ -292,7 +295,7 @@ namespace Gs2::Money::Domain::Model
         TOptional<FString> UserId
     )
     {
-        return FString() +
+        return FString("") +
             (UserId.IsSet() ? *UserId : "null");
     }
 }

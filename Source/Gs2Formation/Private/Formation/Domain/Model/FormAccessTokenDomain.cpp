@@ -29,6 +29,8 @@
 #include "Formation/Domain/Model/FormModelMaster.h"
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Domain/Model/MoldModelMaster.h"
+#include "Formation/Domain/Model/PropertyFormModel.h"
+#include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/CurrentFormMaster.h"
 #include "Formation/Domain/Model/Mold.h"
 #include "Formation/Domain/Model/MoldAccessToken.h"
@@ -52,7 +54,7 @@ namespace Gs2::Formation::Domain::Model
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-        const TOptional<FString> MoldName,
+        const TOptional<FString> MoldModelName,
         const TOptional<int32> Index
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -63,12 +65,12 @@ namespace Gs2::Formation::Domain::Model
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Session)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
-        MoldName(MoldName),
+        MoldModelName(MoldModelName),
         Index(Index),
         ParentKey(Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
-            MoldName,
+            MoldModelName,
             "Form"
         ))
     {
@@ -81,7 +83,12 @@ namespace Gs2::Formation::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        MoldModelName(From.MoldModelName),
+        Index(From.Index),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -107,7 +114,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithMoldName(Self->MoldName)
+            ->WithMoldModelName(Self->MoldModelName)
             ->WithIndex(Self->Index);
         const auto Future = Self->Client->GetForm(
             Request
@@ -127,7 +134,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto ParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId(),
-                    Self->MoldName,
+                    Self->MoldModelName,
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
@@ -178,8 +185,9 @@ namespace Gs2::Formation::Domain::Model
             }
             if (ResultModel->GetFormModel() != nullptr)
             {
-                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
                     Self->NamespaceName,
+                    Self->MoldModelName,
                     "FormModel"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
@@ -225,7 +233,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithMoldName(Self->MoldName)
+            ->WithMoldModelName(Self->MoldModelName)
             ->WithIndex(Self->Index);
         const auto Future = Self->Client->GetFormWithSignature(
             Request
@@ -245,7 +253,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto ParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId(),
-                    Self->MoldName,
+                    Self->MoldModelName,
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
@@ -296,8 +304,9 @@ namespace Gs2::Formation::Domain::Model
             }
             if (ResultModel->GetFormModel() != nullptr)
             {
-                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
                     Self->NamespaceName,
+                    Self->MoldModelName,
                     "FormModel"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
@@ -347,7 +356,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithMoldName(Self->MoldName)
+            ->WithMoldModelName(Self->MoldModelName)
             ->WithIndex(Self->Index);
         const auto Future = Self->Client->SetFormWithSignature(
             Request
@@ -367,7 +376,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto ParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId(),
-                    Self->MoldName,
+                    Self->MoldModelName,
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
@@ -418,8 +427,9 @@ namespace Gs2::Formation::Domain::Model
             }
             if (ResultModel->GetFormModel() != nullptr)
             {
-                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
                     Self->NamespaceName,
+                    Self->MoldModelName,
                     "FormModel"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
@@ -467,7 +477,7 @@ namespace Gs2::Formation::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithMoldName(Self->MoldName)
+            ->WithMoldModelName(Self->MoldModelName)
             ->WithIndex(Self->Index);
         const auto Future = Self->Client->DeleteForm(
             Request
@@ -487,7 +497,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto ParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId(),
-                    Self->MoldName,
+                    Self->MoldModelName,
                     "Form"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
@@ -520,8 +530,9 @@ namespace Gs2::Formation::Domain::Model
             }
             if (ResultModel->GetFormModel() != nullptr)
             {
-                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
                     Self->NamespaceName,
+                    Self->MoldModelName,
                     "FormModel"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
@@ -545,15 +556,15 @@ namespace Gs2::Formation::Domain::Model
     FString FFormAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
-        TOptional<FString> MoldName,
+        TOptional<FString> MoldModelName,
         TOptional<FString> Index,
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
-            (MoldName.IsSet() ? *MoldName : "null") + ":" +
+            (MoldModelName.IsSet() ? *MoldModelName : "null") + ":" +
             (Index.IsSet() ? *Index : "null") + ":" +
             ChildType;
     }
@@ -562,7 +573,7 @@ namespace Gs2::Formation::Domain::Model
         TOptional<FString> Index
     )
     {
-        return FString() +
+        return FString("") +
             (Index.IsSet() ? *Index : "null");
     }
 

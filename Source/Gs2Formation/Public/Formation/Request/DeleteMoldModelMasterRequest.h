@@ -26,7 +26,7 @@ namespace Gs2::Formation::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
-        TOptional<FString> MoldNameValue;
+        TOptional<FString> MoldModelNameValue;
         
     public:
         
@@ -38,11 +38,11 @@ namespace Gs2::Formation::Request
 
         TSharedPtr<FDeleteMoldModelMasterRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDeleteMoldModelMasterRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
-        TSharedPtr<FDeleteMoldModelMasterRequest> WithMoldName(const TOptional<FString> MoldName);
+        TSharedPtr<FDeleteMoldModelMasterRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
-        TOptional<FString> GetMoldName() const;
+        TOptional<FString> GetMoldModelName() const;
 
         static TSharedPtr<FDeleteMoldModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

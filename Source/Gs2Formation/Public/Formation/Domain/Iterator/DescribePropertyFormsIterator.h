@@ -33,7 +33,7 @@ namespace Gs2::Formation::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
-        const TOptional<FString> FormModelName;
+        const TOptional<FString> PropertyFormModelName;
 
     public:
         FDescribePropertyFormsIterator(
@@ -41,7 +41,7 @@ namespace Gs2::Formation::Domain::Iterator
             const Gs2::Formation::FGs2FormationRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<FString> FormModelName
+            const TOptional<FString> PropertyFormModelName
         );
 
         class FIterator;

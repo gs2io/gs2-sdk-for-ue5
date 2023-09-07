@@ -49,9 +49,9 @@ namespace Gs2::UE5::Formation::Domain::Model
         return Domain->UserId();
     }
 
-    TOptional<FString> FEzPropertyFormGameSessionDomain::FormModelName() const
+    TOptional<FString> FEzPropertyFormGameSessionDomain::PropertyFormModelName() const
     {
-        return Domain->FormModelName;
+        return Domain->PropertyFormModelName;
     }
 
     TOptional<FString> FEzPropertyFormGameSessionDomain::PropertyId() const

@@ -73,7 +73,11 @@ namespace Gs2::Idle::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        CategoryName(From.CategoryName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -354,6 +358,72 @@ namespace Gs2::Idle::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FIncreaseMaximumIdleMinutesTask>>(this->AsShared(), Request);
     }
 
+    FStatusDomain::FDecreaseMaximumIdleMinutesTask::FDecreaseMaximumIdleMinutesTask(
+        const TSharedPtr<FStatusDomain> Self,
+        const Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusDomain::FDecreaseMaximumIdleMinutesTask::FDecreaseMaximumIdleMinutesTask(
+        const FDecreaseMaximumIdleMinutesTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusDomain::FDecreaseMaximumIdleMinutesTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FStatusDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithCategoryName(Self->CategoryName);
+        const auto Future = Self->Client->DecreaseMaximumIdleMinutesByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "Status"
+                );
+                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCategoryName()
+                );
+                Self->Cache->Put(
+                    Gs2::Idle::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusDomain::FDecreaseMaximumIdleMinutesTask>> FStatusDomain::DecreaseMaximumIdleMinutes(
+        Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDecreaseMaximumIdleMinutesTask>>(this->AsShared(), Request);
+    }
+
     FString FStatusDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
@@ -361,7 +431,7 @@ namespace Gs2::Idle::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (CategoryName.IsSet() ? *CategoryName : "null") + ":" +
@@ -372,7 +442,7 @@ namespace Gs2::Idle::Domain::Model
         TOptional<FString> CategoryName
     )
     {
-        return FString() +
+        return FString("") +
             (CategoryName.IsSet() ? *CategoryName : "null");
     }
 

@@ -20,6 +20,7 @@
 #include "Formation/Domain/Model/PropertyForm.h"
 #include "Formation/Model/Gs2FormationEzFormModel.h"
 #include "Formation/Model/Gs2FormationEzMoldModel.h"
+#include "Formation/Model/Gs2FormationEzPropertyFormModel.h"
 #include "Formation/Model/Gs2FormationEzMold.h"
 #include "Formation/Model/Gs2FormationEzForm.h"
 #include "Formation/Model/Gs2FormationEzPropertyForm.h"
@@ -49,7 +50,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
-        TOptional<FString> FormModelName() const;
+        TOptional<FString> PropertyFormModelName() const;
         TOptional<FString> PropertyId() const;
 
         FEzPropertyFormDomain(

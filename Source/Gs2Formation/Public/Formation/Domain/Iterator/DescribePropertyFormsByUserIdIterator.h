@@ -32,7 +32,7 @@ namespace Gs2::Formation::Domain::Iterator
         const Gs2::Formation::FGs2FormationRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
-        const TOptional<FString> FormModelName;
+        const TOptional<FString> PropertyFormModelName;
 
     public:
         FDescribePropertyFormsByUserIdIterator(
@@ -40,7 +40,7 @@ namespace Gs2::Formation::Domain::Iterator
             const Gs2::Formation::FGs2FormationRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> FormModelName
+            const TOptional<FString> PropertyFormModelName
         );
 
         class FIterator;

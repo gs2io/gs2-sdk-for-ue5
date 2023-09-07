@@ -31,7 +31,7 @@ namespace Gs2::Formation::Domain::Iterator
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Formation::FGs2FormationRestClientPtr Client;
         const TOptional<FString> NamespaceName;
-        const TOptional<FString> MoldName;
+        const TOptional<FString> MoldModelName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
 
@@ -40,7 +40,7 @@ namespace Gs2::Formation::Domain::Iterator
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Formation::FGs2FormationRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> MoldName,
+            const TOptional<FString> MoldModelName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 

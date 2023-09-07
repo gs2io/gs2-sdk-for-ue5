@@ -22,10 +22,11 @@
 #include "Auth/Gs2Auth.h"
 #include "Formation/Gs2Formation.h"
 #include "Formation/Domain/Iterator/DescribeNamespacesIterator.h"
-#include "Formation/Domain/Iterator/DescribeFormModelsIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelsIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelMastersIterator.h"
+#include "Formation/Domain/Iterator/DescribePropertyFormModelsIterator.h"
+#include "Formation/Domain/Iterator/DescribePropertyFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldsIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldsByUserIdIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormsIterator.h"
@@ -40,6 +41,8 @@ namespace Gs2::Formation::Domain::Model
     class FFormModelMasterDomain;
     class FMoldModelDomain;
     class FMoldModelMasterDomain;
+    class FPropertyFormModelDomain;
+    class FPropertyFormModelMasterDomain;
     class FCurrentFormMasterDomain;
     class FMoldDomain;
     class FMoldAccessTokenDomain;
@@ -194,6 +197,32 @@ namespace Gs2::Formation::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+        class GS2FORMATION_API FCreatePropertyFormModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>,
+            public TSharedFromThis<FCreatePropertyFormModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreatePropertyFormModelMasterRequestPtr Request;
+        public:
+            explicit FCreatePropertyFormModelMasterTask(
+                const TSharedPtr<FNamespaceDomain> Self,
+                const Request::FCreatePropertyFormModelMasterRequestPtr Request
+            );
+
+            FCreatePropertyFormModelMasterTask(
+                const FCreatePropertyFormModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>> Result
+            ) override;
+        };
+        friend FCreatePropertyFormModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreatePropertyFormModelMasterTask>> CreatePropertyFormModelMaster(
+            Request::FCreatePropertyFormModelMasterRequestPtr Request
+        );
+
         class GS2FORMATION_API FCreateFormModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FFormModelMasterDomain>,
             public TSharedFromThis<FCreateFormModelMasterTask>
@@ -253,14 +282,14 @@ namespace Gs2::Formation::Domain::Model
         ) const;
 
         TSharedPtr<Gs2::Formation::Domain::Model::FMoldModelDomain> MoldModel(
-            const FString MoldName
+            const FString MoldModelName
         ) const;
 
-        Gs2::Formation::Domain::Iterator::FDescribeFormModelsIteratorPtr FormModels(
+        Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelsIteratorPtr PropertyFormModels(
         ) const;
 
-        TSharedPtr<Gs2::Formation::Domain::Model::FFormModelDomain> FormModel(
-            const FString FormModelName
+        TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelDomain> PropertyFormModel(
+            const FString PropertyFormModelName
         ) const;
 
         TSharedPtr<Gs2::Formation::Domain::Model::FUserDomain> User(
@@ -269,6 +298,13 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        ) const;
+
+        Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelMastersIteratorPtr PropertyFormModelMasters(
+        ) const;
+
+        TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain> PropertyFormModelMaster(
+            const FString PropertyFormModelName
         ) const;
 
         Gs2::Formation::Domain::Iterator::FDescribeFormModelMastersIteratorPtr FormModelMasters(
@@ -282,7 +318,7 @@ namespace Gs2::Formation::Domain::Model
         ) const;
 
         TSharedPtr<Gs2::Formation::Domain::Model::FMoldModelMasterDomain> MoldModelMaster(
-            const FString MoldName
+            const FString MoldModelName
         ) const;
 
         static FString CreateCacheParentKey(

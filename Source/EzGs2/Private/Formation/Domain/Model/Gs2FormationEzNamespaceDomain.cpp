@@ -51,33 +51,33 @@ namespace Gs2::UE5::Formation::Domain::Model
     }
 
     Gs2::UE5::Formation::Domain::Model::FEzMoldModelDomainPtr FEzNamespaceDomain::MoldModel(
-        const FString MoldName
+        const FString MoldModelName
     ) const
     {
         return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzMoldModelDomain>(
             Domain->MoldModel(
-                MoldName
+                MoldModelName
             ),
             ProfileValue
         );
     }
 
-    Gs2::UE5::Formation::Domain::Iterator::FEzDescribeFormModelsIteratorPtr FEzNamespaceDomain::FormModels(
+    Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormModelsIteratorPtr FEzNamespaceDomain::PropertyFormModels(
     ) const
     {
-        return MakeShared<Gs2::UE5::Formation::Domain::Iterator::FEzDescribeFormModelsIterator>(
-            Domain->FormModels(
+        return MakeShared<Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormModelsIterator>(
+            Domain->PropertyFormModels(
             )
         );
     }
 
-    Gs2::UE5::Formation::Domain::Model::FEzFormModelDomainPtr FEzNamespaceDomain::FormModel(
-        const FString FormModelName
+    Gs2::UE5::Formation::Domain::Model::FEzPropertyFormModelDomainPtr FEzNamespaceDomain::PropertyFormModel(
+        const FString PropertyFormModelName
     ) const
     {
-        return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzFormModelDomain>(
-            Domain->FormModel(
-                FormModelName
+        return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormModelDomain>(
+            Domain->PropertyFormModel(
+                PropertyFormModelName
             ),
             ProfileValue
         );

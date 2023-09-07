@@ -71,7 +71,11 @@ namespace Gs2::Dictionary::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        EntryName(From.EntryName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -215,7 +219,7 @@ namespace Gs2::Dictionary::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (EntryName.IsSet() ? *EntryName : "null") + ":" +
@@ -226,7 +230,7 @@ namespace Gs2::Dictionary::Domain::Model
         TOptional<FString> EntryName
     )
     {
-        return FString() +
+        return FString("") +
             (EntryName.IsSet() ? *EntryName : "null");
     }
 

@@ -20,6 +20,7 @@
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Model/Gs2FormationEzFormModel.h"
 #include "Formation/Model/Gs2FormationEzMoldModel.h"
+#include "Formation/Model/Gs2FormationEzPropertyFormModel.h"
 #include "Formation/Model/Gs2FormationEzMold.h"
 #include "Formation/Model/Gs2FormationEzForm.h"
 #include "Formation/Model/Gs2FormationEzPropertyForm.h"
@@ -59,11 +60,11 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
 
         Gs2::UE5::Formation::Domain::Model::FEzMoldDomainPtr Mold(
-            const FString MoldName
+            const FString MoldModelName
         ) const;
 
         Gs2::UE5::Formation::Domain::Model::FEzPropertyFormDomainPtr PropertyForm(
-            const FString FormModelName,
+            const FString PropertyFormModelName,
             const FString PropertyId
         ) const;
 

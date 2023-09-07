@@ -20,6 +20,7 @@
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Model/Gs2FormationEzFormModel.h"
 #include "Formation/Model/Gs2FormationEzMoldModel.h"
+#include "Formation/Model/Gs2FormationEzPropertyFormModel.h"
 #include "Formation/Model/Gs2FormationEzMold.h"
 #include "Formation/Model/Gs2FormationEzForm.h"
 #include "Formation/Model/Gs2FormationEzPropertyForm.h"
@@ -29,6 +30,7 @@
 #include "Formation/Model/Gs2FormationEzAcquireActionConfig.h"
 #include "Formation/Model/Gs2FormationEzConfig.h"
 #include "Formation/Model/Gs2FormationEzAcquireAction.h"
+#include "Gs2FormationEzFormModelDomain.h"
 #include "Gs2FormationEzMoldModelDomain.h"
 #include "Formation/Domain/Iterator/Gs2FormationEzDescribeMoldModelsIterator.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
@@ -45,7 +47,7 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         public:
         TOptional<FString> NamespaceName() const;
-        TOptional<FString> MoldName() const;
+        TOptional<FString> MoldModelName() const;
 
         FEzMoldModelDomain(
             Gs2::Formation::Domain::Model::FMoldModelDomainPtr Domain,
@@ -71,6 +73,10 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         TSharedPtr<FAsyncTask<FGetMoldModelTask>> GetMoldModel(
         );
+
+        Gs2::UE5::Formation::Domain::Model::FEzFormModelDomainPtr FormModel(
+            const FString FormModelName
+        ) const;
 
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzMoldModel>,

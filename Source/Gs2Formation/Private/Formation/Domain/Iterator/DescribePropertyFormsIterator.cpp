@@ -36,14 +36,14 @@ namespace Gs2::Formation::Domain::Iterator
         const Gs2::Formation::FGs2FormationRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-        const TOptional<FString> FormModelName
+        const TOptional<FString> PropertyFormModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
-        FormModelName(FormModelName)
+        PropertyFormModelName(PropertyFormModelName)
     {
     }
 
@@ -94,7 +94,7 @@ namespace Gs2::Formation::Domain::Iterator
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Formation::Model::FPropertyFormPtr& Item) { return Self->FormModelName && Item->GetName() != Self->FormModelName; });
+                    Range->RemoveAll([this](const Gs2::Formation::Model::FPropertyFormPtr& Item) { return Self->PropertyFormModelName && Item->GetName() != Self->PropertyFormModelName; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -107,7 +107,7 @@ namespace Gs2::Formation::Domain::Iterator
                 MakeShared<Gs2::Formation::Request::FDescribePropertyFormsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                    ->WithFormModelName(Self->FormModelName)
+                    ->WithPropertyFormModelName(Self->PropertyFormModelName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );

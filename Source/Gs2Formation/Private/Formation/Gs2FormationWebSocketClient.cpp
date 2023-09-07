@@ -73,15 +73,6 @@ namespace Gs2::Formation
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeFormModelsTask>> FGs2FormationWebSocketClient::DescribeFormModels(
-        const Request::FDescribeFormModelsRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeFormModelsTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetFormModelTask>> FGs2FormationWebSocketClient::GetFormModel(
         const Request::FGetFormModelRequestPtr Request) const
     {
@@ -194,6 +185,69 @@ namespace Gs2::Formation
         const Request::FDeleteMoldModelMasterRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteMoldModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePropertyFormModelsTask>> FGs2FormationWebSocketClient::DescribePropertyFormModels(
+        const Request::FDescribePropertyFormModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribePropertyFormModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetPropertyFormModelTask>> FGs2FormationWebSocketClient::GetPropertyFormModel(
+        const Request::FGetPropertyFormModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetPropertyFormModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePropertyFormModelMastersTask>> FGs2FormationWebSocketClient::DescribePropertyFormModelMasters(
+        const Request::FDescribePropertyFormModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribePropertyFormModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreatePropertyFormModelMasterTask>> FGs2FormationWebSocketClient::CreatePropertyFormModelMaster(
+        const Request::FCreatePropertyFormModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreatePropertyFormModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetPropertyFormModelMasterTask>> FGs2FormationWebSocketClient::GetPropertyFormModelMaster(
+        const Request::FGetPropertyFormModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetPropertyFormModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdatePropertyFormModelMasterTask>> FGs2FormationWebSocketClient::UpdatePropertyFormModelMaster(
+        const Request::FUpdatePropertyFormModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdatePropertyFormModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePropertyFormModelMasterTask>> FGs2FormationWebSocketClient::DeletePropertyFormModelMaster(
+        const Request::FDeletePropertyFormModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeletePropertyFormModelMasterTask>>(
             Session,
             Request
         );

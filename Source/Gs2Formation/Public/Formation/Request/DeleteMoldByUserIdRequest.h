@@ -27,7 +27,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
-        TOptional<FString> MoldNameValue;
+        TOptional<FString> MoldModelNameValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -41,13 +41,13 @@ namespace Gs2::Formation::Request
         TSharedPtr<FDeleteMoldByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDeleteMoldByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteMoldByUserIdRequest> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FDeleteMoldByUserIdRequest> WithMoldName(const TOptional<FString> MoldName);
+        TSharedPtr<FDeleteMoldByUserIdRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FDeleteMoldByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
-        TOptional<FString> GetMoldName() const;
+        TOptional<FString> GetMoldModelName() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteMoldByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -78,7 +78,12 @@ namespace Gs2::Enchant::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        ParameterName(From.ParameterName),
+        PropertyId(From.PropertyId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -157,7 +162,7 @@ namespace Gs2::Enchant::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (ParameterName.IsSet() ? *ParameterName : "null") + ":" +
@@ -170,7 +175,7 @@ namespace Gs2::Enchant::Domain::Model
         TOptional<FString> PropertyId
     )
     {
-        return FString() +
+        return FString("") +
             (ParameterName.IsSet() ? *ParameterName : "null") + ":" + 
             (PropertyId.IsSet() ? *PropertyId : "null");
     }

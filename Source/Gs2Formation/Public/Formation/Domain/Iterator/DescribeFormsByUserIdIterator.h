@@ -31,7 +31,7 @@ namespace Gs2::Formation::Domain::Iterator
         const Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Formation::FGs2FormationRestClientPtr Client;
         const TOptional<FString> NamespaceName;
-        const TOptional<FString> MoldName;
+        const TOptional<FString> MoldModelName;
         const TOptional<FString> UserId;
 
     public:
@@ -39,7 +39,7 @@ namespace Gs2::Formation::Domain::Iterator
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Formation::FGs2FormationRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> MoldName,
+            const TOptional<FString> MoldModelName,
             const TOptional<FString> UserId
         );
 

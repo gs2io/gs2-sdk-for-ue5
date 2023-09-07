@@ -29,6 +29,8 @@
 #include "Formation/Domain/Model/FormModelMaster.h"
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Domain/Model/MoldModelMaster.h"
+#include "Formation/Domain/Model/PropertyFormModel.h"
+#include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/CurrentFormMaster.h"
 #include "Formation/Domain/Model/Mold.h"
 #include "Formation/Domain/Model/MoldAccessToken.h"
@@ -75,7 +77,10 @@ namespace Gs2::Formation::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -92,7 +97,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain> FUserAccessTokenDomain::Mold(
-        const FString MoldName
+        const FString MoldModelName
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain>(
@@ -102,12 +107,12 @@ namespace Gs2::Formation::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            MoldName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldName)
+            MoldModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldModelName)
         );
     }
 
     Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIteratorPtr FUserAccessTokenDomain::PropertyForms(
-        const FString FormModelName
+        const FString PropertyFormModelName
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIterator>(
@@ -115,12 +120,12 @@ namespace Gs2::Formation::Domain::Model
             Client,
             NamespaceName,
             AccessToken,
-            FormModelName
+            PropertyFormModelName
         );
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomain> FUserAccessTokenDomain::PropertyForm(
-        const FString FormModelName,
+        const FString PropertyFormModelName,
         const FString PropertyId
     ) const
     {
@@ -131,7 +136,7 @@ namespace Gs2::Formation::Domain::Model
             Session,
             NamespaceName,
             AccessToken,
-            FormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(FormModelName),
+            PropertyFormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyFormModelName),
             PropertyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyId)
         );
     }
@@ -142,7 +147,7 @@ namespace Gs2::Formation::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
@@ -152,7 +157,7 @@ namespace Gs2::Formation::Domain::Model
         TOptional<FString> UserId
     )
     {
-        return FString() +
+        return FString("") +
             (UserId.IsSet() ? *UserId : "null");
     }
 }

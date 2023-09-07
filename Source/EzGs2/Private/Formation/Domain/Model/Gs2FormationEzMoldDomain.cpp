@@ -44,9 +44,9 @@ namespace Gs2::UE5::Formation::Domain::Model
         return Domain->UserId;
     }
 
-    TOptional<FString> FEzMoldDomain::MoldName() const
+    TOptional<FString> FEzMoldDomain::MoldModelName() const
     {
-        return Domain->MoldName;
+        return Domain->MoldModelName;
     }
 
     FEzMoldDomain::FEzMoldDomain(

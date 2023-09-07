@@ -20,6 +20,7 @@
 #include "Formation/Domain/Model/Namespace.h"
 #include "Formation/Model/Gs2FormationEzFormModel.h"
 #include "Formation/Model/Gs2FormationEzMoldModel.h"
+#include "Formation/Model/Gs2FormationEzPropertyFormModel.h"
 #include "Formation/Model/Gs2FormationEzMold.h"
 #include "Formation/Model/Gs2FormationEzForm.h"
 #include "Formation/Model/Gs2FormationEzPropertyForm.h"
@@ -31,8 +32,8 @@
 #include "Formation/Model/Gs2FormationEzAcquireAction.h"
 #include "Gs2FormationEzMoldModelDomain.h"
 #include "Formation/Domain/Iterator/Gs2FormationEzDescribeMoldModelsIterator.h"
-#include "Gs2FormationEzFormModelDomain.h"
-#include "Formation/Domain/Iterator/Gs2FormationEzDescribeFormModelsIterator.h"
+#include "Gs2FormationEzPropertyFormModelDomain.h"
+#include "Formation/Domain/Iterator/Gs2FormationEzDescribePropertyFormModelsIterator.h"
 #include "Gs2FormationEzUserDomain.h"
 #include "Gs2FormationEzUserDomain.h"
 #include "Gs2FormationEzUserGameSessionDomain.h"
@@ -63,14 +64,14 @@ namespace Gs2::UE5::Formation::Domain::Model
         ) const;
 
         Gs2::UE5::Formation::Domain::Model::FEzMoldModelDomainPtr MoldModel(
-            const FString MoldName
+            const FString MoldModelName
         ) const;
 
-        Gs2::UE5::Formation::Domain::Iterator::FEzDescribeFormModelsIteratorPtr FormModels(
+        Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormModelsIteratorPtr PropertyFormModels(
         ) const;
 
-        Gs2::UE5::Formation::Domain::Model::FEzFormModelDomainPtr FormModel(
-            const FString FormModelName
+        Gs2::UE5::Formation::Domain::Model::FEzPropertyFormModelDomainPtr PropertyFormModel(
+            const FString PropertyFormModelName
         ) const;
 
         Gs2::UE5::Formation::Domain::Model::FEzUserDomainPtr User(

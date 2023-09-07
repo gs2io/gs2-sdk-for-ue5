@@ -28,7 +28,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
-        TOptional<FString> FormModelNameValue;
+        TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> SlotsValue;
         TOptional<FString> DuplicationAvoiderValue;
@@ -44,7 +44,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FSetPropertyFormByUserIdRequest> WithFormModelName(const TOptional<FString> FormModelName);
+        TSharedPtr<FSetPropertyFormByUserIdRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithSlots(const TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> Slots);
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
@@ -52,7 +52,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
-        TOptional<FString> GetFormModelName() const;
+        TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> GetSlots() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

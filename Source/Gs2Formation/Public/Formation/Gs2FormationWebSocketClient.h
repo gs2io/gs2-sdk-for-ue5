@@ -30,8 +30,6 @@
 #include "Task/WebSocket/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
-#include "Request/DescribeFormModelsRequest.h"
-#include "Task/WebSocket/DescribeFormModelsTask.h"
 #include "Request/GetFormModelRequest.h"
 #include "Task/WebSocket/GetFormModelTask.h"
 #include "Request/DescribeFormModelMastersRequest.h"
@@ -58,6 +56,20 @@
 #include "Task/WebSocket/UpdateMoldModelMasterTask.h"
 #include "Request/DeleteMoldModelMasterRequest.h"
 #include "Task/WebSocket/DeleteMoldModelMasterTask.h"
+#include "Request/DescribePropertyFormModelsRequest.h"
+#include "Task/WebSocket/DescribePropertyFormModelsTask.h"
+#include "Request/GetPropertyFormModelRequest.h"
+#include "Task/WebSocket/GetPropertyFormModelTask.h"
+#include "Request/DescribePropertyFormModelMastersRequest.h"
+#include "Task/WebSocket/DescribePropertyFormModelMastersTask.h"
+#include "Request/CreatePropertyFormModelMasterRequest.h"
+#include "Task/WebSocket/CreatePropertyFormModelMasterTask.h"
+#include "Request/GetPropertyFormModelMasterRequest.h"
+#include "Task/WebSocket/GetPropertyFormModelMasterTask.h"
+#include "Request/UpdatePropertyFormModelMasterRequest.h"
+#include "Task/WebSocket/UpdatePropertyFormModelMasterTask.h"
+#include "Request/DeletePropertyFormModelMasterRequest.h"
+#include "Task/WebSocket/DeletePropertyFormModelMasterTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentFormMasterRequest.h"
@@ -174,10 +186,6 @@ namespace Gs2::Formation
             const Request::FDeleteNamespaceRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeFormModelsTask>> DescribeFormModels(
-            const Request::FDescribeFormModelsRequestPtr Request
-        ) const;
-
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetFormModelTask>> GetFormModel(
             const Request::FGetFormModelRequestPtr Request
         ) const;
@@ -228,6 +236,34 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteMoldModelMasterTask>> DeleteMoldModelMaster(
             const Request::FDeleteMoldModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePropertyFormModelsTask>> DescribePropertyFormModels(
+            const Request::FDescribePropertyFormModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetPropertyFormModelTask>> GetPropertyFormModel(
+            const Request::FGetPropertyFormModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePropertyFormModelMastersTask>> DescribePropertyFormModelMasters(
+            const Request::FDescribePropertyFormModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreatePropertyFormModelMasterTask>> CreatePropertyFormModelMaster(
+            const Request::FCreatePropertyFormModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetPropertyFormModelMasterTask>> GetPropertyFormModelMaster(
+            const Request::FGetPropertyFormModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdatePropertyFormModelMasterTask>> UpdatePropertyFormModelMaster(
+            const Request::FUpdatePropertyFormModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePropertyFormModelMasterTask>> DeletePropertyFormModelMaster(
+            const Request::FDeletePropertyFormModelMasterRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

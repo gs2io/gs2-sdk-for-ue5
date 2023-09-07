@@ -21,7 +21,7 @@ namespace Gs2::Formation::Request
     FAcquireActionsToFormPropertiesRequest::FAcquireActionsToFormPropertiesRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        MoldNameValue(TOptional<FString>()),
+        MoldModelNameValue(TOptional<FString>()),
         IndexValue(TOptional<int32>()),
         AcquireActionValue(nullptr),
         ConfigValue(nullptr)
@@ -33,7 +33,7 @@ namespace Gs2::Formation::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        MoldNameValue(From.MoldNameValue),
+        MoldModelNameValue(From.MoldModelNameValue),
         IndexValue(From.IndexValue),
         AcquireActionValue(From.AcquireActionValue),
         ConfigValue(From.ConfigValue)
@@ -64,11 +64,11 @@ namespace Gs2::Formation::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FAcquireActionsToFormPropertiesRequest> FAcquireActionsToFormPropertiesRequest::WithMoldName(
-        const TOptional<FString> MoldName
+    TSharedPtr<FAcquireActionsToFormPropertiesRequest> FAcquireActionsToFormPropertiesRequest::WithMoldModelName(
+        const TOptional<FString> MoldModelName
     )
     {
-        this->MoldNameValue = MoldName;
+        this->MoldModelNameValue = MoldModelName;
         return SharedThis(this);
     }
 
@@ -119,9 +119,9 @@ namespace Gs2::Formation::Request
         return UserIdValue;
     }
 
-    TOptional<FString> FAcquireActionsToFormPropertiesRequest::GetMoldName() const
+    TOptional<FString> FAcquireActionsToFormPropertiesRequest::GetMoldModelName() const
     {
-        return MoldNameValue;
+        return MoldModelNameValue;
     }
 
     TOptional<int32> FAcquireActionsToFormPropertiesRequest::GetIndex() const
@@ -186,10 +186,10 @@ namespace Gs2::Formation::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithMoldName(Data->HasField("moldName") ? [Data]() -> TOptional<FString>
+            ->WithMoldModelName(Data->HasField("moldModelName") ? [Data]() -> TOptional<FString>
               {
                   FString v;
-                    if (Data->TryGetStringField("moldName", v))
+                    if (Data->TryGetStringField("moldModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -242,9 +242,9 @@ namespace Gs2::Formation::Request
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
         }
-        if (MoldNameValue.IsSet())
+        if (MoldModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("moldName", MoldNameValue.GetValue());
+            JsonRootObject->SetStringField("moldModelName", MoldModelNameValue.GetValue());
         }
         if (IndexValue.IsSet())
         {

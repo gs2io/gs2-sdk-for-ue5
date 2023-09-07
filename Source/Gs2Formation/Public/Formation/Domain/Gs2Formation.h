@@ -29,6 +29,8 @@
 #include "Formation/Domain/Model/FormModelMaster.h"
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Domain/Model/MoldModelMaster.h"
+#include "Formation/Domain/Model/PropertyFormModel.h"
+#include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/CurrentFormMaster.h"
 #include "Formation/Domain/Model/Mold.h"
 #include "Formation/Domain/Model/MoldAccessToken.h"
@@ -41,10 +43,11 @@
 
 // Iterator
 #include "Formation/Domain/Iterator/DescribeNamespacesIterator.h"
-#include "Formation/Domain/Iterator/DescribeFormModelsIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelsIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelMastersIterator.h"
+#include "Formation/Domain/Iterator/DescribePropertyFormModelsIterator.h"
+#include "Formation/Domain/Iterator/DescribePropertyFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldsIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldsByUserIdIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormsIterator.h"

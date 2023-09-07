@@ -28,6 +28,8 @@
 #include "Formation/Domain/Model/FormModelMaster.h"
 #include "Formation/Domain/Model/MoldModel.h"
 #include "Formation/Domain/Model/MoldModelMaster.h"
+#include "Formation/Domain/Model/PropertyFormModel.h"
+#include "Formation/Domain/Model/PropertyFormModelMaster.h"
 #include "Formation/Domain/Model/CurrentFormMaster.h"
 #include "Formation/Domain/Model/Mold.h"
 #include "Formation/Domain/Model/MoldAccessToken.h"
@@ -69,7 +71,9 @@ namespace Gs2::Formation::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -289,6 +293,76 @@ namespace Gs2::Formation::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FCreatePropertyFormModelMasterTask::FCreatePropertyFormModelMasterTask(
+        const TSharedPtr<FNamespaceDomain> Self,
+        const Request::FCreatePropertyFormModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreatePropertyFormModelMasterTask::FCreatePropertyFormModelMasterTask(
+        const FCreatePropertyFormModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreatePropertyFormModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreatePropertyFormModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "PropertyFormModelMaster"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Put(
+                    Gs2::Formation::Model::FPropertyFormModelMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>(
+            Self->Cache,
+            Self->JobQueueDomain,
+            Self->StampSheetConfiguration,
+            Self->Session,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreatePropertyFormModelMasterTask>> FNamespaceDomain::CreatePropertyFormModelMaster(
+        Request::FCreatePropertyFormModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreatePropertyFormModelMasterTask>>(this->AsShared(), Request);
+    }
+
     FNamespaceDomain::FCreateFormModelMasterTask::FCreateFormModelMasterTask(
         const TSharedPtr<FNamespaceDomain> Self,
         const Request::FCreateFormModelMasterRequestPtr Request
@@ -452,7 +526,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldModelDomain> FNamespaceDomain::MoldModel(
-        const FString MoldName
+        const FString MoldModelName
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FMoldModelDomain>(
@@ -461,31 +535,31 @@ namespace Gs2::Formation::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            MoldName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldName)
+            MoldModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldModelName)
         );
     }
 
-    Gs2::Formation::Domain::Iterator::FDescribeFormModelsIteratorPtr FNamespaceDomain::FormModels(
+    Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelsIteratorPtr FNamespaceDomain::PropertyFormModels(
     ) const
     {
-        return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeFormModelsIterator>(
+        return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelsIterator>(
             Cache,
             Client,
             NamespaceName
         );
     }
 
-    TSharedPtr<Gs2::Formation::Domain::Model::FFormModelDomain> FNamespaceDomain::FormModel(
-        const FString FormModelName
+    TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelDomain> FNamespaceDomain::PropertyFormModel(
+        const FString PropertyFormModelName
     ) const
     {
-        return MakeShared<Gs2::Formation::Domain::Model::FFormModelDomain>(
+        return MakeShared<Gs2::Formation::Domain::Model::FPropertyFormModelDomain>(
             Cache,
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            FormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(FormModelName)
+            PropertyFormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyFormModelName)
         );
     }
 
@@ -514,6 +588,30 @@ namespace Gs2::Formation::Domain::Model
             Session,
             NamespaceName,
             AccessToken
+        );
+    }
+
+    Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelMastersIteratorPtr FNamespaceDomain::PropertyFormModelMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelMastersIterator>(
+            Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain> FNamespaceDomain::PropertyFormModelMaster(
+        const FString PropertyFormModelName
+    ) const
+    {
+        return MakeShared<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>(
+            Cache,
+            JobQueueDomain,
+            StampSheetConfiguration,
+            Session,
+            NamespaceName,
+            PropertyFormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyFormModelName)
         );
     }
 
@@ -552,7 +650,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldModelMasterDomain> FNamespaceDomain::MoldModelMaster(
-        const FString MoldName
+        const FString MoldModelName
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FMoldModelMasterDomain>(
@@ -561,7 +659,7 @@ namespace Gs2::Formation::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            MoldName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldName)
+            MoldModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldModelName)
         );
     }
 
@@ -570,7 +668,7 @@ namespace Gs2::Formation::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             ChildType;
     }
@@ -579,7 +677,7 @@ namespace Gs2::Formation::Domain::Model
         TOptional<FString> NamespaceName
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null");
     }
 

@@ -16,16 +16,16 @@
 
 #include "BpGs2/Public/Formation/Model/Gs2FormationNamespace.h"
 #include "BpGs2/Public/Formation/Model/Gs2FormationMoldModel.h"
-#include "BpGs2/Public/Formation/Model/Gs2FormationFormModel.h"
+#include "BpGs2/Public/Formation/Model/Gs2FormationPropertyFormModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Formation/Model/Gs2FormationMoldModel.h"
-#include "Formation/Model/Gs2FormationFormModel.h"
+#include "Formation/Model/Gs2FormationPropertyFormModel.h"
 #include "Formation/Model/Gs2FormationUser.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2FormationMoldModel UGs2FormationNamespaceFunctionLibrary::MoldModel(
     FGs2FormationNamespace Namespace,
-    FString MoldName
+    FString MoldModelName
 )
 {
     FGs2FormationMoldModel Return;
@@ -33,32 +33,32 @@ FGs2FormationMoldModel UGs2FormationNamespaceFunctionLibrary::MoldModel(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationNamespaceFunctionLibrary::MoldModel] Namespace parameter specification is missing."))
         return Return;
     }
-    if (MoldName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationNamespaceFunctionLibrary::MoldModel] MoldName parameter specification is missing."))
+    if (MoldModelName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationNamespaceFunctionLibrary::MoldModel] MoldModelName parameter specification is missing."))
         return Return;
     }
     Return.Value = Namespace.Value->MoldModel(
-        MoldName
+        MoldModelName
     );
     return Return;
 }
 
-FGs2FormationFormModel UGs2FormationNamespaceFunctionLibrary::FormModel(
+FGs2FormationPropertyFormModel UGs2FormationNamespaceFunctionLibrary::PropertyFormModel(
     FGs2FormationNamespace Namespace,
-    FString FormModelName
+    FString PropertyFormModelName
 )
 {
-    FGs2FormationFormModel Return;
+    FGs2FormationPropertyFormModel Return;
     if (Namespace.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationNamespaceFunctionLibrary::FormModel] Namespace parameter specification is missing."))
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationNamespaceFunctionLibrary::PropertyFormModel] Namespace parameter specification is missing."))
         return Return;
     }
-    if (FormModelName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationNamespaceFunctionLibrary::FormModel] FormModelName parameter specification is missing."))
+    if (PropertyFormModelName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationNamespaceFunctionLibrary::PropertyFormModel] PropertyFormModelName parameter specification is missing."))
         return Return;
     }
-    Return.Value = Namespace.Value->FormModel(
-        FormModelName
+    Return.Value = Namespace.Value->PropertyFormModel(
+        PropertyFormModelName
     );
     return Return;
 }

@@ -27,7 +27,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
-        TOptional<FString> FormModelNameValue;
+        TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -42,14 +42,14 @@ namespace Gs2::Formation::Request
         TSharedPtr<FDeletePropertyFormRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDeletePropertyFormRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeletePropertyFormRequest> WithAccessToken(const TOptional<FString> AccessToken);
-        TSharedPtr<FDeletePropertyFormRequest> WithFormModelName(const TOptional<FString> FormModelName);
+        TSharedPtr<FDeletePropertyFormRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FDeletePropertyFormRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FDeletePropertyFormRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
-        TOptional<FString> GetFormModelName() const;
+        TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

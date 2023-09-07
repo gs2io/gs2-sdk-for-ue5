@@ -28,7 +28,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
-        TOptional<FString> MoldNameValue;
+        TOptional<FString> MoldModelNameValue;
         TOptional<int32> IndexValue;
         TSharedPtr<TArray<TSharedPtr<Model::FSlotWithSignature>>> SlotsValue;
         TOptional<FString> KeyIdValue;
@@ -45,7 +45,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FSetFormWithSignatureRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FSetFormWithSignatureRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSetFormWithSignatureRequest> WithAccessToken(const TOptional<FString> AccessToken);
-        TSharedPtr<FSetFormWithSignatureRequest> WithMoldName(const TOptional<FString> MoldName);
+        TSharedPtr<FSetFormWithSignatureRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FSetFormWithSignatureRequest> WithIndex(const TOptional<int32> Index);
         TSharedPtr<FSetFormWithSignatureRequest> WithSlots(const TSharedPtr<TArray<TSharedPtr<Model::FSlotWithSignature>>> Slots);
         TSharedPtr<FSetFormWithSignatureRequest> WithKeyId(const TOptional<FString> KeyId);
@@ -54,7 +54,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
-        TOptional<FString> GetMoldName() const;
+        TOptional<FString> GetMoldModelName() const;
         TOptional<int32> GetIndex() const;
         FString GetIndexString() const;TSharedPtr<TArray<TSharedPtr<Model::FSlotWithSignature>>> GetSlots() const;
         TOptional<FString> GetKeyId() const;

@@ -52,25 +52,25 @@ namespace Gs2::UE5::Formation::Domain::Model
     }
 
     Gs2::UE5::Formation::Domain::Model::FEzMoldDomainPtr FEzUserDomain::Mold(
-        const FString MoldName
+        const FString MoldModelName
     ) const
     {
         return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzMoldDomain>(
             Domain->Mold(
-                MoldName
+                MoldModelName
             ),
             ProfileValue
         );
     }
 
     Gs2::UE5::Formation::Domain::Model::FEzPropertyFormDomainPtr FEzUserDomain::PropertyForm(
-        const FString FormModelName,
+        const FString PropertyFormModelName,
         const FString PropertyId
     ) const
     {
         return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormDomain>(
             Domain->PropertyForm(
-                FormModelName,
+                PropertyFormModelName,
                 PropertyId
             ),
             ProfileValue

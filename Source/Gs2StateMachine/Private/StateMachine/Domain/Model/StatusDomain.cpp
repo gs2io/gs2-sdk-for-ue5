@@ -69,7 +69,11 @@ namespace Gs2::StateMachine::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        StatusName(From.StatusName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -331,7 +335,7 @@ namespace Gs2::StateMachine::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (StatusName.IsSet() ? *StatusName : "null") + ":" +
@@ -342,7 +346,7 @@ namespace Gs2::StateMachine::Domain::Model
         TOptional<FString> StatusName
     )
     {
-        return FString() +
+        return FString("") +
             (StatusName.IsSet() ? *StatusName : "null");
     }
 

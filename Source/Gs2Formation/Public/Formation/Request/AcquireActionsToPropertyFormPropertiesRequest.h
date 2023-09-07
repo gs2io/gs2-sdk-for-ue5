@@ -29,7 +29,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
-        TOptional<FString> FormModelNameValue;
+        TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
         TSharedPtr<Model::FAcquireAction> AcquireActionValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> ConfigValue;
@@ -46,7 +46,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithFormModelName(const TOptional<FString> FormModelName);
+        TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithAcquireAction(const TSharedPtr<Model::FAcquireAction> AcquireAction);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> Config);
@@ -55,7 +55,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
-        TOptional<FString> GetFormModelName() const;
+        TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;
         TSharedPtr<Model::FAcquireAction> GetAcquireAction() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> GetConfig() const;
         TOptional<FString> GetDuplicationAvoider() const;

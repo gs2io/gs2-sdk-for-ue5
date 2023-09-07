@@ -21,7 +21,7 @@ namespace Gs2::Formation::Request
     FDeletePropertyFormByUserIdRequest::FDeletePropertyFormByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        FormModelNameValue(TOptional<FString>()),
+        PropertyFormModelNameValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>())
     {
     }
@@ -31,7 +31,7 @@ namespace Gs2::Formation::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        FormModelNameValue(From.FormModelNameValue),
+        PropertyFormModelNameValue(From.PropertyFormModelNameValue),
         PropertyIdValue(From.PropertyIdValue)
     {
     }
@@ -60,11 +60,11 @@ namespace Gs2::Formation::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FDeletePropertyFormByUserIdRequest> FDeletePropertyFormByUserIdRequest::WithFormModelName(
-        const TOptional<FString> FormModelName
+    TSharedPtr<FDeletePropertyFormByUserIdRequest> FDeletePropertyFormByUserIdRequest::WithPropertyFormModelName(
+        const TOptional<FString> PropertyFormModelName
     )
     {
-        this->FormModelNameValue = FormModelName;
+        this->PropertyFormModelNameValue = PropertyFormModelName;
         return SharedThis(this);
     }
 
@@ -99,9 +99,9 @@ namespace Gs2::Formation::Request
         return UserIdValue;
     }
 
-    TOptional<FString> FDeletePropertyFormByUserIdRequest::GetFormModelName() const
+    TOptional<FString> FDeletePropertyFormByUserIdRequest::GetPropertyFormModelName() const
     {
-        return FormModelNameValue;
+        return PropertyFormModelNameValue;
     }
 
     TOptional<FString> FDeletePropertyFormByUserIdRequest::GetPropertyId() const
@@ -139,10 +139,10 @@ namespace Gs2::Formation::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithFormModelName(Data->HasField("formModelName") ? [Data]() -> TOptional<FString>
+            ->WithPropertyFormModelName(Data->HasField("propertyFormModelName") ? [Data]() -> TOptional<FString>
               {
                   FString v;
-                    if (Data->TryGetStringField("formModelName", v))
+                    if (Data->TryGetStringField("propertyFormModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -175,9 +175,9 @@ namespace Gs2::Formation::Request
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
         }
-        if (FormModelNameValue.IsSet())
+        if (PropertyFormModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("formModelName", FormModelNameValue.GetValue());
+            JsonRootObject->SetStringField("propertyFormModelName", PropertyFormModelNameValue.GetValue());
         }
         if (PropertyIdValue.IsSet())
         {

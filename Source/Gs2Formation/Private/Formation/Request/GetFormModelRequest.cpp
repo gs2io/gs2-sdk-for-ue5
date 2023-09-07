@@ -20,6 +20,7 @@ namespace Gs2::Formation::Request
 {
     FGetFormModelRequest::FGetFormModelRequest():
         NamespaceNameValue(TOptional<FString>()),
+        MoldModelNameValue(TOptional<FString>()),
         FormModelNameValue(TOptional<FString>())
     {
     }
@@ -28,6 +29,7 @@ namespace Gs2::Formation::Request
         const FGetFormModelRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
+        MoldModelNameValue(From.MoldModelNameValue),
         FormModelNameValue(From.FormModelNameValue)
     {
     }
@@ -45,6 +47,14 @@ namespace Gs2::Formation::Request
     )
     {
         this->NamespaceNameValue = NamespaceName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FGetFormModelRequest> FGetFormModelRequest::WithMoldModelName(
+        const TOptional<FString> MoldModelName
+    )
+    {
+        this->MoldModelNameValue = MoldModelName;
         return SharedThis(this);
     }
 
@@ -66,6 +76,11 @@ namespace Gs2::Formation::Request
         return NamespaceNameValue;
     }
 
+    TOptional<FString> FGetFormModelRequest::GetMoldModelName() const
+    {
+        return MoldModelNameValue;
+    }
+
     TOptional<FString> FGetFormModelRequest::GetFormModelName() const
     {
         return FormModelNameValue;
@@ -82,6 +97,15 @@ namespace Gs2::Formation::Request
               {
                   FString v;
                     if (Data->TryGetStringField("namespaceName", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithMoldModelName(Data->HasField("moldModelName") ? [Data]() -> TOptional<FString>
+              {
+                  FString v;
+                    if (Data->TryGetStringField("moldModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -108,6 +132,10 @@ namespace Gs2::Formation::Request
         if (NamespaceNameValue.IsSet())
         {
             JsonRootObject->SetStringField("namespaceName", NamespaceNameValue.GetValue());
+        }
+        if (MoldModelNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("moldModelName", MoldModelNameValue.GetValue());
         }
         if (FormModelNameValue.IsSet())
         {

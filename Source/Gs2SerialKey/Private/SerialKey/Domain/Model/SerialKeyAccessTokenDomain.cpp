@@ -73,7 +73,11 @@ namespace Gs2::SerialKey::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        SerialKeyCode(From.SerialKeyCode),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -167,7 +171,7 @@ namespace Gs2::SerialKey::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (SerialKeyCode.IsSet() ? *SerialKeyCode : "null") + ":" +
@@ -178,7 +182,7 @@ namespace Gs2::SerialKey::Domain::Model
         TOptional<FString> SerialKeyCode
     )
     {
-        return FString() +
+        return FString("") +
             (SerialKeyCode.IsSet() ? *SerialKeyCode : "null");
     }
 

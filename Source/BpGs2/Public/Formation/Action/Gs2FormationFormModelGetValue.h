@@ -42,7 +42,7 @@ public:
 
     UGs2FormationFormModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Formation::Fetch::GetValueOfFormModel", Category="Game Server Services|GS2-Formation|Namespace|FormModel|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Formation::Fetch::GetValueOfFormModel", Category="Game Server Services|GS2-Formation|Namespace|MoldModel|FormModel|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2FormationFormModelGetValueAsyncFunction* FormModelGetValue(
         UObject* WorldContextObject,
         FGs2FormationFormModel FormModel

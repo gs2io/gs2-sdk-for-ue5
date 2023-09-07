@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/PropertyForm.h"
-#include "../Model/FormModel.h"
+#include "../Model/PropertyFormModel.h"
 
 namespace Gs2::Formation::Result
 {
@@ -27,7 +27,7 @@ namespace Gs2::Formation::Result
         TSharedPtr<Model::FPropertyForm> ItemValue;
         TOptional<FString> BodyValue;
         TOptional<FString> SignatureValue;
-        TSharedPtr<Model::FFormModel> FormModelValue;
+        TSharedPtr<Model::FPropertyFormModel> PropertyFormModelValue;
         
     public:
         
@@ -40,12 +40,12 @@ namespace Gs2::Formation::Result
         TSharedPtr<FGetPropertyFormWithSignatureResult> WithItem(const TSharedPtr<Model::FPropertyForm> Item);
         TSharedPtr<FGetPropertyFormWithSignatureResult> WithBody(const TOptional<FString> Body);
         TSharedPtr<FGetPropertyFormWithSignatureResult> WithSignature(const TOptional<FString> Signature);
-        TSharedPtr<FGetPropertyFormWithSignatureResult> WithFormModel(const TSharedPtr<Model::FFormModel> FormModel);
+        TSharedPtr<FGetPropertyFormWithSignatureResult> WithPropertyFormModel(const TSharedPtr<Model::FPropertyFormModel> PropertyFormModel);
 
         TSharedPtr<Model::FPropertyForm> GetItem() const;
         TOptional<FString> GetBody() const;
         TOptional<FString> GetSignature() const;
-        TSharedPtr<Model::FFormModel> GetFormModel() const;
+        TSharedPtr<Model::FPropertyFormModel> GetPropertyFormModel() const;
 
         static TSharedPtr<FGetPropertyFormWithSignatureResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

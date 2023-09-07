@@ -169,7 +169,7 @@ namespace Gs2::Formation::Model
 
     TOptional<FString> FPropertyForm::GetRegionFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<formModelName>.+):(?<propertyId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<propertyFormModelName>.+):(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -180,7 +180,7 @@ namespace Gs2::Formation::Model
 
     TOptional<FString> FPropertyForm::GetOwnerIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<formModelName>.+):(?<propertyId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<propertyFormModelName>.+):(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -191,7 +191,7 @@ namespace Gs2::Formation::Model
 
     TOptional<FString> FPropertyForm::GetNamespaceNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<formModelName>.+):(?<propertyId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<propertyFormModelName>.+):(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -202,7 +202,7 @@ namespace Gs2::Formation::Model
 
     TOptional<FString> FPropertyForm::GetUserIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<formModelName>.+):(?<propertyId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<propertyFormModelName>.+):(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -211,9 +211,9 @@ namespace Gs2::Formation::Model
         return TOptional<FString>();
     }
 
-    TOptional<FString> FPropertyForm::GetFormModelNameFromGrn(const FString Grn)
+    TOptional<FString> FPropertyForm::GetPropertyFormModelNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<formModelName>.+):(?<propertyId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<propertyFormModelName>.+):(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -224,7 +224,7 @@ namespace Gs2::Formation::Model
 
     TOptional<FString> FPropertyForm::GetPropertyIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<formModelName>.+):(?<propertyId>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):user:(?<userId>.+):propertyForm:(?<propertyFormModelName>.+):(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {

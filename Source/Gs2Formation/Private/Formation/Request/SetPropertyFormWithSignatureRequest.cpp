@@ -21,7 +21,7 @@ namespace Gs2::Formation::Request
     FSetPropertyFormWithSignatureRequest::FSetPropertyFormWithSignatureRequest():
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
-        FormModelNameValue(TOptional<FString>()),
+        PropertyFormModelNameValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
         SlotsValue(nullptr),
         KeyIdValue(TOptional<FString>())
@@ -33,7 +33,7 @@ namespace Gs2::Formation::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
-        FormModelNameValue(From.FormModelNameValue),
+        PropertyFormModelNameValue(From.PropertyFormModelNameValue),
         PropertyIdValue(From.PropertyIdValue),
         SlotsValue(From.SlotsValue),
         KeyIdValue(From.KeyIdValue)
@@ -64,11 +64,11 @@ namespace Gs2::Formation::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FSetPropertyFormWithSignatureRequest> FSetPropertyFormWithSignatureRequest::WithFormModelName(
-        const TOptional<FString> FormModelName
+    TSharedPtr<FSetPropertyFormWithSignatureRequest> FSetPropertyFormWithSignatureRequest::WithPropertyFormModelName(
+        const TOptional<FString> PropertyFormModelName
     )
     {
-        this->FormModelNameValue = FormModelName;
+        this->PropertyFormModelNameValue = PropertyFormModelName;
         return SharedThis(this);
     }
 
@@ -119,9 +119,9 @@ namespace Gs2::Formation::Request
         return AccessTokenValue;
     }
 
-    TOptional<FString> FSetPropertyFormWithSignatureRequest::GetFormModelName() const
+    TOptional<FString> FSetPropertyFormWithSignatureRequest::GetPropertyFormModelName() const
     {
-        return FormModelNameValue;
+        return PropertyFormModelNameValue;
     }
 
     TOptional<FString> FSetPropertyFormWithSignatureRequest::GetPropertyId() const
@@ -173,10 +173,10 @@ namespace Gs2::Formation::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithFormModelName(Data->HasField("formModelName") ? [Data]() -> TOptional<FString>
+            ->WithPropertyFormModelName(Data->HasField("propertyFormModelName") ? [Data]() -> TOptional<FString>
               {
                   FString v;
-                    if (Data->TryGetStringField("formModelName", v))
+                    if (Data->TryGetStringField("propertyFormModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
@@ -230,9 +230,9 @@ namespace Gs2::Formation::Request
         {
             JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
         }
-        if (FormModelNameValue.IsSet())
+        if (PropertyFormModelNameValue.IsSet())
         {
-            JsonRootObject->SetStringField("formModelName", FormModelNameValue.GetValue());
+            JsonRootObject->SetStringField("propertyFormModelName", PropertyFormModelNameValue.GetValue());
         }
         if (PropertyIdValue.IsSet())
         {

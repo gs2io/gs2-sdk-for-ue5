@@ -20,6 +20,7 @@
 #include "Formation/Domain/Model/FormModel.h"
 #include "Formation/Model/Gs2FormationEzFormModel.h"
 #include "Formation/Model/Gs2FormationEzMoldModel.h"
+#include "Formation/Model/Gs2FormationEzPropertyFormModel.h"
 #include "Formation/Model/Gs2FormationEzMold.h"
 #include "Formation/Model/Gs2FormationEzForm.h"
 #include "Formation/Model/Gs2FormationEzPropertyForm.h"
@@ -30,7 +31,6 @@
 #include "Formation/Model/Gs2FormationEzConfig.h"
 #include "Formation/Model/Gs2FormationEzAcquireAction.h"
 #include "Gs2FormationEzFormModelDomain.h"
-#include "Formation/Domain/Iterator/Gs2FormationEzDescribeFormModelsIterator.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
 
@@ -45,6 +45,7 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         public:
         TOptional<FString> NamespaceName() const;
+        TOptional<FString> MoldModelName() const;
         TOptional<FString> FormModelName() const;
 
         FEzFormModelDomain(

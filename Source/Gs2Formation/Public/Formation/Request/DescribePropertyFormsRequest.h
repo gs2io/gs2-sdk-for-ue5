@@ -27,7 +27,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
-        TOptional<FString> FormModelNameValue;
+        TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -42,14 +42,14 @@ namespace Gs2::Formation::Request
         TSharedPtr<FDescribePropertyFormsRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribePropertyFormsRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribePropertyFormsRequest> WithAccessToken(const TOptional<FString> AccessToken);
-        TSharedPtr<FDescribePropertyFormsRequest> WithFormModelName(const TOptional<FString> FormModelName);
+        TSharedPtr<FDescribePropertyFormsRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FDescribePropertyFormsRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribePropertyFormsRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
-        TOptional<FString> GetFormModelName() const;
+        TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;

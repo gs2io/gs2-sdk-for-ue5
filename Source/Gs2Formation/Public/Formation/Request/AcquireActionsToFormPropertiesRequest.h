@@ -29,7 +29,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
-        TOptional<FString> MoldNameValue;
+        TOptional<FString> MoldModelNameValue;
         TOptional<int32> IndexValue;
         TSharedPtr<Model::FAcquireAction> AcquireActionValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> ConfigValue;
@@ -46,7 +46,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithUserId(const TOptional<FString> UserId);
-        TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithMoldName(const TOptional<FString> MoldName);
+        TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithIndex(const TOptional<int32> Index);
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithAcquireAction(const TSharedPtr<Model::FAcquireAction> AcquireAction);
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> Config);
@@ -55,7 +55,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
-        TOptional<FString> GetMoldName() const;
+        TOptional<FString> GetMoldModelName() const;
         TOptional<int32> GetIndex() const;
         FString GetIndexString() const;
         TSharedPtr<Model::FAcquireAction> GetAcquireAction() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> GetConfig() const;
