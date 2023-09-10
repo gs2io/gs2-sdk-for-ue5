@@ -81,6 +81,9 @@ namespace Gs2::Inbox::Task::Rest
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
             }
+            if (this->Request->GetIsRead().IsSet()) {
+                queryStrings.Add("isRead=" + this->Request->GetIsReadString());
+            }
             if (this->Request->GetPageToken().IsSet()) {
                 queryStrings.Add("pageToken=" + FGenericPlatformHttp::UrlEncode(this->Request->GetPageToken().GetValue()));
             }

@@ -35,13 +35,15 @@ namespace Gs2::Inbox::Domain::Iterator
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Inbox::FGs2InboxRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const TOptional<bool> IsRead
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken)
+        AccessToken(AccessToken),
+        IsRead(IsRead)
     {
     }
 
@@ -92,6 +94,7 @@ namespace Gs2::Inbox::Domain::Iterator
 
                 if (Range)
                 {
+                    Range->RemoveAll([this](const Gs2::Inbox::Model::FMessagePtr& Item) { return Self->IsRead && Item->GetIsRead() != Self->IsRead; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -132,6 +135,10 @@ namespace Gs2::Inbox::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Inbox::Model::FMessagePtr& Item) { return Self->IsRead && Item->GetIsRead() != Self->IsRead; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

@@ -33,6 +33,7 @@ class BPGS2_API UGs2InboxListOfMessageAsyncFunction : public UBlueprintAsyncActi
     FGs2InboxOwnUser User;
 
 public:
+    bool IsRead;
 
     UPROPERTY(BlueprintAssignable)
     FGs2InboxListOfMessageSuccessDelegate OnSuccess;
@@ -45,7 +46,8 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Inbox::Fetch::ListOfMessage", Category="Game Server Services|GS2-Inbox|Namespace|User|Message|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2InboxListOfMessageAsyncFunction* ListOfMessage(
         UObject* WorldContextObject,
-        FGs2InboxOwnUser User
+        FGs2InboxOwnUser User,
+        bool IsRead
     );
 
     virtual void Activate() override;

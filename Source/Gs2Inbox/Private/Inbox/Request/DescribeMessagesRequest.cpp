@@ -21,6 +21,7 @@ namespace Gs2::Inbox::Request
     FDescribeMessagesRequest::FDescribeMessagesRequest():
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
+        IsReadValue(TOptional<bool>()),
         PageTokenValue(TOptional<FString>()),
         LimitValue(TOptional<int32>())
     {
@@ -31,6 +32,7 @@ namespace Gs2::Inbox::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
+        IsReadValue(From.IsReadValue),
         PageTokenValue(From.PageTokenValue),
         LimitValue(From.LimitValue)
     {
@@ -57,6 +59,14 @@ namespace Gs2::Inbox::Request
     )
     {
         this->AccessTokenValue = AccessToken;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeMessagesRequest> FDescribeMessagesRequest::WithIsRead(
+        const TOptional<bool> IsRead
+    )
+    {
+        this->IsReadValue = IsRead;
         return SharedThis(this);
     }
 
@@ -89,6 +99,20 @@ namespace Gs2::Inbox::Request
     TOptional<FString> FDescribeMessagesRequest::GetAccessToken() const
     {
         return AccessTokenValue;
+    }
+
+    TOptional<bool> FDescribeMessagesRequest::GetIsRead() const
+    {
+        return IsReadValue;
+    }
+
+    FString FDescribeMessagesRequest::GetIsReadString() const
+    {
+        if (!IsReadValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(IsReadValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FDescribeMessagesRequest::GetPageToken() const
@@ -135,6 +159,15 @@ namespace Gs2::Inbox::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithIsRead(Data->HasField("isRead") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("isRead", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
             ->WithPageToken(Data->HasField("pageToken") ? [Data]() -> TOptional<FString>
               {
                   FString v;
@@ -169,6 +202,10 @@ namespace Gs2::Inbox::Request
         if (AccessTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+        }
+        if (IsReadValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("isRead", IsReadValue.GetValue());
         }
         if (PageTokenValue.IsSet())
         {

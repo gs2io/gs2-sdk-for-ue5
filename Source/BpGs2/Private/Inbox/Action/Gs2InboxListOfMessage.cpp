@@ -27,7 +27,8 @@ UGs2InboxListOfMessageAsyncFunction::UGs2InboxListOfMessageAsyncFunction(
 
 UGs2InboxListOfMessageAsyncFunction* UGs2InboxListOfMessageAsyncFunction::ListOfMessage(
     UObject* WorldContextObject,
-    FGs2InboxOwnUser User
+    FGs2InboxOwnUser User,
+    bool IsRead
 )
 {
     UGs2InboxListOfMessageAsyncFunction* Action = NewObject<UGs2InboxListOfMessageAsyncFunction>();
@@ -37,6 +38,7 @@ UGs2InboxListOfMessageAsyncFunction* UGs2InboxListOfMessageAsyncFunction::ListOf
         return Action;
     }
     Action->User = User;
+    Action->IsRead = IsRead;
     return Action;
 }
 
@@ -50,6 +52,7 @@ void UGs2InboxListOfMessageAsyncFunction::Activate()
         return;
     }
     const auto It = User.Value->Messages(
+        IsRead
     );
     for (auto v : *It)
     {

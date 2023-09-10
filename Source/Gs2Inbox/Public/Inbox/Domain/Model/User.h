@@ -130,6 +130,7 @@ namespace Gs2::Inbox::Domain::Model
         );
 
         Gs2::Inbox::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr Messages(
+            const TOptional<bool> IsRead
         ) const;
 
         TSharedPtr<Gs2::Inbox::Domain::Model::FMessageDomain> Message(

@@ -67,6 +67,7 @@ namespace Gs2::UE5::Inbox::Domain::Model
         );
 
         Gs2::UE5::Inbox::Domain::Iterator::FEzDescribeMessagesIteratorPtr Messages(
+            const TOptional<bool> IsRead = TOptional<bool>()
         ) const;
 
         Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomainPtr Message(

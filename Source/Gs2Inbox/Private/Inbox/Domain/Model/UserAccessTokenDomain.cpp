@@ -184,13 +184,15 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     Gs2::Inbox::Domain::Iterator::FDescribeMessagesIteratorPtr FUserAccessTokenDomain::Messages(
+        const TOptional<bool> IsRead
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Iterator::FDescribeMessagesIterator>(
             Cache,
             Client,
             NamespaceName,
-            AccessToken
+            AccessToken,
+            IsRead
         );
     }
 

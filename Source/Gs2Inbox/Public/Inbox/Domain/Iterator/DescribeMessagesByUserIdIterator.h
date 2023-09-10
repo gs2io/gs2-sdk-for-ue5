@@ -32,13 +32,15 @@ namespace Gs2::Inbox::Domain::Iterator
         const Gs2::Inbox::FGs2InboxRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<bool> IsRead;
 
     public:
         FDescribeMessagesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Inbox::FGs2InboxRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<bool> IsRead
         );
 
         class FIterator;

@@ -256,13 +256,15 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     Gs2::Inbox::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr FUserDomain::Messages(
+        const TOptional<bool> IsRead
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Iterator::FDescribeMessagesByUserIdIterator>(
             Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            IsRead
         );
     }
 

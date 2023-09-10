@@ -94,10 +94,12 @@ namespace Gs2::UE5::Inbox::Domain::Model
     }
 
     Gs2::UE5::Inbox::Domain::Iterator::FEzDescribeMessagesIteratorPtr FEzUserGameSessionDomain::Messages(
+          const TOptional<bool> IsRead
     ) const
     {
         return MakeShared<Gs2::UE5::Inbox::Domain::Iterator::FEzDescribeMessagesIterator>(
             Domain->Messages(
+                IsRead
             )
         );
     }

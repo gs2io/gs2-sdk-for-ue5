@@ -27,6 +27,7 @@ namespace Gs2::Inbox::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<bool> IsReadValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
         
@@ -41,12 +42,15 @@ namespace Gs2::Inbox::Request
         TSharedPtr<FDescribeMessagesByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeMessagesByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribeMessagesByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDescribeMessagesByUserIdRequest> WithIsRead(const TOptional<bool> IsRead);
         TSharedPtr<FDescribeMessagesByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeMessagesByUserIdRequest> WithLimit(const TOptional<int32> Limit);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<bool> GetIsRead() const;
+        FString GetIsReadString() const;
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
