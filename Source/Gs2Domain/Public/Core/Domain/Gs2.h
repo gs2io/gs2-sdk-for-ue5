@@ -54,6 +54,7 @@
 #include "Script/Domain/Gs2Script.h"
 #include "SerialKey/Domain/Gs2SerialKey.h"
 #include "Showcase/Domain/Gs2Showcase.h"
+#include "SkillTree/Domain/Gs2SkillTree.h"
 #include "Stamina/Domain/Gs2Stamina.h"
 #include "StateMachine/Domain/Gs2StateMachine.h"
 #include "Version/Domain/Gs2Version.h"
@@ -108,6 +109,7 @@ namespace Gs2::Core::Domain
         const Gs2::Script::Domain::FGs2ScriptDomainPtr Script;
         const Gs2::SerialKey::Domain::FGs2SerialKeyDomainPtr SerialKey;
         const Gs2::Showcase::Domain::FGs2ShowcaseDomainPtr Showcase;
+        const Gs2::SkillTree::Domain::FGs2SkillTreeDomainPtr SkillTree;
         const Gs2::Stamina::Domain::FGs2StaminaDomainPtr Stamina;
         const Gs2::StateMachine::Domain::FGs2StateMachineDomainPtr StateMachine;
         const Gs2::Version::Domain::FGs2VersionDomainPtr Version;

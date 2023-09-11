@@ -53,6 +53,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2Script",
 			"Gs2SerialKey",
 			"Gs2Showcase",
+			"Gs2SkillTree",
 			"Gs2Stamina",
 			"Gs2StateMachine",
 			"Gs2Version",

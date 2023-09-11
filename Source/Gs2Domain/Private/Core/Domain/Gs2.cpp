@@ -104,6 +104,7 @@ namespace Gs2::Core::Domain
         Script(MakeShared<Script::Domain::FGs2ScriptDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         SerialKey(MakeShared<SerialKey::Domain::FGs2SerialKeyDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Showcase(MakeShared<Showcase::Domain::FGs2ShowcaseDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
+        SkillTree(MakeShared<SkillTree::Domain::FGs2SkillTreeDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Stamina(MakeShared<Stamina::Domain::FGs2StaminaDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         StateMachine(MakeShared<StateMachine::Domain::FGs2StateMachineDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Version(MakeShared<Version::Domain::FGs2VersionDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
@@ -267,6 +268,10 @@ namespace Gs2::Core::Domain
                     {
                         Showcase->HandleNotification(Method, *Message->GetPayload());
                     }
+                    if (Service == "Gs2SkillTree")
+                    {
+                        SkillTree->HandleNotification(Method, *Message->GetPayload());
+                    }
                     if (Service == "Gs2Stamina")
                     {
                         Stamina->HandleNotification(Method, *Message->GetPayload());
@@ -336,6 +341,7 @@ namespace Gs2::Core::Domain
         Script(From.Script),
         SerialKey(From.SerialKey),
         Showcase(From.Showcase),
+        SkillTree(From.SkillTree),
         Stamina(From.Stamina),
         StateMachine(From.StateMachine),
         Version(From.Version),
@@ -504,6 +510,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Showcase")
             {
                 Showcase->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2SkillTree")
+            {
+                SkillTree->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2Stamina")
             {
@@ -676,6 +686,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Showcase")
             {
                 Showcase->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2SkillTree")
+            {
+                SkillTree->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2Stamina")
             {
@@ -867,6 +881,10 @@ namespace Gs2::Core::Domain
             if (Service == "showcase")
             {
                 Showcase->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "skill_tree")
+            {
+                SkillTree->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "stamina")
             {

@@ -49,6 +49,7 @@
 #include "Schedule/Domain/EzGs2Schedule.h"
 #include "SerialKey/Domain/EzGs2SerialKey.h"
 #include "Showcase/Domain/EzGs2Showcase.h"
+#include "SkillTree/Domain/EzGs2SkillTree.h"
 #include "Stamina/Domain/EzGs2Stamina.h"
 #include "StateMachine/Domain/EzGs2StateMachine.h"
 #include "Version/Domain/EzGs2Version.h"
@@ -98,6 +99,7 @@ namespace Gs2::UE5::Core::Domain
         Gs2::UE5::Schedule::Domain::FEzGs2SchedulePtr Schedule;
         Gs2::UE5::SerialKey::Domain::FEzGs2SerialKeyPtr SerialKey;
         Gs2::UE5::Showcase::Domain::FEzGs2ShowcasePtr Showcase;
+        Gs2::UE5::SkillTree::Domain::FEzGs2SkillTreePtr SkillTree;
         Gs2::UE5::Stamina::Domain::FEzGs2StaminaPtr Stamina;
         Gs2::UE5::StateMachine::Domain::FEzGs2StateMachinePtr StateMachine;
         Gs2::UE5::Version::Domain::FEzGs2VersionPtr Version;
