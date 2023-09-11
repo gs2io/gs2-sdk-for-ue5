@@ -75,7 +75,12 @@ namespace Gs2::News::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        Key(From.Key),
+        Value(From.Value),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -88,7 +93,7 @@ namespace Gs2::News::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (Key.IsSet() ? *Key : "null") + ":" +
@@ -101,7 +106,7 @@ namespace Gs2::News::Domain::Model
         TOptional<FString> Value
     )
     {
-        return FString() +
+        return FString("") +
             (Key.IsSet() ? *Key : "null") + ":" + 
             (Value.IsSet() ? *Value : "null");
     }

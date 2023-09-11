@@ -138,6 +138,10 @@ namespace Gs2::Formation::Domain::Iterator
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Formation::Model::FPropertyFormPtr& Item) { return Self->PropertyFormModelName && Item->GetName() != Self->PropertyFormModelName; });
+            }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();

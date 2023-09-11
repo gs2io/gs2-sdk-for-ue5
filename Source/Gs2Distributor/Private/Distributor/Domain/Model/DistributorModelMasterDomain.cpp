@@ -69,7 +69,10 @@ namespace Gs2::Distributor::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        DistributorName(From.DistributorName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -264,7 +267,7 @@ namespace Gs2::Distributor::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (DistributorName.IsSet() ? *DistributorName : "null") + ":" +
             ChildType;
@@ -274,7 +277,7 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<FString> DistributorName
     )
     {
-        return FString() +
+        return FString("") +
             (DistributorName.IsSet() ? *DistributorName : "null");
     }
 

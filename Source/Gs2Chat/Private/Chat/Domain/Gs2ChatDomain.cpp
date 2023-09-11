@@ -58,7 +58,8 @@ namespace Gs2::Chat::Domain
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        ParentKey(From.ParentKey)
     {
 
     }

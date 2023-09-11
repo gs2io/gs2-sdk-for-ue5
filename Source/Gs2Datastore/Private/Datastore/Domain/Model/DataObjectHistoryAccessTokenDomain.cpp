@@ -74,7 +74,12 @@ namespace Gs2::Datastore::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        DataObjectName(From.DataObjectName),
+        Generation(From.Generation),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -153,7 +158,7 @@ namespace Gs2::Datastore::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (DataObjectName.IsSet() ? *DataObjectName : "null") + ":" +
@@ -165,7 +170,7 @@ namespace Gs2::Datastore::Domain::Model
         TOptional<FString> Generation
     )
     {
-        return FString() +
+        return FString("") +
             (Generation.IsSet() ? *Generation : "null");
     }
 

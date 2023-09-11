@@ -84,7 +84,7 @@ namespace Gs2::Ranking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = FString() +
+            const auto ListParentKey = FString("") +
                 (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
                 (Self->UserId.IsSet() ? *Self->UserId : "null") + ":" +
                 (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
@@ -143,6 +143,11 @@ namespace Gs2::Ranking::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
+                Range->RemoveAll([this](const Gs2::Ranking::Model::FScorePtr& Item) { return Self->ScorerUserId && Item->GetScorerUserId() != Self->ScorerUserId; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

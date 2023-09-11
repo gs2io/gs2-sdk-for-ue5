@@ -107,7 +107,6 @@ namespace Gs2::Datastore::Domain::Iterator
                 MakeShared<Gs2::Datastore::Request::FDescribeDataObjectsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                    ->WithStatus(Self->Status)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );
@@ -136,6 +135,10 @@ namespace Gs2::Datastore::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Datastore::Model::FDataObjectPtr& Item) { return Self->Status && Item->GetStatus() != Self->Status; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

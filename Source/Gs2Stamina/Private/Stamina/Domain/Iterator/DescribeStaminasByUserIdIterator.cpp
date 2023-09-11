@@ -133,6 +133,9 @@ namespace Gs2::Stamina::Domain::Iterator
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (Range)
+            {
+            }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();

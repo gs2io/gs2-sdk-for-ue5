@@ -83,7 +83,14 @@ namespace Gs2::Matchmaking::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        RatingName(From.RatingName),
+        GatheringName(From.GatheringName),
+        NumberOfPlayer(From.NumberOfPlayer),
+        KeyId(From.KeyId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -172,7 +179,7 @@ namespace Gs2::Matchmaking::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (RatingName.IsSet() ? *RatingName : "null") + ":" +
@@ -189,7 +196,7 @@ namespace Gs2::Matchmaking::Domain::Model
         TOptional<FString> KeyId
     )
     {
-        return FString() +
+        return FString("") +
             (RatingName.IsSet() ? *RatingName : "null") + ":" + 
             (GatheringName.IsSet() ? *GatheringName : "null") + ":" + 
             (NumberOfPlayer.IsSet() ? *NumberOfPlayer : "null") + ":" + 

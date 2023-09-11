@@ -137,6 +137,10 @@ namespace Gs2::SerialKey::Domain::Iterator
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::SerialKey::Model::FSerialKeyPtr& Item) { return Self->CampaignModelName && Item->GetCampaignModelName() != Self->CampaignModelName; });
+            }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();

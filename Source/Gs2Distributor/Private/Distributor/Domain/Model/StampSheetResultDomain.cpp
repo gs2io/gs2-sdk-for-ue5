@@ -72,7 +72,11 @@ namespace Gs2::Distributor::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TransactionId(From.TransactionId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -148,7 +152,7 @@ namespace Gs2::Distributor::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (TransactionId.IsSet() ? *TransactionId : "null") + ":" +
@@ -159,7 +163,7 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<FString> TransactionId
     )
     {
-        return FString() +
+        return FString("") +
             (TransactionId.IsSet() ? *TransactionId : "null");
     }
 

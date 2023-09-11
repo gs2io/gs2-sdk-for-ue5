@@ -62,7 +62,10 @@ namespace Gs2::Script::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        ScriptName(From.ScriptName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -321,7 +324,7 @@ namespace Gs2::Script::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (ScriptName.IsSet() ? *ScriptName : "null") + ":" +
             ChildType;
@@ -331,7 +334,7 @@ namespace Gs2::Script::Domain::Model
         TOptional<FString> ScriptName
     )
     {
-        return FString() +
+        return FString("") +
             (ScriptName.IsSet() ? *ScriptName : "null");
     }
 

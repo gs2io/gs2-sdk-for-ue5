@@ -60,7 +60,9 @@ namespace Gs2::Identifier::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        SecurityPolicyName(From.SecurityPolicyName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -239,7 +241,7 @@ namespace Gs2::Identifier::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (SecurityPolicyName.IsSet() ? *SecurityPolicyName : "null") + ":" +
             ChildType;
     }
@@ -248,7 +250,7 @@ namespace Gs2::Identifier::Domain::Model
         TOptional<FString> SecurityPolicyName
     )
     {
-        return FString() +
+        return FString("") +
             (SecurityPolicyName.IsSet() ? *SecurityPolicyName : "null");
     }
 

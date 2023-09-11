@@ -106,7 +106,6 @@ namespace Gs2::Experience::Domain::Iterator
             const auto Future = Self->Client->DescribeStatuses(
                 MakeShared<Gs2::Experience::Request::FDescribeStatusesRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
-                    ->WithExperienceName(Self->ExperienceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
@@ -137,6 +136,10 @@ namespace Gs2::Experience::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Experience::Model::FStatusPtr& Item) { return Self->ExperienceName && Item->GetExperienceName() != Self->ExperienceName; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

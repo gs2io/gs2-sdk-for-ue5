@@ -65,7 +65,10 @@ namespace Gs2::Identifier::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        UserName(From.UserName),
+        ClientId(From.ClientId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -196,7 +199,7 @@ namespace Gs2::Identifier::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (UserName.IsSet() ? *UserName : "null") + ":" +
             (ClientId.IsSet() ? *ClientId : "null") + ":" +
             ChildType;
@@ -206,7 +209,7 @@ namespace Gs2::Identifier::Domain::Model
         TOptional<FString> ClientId
     )
     {
-        return FString() +
+        return FString("") +
             (ClientId.IsSet() ? *ClientId : "null");
     }
 

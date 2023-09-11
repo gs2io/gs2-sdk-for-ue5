@@ -84,7 +84,11 @@ namespace Gs2::Friend::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        TargetUserId(From.TargetUserId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -228,7 +232,7 @@ namespace Gs2::Friend::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (TargetUserId.IsSet() ? *TargetUserId : "null") + ":" +
@@ -239,7 +243,7 @@ namespace Gs2::Friend::Domain::Model
         TOptional<FString> TargetUserId
     )
     {
-        return FString() +
+        return FString("") +
             (TargetUserId.IsSet() ? *TargetUserId : "null");
     }
 

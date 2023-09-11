@@ -82,7 +82,13 @@ namespace Gs2::Ranking::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        CategoryName(From.CategoryName),
+        ScorerUserId(From.ScorerUserId),
+        UniqueId(From.UniqueId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -126,7 +132,7 @@ namespace Gs2::Ranking::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = FString() +
+                const auto ParentKey = FString("") +
                     (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
                     (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
                     (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
@@ -164,7 +170,7 @@ namespace Gs2::Ranking::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (CategoryName.IsSet() ? *CategoryName : "null") + ":" +
@@ -179,7 +185,7 @@ namespace Gs2::Ranking::Domain::Model
         TOptional<FString> UniqueId
     )
     {
-        return FString() +
+        return FString("") +
             (CategoryName.IsSet() ? *CategoryName : "null") + ":" + 
             (ScorerUserId.IsSet() ? *ScorerUserId : "null") + ":" + 
             (UniqueId.IsSet() ? *UniqueId : "null");
@@ -203,7 +209,7 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FScore>> Result
     )
     {
-        const auto ParentKey = FString() +
+        const auto ParentKey = FString("") +
             (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
             (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
             (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +

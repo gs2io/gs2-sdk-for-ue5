@@ -63,7 +63,9 @@ namespace Gs2::Identifier::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        UserName(From.UserName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -277,7 +279,7 @@ namespace Gs2::Identifier::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (UserName.IsSet() ? *UserName : "null") + ":" +
             ChildType;
     }

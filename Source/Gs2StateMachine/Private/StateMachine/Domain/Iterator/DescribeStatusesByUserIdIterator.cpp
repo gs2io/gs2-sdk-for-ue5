@@ -107,7 +107,6 @@ namespace Gs2::StateMachine::Domain::Iterator
                 MakeShared<Gs2::StateMachine::Request::FDescribeStatusesByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
-                    ->WithStatus(Self->Status)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );
@@ -136,6 +135,10 @@ namespace Gs2::StateMachine::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::StateMachine::Model::FStatusPtr& Item) { return Self->Status && Item->GetStatus() != Self->Status; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

@@ -107,7 +107,6 @@ namespace Gs2::Limit::Domain::Iterator
                 MakeShared<Gs2::Limit::Request::FDescribeCountersRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                    ->WithLimitName(Self->LimitName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );
@@ -137,6 +136,10 @@ namespace Gs2::Limit::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Limit::Model::FCounterPtr& Item) { return Self->LimitName && Item->GetLimitName() != Self->LimitName; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

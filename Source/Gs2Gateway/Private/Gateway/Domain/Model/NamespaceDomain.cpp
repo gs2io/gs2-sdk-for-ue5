@@ -65,7 +65,11 @@ namespace Gs2::Gateway::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        Wssession(From.Wssession),
+        Wsclient(From.Wsclient),
+        NamespaceName(From.NamespaceName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -320,7 +324,7 @@ namespace Gs2::Gateway::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             ChildType;
     }
@@ -329,7 +333,7 @@ namespace Gs2::Gateway::Domain::Model
         TOptional<FString> NamespaceName
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null");
     }
 

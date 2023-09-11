@@ -107,7 +107,6 @@ namespace Gs2::Enchant::Domain::Iterator
                 MakeShared<Gs2::Enchant::Request::FDescribeBalanceParameterStatusesByUserIdRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
-                    ->WithParameterName(Self->ParameterName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );
@@ -137,6 +136,10 @@ namespace Gs2::Enchant::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Enchant::Model::FBalanceParameterStatusPtr& Item) { return Self->ParameterName && Item->GetParameterName() != Self->ParameterName; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

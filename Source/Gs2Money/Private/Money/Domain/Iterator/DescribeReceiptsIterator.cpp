@@ -113,7 +113,6 @@ namespace Gs2::Money::Domain::Iterator
                 MakeShared<Gs2::Money::Request::FDescribeReceiptsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
-                    ->WithSlot(Self->Slot)
                     ->WithBegin(Self->Begin)
                     ->WithEnd(Self->End)
                     ->WithPageToken(PageToken)
@@ -144,6 +143,12 @@ namespace Gs2::Money::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->Slot && Item->GetSlot() != Self->Slot; });
+                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->Begin && *Item->GetCreatedAt() < *Self->Begin; });
+                Range->RemoveAll([this](const Gs2::Money::Model::FReceiptPtr& Item) { return Self->End && *Item->GetCreatedAt() > *Self->End; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

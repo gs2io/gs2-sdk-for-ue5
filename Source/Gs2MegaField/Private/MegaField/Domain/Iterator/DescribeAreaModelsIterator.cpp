@@ -125,6 +125,9 @@ namespace Gs2::MegaField::Domain::Iterator
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (Range)
+            {
+            }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {

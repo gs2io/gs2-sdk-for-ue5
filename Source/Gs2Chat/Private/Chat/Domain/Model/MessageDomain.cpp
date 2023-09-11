@@ -77,7 +77,13 @@ namespace Gs2::Chat::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        RoomName(From.RoomName),
+        Password(From.Password),
+        MessageName(From.MessageName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -219,7 +225,7 @@ namespace Gs2::Chat::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (RoomName.IsSet() ? *RoomName : "null") + ":" +
@@ -231,7 +237,7 @@ namespace Gs2::Chat::Domain::Model
         TOptional<FString> MessageName
     )
     {
-        return FString() +
+        return FString("") +
             (MessageName.IsSet() ? *MessageName : "null");
     }
 

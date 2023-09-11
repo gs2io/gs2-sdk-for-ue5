@@ -60,7 +60,10 @@ namespace Gs2::Gateway::Domain
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        Wssession(From.Wssession),
+        Wsclient(From.Wsclient),
+        ParentKey(From.ParentKey)
     {
 
     }

@@ -102,6 +102,10 @@ namespace Gs2::Chat::Domain::Iterator
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
             Range = R->GetItems();
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Chat::Model::FSubscribePtr& Item) { return Self->RoomName && Item->GetRoomName() != Self->RoomName; });
+            }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();

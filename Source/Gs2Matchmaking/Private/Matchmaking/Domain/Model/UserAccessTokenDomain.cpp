@@ -74,7 +74,10 @@ namespace Gs2::Matchmaking::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -233,7 +236,7 @@ namespace Gs2::Matchmaking::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
@@ -243,7 +246,7 @@ namespace Gs2::Matchmaking::Domain::Model
         TOptional<FString> UserId
     )
     {
-        return FString() +
+        return FString("") +
             (UserId.IsSet() ? *UserId : "null");
     }
 }

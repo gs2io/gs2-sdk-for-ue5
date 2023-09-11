@@ -63,7 +63,10 @@ namespace Gs2::Key::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        ApiKeyName(From.ApiKeyName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -258,7 +261,7 @@ namespace Gs2::Key::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (ApiKeyName.IsSet() ? *ApiKeyName : "null") + ":" +
             ChildType;
@@ -268,7 +271,7 @@ namespace Gs2::Key::Domain::Model
         TOptional<FString> ApiKeyName
     )
     {
-        return FString() +
+        return FString("") +
             (ApiKeyName.IsSet() ? *ApiKeyName : "null");
     }
 

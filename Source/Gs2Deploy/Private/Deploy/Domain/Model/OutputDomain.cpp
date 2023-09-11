@@ -64,7 +64,10 @@ namespace Gs2::Deploy::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        StackName(From.StackName),
+        OutputName(From.OutputName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -137,7 +140,7 @@ namespace Gs2::Deploy::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (StackName.IsSet() ? *StackName : "null") + ":" +
             (OutputName.IsSet() ? *OutputName : "null") + ":" +
             ChildType;
@@ -147,7 +150,7 @@ namespace Gs2::Deploy::Domain::Model
         TOptional<FString> OutputName
     )
     {
-        return FString() +
+        return FString("") +
             (OutputName.IsSet() ? *OutputName : "null");
     }
 

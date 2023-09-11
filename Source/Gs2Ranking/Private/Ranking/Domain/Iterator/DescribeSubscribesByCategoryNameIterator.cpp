@@ -134,6 +134,10 @@ namespace Gs2::Ranking::Domain::Iterator
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Ranking::Model::FSubscribeUserPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
+            }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {

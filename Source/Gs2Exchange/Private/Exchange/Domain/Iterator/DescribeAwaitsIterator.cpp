@@ -107,7 +107,6 @@ namespace Gs2::Exchange::Domain::Iterator
                 MakeShared<Gs2::Exchange::Request::FDescribeAwaitsRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                    ->WithRateName(Self->RateName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             );
@@ -136,6 +135,10 @@ namespace Gs2::Exchange::Domain::Iterator
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Exchange::Model::FAwaitPtr& Item) { return Self->RateName && Item->GetRateName() != Self->RateName; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

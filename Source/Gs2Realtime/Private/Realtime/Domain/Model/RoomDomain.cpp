@@ -62,7 +62,10 @@ namespace Gs2::Realtime::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        RoomName(From.RoomName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -193,7 +196,7 @@ namespace Gs2::Realtime::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (RoomName.IsSet() ? *RoomName : "null") + ":" +
             ChildType;
@@ -203,7 +206,7 @@ namespace Gs2::Realtime::Domain::Model
         TOptional<FString> RoomName
     )
     {
-        return FString() +
+        return FString("") +
             (RoomName.IsSet() ? *RoomName : "null");
     }
 

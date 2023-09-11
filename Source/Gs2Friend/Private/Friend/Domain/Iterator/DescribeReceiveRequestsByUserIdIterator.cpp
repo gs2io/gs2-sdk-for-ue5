@@ -134,6 +134,10 @@ namespace Gs2::Friend::Domain::Iterator
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Friend::Model::FFriendRequestPtr& Item) { return Self->UserId && Item->GetTargetUserId() != Self->UserId; });
+            }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();

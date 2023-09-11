@@ -78,7 +78,11 @@ namespace Gs2::Ranking::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        CategoryName(From.CategoryName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -90,7 +94,7 @@ namespace Gs2::Ranking::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (CategoryName.IsSet() ? *CategoryName : "null") + ":" +
@@ -101,7 +105,7 @@ namespace Gs2::Ranking::Domain::Model
         TOptional<FString> CategoryName
     )
     {
-        return FString() +
+        return FString("") +
             (CategoryName.IsSet() ? *CategoryName : "null");
     }
 

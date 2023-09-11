@@ -70,7 +70,10 @@ namespace Gs2::Version::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        VersionName(From.VersionName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -265,7 +268,7 @@ namespace Gs2::Version::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (VersionName.IsSet() ? *VersionName : "null") + ":" +
             ChildType;
@@ -275,7 +278,7 @@ namespace Gs2::Version::Domain::Model
         TOptional<FString> VersionName
     )
     {
-        return FString() +
+        return FString("") +
             (VersionName.IsSet() ? *VersionName : "null");
     }
 
