@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "2023.9.5",
+	"VersionName": "2023.9.6",
 	"FriendlyName": "GS2 Plugin",
 	"Description": "Plugin for Game Server Services",
 	"Category": "Online Service",
@@ -197,6 +197,11 @@
 		},
 		{
 			"Name": "Gs2Showcase",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "Gs2SkillTree",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
 		},
