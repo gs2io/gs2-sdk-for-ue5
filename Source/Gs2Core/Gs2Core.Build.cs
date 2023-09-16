@@ -28,6 +28,7 @@ public class Gs2Core : ModuleRules
 		PublicIncludePathModuleNames.AddRange(new []
 		{
 			"Gs2Account",
+			"Gs2AdReward",
 			"Gs2Auth",
 			"Gs2Chat",
 			"Gs2Datastore",
@@ -99,6 +100,7 @@ public class Gs2Plugin
 		{
 			"Gs2Core",
 			"Gs2Account",
+			"Gs2AdReward",
 			"Gs2Auth",
 			"Gs2Chat",
 			"Gs2Datastore",

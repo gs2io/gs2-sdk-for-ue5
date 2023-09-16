@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Account/Domain/EzGs2Account.h"
+#include "AdReward/Domain/EzGs2AdReward.h"
 #include "Auth/Domain/EzGs2Auth.h"
 #include "Chat/Domain/EzGs2Chat.h"
 #include "Core/Domain/Gs2.h"
@@ -69,6 +70,7 @@ namespace Gs2::UE5::Core::Domain
         Gs2::Core::Domain::FGs2Ptr Super;
 
         Gs2::UE5::Account::Domain::FEzGs2AccountPtr Account;
+        Gs2::UE5::AdReward::Domain::FEzGs2AdRewardPtr AdReward;
         Gs2::UE5::Auth::Domain::FEzGs2AuthPtr Auth;
         Gs2::UE5::Chat::Domain::FEzGs2ChatPtr Chat;
         Gs2::UE5::Datastore::Domain::FEzGs2DatastorePtr Datastore;

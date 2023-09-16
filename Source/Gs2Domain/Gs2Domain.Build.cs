@@ -18,6 +18,7 @@ public class Gs2Domain : ModuleRules
 			"JsonUtilities",
 			"Gs2Core",
 			"Gs2Account",
+			"Gs2AdReward",
 			"Gs2Auth",
 			"Gs2Chat",
 			"Gs2Datastore",

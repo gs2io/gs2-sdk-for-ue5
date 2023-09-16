@@ -69,6 +69,7 @@ namespace Gs2::Core::Domain
         WebSocketSession(_WebSocketSession),
         DistributorNamespaceName(DistributorNamespaceName),
         Account(MakeShared<Account::Domain::FGs2AccountDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
+        AdReward(MakeShared<AdReward::Domain::FGs2AdRewardDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Auth(MakeShared<Auth::Domain::FGs2AuthDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Chat(MakeShared<Chat::Domain::FGs2ChatDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
         Datastore(MakeShared<Datastore::Domain::FGs2DatastoreDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
@@ -126,11 +127,16 @@ namespace Gs2::Core::Domain
                 }
                 if (Message->GetSubject()->Contains(":") && Message->GetPayload().IsSet())
                 {
-                    FString Service, Method;
+                    auto Service = FString("");
+                    auto Method = FString("");
                     Message->GetSubject()->Split(FString(":"), &Service, &Method);
                     if (Service == "Gs2Account")
                     {
                         Account->HandleNotification(Method, *Message->GetPayload());
+                    }
+                    if (Service == "Gs2AdReward")
+                    {
+                        AdReward->HandleNotification(Method, *Message->GetPayload());
                     }
                     if (Service == "Gs2Auth")
                     {
@@ -307,6 +313,7 @@ namespace Gs2::Core::Domain
         WebSocketSession(From.WebSocketSession),
         DistributorNamespaceName(From.DistributorNamespaceName),
         Account(From.Account),
+        AdReward(From.AdReward),
         Auth(From.Auth),
         Chat(From.Chat),
         Datastore(From.Datastore),
@@ -368,12 +375,17 @@ namespace Gs2::Core::Domain
         }
         if (Action.Contains(":"))
         {
-            FString Service, Method;
+            auto Service = FString("");
+            auto Method = FString("");
             Action.Split(FString(":"), &Service, &Method);
             
             if (Service == "Gs2Account")
             {
                 Account->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2AdReward")
+            {
+                AdReward->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2Auth")
             {
@@ -544,12 +556,17 @@ namespace Gs2::Core::Domain
         }
         if (Action.Contains(":"))
         {
-            FString Service, Method;
+            auto Service = FString("");
+            auto Method = FString("");
             Action.Split(FString(":"), &Service, &Method);
             
             if (Service == "Gs2Account")
             {
                 Account->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2AdReward")
+            {
+                AdReward->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2Auth")
             {
@@ -739,12 +756,17 @@ namespace Gs2::Core::Domain
             }
             ScriptName = ScriptName->Replace(TEXT("execute_"), TEXT(""));
             
-            FString Service, Method;
+            auto Service = FString("");
+            auto Method = FString("");
             ScriptName->Split(FString("_"), &Service, &Method);
             
             if (Service == "account")
             {
                 Account->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "ad_reward")
+            {
+                AdReward->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "auth")
             {

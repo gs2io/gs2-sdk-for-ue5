@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Gs2Core.h"
 #include "Account/Domain/Gs2Account.h"
+#include "AdReward/Domain/Gs2AdReward.h"
 #include "Auth/Domain/Gs2Auth.h"
 #include "Chat/Domain/Gs2Chat.h"
 #include "Datastore/Domain/Gs2Datastore.h"
@@ -74,6 +75,7 @@ namespace Gs2::Core::Domain
     public:
     
         const Gs2::Account::Domain::FGs2AccountDomainPtr Account;
+        const Gs2::AdReward::Domain::FGs2AdRewardDomainPtr AdReward;
         const Gs2::Auth::Domain::FGs2AuthDomainPtr Auth;
         const Gs2::Chat::Domain::FGs2ChatDomainPtr Chat;
         const Gs2::Datastore::Domain::FGs2DatastoreDomainPtr Datastore;
