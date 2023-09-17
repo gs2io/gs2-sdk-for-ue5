@@ -32,6 +32,8 @@
 #include "Task/WebSocket/GetStackTask.h"
 #include "Request/UpdateStackRequest.h"
 #include "Task/WebSocket/UpdateStackTask.h"
+#include "Request/ChangeSetRequest.h"
+#include "Task/WebSocket/ChangeSetTask.h"
 #include "Request/UpdateStackFromGitHubRequest.h"
 #include "Task/WebSocket/UpdateStackFromGitHubTask.h"
 #include "Request/DeleteStackRequest.h"
@@ -92,6 +94,10 @@ namespace Gs2::Deploy
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateStackTask>> UpdateStack(
             const Request::FUpdateStackRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FChangeSetTask>> ChangeSet(
+            const Request::FChangeSetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateStackFromGitHubTask>> UpdateStackFromGitHub(

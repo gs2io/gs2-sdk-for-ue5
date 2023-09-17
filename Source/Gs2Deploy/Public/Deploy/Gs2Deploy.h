@@ -21,8 +21,9 @@
 #include "Model/Resource.h"
 #include "Model/Event.h"
 #include "Model/Output.h"
-#include "Model/GitHubCheckoutSetting.h"
 #include "Model/OutputField.h"
+#include "Model/ChangeSet.h"
+#include "Model/GitHubCheckoutSetting.h"
 
 // DescribeStacks
 #include "Request/DescribeStacksRequest.h"
@@ -65,6 +66,12 @@
 #include "Result/UpdateStackResult.h"
 #include "Task/Rest/UpdateStackTask.h"
 #include "Task/WebSocket/UpdateStackTask.h"
+
+// ChangeSet
+#include "Request/ChangeSetRequest.h"
+#include "Result/ChangeSetResult.h"
+#include "Task/Rest/ChangeSetTask.h"
+#include "Task/WebSocket/ChangeSetTask.h"
 
 // UpdateStackFromGitHub
 #include "Request/UpdateStackFromGitHubRequest.h"

@@ -32,6 +32,8 @@
 #include "Task/Rest/GetStackTask.h"
 #include "Request/UpdateStackRequest.h"
 #include "Task/Rest/UpdateStackTask.h"
+#include "Request/ChangeSetRequest.h"
+#include "Task/Rest/ChangeSetTask.h"
 #include "Request/UpdateStackFromGitHubRequest.h"
 #include "Task/Rest/UpdateStackFromGitHubTask.h"
 #include "Request/DeleteStackRequest.h"
@@ -92,6 +94,10 @@ namespace Gs2::Deploy
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateStackTask>> UpdateStack(
             const Request::FUpdateStackRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FChangeSetTask>> ChangeSet(
+            const Request::FChangeSetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateStackFromGitHubTask>> UpdateStackFromGitHub(

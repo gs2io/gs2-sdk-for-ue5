@@ -82,6 +82,15 @@ namespace Gs2::Deploy
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FChangeSetTask>> FGs2DeployRestClient::ChangeSet(
+        const Request::FChangeSetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FChangeSetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FUpdateStackFromGitHubTask>> FGs2DeployRestClient::UpdateStackFromGitHub(
         const Request::FUpdateStackFromGitHubRequestPtr Request) const
     {

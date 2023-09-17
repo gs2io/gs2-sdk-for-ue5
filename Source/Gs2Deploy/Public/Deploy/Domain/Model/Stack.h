@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -149,6 +151,32 @@ namespace Gs2::Deploy::Domain::Model
 
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateStackRequestPtr Request
+        );
+
+        class GS2DEPLOY_API FChangeSetTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Deploy::Model::FChangeSet>>>,
+            public TSharedFromThis<FChangeSetTask>
+        {
+            const TSharedPtr<FStackDomain> Self;
+            const Request::FChangeSetRequestPtr Request;
+        public:
+            explicit FChangeSetTask(
+                const TSharedPtr<FStackDomain> Self,
+                const Request::FChangeSetRequestPtr Request
+            );
+
+            FChangeSetTask(
+                const FChangeSetTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Deploy::Model::FChangeSet>>>> Result
+            ) override;
+        };
+        friend FChangeSetTask;
+
+        TSharedPtr<FAsyncTask<FChangeSetTask>> ChangeSet(
+            Request::FChangeSetRequestPtr Request
         );
 
         class GS2DEPLOY_API FUpdateFromGitHubTask final :

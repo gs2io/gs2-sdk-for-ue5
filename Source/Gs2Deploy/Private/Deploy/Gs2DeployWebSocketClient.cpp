@@ -82,6 +82,15 @@ namespace Gs2::Deploy
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FChangeSetTask>> FGs2DeployWebSocketClient::ChangeSet(
+        const Request::FChangeSetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FChangeSetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateStackFromGitHubTask>> FGs2DeployWebSocketClient::UpdateStackFromGitHub(
         const Request::FUpdateStackFromGitHubRequestPtr Request) const
     {
