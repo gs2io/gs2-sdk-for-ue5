@@ -288,6 +288,14 @@ namespace Gs2::AdReward::Domain
             {
                 return;
             }
+            const auto ParentKey = Gs2::AdReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+                PayloadJson->GetStringField("namespaceName"),
+                PayloadJson->GetStringField("userId"),
+                "Point"
+            );
+            const auto Key = Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(
+            );
+            Cache->Delete(Gs2::AdReward::Model::FPoint::TypeName, ParentKey, Key);
             ChangePointNotificationEvent.Broadcast(Gs2::AdReward::Model::FChangePointNotification::FromJson(PayloadJson));
         }
     }

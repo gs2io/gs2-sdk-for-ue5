@@ -36,6 +36,8 @@ struct FGs2AdRewardChangePointNotification
 
     UPROPERTY(BlueprintReadWrite)
     FString NamespaceName = "";
+    UPROPERTY(BlueprintReadWrite)
+    FString UserId = "";
 };
 
 inline FGs2AdRewardChangePointNotification EzChangePointNotificationToFGs2AdRewardChangePointNotification(
@@ -44,6 +46,7 @@ inline FGs2AdRewardChangePointNotification EzChangePointNotificationToFGs2AdRewa
 {
     FGs2AdRewardChangePointNotification Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     return Value;
 }
 

@@ -22,11 +22,17 @@ namespace Gs2::AdReward::Model
 	{
 	public:
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> UserIdValue;
 
         TSharedPtr<FChangePointNotification> WithNamespaceName(
             const TOptional<FString> NamespaceName
         );
         TOptional<FString> GetNamespaceName() const;
+
+        TSharedPtr<FChangePointNotification> WithUserId(
+            const TOptional<FString> UserId
+        );
+        TOptional<FString> GetUserId() const;
 
         static TSharedPtr<FChangePointNotification> FromJson(const TSharedPtr<FJsonObject> Data);
     };

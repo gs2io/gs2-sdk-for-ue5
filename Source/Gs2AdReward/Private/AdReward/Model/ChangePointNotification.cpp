@@ -30,6 +30,17 @@ namespace Gs2::AdReward::Model
         return NamespaceNameValue;
     }
 
+    TSharedPtr<FChangePointNotification> FChangePointNotification::WithUserId(
+        const TOptional<FString> UserId
+    ) {
+        UserIdValue = UserId;
+        return SharedThis(this);
+    }
+    TOptional<FString> FChangePointNotification::GetUserId() const
+    {
+        return UserIdValue;
+    }
+
     TSharedPtr<FChangePointNotification> FChangePointNotification::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
@@ -40,6 +51,15 @@ namespace Gs2::AdReward::Model
                 {
                     FString v;
                     if (Data->TryGetStringField("namespaceName", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+                {
+                    FString v;
+                    if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
