@@ -19,7 +19,6 @@
 // Model
 #include "Model/Namespace.h"
 #include "Model/VersionModelMaster.h"
-#include "Model/Version.h"
 #include "Model/VersionModel.h"
 #include "Model/AcceptVersion.h"
 #include "Model/Status.h"
@@ -29,6 +28,8 @@
 #include "Model/ScriptSetting.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/Version.h"
+#include "Model/ScheduleVersion.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

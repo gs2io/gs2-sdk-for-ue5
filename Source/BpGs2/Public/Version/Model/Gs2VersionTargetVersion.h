@@ -30,11 +30,11 @@ struct FGs2VersionTargetVersion
     UPROPERTY(BlueprintReadWrite)
     FString VersionName = "";
     UPROPERTY(BlueprintReadWrite)
-    FGs2VersionVersion Version = FGs2VersionVersion();
-    UPROPERTY(BlueprintReadWrite)
     FString Body = "";
     UPROPERTY(BlueprintReadWrite)
     FString Signature = "";
+    UPROPERTY(BlueprintReadWrite)
+    FGs2VersionVersion Version = FGs2VersionVersion();
 };
 
 inline FGs2VersionTargetVersion EzTargetVersionToFGs2VersionTargetVersion(

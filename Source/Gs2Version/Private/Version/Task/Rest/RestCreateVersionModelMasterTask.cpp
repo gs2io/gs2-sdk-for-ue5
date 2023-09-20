@@ -96,6 +96,18 @@ namespace Gs2::Version::Task::Rest
             {
                 JsonRootObject->SetStringField("metadata", this->Request->GetMetadata().GetValue());
             }
+            if (this->Request->GetScope().IsSet())
+            {
+                JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
+            }
+            if (this->Request->GetType().IsSet())
+            {
+                JsonRootObject->SetStringField("type", this->Request->GetType().GetValue());
+            }
+            if (this->Request->GetCurrentVersion() != nullptr && this->Request->GetCurrentVersion().IsValid())
+            {
+                JsonRootObject->SetObjectField("currentVersion", this->Request->GetCurrentVersion()->ToJson());
+            }
             if (this->Request->GetWarningVersion() != nullptr && this->Request->GetWarningVersion().IsValid())
             {
                 JsonRootObject->SetObjectField("warningVersion", this->Request->GetWarningVersion()->ToJson());
@@ -104,13 +116,14 @@ namespace Gs2::Version::Task::Rest
             {
                 JsonRootObject->SetObjectField("errorVersion", this->Request->GetErrorVersion()->ToJson());
             }
-            if (this->Request->GetScope().IsSet())
+            if (this->Request->GetScheduleVersions() != nullptr && this->Request->GetScheduleVersions().IsValid())
             {
-                JsonRootObject->SetStringField("scope", this->Request->GetScope().GetValue());
-            }
-            if (this->Request->GetCurrentVersion() != nullptr && this->Request->GetCurrentVersion().IsValid())
-            {
-                JsonRootObject->SetObjectField("currentVersion", this->Request->GetCurrentVersion()->ToJson());
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetScheduleVersions())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("scheduleVersions", v);
             }
             if (this->Request->GetNeedSignature().IsSet())
             {

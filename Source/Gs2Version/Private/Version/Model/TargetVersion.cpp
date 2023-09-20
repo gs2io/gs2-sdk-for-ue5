@@ -20,9 +20,9 @@ namespace Gs2::Version::Model
 {
     FTargetVersion::FTargetVersion():
         VersionNameValue(TOptional<FString>()),
-        VersionValue(nullptr),
         BodyValue(TOptional<FString>()),
-        SignatureValue(TOptional<FString>())
+        SignatureValue(TOptional<FString>()),
+        VersionValue(nullptr)
     {
     }
 
@@ -30,9 +30,9 @@ namespace Gs2::Version::Model
         const FTargetVersion& From
     ):
         VersionNameValue(From.VersionNameValue),
-        VersionValue(From.VersionValue),
         BodyValue(From.BodyValue),
-        SignatureValue(From.SignatureValue)
+        SignatureValue(From.SignatureValue),
+        VersionValue(From.VersionValue)
     {
     }
 
@@ -41,14 +41,6 @@ namespace Gs2::Version::Model
     )
     {
         this->VersionNameValue = VersionName;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FTargetVersion> FTargetVersion::WithVersion(
-        const TSharedPtr<FVersion> Version
-    )
-    {
-        this->VersionValue = Version;
         return SharedThis(this);
     }
 
@@ -67,13 +59,17 @@ namespace Gs2::Version::Model
         this->SignatureValue = Signature;
         return SharedThis(this);
     }
+
+    TSharedPtr<FTargetVersion> FTargetVersion::WithVersion(
+        const TSharedPtr<FVersion> Version
+    )
+    {
+        this->VersionValue = Version;
+        return SharedThis(this);
+    }
     TOptional<FString> FTargetVersion::GetVersionName() const
     {
         return VersionNameValue;
-    }
-    TSharedPtr<FVersion> FTargetVersion::GetVersion() const
-    {
-        return VersionValue;
     }
     TOptional<FString> FTargetVersion::GetBody() const
     {
@@ -82,6 +78,10 @@ namespace Gs2::Version::Model
     TOptional<FString> FTargetVersion::GetSignature() const
     {
         return SignatureValue;
+    }
+    TSharedPtr<FVersion> FTargetVersion::GetVersion() const
+    {
+        return VersionValue;
     }
 
     TSharedPtr<FTargetVersion> FTargetVersion::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -99,14 +99,6 @@ namespace Gs2::Version::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithVersion(Data->HasField("version") ? [Data]() -> Model::FVersionPtr
-                {
-                    if (Data->HasTypedField<EJson::Null>("version"))
-                    {
-                        return nullptr;
-                    }
-                    return Model::FVersion::FromJson(Data->GetObjectField("version"));
-                 }() : nullptr)
             ->WithBody(Data->HasField("body") ? [Data]() -> TOptional<FString>
                 {
                     FString v;
@@ -124,7 +116,15 @@ namespace Gs2::Version::Model
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
-                }() : TOptional<FString>());
+                }() : TOptional<FString>())
+            ->WithVersion(Data->HasField("version") ? [Data]() -> Model::FVersionPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>("version"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FVersion::FromJson(Data->GetObjectField("version"));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FTargetVersion::ToJson() const
@@ -134,10 +134,6 @@ namespace Gs2::Version::Model
         {
             JsonRootObject->SetStringField("versionName", VersionNameValue.GetValue());
         }
-        if (VersionValue != nullptr && VersionValue.IsValid())
-        {
-            JsonRootObject->SetObjectField("version", VersionValue->ToJson());
-        }
         if (BodyValue.IsSet())
         {
             JsonRootObject->SetStringField("body", BodyValue.GetValue());
@@ -145,6 +141,10 @@ namespace Gs2::Version::Model
         if (SignatureValue.IsSet())
         {
             JsonRootObject->SetStringField("signature", SignatureValue.GetValue());
+        }
+        if (VersionValue != nullptr && VersionValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("version", VersionValue->ToJson());
         }
         return JsonRootObject;
     }

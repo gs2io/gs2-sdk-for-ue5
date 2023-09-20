@@ -36,9 +36,9 @@ namespace Gs2::Version::Domain::Model
     class FAcceptVersionAccessTokenDomain;
     class FCheckerDomain;
     class FCheckerAccessTokenDomain;
-    class FCurrentVersionMasterDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
+    class FCurrentVersionMasterDomain;
 
     class GS2VERSION_API FAcceptVersionAccessTokenDomain:
         public TSharedFromThis<FAcceptVersionAccessTokenDomain>

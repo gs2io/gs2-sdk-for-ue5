@@ -31,9 +31,9 @@
 #include "Version/Domain/Model/AcceptVersionAccessToken.h"
 #include "Version/Domain/Model/Checker.h"
 #include "Version/Domain/Model/CheckerAccessToken.h"
-#include "Version/Domain/Model/CurrentVersionMaster.h"
 #include "Version/Domain/Model/User.h"
 #include "Version/Domain/Model/UserAccessToken.h"
+#include "Version/Domain/Model/CurrentVersionMaster.h"
 
 // Iterator
 #include "Version/Domain/Iterator/DescribeNamespacesIterator.h"

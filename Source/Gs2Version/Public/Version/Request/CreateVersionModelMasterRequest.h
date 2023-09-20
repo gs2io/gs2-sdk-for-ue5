@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Version.h"
+#include "../Model/ScheduleVersion.h"
 
 namespace Gs2::Version::Request
 {
@@ -30,10 +31,12 @@ namespace Gs2::Version::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> MetadataValue;
+        TOptional<FString> ScopeValue;
+        TOptional<FString> TypeValue;
+        TSharedPtr<Model::FVersion> CurrentVersionValue;
         TSharedPtr<Model::FVersion> WarningVersionValue;
         TSharedPtr<Model::FVersion> ErrorVersionValue;
-        TOptional<FString> ScopeValue;
-        TSharedPtr<Model::FVersion> CurrentVersionValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FScheduleVersion>>> ScheduleVersionsValue;
         TOptional<bool> NeedSignatureValue;
         TOptional<FString> SignatureKeyIdValue;
         
@@ -50,10 +53,12 @@ namespace Gs2::Version::Request
         TSharedPtr<FCreateVersionModelMasterRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateVersionModelMasterRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateVersionModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FCreateVersionModelMasterRequest> WithScope(const TOptional<FString> Scope);
+        TSharedPtr<FCreateVersionModelMasterRequest> WithType(const TOptional<FString> Type);
+        TSharedPtr<FCreateVersionModelMasterRequest> WithCurrentVersion(const TSharedPtr<Model::FVersion> CurrentVersion);
         TSharedPtr<FCreateVersionModelMasterRequest> WithWarningVersion(const TSharedPtr<Model::FVersion> WarningVersion);
         TSharedPtr<FCreateVersionModelMasterRequest> WithErrorVersion(const TSharedPtr<Model::FVersion> ErrorVersion);
-        TSharedPtr<FCreateVersionModelMasterRequest> WithScope(const TOptional<FString> Scope);
-        TSharedPtr<FCreateVersionModelMasterRequest> WithCurrentVersion(const TSharedPtr<Model::FVersion> CurrentVersion);
+        TSharedPtr<FCreateVersionModelMasterRequest> WithScheduleVersions(const TSharedPtr<TArray<TSharedPtr<Model::FScheduleVersion>>> ScheduleVersions);
         TSharedPtr<FCreateVersionModelMasterRequest> WithNeedSignature(const TOptional<bool> NeedSignature);
         TSharedPtr<FCreateVersionModelMasterRequest> WithSignatureKeyId(const TOptional<FString> SignatureKeyId);
 
@@ -62,10 +67,11 @@ namespace Gs2::Version::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;
-        TSharedPtr<Model::FVersion> GetWarningVersion() const;
-        TSharedPtr<Model::FVersion> GetErrorVersion() const;
         TOptional<FString> GetScope() const;
+        TOptional<FString> GetType() const;
         TSharedPtr<Model::FVersion> GetCurrentVersion() const;
+        TSharedPtr<Model::FVersion> GetWarningVersion() const;
+        TSharedPtr<Model::FVersion> GetErrorVersion() const;TSharedPtr<TArray<TSharedPtr<Model::FScheduleVersion>>> GetScheduleVersions() const;
         TOptional<bool> GetNeedSignature() const;
         FString GetNeedSignatureString() const;
         TOptional<FString> GetSignatureKeyId() const;

@@ -23,10 +23,12 @@ namespace Gs2::Version::Request
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
+        ScopeValue(TOptional<FString>()),
+        TypeValue(TOptional<FString>()),
+        CurrentVersionValue(nullptr),
         WarningVersionValue(nullptr),
         ErrorVersionValue(nullptr),
-        ScopeValue(TOptional<FString>()),
-        CurrentVersionValue(nullptr),
+        ScheduleVersionsValue(nullptr),
         NeedSignatureValue(TOptional<bool>()),
         SignatureKeyIdValue(TOptional<FString>())
     {
@@ -39,10 +41,12 @@ namespace Gs2::Version::Request
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         MetadataValue(From.MetadataValue),
+        ScopeValue(From.ScopeValue),
+        TypeValue(From.TypeValue),
+        CurrentVersionValue(From.CurrentVersionValue),
         WarningVersionValue(From.WarningVersionValue),
         ErrorVersionValue(From.ErrorVersionValue),
-        ScopeValue(From.ScopeValue),
-        CurrentVersionValue(From.CurrentVersionValue),
+        ScheduleVersionsValue(From.ScheduleVersionsValue),
         NeedSignatureValue(From.NeedSignatureValue),
         SignatureKeyIdValue(From.SignatureKeyIdValue)
     {
@@ -88,6 +92,30 @@ namespace Gs2::Version::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateVersionModelMasterRequest> FCreateVersionModelMasterRequest::WithScope(
+        const TOptional<FString> Scope
+    )
+    {
+        this->ScopeValue = Scope;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateVersionModelMasterRequest> FCreateVersionModelMasterRequest::WithType(
+        const TOptional<FString> Type
+    )
+    {
+        this->TypeValue = Type;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateVersionModelMasterRequest> FCreateVersionModelMasterRequest::WithCurrentVersion(
+        const TSharedPtr<Model::FVersion> CurrentVersion
+    )
+    {
+        this->CurrentVersionValue = CurrentVersion;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateVersionModelMasterRequest> FCreateVersionModelMasterRequest::WithWarningVersion(
         const TSharedPtr<Model::FVersion> WarningVersion
     )
@@ -104,19 +132,11 @@ namespace Gs2::Version::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FCreateVersionModelMasterRequest> FCreateVersionModelMasterRequest::WithScope(
-        const TOptional<FString> Scope
+    TSharedPtr<FCreateVersionModelMasterRequest> FCreateVersionModelMasterRequest::WithScheduleVersions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FScheduleVersion>>> ScheduleVersions
     )
     {
-        this->ScopeValue = Scope;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FCreateVersionModelMasterRequest> FCreateVersionModelMasterRequest::WithCurrentVersion(
-        const TSharedPtr<Model::FVersion> CurrentVersion
-    )
-    {
-        this->CurrentVersionValue = CurrentVersion;
+        this->ScheduleVersionsValue = ScheduleVersions;
         return SharedThis(this);
     }
 
@@ -161,6 +181,25 @@ namespace Gs2::Version::Request
         return MetadataValue;
     }
 
+    TOptional<FString> FCreateVersionModelMasterRequest::GetScope() const
+    {
+        return ScopeValue;
+    }
+
+    TOptional<FString> FCreateVersionModelMasterRequest::GetType() const
+    {
+        return TypeValue;
+    }
+
+    TSharedPtr<Model::FVersion> FCreateVersionModelMasterRequest::GetCurrentVersion() const
+    {
+        if (!CurrentVersionValue.IsValid())
+        {
+            return nullptr;
+        }
+        return CurrentVersionValue;
+    }
+
     TSharedPtr<Model::FVersion> FCreateVersionModelMasterRequest::GetWarningVersion() const
     {
         if (!WarningVersionValue.IsValid())
@@ -179,18 +218,13 @@ namespace Gs2::Version::Request
         return ErrorVersionValue;
     }
 
-    TOptional<FString> FCreateVersionModelMasterRequest::GetScope() const
+    TSharedPtr<TArray<TSharedPtr<Model::FScheduleVersion>>> FCreateVersionModelMasterRequest::GetScheduleVersions() const
     {
-        return ScopeValue;
-    }
-
-    TSharedPtr<Model::FVersion> FCreateVersionModelMasterRequest::GetCurrentVersion() const
-    {
-        if (!CurrentVersionValue.IsValid())
+        if (!ScheduleVersionsValue.IsValid())
         {
             return nullptr;
         }
-        return CurrentVersionValue;
+        return ScheduleVersionsValue;
     }
 
     TOptional<bool> FCreateVersionModelMasterRequest::GetNeedSignature() const
@@ -255,6 +289,32 @@ namespace Gs2::Version::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
+              {
+                  FString v;
+                    if (Data->TryGetStringField("scope", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
+              {
+                  FString v;
+                    if (Data->TryGetStringField("type", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+          ->WithCurrentVersion(Data->HasField("currentVersion") ? [Data]() -> Model::FVersionPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>("currentVersion"))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FVersion::FromJson(Data->GetObjectField("currentVersion"));
+             }() : nullptr)
           ->WithWarningVersion(Data->HasField("warningVersion") ? [Data]() -> Model::FVersionPtr
               {
                   if (Data->HasTypedField<EJson::Null>("warningVersion"))
@@ -271,22 +331,17 @@ namespace Gs2::Version::Request
                   }
                   return Model::FVersion::FromJson(Data->GetObjectField("errorVersion"));
              }() : nullptr)
-            ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
+          ->WithScheduleVersions(Data->HasField("scheduleVersions") ? [Data]() -> TSharedPtr<TArray<Model::FScheduleVersionPtr>>
               {
-                  FString v;
-                    if (Data->TryGetStringField("scope", v))
+                  auto v = MakeShared<TArray<Model::FScheduleVersionPtr>>();
+                  if (!Data->HasTypedField<EJson::Null>("scheduleVersions") && Data->HasTypedField<EJson::Array>("scheduleVersions"))
                   {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                      for (auto JsonObjectValue : Data->GetArrayField("scheduleVersions"))
+                      {
+                          v->Add(Model::FScheduleVersion::FromJson(JsonObjectValue->AsObject()));
+                      }
                   }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
-          ->WithCurrentVersion(Data->HasField("currentVersion") ? [Data]() -> Model::FVersionPtr
-              {
-                  if (Data->HasTypedField<EJson::Null>("currentVersion"))
-                  {
-                      return nullptr;
-                  }
-                  return Model::FVersion::FromJson(Data->GetObjectField("currentVersion"));
+                  return v;
              }() : nullptr)
             ->WithNeedSignature(Data->HasField("needSignature") ? [Data]() -> TOptional<bool>
               {
@@ -331,6 +386,18 @@ namespace Gs2::Version::Request
         {
             JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
         }
+        if (ScopeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("scope", ScopeValue.GetValue());
+        }
+        if (TypeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("type", TypeValue.GetValue());
+        }
+        if (CurrentVersionValue != nullptr && CurrentVersionValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("currentVersion", CurrentVersionValue->ToJson());
+        }
         if (WarningVersionValue != nullptr && WarningVersionValue.IsValid())
         {
             JsonRootObject->SetObjectField("warningVersion", WarningVersionValue->ToJson());
@@ -339,13 +406,14 @@ namespace Gs2::Version::Request
         {
             JsonRootObject->SetObjectField("errorVersion", ErrorVersionValue->ToJson());
         }
-        if (ScopeValue.IsSet())
+        if (ScheduleVersionsValue != nullptr && ScheduleVersionsValue.IsValid())
         {
-            JsonRootObject->SetStringField("scope", ScopeValue.GetValue());
-        }
-        if (CurrentVersionValue != nullptr && CurrentVersionValue.IsValid())
-        {
-            JsonRootObject->SetObjectField("currentVersion", CurrentVersionValue->ToJson());
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *ScheduleVersionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("scheduleVersions", v);
         }
         if (NeedSignatureValue.IsSet())
         {

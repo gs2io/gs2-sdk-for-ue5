@@ -30,9 +30,9 @@
 #include "Version/Domain/Model/VersionModel.h"
 #include "Version/Domain/Model/AcceptVersion.h"
 #include "Version/Domain/Model/Checker.h"
-#include "Version/Domain/Model/CurrentVersionMaster.h"
 #include "Version/Domain/Model/User.h"
 #include "Version/Domain/Model/UserAccessToken.h"
+#include "Version/Domain/Model/CurrentVersionMaster.h"
 
 namespace Gs2::Version::Domain
 {

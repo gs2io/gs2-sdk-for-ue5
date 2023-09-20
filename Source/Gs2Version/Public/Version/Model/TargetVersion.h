@@ -25,9 +25,9 @@ namespace Gs2::Version::Model
     class GS2VERSION_API FTargetVersion final : public Gs2Object, public TSharedFromThis<FTargetVersion>
     {
         TOptional<FString> VersionNameValue;
-        TSharedPtr<FVersion> VersionValue;
         TOptional<FString> BodyValue;
         TOptional<FString> SignatureValue;
+        TSharedPtr<FVersion> VersionValue;
 
     public:
         FTargetVersion();
@@ -37,14 +37,14 @@ namespace Gs2::Version::Model
         virtual ~FTargetVersion() override = default;
 
         TSharedPtr<FTargetVersion> WithVersionName(const TOptional<FString> VersionName);
-        TSharedPtr<FTargetVersion> WithVersion(const TSharedPtr<FVersion> Version);
         TSharedPtr<FTargetVersion> WithBody(const TOptional<FString> Body);
         TSharedPtr<FTargetVersion> WithSignature(const TOptional<FString> Signature);
+        TSharedPtr<FTargetVersion> WithVersion(const TSharedPtr<FVersion> Version);
 
         TOptional<FString> GetVersionName() const;
-        TSharedPtr<FVersion> GetVersion() const;
         TOptional<FString> GetBody() const;
         TOptional<FString> GetSignature() const;
+        TSharedPtr<FVersion> GetVersion() const;
 
 
         static TSharedPtr<FTargetVersion> FromJson(const TSharedPtr<FJsonObject> Data);
