@@ -46,9 +46,14 @@ namespace Gs2::Account::Domain::Model
         Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
+        TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> BanStatuses;
         TOptional<FString> Body;
         TOptional<FString> Signature;
         TOptional<FString> NextPageToken;
+        TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> GetBanStatuses() const
+        {
+            return BanStatuses;
+        }
         TOptional<FString> GetBody() const
         {
             return Body;
@@ -133,6 +138,58 @@ namespace Gs2::Account::Domain::Model
 
         TSharedPtr<FAsyncTask<FUpdateBannedTask>> UpdateBanned(
             Request::FUpdateBannedRequestPtr Request
+        );
+
+        class GS2ACCOUNT_API FAddBanTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FAddBanTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FAddBanRequestPtr Request;
+        public:
+            explicit FAddBanTask(
+                const TSharedPtr<FAccountDomain> Self,
+                const Request::FAddBanRequestPtr Request
+            );
+
+            FAddBanTask(
+                const FAddBanTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FAddBanTask;
+
+        TSharedPtr<FAsyncTask<FAddBanTask>> AddBan(
+            Request::FAddBanRequestPtr Request
+        );
+
+        class GS2ACCOUNT_API FRemoveBanTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FRemoveBanTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FRemoveBanRequestPtr Request;
+        public:
+            explicit FRemoveBanTask(
+                const TSharedPtr<FAccountDomain> Self,
+                const Request::FRemoveBanRequestPtr Request
+            );
+
+            FRemoveBanTask(
+                const FRemoveBanTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FRemoveBanTask;
+
+        TSharedPtr<FAsyncTask<FRemoveBanTask>> RemoveBan(
+            Request::FRemoveBanRequestPtr Request
         );
 
         class GS2ACCOUNT_API FGetTask final :

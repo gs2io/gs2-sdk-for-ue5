@@ -15,6 +15,7 @@
  */
 
 #include "BpGs2/Public/Account/Model/Gs2AccountNamespace.h"
+#include "BpGs2/Public/Account/Model/Gs2AccountBanStatus.h"
 #include "BpGs2/Public/Account/Model/Gs2AccountAccount.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Account/Model/Gs2AccountAccount.h"

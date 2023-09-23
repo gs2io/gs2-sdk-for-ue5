@@ -20,6 +20,7 @@
 #include "Account/Domain/Model/AccountAccessToken.h"
 #include "Account/Model/Gs2AccountEzAccount.h"
 #include "Account/Model/Gs2AccountEzTakeOver.h"
+#include "Account/Model/Gs2AccountEzBanStatus.h"
 #include "Gs2AccountEzTakeOverGameSessionDomain.h"
 #include "Account/Domain/Iterator/Gs2AccountEzDescribeTakeOversIterator.h"
 #include "Gs2AccountEzAccountGameSessionDomain.h"
@@ -36,6 +37,7 @@ namespace Gs2::UE5::Account::Domain::Model
         Gs2::UE5::Util::FProfilePtr ProfileValue;
 
         public:
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>> BanStatuses() const;
         TOptional<FString> Body() const;
         TOptional<FString> Signature() const;
         TOptional<FString> NextPageToken() const;

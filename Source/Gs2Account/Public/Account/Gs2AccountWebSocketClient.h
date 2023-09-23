@@ -38,6 +38,10 @@
 #include "Task/WebSocket/UpdateTimeOffsetTask.h"
 #include "Request/UpdateBannedRequest.h"
 #include "Task/WebSocket/UpdateBannedTask.h"
+#include "Request/AddBanRequest.h"
+#include "Task/WebSocket/AddBanTask.h"
+#include "Request/RemoveBanRequest.h"
+#include "Task/WebSocket/RemoveBanTask.h"
 #include "Request/GetAccountRequest.h"
 #include "Task/WebSocket/GetAccountTask.h"
 #include "Request/DeleteAccountRequest.h"
@@ -120,6 +124,14 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateBannedTask>> UpdateBanned(
             const Request::FUpdateBannedRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAddBanTask>> AddBan(
+            const Request::FAddBanRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRemoveBanTask>> RemoveBan(
+            const Request::FRemoveBanRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetAccountTask>> GetAccount(

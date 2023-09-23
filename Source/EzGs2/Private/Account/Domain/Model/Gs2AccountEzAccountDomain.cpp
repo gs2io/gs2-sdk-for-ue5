@@ -19,6 +19,21 @@
 namespace Gs2::UE5::Account::Domain::Model
 {
 
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>> FEzAccountDomain::BanStatuses() const
+    {
+        return [&]{
+            auto Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>>();
+            for (auto Value : *Domain->BanStatuses) {
+                Result->Add(
+                    Gs2::UE5::Account::Model::FEzBanStatus::FromModel(
+                        Value
+                    )
+                );
+            }
+            return Result;
+        }();
+    }
+
     TOptional<FString> FEzAccountDomain::Body() const
     {
         return Domain->Body;

@@ -20,6 +20,7 @@
 #include "Account/Domain/Model/Namespace.h"
 #include "Account/Model/Gs2AccountEzAccount.h"
 #include "Account/Model/Gs2AccountEzTakeOver.h"
+#include "Account/Model/Gs2AccountEzBanStatus.h"
 #include "Gs2AccountEzAccountDomain.h"
 #include "Gs2AccountEzAccountDomain.h"
 #include "Gs2AccountEzAccountGameSessionDomain.h"

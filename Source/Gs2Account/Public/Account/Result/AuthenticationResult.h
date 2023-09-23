@@ -18,12 +18,14 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Account.h"
+#include "../Model/BanStatus.h"
 
 namespace Gs2::Account::Result
 {
     class GS2ACCOUNT_API FAuthenticationResult final : public TSharedFromThis<FAuthenticationResult>
     {
         TSharedPtr<Model::FAccount> ItemValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FBanStatus>>> BanStatusesValue;
         TOptional<FString> BodyValue;
         TOptional<FString> SignatureValue;
         
@@ -36,10 +38,12 @@ namespace Gs2::Account::Result
         ~FAuthenticationResult() = default;
 
         TSharedPtr<FAuthenticationResult> WithItem(const TSharedPtr<Model::FAccount> Item);
+        TSharedPtr<FAuthenticationResult> WithBanStatuses(const TSharedPtr<TArray<TSharedPtr<Model::FBanStatus>>> BanStatuses);
         TSharedPtr<FAuthenticationResult> WithBody(const TOptional<FString> Body);
         TSharedPtr<FAuthenticationResult> WithSignature(const TOptional<FString> Signature);
 
         TSharedPtr<Model::FAccount> GetItem() const;
+        TSharedPtr<TArray<TSharedPtr<Model::FBanStatus>>> GetBanStatuses() const;
         TOptional<FString> GetBody() const;
         TOptional<FString> GetSignature() const;
 

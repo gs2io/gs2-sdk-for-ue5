@@ -46,9 +46,14 @@ namespace Gs2::Account::Domain::Model
         Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
+        TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> BanStatuses;
         TOptional<FString> Body;
         TOptional<FString> Signature;
         TOptional<FString> NextPageToken;
+        TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> GetBanStatuses() const
+        {
+            return BanStatuses;
+        }
         TOptional<FString> GetBody() const
         {
             return Body;

@@ -23,6 +23,7 @@ namespace Gs2::Account::Model
         UserIdValue(TOptional<FString>()),
         PasswordValue(TOptional<FString>()),
         TimeOffsetValue(TOptional<int32>()),
+        BanStatusesValue(nullptr),
         BannedValue(TOptional<bool>()),
         CreatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -36,6 +37,7 @@ namespace Gs2::Account::Model
         UserIdValue(From.UserIdValue),
         PasswordValue(From.PasswordValue),
         TimeOffsetValue(From.TimeOffsetValue),
+        BanStatusesValue(From.BanStatusesValue),
         BannedValue(From.BannedValue),
         CreatedAtValue(From.CreatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -71,6 +73,14 @@ namespace Gs2::Account::Model
     )
     {
         this->TimeOffsetValue = TimeOffset;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAccount> FAccount::WithBanStatuses(
+        const TSharedPtr<TArray<TSharedPtr<Model::FBanStatus>>> BanStatuses
+    )
+    {
+        this->BanStatusesValue = BanStatuses;
         return SharedThis(this);
     }
 
@@ -121,6 +131,10 @@ namespace Gs2::Account::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), TimeOffsetValue.GetValue());
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FBanStatus>>> FAccount::GetBanStatuses() const
+    {
+        return BanStatusesValue;
     }
     TOptional<bool> FAccount::GetBanned() const
     {
@@ -248,6 +262,18 @@ namespace Gs2::Account::Model
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
+            ->WithBanStatuses(Data->HasField("banStatuses") ? [Data]() -> TSharedPtr<TArray<Model::FBanStatusPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FBanStatusPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("banStatuses") && Data->HasTypedField<EJson::Array>("banStatuses"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("banStatuses"))
+                        {
+                            v->Add(Model::FBanStatus::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FBanStatusPtr>>())
             ->WithBanned(Data->HasField("banned") ? [Data]() -> TOptional<bool>
                 {
                     bool v;
@@ -295,6 +321,15 @@ namespace Gs2::Account::Model
         if (TimeOffsetValue.IsSet())
         {
             JsonRootObject->SetNumberField("timeOffset", TimeOffsetValue.GetValue());
+        }
+        if (BanStatusesValue != nullptr && BanStatusesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *BanStatusesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("banStatuses", v);
         }
         if (BannedValue.IsSet())
         {

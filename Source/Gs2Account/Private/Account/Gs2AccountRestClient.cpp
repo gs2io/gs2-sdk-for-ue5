@@ -109,6 +109,24 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FAddBanTask>> FGs2AccountRestClient::AddBan(
+        const Request::FAddBanRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAddBanTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FRemoveBanTask>> FGs2AccountRestClient::RemoveBan(
+        const Request::FRemoveBanRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRemoveBanTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetAccountTask>> FGs2AccountRestClient::GetAccount(
         const Request::FGetAccountRequestPtr Request) const
     {

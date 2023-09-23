@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "BanStatus.h"
 
 namespace Gs2::Account::Model
 {
@@ -27,6 +28,7 @@ namespace Gs2::Account::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> PasswordValue;
         TOptional<int32> TimeOffsetValue;
+        TSharedPtr<TArray<TSharedPtr<FBanStatus>>> BanStatusesValue;
         TOptional<bool> BannedValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
@@ -42,6 +44,7 @@ namespace Gs2::Account::Model
         TSharedPtr<FAccount> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FAccount> WithPassword(const TOptional<FString> Password);
         TSharedPtr<FAccount> WithTimeOffset(const TOptional<int32> TimeOffset);
+        TSharedPtr<FAccount> WithBanStatuses(const TSharedPtr<TArray<TSharedPtr<FBanStatus>>> BanStatuses);
         TSharedPtr<FAccount> WithBanned(const TOptional<bool> Banned);
         TSharedPtr<FAccount> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FAccount> WithRevision(const TOptional<int64> Revision);
@@ -51,6 +54,7 @@ namespace Gs2::Account::Model
         TOptional<FString> GetPassword() const;
         TOptional<int32> GetTimeOffset() const;
         FString GetTimeOffsetString() const;
+        TSharedPtr<TArray<TSharedPtr<FBanStatus>>> GetBanStatuses() const;
         TOptional<bool> GetBanned() const;
         FString GetBannedString() const;
         TOptional<int64> GetCreatedAt() const;

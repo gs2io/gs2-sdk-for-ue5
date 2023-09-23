@@ -20,6 +20,7 @@
 #include "Account/Domain/Model/TakeOverAccessToken.h"
 #include "Account/Model/Gs2AccountEzAccount.h"
 #include "Account/Model/Gs2AccountEzTakeOver.h"
+#include "Account/Model/Gs2AccountEzBanStatus.h"
 #include "Gs2AccountEzTakeOverGameSessionDomain.h"
 #include "Account/Domain/Iterator/Gs2AccountEzDescribeTakeOversIterator.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"

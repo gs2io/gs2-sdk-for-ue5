@@ -38,6 +38,10 @@
 #include "Task/Rest/UpdateTimeOffsetTask.h"
 #include "Request/UpdateBannedRequest.h"
 #include "Task/Rest/UpdateBannedTask.h"
+#include "Request/AddBanRequest.h"
+#include "Task/Rest/AddBanTask.h"
+#include "Request/RemoveBanRequest.h"
+#include "Task/Rest/RemoveBanTask.h"
 #include "Request/GetAccountRequest.h"
 #include "Task/Rest/GetAccountTask.h"
 #include "Request/DeleteAccountRequest.h"
@@ -120,6 +124,14 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::Rest::FUpdateBannedTask>> UpdateBanned(
             const Request::FUpdateBannedRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAddBanTask>> AddBan(
+            const Request::FAddBanRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRemoveBanTask>> RemoveBan(
+            const Request::FRemoveBanRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetAccountTask>> GetAccount(

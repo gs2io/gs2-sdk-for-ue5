@@ -20,6 +20,7 @@ namespace Gs2::Account::Result
 {
     FAuthenticationResult::FAuthenticationResult():
         ItemValue(nullptr),
+        BanStatusesValue(nullptr),
         BodyValue(TOptional<FString>()),
         SignatureValue(TOptional<FString>())
     {
@@ -29,6 +30,7 @@ namespace Gs2::Account::Result
         const FAuthenticationResult& From
     ):
         ItemValue(From.ItemValue),
+        BanStatusesValue(From.BanStatusesValue),
         BodyValue(From.BodyValue),
         SignatureValue(From.SignatureValue)
     {
@@ -39,6 +41,14 @@ namespace Gs2::Account::Result
     )
     {
         this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAuthenticationResult> FAuthenticationResult::WithBanStatuses(
+        const TSharedPtr<TArray<TSharedPtr<Model::FBanStatus>>> BanStatuses
+    )
+    {
+        this->BanStatusesValue = BanStatuses;
         return SharedThis(this);
     }
 
@@ -67,6 +77,15 @@ namespace Gs2::Account::Result
         return ItemValue;
     }
 
+    TSharedPtr<TArray<TSharedPtr<Model::FBanStatus>>> FAuthenticationResult::GetBanStatuses() const
+    {
+        if (!BanStatusesValue.IsValid())
+        {
+            return nullptr;
+        }
+        return BanStatusesValue;
+    }
+
     TOptional<FString> FAuthenticationResult::GetBody() const
     {
         return BodyValue;
@@ -90,6 +109,18 @@ namespace Gs2::Account::Result
                         return nullptr;
                     }
                     return Model::FAccount::FromJson(Data->GetObjectField("item"));
+                 }() : nullptr)
+            ->WithBanStatuses(Data->HasField("banStatuses") ? [Data]() -> TSharedPtr<TArray<Model::FBanStatusPtr>>
+                 {
+                    auto v = MakeShared<TArray<Model::FBanStatusPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("banStatuses") && Data->HasTypedField<EJson::Array>("banStatuses"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("banStatuses"))
+                        {
+                            v->Add(Model::FBanStatus::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
                  }() : nullptr)
             ->WithBody(Data->HasField("body") ? [Data]() -> TOptional<FString>
                 {
@@ -117,6 +148,15 @@ namespace Gs2::Account::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (BanStatusesValue != nullptr && BanStatusesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *BanStatusesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("banStatuses", v);
         }
         if (BodyValue.IsSet())
         {

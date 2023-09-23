@@ -21,6 +21,7 @@
 #include "Model/Account.h"
 #include "Model/TakeOver.h"
 #include "Model/DataOwner.h"
+#include "Model/BanStatus.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
 
@@ -83,6 +84,18 @@
 #include "Result/UpdateBannedResult.h"
 #include "Task/Rest/UpdateBannedTask.h"
 #include "Task/WebSocket/UpdateBannedTask.h"
+
+// AddBan
+#include "Request/AddBanRequest.h"
+#include "Result/AddBanResult.h"
+#include "Task/Rest/AddBanTask.h"
+#include "Task/WebSocket/AddBanTask.h"
+
+// RemoveBan
+#include "Request/RemoveBanRequest.h"
+#include "Result/RemoveBanResult.h"
+#include "Task/Rest/RemoveBanTask.h"
+#include "Task/WebSocket/RemoveBanTask.h"
 
 // GetAccount
 #include "Request/GetAccountRequest.h"
