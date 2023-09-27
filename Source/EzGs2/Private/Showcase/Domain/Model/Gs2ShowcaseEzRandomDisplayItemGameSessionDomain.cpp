@@ -209,4 +209,21 @@ namespace Gs2::UE5::Showcase::Domain::Model
     TSharedPtr<FAsyncTask<FEzRandomDisplayItemGameSessionDomain::FModelTask>> FEzRandomDisplayItemGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzRandomDisplayItemGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Showcase::Model::FEzRandomDisplayItemPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Showcase::Model::FRandomDisplayItemPtr Item)
+            {
+                Callback(Gs2::UE5::Showcase::Model::FEzRandomDisplayItem::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzRandomDisplayItemGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

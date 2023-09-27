@@ -525,6 +525,34 @@ namespace Gs2::Script::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeScripts(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Script::Model::FScript::TypeName,
+            Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Script"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeScripts(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Script::Model::FScript::TypeName,
+            Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Script"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Script::Domain::Model::FScriptDomain> FNamespaceDomain::Script(
         const FString ScriptName
     ) const
@@ -629,6 +657,37 @@ namespace Gs2::Script::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Script::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Script::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Script::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Script::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

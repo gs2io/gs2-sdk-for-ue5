@@ -404,6 +404,35 @@ namespace Gs2::Dictionary::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentEntryMasterDomain::FModelTask>> FCurrentEntryMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentEntryMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentEntryMasterDomain::Subscribe(
+        TFunction<void(Gs2::Dictionary::Model::FCurrentEntryMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Dictionary::Model::FCurrentEntryMaster::TypeName,
+            ParentKey,
+            Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Dictionary::Model::FCurrentEntryMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentEntryMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Dictionary::Model::FCurrentEntryMaster::TypeName,
+            ParentKey,
+            Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

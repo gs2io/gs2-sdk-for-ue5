@@ -104,6 +104,14 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Formation::Domain::Iterator::FDescribeMoldsIteratorPtr Molds(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMolds(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMolds(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain> Mold(
             const FString MoldModelName
         ) const;
@@ -111,6 +119,14 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIteratorPtr PropertyForms(
             const FString PropertyFormModelName
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribePropertyForms(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribePropertyForms(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomain> PropertyForm(
             const FString PropertyFormModelName,

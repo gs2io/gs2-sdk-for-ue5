@@ -288,6 +288,35 @@ namespace Gs2::AdReward::Domain::Model
     TSharedPtr<FAsyncTask<FPointAccessTokenDomain::FModelTask>> FPointAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FPointAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FPointAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::AdReward::Model::FPointPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::AdReward::Model::FPoint::TypeName,
+            ParentKey,
+            Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::AdReward::Model::FPoint>(obj));
+            }
+        );
+    }
+
+    void FPointAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::AdReward::Model::FPoint::TypeName,
+            ParentKey,
+            Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -90,4 +90,21 @@ namespace Gs2::UE5::Dictionary::Domain::Model
     TSharedPtr<FAsyncTask<FEzEntryDomain::FModelTask>> FEzEntryDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzEntryDomain::Subscribe(TFunction<void(Gs2::UE5::Dictionary::Model::FEzEntryPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Dictionary::Model::FEntryPtr Item)
+            {
+                Callback(Gs2::UE5::Dictionary::Model::FEzEntry::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzEntryDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

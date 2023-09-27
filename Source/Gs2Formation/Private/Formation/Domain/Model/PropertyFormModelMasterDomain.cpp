@@ -360,6 +360,37 @@ namespace Gs2::Formation::Domain::Model
     TSharedPtr<FAsyncTask<FPropertyFormModelMasterDomain::FModelTask>> FPropertyFormModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FPropertyFormModelMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FPropertyFormModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::Formation::Model::FPropertyFormModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Formation::Model::FPropertyFormModelMaster::TypeName,
+            ParentKey,
+            Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain::CreateCacheKey(
+                PropertyFormModelName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Formation::Model::FPropertyFormModelMaster>(obj));
+            }
+        );
+    }
+
+    void FPropertyFormModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Formation::Model::FPropertyFormModelMaster::TypeName,
+            ParentKey,
+            Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain::CreateCacheKey(
+                PropertyFormModelName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

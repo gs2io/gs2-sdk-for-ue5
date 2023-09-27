@@ -178,4 +178,21 @@ namespace Gs2::UE5::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FEzFollowUserGameSessionDomain::FModelTask>> FEzFollowUserGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzFollowUserGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzFollowUserPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Friend::Model::FFollowUserPtr Item)
+            {
+                Callback(Gs2::UE5::Friend::Model::FEzFollowUser::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzFollowUserGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

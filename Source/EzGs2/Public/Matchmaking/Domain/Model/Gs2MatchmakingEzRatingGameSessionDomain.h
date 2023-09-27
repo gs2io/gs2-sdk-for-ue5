@@ -91,6 +91,10 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Matchmaking::Model::FEzRatingPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
+
     };
     typedef TSharedPtr<FEzRatingGameSessionDomain> FEzRatingGameSessionDomainPtr;
 }

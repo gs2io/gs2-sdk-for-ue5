@@ -317,6 +317,34 @@ namespace Gs2::Identifier::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeIdentifiers(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Identifier::Model::FIdentifier::TypeName,
+            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+                UserName,
+                "Identifier"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeIdentifiers(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Identifier::Model::FIdentifier::TypeName,
+            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+                UserName,
+                "Identifier"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain> FUserDomain::Identifier(
         const FString ClientId
     ) const
@@ -338,6 +366,34 @@ namespace Gs2::Identifier::Domain::Model
             Cache,
             Client,
             UserName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribePasswords(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Identifier::Model::FPassword::TypeName,
+            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+                UserName,
+                "Password"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribePasswords(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Identifier::Model::FPassword::TypeName,
+            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+                UserName,
+                "Password"
+            ),
+            CallbackID
         );
     }
 
@@ -455,6 +511,37 @@ namespace Gs2::Identifier::Domain::Model
 
     TSharedPtr<FAsyncTask<FUserDomain::FModelTask>> FUserDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FUserDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::Subscribe(
+        TFunction<void(Gs2::Identifier::Model::FUserPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Identifier::Model::FUser::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
+                UserName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FUser>(obj));
+            }
+        );
+    }
+
+    void FUserDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Identifier::Model::FUser::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
+                UserName
+            ),
+            CallbackID
+        );
     }
 }
 

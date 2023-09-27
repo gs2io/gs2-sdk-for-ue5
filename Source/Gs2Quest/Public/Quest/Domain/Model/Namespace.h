@@ -221,6 +221,14 @@ namespace Gs2::Quest::Domain::Model
         Gs2::Quest::Domain::Iterator::FDescribeQuestGroupModelsIteratorPtr QuestGroupModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeQuestGroupModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeQuestGroupModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Quest::Domain::Model::FQuestGroupModelDomain> QuestGroupModel(
             const FString QuestGroupName
         ) const;
@@ -235,6 +243,14 @@ namespace Gs2::Quest::Domain::Model
 
         Gs2::Quest::Domain::Iterator::FDescribeQuestGroupModelMastersIteratorPtr QuestGroupModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeQuestGroupModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeQuestGroupModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain> QuestGroupModelMaster(
             const FString QuestGroupName
@@ -270,6 +286,14 @@ namespace Gs2::Quest::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Quest::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

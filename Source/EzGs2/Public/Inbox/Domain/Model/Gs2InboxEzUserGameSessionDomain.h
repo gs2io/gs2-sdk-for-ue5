@@ -70,6 +70,10 @@ namespace Gs2::UE5::Inbox::Domain::Model
             const TOptional<bool> IsRead = TOptional<bool>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMessages(TFunction<void()> Callback);
+
+        void UnsubscribeMessages(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomainPtr Message(
             const FString MessageName
         ) const;

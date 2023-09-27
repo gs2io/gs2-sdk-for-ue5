@@ -234,6 +234,37 @@ namespace Gs2::Enchant::Domain::Model
     TSharedPtr<FAsyncTask<FRarityParameterModelDomain::FModelTask>> FRarityParameterModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRarityParameterModelDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FRarityParameterModelDomain::Subscribe(
+        TFunction<void(Gs2::Enchant::Model::FRarityParameterModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Enchant::Model::FRarityParameterModel::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FRarityParameterModelDomain::CreateCacheKey(
+                ParameterName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Enchant::Model::FRarityParameterModel>(obj));
+            }
+        );
+    }
+
+    void FRarityParameterModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Enchant::Model::FRarityParameterModel::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FRarityParameterModelDomain::CreateCacheKey(
+                ParameterName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

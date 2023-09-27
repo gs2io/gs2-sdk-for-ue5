@@ -78,7 +78,12 @@ namespace Gs2::MegaField::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        AreaModelName(From.AreaModelName),
+        LayerModelName(From.LayerModelName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -420,7 +425,7 @@ namespace Gs2::MegaField::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (AreaModelName.IsSet() ? *AreaModelName : "null") + ":" +
@@ -433,7 +438,7 @@ namespace Gs2::MegaField::Domain::Model
         TOptional<FString> LayerModelName
     )
     {
-        return FString() +
+        return FString("") +
             (AreaModelName.IsSet() ? *AreaModelName : "null") + ":" + 
             (LayerModelName.IsSet() ? *LayerModelName : "null");
     }
@@ -457,12 +462,14 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::MegaField::Model::FSpatial>(
+        TSharedPtr<Gs2::MegaField::Model::FSpatial> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::MegaField::Model::FSpatial>(
             Self->ParentKey,
             Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
                 Self->AreaModelName,
                 Self->LayerModelName
-            )
+            ),
+            &Value
         );
         *Result = Value;
 
@@ -471,6 +478,39 @@ namespace Gs2::MegaField::Domain::Model
 
     TSharedPtr<FAsyncTask<FSpatialAccessTokenDomain::FModelTask>> FSpatialAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSpatialAccessTokenDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FSpatialAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::MegaField::Model::FSpatial::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
+                AreaModelName,
+                LayerModelName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FSpatial>(obj));
+            }
+        );
+    }
+
+    void FSpatialAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::MegaField::Model::FSpatial::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
+                AreaModelName,
+                LayerModelName
+            ),
+            CallbackID
+        );
     }
 }
 

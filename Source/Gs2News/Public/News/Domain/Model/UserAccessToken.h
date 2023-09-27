@@ -85,6 +85,14 @@ namespace Gs2::News::Domain::Model
         Gs2::News::Domain::Iterator::FDescribeNewsIteratorPtr Newses(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNewses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNewses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::News::Domain::Model::FNewsAccessTokenDomain> News(
         ) const;
 

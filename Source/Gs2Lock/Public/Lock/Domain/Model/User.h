@@ -73,6 +73,14 @@ namespace Gs2::Lock::Domain::Model
         Gs2::Lock::Domain::Iterator::FDescribeMutexesByUserIdIteratorPtr Mutexes(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMutexes(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMutexes(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Lock::Domain::Model::FMutexDomain> Mutex(
             const FString PropertyId
         ) const;

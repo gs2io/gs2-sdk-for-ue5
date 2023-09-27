@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -317,6 +319,39 @@ namespace Gs2::Ranking::Domain::Model
 
     TSharedPtr<FAsyncTask<FSubscribeUserDomain::FModelTask>> FSubscribeUserDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSubscribeUserDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FSubscribeUserDomain::Subscribe(
+        TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Ranking::Model::FSubscribeUser::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
+                CategoryName,
+                TargetUserId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Ranking::Model::FSubscribeUser>(obj));
+            }
+        );
+    }
+
+    void FSubscribeUserDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Ranking::Model::FSubscribeUser::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
+                CategoryName,
+                TargetUserId
+            ),
+            CallbackID
+        );
     }
 }
 

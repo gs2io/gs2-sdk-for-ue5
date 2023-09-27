@@ -230,12 +230,28 @@ namespace Gs2::Key::Domain::Model
         Gs2::Key::Domain::Iterator::FDescribeKeysIteratorPtr Keys(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeKeys(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeKeys(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Key::Domain::Model::FKeyDomain> Key(
             const FString KeyName
         ) const;
 
         Gs2::Key::Domain::Iterator::FDescribeGitHubApiKeysIteratorPtr GitHubApiKeys(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeGitHubApiKeys(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeGitHubApiKeys(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Key::Domain::Model::FGitHubApiKeyDomain> GitHubApiKey(
             const FString ApiKeyName
@@ -271,6 +287,14 @@ namespace Gs2::Key::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Key::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

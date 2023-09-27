@@ -342,6 +342,20 @@ namespace Gs2::UE5::Datastore::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzDataObjectGameSessionDomain::SubscribeDataObjectHistories(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeDataObjectHistories(
+            Callback
+        );
+    }
+
+    void FEzDataObjectGameSessionDomain::UnsubscribeDataObjectHistories(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeDataObjectHistories(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Datastore::Domain::Model::FEzDataObjectHistoryGameSessionDomainPtr FEzDataObjectGameSessionDomain::DataObjectHistory(
         const FString Generation
     ) const
@@ -393,6 +407,23 @@ namespace Gs2::UE5::Datastore::Domain::Model
     TSharedPtr<FAsyncTask<FEzDataObjectGameSessionDomain::FModelTask>> FEzDataObjectGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzDataObjectGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Datastore::Model::FEzDataObjectPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Datastore::Model::FDataObjectPtr Item)
+            {
+                Callback(Gs2::UE5::Datastore::Model::FEzDataObject::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzDataObjectGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
     
     FEzDataObjectGameSessionDomain::FReUploadTask::FReUploadTask(
         TSharedPtr<FEzDataObjectGameSessionDomain> Self,
@@ -409,7 +440,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
     {
         const auto Future = Self->ProfileValue->Run<FReUploadTask>(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                FString Url;
+                FString Url("");
                 {
                     const auto Task = Self->Domain->PrepareReUpload(
                         MakeShared<Gs2::Datastore::Request::FPrepareReUploadRequest>()
@@ -426,7 +457,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
                 {
                     auto Processing = true;
                     int32 ResponseCode;
-                    FString ResponseBody;
+                    FString ResponseBody("");
                     {
                         const auto Request = FHttpModule::Get().CreateRequest();
                         Request->OnProcessRequestComplete().BindLambda(
@@ -520,7 +551,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
     {
         const auto Future = Self->ProfileValue->Run<FDownloadTask>(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                FString Url;
+                FString Url("");
                 {
                     const auto Task = Self->Domain->PrepareDownloadOwnData(
                         MakeShared<Gs2::Datastore::Request::FPrepareDownloadOwnDataRequest>()

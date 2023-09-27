@@ -30,6 +30,14 @@
 #include "Inventory/Domain/Model/InventoryModel.h"
 #include "Inventory/Domain/Model/ItemModelMaster.h"
 #include "Inventory/Domain/Model/ItemModel.h"
+#include "Inventory/Domain/Model/SimpleInventoryModelMaster.h"
+#include "Inventory/Domain/Model/SimpleInventoryModel.h"
+#include "Inventory/Domain/Model/SimpleItemModelMaster.h"
+#include "Inventory/Domain/Model/SimpleItemModel.h"
+#include "Inventory/Domain/Model/BigInventoryModelMaster.h"
+#include "Inventory/Domain/Model/BigInventoryModel.h"
+#include "Inventory/Domain/Model/BigItemModelMaster.h"
+#include "Inventory/Domain/Model/BigItemModel.h"
 #include "Inventory/Domain/Model/CurrentItemModelMaster.h"
 #include "Inventory/Domain/Model/Inventory.h"
 #include "Inventory/Domain/Model/InventoryAccessToken.h"
@@ -37,6 +45,14 @@
 #include "Inventory/Domain/Model/ItemSetAccessToken.h"
 #include "Inventory/Domain/Model/ReferenceOf.h"
 #include "Inventory/Domain/Model/ReferenceOfAccessToken.h"
+#include "Inventory/Domain/Model/SimpleInventory.h"
+#include "Inventory/Domain/Model/SimpleInventoryAccessToken.h"
+#include "Inventory/Domain/Model/SimpleItem.h"
+#include "Inventory/Domain/Model/SimpleItemAccessToken.h"
+#include "Inventory/Domain/Model/BigInventory.h"
+#include "Inventory/Domain/Model/BigInventoryAccessToken.h"
+#include "Inventory/Domain/Model/BigItem.h"
+#include "Inventory/Domain/Model/BigItemAccessToken.h"
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
 #include "Inventory/Domain/Model/ItemSetEntry.h"
@@ -85,7 +101,13 @@ namespace Gs2::Inventory::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        InventoryName(From.InventoryName),
+        ItemName(From.ItemName),
+        ItemSetName(From.ItemSetName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -140,19 +162,21 @@ namespace Gs2::Inventory::Domain::Model
                         Item->GetName()
                     );
                     if (Item->GetCount() == 0) {
-                        Self->Cache->Delete(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
+                        Self->Cache->Put(
+                            Gs2::Inventory::Model::FItemSetEntry::TypeName,
                             ParentKey,
-                            Key
+                            Key,
+                            nullptr,
+                            Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                         );
                     }
                     else
                     {
                         Self->Cache->Put(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
+                            Gs2::Inventory::Model::FItemSetEntry::TypeName,
                             ParentKey,
                             Key,
-                            Item,
+                            MakeShared<Gs2::Inventory::Model::FItemSetEntry>(Item),
                             Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                         );
                     }
@@ -246,9 +270,11 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
-                const auto Item = Self->Cache->Get<Gs2::Inventory::Model::FInventory>(
+                TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
+                auto bCacheHit = Self->Cache->TryGet<Gs2::Inventory::Model::FInventory>(
                     ParentKey,
-                    Key
+                    Key,
+                    &Item
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
@@ -333,19 +359,21 @@ namespace Gs2::Inventory::Domain::Model
                         Item->GetName()
                     );
                     if (Item->GetCount() == 0) {
-                        Self->Cache->Delete(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
+                        Self->Cache->Put(
+                            Gs2::Inventory::Model::FItemSetEntry::TypeName,
                             ParentKey,
-                            Key
+                            Key,
+                            nullptr,
+                            Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                         );
                     }
                     else
                     {
                         Self->Cache->Put(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
+                            Gs2::Inventory::Model::FItemSetEntry::TypeName,
                             ParentKey,
                             Key,
-                            Item,
+                            MakeShared<Gs2::Inventory::Model::FItemSetEntry>(Item),
                             Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                         );
                     }
@@ -439,9 +467,11 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
-                const auto Item = Self->Cache->Get<Gs2::Inventory::Model::FInventory>(
+                TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
+                auto bCacheHit = Self->Cache->TryGet<Gs2::Inventory::Model::FInventory>(
                     ParentKey,
-                    Key
+                    Key,
+                    &Item
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
@@ -544,19 +574,21 @@ namespace Gs2::Inventory::Domain::Model
                         Item->GetName()
                     );
                     if (Item->GetCount() == 0) {
-                        Self->Cache->Delete(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
+                        Self->Cache->Put(
+                            Gs2::Inventory::Model::FItemSetEntry::TypeName,
                             ParentKey,
-                            Key
+                            Key,
+                            nullptr,
+                            Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                         );
                     }
                     else
                     {
                         Self->Cache->Put(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
+                            Gs2::Inventory::Model::FItemSetEntry::TypeName,
                             ParentKey,
                             Key,
-                            Item,
+                            MakeShared<Gs2::Inventory::Model::FItemSetEntry>(Item),
                             Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                         );
                     }
@@ -650,9 +682,11 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
-                const auto Item = Self->Cache->Get<Gs2::Inventory::Model::FInventory>(
+                TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
+                auto bCacheHit = Self->Cache->TryGet<Gs2::Inventory::Model::FInventory>(
                     ParentKey,
-                    Key
+                    Key,
+                    &Item
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
@@ -754,19 +788,21 @@ namespace Gs2::Inventory::Domain::Model
                         Item->GetName()
                     );
                     if (Item->GetCount() == 0) {
-                        Self->Cache->Delete(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
+                        Self->Cache->Put(
+                            Gs2::Inventory::Model::FItemSetEntry::TypeName,
                             ParentKey,
-                            Key
+                            Key,
+                            nullptr,
+                            Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                         );
                     }
                     else
                     {
                         Self->Cache->Put(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
+                            Gs2::Inventory::Model::FItemSetEntry::TypeName,
                             ParentKey,
                             Key,
-                            Item,
+                            MakeShared<Gs2::Inventory::Model::FItemSetEntry>(Item),
                             Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                         );
                     }
@@ -860,9 +896,11 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
-                const auto Item = Self->Cache->Get<Gs2::Inventory::Model::FInventory>(
+                TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
+                auto bCacheHit = Self->Cache->TryGet<Gs2::Inventory::Model::FInventory>(
                     ParentKey,
-                    Key
+                    Key,
+                    &Item
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
@@ -962,10 +1000,12 @@ namespace Gs2::Inventory::Domain::Model
                         Item->GetItemName(),
                         Item->GetName()
                     );
-                    Self->Cache->Delete(
-                        Gs2::Inventory::Model::FItemSet::TypeName,
+                    Self->Cache->Put(
+                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
                         ParentKey,
-                        Key
+                        Key,
+                        nullptr,
+                        FDateTime::FromUnixTimestamp((FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp())
                     );
                 }
                 if (ResultModel->GetItems()->Num() == 0)
@@ -1130,10 +1170,10 @@ namespace Gs2::Inventory::Domain::Model
                     ResultModel->GetItemSet()->GetName()
                 );
                 Self->Cache->Put(
-                    Gs2::Inventory::Model::FItemSet::TypeName,
+                    Gs2::Inventory::Model::FItemSetEntry::TypeName,
                     ParentKey,
                     Key,
-                    ResultModel->GetItemSet(),
+                    MakeShared<Gs2::Inventory::Model::FItemSetEntry>(ResultModel->GetItemSet()),
                     ResultModel->GetItemSet()->GetExpiresAt().IsSet() && *ResultModel->GetItemSet()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItemSet()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
@@ -1230,7 +1270,7 @@ namespace Gs2::Inventory::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (InventoryName.IsSet() ? *InventoryName : "null") + ":" +
@@ -1244,7 +1284,7 @@ namespace Gs2::Inventory::Domain::Model
         TOptional<FString> ItemSetName
     )
     {
-        return FString() +
+        return FString("") +
             (ItemName.IsSet() ? *ItemName : "null") + ":" + 
             (ItemSetName.IsSet() ? *ItemSetName : "null");
     }
@@ -1289,13 +1329,14 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
 
+                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                    Self->ItemName,
+                    Self->ItemSetName
+                );
                 Self->Cache->Put(
-                    Gs2::Inventory::Model::FItemSet::TypeName,
+                    Gs2::Inventory::Model::FItemSetEntry::TypeName,
                     Self->ParentKey,
-                    Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                        Self->ItemName,
-                        Self->ItemSetName
-                    ),
+                    Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
@@ -1325,6 +1366,39 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FItemSetDomain::FModelTask>> FItemSetDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FItemSetDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FItemSetDomain::Subscribe(
+        TFunction<void(Inventory::Model::FItemSetEntryPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inventory::Model::FItemSetEntry::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                ItemName,
+                ItemSetName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Inventory::Model::FItemSetEntry>(obj));
+            }
+        );
+    }
+
+    void FItemSetDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inventory::Model::FItemSetEntry::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                ItemName,
+                ItemSetName
+            ),
+            CallbackID
+        );
     }
 }
 

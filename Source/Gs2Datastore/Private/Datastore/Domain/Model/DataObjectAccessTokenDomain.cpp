@@ -502,6 +502,38 @@ namespace Gs2::Datastore::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FDataObjectAccessTokenDomain::SubscribeDataObjectHistories(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Datastore::Model::FDataObjectHistory::TypeName,
+            Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                DataObjectName,
+                "DataObjectHistory"
+            ),
+            Callback
+        );
+    }
+
+    void FDataObjectAccessTokenDomain::UnsubscribeDataObjectHistories(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Datastore::Model::FDataObjectHistory::TypeName,
+            Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                DataObjectName,
+                "DataObjectHistory"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectHistoryAccessTokenDomain> FDataObjectAccessTokenDomain::DataObjectHistory(
         const FString Generation
     ) const
@@ -574,6 +606,37 @@ namespace Gs2::Datastore::Domain::Model
 
     TSharedPtr<FAsyncTask<FDataObjectAccessTokenDomain::FModelTask>> FDataObjectAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDataObjectAccessTokenDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FDataObjectAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Datastore::Model::FDataObjectPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Datastore::Model::FDataObject::TypeName,
+            ParentKey,
+            Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
+                DataObjectName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Datastore::Model::FDataObject>(obj));
+            }
+        );
+    }
+
+    void FDataObjectAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Datastore::Model::FDataObject::TypeName,
+            ParentKey,
+            Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
+                DataObjectName
+            ),
+            CallbackID
+        );
     }
 }
 

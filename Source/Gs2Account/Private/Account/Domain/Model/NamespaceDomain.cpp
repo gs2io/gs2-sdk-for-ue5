@@ -500,6 +500,34 @@ namespace Gs2::Account::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeAccounts(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Account::Model::FAccount::TypeName,
+            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Account"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeAccounts(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Account::Model::FAccount::TypeName,
+            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Account"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain> FNamespaceDomain::Account(
         const FString UserId
     ) const
@@ -618,6 +646,37 @@ namespace Gs2::Account::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Account::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Account::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Account::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Account::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

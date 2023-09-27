@@ -62,6 +62,10 @@ namespace Gs2::UE5::News::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::News::Model::FEzSetCookieRequestEntryPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
+
     };
     typedef TSharedPtr<FEzSetCookieRequestEntryGameSessionDomain> FEzSetCookieRequestEntryGameSessionDomainPtr;
 }

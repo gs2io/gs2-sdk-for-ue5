@@ -56,6 +56,10 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         Gs2::UE5::LoginReward::Domain::Iterator::FEzDescribeReceiveStatusesIteratorPtr ReceiveStatuses(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeReceiveStatuses(TFunction<void()> Callback);
+
+        void UnsubscribeReceiveStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::LoginReward::Domain::Model::FEzReceiveStatusGameSessionDomainPtr ReceiveStatus(
             const FString BonusModelName
         ) const;

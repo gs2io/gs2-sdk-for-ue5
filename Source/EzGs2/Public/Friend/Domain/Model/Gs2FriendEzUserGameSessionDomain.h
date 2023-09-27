@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -87,12 +89,26 @@ namespace Gs2::UE5::Friend::Domain::Model
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIteratorPtr BlackLists(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBlackLists(TFunction<void()> Callback);
+
+        void UnsubscribeBlackLists(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Friend::Domain::Model::FEzBlackListGameSessionDomainPtr BlackList(
         ) const;
 
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFollowsIteratorPtr Follows(
             const TOptional<bool> WithProfile = TOptional<bool>()
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeFollows(
+            TFunction<void()> Callback,
+            bool WithProfile
+        );
+
+        void UnsubscribeFollows(
+            Gs2::Core::Domain::CallbackID CallbackId,
+            bool WithProfile
+        );
 
         Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomainPtr FollowUser(
             const FString TargetUserId,
@@ -103,6 +119,16 @@ namespace Gs2::UE5::Friend::Domain::Model
             const TOptional<bool> WithProfile = TOptional<bool>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeFriends(
+            TFunction<void()> Callback,
+            bool WithProfile
+        );
+
+        void UnsubscribeFriends(
+            Gs2::Core::Domain::CallbackID CallbackId,
+            bool WithProfile
+        );
+
         Gs2::UE5::Friend::Domain::Model::FEzFriendGameSessionDomainPtr Friend(
             const bool WithProfile
         ) const;
@@ -110,12 +136,20 @@ namespace Gs2::UE5::Friend::Domain::Model
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeSendRequestsIteratorPtr SendRequests(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSendRequests(TFunction<void()> Callback);
+
+        void UnsubscribeSendRequests(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Friend::Domain::Model::FEzSendFriendRequestGameSessionDomainPtr SendFriendRequest(
             const FString TargetUserId
         ) const;
 
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeReceiveRequestsIteratorPtr ReceiveRequests(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeReceiveRequests(TFunction<void()> Callback);
+
+        void UnsubscribeReceiveRequests(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Friend::Domain::Model::FEzReceiveFriendRequestGameSessionDomainPtr ReceiveFriendRequest(
             const FString FromUserId

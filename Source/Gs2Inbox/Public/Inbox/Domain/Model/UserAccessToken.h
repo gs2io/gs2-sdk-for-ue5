@@ -108,6 +108,14 @@ namespace Gs2::Inbox::Domain::Model
             const TOptional<bool> IsRead
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMessages(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMessages(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain> Message(
             const FString MessageName
         ) const;

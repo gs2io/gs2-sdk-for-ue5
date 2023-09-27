@@ -333,6 +333,35 @@ namespace Gs2::Identifier::Domain::Model
     TSharedPtr<FAsyncTask<FPasswordDomain::FModelTask>> FPasswordDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FPasswordDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FPasswordDomain::Subscribe(
+        TFunction<void(Gs2::Identifier::Model::FPasswordPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Identifier::Model::FPassword::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FPassword>(obj));
+            }
+        );
+    }
+
+    void FPasswordDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Identifier::Model::FPassword::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

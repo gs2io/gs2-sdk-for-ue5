@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Inventory/Domain/Model/Gs2InventoryEzItemSetGameSessionDomain.h"
@@ -274,5 +276,27 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzItemSetGameSessionDomain::FModelTask>> FEzItemSetGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzItemSetGameSessionDomain::Subscribe(TFunction<void(TArray<Gs2::UE5::Inventory::Model::FEzItemSetPtr>)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](TSharedPtr<Gs2::Inventory::Model::FItemSetEntry> Items)
+            {
+                TArray<Gs2::UE5::Inventory::Model::FEzItemSetPtr> Arr;
+                for (auto Item : Items->Value)
+                {
+                    Arr.Add(Gs2::UE5::Inventory::Model::FEzItemSet::FromModel(Item));
+                }
+                Callback(Arr);
+            }
+        );
+    }
+
+    void FEzItemSetGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
     }
 }

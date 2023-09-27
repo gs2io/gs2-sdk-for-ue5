@@ -405,6 +405,35 @@ namespace Gs2::SerialKey::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentCampaignMasterDomain::FModelTask>> FCurrentCampaignMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentCampaignMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentCampaignMasterDomain::Subscribe(
+        TFunction<void(Gs2::SerialKey::Model::FCurrentCampaignMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::SerialKey::Model::FCurrentCampaignMaster::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FCurrentCampaignMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentCampaignMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::SerialKey::Model::FCurrentCampaignMaster::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

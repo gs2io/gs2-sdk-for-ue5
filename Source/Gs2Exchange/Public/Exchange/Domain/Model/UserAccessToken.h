@@ -104,6 +104,14 @@ namespace Gs2::Exchange::Domain::Model
             const TOptional<FString> RateName
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeAwaits(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeAwaits(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomain> Await(
             const FString AwaitName
         ) const;

@@ -167,6 +167,14 @@ namespace Gs2::Matchmaking::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Matchmaking::Model::FGatheringPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
     };
 
     typedef TSharedPtr<FGatheringAccessTokenDomain> FGatheringAccessTokenDomainPtr;

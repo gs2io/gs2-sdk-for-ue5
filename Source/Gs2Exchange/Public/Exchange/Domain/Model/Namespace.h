@@ -243,6 +243,14 @@ namespace Gs2::Exchange::Domain::Model
         Gs2::Exchange::Domain::Iterator::FDescribeRateModelMastersIteratorPtr RateModelMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRateModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRateModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Exchange::Domain::Model::FRateModelMasterDomain> RateModelMaster(
             const FString RateName
         ) const;
@@ -252,6 +260,14 @@ namespace Gs2::Exchange::Domain::Model
 
         Gs2::Exchange::Domain::Iterator::FDescribeRateModelsIteratorPtr RateModels(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeRateModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRateModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Exchange::Domain::Model::FRateModelDomain> RateModel(
             const FString RateName
@@ -268,12 +284,28 @@ namespace Gs2::Exchange::Domain::Model
         Gs2::Exchange::Domain::Iterator::FDescribeIncrementalRateModelsIteratorPtr IncrementalRateModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeIncrementalRateModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeIncrementalRateModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain> IncrementalRateModel(
             const FString RateName
         ) const;
 
         Gs2::Exchange::Domain::Iterator::FDescribeIncrementalRateModelMastersIteratorPtr IncrementalRateModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeIncrementalRateModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeIncrementalRateModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain> IncrementalRateModelMaster(
             const FString RateName
@@ -309,6 +341,14 @@ namespace Gs2::Exchange::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Exchange::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

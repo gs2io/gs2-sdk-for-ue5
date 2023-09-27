@@ -107,4 +107,21 @@ namespace Gs2::UE5::JobQueue::Domain::Model
     TSharedPtr<FAsyncTask<FEzJobGameSessionDomain::FModelTask>> FEzJobGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzJobGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::JobQueue::Model::FEzJobPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::JobQueue::Model::FJobPtr Item)
+            {
+                Callback(Gs2::UE5::JobQueue::Model::FEzJob::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzJobGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

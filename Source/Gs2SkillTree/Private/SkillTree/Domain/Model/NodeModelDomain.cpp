@@ -230,6 +230,37 @@ namespace Gs2::SkillTree::Domain::Model
     TSharedPtr<FAsyncTask<FNodeModelDomain::FModelTask>> FNodeModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNodeModelDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FNodeModelDomain::Subscribe(
+        TFunction<void(Gs2::SkillTree::Model::FNodeModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::SkillTree::Model::FNodeModel::TypeName,
+            ParentKey,
+            Gs2::SkillTree::Domain::Model::FNodeModelDomain::CreateCacheKey(
+                NodeModelName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::SkillTree::Model::FNodeModel>(obj));
+            }
+        );
+    }
+
+    void FNodeModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::SkillTree::Model::FNodeModel::TypeName,
+            ParentKey,
+            Gs2::SkillTree::Domain::Model::FNodeModelDomain::CreateCacheKey(
+                NodeModelName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

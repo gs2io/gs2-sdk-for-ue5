@@ -50,6 +50,20 @@ namespace Gs2::UE5::Enhance::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeRateModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRateModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeRateModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRateModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Enhance::Domain::Model::FEzRateModelDomainPtr FEzNamespaceDomain::RateModel(
         const FString RateName
     ) const

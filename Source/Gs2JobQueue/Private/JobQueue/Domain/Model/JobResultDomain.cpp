@@ -246,6 +246,37 @@ namespace Gs2::JobQueue::Domain::Model
     TSharedPtr<FAsyncTask<FJobResultDomain::FModelTask>> FJobResultDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FJobResultDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FJobResultDomain::Subscribe(
+        TFunction<void(Gs2::JobQueue::Model::FJobResultPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::JobQueue::Model::FJobResult::TypeName,
+            ParentKey,
+            Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
+                TryNumber.IsSet() ? FString::FromInt(*TryNumber) : TOptional<FString>()
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::JobQueue::Model::FJobResult>(obj));
+            }
+        );
+    }
+
+    void FJobResultDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::JobQueue::Model::FJobResult::TypeName,
+            ParentKey,
+            Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
+                TryNumber.IsSet() ? FString::FromInt(*TryNumber) : TOptional<FString>()
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -137,6 +137,28 @@ namespace Gs2::Inbox::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2InboxDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inbox::Model::FNamespace::TypeName,
+            "inbox:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2InboxDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inbox::Model::FNamespace::TypeName,
+            "inbox:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inbox::Domain::Model::FNamespaceDomain> FGs2InboxDomain::Namespace(
         const FString NamespaceName
     ) const

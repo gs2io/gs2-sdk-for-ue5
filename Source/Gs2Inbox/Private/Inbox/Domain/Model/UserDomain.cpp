@@ -268,6 +268,36 @@ namespace Gs2::Inbox::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeMessages(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inbox::Model::FMessage::TypeName,
+            Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Message"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeMessages(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inbox::Model::FMessage::TypeName,
+            Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Message"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inbox::Domain::Model::FMessageDomain> FUserDomain::Message(
         const FString MessageName
     ) const

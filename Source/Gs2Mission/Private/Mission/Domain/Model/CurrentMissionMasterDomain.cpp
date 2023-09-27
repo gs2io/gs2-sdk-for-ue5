@@ -410,6 +410,35 @@ namespace Gs2::Mission::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentMissionMasterDomain::FModelTask>> FCurrentMissionMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentMissionMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentMissionMasterDomain::Subscribe(
+        TFunction<void(Gs2::Mission::Model::FCurrentMissionMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Mission::Model::FCurrentMissionMaster::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Mission::Model::FCurrentMissionMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentMissionMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Mission::Model::FCurrentMissionMaster::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

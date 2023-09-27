@@ -89,6 +89,36 @@ namespace Gs2::News::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeNewses(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::News::Model::FNews::TypeName,
+            Gs2::News::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "News"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeNewses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::News::Model::FNews::TypeName,
+            Gs2::News::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "News"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::News::Domain::Model::FNewsDomain> FUserDomain::News(
     ) const
     {

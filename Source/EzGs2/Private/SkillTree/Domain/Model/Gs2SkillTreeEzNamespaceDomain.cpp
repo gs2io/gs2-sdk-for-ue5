@@ -50,6 +50,20 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeNodeModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeNodeModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeNodeModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeNodeModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::SkillTree::Domain::Model::FEzNodeModelDomainPtr FEzNamespaceDomain::NodeModel(
         const FString NodeModelName
     ) const

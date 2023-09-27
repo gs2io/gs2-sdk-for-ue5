@@ -93,6 +93,20 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzMissionGroupModelDomain::SubscribeMissionTaskModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeMissionTaskModels(
+            Callback
+        );
+    }
+
+    void FEzMissionGroupModelDomain::UnsubscribeMissionTaskModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeMissionTaskModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Mission::Domain::Model::FEzMissionTaskModelDomainPtr FEzMissionGroupModelDomain::MissionTaskModel(
         const FString MissionTaskName
     ) const
@@ -143,5 +157,22 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzMissionGroupModelDomain::FModelTask>> FEzMissionGroupModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzMissionGroupModelDomain::Subscribe(TFunction<void(Gs2::UE5::Mission::Model::FEzMissionGroupModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Mission::Model::FMissionGroupModelPtr Item)
+            {
+                Callback(Gs2::UE5::Mission::Model::FEzMissionGroupModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzMissionGroupModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
     }
 }

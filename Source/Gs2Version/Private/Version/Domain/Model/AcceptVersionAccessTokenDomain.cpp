@@ -367,6 +367,37 @@ namespace Gs2::Version::Domain::Model
     TSharedPtr<FAsyncTask<FAcceptVersionAccessTokenDomain::FModelTask>> FAcceptVersionAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FAcceptVersionAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FAcceptVersionAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Version::Model::FAcceptVersionPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Version::Model::FAcceptVersion::TypeName,
+            ParentKey,
+            Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
+                VersionName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Version::Model::FAcceptVersion>(obj));
+            }
+        );
+    }
+
+    void FAcceptVersionAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Version::Model::FAcceptVersion::TypeName,
+            ParentKey,
+            Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
+                VersionName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

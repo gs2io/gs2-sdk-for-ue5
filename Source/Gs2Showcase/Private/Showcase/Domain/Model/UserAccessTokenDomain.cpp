@@ -128,6 +128,36 @@ namespace Gs2::Showcase::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeShowcases(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Showcase::Model::FShowcase::TypeName,
+            Gs2::Showcase::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Showcase"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeShowcases(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Showcase::Model::FShowcase::TypeName,
+            Gs2::Showcase::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Showcase"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomain> FUserAccessTokenDomain::Showcase(
         const FString ShowcaseName
     ) const

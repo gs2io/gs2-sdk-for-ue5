@@ -75,4 +75,21 @@ namespace Gs2::UE5::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FEzProfileDomain::FModelTask>> FEzProfileDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzProfileDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzProfilePtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Friend::Model::FProfilePtr Item)
+            {
+                Callback(Gs2::UE5::Friend::Model::FEzProfile::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzProfileDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

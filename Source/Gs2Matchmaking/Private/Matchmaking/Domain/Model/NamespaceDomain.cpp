@@ -566,6 +566,34 @@ namespace Gs2::Matchmaking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRatingModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Matchmaking::Model::FRatingModel::TypeName,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RatingModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRatingModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Matchmaking::Model::FRatingModel::TypeName,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RatingModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelDomain> FNamespaceDomain::RatingModel(
         const FString RatingName
     ) const
@@ -603,6 +631,34 @@ namespace Gs2::Matchmaking::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRatingModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RatingModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRatingModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Matchmaking::Model::FRatingModelMaster::TypeName,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RatingModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -710,6 +766,37 @@ namespace Gs2::Matchmaking::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Matchmaking::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Matchmaking::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Matchmaking::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

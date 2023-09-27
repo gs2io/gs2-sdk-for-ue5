@@ -75,4 +75,21 @@ namespace Gs2::UE5::Lottery::Domain::Model
     TSharedPtr<FAsyncTask<FEzProbabilityGameSessionDomain::FModelTask>> FEzProbabilityGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzProbabilityGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Lottery::Model::FEzProbabilityPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Lottery::Model::FProbabilityPtr Item)
+            {
+                Callback(Gs2::UE5::Lottery::Model::FEzProbability::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzProbabilityGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

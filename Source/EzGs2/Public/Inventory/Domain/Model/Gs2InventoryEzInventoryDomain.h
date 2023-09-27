@@ -82,6 +82,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzInventoryPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
+
     };
     typedef TSharedPtr<FEzInventoryDomain> FEzInventoryDomainPtr;
 }

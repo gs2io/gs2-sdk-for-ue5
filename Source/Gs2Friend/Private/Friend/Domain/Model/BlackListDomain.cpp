@@ -285,6 +285,35 @@ namespace Gs2::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FBlackListDomain::FModelTask>> FBlackListDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBlackListDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FBlackListDomain::Subscribe(
+        TFunction<void(Gs2::Friend::Model::FBlackListPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Friend::Model::FBlackList::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FBlackList>(obj));
+            }
+        );
+    }
+
+    void FBlackListDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Friend::Model::FBlackList::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

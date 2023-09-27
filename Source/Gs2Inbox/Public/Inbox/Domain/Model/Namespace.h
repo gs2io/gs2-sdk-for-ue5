@@ -224,12 +224,28 @@ namespace Gs2::Inbox::Domain::Model
         Gs2::Inbox::Domain::Iterator::FDescribeGlobalMessagesIteratorPtr GlobalMessages(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeGlobalMessages(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeGlobalMessages(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Inbox::Domain::Model::FGlobalMessageDomain> GlobalMessage(
             const FString GlobalMessageName
         ) const;
 
         Gs2::Inbox::Domain::Iterator::FDescribeGlobalMessageMastersIteratorPtr GlobalMessageMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeGlobalMessageMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeGlobalMessageMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain> GlobalMessageMaster(
             const FString GlobalMessageName
@@ -265,6 +281,14 @@ namespace Gs2::Inbox::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Inbox::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

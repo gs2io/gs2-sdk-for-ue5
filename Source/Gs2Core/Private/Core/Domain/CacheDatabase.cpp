@@ -43,7 +43,9 @@ FCacheDatabase::FCacheDatabase(
     const FCacheDatabase& From
 ):
     Cache(From.Cache),
+    CacheUpdateCallback(From.CacheUpdateCallback),
     ListCached(From.ListCached),
+    ListCacheUpdateCallback(From.ListCacheUpdateCallback),
     ListCacheUpdateRequired(From.ListCacheUpdateRequired),
     ListUpdateContexts(From.ListUpdateContexts)
 {
@@ -52,7 +54,9 @@ FCacheDatabase::FCacheDatabase(
 void FCacheDatabase::Clear()
 {
     Cache.Reset();
+    CacheUpdateCallback.Reset();
     ListCached.Reset();
+    ListCacheUpdateCallback.Reset();
     ListCacheUpdateRequired.Reset();
     ListUpdateContexts.Reset();
 }
@@ -71,6 +75,15 @@ void FCacheDatabase::SetListCached(
         if (ListCacheUpdateRequired0 != nullptr) ListCacheUpdateRequired0->Remove(ParentKey);
 
         Ensure(ListUpdateContexts, Kind).Add(ParentKey, UpdateContext);
+    }
+    auto Callbacks = Ensure(ListCacheUpdateCallback, Kind).Find(ParentKey);
+    if (Callbacks != nullptr)
+    {
+        for (auto Callback : *Callbacks)
+        {
+            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s]: List Update Callback %d"), ToCStr(Kind), ToCStr(ParentKey), Callback.Key);
+            Callback.Value();
+        }
     }
 }
 
@@ -117,6 +130,29 @@ void FCacheDatabase::Put(
 
     UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Put %p"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), &Obj);
     Ensure(Ensure(Cache, Kind), ParentKey).Add(Key, TTuple<TSharedPtr<Gs2Object>, int64>(Obj, Ttl.ToUnixTimestamp()));
+
+    {
+        auto Callbacks = Ensure(Ensure(CacheUpdateCallback, Kind), ParentKey).Find(Key);
+        if (Callbacks != nullptr)
+        {
+            for (auto Callback : *Callbacks)
+            {
+                UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Update Callback %d"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), Callback.Key);
+                Callback.Value(Obj);
+            }
+        }
+    }
+    {
+        auto Callbacks = Ensure(ListCacheUpdateCallback, Kind).Find(ParentKey);
+        if (Callbacks != nullptr)
+        {
+            for (auto Callback : *Callbacks)
+            {
+                UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s]: List Update Callback %d"), ToCStr(Kind), ToCStr(ParentKey), Callback.Key);
+                Callback.Value();
+            }
+        }
+    }
 }
 
 void FCacheDatabase::Delete(
@@ -131,6 +167,44 @@ void FCacheDatabase::Delete(
     if (Cache1 == nullptr) return;
     UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Remove"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key));
     Cache1->Remove(Key);
+    {
+        auto Callbacks = Ensure(ListCacheUpdateCallback, Kind).Find(ParentKey);
+        if (Callbacks != nullptr)
+        {
+            for (auto Callback : *Callbacks)
+            {
+                Callback.Value();
+            }
+        }
+    }
+}
+
+static CallbackID GCallbackID = 1;
+
+CallbackID FCacheDatabase::Subscribe(FTypeName Kind, FParentCacheKey ParentKey, FCacheKey Key, const TFunction<void(TSharedPtr<Gs2Object>)>& Callback)
+{
+    UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Subscribe(%d)"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), GCallbackID);
+    Ensure(Ensure(Ensure(CacheUpdateCallback, Kind), ParentKey), Key).Add(GCallbackID, Callback);
+    return GCallbackID++;
+}
+
+void FCacheDatabase::Unsubscribe(FTypeName Kind, FParentCacheKey ParentKey, FCacheKey Key, CallbackID CallbackID)
+{
+    UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s][%s]: Unsubscribe(%d)"), ToCStr(Kind), ToCStr(ParentKey), ToCStr(Key), CallbackID);
+    Ensure(Ensure(Ensure(CacheUpdateCallback, Kind), ParentKey), Key).Remove(CallbackID);
+}
+
+CallbackID FCacheDatabase::ListSubscribe(FTypeName Kind, FParentCacheKey ParentKey, const TFunction<void()>& Callback)
+{
+    UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s]: ListSubscribe(%d)"), ToCStr(Kind), ToCStr(ParentKey), GCallbackID);
+    Ensure(Ensure(ListCacheUpdateCallback, Kind), ParentKey).Add(GCallbackID, Callback);
+    return GCallbackID++;
+}
+
+void FCacheDatabase::ListUnsubscribe(FTypeName Kind, FParentCacheKey ParentKey, CallbackID CallbackID)
+{
+    UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s][%s]: ListUnsubscribe(%d)"), ToCStr(Kind), ToCStr(ParentKey), CallbackID);
+    Ensure(Ensure(ListCacheUpdateCallback, Kind), ParentKey).Remove(CallbackID);
 }
 
 bool FCacheDatabase::TryGet(

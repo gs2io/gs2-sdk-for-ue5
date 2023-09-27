@@ -80,4 +80,21 @@ namespace Gs2::UE5::Chat::Domain::Model
     TSharedPtr<FAsyncTask<FEzSubscribeDomain::FModelTask>> FEzSubscribeDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzSubscribeDomain::Subscribe(TFunction<void(Gs2::UE5::Chat::Model::FEzSubscribePtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Chat::Model::FSubscribePtr Item)
+            {
+                Callback(Gs2::UE5::Chat::Model::FEzSubscribe::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzSubscribeDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

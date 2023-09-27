@@ -303,6 +303,14 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIteratorPtr RandomShowcaseMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRandomShowcaseMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRandomShowcaseMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain> RandomShowcaseMaster(
             const FString ShowcaseName
         ) const;
@@ -310,12 +318,28 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Showcase::Domain::Iterator::FDescribeSalesItemMastersIteratorPtr SalesItemMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSalesItemMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSalesItemMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Showcase::Domain::Model::FSalesItemMasterDomain> SalesItemMaster(
             const FString SalesItemName
         ) const;
 
         Gs2::Showcase::Domain::Iterator::FDescribeSalesItemGroupMastersIteratorPtr SalesItemGroupMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSalesItemGroupMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSalesItemGroupMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain> SalesItemGroupMaster(
             const FString SalesItemGroupName
@@ -334,6 +358,14 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Showcase::Domain::Iterator::FDescribeShowcaseMastersIteratorPtr ShowcaseMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeShowcaseMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeShowcaseMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FShowcaseMasterDomain> ShowcaseMaster(
             const FString ShowcaseName
@@ -369,6 +401,14 @@ namespace Gs2::Showcase::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Showcase::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

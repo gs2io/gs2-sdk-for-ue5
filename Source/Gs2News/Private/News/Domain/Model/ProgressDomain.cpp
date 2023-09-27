@@ -151,6 +151,36 @@ namespace Gs2::News::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FProgressDomain::SubscribeOutputs(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::News::Model::FOutput::TypeName,
+            Gs2::News::Domain::Model::FProgressDomain::CreateCacheParentKey(
+                NamespaceName,
+                UploadToken,
+                "Output"
+            ),
+            Callback
+        );
+    }
+
+    void FProgressDomain::UnsubscribeOutputs(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::News::Model::FOutput::TypeName,
+            Gs2::News::Domain::Model::FProgressDomain::CreateCacheParentKey(
+                NamespaceName,
+                UploadToken,
+                "Output"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::News::Domain::Model::FOutputDomain> FProgressDomain::Output(
         const FString OutputName
     ) const
@@ -257,6 +287,37 @@ namespace Gs2::News::Domain::Model
 
     TSharedPtr<FAsyncTask<FProgressDomain::FModelTask>> FProgressDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FProgressDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FProgressDomain::Subscribe(
+        TFunction<void(Gs2::News::Model::FProgressPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::News::Model::FProgress::TypeName,
+            ParentKey,
+            Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
+                UploadToken
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::News::Model::FProgress>(obj));
+            }
+        );
+    }
+
+    void FProgressDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::News::Model::FProgress::TypeName,
+            ParentKey,
+            Gs2::News::Domain::Model::FProgressDomain::CreateCacheKey(
+                UploadToken
+            ),
+            CallbackID
+        );
     }
 }
 

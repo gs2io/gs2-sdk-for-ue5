@@ -383,6 +383,34 @@ namespace Gs2::Ranking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCategoryModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Ranking::Model::FCategoryModel::TypeName,
+            Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CategoryModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeCategoryModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Ranking::Model::FCategoryModel::TypeName,
+            Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CategoryModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Ranking::Domain::Model::FCategoryModelDomain> FNamespaceDomain::CategoryModel(
         const FString CategoryName
     ) const
@@ -432,6 +460,34 @@ namespace Gs2::Ranking::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCategoryModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Ranking::Model::FCategoryModelMaster::TypeName,
+            Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CategoryModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeCategoryModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Ranking::Model::FCategoryModelMaster::TypeName,
+            Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CategoryModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -539,6 +595,37 @@ namespace Gs2::Ranking::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Ranking::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Ranking::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Ranking::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Ranking::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

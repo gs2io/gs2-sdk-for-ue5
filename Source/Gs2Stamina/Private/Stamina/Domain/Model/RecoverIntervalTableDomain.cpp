@@ -118,6 +118,35 @@ namespace Gs2::Stamina::Domain::Model
     TSharedPtr<FAsyncTask<FRecoverIntervalTableDomain::FModelTask>> FRecoverIntervalTableDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRecoverIntervalTableDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FRecoverIntervalTableDomain::Subscribe(
+        TFunction<void(Gs2::Stamina::Model::FRecoverIntervalTablePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Stamina::Model::FRecoverIntervalTable::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FRecoverIntervalTableDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Stamina::Model::FRecoverIntervalTable>(obj));
+            }
+        );
+    }
+
+    void FRecoverIntervalTableDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Stamina::Model::FRecoverIntervalTable::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FRecoverIntervalTableDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

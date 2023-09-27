@@ -95,4 +95,21 @@ namespace Gs2::UE5::Schedule::Domain::Model
     TSharedPtr<FAsyncTask<FEzEventDomain::FModelTask>> FEzEventDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzEventDomain::Subscribe(TFunction<void(Gs2::UE5::Schedule::Model::FEzEventPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Schedule::Model::FEventPtr Item)
+            {
+                Callback(Gs2::UE5::Schedule::Model::FEzEvent::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzEventDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

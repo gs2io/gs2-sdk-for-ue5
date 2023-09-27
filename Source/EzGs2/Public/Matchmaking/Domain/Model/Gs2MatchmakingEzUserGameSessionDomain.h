@@ -100,6 +100,10 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             const Gs2::UE5::Matchmaking::Model::FEzPlayerPtr Player
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeDoMatchmaking(TFunction<void()> Callback);
+
+        void UnsubscribeDoMatchmaking(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomainPtr Gathering(
             const FString GatheringName
         ) const;
@@ -113,6 +117,10 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingsIteratorPtr Ratings(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeRatings(TFunction<void()> Callback);
+
+        void UnsubscribeRatings(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzRatingGameSessionDomainPtr Rating(
             const FString RatingName

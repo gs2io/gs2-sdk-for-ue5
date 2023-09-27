@@ -50,6 +50,20 @@ namespace Gs2::UE5::Exchange::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeRateModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRateModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeRateModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRateModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Exchange::Domain::Model::FEzRateModelDomainPtr FEzNamespaceDomain::RateModel(
         const FString RateName
     ) const
@@ -80,6 +94,20 @@ namespace Gs2::UE5::Exchange::Domain::Model
         return MakeShared<Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIterator>(
             Domain->IncrementalRateModels(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeIncrementalRateModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeIncrementalRateModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeIncrementalRateModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeIncrementalRateModels(
+            CallbackId
         );
     }
 

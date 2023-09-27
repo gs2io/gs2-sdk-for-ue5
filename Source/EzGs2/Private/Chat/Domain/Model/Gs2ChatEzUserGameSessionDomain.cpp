@@ -138,6 +138,20 @@ namespace Gs2::UE5::Chat::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeSubscribes(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSubscribes(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeSubscribes(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSubscribes(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomainPtr FEzUserGameSessionDomain::Subscribe(
         const FString RoomName
     ) const

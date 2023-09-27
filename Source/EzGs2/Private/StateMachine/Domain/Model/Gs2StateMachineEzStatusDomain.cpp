@@ -80,4 +80,21 @@ namespace Gs2::UE5::StateMachine::Domain::Model
     TSharedPtr<FAsyncTask<FEzStatusDomain::FModelTask>> FEzStatusDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzStatusDomain::Subscribe(TFunction<void(Gs2::UE5::StateMachine::Model::FEzStatusPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::StateMachine::Model::FStatusPtr Item)
+            {
+                Callback(Gs2::UE5::StateMachine::Model::FEzStatus::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzStatusDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

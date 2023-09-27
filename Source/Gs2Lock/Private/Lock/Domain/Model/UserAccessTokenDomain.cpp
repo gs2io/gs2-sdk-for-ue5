@@ -85,6 +85,36 @@ namespace Gs2::Lock::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeMutexes(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lock::Model::FMutex::TypeName,
+            Gs2::Lock::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Mutex"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeMutexes(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lock::Model::FMutex::TypeName,
+            Gs2::Lock::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Mutex"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Lock::Domain::Model::FMutexAccessTokenDomain> FUserAccessTokenDomain::Mutex(
         const FString PropertyId
     ) const

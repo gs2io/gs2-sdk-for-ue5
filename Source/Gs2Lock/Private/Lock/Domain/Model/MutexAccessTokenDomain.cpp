@@ -362,6 +362,37 @@ namespace Gs2::Lock::Domain::Model
     TSharedPtr<FAsyncTask<FMutexAccessTokenDomain::FModelTask>> FMutexAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FMutexAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FMutexAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Lock::Model::FMutexPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Lock::Model::FMutex::TypeName,
+            ParentKey,
+            Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
+                PropertyId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Lock::Model::FMutex>(obj));
+            }
+        );
+    }
+
+    void FMutexAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Lock::Model::FMutex::TypeName,
+            ParentKey,
+            Gs2::Lock::Domain::Model::FMutexDomain::CreateCacheKey(
+                PropertyId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

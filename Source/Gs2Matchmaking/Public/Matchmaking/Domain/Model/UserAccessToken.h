@@ -134,6 +134,14 @@ namespace Gs2::Matchmaking::Domain::Model
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIteratorPtr Ratings(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRatings(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRatings(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingAccessTokenDomain> Rating(
             const FString RatingName
         ) const;

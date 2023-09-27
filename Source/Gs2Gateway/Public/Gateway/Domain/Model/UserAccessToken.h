@@ -85,6 +85,14 @@ namespace Gs2::Gateway::Domain::Model
         Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsIteratorPtr WebSocketSessions(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeWebSocketSessions(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeWebSocketSessions(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomain> WebSocketSession(
         ) const;
 

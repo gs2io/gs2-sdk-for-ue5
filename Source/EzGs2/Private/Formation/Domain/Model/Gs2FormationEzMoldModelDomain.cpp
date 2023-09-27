@@ -135,4 +135,21 @@ namespace Gs2::UE5::Formation::Domain::Model
     TSharedPtr<FAsyncTask<FEzMoldModelDomain::FModelTask>> FEzMoldModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzMoldModelDomain::Subscribe(TFunction<void(Gs2::UE5::Formation::Model::FEzMoldModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Formation::Model::FMoldModelPtr Item)
+            {
+                Callback(Gs2::UE5::Formation::Model::FEzMoldModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzMoldModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

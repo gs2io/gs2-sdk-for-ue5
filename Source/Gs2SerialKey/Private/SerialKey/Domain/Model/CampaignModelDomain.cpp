@@ -223,6 +223,36 @@ namespace Gs2::SerialKey::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FCampaignModelDomain::SubscribeIssueJobs(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::SerialKey::Model::FIssueJob::TypeName,
+            Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                CampaignModelName,
+                "IssueJob"
+            ),
+            Callback
+        );
+    }
+
+    void FCampaignModelDomain::UnsubscribeIssueJobs(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::SerialKey::Model::FIssueJob::TypeName,
+            Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                CampaignModelName,
+                "IssueJob"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::SerialKey::Domain::Model::FIssueJobDomain> FCampaignModelDomain::IssueJob(
         const FString IssueJobName
     ) const
@@ -329,6 +359,37 @@ namespace Gs2::SerialKey::Domain::Model
 
     TSharedPtr<FAsyncTask<FCampaignModelDomain::FModelTask>> FCampaignModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCampaignModelDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FCampaignModelDomain::Subscribe(
+        TFunction<void(Gs2::SerialKey::Model::FCampaignModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::SerialKey::Model::FCampaignModel::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
+                CampaignModelName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FCampaignModel>(obj));
+            }
+        );
+    }
+
+    void FCampaignModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::SerialKey::Model::FCampaignModel::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
+                CampaignModelName
+            ),
+            CallbackID
+        );
     }
 }
 

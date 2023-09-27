@@ -119,6 +119,14 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Inventory::Domain::Iterator::FDescribeInventoriesByUserIdIteratorPtr Inventories(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeInventories(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeInventories(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryDomain> Inventory(
             const FString InventoryName
         ) const;

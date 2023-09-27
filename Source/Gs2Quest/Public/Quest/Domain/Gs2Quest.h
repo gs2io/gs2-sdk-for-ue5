@@ -109,6 +109,14 @@ namespace Gs2::Quest::Domain
         Gs2::Quest::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNamespaces(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNamespaces(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Quest::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
         ) const;

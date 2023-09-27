@@ -139,6 +139,28 @@ namespace Gs2::Stamina::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2StaminaDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Stamina::Model::FNamespace::TypeName,
+            "stamina:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2StaminaDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Stamina::Model::FNamespace::TypeName,
+            "stamina:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Stamina::Domain::Model::FNamespaceDomain> FGs2StaminaDomain::Namespace(
         const FString NamespaceName
     ) const

@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Quest/Domain/Model/Gs2QuestEzUserGameSessionDomain.h"
@@ -143,6 +141,20 @@ namespace Gs2::UE5::Quest::Domain::Model
         return MakeShared<Gs2::UE5::Quest::Domain::Iterator::FEzDescribeCompletedQuestListsIterator>(
             Domain->CompletedQuestLists(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeCompletedQuestLists(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeCompletedQuestLists(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeCompletedQuestLists(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeCompletedQuestLists(
+            CallbackId
         );
     }
 

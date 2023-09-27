@@ -137,6 +137,35 @@ namespace Gs2::Lottery::Domain::Model
     TSharedPtr<FAsyncTask<FProbabilityAccessTokenDomain::FModelTask>> FProbabilityAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FProbabilityAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FProbabilityAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Lottery::Model::FProbabilityPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FProbability>(obj));
+            }
+        );
+    }
+
+    void FProbabilityAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

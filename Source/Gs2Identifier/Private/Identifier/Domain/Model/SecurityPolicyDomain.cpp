@@ -327,6 +327,37 @@ namespace Gs2::Identifier::Domain::Model
     TSharedPtr<FAsyncTask<FSecurityPolicyDomain::FModelTask>> FSecurityPolicyDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSecurityPolicyDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FSecurityPolicyDomain::Subscribe(
+        TFunction<void(Gs2::Identifier::Model::FSecurityPolicyPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Identifier::Model::FSecurityPolicy::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                SecurityPolicyName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FSecurityPolicy>(obj));
+            }
+        );
+    }
+
+    void FSecurityPolicyDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Identifier::Model::FSecurityPolicy::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
+                SecurityPolicyName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

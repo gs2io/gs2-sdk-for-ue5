@@ -212,6 +212,14 @@ namespace Gs2::SkillTree::Domain::Model
         Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelsIteratorPtr NodeModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNodeModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNodeModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::SkillTree::Domain::Model::FNodeModelDomain> NodeModel(
             const FString NodeModelName
         ) const;
@@ -226,6 +234,14 @@ namespace Gs2::SkillTree::Domain::Model
 
         Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelMastersIteratorPtr NodeModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeNodeModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNodeModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::SkillTree::Domain::Model::FNodeModelMasterDomain> NodeModelMaster(
             const FString NodeModelName
@@ -261,6 +277,14 @@ namespace Gs2::SkillTree::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::SkillTree::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

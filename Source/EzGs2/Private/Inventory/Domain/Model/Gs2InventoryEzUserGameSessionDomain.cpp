@@ -50,6 +50,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeInventories(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeInventories(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeInventories(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeInventories(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Inventory::Domain::Model::FEzInventoryGameSessionDomainPtr FEzUserGameSessionDomain::Inventory(
         const FString InventoryName
     ) const

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -229,6 +231,37 @@ namespace Gs2::Idle::Domain::Model
 
     TSharedPtr<FAsyncTask<FCategoryModelDomain::FModelTask>> FCategoryModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCategoryModelDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FCategoryModelDomain::Subscribe(
+        TFunction<void(Gs2::Idle::Model::FCategoryModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Idle::Model::FCategoryModel::TypeName,
+            ParentKey,
+            Gs2::Idle::Domain::Model::FCategoryModelDomain::CreateCacheKey(
+                CategoryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Idle::Model::FCategoryModel>(obj));
+            }
+        );
+    }
+
+    void FCategoryModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Idle::Model::FCategoryModel::TypeName,
+            ParentKey,
+            Gs2::Idle::Domain::Model::FCategoryModelDomain::CreateCacheKey(
+            CategoryName
+            ),
+            CallbackID
+        );
     }
 }
 

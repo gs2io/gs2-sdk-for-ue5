@@ -161,6 +161,20 @@ namespace Gs2::UE5::Chat::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzRoomGameSessionDomain::SubscribeMessages(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeMessages(
+            Callback
+        );
+    }
+
+    void FEzRoomGameSessionDomain::UnsubscribeMessages(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeMessages(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Chat::Domain::Model::FEzMessageGameSessionDomainPtr FEzRoomGameSessionDomain::Message(
         const FString MessageName
     ) const
@@ -211,5 +225,22 @@ namespace Gs2::UE5::Chat::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzRoomGameSessionDomain::FModelTask>> FEzRoomGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzRoomGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Chat::Model::FEzRoomPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Chat::Model::FRoomPtr Item)
+            {
+                Callback(Gs2::UE5::Chat::Model::FEzRoom::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzRoomGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
     }
 }

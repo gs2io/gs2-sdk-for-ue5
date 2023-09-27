@@ -123,4 +123,21 @@ namespace Gs2::UE5::AdReward::Domain::Model
     TSharedPtr<FAsyncTask<FEzPointGameSessionDomain::FModelTask>> FEzPointGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzPointGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::AdReward::Model::FEzPointPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::AdReward::Model::FPointPtr Item)
+            {
+                Callback(Gs2::UE5::AdReward::Model::FEzPoint::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzPointGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

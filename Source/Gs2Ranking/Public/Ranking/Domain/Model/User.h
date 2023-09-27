@@ -133,11 +133,27 @@ namespace Gs2::Ranking::Domain::Model
             const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRankings(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRankings(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIteratorPtr NearRankings(
             const FString CategoryName,
             const int64 Score,
             const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeNearRankings(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNearRankings(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Ranking::Domain::Model::FRankingDomain> Ranking(
             const FString CategoryName
@@ -147,6 +163,14 @@ namespace Gs2::Ranking::Domain::Model
             const FString CategoryName,
             const FString ScorerUserId
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeScores(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeScores(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Ranking::Domain::Model::FScoreDomain> Score(
             const FString CategoryName,

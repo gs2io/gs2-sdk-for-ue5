@@ -216,6 +216,14 @@ namespace Gs2::Version::Domain::Model
         Gs2::Version::Domain::Iterator::FDescribeVersionModelsIteratorPtr VersionModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeVersionModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeVersionModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Version::Domain::Model::FVersionModelDomain> VersionModel(
             const FString VersionName
         ) const;
@@ -230,6 +238,14 @@ namespace Gs2::Version::Domain::Model
 
         Gs2::Version::Domain::Iterator::FDescribeVersionModelMastersIteratorPtr VersionModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeVersionModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeVersionModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Version::Domain::Model::FVersionModelMasterDomain> VersionModelMaster(
             const FString VersionName
@@ -265,6 +281,14 @@ namespace Gs2::Version::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Version::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

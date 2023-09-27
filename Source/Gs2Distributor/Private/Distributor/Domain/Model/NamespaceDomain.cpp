@@ -378,6 +378,34 @@ namespace Gs2::Distributor::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeDistributorModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Distributor::Model::FDistributorModel::TypeName,
+            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "DistributorModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeDistributorModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Distributor::Model::FDistributorModel::TypeName,
+            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "DistributorModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Distributor::Domain::Model::FDistributorModelDomain> FNamespaceDomain::DistributorModel(
         const FString DistributorName
     ) const
@@ -411,6 +439,34 @@ namespace Gs2::Distributor::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeDistributorModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
+            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "DistributorModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeDistributorModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
+            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "DistributorModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -546,6 +602,37 @@ namespace Gs2::Distributor::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Distributor::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Distributor::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Distributor::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Distributor::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

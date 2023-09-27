@@ -113,6 +113,14 @@ namespace Gs2::Chat::Domain::Model
         Gs2::Chat::Domain::Iterator::FDescribeSubscribesIteratorPtr Subscribes(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSubscribes(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSubscribes(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Chat::Domain::Model::FSubscribeAccessTokenDomain> Subscribe(
             const FString RoomName
         ) const;

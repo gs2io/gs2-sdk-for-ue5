@@ -63,6 +63,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeInventoriesIteratorPtr Inventories(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeInventories(TFunction<void()> Callback);
+
+        void UnsubscribeInventories(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Inventory::Domain::Model::FEzInventoryGameSessionDomainPtr Inventory(
             const FString InventoryName
         ) const;

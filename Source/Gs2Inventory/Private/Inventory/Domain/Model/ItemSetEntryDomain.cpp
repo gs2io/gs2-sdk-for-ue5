@@ -26,6 +26,12 @@ namespace Gs2::Inventory::Model
     }
 
     FItemSetEntry::FItemSetEntry(
+        const FItemSetEntry& From
+    ): Value(From.Value)
+    {
+    }
+
+    FItemSetEntry::FItemSetEntry(
         const FItemSetPtr& Value
     ): Value([&Value]
     {

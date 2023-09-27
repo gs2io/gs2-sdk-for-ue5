@@ -184,6 +184,14 @@ namespace Gs2::MegaField::Domain::Model
         Gs2::MegaField::Domain::Iterator::FDescribeLayerModelMastersIteratorPtr LayerModelMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeLayerModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLayerModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::MegaField::Domain::Model::FLayerModelMasterDomain> LayerModelMaster(
             const FString LayerModelName
         ) const;
@@ -219,6 +227,14 @@ namespace Gs2::MegaField::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::MegaField::Model::FAreaModelMasterPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

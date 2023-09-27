@@ -140,6 +140,28 @@ namespace Gs2::Friend::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2FriendDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Friend::Model::FNamespace::TypeName,
+            "friend:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2FriendDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Friend::Model::FNamespace::TypeName,
+            "friend:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Friend::Domain::Model::FNamespaceDomain> FGs2FriendDomain::Namespace(
         const FString NamespaceName
     ) const

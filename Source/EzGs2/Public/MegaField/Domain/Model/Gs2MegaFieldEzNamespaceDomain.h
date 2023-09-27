@@ -56,6 +56,10 @@ namespace Gs2::UE5::MegaField::Domain::Model
         Gs2::UE5::MegaField::Domain::Iterator::FEzDescribeAreaModelsIteratorPtr AreaModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeAreaModels(TFunction<void()> Callback);
+
+        void UnsubscribeAreaModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::MegaField::Domain::Model::FEzAreaModelDomainPtr AreaModel(
             const FString AreaModelName
         ) const;

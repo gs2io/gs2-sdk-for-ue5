@@ -274,6 +274,41 @@ namespace Gs2::Ranking::Domain::Model
     TSharedPtr<FAsyncTask<FScoreAccessTokenDomain::FModelTask>> FScoreAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FScoreAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FScoreAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Ranking::Model::FScorePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Ranking::Model::FScore::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
+                ScorerUserId,
+                ScorerUserId,
+                UniqueId ? *UniqueId : "0"
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Ranking::Model::FScore>(obj));
+            }
+        );
+    }
+
+    void FScoreAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Ranking::Model::FScore::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
+                ScorerUserId,
+                ScorerUserId,
+                UniqueId ? *UniqueId : "0"
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

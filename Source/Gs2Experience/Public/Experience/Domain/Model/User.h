@@ -91,6 +91,14 @@ namespace Gs2::Experience::Domain::Model
             const TOptional<FString> ExperienceName
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStatuses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain> Status(
             const FString ExperienceName,
             const FString PropertyId

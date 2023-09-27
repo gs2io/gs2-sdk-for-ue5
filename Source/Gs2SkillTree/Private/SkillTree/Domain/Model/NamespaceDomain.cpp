@@ -377,6 +377,34 @@ namespace Gs2::SkillTree::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeNodeModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::SkillTree::Model::FNodeModel::TypeName,
+            Gs2::SkillTree::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "NodeModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeNodeModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::SkillTree::Model::FNodeModel::TypeName,
+            Gs2::SkillTree::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "NodeModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::SkillTree::Domain::Model::FNodeModelDomain> FNamespaceDomain::NodeModel(
         const FString NodeModelName
     ) const
@@ -426,6 +454,34 @@ namespace Gs2::SkillTree::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeNodeModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::SkillTree::Model::FNodeModelMaster::TypeName,
+            Gs2::SkillTree::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "NodeModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeNodeModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::SkillTree::Model::FNodeModelMaster::TypeName,
+            Gs2::SkillTree::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "NodeModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -533,6 +589,37 @@ namespace Gs2::SkillTree::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::SkillTree::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::SkillTree::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::SkillTree::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::SkillTree::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::SkillTree::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::SkillTree::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

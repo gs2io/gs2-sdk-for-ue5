@@ -136,6 +136,28 @@ namespace Gs2::Idle::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2IdleDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Idle::Model::FNamespace::TypeName,
+            "idle:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2IdleDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Idle::Model::FNamespace::TypeName,
+            "idle:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Idle::Domain::Model::FNamespaceDomain> FGs2IdleDomain::Namespace(
         const FString NamespaceName
     ) const

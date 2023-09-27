@@ -181,6 +181,14 @@ namespace Gs2::StateMachine::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::StateMachine::Model::FStatusPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
     };
 
     typedef TSharedPtr<FStatusAccessTokenDomain> FStatusAccessTokenDomainPtr;

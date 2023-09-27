@@ -170,6 +170,14 @@ namespace Gs2::Matchmaking::Domain::Model
         Gs2::Matchmaking::Domain::Iterator::FDescribeGatheringsIteratorPtr Gatherings(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeGatherings(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeGatherings(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingByPlayerIteratorPtr DoMatchmakingByPlayer(
             const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player
         ) const;
@@ -191,6 +199,14 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsByUserIdIteratorPtr Ratings(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeRatings(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRatings(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingDomain> Rating(
             const FString RatingName

@@ -327,6 +327,37 @@ namespace Gs2::Mission::Domain::Model
     TSharedPtr<FAsyncTask<FCompleteAccessTokenDomain::FModelTask>> FCompleteAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCompleteAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCompleteAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Mission::Model::FCompletePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Mission::Model::FComplete::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                MissionGroupName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Mission::Model::FComplete>(obj));
+            }
+        );
+    }
+
+    void FCompleteAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Mission::Model::FComplete::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                MissionGroupName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -147,6 +147,39 @@ namespace Gs2::News::Domain::Model
     TSharedPtr<FAsyncTask<FSetCookieRequestEntryDomain::FModelTask>> FSetCookieRequestEntryDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSetCookieRequestEntryDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FSetCookieRequestEntryDomain::Subscribe(
+        TFunction<void(Gs2::News::Model::FSetCookieRequestEntryPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::News::Model::FSetCookieRequestEntry::TypeName,
+            ParentKey,
+            Gs2::News::Domain::Model::FSetCookieRequestEntryDomain::CreateCacheKey(
+                Key,
+                Value
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::News::Model::FSetCookieRequestEntry>(obj));
+            }
+        );
+    }
+
+    void FSetCookieRequestEntryDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::News::Model::FSetCookieRequestEntry::TypeName,
+            ParentKey,
+            Gs2::News::Domain::Model::FSetCookieRequestEntryDomain::CreateCacheKey(
+                Key,
+                Value
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

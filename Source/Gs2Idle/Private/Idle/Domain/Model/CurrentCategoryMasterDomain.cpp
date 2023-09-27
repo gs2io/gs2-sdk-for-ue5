@@ -404,6 +404,35 @@ namespace Gs2::Idle::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentCategoryMasterDomain::FModelTask>> FCurrentCategoryMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentCategoryMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentCategoryMasterDomain::Subscribe(
+        TFunction<void(Gs2::Idle::Model::FCurrentCategoryMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Idle::Model::FCurrentCategoryMaster::TypeName,
+            ParentKey,
+            Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Idle::Model::FCurrentCategoryMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentCategoryMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Idle::Model::FCurrentCategoryMaster::TypeName,
+            ParentKey,
+            Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

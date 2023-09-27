@@ -77,6 +77,20 @@ namespace Gs2::UE5::Exchange::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeAwaits(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeAwaits(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeAwaits(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeAwaits(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomainPtr FEzUserGameSessionDomain::Await(
         const FString AwaitName
     ) const

@@ -139,6 +139,37 @@ namespace Gs2::JobQueue::Domain::Model
     TSharedPtr<FAsyncTask<FDeadLetterJobAccessTokenDomain::FModelTask>> FDeadLetterJobAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDeadLetterJobAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FDeadLetterJobAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::JobQueue::Model::FDeadLetterJobPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::JobQueue::Model::FDeadLetterJob::TypeName,
+            ParentKey,
+            Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain::CreateCacheKey(
+                DeadLetterJobName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::JobQueue::Model::FDeadLetterJob>(obj));
+            }
+        );
+    }
+
+    void FDeadLetterJobAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::JobQueue::Model::FDeadLetterJob::TypeName,
+            ParentKey,
+            Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain::CreateCacheKey(
+                DeadLetterJobName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

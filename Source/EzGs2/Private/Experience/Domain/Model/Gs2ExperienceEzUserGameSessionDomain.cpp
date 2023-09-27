@@ -62,6 +62,20 @@ namespace Gs2::UE5::Experience::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeStatuses(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeStatuses(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeStatuses(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Experience::Domain::Model::FEzStatusGameSessionDomainPtr FEzUserGameSessionDomain::Status(
         const FString ExperienceName,
         const FString PropertyId

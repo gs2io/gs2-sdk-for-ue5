@@ -368,6 +368,37 @@ namespace Gs2::Matchmaking::Domain::Model
     TSharedPtr<FAsyncTask<FGatheringDomain::FModelTask>> FGatheringDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FGatheringDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FGatheringDomain::Subscribe(
+        TFunction<void(Gs2::Matchmaking::Model::FGatheringPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Matchmaking::Model::FGathering::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
+                GatheringName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FGathering>(obj));
+            }
+        );
+    }
+
+    void FGatheringDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Matchmaking::Model::FGathering::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
+                GatheringName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

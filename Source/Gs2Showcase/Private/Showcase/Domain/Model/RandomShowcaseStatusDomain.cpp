@@ -32,6 +32,8 @@
 #include "Showcase/Domain/Model/CurrentShowcaseMaster.h"
 #include "Showcase/Domain/Model/Showcase.h"
 #include "Showcase/Domain/Model/ShowcaseAccessToken.h"
+#include "Showcase/Domain/Model/DisplayItem.h"
+#include "Showcase/Domain/Model/DisplayItemAccessToken.h"
 #include "Showcase/Domain/Model/RandomShowcaseMaster.h"
 #include "Showcase/Domain/Model/RandomShowcase.h"
 #include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"
@@ -81,7 +83,11 @@ namespace Gs2::Showcase::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        ShowcaseName(From.ShowcaseName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -160,6 +166,82 @@ namespace Gs2::Showcase::Domain::Model
         Request::FIncrementPurchaseCountByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FIncrementPurchaseCountTask>>(this->AsShared(), Request);
+    }
+
+    FRandomShowcaseStatusDomain::FDecrementPurchaseCountTask::FDecrementPurchaseCountTask(
+        const TSharedPtr<FRandomShowcaseStatusDomain> Self,
+        const Request::FDecrementPurchaseCountByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FRandomShowcaseStatusDomain::FDecrementPurchaseCountTask::FDecrementPurchaseCountTask(
+        const FDecrementPurchaseCountTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRandomShowcaseStatusDomain::FDecrementPurchaseCountTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithShowcaseName(Self->ShowcaseName);
+        const auto Future = Self->Client->DecrementPurchaseCountByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->ShowcaseName,
+                    "RandomDisplayItem"
+                );
+                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Cache->Put(
+                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
+            Self->Cache,
+            Self->JobQueueDomain,
+            Self->StampSheetConfiguration,
+            Self->Session,
+            Request->GetNamespaceName(),
+            Request->GetUserId(),
+            ResultModel->GetItem()->GetShowcaseName(),
+            Request->GetDisplayItemName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRandomShowcaseStatusDomain::FDecrementPurchaseCountTask>> FRandomShowcaseStatusDomain::DecrementPurchaseCount(
+        Request::FDecrementPurchaseCountByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDecrementPurchaseCountTask>>(this->AsShared(), Request);
     }
 
     FRandomShowcaseStatusDomain::FForceReDrawTask::FForceReDrawTask(
@@ -267,7 +349,7 @@ namespace Gs2::Showcase::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (ShowcaseName.IsSet() ? *ShowcaseName : "null") + ":" +
@@ -278,7 +360,7 @@ namespace Gs2::Showcase::Domain::Model
         TOptional<FString> ShowcaseName
     )
     {
-        return FString() +
+        return FString("") +
             (ShowcaseName.IsSet() ? *ShowcaseName : "null");
     }
 }

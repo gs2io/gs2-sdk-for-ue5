@@ -146,6 +146,10 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Formation::Model::FEzPropertyFormPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
+
     };
     typedef TSharedPtr<FEzPropertyFormGameSessionDomain> FEzPropertyFormGameSessionDomainPtr;
 }

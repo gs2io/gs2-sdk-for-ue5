@@ -359,6 +359,34 @@ namespace Gs2::Realtime::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRooms(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Realtime::Model::FRoom::TypeName,
+            Gs2::Realtime::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Room"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRooms(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Realtime::Model::FRoom::TypeName,
+            Gs2::Realtime::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Room"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Realtime::Domain::Model::FRoomDomain> FNamespaceDomain::Room(
         const FString RoomName
     ) const
@@ -463,6 +491,37 @@ namespace Gs2::Realtime::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Realtime::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Realtime::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Realtime::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Realtime::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Realtime::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Realtime::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

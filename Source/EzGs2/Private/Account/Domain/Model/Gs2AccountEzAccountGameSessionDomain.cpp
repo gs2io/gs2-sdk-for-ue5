@@ -75,6 +75,20 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzAccountGameSessionDomain::SubscribeTakeOvers(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeTakeOvers(
+            Callback
+        );
+    }
+
+    void FEzAccountGameSessionDomain::UnsubscribeTakeOvers(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeTakeOvers(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomainPtr FEzAccountGameSessionDomain::TakeOver(
         const int32 Type
     ) const
@@ -125,5 +139,22 @@ namespace Gs2::UE5::Account::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzAccountGameSessionDomain::FModelTask>> FEzAccountGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzAccountGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Account::Model::FEzAccountPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Account::Model::FAccountPtr Item)
+            {
+                Callback(Gs2::UE5::Account::Model::FEzAccount::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzAccountGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
     }
 }

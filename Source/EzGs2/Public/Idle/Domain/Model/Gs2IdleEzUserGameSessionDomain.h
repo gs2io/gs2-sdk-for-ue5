@@ -51,6 +51,10 @@ namespace Gs2::UE5::Idle::Domain::Model
         Gs2::UE5::Idle::Domain::Iterator::FEzDescribeStatusesIteratorPtr Statuses(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(TFunction<void()> Callback);
+
+        void UnsubscribeStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Idle::Domain::Model::FEzStatusGameSessionDomainPtr Status(
             const FString CategoryName
         ) const;

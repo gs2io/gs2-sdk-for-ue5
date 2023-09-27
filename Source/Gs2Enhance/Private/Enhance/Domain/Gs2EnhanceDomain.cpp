@@ -137,6 +137,28 @@ namespace Gs2::Enhance::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2EnhanceDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Enhance::Model::FNamespace::TypeName,
+            "enhance:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2EnhanceDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Enhance::Model::FNamespace::TypeName,
+            "enhance:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Enhance::Domain::Model::FNamespaceDomain> FGs2EnhanceDomain::Namespace(
         const FString NamespaceName
     ) const

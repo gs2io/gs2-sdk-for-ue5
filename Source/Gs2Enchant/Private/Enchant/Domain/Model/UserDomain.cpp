@@ -93,6 +93,36 @@ namespace Gs2::Enchant::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeBalanceParameterStatuses(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
+            Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "BalanceParameterStatus"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeBalanceParameterStatuses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
+            Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "BalanceParameterStatus"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain> FUserDomain::BalanceParameterStatus(
         const FString ParameterName,
         const FString PropertyId
@@ -120,6 +150,36 @@ namespace Gs2::Enchant::Domain::Model
             NamespaceName,
             UserId,
             ParameterName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeRarityParameterStatuses(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+            Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "RarityParameterStatus"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeRarityParameterStatuses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+            Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "RarityParameterStatus"
+            ),
+            CallbackID
         );
     }
 

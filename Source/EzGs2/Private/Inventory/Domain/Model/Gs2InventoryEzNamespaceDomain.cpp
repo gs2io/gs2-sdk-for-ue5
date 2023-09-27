@@ -50,6 +50,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeInventoryModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeInventoryModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeInventoryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeInventoryModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Inventory::Domain::Model::FEzInventoryModelDomainPtr FEzNamespaceDomain::InventoryModel(
         const FString InventoryName
     ) const
@@ -95,6 +109,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeSimpleInventoryModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSimpleInventoryModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeSimpleInventoryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSimpleInventoryModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Inventory::Domain::Model::FEzSimpleInventoryModelDomainPtr FEzNamespaceDomain::SimpleInventoryModel(
         const FString InventoryName
     ) const
@@ -113,6 +141,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
         return MakeShared<Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeBigInventoryModelsIterator>(
             Domain->BigInventoryModels(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeBigInventoryModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeBigInventoryModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeBigInventoryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeBigInventoryModels(
+            CallbackId
         );
     }
 

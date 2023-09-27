@@ -341,6 +341,37 @@ namespace Gs2::LoginReward::Domain::Model
     TSharedPtr<FAsyncTask<FReceiveStatusAccessTokenDomain::FModelTask>> FReceiveStatusAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FReceiveStatusAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FReceiveStatusAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::LoginReward::Model::FReceiveStatusPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::LoginReward::Model::FReceiveStatus::TypeName,
+            ParentKey,
+            Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
+                BonusModelName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::LoginReward::Model::FReceiveStatus>(obj));
+            }
+        );
+    }
+
+    void FReceiveStatusAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::LoginReward::Model::FReceiveStatus::TypeName,
+            ParentKey,
+            Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
+                BonusModelName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

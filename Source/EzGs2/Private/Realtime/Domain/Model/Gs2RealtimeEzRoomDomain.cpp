@@ -123,4 +123,21 @@ namespace Gs2::UE5::Realtime::Domain::Model
     TSharedPtr<FAsyncTask<FEzRoomDomain::FModelTask>> FEzRoomDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzRoomDomain::Subscribe(TFunction<void(Gs2::UE5::Realtime::Model::FEzRoomPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Realtime::Model::FRoomPtr Item)
+            {
+                Callback(Gs2::UE5::Realtime::Model::FEzRoom::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzRoomDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

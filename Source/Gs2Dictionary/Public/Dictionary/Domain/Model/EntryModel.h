@@ -128,6 +128,14 @@ namespace Gs2::Dictionary::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Dictionary::Model::FEntryModelPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
     };
 
     typedef TSharedPtr<FEntryModelDomain> FEntryModelDomainPtr;

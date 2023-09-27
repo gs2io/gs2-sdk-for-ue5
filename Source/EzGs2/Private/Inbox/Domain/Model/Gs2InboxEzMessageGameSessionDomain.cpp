@@ -236,4 +236,21 @@ namespace Gs2::UE5::Inbox::Domain::Model
     TSharedPtr<FAsyncTask<FEzMessageGameSessionDomain::FModelTask>> FEzMessageGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzMessageGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Inbox::Model::FEzMessagePtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Inbox::Model::FMessagePtr Item)
+            {
+                Callback(Gs2::UE5::Inbox::Model::FEzMessage::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzMessageGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

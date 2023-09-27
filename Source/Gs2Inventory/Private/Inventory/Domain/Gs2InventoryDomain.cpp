@@ -153,6 +153,28 @@ namespace Gs2::Inventory::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2InventoryDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FNamespace::TypeName,
+            "inventory:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2InventoryDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FNamespace::TypeName,
+            "inventory:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FNamespaceDomain> FGs2InventoryDomain::Namespace(
         const FString NamespaceName
     ) const

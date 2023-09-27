@@ -81,6 +81,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeItemModelsIteratorPtr ItemModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeItemModels(TFunction<void()> Callback);
+
+        void UnsubscribeItemModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Inventory::Domain::Model::FEzItemModelDomainPtr ItemModel(
             const FString ItemName
         ) const;
@@ -102,6 +106,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzInventoryModelPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzInventoryModelDomain> FEzInventoryModelDomainPtr;

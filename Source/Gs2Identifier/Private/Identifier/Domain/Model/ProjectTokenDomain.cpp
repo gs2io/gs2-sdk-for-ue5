@@ -215,6 +215,35 @@ namespace Gs2::Identifier::Domain::Model
     TSharedPtr<FAsyncTask<FProjectTokenDomain::FModelTask>> FProjectTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FProjectTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FProjectTokenDomain::Subscribe(
+        TFunction<void(Gs2::Identifier::Model::FProjectTokenPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Identifier::Model::FProjectToken::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FProjectToken>(obj));
+            }
+        );
+    }
+
+    void FProjectTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Identifier::Model::FProjectToken::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -283,6 +283,14 @@ namespace Gs2::Matchmaking::Domain::Model
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelsIteratorPtr RatingModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRatingModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRatingModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelDomain> RatingModel(
             const FString RatingName
         ) const;
@@ -294,6 +302,14 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingModelMastersIteratorPtr RatingModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeRatingModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRatingModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain> RatingModelMaster(
             const FString RatingName
@@ -329,6 +345,14 @@ namespace Gs2::Matchmaking::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Matchmaking::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

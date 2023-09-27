@@ -62,6 +62,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeBigItemsIteratorPtr BigItems(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBigItems(TFunction<void()> Callback);
+
+        void UnsubscribeBigItems(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Inventory::Domain::Model::FEzBigItemGameSessionDomainPtr BigItem(
             const FString ItemName
         ) const;

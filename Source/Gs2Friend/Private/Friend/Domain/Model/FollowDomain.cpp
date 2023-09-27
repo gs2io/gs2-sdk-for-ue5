@@ -149,6 +149,37 @@ namespace Gs2::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FFollowDomain::FModelTask>> FFollowDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FFollowDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FFollowDomain::Subscribe(
+        TFunction<void(Gs2::Friend::Model::FFollowPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Friend::Model::FFollow::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheKey(
+                WithProfile.IsSet() ? WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False")
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FFollow>(obj));
+            }
+        );
+    }
+
+    void FFollowDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Friend::Model::FFollow::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheKey(
+                WithProfile.IsSet() ? WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False")
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

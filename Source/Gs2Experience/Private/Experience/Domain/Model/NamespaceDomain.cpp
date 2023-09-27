@@ -448,6 +448,34 @@ namespace Gs2::Experience::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeExperienceModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Experience::Model::FExperienceModel::TypeName,
+            Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "ExperienceModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeExperienceModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Experience::Model::FExperienceModel::TypeName,
+            Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "ExperienceModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Experience::Domain::Model::FExperienceModelDomain> FNamespaceDomain::ExperienceModel(
         const FString ExperienceName
     ) const
@@ -500,6 +528,34 @@ namespace Gs2::Experience::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeThresholdMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Experience::Model::FThresholdMaster::TypeName,
+            Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "ThresholdMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeThresholdMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Experience::Model::FThresholdMaster::TypeName,
+            Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "ThresholdMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Experience::Domain::Model::FThresholdMasterDomain> FNamespaceDomain::ThresholdMaster(
         const FString ThresholdName
     ) const
@@ -521,6 +577,34 @@ namespace Gs2::Experience::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeExperienceModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Experience::Model::FExperienceModelMaster::TypeName,
+            Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "ExperienceModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeExperienceModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Experience::Model::FExperienceModelMaster::TypeName,
+            Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "ExperienceModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -628,6 +712,37 @@ namespace Gs2::Experience::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Experience::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Experience::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Experience::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Experience::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

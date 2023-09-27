@@ -355,6 +355,37 @@ namespace Gs2::Stamina::Domain::Model
     TSharedPtr<FAsyncTask<FRecoverValueTableMasterDomain::FModelTask>> FRecoverValueTableMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRecoverValueTableMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FRecoverValueTableMasterDomain::Subscribe(
+        TFunction<void(Gs2::Stamina::Model::FRecoverValueTableMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Stamina::Model::FRecoverValueTableMaster::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain::CreateCacheKey(
+                RecoverValueTableName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Stamina::Model::FRecoverValueTableMaster>(obj));
+            }
+        );
+    }
+
+    void FRecoverValueTableMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Stamina::Model::FRecoverValueTableMaster::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain::CreateCacheKey(
+                RecoverValueTableName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

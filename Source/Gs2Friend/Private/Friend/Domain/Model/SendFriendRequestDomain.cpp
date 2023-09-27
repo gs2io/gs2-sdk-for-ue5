@@ -318,6 +318,37 @@ namespace Gs2::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FSendFriendRequestDomain::FModelTask>> FSendFriendRequestDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSendFriendRequestDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FSendFriendRequestDomain::Subscribe(
+        TFunction<void(Gs2::Friend::Model::FFriendRequestPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
+                TargetUserId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FFriendRequest>(obj));
+            }
+        );
+    }
+
+    void FSendFriendRequestDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
+                TargetUserId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

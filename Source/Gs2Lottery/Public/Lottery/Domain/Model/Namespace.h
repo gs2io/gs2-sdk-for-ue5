@@ -260,12 +260,28 @@ namespace Gs2::Lottery::Domain::Model
         Gs2::Lottery::Domain::Iterator::FDescribePrizeTablesIteratorPtr PrizeTables(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribePrizeTables(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribePrizeTables(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeTableDomain> PrizeTable(
             const FString PrizeTableName
         ) const;
 
         Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIteratorPtr LotteryModels(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeLotteryModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLotteryModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryModelDomain> LotteryModel(
             const FString LotteryName
@@ -274,12 +290,28 @@ namespace Gs2::Lottery::Domain::Model
         Gs2::Lottery::Domain::Iterator::FDescribePrizeTableMastersIteratorPtr PrizeTableMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribePrizeTableMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribePrizeTableMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain> PrizeTableMaster(
             const FString PrizeTableName
         ) const;
 
         Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelMastersIteratorPtr LotteryModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeLotteryModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLotteryModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryModelMasterDomain> LotteryModelMaster(
             const FString LotteryName
@@ -315,6 +347,14 @@ namespace Gs2::Lottery::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Lottery::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

@@ -70,6 +70,20 @@ namespace Gs2::UE5::Distributor::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeDistributorModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeDistributorModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeDistributorModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeDistributorModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Distributor::Domain::Model::FEzDistributorModelDomainPtr FEzNamespaceDomain::DistributorModel(
         const FString DistributorName
     ) const

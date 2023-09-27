@@ -141,6 +141,28 @@ namespace Gs2::Lottery::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2LotteryDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lottery::Model::FNamespace::TypeName,
+            "lottery:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2LotteryDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FNamespace::TypeName,
+            "lottery:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Lottery::Domain::Model::FNamespaceDomain> FGs2LotteryDomain::Namespace(
         const FString NamespaceName
     ) const

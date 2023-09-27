@@ -131,6 +131,14 @@ namespace Gs2::SerialKey::Domain::Model
         Gs2::SerialKey::Domain::Iterator::FDescribeIssueJobsIteratorPtr IssueJobs(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeIssueJobs(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeIssueJobs(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::SerialKey::Domain::Model::FIssueJobDomain> IssueJob(
             const FString IssueJobName
         ) const;
@@ -166,6 +174,14 @@ namespace Gs2::SerialKey::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::SerialKey::Model::FCampaignModelPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

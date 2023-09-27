@@ -50,6 +50,20 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeMissionGroupModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeMissionGroupModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeMissionGroupModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeMissionGroupModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Mission::Domain::Model::FEzMissionGroupModelDomainPtr FEzNamespaceDomain::MissionGroupModel(
         const FString MissionGroupName
     ) const
@@ -68,6 +82,20 @@ namespace Gs2::UE5::Mission::Domain::Model
         return MakeShared<Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCounterModelsIterator>(
             Domain->CounterModels(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeCounterModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeCounterModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeCounterModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeCounterModels(
+            CallbackId
         );
     }
 

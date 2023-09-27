@@ -108,6 +108,36 @@ namespace Gs2::Lottery::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeBoxes(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lottery::Model::FBoxItems::TypeName,
+            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "BoxItems"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeBoxes(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FBoxItems::TypeName,
+            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "BoxItems"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Lottery::Domain::Model::FBoxItemsAccessTokenDomain> FUserAccessTokenDomain::BoxItems(
         const FString PrizeTableName
     ) const
@@ -133,6 +163,36 @@ namespace Gs2::Lottery::Domain::Model
             NamespaceName,
             LotteryName,
             AccessToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeProbabilities(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Probability"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeProbabilities(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Probability"
+            ),
+            CallbackID
         );
     }
 

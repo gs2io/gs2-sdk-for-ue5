@@ -92,6 +92,10 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Datastore::Model::FEzDataObjectPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
+        
         class FDownloadTask :
             public Gs2::Core::Util::TGs2Future<TArray<uint8>>,
             public TSharedFromThis<FDownloadTask>

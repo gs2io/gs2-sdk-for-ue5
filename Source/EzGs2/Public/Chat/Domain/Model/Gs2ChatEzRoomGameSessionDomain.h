@@ -97,6 +97,10 @@ namespace Gs2::UE5::Chat::Domain::Model
         Gs2::UE5::Chat::Domain::Iterator::FEzDescribeMessagesIteratorPtr Messages(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMessages(TFunction<void()> Callback);
+
+        void UnsubscribeMessages(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Chat::Domain::Model::FEzMessageGameSessionDomainPtr Message(
             const FString MessageName
         ) const;
@@ -118,6 +122,10 @@ namespace Gs2::UE5::Chat::Domain::Model
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Chat::Model::FEzRoomPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzRoomGameSessionDomain> FEzRoomGameSessionDomainPtr;

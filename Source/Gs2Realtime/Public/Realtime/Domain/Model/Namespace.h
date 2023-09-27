@@ -207,6 +207,14 @@ namespace Gs2::Realtime::Domain::Model
         Gs2::Realtime::Domain::Iterator::FDescribeRoomsIteratorPtr Rooms(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRooms(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRooms(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Realtime::Domain::Model::FRoomDomain> Room(
             const FString RoomName
         ) const;
@@ -241,6 +249,14 @@ namespace Gs2::Realtime::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Realtime::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

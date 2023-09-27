@@ -50,6 +50,20 @@ namespace Gs2::UE5::MegaField::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeAreaModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeAreaModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeAreaModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeAreaModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::MegaField::Domain::Model::FEzAreaModelDomainPtr FEzNamespaceDomain::AreaModel(
         const FString AreaModelName
     ) const

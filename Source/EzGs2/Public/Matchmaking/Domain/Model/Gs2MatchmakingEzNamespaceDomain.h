@@ -129,6 +129,10 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingModelsIteratorPtr RatingModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRatingModels(TFunction<void()> Callback);
+
+        void UnsubscribeRatingModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Matchmaking::Domain::Model::FEzRatingModelDomainPtr RatingModel(
             const FString RatingName
         ) const;

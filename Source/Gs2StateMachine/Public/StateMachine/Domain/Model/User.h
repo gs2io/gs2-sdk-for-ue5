@@ -102,6 +102,14 @@ namespace Gs2::StateMachine::Domain::Model
             const TOptional<FString> Status
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStatuses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::StateMachine::Domain::Model::FStatusDomain> Status(
             const FString StatusName
         ) const;

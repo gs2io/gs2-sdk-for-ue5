@@ -52,6 +52,10 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeEntryModelsIteratorPtr EntryModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeEntryModels(TFunction<void()> Callback);
+
+        void UnsubscribeEntryModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryModelDomainPtr EntryModel(
             const FString EntryName
         ) const;

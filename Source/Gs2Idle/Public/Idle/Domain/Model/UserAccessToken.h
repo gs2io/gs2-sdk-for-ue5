@@ -79,6 +79,14 @@ namespace Gs2::Idle::Domain::Model
         Gs2::Idle::Domain::Iterator::FDescribeStatusesIteratorPtr Statuses(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStatuses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain> Status(
             const FString CategoryName
         ) const;

@@ -70,6 +70,20 @@ namespace Gs2::UE5::Lottery::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeBoxes(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeBoxes(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeBoxes(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeBoxes(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Lottery::Domain::Model::FEzBoxItemsGameSessionDomainPtr FEzUserGameSessionDomain::BoxItems(
         const FString PrizeTableName
     ) const
@@ -90,6 +104,20 @@ namespace Gs2::UE5::Lottery::Domain::Model
             Domain->Probabilities(
                 LotteryName
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeProbabilities(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeProbabilities(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeProbabilities(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeProbabilities(
+            CallbackId
         );
     }
 }

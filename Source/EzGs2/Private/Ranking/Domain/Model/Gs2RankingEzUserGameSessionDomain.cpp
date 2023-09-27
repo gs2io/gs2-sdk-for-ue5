@@ -114,6 +114,20 @@ namespace Gs2::UE5::Ranking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeSubscribeUsers(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSubscribeUsers(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeSubscribeUsers(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSubscribeUsers(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserGameSessionDomainPtr FEzUserGameSessionDomain::SubscribeUser(
         const FString CategoryName,
         const FString TargetUserId
@@ -141,6 +155,20 @@ namespace Gs2::UE5::Ranking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeRankings(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRankings(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeRankings(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRankings(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Ranking::Domain::Model::FEzRankingGameSessionDomainPtr FEzUserGameSessionDomain::Ranking(
         const FString CategoryName
     ) const
@@ -163,6 +191,20 @@ namespace Gs2::UE5::Ranking::Domain::Model
                 CategoryName,
                 ScorerUserId
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeScores(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeScores(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeScores(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeScores(
+            CallbackId
         );
     }
 

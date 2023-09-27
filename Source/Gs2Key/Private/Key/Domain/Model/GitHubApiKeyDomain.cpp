@@ -347,6 +347,37 @@ namespace Gs2::Key::Domain::Model
     TSharedPtr<FAsyncTask<FGitHubApiKeyDomain::FModelTask>> FGitHubApiKeyDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FGitHubApiKeyDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FGitHubApiKeyDomain::Subscribe(
+        TFunction<void(Gs2::Key::Model::FGitHubApiKeyPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Key::Model::FGitHubApiKey::TypeName,
+            ParentKey,
+            Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
+                ApiKeyName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Key::Model::FGitHubApiKey>(obj));
+            }
+        );
+    }
+
+    void FGitHubApiKeyDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Key::Model::FGitHubApiKey::TypeName,
+            ParentKey,
+            Gs2::Key::Domain::Model::FGitHubApiKeyDomain::CreateCacheKey(
+                ApiKeyName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

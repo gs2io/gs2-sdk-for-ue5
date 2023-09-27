@@ -290,4 +290,21 @@ namespace Gs2::UE5::Exchange::Domain::Model
     TSharedPtr<FAsyncTask<FEzAwaitGameSessionDomain::FModelTask>> FEzAwaitGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzAwaitGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Exchange::Model::FEzAwaitPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Exchange::Model::FAwaitPtr Item)
+            {
+                Callback(Gs2::UE5::Exchange::Model::FEzAwait::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzAwaitGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

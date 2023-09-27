@@ -308,6 +308,36 @@ namespace Gs2::Matchmaking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeGatherings(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Matchmaking::Model::FGathering::TypeName,
+            Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                "Gathering"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeGatherings(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Matchmaking::Model::FGathering::TypeName,
+            Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                "Gathering"
+            ),
+            CallbackID
+        );
+    }
+
     Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingByPlayerIteratorPtr FUserDomain::DoMatchmakingByPlayer(
         const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player
     ) const
@@ -377,6 +407,36 @@ namespace Gs2::Matchmaking::Domain::Model
             Client,
             NamespaceName,
             UserId
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeRatings(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Matchmaking::Model::FRating::TypeName,
+            Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Rating"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeRatings(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Matchmaking::Model::FRating::TypeName,
+            Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Rating"
+            ),
+            CallbackID
         );
     }
 

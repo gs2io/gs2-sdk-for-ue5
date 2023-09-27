@@ -105,6 +105,14 @@ namespace Gs2::News::Domain::Model
         Gs2::News::Domain::Iterator::FDescribeOutputsIteratorPtr Outputs(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeOutputs(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeOutputs(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::News::Domain::Model::FOutputDomain> Output(
             const FString OutputName
         ) const;
@@ -140,6 +148,14 @@ namespace Gs2::News::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::News::Model::FProgressPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

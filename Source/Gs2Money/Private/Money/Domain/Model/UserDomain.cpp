@@ -232,6 +232,36 @@ namespace Gs2::Money::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeWallets(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Money::Model::FWallet::TypeName,
+            Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Wallet"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeWallets(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Money::Model::FWallet::TypeName,
+            Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Wallet"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Money::Domain::Model::FWalletDomain> FUserDomain::Wallet(
         const int32 Slot
     ) const
@@ -261,6 +291,36 @@ namespace Gs2::Money::Domain::Model
             Slot,
             Begin,
             End
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeReceipts(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Money::Model::FReceipt::TypeName,
+            Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Receipt"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeReceipts(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Money::Model::FReceipt::TypeName,
+            Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Receipt"
+            ),
+            CallbackID
         );
     }
 

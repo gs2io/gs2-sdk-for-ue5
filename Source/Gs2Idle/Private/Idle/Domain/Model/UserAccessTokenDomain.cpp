@@ -88,6 +88,36 @@ namespace Gs2::Idle::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeStatuses(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Idle::Model::FStatus::TypeName,
+            Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Status"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeStatuses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Idle::Model::FStatus::TypeName,
+            Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Status"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain> FUserAccessTokenDomain::Status(
         const FString CategoryName
     ) const

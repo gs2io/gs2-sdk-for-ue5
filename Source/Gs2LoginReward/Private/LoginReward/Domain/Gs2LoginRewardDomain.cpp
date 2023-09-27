@@ -137,6 +137,28 @@ namespace Gs2::LoginReward::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2LoginRewardDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::LoginReward::Model::FNamespace::TypeName,
+            "loginReward:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2LoginRewardDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::LoginReward::Model::FNamespace::TypeName,
+            "loginReward:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::LoginReward::Domain::Model::FNamespaceDomain> FGs2LoginRewardDomain::Namespace(
         const FString NamespaceName
     ) const

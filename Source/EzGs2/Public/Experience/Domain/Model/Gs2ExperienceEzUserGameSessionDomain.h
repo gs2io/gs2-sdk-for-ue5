@@ -54,6 +54,10 @@ namespace Gs2::UE5::Experience::Domain::Model
             const TOptional<FString> ExperienceName = TOptional<FString>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(TFunction<void()> Callback);
+
+        void UnsubscribeStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Experience::Domain::Model::FEzStatusGameSessionDomainPtr Status(
             const FString ExperienceName,
             const FString PropertyId

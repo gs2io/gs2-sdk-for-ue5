@@ -194,6 +194,14 @@ namespace Gs2::Mission::Domain::Model
         Gs2::Mission::Domain::Iterator::FDescribeMissionTaskModelMastersIteratorPtr MissionTaskModelMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMissionTaskModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMissionTaskModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain> MissionTaskModelMaster(
             const FString MissionTaskName
         ) const;
@@ -229,6 +237,14 @@ namespace Gs2::Mission::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Mission::Model::FMissionGroupModelMasterPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

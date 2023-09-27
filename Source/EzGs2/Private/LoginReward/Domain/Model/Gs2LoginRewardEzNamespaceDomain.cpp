@@ -74,6 +74,20 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeBonusModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeBonusModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeBonusModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeBonusModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::LoginReward::Domain::Model::FEzBonusModelDomainPtr FEzNamespaceDomain::BonusModel(
         const FString BonusModelName
     ) const

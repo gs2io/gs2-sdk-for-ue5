@@ -242,6 +242,14 @@ namespace Gs2::Experience::Domain::Model
         Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIteratorPtr ExperienceModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeExperienceModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeExperienceModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Experience::Domain::Model::FExperienceModelDomain> ExperienceModel(
             const FString ExperienceName
         ) const;
@@ -257,12 +265,28 @@ namespace Gs2::Experience::Domain::Model
         Gs2::Experience::Domain::Iterator::FDescribeThresholdMastersIteratorPtr ThresholdMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeThresholdMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeThresholdMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Experience::Domain::Model::FThresholdMasterDomain> ThresholdMaster(
             const FString ThresholdName
         ) const;
 
         Gs2::Experience::Domain::Iterator::FDescribeExperienceModelMastersIteratorPtr ExperienceModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeExperienceModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeExperienceModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Experience::Domain::Model::FExperienceModelMasterDomain> ExperienceModelMaster(
             const FString ExperienceName
@@ -298,6 +322,14 @@ namespace Gs2::Experience::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Experience::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

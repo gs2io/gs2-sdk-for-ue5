@@ -90,6 +90,36 @@ namespace Gs2::Experience::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeStatuses(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Experience::Model::FStatus::TypeName,
+            Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Status"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeStatuses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Experience::Model::FStatus::TypeName,
+            Gs2::Experience::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Status"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain> FUserDomain::Status(
         const FString ExperienceName,
         const FString PropertyId

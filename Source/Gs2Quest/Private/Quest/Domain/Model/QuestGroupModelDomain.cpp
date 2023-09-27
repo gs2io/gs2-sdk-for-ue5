@@ -153,6 +153,36 @@ namespace Gs2::Quest::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FQuestGroupModelDomain::SubscribeQuestModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Quest::Model::FQuestModel::TypeName,
+            Gs2::Quest::Domain::Model::FQuestGroupModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                QuestGroupName,
+                "QuestModel"
+            ),
+            Callback
+        );
+    }
+
+    void FQuestGroupModelDomain::UnsubscribeQuestModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Quest::Model::FQuestModel::TypeName,
+            Gs2::Quest::Domain::Model::FQuestGroupModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                QuestGroupName,
+                "QuestModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Quest::Domain::Model::FQuestModelDomain> FQuestGroupModelDomain::QuestModel(
         const FString QuestName
     ) const
@@ -259,6 +289,37 @@ namespace Gs2::Quest::Domain::Model
 
     TSharedPtr<FAsyncTask<FQuestGroupModelDomain::FModelTask>> FQuestGroupModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FQuestGroupModelDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FQuestGroupModelDomain::Subscribe(
+        TFunction<void(Gs2::Quest::Model::FQuestGroupModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Quest::Model::FQuestGroupModel::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FQuestGroupModelDomain::CreateCacheKey(
+                QuestGroupName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Quest::Model::FQuestGroupModel>(obj));
+            }
+        );
+    }
+
+    void FQuestGroupModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Quest::Model::FQuestGroupModel::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FQuestGroupModelDomain::CreateCacheKey(
+                QuestGroupName
+            ),
+            CallbackID
+        );
     }
 }
 

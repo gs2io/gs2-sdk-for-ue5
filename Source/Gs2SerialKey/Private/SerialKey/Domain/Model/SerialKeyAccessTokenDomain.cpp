@@ -221,6 +221,37 @@ namespace Gs2::SerialKey::Domain::Model
     TSharedPtr<FAsyncTask<FSerialKeyAccessTokenDomain::FModelTask>> FSerialKeyAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSerialKeyAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FSerialKeyAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::SerialKey::Model::FSerialKeyPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::SerialKey::Model::FSerialKey::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                SerialKeyCode
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FSerialKey>(obj));
+            }
+        );
+    }
+
+    void FSerialKeyAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::SerialKey::Model::FSerialKey::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                SerialKeyCode
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

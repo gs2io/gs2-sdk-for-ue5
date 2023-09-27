@@ -315,6 +315,37 @@ namespace Gs2::JobQueue::Domain::Model
     TSharedPtr<FAsyncTask<FJobDomain::FModelTask>> FJobDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FJobDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FJobDomain::Subscribe(
+        TFunction<void(Gs2::JobQueue::Model::FJobPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::JobQueue::Model::FJob::TypeName,
+            ParentKey,
+            Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
+                JobName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::JobQueue::Model::FJob>(obj));
+            }
+        );
+    }
+
+    void FJobDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::JobQueue::Model::FJob::TypeName,
+            ParentKey,
+            Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
+                JobName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

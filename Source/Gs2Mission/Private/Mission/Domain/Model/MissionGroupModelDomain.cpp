@@ -155,6 +155,36 @@ namespace Gs2::Mission::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FMissionGroupModelDomain::SubscribeMissionTaskModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FMissionTaskModel::TypeName,
+            Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                MissionGroupName,
+                "MissionTaskModel"
+            ),
+            Callback
+        );
+    }
+
+    void FMissionGroupModelDomain::UnsubscribeMissionTaskModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FMissionTaskModel::TypeName,
+            Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                MissionGroupName,
+                "MissionTaskModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Mission::Domain::Model::FMissionTaskModelDomain> FMissionGroupModelDomain::MissionTaskModel(
         const FString MissionTaskName
     ) const
@@ -261,6 +291,37 @@ namespace Gs2::Mission::Domain::Model
 
     TSharedPtr<FAsyncTask<FMissionGroupModelDomain::FModelTask>> FMissionGroupModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FMissionGroupModelDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FMissionGroupModelDomain::Subscribe(
+        TFunction<void(Gs2::Mission::Model::FMissionGroupModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Mission::Model::FMissionGroupModel::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheKey(
+                MissionGroupName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Mission::Model::FMissionGroupModel>(obj));
+            }
+        );
+    }
+
+    void FMissionGroupModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Mission::Model::FMissionGroupModel::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheKey(
+                MissionGroupName
+            ),
+            CallbackID
+        );
     }
 }
 

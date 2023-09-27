@@ -410,6 +410,35 @@ namespace Gs2::Ranking::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentRankingMasterDomain::FModelTask>> FCurrentRankingMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentRankingMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentRankingMasterDomain::Subscribe(
+        TFunction<void(Gs2::Ranking::Model::FCurrentRankingMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Ranking::Model::FCurrentRankingMaster::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Ranking::Model::FCurrentRankingMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentRankingMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Ranking::Model::FCurrentRankingMaster::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

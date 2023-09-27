@@ -453,6 +453,34 @@ namespace Gs2::Mission::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMissionGroupModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FMissionGroupModel::TypeName,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MissionGroupModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeMissionGroupModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FMissionGroupModel::TypeName,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MissionGroupModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Mission::Domain::Model::FMissionGroupModelDomain> FNamespaceDomain::MissionGroupModel(
         const FString MissionGroupName
     ) const
@@ -474,6 +502,34 @@ namespace Gs2::Mission::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCounterModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FCounterModel::TypeName,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CounterModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeCounterModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FCounterModel::TypeName,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CounterModel"
+            ),
+            CallbackID
         );
     }
 
@@ -529,6 +585,34 @@ namespace Gs2::Mission::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMissionGroupModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FMissionGroupModelMaster::TypeName,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MissionGroupModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeMissionGroupModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FMissionGroupModelMaster::TypeName,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MissionGroupModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain> FNamespaceDomain::MissionGroupModelMaster(
         const FString MissionGroupName
     ) const
@@ -550,6 +634,34 @@ namespace Gs2::Mission::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCounterModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FCounterModelMaster::TypeName,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CounterModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeCounterModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FCounterModelMaster::TypeName,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CounterModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -657,6 +769,37 @@ namespace Gs2::Mission::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Mission::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Mission::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Mission::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Mission::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

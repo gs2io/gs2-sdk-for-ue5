@@ -128,6 +128,14 @@ namespace Gs2::Limit::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Limit::Model::FLimitModelPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
     };
 
     typedef TSharedPtr<FLimitModelDomain> FLimitModelDomainPtr;

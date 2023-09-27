@@ -94,6 +94,36 @@ namespace Gs2::Mission::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeCounters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FCounter::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Counter"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeCounters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FCounter::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Counter"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain> FUserAccessTokenDomain::Counter(
         const FString CounterName
     ) const
@@ -117,6 +147,36 @@ namespace Gs2::Mission::Domain::Model
             Client,
             NamespaceName,
             AccessToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeCompletes(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FComplete::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Complete"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeCompletes(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FComplete::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Complete"
+            ),
+            CallbackID
         );
     }
 

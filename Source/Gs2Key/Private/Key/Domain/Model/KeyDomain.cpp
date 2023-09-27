@@ -441,6 +441,37 @@ namespace Gs2::Key::Domain::Model
     TSharedPtr<FAsyncTask<FKeyDomain::FModelTask>> FKeyDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FKeyDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FKeyDomain::Subscribe(
+        TFunction<void(Gs2::Key::Model::FKeyPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Key::Model::FKey::TypeName,
+            ParentKey,
+            Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
+                KeyName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Key::Model::FKey>(obj));
+            }
+        );
+    }
+
+    void FKeyDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Key::Model::FKey::TypeName,
+            ParentKey,
+            Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
+                KeyName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

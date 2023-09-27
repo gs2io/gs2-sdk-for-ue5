@@ -74,7 +74,11 @@ namespace Gs2::Idle::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        CategoryName(From.CategoryName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -296,7 +300,7 @@ namespace Gs2::Idle::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (CategoryName.IsSet() ? *CategoryName : "null") + ":" +
@@ -307,7 +311,7 @@ namespace Gs2::Idle::Domain::Model
         TOptional<FString> CategoryName
     )
     {
-        return FString() +
+        return FString("") +
             (CategoryName.IsSet() ? *CategoryName : "null");
     }
 
@@ -382,6 +386,37 @@ namespace Gs2::Idle::Domain::Model
 
     TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FModelTask>> FStatusAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStatusAccessTokenDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FStatusAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Idle::Model::FStatusPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Idle::Model::FStatus::TypeName,
+            ParentKey,
+            Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                CategoryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Idle::Model::FStatus>(obj));
+            }
+        );
+    }
+
+    void FStatusAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Idle::Model::FStatus::TypeName,
+            ParentKey,
+            Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                CategoryName
+            ),
+            CallbackID
+        );
     }
 }
 

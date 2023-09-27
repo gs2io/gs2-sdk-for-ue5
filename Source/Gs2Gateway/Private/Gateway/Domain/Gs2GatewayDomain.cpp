@@ -140,6 +140,28 @@ namespace Gs2::Gateway::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2GatewayDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Gateway::Model::FNamespace::TypeName,
+            "gateway:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2GatewayDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Gateway::Model::FNamespace::TypeName,
+            "gateway:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Gateway::Domain::Model::FNamespaceDomain> FGs2GatewayDomain::Namespace(
         const FString NamespaceName
     ) const

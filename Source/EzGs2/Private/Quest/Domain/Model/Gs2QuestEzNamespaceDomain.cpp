@@ -50,6 +50,20 @@ namespace Gs2::UE5::Quest::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeQuestGroupModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeQuestGroupModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeQuestGroupModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeQuestGroupModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Quest::Domain::Model::FEzQuestGroupModelDomainPtr FEzNamespaceDomain::QuestGroupModel(
         const FString QuestGroupName
     ) const

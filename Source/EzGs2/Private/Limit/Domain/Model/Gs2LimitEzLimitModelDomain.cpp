@@ -123,4 +123,21 @@ namespace Gs2::UE5::Limit::Domain::Model
     TSharedPtr<FAsyncTask<FEzLimitModelDomain::FModelTask>> FEzLimitModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzLimitModelDomain::Subscribe(TFunction<void(Gs2::UE5::Limit::Model::FEzLimitModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Limit::Model::FLimitModelPtr Item)
+            {
+                Callback(Gs2::UE5::Limit::Model::FEzLimitModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzLimitModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

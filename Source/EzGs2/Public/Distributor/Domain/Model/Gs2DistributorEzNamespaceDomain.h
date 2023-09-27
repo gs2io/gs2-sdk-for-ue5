@@ -58,6 +58,10 @@ namespace Gs2::UE5::Distributor::Domain::Model
         Gs2::UE5::Distributor::Domain::Iterator::FEzDescribeDistributorModelsIteratorPtr DistributorModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeDistributorModels(TFunction<void()> Callback);
+
+        void UnsubscribeDistributorModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Distributor::Domain::Model::FEzDistributorModelDomainPtr DistributorModel(
             const FString DistributorName
         ) const;

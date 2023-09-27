@@ -89,6 +89,36 @@ namespace Gs2::Schedule::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeTriggers(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Schedule::Model::FTrigger::TypeName,
+            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Trigger"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeTriggers(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Schedule::Model::FTrigger::TypeName,
+            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Trigger"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerAccessTokenDomain> FUserAccessTokenDomain::Trigger(
         const FString TriggerName
     ) const
@@ -112,6 +142,36 @@ namespace Gs2::Schedule::Domain::Model
             Client,
             NamespaceName,
             AccessToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeEvents(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Schedule::Model::FEvent::TypeName,
+            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Event"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeEvents(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Schedule::Model::FEvent::TypeName,
+            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Event"
+            ),
+            CallbackID
         );
     }
 

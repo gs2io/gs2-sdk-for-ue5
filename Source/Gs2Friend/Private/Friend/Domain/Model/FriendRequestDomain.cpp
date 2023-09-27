@@ -87,7 +87,7 @@ namespace Gs2::Friend::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (TargetUserId.IsSet() ? *TargetUserId : "null") + ":" +
@@ -98,7 +98,7 @@ namespace Gs2::Friend::Domain::Model
         TOptional<FString> TargetUserId
     )
     {
-        return FString() +
+        return FString("") +
             (TargetUserId.IsSet() ? *TargetUserId : "null");
     }
 
@@ -114,11 +114,13 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        auto Value = Self->Cache->Get<Gs2::Friend::Model::FFriendRequest>(
+        TSharedPtr<Gs2::Friend::Model::FFriendRequest> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
             Self->ParentKey,
             Gs2::Friend::Domain::Model::FFriendRequestDomain::CreateCacheKey(
                 Self->TargetUserId
-            )
+            ),
+            &Value
         );
         *Result = Value;
 
@@ -127,6 +129,37 @@ namespace Gs2::Friend::Domain::Model
 
     TSharedPtr<FAsyncTask<FFriendRequestDomain::FModelTask>> FFriendRequestDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FFriendRequestDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FFriendRequestDomain::Subscribe(
+        TFunction<void(Gs2::Friend::Model::FFriendRequestPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FFriendRequestDomain::CreateCacheKey(
+                TargetUserId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FFriendRequest>(obj));
+            }
+        );
+    }
+
+    void FFriendRequestDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FFriendRequestDomain::CreateCacheKey(
+                TargetUserId
+            ),
+            CallbackID
+        );
     }
 }
 

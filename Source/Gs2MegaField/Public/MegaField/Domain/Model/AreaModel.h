@@ -101,6 +101,14 @@ namespace Gs2::MegaField::Domain::Model
         Gs2::MegaField::Domain::Iterator::FDescribeLayerModelsIteratorPtr LayerModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeLayerModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLayerModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::MegaField::Domain::Model::FLayerModelDomain> LayerModel(
             const FString LayerModelName
         ) const;
@@ -136,6 +144,14 @@ namespace Gs2::MegaField::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::MegaField::Model::FAreaModelPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

@@ -85,4 +85,21 @@ namespace Gs2::UE5::Enchant::Domain::Model
     TSharedPtr<FAsyncTask<FEzBalanceParameterStatusDomain::FModelTask>> FEzBalanceParameterStatusDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzBalanceParameterStatusDomain::Subscribe(TFunction<void(Gs2::UE5::Enchant::Model::FEzBalanceParameterStatusPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Enchant::Model::FBalanceParameterStatusPtr Item)
+            {
+                Callback(Gs2::UE5::Enchant::Model::FEzBalanceParameterStatus::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzBalanceParameterStatusDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

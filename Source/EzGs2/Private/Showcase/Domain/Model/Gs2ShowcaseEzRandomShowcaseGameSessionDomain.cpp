@@ -50,6 +50,20 @@ namespace Gs2::UE5::Showcase::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzRandomShowcaseGameSessionDomain::SubscribeRandomDisplayItems(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRandomDisplayItems(
+            Callback
+        );
+    }
+
+    void FEzRandomShowcaseGameSessionDomain::UnsubscribeRandomDisplayItems(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRandomDisplayItems(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomainPtr FEzRandomShowcaseGameSessionDomain::RandomDisplayItem(
         const FString DisplayItemName
     ) const

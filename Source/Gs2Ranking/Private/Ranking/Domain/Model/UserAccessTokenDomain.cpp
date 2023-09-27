@@ -171,6 +171,36 @@ namespace Gs2::Ranking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeSubscribeUsers(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Ranking::Model::FSubscribeUser::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "SubscribeUser"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeSubscribeUsers(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Ranking::Model::FSubscribeUser::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "SubscribeUser"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain> FUserAccessTokenDomain::SubscribeUser(
         const FString CategoryName,
         const FString TargetUserId
@@ -203,6 +233,36 @@ namespace Gs2::Ranking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeRankings(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Ranking::Model::FRanking::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Ranking"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeRankings(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Ranking::Model::FRanking::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Ranking"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Ranking::Domain::Model::FRankingAccessTokenDomain> FUserAccessTokenDomain::Ranking(
         const FString CategoryName
     ) const
@@ -230,6 +290,36 @@ namespace Gs2::Ranking::Domain::Model
             CategoryName,
             AccessToken,
             ScorerUserId
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeScores(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Ranking::Model::FScore::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Score"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeScores(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Ranking::Model::FScore::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Score"
+            ),
+            CallbackID
         );
     }
 

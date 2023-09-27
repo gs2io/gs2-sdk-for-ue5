@@ -134,6 +134,28 @@ namespace Gs2::Money::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2MoneyDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Money::Model::FNamespace::TypeName,
+            "money:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2MoneyDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Money::Model::FNamespace::TypeName,
+            "money:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Money::Domain::Model::FNamespaceDomain> FGs2MoneyDomain::Namespace(
         const FString NamespaceName
     ) const

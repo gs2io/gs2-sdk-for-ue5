@@ -50,6 +50,20 @@ namespace Gs2::UE5::Experience::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeExperienceModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeExperienceModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeExperienceModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeExperienceModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Experience::Domain::Model::FEzExperienceModelDomainPtr FEzNamespaceDomain::ExperienceModel(
         const FString ExperienceName
     ) const

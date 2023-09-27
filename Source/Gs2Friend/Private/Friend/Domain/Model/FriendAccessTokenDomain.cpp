@@ -166,6 +166,37 @@ namespace Gs2::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FFriendAccessTokenDomain::FModelTask>> FFriendAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FFriendAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FFriendAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Friend::Model::FFriendPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Friend::Model::FFriend::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheKey(
+                WithProfile.IsSet() ? WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False")
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FFriend>(obj));
+            }
+        );
+    }
+
+    void FFriendAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Friend::Model::FFriend::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheKey(
+                WithProfile.IsSet() ? WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False")
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

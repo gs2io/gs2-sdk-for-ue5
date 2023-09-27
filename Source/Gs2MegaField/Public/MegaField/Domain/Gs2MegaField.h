@@ -104,6 +104,14 @@ namespace Gs2::MegaField::Domain
         Gs2::MegaField::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNamespaces(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNamespaces(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::MegaField::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
         ) const;

@@ -134,6 +134,28 @@ namespace Gs2::Datastore::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2DatastoreDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Datastore::Model::FNamespace::TypeName,
+            "datastore:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2DatastoreDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Datastore::Model::FNamespace::TypeName,
+            "datastore:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Datastore::Domain::Model::FNamespaceDomain> FGs2DatastoreDomain::Namespace(
         const FString NamespaceName
     ) const

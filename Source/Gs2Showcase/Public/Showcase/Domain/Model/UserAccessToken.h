@@ -96,6 +96,14 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Showcase::Domain::Iterator::FDescribeShowcasesIteratorPtr Showcases(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeShowcases(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeShowcases(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomain> Showcase(
             const FString ShowcaseName
         ) const;

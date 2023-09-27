@@ -238,6 +238,35 @@ namespace Gs2::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FPublicProfileDomain::FModelTask>> FPublicProfileDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FPublicProfileDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FPublicProfileDomain::Subscribe(
+        TFunction<void(Gs2::Friend::Model::FPublicProfilePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Friend::Model::FPublicProfile::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FPublicProfileDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FPublicProfile>(obj));
+            }
+        );
+    }
+
+    void FPublicProfileDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Friend::Model::FPublicProfile::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FPublicProfileDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

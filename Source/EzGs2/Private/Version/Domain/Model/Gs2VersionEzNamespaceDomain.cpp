@@ -50,6 +50,20 @@ namespace Gs2::UE5::Version::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeVersionModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeVersionModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeVersionModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeVersionModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Version::Domain::Model::FEzVersionModelDomainPtr FEzNamespaceDomain::VersionModel(
         const FString VersionName
     ) const

@@ -232,6 +232,37 @@ namespace Gs2::Version::Domain::Model
     TSharedPtr<FAsyncTask<FVersionModelDomain::FModelTask>> FVersionModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FVersionModelDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FVersionModelDomain::Subscribe(
+        TFunction<void(Gs2::Version::Model::FVersionModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Version::Model::FVersionModel::TypeName,
+            ParentKey,
+            Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
+                VersionName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Version::Model::FVersionModel>(obj));
+            }
+        );
+    }
+
+    void FVersionModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Version::Model::FVersionModel::TypeName,
+            ParentKey,
+            Gs2::Version::Domain::Model::FVersionModelDomain::CreateCacheKey(
+                VersionName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

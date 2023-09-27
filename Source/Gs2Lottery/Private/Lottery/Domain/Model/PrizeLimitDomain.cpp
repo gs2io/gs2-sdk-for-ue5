@@ -292,6 +292,37 @@ namespace Gs2::Lottery::Domain::Model
     TSharedPtr<FAsyncTask<FPrizeLimitDomain::FModelTask>> FPrizeLimitDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FPrizeLimitDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FPrizeLimitDomain::Subscribe(
+        TFunction<void(Gs2::Lottery::Model::FPrizeLimitPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Lottery::Model::FPrizeLimit::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
+                PrizeId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FPrizeLimit>(obj));
+            }
+        );
+    }
+
+    void FPrizeLimitDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Lottery::Model::FPrizeLimit::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FPrizeLimitDomain::CreateCacheKey(
+                PrizeId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

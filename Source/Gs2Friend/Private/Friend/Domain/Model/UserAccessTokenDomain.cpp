@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -225,6 +227,38 @@ namespace Gs2::Friend::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeFollows(
+        TFunction<void()> Callback,
+        bool WithProfile
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Friend::Model::FFollowUser::TypeName,
+            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                FString("FollowUser:") + (WithProfile == true ? "True" : "False")
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeFollows(
+        Gs2::Core::Domain::CallbackID CallbackID,
+        bool WithProfile
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Friend::Model::FFollowUser::TypeName,
+            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                FString("FollowUser:") + (WithProfile == true ? "True" : "False")
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain> FUserAccessTokenDomain::FollowUser(
         const FString TargetUserId,
         const bool WithProfile
@@ -255,6 +289,40 @@ namespace Gs2::Friend::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeFriends(
+        TFunction<void()> Callback,
+        bool WithProfile
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Friend::Model::FFriendUser::TypeName,
+            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                WithProfile ? TOptional<FString>("True") : TOptional<FString>("False"),
+                "FriendUser"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeFriends(
+        Gs2::Core::Domain::CallbackID CallbackID,
+        bool WithProfile
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Friend::Model::FFriendUser::TypeName,
+            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                WithProfile ? TOptional<FString>("True") : TOptional<FString>("False"),
+                "FriendUser"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Friend::Domain::Model::FFriendAccessTokenDomain> FUserAccessTokenDomain::Friend(
         const bool WithProfile
     ) const
@@ -281,6 +349,36 @@ namespace Gs2::Friend::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeSendRequests(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "FriendRequest"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeSendRequests(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "FriendRequest"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain> FUserAccessTokenDomain::SendFriendRequest(
         const FString TargetUserId
     ) const
@@ -304,6 +402,36 @@ namespace Gs2::Friend::Domain::Model
             Client,
             NamespaceName,
             AccessToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeReceiveRequests(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "FriendRequest"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeReceiveRequests(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "FriendRequest"
+            ),
+            CallbackID
         );
     }
 

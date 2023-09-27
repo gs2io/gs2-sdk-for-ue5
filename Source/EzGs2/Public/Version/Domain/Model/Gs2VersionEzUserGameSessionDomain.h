@@ -54,6 +54,10 @@ namespace Gs2::UE5::Version::Domain::Model
         Gs2::UE5::Version::Domain::Iterator::FEzDescribeAcceptVersionsIteratorPtr AcceptVersions(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeAcceptVersions(TFunction<void()> Callback);
+
+        void UnsubscribeAcceptVersions(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomainPtr AcceptVersion(
             const FString VersionName
         ) const;

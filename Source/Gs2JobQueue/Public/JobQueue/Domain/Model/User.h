@@ -139,12 +139,28 @@ namespace Gs2::JobQueue::Domain::Model
         Gs2::JobQueue::Domain::Iterator::FDescribeJobsByUserIdIteratorPtr Jobs(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeJobs(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeJobs(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::JobQueue::Domain::Model::FJobDomain> Job(
             const FString JobName
         ) const;
 
         Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIteratorPtr DeadLetterJobs(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeDeadLetterJobs(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeDeadLetterJobs(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain> DeadLetterJob(
             const FString DeadLetterJobName

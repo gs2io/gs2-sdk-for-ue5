@@ -239,6 +239,37 @@ namespace Gs2::SerialKey::Domain::Model
     TSharedPtr<FAsyncTask<FIssueJobDomain::FModelTask>> FIssueJobDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FIssueJobDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FIssueJobDomain::Subscribe(
+        TFunction<void(Gs2::SerialKey::Model::FIssueJobPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::SerialKey::Model::FIssueJob::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FIssueJobDomain::CreateCacheKey(
+                IssueJobName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FIssueJob>(obj));
+            }
+        );
+    }
+
+    void FIssueJobDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::SerialKey::Model::FIssueJob::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FIssueJobDomain::CreateCacheKey(
+                IssueJobName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

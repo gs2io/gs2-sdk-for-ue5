@@ -50,6 +50,10 @@ namespace Gs2::UE5::StateMachine::Domain::Model
             const TOptional<FString> Status = TOptional<FString>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(TFunction<void()> Callback);
+
+        void UnsubscribeStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::StateMachine::Domain::Model::FEzStatusGameSessionDomainPtr Status(
             const FString StatusName
         ) const;

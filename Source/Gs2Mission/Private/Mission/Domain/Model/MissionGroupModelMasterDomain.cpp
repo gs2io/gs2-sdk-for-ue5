@@ -350,6 +350,36 @@ namespace Gs2::Mission::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FMissionGroupModelMasterDomain::SubscribeMissionTaskModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FMissionTaskModelMaster::TypeName,
+            Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain::CreateCacheParentKey(
+                NamespaceName,
+                MissionGroupName,
+                "MissionTaskModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FMissionGroupModelMasterDomain::UnsubscribeMissionTaskModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FMissionTaskModelMaster::TypeName,
+            Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain::CreateCacheParentKey(
+                NamespaceName,
+                MissionGroupName,
+                "MissionTaskModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain> FMissionGroupModelMasterDomain::MissionTaskModelMaster(
         const FString MissionTaskName
     ) const
@@ -456,6 +486,37 @@ namespace Gs2::Mission::Domain::Model
 
     TSharedPtr<FAsyncTask<FMissionGroupModelMasterDomain::FModelTask>> FMissionGroupModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FMissionGroupModelMasterDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FMissionGroupModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::Mission::Model::FMissionGroupModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Mission::Model::FMissionGroupModelMaster::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain::CreateCacheKey(
+                MissionGroupName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Mission::Model::FMissionGroupModelMaster>(obj));
+            }
+        );
+    }
+
+    void FMissionGroupModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Mission::Model::FMissionGroupModelMaster::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain::CreateCacheKey(
+                MissionGroupName
+            ),
+            CallbackID
+        );
     }
 }
 

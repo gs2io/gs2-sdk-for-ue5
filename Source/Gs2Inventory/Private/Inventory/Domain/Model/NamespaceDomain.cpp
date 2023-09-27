@@ -540,6 +540,34 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeInventoryModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FInventoryModel::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "InventoryModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeInventoryModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FInventoryModel::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "InventoryModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryModelDomain> FNamespaceDomain::InventoryModel(
         const FString InventoryName
     ) const
@@ -592,6 +620,34 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSimpleInventoryModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FSimpleInventoryModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SimpleInventoryModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeSimpleInventoryModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FSimpleInventoryModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SimpleInventoryModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain> FNamespaceDomain::SimpleInventoryModelMaster(
         const FString InventoryName
     ) const
@@ -613,6 +669,34 @@ namespace Gs2::Inventory::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSimpleInventoryModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FSimpleInventoryModel::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SimpleInventoryModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeSimpleInventoryModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FSimpleInventoryModel::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SimpleInventoryModel"
+            ),
+            CallbackID
         );
     }
 
@@ -640,6 +724,34 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBigInventoryModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FBigInventoryModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BigInventoryModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeBigInventoryModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FBigInventoryModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BigInventoryModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain> FNamespaceDomain::BigInventoryModelMaster(
         const FString InventoryName
     ) const
@@ -664,6 +776,34 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBigInventoryModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FBigInventoryModel::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BigInventoryModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeBigInventoryModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FBigInventoryModel::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BigInventoryModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelDomain> FNamespaceDomain::BigInventoryModel(
         const FString InventoryName
     ) const
@@ -685,6 +825,34 @@ namespace Gs2::Inventory::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeInventoryModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FInventoryModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "InventoryModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeInventoryModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FInventoryModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "InventoryModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -792,6 +960,37 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Inventory::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inventory::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inventory::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

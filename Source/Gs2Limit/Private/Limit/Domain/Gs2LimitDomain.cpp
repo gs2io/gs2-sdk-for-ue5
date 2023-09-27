@@ -136,6 +136,28 @@ namespace Gs2::Limit::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2LimitDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Limit::Model::FNamespace::TypeName,
+            "limit:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2LimitDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Limit::Model::FNamespace::TypeName,
+            "limit:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Limit::Domain::Model::FNamespaceDomain> FGs2LimitDomain::Namespace(
         const FString NamespaceName
     ) const

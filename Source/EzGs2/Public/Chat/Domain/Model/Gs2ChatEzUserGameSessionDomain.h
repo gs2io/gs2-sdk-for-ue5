@@ -88,6 +88,10 @@ namespace Gs2::UE5::Chat::Domain::Model
         Gs2::UE5::Chat::Domain::Iterator::FEzDescribeSubscribesIteratorPtr Subscribes(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSubscribes(TFunction<void()> Callback);
+
+        void UnsubscribeSubscribes(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomainPtr Subscribe(
             const FString RoomName
         ) const;

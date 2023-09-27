@@ -240,6 +240,37 @@ namespace Gs2::Distributor::Domain::Model
     TSharedPtr<FAsyncTask<FStampSheetResultAccessTokenDomain::FModelTask>> FStampSheetResultAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStampSheetResultAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FStampSheetResultAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Distributor::Model::FStampSheetResultPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Distributor::Model::FStampSheetResult::TypeName,
+            ParentKey,
+            Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
+                TransactionId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Distributor::Model::FStampSheetResult>(obj));
+            }
+        );
+    }
+
+    void FStampSheetResultAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Distributor::Model::FStampSheetResult::TypeName,
+            ParentKey,
+            Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
+                TransactionId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

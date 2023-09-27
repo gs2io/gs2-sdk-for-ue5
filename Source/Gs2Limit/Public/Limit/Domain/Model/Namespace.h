@@ -214,6 +214,14 @@ namespace Gs2::Limit::Domain::Model
         Gs2::Limit::Domain::Iterator::FDescribeLimitModelsIteratorPtr LimitModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeLimitModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLimitModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Limit::Domain::Model::FLimitModelDomain> LimitModel(
             const FString LimitName
         ) const;
@@ -228,6 +236,14 @@ namespace Gs2::Limit::Domain::Model
 
         Gs2::Limit::Domain::Iterator::FDescribeLimitModelMastersIteratorPtr LimitModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeLimitModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeLimitModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Limit::Domain::Model::FLimitModelMasterDomain> LimitModelMaster(
             const FString LimitName
@@ -263,6 +279,14 @@ namespace Gs2::Limit::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Limit::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

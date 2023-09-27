@@ -50,6 +50,20 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeCounters(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeCounters(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeCounters(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeCounters(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomainPtr FEzUserGameSessionDomain::Counter(
         const FString CounterName
     ) const
@@ -68,6 +82,20 @@ namespace Gs2::UE5::Mission::Domain::Model
         return MakeShared<Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCompletesIterator>(
             Domain->Completes(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeCompletes(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeCompletes(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeCompletes(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeCompletes(
+            CallbackId
         );
     }
 

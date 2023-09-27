@@ -128,4 +128,21 @@ namespace Gs2::UE5::Inventory::Domain::Model
     TSharedPtr<FAsyncTask<FEzBigItemModelDomain::FModelTask>> FEzBigItemModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzBigItemModelDomain::Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzBigItemModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Inventory::Model::FBigItemModelPtr Item)
+            {
+                Callback(Gs2::UE5::Inventory::Model::FEzBigItemModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzBigItemModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

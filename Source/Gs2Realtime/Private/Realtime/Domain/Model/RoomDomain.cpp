@@ -282,6 +282,37 @@ namespace Gs2::Realtime::Domain::Model
     TSharedPtr<FAsyncTask<FRoomDomain::FModelTask>> FRoomDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRoomDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FRoomDomain::Subscribe(
+        TFunction<void(Gs2::Realtime::Model::FRoomPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Realtime::Model::FRoom::TypeName,
+            ParentKey,
+            Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
+                RoomName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Realtime::Model::FRoom>(obj));
+            }
+        );
+    }
+
+    void FRoomDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Realtime::Model::FRoom::TypeName,
+            ParentKey,
+            Gs2::Realtime::Domain::Model::FRoomDomain::CreateCacheKey(
+                RoomName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

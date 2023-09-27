@@ -186,6 +186,36 @@ namespace Gs2::Quest::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeCompletedQuestLists(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Quest::Model::FCompletedQuestList::TypeName,
+            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "CompletedQuestList"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeCompletedQuestLists(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Quest::Model::FCompletedQuestList::TypeName,
+            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "CompletedQuestList"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListAccessTokenDomain> FUserAccessTokenDomain::CompletedQuestList(
         const FString QuestGroupName
     ) const

@@ -379,6 +379,34 @@ namespace Gs2::Version::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeVersionModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Version::Model::FVersionModel::TypeName,
+            Gs2::Version::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "VersionModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeVersionModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Version::Model::FVersionModel::TypeName,
+            Gs2::Version::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "VersionModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Version::Domain::Model::FVersionModelDomain> FNamespaceDomain::VersionModel(
         const FString VersionName
     ) const
@@ -428,6 +456,34 @@ namespace Gs2::Version::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeVersionModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Version::Model::FVersionModelMaster::TypeName,
+            Gs2::Version::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "VersionModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeVersionModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Version::Model::FVersionModelMaster::TypeName,
+            Gs2::Version::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "VersionModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -535,6 +591,37 @@ namespace Gs2::Version::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Version::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Version::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Version::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Version::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Version::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Version::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

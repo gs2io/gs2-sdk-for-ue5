@@ -224,6 +224,14 @@ namespace Gs2::Schedule::Domain::Model
         Gs2::Schedule::Domain::Iterator::FDescribeEventMastersIteratorPtr EventMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeEventMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeEventMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Schedule::Domain::Model::FEventMasterDomain> EventMaster(
             const FString EventName
         ) const;
@@ -258,6 +266,14 @@ namespace Gs2::Schedule::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Schedule::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

@@ -214,6 +214,14 @@ namespace Gs2::Dictionary::Domain::Model
         Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelsIteratorPtr EntryModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeEntryModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeEntryModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelDomain> EntryModel(
             const FString EntryName
         ) const;
@@ -228,6 +236,14 @@ namespace Gs2::Dictionary::Domain::Model
 
         Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelMastersIteratorPtr EntryModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeEntryModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeEntryModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain> EntryModelMaster(
             const FString EntryName
@@ -263,6 +279,14 @@ namespace Gs2::Dictionary::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Dictionary::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

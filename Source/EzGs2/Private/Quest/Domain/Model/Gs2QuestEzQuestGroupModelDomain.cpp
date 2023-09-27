@@ -93,6 +93,20 @@ namespace Gs2::UE5::Quest::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzQuestGroupModelDomain::SubscribeQuestModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeQuestModels(
+            Callback
+        );
+    }
+
+    void FEzQuestGroupModelDomain::UnsubscribeQuestModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeQuestModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Quest::Domain::Model::FEzQuestModelDomainPtr FEzQuestGroupModelDomain::QuestModel(
         const FString QuestName
     ) const
@@ -143,5 +157,22 @@ namespace Gs2::UE5::Quest::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzQuestGroupModelDomain::FModelTask>> FEzQuestGroupModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzQuestGroupModelDomain::Subscribe(TFunction<void(Gs2::UE5::Quest::Model::FEzQuestGroupModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Quest::Model::FQuestGroupModelPtr Item)
+            {
+                Callback(Gs2::UE5::Quest::Model::FEzQuestGroupModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzQuestGroupModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
     }
 }

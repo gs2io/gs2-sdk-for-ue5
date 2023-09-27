@@ -307,6 +307,14 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIteratorPtr InventoryModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeInventoryModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeInventoryModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryModelDomain> InventoryModel(
             const FString InventoryName
         ) const;
@@ -322,12 +330,28 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelMastersIteratorPtr SimpleInventoryModelMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSimpleInventoryModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSimpleInventoryModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain> SimpleInventoryModelMaster(
             const FString InventoryName
         ) const;
 
         Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelsIteratorPtr SimpleInventoryModels(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSimpleInventoryModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSimpleInventoryModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain> SimpleInventoryModel(
             const FString InventoryName
@@ -336,6 +360,14 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIteratorPtr BigInventoryModelMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBigInventoryModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeBigInventoryModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain> BigInventoryModelMaster(
             const FString InventoryName
         ) const;
@@ -343,12 +375,28 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelsIteratorPtr BigInventoryModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBigInventoryModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeBigInventoryModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelDomain> BigInventoryModel(
             const FString InventoryName
         ) const;
 
         Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelMastersIteratorPtr InventoryModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeInventoryModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeInventoryModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain> InventoryModelMaster(
             const FString InventoryName
@@ -384,6 +432,14 @@ namespace Gs2::Inventory::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Inventory::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

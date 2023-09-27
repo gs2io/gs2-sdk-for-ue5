@@ -70,4 +70,21 @@ namespace Gs2::UE5::Ranking::Domain::Model
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared(), ScorerUserId);
     }
+    
+    Gs2::Core::Domain::CallbackID FEzRankingDomain::Subscribe(TFunction<void(Gs2::UE5::Ranking::Model::FEzRankingPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Ranking::Model::FRankingPtr Item)
+            {
+                Callback(Gs2::UE5::Ranking::Model::FEzRanking::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzRankingDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

@@ -60,6 +60,20 @@ namespace Gs2::UE5::Version::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeAcceptVersions(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeAcceptVersions(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeAcceptVersions(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeAcceptVersions(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomainPtr FEzUserGameSessionDomain::AcceptVersion(
         const FString VersionName
     ) const

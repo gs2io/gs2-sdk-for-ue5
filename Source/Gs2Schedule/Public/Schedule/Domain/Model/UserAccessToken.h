@@ -81,12 +81,28 @@ namespace Gs2::Schedule::Domain::Model
         Gs2::Schedule::Domain::Iterator::FDescribeTriggersIteratorPtr Triggers(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeTriggers(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeTriggers(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerAccessTokenDomain> Trigger(
             const FString TriggerName
         ) const;
 
         Gs2::Schedule::Domain::Iterator::FDescribeEventsIteratorPtr Events(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeEvents(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeEvents(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FEventAccessTokenDomain> Event(
             const FString EventName

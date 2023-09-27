@@ -404,6 +404,35 @@ namespace Gs2::Limit::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentLimitMasterDomain::FModelTask>> FCurrentLimitMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentLimitMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentLimitMasterDomain::Subscribe(
+        TFunction<void(Gs2::Limit::Model::FCurrentLimitMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
+            ParentKey,
+            Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Limit::Model::FCurrentLimitMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentLimitMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Limit::Model::FCurrentLimitMaster::TypeName,
+            ParentKey,
+            Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

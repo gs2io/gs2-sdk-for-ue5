@@ -252,12 +252,28 @@ namespace Gs2::Mission::Domain::Model
         Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelsIteratorPtr MissionGroupModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMissionGroupModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMissionGroupModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Mission::Domain::Model::FMissionGroupModelDomain> MissionGroupModel(
             const FString MissionGroupName
         ) const;
 
         Gs2::Mission::Domain::Iterator::FDescribeCounterModelsIteratorPtr CounterModels(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCounterModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCounterModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCounterModelDomain> CounterModel(
             const FString CounterName
@@ -274,12 +290,28 @@ namespace Gs2::Mission::Domain::Model
         Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelMastersIteratorPtr MissionGroupModelMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMissionGroupModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMissionGroupModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain> MissionGroupModelMaster(
             const FString MissionGroupName
         ) const;
 
         Gs2::Mission::Domain::Iterator::FDescribeCounterModelMastersIteratorPtr CounterModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCounterModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCounterModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCounterModelMasterDomain> CounterModelMaster(
             const FString CounterName
@@ -315,6 +347,14 @@ namespace Gs2::Mission::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Mission::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

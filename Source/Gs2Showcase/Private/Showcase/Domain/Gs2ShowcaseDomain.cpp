@@ -142,6 +142,28 @@ namespace Gs2::Showcase::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2ShowcaseDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Showcase::Model::FNamespace::TypeName,
+            "showcase:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2ShowcaseDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Showcase::Model::FNamespace::TypeName,
+            "showcase:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Showcase::Domain::Model::FNamespaceDomain> FGs2ShowcaseDomain::Namespace(
         const FString NamespaceName
     ) const

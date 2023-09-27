@@ -302,6 +302,37 @@ namespace Gs2::Quest::Domain::Model
     TSharedPtr<FAsyncTask<FCompletedQuestListDomain::FModelTask>> FCompletedQuestListDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCompletedQuestListDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCompletedQuestListDomain::Subscribe(
+        TFunction<void(Gs2::Quest::Model::FCompletedQuestListPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Quest::Model::FCompletedQuestList::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
+                QuestGroupName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Quest::Model::FCompletedQuestList>(obj));
+            }
+        );
+    }
+
+    void FCompletedQuestListDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Quest::Model::FCompletedQuestList::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
+                QuestGroupName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

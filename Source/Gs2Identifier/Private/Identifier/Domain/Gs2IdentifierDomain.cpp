@@ -196,6 +196,28 @@ namespace Gs2::Identifier::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2IdentifierDomain::SubscribeUsers(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Identifier::Model::FUser::TypeName,
+            "identifier:User",
+            Callback
+        );
+    }
+
+    void FGs2IdentifierDomain::UnsubscribeUsers(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Identifier::Model::FUser::TypeName,
+            "identifier:User",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Identifier::Domain::Model::FUserDomain> FGs2IdentifierDomain::User(
         const FString UserName
     ) const
@@ -218,12 +240,56 @@ namespace Gs2::Identifier::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2IdentifierDomain::SubscribeSecurityPolicies(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Identifier::Model::FSecurityPolicy::TypeName,
+            "identifier:SecurityPolicy",
+            Callback
+        );
+    }
+
+    void FGs2IdentifierDomain::UnsubscribeSecurityPolicies(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Identifier::Model::FSecurityPolicy::TypeName,
+            "identifier:SecurityPolicy",
+            CallbackID
+        );
+    }
+
     Gs2::Identifier::Domain::Iterator::FDescribeCommonSecurityPoliciesIteratorPtr FGs2IdentifierDomain::CommonSecurityPolicies(
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeCommonSecurityPoliciesIterator>(
             Cache,
             Client
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FGs2IdentifierDomain::SubscribeCommonSecurityPolicies(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Identifier::Model::FSecurityPolicy::TypeName,
+            "identifier:SecurityPolicy",
+            Callback
+        );
+    }
+
+    void FGs2IdentifierDomain::UnsubscribeCommonSecurityPolicies(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Identifier::Model::FSecurityPolicy::TypeName,
+            "identifier:SecurityPolicy",
+            CallbackID
         );
     }
 

@@ -128,4 +128,21 @@ namespace Gs2::UE5::Quest::Domain::Model
     TSharedPtr<FAsyncTask<FEzCompletedQuestListGameSessionDomain::FModelTask>> FEzCompletedQuestListGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzCompletedQuestListGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Quest::Model::FEzCompletedQuestListPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Quest::Model::FCompletedQuestListPtr Item)
+            {
+                Callback(Gs2::UE5::Quest::Model::FEzCompletedQuestList::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzCompletedQuestListGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

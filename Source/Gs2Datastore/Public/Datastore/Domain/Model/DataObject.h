@@ -250,6 +250,14 @@ namespace Gs2::Datastore::Domain::Model
         Gs2::Datastore::Domain::Iterator::FDescribeDataObjectHistoriesByUserIdIteratorPtr DataObjectHistories(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeDataObjectHistories(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeDataObjectHistories(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain> DataObjectHistory(
             const FString Generation
         ) const;
@@ -286,6 +294,14 @@ namespace Gs2::Datastore::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Datastore::Model::FDataObjectPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

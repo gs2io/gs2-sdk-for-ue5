@@ -123,4 +123,21 @@ namespace Gs2::UE5::Distributor::Domain::Model
     TSharedPtr<FAsyncTask<FEzDistributorModelDomain::FModelTask>> FEzDistributorModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzDistributorModelDomain::Subscribe(TFunction<void(Gs2::UE5::Distributor::Model::FEzDistributorModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Distributor::Model::FDistributorModelPtr Item)
+            {
+                Callback(Gs2::UE5::Distributor::Model::FEzDistributorModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzDistributorModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

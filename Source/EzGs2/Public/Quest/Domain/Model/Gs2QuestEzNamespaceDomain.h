@@ -58,6 +58,10 @@ namespace Gs2::UE5::Quest::Domain::Model
         Gs2::UE5::Quest::Domain::Iterator::FEzDescribeQuestGroupModelsIteratorPtr QuestGroupModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeQuestGroupModels(TFunction<void()> Callback);
+
+        void UnsubscribeQuestGroupModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Quest::Domain::Model::FEzQuestGroupModelDomainPtr QuestGroupModel(
             const FString QuestGroupName
         ) const;

@@ -80,6 +80,14 @@ namespace Gs2::Limit::Domain::Model
             const TOptional<FString> LimitName
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeCounters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCounters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Limit::Domain::Model::FCounterAccessTokenDomain> Counter(
             const FString LimitName,
             const FString CounterName

@@ -61,6 +61,10 @@ namespace Gs2::UE5::Lottery::Domain::Model
         Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeBoxesIteratorPtr Boxes(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBoxes(TFunction<void()> Callback);
+
+        void UnsubscribeBoxes(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Lottery::Domain::Model::FEzBoxItemsGameSessionDomainPtr BoxItems(
             const FString PrizeTableName
         ) const;
@@ -68,6 +72,10 @@ namespace Gs2::UE5::Lottery::Domain::Model
         Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeProbabilitiesIteratorPtr Probabilities(
             const FString LotteryName
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeProbabilities(TFunction<void()> Callback);
+
+        void UnsubscribeProbabilities(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzUserGameSessionDomain> FEzUserGameSessionDomainPtr;

@@ -164,6 +164,10 @@ namespace Gs2::UE5::Datastore::Domain::Model
         Gs2::UE5::Datastore::Domain::Iterator::FEzDescribeDataObjectHistoriesIteratorPtr DataObjectHistories(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeDataObjectHistories(TFunction<void()> Callback);
+
+        void UnsubscribeDataObjectHistories(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Datastore::Domain::Model::FEzDataObjectHistoryGameSessionDomainPtr DataObjectHistory(
             const FString Generation
         ) const;
@@ -185,6 +189,10 @@ namespace Gs2::UE5::Datastore::Domain::Model
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Datastore::Model::FEzDataObjectPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
         class FReUploadTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>,

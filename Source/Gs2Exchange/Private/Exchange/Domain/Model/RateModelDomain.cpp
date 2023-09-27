@@ -234,6 +234,37 @@ namespace Gs2::Exchange::Domain::Model
     TSharedPtr<FAsyncTask<FRateModelDomain::FModelTask>> FRateModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRateModelDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FRateModelDomain::Subscribe(
+        TFunction<void(Gs2::Exchange::Model::FRateModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Exchange::Model::FRateModel::TypeName,
+            ParentKey,
+            Gs2::Exchange::Domain::Model::FRateModelDomain::CreateCacheKey(
+                RateName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Exchange::Model::FRateModel>(obj));
+            }
+        );
+    }
+
+    void FRateModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Exchange::Model::FRateModel::TypeName,
+            ParentKey,
+            Gs2::Exchange::Domain::Model::FRateModelDomain::CreateCacheKey(
+                RateName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

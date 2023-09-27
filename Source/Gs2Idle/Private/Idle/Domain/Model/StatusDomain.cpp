@@ -518,6 +518,37 @@ namespace Gs2::Idle::Domain::Model
     TSharedPtr<FAsyncTask<FStatusDomain::FModelTask>> FStatusDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStatusDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FStatusDomain::Subscribe(
+        TFunction<void(Gs2::Idle::Model::FStatusPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Idle::Model::FStatus::TypeName,
+            ParentKey,
+            Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                CategoryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Idle::Model::FStatus>(obj));
+            }
+        );
+    }
+
+    void FStatusDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Idle::Model::FStatus::TypeName,
+            ParentKey,
+            Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                CategoryName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

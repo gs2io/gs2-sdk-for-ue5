@@ -172,6 +172,36 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FSimpleInventoryModelDomain::SubscribeSimpleItemModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FSimpleItemModel::TypeName,
+            Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                InventoryName,
+                "SimpleItemModel"
+            ),
+            Callback
+        );
+    }
+
+    void FSimpleInventoryModelDomain::UnsubscribeSimpleItemModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FSimpleItemModel::TypeName,
+            Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                InventoryName,
+                "SimpleItemModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemModelDomain> FSimpleInventoryModelDomain::SimpleItemModel(
         const FString ItemName
     ) const
@@ -278,6 +308,37 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FSimpleInventoryModelDomain::FModelTask>> FSimpleInventoryModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSimpleInventoryModelDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FSimpleInventoryModelDomain::Subscribe(
+        TFunction<void(Gs2::Inventory::Model::FSimpleInventoryModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inventory::Model::FSimpleInventoryModel::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain::CreateCacheKey(
+                InventoryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FSimpleInventoryModel>(obj));
+            }
+        );
+    }
+
+    void FSimpleInventoryModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inventory::Model::FSimpleInventoryModel::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain::CreateCacheKey(
+                InventoryName
+            ),
+            CallbackID
+        );
     }
 }
 

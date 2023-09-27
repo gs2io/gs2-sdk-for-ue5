@@ -55,6 +55,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzBigInventoryGameSessionDomain::SubscribeBigItems(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeBigItems(
+            Callback
+        );
+    }
+
+    void FEzBigInventoryGameSessionDomain::UnsubscribeBigItems(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeBigItems(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Inventory::Domain::Model::FEzBigItemGameSessionDomainPtr FEzBigInventoryGameSessionDomain::BigItem(
         const FString ItemName
     ) const

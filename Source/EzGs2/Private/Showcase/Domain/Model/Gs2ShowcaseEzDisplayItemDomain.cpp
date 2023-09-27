@@ -95,4 +95,21 @@ namespace Gs2::UE5::Showcase::Domain::Model
     TSharedPtr<FAsyncTask<FEzDisplayItemDomain::FModelTask>> FEzDisplayItemDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzDisplayItemDomain::Subscribe(TFunction<void(Gs2::UE5::Showcase::Model::FEzDisplayItemPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Showcase::Model::FDisplayItemPtr Item)
+            {
+                Callback(Gs2::UE5::Showcase::Model::FEzDisplayItem::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzDisplayItemDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

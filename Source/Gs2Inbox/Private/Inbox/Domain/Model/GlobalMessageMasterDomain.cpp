@@ -354,6 +354,37 @@ namespace Gs2::Inbox::Domain::Model
     TSharedPtr<FAsyncTask<FGlobalMessageMasterDomain::FModelTask>> FGlobalMessageMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FGlobalMessageMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FGlobalMessageMasterDomain::Subscribe(
+        TFunction<void(Gs2::Inbox::Model::FGlobalMessageMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inbox::Model::FGlobalMessageMaster::TypeName,
+            ParentKey,
+            Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain::CreateCacheKey(
+                GlobalMessageName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inbox::Model::FGlobalMessageMaster>(obj));
+            }
+        );
+    }
+
+    void FGlobalMessageMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inbox::Model::FGlobalMessageMaster::TypeName,
+            ParentKey,
+            Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain::CreateCacheKey(
+                GlobalMessageName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

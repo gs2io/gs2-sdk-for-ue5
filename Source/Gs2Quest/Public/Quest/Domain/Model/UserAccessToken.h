@@ -125,6 +125,14 @@ namespace Gs2::Quest::Domain::Model
         Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIteratorPtr CompletedQuestLists(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeCompletedQuestLists(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCompletedQuestLists(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListAccessTokenDomain> CompletedQuestList(
             const FString QuestGroupName
         ) const;

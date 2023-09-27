@@ -585,6 +585,34 @@ namespace Gs2::Showcase::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRandomShowcaseMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Showcase::Model::FRandomShowcaseMaster::TypeName,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RandomShowcaseMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRandomShowcaseMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Showcase::Model::FRandomShowcaseMaster::TypeName,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RandomShowcaseMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain> FNamespaceDomain::RandomShowcaseMaster(
         const FString ShowcaseName
     ) const
@@ -609,6 +637,34 @@ namespace Gs2::Showcase::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSalesItemMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Showcase::Model::FSalesItemMaster::TypeName,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SalesItemMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeSalesItemMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Showcase::Model::FSalesItemMaster::TypeName,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SalesItemMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Showcase::Domain::Model::FSalesItemMasterDomain> FNamespaceDomain::SalesItemMaster(
         const FString SalesItemName
     ) const
@@ -630,6 +686,34 @@ namespace Gs2::Showcase::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSalesItemGroupMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SalesItemGroupMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeSalesItemGroupMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "SalesItemGroupMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -694,6 +778,34 @@ namespace Gs2::Showcase::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeShowcaseMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Showcase::Model::FShowcaseMaster::TypeName,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "ShowcaseMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeShowcaseMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Showcase::Model::FShowcaseMaster::TypeName,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "ShowcaseMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -801,6 +913,37 @@ namespace Gs2::Showcase::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Showcase::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Showcase::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Showcase::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

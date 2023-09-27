@@ -378,6 +378,34 @@ namespace Gs2::SerialKey::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCampaignModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::SerialKey::Model::FCampaignModel::TypeName,
+            Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CampaignModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeCampaignModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::SerialKey::Model::FCampaignModel::TypeName,
+            Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CampaignModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::SerialKey::Domain::Model::FCampaignModelDomain> FNamespaceDomain::CampaignModel(
         const FString CampaignModelName
     ) const
@@ -427,6 +455,34 @@ namespace Gs2::SerialKey::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCampaignModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
+            Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CampaignModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeCampaignModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::SerialKey::Model::FCampaignModelMaster::TypeName,
+            Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "CampaignModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -534,6 +590,37 @@ namespace Gs2::SerialKey::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::SerialKey::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::SerialKey::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::SerialKey::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

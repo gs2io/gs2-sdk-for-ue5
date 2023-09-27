@@ -52,6 +52,20 @@ namespace Gs2::UE5::Limit::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeCounters(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeCounters(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeCounters(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeCounters(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Limit::Domain::Model::FEzCounterGameSessionDomainPtr FEzUserGameSessionDomain::Counter(
         const FString LimitName,
         const FString CounterName

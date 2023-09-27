@@ -147,11 +147,27 @@ namespace Gs2::Quest::Domain::Model
         Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIteratorPtr Progresses(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeProgresses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeProgresses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain> Progress(
         ) const;
 
         Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsByUserIdIteratorPtr CompletedQuestLists(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCompletedQuestLists(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCompletedQuestLists(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListDomain> CompletedQuestList(
             const FString QuestGroupName

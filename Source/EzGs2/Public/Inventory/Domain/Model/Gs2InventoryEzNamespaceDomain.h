@@ -68,6 +68,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeInventoryModelsIteratorPtr InventoryModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeInventoryModels(TFunction<void()> Callback);
+
+        void UnsubscribeInventoryModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Inventory::Domain::Model::FEzInventoryModelDomainPtr InventoryModel(
             const FString InventoryName
         ) const;
@@ -83,12 +87,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeSimpleInventoryModelsIteratorPtr SimpleInventoryModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSimpleInventoryModels(TFunction<void()> Callback);
+
+        void UnsubscribeSimpleInventoryModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Inventory::Domain::Model::FEzSimpleInventoryModelDomainPtr SimpleInventoryModel(
             const FString InventoryName
         ) const;
 
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeBigInventoryModelsIteratorPtr BigInventoryModels(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeBigInventoryModels(TFunction<void()> Callback);
+
+        void UnsubscribeBigInventoryModels(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Inventory::Domain::Model::FEzBigInventoryModelDomainPtr BigInventoryModel(
             const FString InventoryName

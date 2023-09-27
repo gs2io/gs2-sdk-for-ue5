@@ -91,6 +91,36 @@ namespace Gs2::Stamina::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeStaminas(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Stamina::Model::FStamina::TypeName,
+            Gs2::Stamina::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Stamina"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeStaminas(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Stamina::Model::FStamina::TypeName,
+            Gs2::Stamina::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Stamina"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain> FUserAccessTokenDomain::Stamina(
         const FString StaminaName
     ) const

@@ -73,6 +73,10 @@ namespace Gs2::UE5::MegaField::Domain::Model
         Gs2::UE5::MegaField::Domain::Iterator::FEzDescribeLayerModelsIteratorPtr LayerModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeLayerModels(TFunction<void()> Callback);
+
+        void UnsubscribeLayerModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::MegaField::Domain::Model::FEzLayerModelDomainPtr LayerModel(
             const FString LayerModelName
         ) const;
@@ -94,6 +98,10 @@ namespace Gs2::UE5::MegaField::Domain::Model
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::MegaField::Model::FEzAreaModelPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzAreaModelDomain> FEzAreaModelDomainPtr;

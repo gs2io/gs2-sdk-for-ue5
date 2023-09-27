@@ -230,6 +230,35 @@ namespace Gs2::News::Domain::Model
     TSharedPtr<FAsyncTask<FNewsDomain::FModelTask>> FNewsDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNewsDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FNewsDomain::Subscribe(
+        TFunction<void(Gs2::News::Model::FNewsPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::News::Model::FNews::TypeName,
+            ParentKey,
+            Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::News::Model::FNews>(obj));
+            }
+        );
+    }
+
+    void FNewsDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::News::Model::FNews::TypeName,
+            ParentKey,
+            Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -410,6 +410,37 @@ namespace Gs2::Script::Domain::Model
     TSharedPtr<FAsyncTask<FScriptDomain::FModelTask>> FScriptDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FScriptDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FScriptDomain::Subscribe(
+        TFunction<void(Gs2::Script::Model::FScriptPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Script::Model::FScript::TypeName,
+            ParentKey,
+            Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
+                ScriptName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Script::Model::FScript>(obj));
+            }
+        );
+    }
+
+    void FScriptDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Script::Model::FScript::TypeName,
+            ParentKey,
+            Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
+                ScriptName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

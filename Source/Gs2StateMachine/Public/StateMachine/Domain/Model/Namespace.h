@@ -208,6 +208,14 @@ namespace Gs2::StateMachine::Domain::Model
         Gs2::StateMachine::Domain::Iterator::FDescribeStateMachineMastersIteratorPtr StateMachineMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStateMachineMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStateMachineMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain> StateMachineMaster(
             const int64 Version
         ) const;
@@ -250,6 +258,14 @@ namespace Gs2::StateMachine::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::StateMachine::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

@@ -261,6 +261,14 @@ namespace Gs2::Account::Domain::Model
         Gs2::Account::Domain::Iterator::FDescribeAccountsIteratorPtr Accounts(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeAccounts(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeAccounts(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain> Account(
             const FString UserId
         ) const;
@@ -299,6 +307,14 @@ namespace Gs2::Account::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Account::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

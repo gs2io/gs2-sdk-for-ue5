@@ -359,6 +359,37 @@ namespace Gs2::Showcase::Domain::Model
     TSharedPtr<FAsyncTask<FRandomDisplayItemAccessTokenDomain::FModelTask>> FRandomDisplayItemAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRandomDisplayItemAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FRandomDisplayItemAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Showcase::Model::FRandomDisplayItemPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                DisplayItemName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FRandomDisplayItem>(obj));
+            }
+        );
+    }
+
+    void FRandomDisplayItemAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                DisplayItemName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

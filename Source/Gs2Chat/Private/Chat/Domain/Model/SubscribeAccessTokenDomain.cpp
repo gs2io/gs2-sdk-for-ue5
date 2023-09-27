@@ -432,6 +432,37 @@ namespace Gs2::Chat::Domain::Model
     TSharedPtr<FAsyncTask<FSubscribeAccessTokenDomain::FModelTask>> FSubscribeAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSubscribeAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FSubscribeAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Chat::Model::FSubscribePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Chat::Model::FSubscribe::TypeName,
+            ParentKey,
+            Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
+                RoomName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Chat::Model::FSubscribe>(obj));
+            }
+        );
+    }
+
+    void FSubscribeAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Chat::Model::FSubscribe::TypeName,
+            ParentKey,
+            Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
+                RoomName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

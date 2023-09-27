@@ -133,6 +133,28 @@ namespace Gs2::AdReward::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2AdRewardDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::AdReward::Model::FNamespace::TypeName,
+            "adReward:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2AdRewardDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::AdReward::Model::FNamespace::TypeName,
+            "adReward:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::AdReward::Domain::Model::FNamespaceDomain> FGs2AdRewardDomain::Namespace(
         const FString NamespaceName
     ) const

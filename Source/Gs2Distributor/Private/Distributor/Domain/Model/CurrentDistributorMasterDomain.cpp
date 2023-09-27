@@ -405,6 +405,35 @@ namespace Gs2::Distributor::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentDistributorMasterDomain::FModelTask>> FCurrentDistributorMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentDistributorMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentDistributorMasterDomain::Subscribe(
+        TFunction<void(Gs2::Distributor::Model::FCurrentDistributorMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Distributor::Model::FCurrentDistributorMaster::TypeName,
+            ParentKey,
+            Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Distributor::Model::FCurrentDistributorMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentDistributorMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Distributor::Model::FCurrentDistributorMaster::TypeName,
+            ParentKey,
+            Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

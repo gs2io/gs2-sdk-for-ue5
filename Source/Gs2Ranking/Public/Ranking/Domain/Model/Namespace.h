@@ -225,6 +225,14 @@ namespace Gs2::Ranking::Domain::Model
         Gs2::Ranking::Domain::Iterator::FDescribeCategoryModelsIteratorPtr CategoryModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeCategoryModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCategoryModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Ranking::Domain::Model::FCategoryModelDomain> CategoryModel(
             const FString CategoryName
         ) const;
@@ -239,6 +247,14 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Ranking::Domain::Iterator::FDescribeCategoryModelMastersIteratorPtr CategoryModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCategoryModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCategoryModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Ranking::Domain::Model::FCategoryModelMasterDomain> CategoryModelMaster(
             const FString CategoryName
@@ -274,6 +290,14 @@ namespace Gs2::Ranking::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Ranking::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

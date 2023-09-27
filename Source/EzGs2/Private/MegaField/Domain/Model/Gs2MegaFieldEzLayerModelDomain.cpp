@@ -128,4 +128,21 @@ namespace Gs2::UE5::MegaField::Domain::Model
     TSharedPtr<FAsyncTask<FEzLayerModelDomain::FModelTask>> FEzLayerModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzLayerModelDomain::Subscribe(TFunction<void(Gs2::UE5::MegaField::Model::FEzLayerModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::MegaField::Model::FLayerModelPtr Item)
+            {
+                Callback(Gs2::UE5::MegaField::Model::FEzLayerModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzLayerModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

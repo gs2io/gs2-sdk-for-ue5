@@ -313,6 +313,36 @@ namespace Gs2::Datastore::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeDataObjects(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Datastore::Model::FDataObject::TypeName,
+            Gs2::Datastore::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "DataObject"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeDataObjects(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Datastore::Model::FDataObject::TypeName,
+            Gs2::Datastore::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "DataObject"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain> FUserAccessTokenDomain::DataObject(
         const FString DataObjectName
     ) const

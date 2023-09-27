@@ -49,6 +49,10 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeEntriesIteratorPtr Entries(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeEntries(TFunction<void()> Callback);
+
+        void UnsubscribeEntries(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr Entry(
             const FString EntryName
         ) const;

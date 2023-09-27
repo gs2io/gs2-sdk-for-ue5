@@ -117,6 +117,14 @@ namespace Gs2::Mission::Domain
         Gs2::Mission::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNamespaces(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNamespaces(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Mission::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
         ) const;

@@ -113,6 +113,20 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzMoldGameSessionDomain::SubscribeForms(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeForms(
+            Callback
+        );
+    }
+
+    void FEzMoldGameSessionDomain::UnsubscribeForms(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeForms(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomainPtr FEzMoldGameSessionDomain::Form(
         const int32 Index
     ) const
@@ -163,5 +177,22 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzMoldGameSessionDomain::FModelTask>> FEzMoldGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzMoldGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Formation::Model::FEzMoldPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Formation::Model::FMoldPtr Item)
+            {
+                Callback(Gs2::UE5::Formation::Model::FEzMold::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzMoldGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
     }
 }

@@ -156,6 +156,14 @@ namespace Gs2::Dictionary::Domain::Model
         Gs2::Dictionary::Domain::Iterator::FDescribeEntriesByUserIdIteratorPtr Entries(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeEntries(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeEntries(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain> Entry(
             const FString EntryName
         ) const;

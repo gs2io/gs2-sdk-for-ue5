@@ -285,6 +285,37 @@ namespace Gs2::Identifier::Domain::Model
     TSharedPtr<FAsyncTask<FIdentifierDomain::FModelTask>> FIdentifierDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FIdentifierDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FIdentifierDomain::Subscribe(
+        TFunction<void(Gs2::Identifier::Model::FIdentifierPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Identifier::Model::FIdentifier::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
+                ClientId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FIdentifier>(obj));
+            }
+        );
+    }
+
+    void FIdentifierDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Identifier::Model::FIdentifier::TypeName,
+            ParentKey,
+            Gs2::Identifier::Domain::Model::FIdentifierDomain::CreateCacheKey(
+                ClientId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

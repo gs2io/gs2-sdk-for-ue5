@@ -123,4 +123,21 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
     TSharedPtr<FAsyncTask<FEzRatingModelDomain::FModelTask>> FEzRatingModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzRatingModelDomain::Subscribe(TFunction<void(Gs2::UE5::Matchmaking::Model::FEzRatingModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Matchmaking::Model::FRatingModelPtr Item)
+            {
+                Callback(Gs2::UE5::Matchmaking::Model::FEzRatingModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzRatingModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

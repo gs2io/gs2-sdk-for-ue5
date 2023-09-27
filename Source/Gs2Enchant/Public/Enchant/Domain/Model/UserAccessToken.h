@@ -88,6 +88,14 @@ namespace Gs2::Enchant::Domain::Model
             const TOptional<FString> ParameterName
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBalanceParameterStatuses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeBalanceParameterStatuses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusAccessTokenDomain> BalanceParameterStatus(
             const FString ParameterName,
             const FString PropertyId
@@ -96,6 +104,14 @@ namespace Gs2::Enchant::Domain::Model
         Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterStatusesIteratorPtr RarityParameterStatuses(
             const TOptional<FString> ParameterName
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeRarityParameterStatuses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRarityParameterStatuses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterStatusAccessTokenDomain> RarityParameterStatus(
             const FString ParameterName,

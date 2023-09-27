@@ -195,4 +195,21 @@ namespace Gs2::UE5::Dictionary::Domain::Model
     TSharedPtr<FAsyncTask<FEzEntryGameSessionDomain::FModelTask>> FEzEntryGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzEntryGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Dictionary::Model::FEzEntryPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Dictionary::Model::FEntryPtr Item)
+            {
+                Callback(Gs2::UE5::Dictionary::Model::FEzEntry::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzEntryGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

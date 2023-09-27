@@ -63,6 +63,10 @@ namespace Gs2::UE5::Ranking::Domain::Model
             const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNearRankings(TFunction<void()> Callback);
+
+        void UnsubscribeNearRankings(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Ranking::Domain::Model::FEzRankingDomainPtr Ranking(
             const FString CategoryName
         ) const;

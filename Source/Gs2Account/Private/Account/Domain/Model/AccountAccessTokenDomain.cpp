@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -84,6 +86,36 @@ namespace Gs2::Account::Domain::Model
             Client,
             NamespaceName,
             AccessToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FAccountAccessTokenDomain::SubscribeTakeOvers(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "TakeOver"
+            ),
+            Callback
+        );
+    }
+
+    void FAccountAccessTokenDomain::UnsubscribeTakeOvers(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "TakeOver"
+            ),
+            CallbackID
         );
     }
 
@@ -169,6 +201,37 @@ namespace Gs2::Account::Domain::Model
 
     TSharedPtr<FAsyncTask<FAccountAccessTokenDomain::FModelTask>> FAccountAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FAccountAccessTokenDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FAccountAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Account::Model::FAccountPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Account::Model::FAccount::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                UserId()
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Account::Model::FAccount>(obj));
+            }
+        );
+    }
+
+    void FAccountAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Account::Model::FAccount::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                UserId()
+            ),
+            CallbackID
+        );
     }
 }
 

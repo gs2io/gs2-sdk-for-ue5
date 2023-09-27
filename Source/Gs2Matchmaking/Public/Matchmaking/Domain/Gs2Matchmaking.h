@@ -123,6 +123,14 @@ namespace Gs2::Matchmaking::Domain
         Gs2::Matchmaking::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNamespaces(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNamespaces(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
         ) const;

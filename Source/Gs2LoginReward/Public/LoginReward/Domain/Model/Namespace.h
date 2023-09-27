@@ -213,6 +213,14 @@ namespace Gs2::LoginReward::Domain::Model
         Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelMastersIteratorPtr BonusModelMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBonusModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeBonusModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain> BonusModelMaster(
             const FString BonusModelName
         ) const;
@@ -230,6 +238,14 @@ namespace Gs2::LoginReward::Domain::Model
 
         Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelsIteratorPtr BonusModels(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeBonusModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeBonusModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::LoginReward::Domain::Model::FBonusModelDomain> BonusModel(
             const FString BonusModelName
@@ -265,6 +281,14 @@ namespace Gs2::LoginReward::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::LoginReward::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

@@ -298,6 +298,14 @@ namespace Gs2::Stamina::Domain::Model
         Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIteratorPtr StaminaModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStaminaModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStaminaModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaModelDomain> StaminaModel(
             const FString StaminaName
         ) const;
@@ -313,12 +321,28 @@ namespace Gs2::Stamina::Domain::Model
         Gs2::Stamina::Domain::Iterator::FDescribeRecoverIntervalTableMastersIteratorPtr RecoverIntervalTableMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRecoverIntervalTableMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRecoverIntervalTableMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain> RecoverIntervalTableMaster(
             const FString RecoverIntervalTableName
         ) const;
 
         Gs2::Stamina::Domain::Iterator::FDescribeMaxStaminaTableMastersIteratorPtr MaxStaminaTableMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeMaxStaminaTableMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMaxStaminaTableMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain> MaxStaminaTableMaster(
             const FString MaxStaminaTableName
@@ -327,12 +351,28 @@ namespace Gs2::Stamina::Domain::Model
         Gs2::Stamina::Domain::Iterator::FDescribeRecoverValueTableMastersIteratorPtr RecoverValueTableMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRecoverValueTableMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRecoverValueTableMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain> RecoverValueTableMaster(
             const FString RecoverValueTableName
         ) const;
 
         Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelMastersIteratorPtr StaminaModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeStaminaModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStaminaModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain> StaminaModelMaster(
             const FString StaminaName
@@ -368,6 +408,14 @@ namespace Gs2::Stamina::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Stamina::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

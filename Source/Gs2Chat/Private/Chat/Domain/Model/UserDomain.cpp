@@ -87,6 +87,36 @@ namespace Gs2::Chat::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeRooms(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Chat::Model::FRoom::TypeName,
+            Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                "Room"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeRooms(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Chat::Model::FRoom::TypeName,
+            Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                "Room"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Chat::Domain::Model::FRoomDomain> FUserDomain::Room(
         const FString RoomName,
         const TOptional<FString> Password
@@ -115,6 +145,36 @@ namespace Gs2::Chat::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSubscribes(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Chat::Model::FSubscribe::TypeName,
+            Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Subscribe"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeSubscribes(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Chat::Model::FSubscribe::TypeName,
+            Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Subscribe"
+            ),
+            CallbackID
+        );
+    }
+
     Gs2::Chat::Domain::Iterator::FDescribeSubscribesByRoomNameIteratorPtr FUserDomain::SubscribesByRoomName(
         const FString RoomName
     ) const
@@ -124,6 +184,36 @@ namespace Gs2::Chat::Domain::Model
             Client,
             NamespaceName,
             RoomName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSubscribesByRoomName(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Chat::Model::FSubscribe::TypeName,
+            Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Subscribe"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeSubscribesByRoomName(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Chat::Model::FSubscribe::TypeName,
+            Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Subscribe"
+            ),
+            CallbackID
         );
     }
 

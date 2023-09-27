@@ -134,6 +134,28 @@ namespace Gs2::Account::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2AccountDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Account::Model::FNamespace::TypeName,
+            "account:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2AccountDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Account::Model::FNamespace::TypeName,
+            "account:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Account::Domain::Model::FNamespaceDomain> FGs2AccountDomain::Namespace(
         const FString NamespaceName
     ) const

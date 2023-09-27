@@ -80,4 +80,21 @@ namespace Gs2::UE5::Version::Domain::Model
     TSharedPtr<FAsyncTask<FEzAcceptVersionDomain::FModelTask>> FEzAcceptVersionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzAcceptVersionDomain::Subscribe(TFunction<void(Gs2::UE5::Version::Model::FEzAcceptVersionPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Version::Model::FAcceptVersionPtr Item)
+            {
+                Callback(Gs2::UE5::Version::Model::FEzAcceptVersion::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzAcceptVersionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

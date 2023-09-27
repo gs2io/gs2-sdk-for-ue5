@@ -55,6 +55,20 @@ namespace Gs2::UE5::Stamina::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeStaminas(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeStaminas(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeStaminas(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeStaminas(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomainPtr FEzUserGameSessionDomain::Stamina(
         const FString StaminaName
     ) const

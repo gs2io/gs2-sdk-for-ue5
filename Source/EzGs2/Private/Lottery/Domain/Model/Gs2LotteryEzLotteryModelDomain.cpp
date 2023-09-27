@@ -123,4 +123,21 @@ namespace Gs2::UE5::Lottery::Domain::Model
     TSharedPtr<FAsyncTask<FEzLotteryModelDomain::FModelTask>> FEzLotteryModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzLotteryModelDomain::Subscribe(TFunction<void(Gs2::UE5::Lottery::Model::FEzLotteryModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Lottery::Model::FLotteryModelPtr Item)
+            {
+                Callback(Gs2::UE5::Lottery::Model::FEzLotteryModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzLotteryModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

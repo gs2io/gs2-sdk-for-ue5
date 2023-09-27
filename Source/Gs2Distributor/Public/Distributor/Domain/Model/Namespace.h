@@ -233,6 +233,14 @@ namespace Gs2::Distributor::Domain::Model
         Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelsIteratorPtr DistributorModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeDistributorModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeDistributorModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Distributor::Domain::Model::FDistributorModelDomain> DistributorModel(
             const FString DistributorName
         ) const;
@@ -242,6 +250,14 @@ namespace Gs2::Distributor::Domain::Model
 
         Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelMastersIteratorPtr DistributorModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeDistributorModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeDistributorModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain> DistributorModelMaster(
             const FString DistributorName
@@ -285,6 +301,14 @@ namespace Gs2::Distributor::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Distributor::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

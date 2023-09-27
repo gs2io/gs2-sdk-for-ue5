@@ -430,6 +430,37 @@ namespace Gs2::Account::Domain::Model
     TSharedPtr<FAsyncTask<FTakeOverAccessTokenDomain::FModelTask>> FTakeOverAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FTakeOverAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FTakeOverAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Account::Model::FTakeOverPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>()
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Account::Model::FTakeOver>(obj));
+            }
+        );
+    }
+
+    void FTakeOverAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
+                Type.IsSet() ? FString::FromInt(*Type) : TOptional<FString>()
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

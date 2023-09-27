@@ -80,12 +80,28 @@ namespace Gs2::Schedule::Domain::Model
         Gs2::Schedule::Domain::Iterator::FDescribeTriggersByUserIdIteratorPtr Triggers(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeTriggers(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeTriggers(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerDomain> Trigger(
             const FString TriggerName
         ) const;
 
         Gs2::Schedule::Domain::Iterator::FDescribeEventsByUserIdIteratorPtr Events(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeEvents(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeEvents(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FEventDomain> Event(
             const FString EventName

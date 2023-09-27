@@ -158,6 +158,14 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Formation::Domain::Iterator::FDescribeFormsIteratorPtr Forms(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeForms(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeForms(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Formation::Domain::Model::FFormAccessTokenDomain> Form(
             const int32 Index
         ) const;
@@ -194,6 +202,14 @@ namespace Gs2::Formation::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Formation::Model::FMoldPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

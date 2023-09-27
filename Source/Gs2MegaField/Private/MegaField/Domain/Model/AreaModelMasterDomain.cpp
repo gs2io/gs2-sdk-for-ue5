@@ -346,6 +346,36 @@ namespace Gs2::MegaField::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FAreaModelMasterDomain::SubscribeLayerModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::MegaField::Model::FLayerModelMaster::TypeName,
+            Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheParentKey(
+                NamespaceName,
+                AreaModelName,
+                "LayerModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FAreaModelMasterDomain::UnsubscribeLayerModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::MegaField::Model::FLayerModelMaster::TypeName,
+            Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheParentKey(
+                NamespaceName,
+                AreaModelName,
+                "LayerModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::MegaField::Domain::Model::FLayerModelMasterDomain> FAreaModelMasterDomain::LayerModelMaster(
         const FString LayerModelName
     ) const
@@ -452,6 +482,37 @@ namespace Gs2::MegaField::Domain::Model
 
     TSharedPtr<FAsyncTask<FAreaModelMasterDomain::FModelTask>> FAreaModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FAreaModelMasterDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FAreaModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::MegaField::Model::FAreaModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::MegaField::Model::FAreaModelMaster::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
+                AreaModelName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FAreaModelMaster>(obj));
+            }
+        );
+    }
+
+    void FAreaModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::MegaField::Model::FAreaModelMaster::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
+                AreaModelName
+            ),
+            CallbackID
+        );
     }
 }
 

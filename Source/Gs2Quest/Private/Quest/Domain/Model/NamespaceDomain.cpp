@@ -381,6 +381,34 @@ namespace Gs2::Quest::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeQuestGroupModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Quest::Model::FQuestGroupModel::TypeName,
+            Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "QuestGroupModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeQuestGroupModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Quest::Model::FQuestGroupModel::TypeName,
+            Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "QuestGroupModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Quest::Domain::Model::FQuestGroupModelDomain> FNamespaceDomain::QuestGroupModel(
         const FString QuestGroupName
     ) const
@@ -430,6 +458,34 @@ namespace Gs2::Quest::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeQuestGroupModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
+            Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "QuestGroupModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeQuestGroupModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
+            Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "QuestGroupModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -537,6 +593,37 @@ namespace Gs2::Quest::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Quest::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Quest::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Quest::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Quest::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

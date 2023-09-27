@@ -191,6 +191,14 @@ namespace Gs2::Ranking::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Ranking::Model::FCategoryModelMasterPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
     };
 
     typedef TSharedPtr<FCategoryModelMasterDomain> FCategoryModelMasterDomainPtr;

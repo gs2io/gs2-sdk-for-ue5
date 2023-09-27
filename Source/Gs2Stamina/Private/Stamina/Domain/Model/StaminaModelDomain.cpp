@@ -233,6 +233,37 @@ namespace Gs2::Stamina::Domain::Model
     TSharedPtr<FAsyncTask<FStaminaModelDomain::FModelTask>> FStaminaModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStaminaModelDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FStaminaModelDomain::Subscribe(
+        TFunction<void(Gs2::Stamina::Model::FStaminaModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Stamina::Model::FStaminaModel::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
+                StaminaName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Stamina::Model::FStaminaModel>(obj));
+            }
+        );
+    }
+
+    void FStaminaModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Stamina::Model::FStaminaModel::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FStaminaModelDomain::CreateCacheKey(
+                StaminaName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

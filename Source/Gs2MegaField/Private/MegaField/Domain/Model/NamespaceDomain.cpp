@@ -379,6 +379,34 @@ namespace Gs2::MegaField::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeAreaModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::MegaField::Model::FAreaModel::TypeName,
+            Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "AreaModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeAreaModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::MegaField::Model::FAreaModel::TypeName,
+            Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "AreaModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::MegaField::Domain::Model::FAreaModelDomain> FNamespaceDomain::AreaModel(
         const FString AreaModelName
     ) const
@@ -428,6 +456,34 @@ namespace Gs2::MegaField::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeAreaModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::MegaField::Model::FAreaModelMaster::TypeName,
+            Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "AreaModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeAreaModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::MegaField::Model::FAreaModelMaster::TypeName,
+            Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "AreaModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -535,6 +591,37 @@ namespace Gs2::MegaField::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::MegaField::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::MegaField::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::MegaField::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

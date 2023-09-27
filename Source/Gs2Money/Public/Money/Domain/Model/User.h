@@ -133,6 +133,14 @@ namespace Gs2::Money::Domain::Model
         Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIteratorPtr Wallets(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeWallets(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeWallets(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Money::Domain::Model::FWalletDomain> Wallet(
             const int32 Slot
         ) const;
@@ -142,6 +150,14 @@ namespace Gs2::Money::Domain::Model
             const TOptional<int64> Begin,
             const TOptional<int64> End
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeReceipts(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeReceipts(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Money::Domain::Model::FReceiptDomain> Receipt(
             const FString TransactionId

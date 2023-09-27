@@ -305,6 +305,14 @@ namespace Gs2::Script::Domain::Model
         Gs2::Script::Domain::Iterator::FDescribeScriptsIteratorPtr Scripts(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeScripts(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeScripts(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Script::Domain::Model::FScriptDomain> Script(
             const FString ScriptName
         ) const;
@@ -339,6 +347,14 @@ namespace Gs2::Script::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Script::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

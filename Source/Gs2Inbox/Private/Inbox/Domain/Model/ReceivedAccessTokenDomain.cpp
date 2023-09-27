@@ -132,6 +132,35 @@ namespace Gs2::Inbox::Domain::Model
     TSharedPtr<FAsyncTask<FReceivedAccessTokenDomain::FModelTask>> FReceivedAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FReceivedAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FReceivedAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Inbox::Model::FReceivedPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inbox::Model::FReceived::TypeName,
+            ParentKey,
+            Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inbox::Model::FReceived>(obj));
+            }
+        );
+    }
+
+    void FReceivedAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inbox::Model::FReceived::TypeName,
+            ParentKey,
+            Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

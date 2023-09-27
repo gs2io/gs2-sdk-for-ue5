@@ -350,6 +350,35 @@ namespace Gs2::Inbox::Domain::Model
     TSharedPtr<FAsyncTask<FReceivedDomain::FModelTask>> FReceivedDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FReceivedDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FReceivedDomain::Subscribe(
+        TFunction<void(Gs2::Inbox::Model::FReceivedPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inbox::Model::FReceived::TypeName,
+            ParentKey,
+            Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inbox::Model::FReceived>(obj));
+            }
+        );
+    }
+
+    void FReceivedDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inbox::Model::FReceived::TypeName,
+            ParentKey,
+            Gs2::Inbox::Domain::Model::FReceivedDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

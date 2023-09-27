@@ -359,6 +359,37 @@ namespace Gs2::Lottery::Domain::Model
     TSharedPtr<FAsyncTask<FLotteryModelMasterDomain::FModelTask>> FLotteryModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FLotteryModelMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FLotteryModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::Lottery::Model::FLotteryModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Lottery::Model::FLotteryModelMaster::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FLotteryModelMasterDomain::CreateCacheKey(
+                LotteryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FLotteryModelMaster>(obj));
+            }
+        );
+    }
+
+    void FLotteryModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Lottery::Model::FLotteryModelMaster::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FLotteryModelMasterDomain::CreateCacheKey(
+                LotteryName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

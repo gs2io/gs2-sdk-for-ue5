@@ -128,4 +128,21 @@ namespace Gs2::UE5::Mission::Domain::Model
     TSharedPtr<FAsyncTask<FEzMissionTaskModelDomain::FModelTask>> FEzMissionTaskModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzMissionTaskModelDomain::Subscribe(TFunction<void(Gs2::UE5::Mission::Model::FEzMissionTaskModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Mission::Model::FMissionTaskModelPtr Item)
+            {
+                Callback(Gs2::UE5::Mission::Model::FEzMissionTaskModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzMissionTaskModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

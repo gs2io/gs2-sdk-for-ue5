@@ -377,6 +377,34 @@ namespace Gs2::Dictionary::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeEntryModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Dictionary::Model::FEntryModel::TypeName,
+            Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "EntryModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeEntryModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Dictionary::Model::FEntryModel::TypeName,
+            Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "EntryModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelDomain> FNamespaceDomain::EntryModel(
         const FString EntryName
     ) const
@@ -426,6 +454,34 @@ namespace Gs2::Dictionary::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeEntryModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Dictionary::Model::FEntryModelMaster::TypeName,
+            Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "EntryModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeEntryModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Dictionary::Model::FEntryModelMaster::TypeName,
+            Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "EntryModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -533,6 +589,37 @@ namespace Gs2::Dictionary::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Dictionary::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Dictionary::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Dictionary::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Dictionary::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

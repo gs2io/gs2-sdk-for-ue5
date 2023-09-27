@@ -80,4 +80,21 @@ namespace Gs2::UE5::Account::Domain::Model
     TSharedPtr<FAsyncTask<FEzTakeOverDomain::FModelTask>> FEzTakeOverDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzTakeOverDomain::Subscribe(TFunction<void(Gs2::UE5::Account::Model::FEzTakeOverPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Account::Model::FTakeOverPtr Item)
+            {
+                Callback(Gs2::UE5::Account::Model::FEzTakeOver::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzTakeOverDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

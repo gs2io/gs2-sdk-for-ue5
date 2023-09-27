@@ -50,6 +50,20 @@ namespace Gs2::UE5::Schedule::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeTriggers(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeTriggers(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeTriggers(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeTriggers(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Schedule::Domain::Model::FEzTriggerGameSessionDomainPtr FEzUserGameSessionDomain::Trigger(
         const FString TriggerName
     ) const
@@ -68,6 +82,20 @@ namespace Gs2::UE5::Schedule::Domain::Model
         return MakeShared<Gs2::UE5::Schedule::Domain::Iterator::FEzDescribeEventsIterator>(
             Domain->Events(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeEvents(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeEvents(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeEvents(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeEvents(
+            CallbackId
         );
     }
 

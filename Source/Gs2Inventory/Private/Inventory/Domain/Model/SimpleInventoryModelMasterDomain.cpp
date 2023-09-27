@@ -367,6 +367,36 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FSimpleInventoryModelMasterDomain::SubscribeSimpleItemModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FSimpleItemModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain::CreateCacheParentKey(
+                NamespaceName,
+                InventoryName,
+                "SimpleItemModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FSimpleInventoryModelMasterDomain::UnsubscribeSimpleItemModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FSimpleItemModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain::CreateCacheParentKey(
+                NamespaceName,
+                InventoryName,
+                "SimpleItemModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemModelMasterDomain> FSimpleInventoryModelMasterDomain::SimpleItemModelMaster(
         const FString ItemName
     ) const
@@ -473,6 +503,37 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FSimpleInventoryModelMasterDomain::FModelTask>> FSimpleInventoryModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSimpleInventoryModelMasterDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FSimpleInventoryModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::Inventory::Model::FSimpleInventoryModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inventory::Model::FSimpleInventoryModelMaster::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain::CreateCacheKey(
+                InventoryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FSimpleInventoryModelMaster>(obj));
+            }
+        );
+    }
+
+    void FSimpleInventoryModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inventory::Model::FSimpleInventoryModelMaster::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain::CreateCacheKey(
+                InventoryName
+            ),
+            CallbackID
+        );
     }
 }
 

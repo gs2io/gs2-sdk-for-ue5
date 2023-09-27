@@ -141,6 +141,39 @@ namespace Gs2::MegaField::Domain::Model
     TSharedPtr<FAsyncTask<FLayerDomain::FModelTask>> FLayerDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FLayerDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FLayerDomain::Subscribe(
+        TFunction<void(Gs2::MegaField::Model::FLayerPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::MegaField::Model::FLayer::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FLayerDomain::CreateCacheKey(
+                AreaModelName,
+                LayerModelName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FLayer>(obj));
+            }
+        );
+    }
+
+    void FLayerDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::MegaField::Model::FLayer::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FLayerDomain::CreateCacheKey(
+                AreaModelName,
+                LayerModelName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

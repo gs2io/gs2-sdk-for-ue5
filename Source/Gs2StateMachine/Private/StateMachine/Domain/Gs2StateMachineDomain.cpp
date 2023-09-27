@@ -134,6 +134,28 @@ namespace Gs2::StateMachine::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2StateMachineDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::StateMachine::Model::FNamespace::TypeName,
+            "stateMachine:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2StateMachineDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::StateMachine::Model::FNamespace::TypeName,
+            "stateMachine:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::StateMachine::Domain::Model::FNamespaceDomain> FGs2StateMachineDomain::Namespace(
         const FString NamespaceName
     ) const

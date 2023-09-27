@@ -190,4 +190,21 @@ namespace Gs2::UE5::Limit::Domain::Model
     TSharedPtr<FAsyncTask<FEzCounterGameSessionDomain::FModelTask>> FEzCounterGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzCounterGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Limit::Model::FEzCounterPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Limit::Model::FCounterPtr Item)
+            {
+                Callback(Gs2::UE5::Limit::Model::FEzCounter::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzCounterGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

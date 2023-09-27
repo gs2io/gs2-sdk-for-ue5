@@ -227,6 +227,20 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeRatingModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRatingModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeRatingModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRatingModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Matchmaking::Domain::Model::FEzRatingModelDomainPtr FEzNamespaceDomain::RatingModel(
         const FString RatingName
     ) const

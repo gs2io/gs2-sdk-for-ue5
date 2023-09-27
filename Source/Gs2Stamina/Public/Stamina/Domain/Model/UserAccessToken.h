@@ -90,6 +90,14 @@ namespace Gs2::Stamina::Domain::Model
         Gs2::Stamina::Domain::Iterator::FDescribeStaminasIteratorPtr Staminas(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStaminas(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStaminas(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain> Stamina(
             const FString StaminaName
         ) const;

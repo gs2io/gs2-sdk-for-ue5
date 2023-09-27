@@ -602,6 +602,37 @@ namespace Gs2::Exchange::Domain::Model
     TSharedPtr<FAsyncTask<FAwaitDomain::FModelTask>> FAwaitDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FAwaitDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FAwaitDomain::Subscribe(
+        TFunction<void(Gs2::Exchange::Model::FAwaitPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Exchange::Model::FAwait::TypeName,
+            ParentKey,
+            Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
+                AwaitName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Exchange::Model::FAwait>(obj));
+            }
+        );
+    }
+
+    void FAwaitDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Exchange::Model::FAwait::TypeName,
+            ParentKey,
+            Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
+                AwaitName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

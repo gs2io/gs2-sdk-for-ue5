@@ -353,6 +353,37 @@ namespace Gs2::Experience::Domain::Model
     TSharedPtr<FAsyncTask<FExperienceModelMasterDomain::FModelTask>> FExperienceModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FExperienceModelMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FExperienceModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::Experience::Model::FExperienceModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Experience::Model::FExperienceModelMaster::TypeName,
+            ParentKey,
+            Gs2::Experience::Domain::Model::FExperienceModelMasterDomain::CreateCacheKey(
+                ExperienceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Experience::Model::FExperienceModelMaster>(obj));
+            }
+        );
+    }
+
+    void FExperienceModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Experience::Model::FExperienceModelMaster::TypeName,
+            ParentKey,
+            Gs2::Experience::Domain::Model::FExperienceModelMasterDomain::CreateCacheKey(
+                ExperienceName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

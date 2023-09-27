@@ -85,6 +85,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeSimpleItemsIteratorPtr SimpleItems(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSimpleItems(TFunction<void()> Callback);
+
+        void UnsubscribeSimpleItems(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemGameSessionDomainPtr SimpleItem(
             const FString ItemName
         ) const;

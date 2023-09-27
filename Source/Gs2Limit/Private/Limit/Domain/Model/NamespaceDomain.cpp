@@ -377,6 +377,34 @@ namespace Gs2::Limit::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeLimitModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Limit::Model::FLimitModel::TypeName,
+            Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "LimitModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeLimitModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Limit::Model::FLimitModel::TypeName,
+            Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "LimitModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Limit::Domain::Model::FLimitModelDomain> FNamespaceDomain::LimitModel(
         const FString LimitName
     ) const
@@ -426,6 +454,34 @@ namespace Gs2::Limit::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeLimitModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Limit::Model::FLimitModelMaster::TypeName,
+            Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "LimitModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeLimitModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Limit::Model::FLimitModelMaster::TypeName,
+            Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "LimitModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -533,6 +589,37 @@ namespace Gs2::Limit::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Limit::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Limit::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Limit::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Limit::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

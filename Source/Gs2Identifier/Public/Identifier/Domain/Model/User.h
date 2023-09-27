@@ -182,12 +182,28 @@ namespace Gs2::Identifier::Domain::Model
         Gs2::Identifier::Domain::Iterator::FDescribeIdentifiersIteratorPtr Identifiers(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeIdentifiers(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeIdentifiers(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain> Identifier(
             const FString ClientId
         ) const;
 
         Gs2::Identifier::Domain::Iterator::FDescribePasswordsIteratorPtr Passwords(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribePasswords(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribePasswords(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain> Password(
         ) const;
@@ -225,6 +241,14 @@ namespace Gs2::Identifier::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Identifier::Model::FUserPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

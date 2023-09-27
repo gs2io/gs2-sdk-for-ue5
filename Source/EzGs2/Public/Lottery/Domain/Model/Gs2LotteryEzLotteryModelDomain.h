@@ -86,6 +86,10 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Lottery::Model::FEzLotteryModelPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
+
     };
     typedef TSharedPtr<FEzLotteryModelDomain> FEzLotteryModelDomainPtr;
 }

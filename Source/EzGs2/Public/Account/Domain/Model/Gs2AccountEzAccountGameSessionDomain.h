@@ -52,6 +52,10 @@ namespace Gs2::UE5::Account::Domain::Model
         Gs2::UE5::Account::Domain::Iterator::FEzDescribeTakeOversIteratorPtr TakeOvers(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeTakeOvers(TFunction<void()> Callback);
+
+        void UnsubscribeTakeOvers(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomainPtr TakeOver(
             const int32 Type
         ) const;
@@ -73,6 +77,10 @@ namespace Gs2::UE5::Account::Domain::Model
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Account::Model::FEzAccountPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzAccountGameSessionDomain> FEzAccountGameSessionDomainPtr;

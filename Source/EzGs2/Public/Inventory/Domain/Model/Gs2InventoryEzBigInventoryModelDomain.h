@@ -81,6 +81,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeBigItemModelsIteratorPtr BigItemModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBigItemModels(TFunction<void()> Callback);
+
+        void UnsubscribeBigItemModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Inventory::Domain::Model::FEzBigItemModelDomainPtr BigItemModel(
             const FString ItemName
         ) const;
@@ -102,6 +106,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzBigInventoryModelPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzBigInventoryModelDomain> FEzBigInventoryModelDomainPtr;

@@ -75,6 +75,20 @@ namespace Gs2::UE5::Ranking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserDomain::SubscribeNearRankings(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeNearRankings(
+            Callback
+        );
+    }
+
+    void FEzUserDomain::UnsubscribeNearRankings(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeNearRankings(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Ranking::Domain::Model::FEzRankingDomainPtr FEzUserDomain::Ranking(
         const FString CategoryName
     ) const

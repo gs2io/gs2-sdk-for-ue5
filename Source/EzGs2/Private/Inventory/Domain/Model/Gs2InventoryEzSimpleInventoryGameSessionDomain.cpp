@@ -117,6 +117,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzSimpleInventoryGameSessionDomain::SubscribeSimpleItems(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSimpleItems(
+            Callback
+        );
+    }
+
+    void FEzSimpleInventoryGameSessionDomain::UnsubscribeSimpleItems(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSimpleItems(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemGameSessionDomainPtr FEzSimpleInventoryGameSessionDomain::SimpleItem(
         const FString ItemName
     ) const

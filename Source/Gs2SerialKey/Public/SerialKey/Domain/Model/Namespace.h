@@ -215,6 +215,14 @@ namespace Gs2::SerialKey::Domain::Model
         Gs2::SerialKey::Domain::Iterator::FDescribeCampaignModelsIteratorPtr CampaignModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeCampaignModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCampaignModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::SerialKey::Domain::Model::FCampaignModelDomain> CampaignModel(
             const FString CampaignModelName
         ) const;
@@ -229,6 +237,14 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::SerialKey::Domain::Iterator::FDescribeCampaignModelMastersIteratorPtr CampaignModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCampaignModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCampaignModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::SerialKey::Domain::Model::FCampaignModelMasterDomain> CampaignModelMaster(
             const FString CampaignModelName
@@ -264,6 +280,14 @@ namespace Gs2::SerialKey::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::SerialKey::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

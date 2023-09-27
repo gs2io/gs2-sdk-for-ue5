@@ -141,6 +141,35 @@ namespace Gs2::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FSendBoxDomain::FModelTask>> FSendBoxDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSendBoxDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FSendBoxDomain::Subscribe(
+        TFunction<void(Gs2::Friend::Model::FSendBoxPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Friend::Model::FSendBox::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FSendBoxDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FSendBox>(obj));
+            }
+        );
+    }
+
+    void FSendBoxDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Friend::Model::FSendBox::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FSendBoxDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

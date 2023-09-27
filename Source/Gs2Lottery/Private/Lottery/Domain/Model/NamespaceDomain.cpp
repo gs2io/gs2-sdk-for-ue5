@@ -482,6 +482,34 @@ namespace Gs2::Lottery::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribePrizeTables(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lottery::Model::FPrizeTable::TypeName,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "PrizeTable"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribePrizeTables(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FPrizeTable::TypeName,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "PrizeTable"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeTableDomain> FNamespaceDomain::PrizeTable(
         const FString PrizeTableName
     ) const
@@ -503,6 +531,34 @@ namespace Gs2::Lottery::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeLotteryModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lottery::Model::FLotteryModel::TypeName,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "LotteryModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeLotteryModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FLotteryModel::TypeName,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "LotteryModel"
+            ),
+            CallbackID
         );
     }
 
@@ -530,6 +586,34 @@ namespace Gs2::Lottery::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribePrizeTableMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "PrizeTableMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribePrizeTableMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "PrizeTableMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain> FNamespaceDomain::PrizeTableMaster(
         const FString PrizeTableName
     ) const
@@ -551,6 +635,34 @@ namespace Gs2::Lottery::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeLotteryModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lottery::Model::FLotteryModelMaster::TypeName,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "LotteryModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeLotteryModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FLotteryModelMaster::TypeName,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "LotteryModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -658,6 +770,37 @@ namespace Gs2::Lottery::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Lottery::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Lottery::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Lottery::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

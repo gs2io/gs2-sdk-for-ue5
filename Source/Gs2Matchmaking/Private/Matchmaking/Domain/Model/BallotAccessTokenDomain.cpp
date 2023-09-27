@@ -284,6 +284,43 @@ namespace Gs2::Matchmaking::Domain::Model
     TSharedPtr<FAsyncTask<FBallotAccessTokenDomain::FModelTask>> FBallotAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBallotAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FBallotAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Matchmaking::Model::FBallotPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Matchmaking::Model::FBallot::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
+                RatingName,
+                GatheringName,
+                NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
+                KeyId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FBallot>(obj));
+            }
+        );
+    }
+
+    void FBallotAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Matchmaking::Model::FBallot::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
+                RatingName,
+                GatheringName,
+                NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : TOptional<FString>(),
+                KeyId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

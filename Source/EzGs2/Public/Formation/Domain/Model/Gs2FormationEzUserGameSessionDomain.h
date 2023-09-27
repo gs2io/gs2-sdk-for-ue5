@@ -62,6 +62,10 @@ namespace Gs2::UE5::Formation::Domain::Model
         Gs2::UE5::Formation::Domain::Iterator::FEzDescribeMoldsIteratorPtr Molds(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMolds(TFunction<void()> Callback);
+
+        void UnsubscribeMolds(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Formation::Domain::Model::FEzMoldGameSessionDomainPtr Mold(
             const FString MoldModelName
         ) const;
@@ -69,6 +73,10 @@ namespace Gs2::UE5::Formation::Domain::Model
         Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormsIteratorPtr PropertyForms(
             const FString PropertyFormModelName
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribePropertyForms(TFunction<void()> Callback);
+
+        void UnsubscribePropertyForms(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomainPtr PropertyForm(
             const FString PropertyFormModelName,

@@ -768,6 +768,37 @@ namespace Gs2::Formation::Domain::Model
     TSharedPtr<FAsyncTask<FFormDomain::FModelTask>> FFormDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FFormDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FFormDomain::Subscribe(
+        TFunction<void(Gs2::Formation::Model::FFormPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Formation::Model::FForm::TypeName,
+            ParentKey,
+            Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
+                Index.IsSet() ? FString::FromInt(*Index) : TOptional<FString>()
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Formation::Model::FForm>(obj));
+            }
+        );
+    }
+
+    void FFormDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Formation::Model::FForm::TypeName,
+            ParentKey,
+            Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
+                Index.IsSet() ? FString::FromInt(*Index) : TOptional<FString>()
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

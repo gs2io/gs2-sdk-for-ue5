@@ -123,4 +123,21 @@ namespace Gs2::UE5::Enchant::Domain::Model
     TSharedPtr<FAsyncTask<FEzRarityParameterModelDomain::FModelTask>> FEzRarityParameterModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzRarityParameterModelDomain::Subscribe(TFunction<void(Gs2::UE5::Enchant::Model::FEzRarityParameterModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Enchant::Model::FRarityParameterModelPtr Item)
+            {
+                Callback(Gs2::UE5::Enchant::Model::FEzRarityParameterModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzRarityParameterModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

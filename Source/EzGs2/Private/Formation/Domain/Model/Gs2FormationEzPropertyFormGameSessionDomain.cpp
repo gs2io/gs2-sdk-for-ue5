@@ -269,4 +269,21 @@ namespace Gs2::UE5::Formation::Domain::Model
     TSharedPtr<FAsyncTask<FEzPropertyFormGameSessionDomain::FModelTask>> FEzPropertyFormGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzPropertyFormGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Formation::Model::FEzPropertyFormPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Formation::Model::FPropertyFormPtr Item)
+            {
+                Callback(Gs2::UE5::Formation::Model::FEzPropertyForm::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzPropertyFormGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

@@ -87,6 +87,36 @@ namespace Gs2::Money::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeWallets(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Money::Model::FWallet::TypeName,
+            Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Wallet"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeWallets(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Money::Model::FWallet::TypeName,
+            Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Wallet"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Money::Domain::Model::FWalletAccessTokenDomain> FUserAccessTokenDomain::Wallet(
         const int32 Slot
     ) const

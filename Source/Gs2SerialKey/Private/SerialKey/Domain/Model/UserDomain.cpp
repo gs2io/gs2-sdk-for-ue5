@@ -306,6 +306,36 @@ namespace Gs2::SerialKey::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSerialKeys(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::SerialKey::Model::FSerialKey::TypeName,
+            Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "SerialKey"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeSerialKeys(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::SerialKey::Model::FSerialKey::TypeName,
+            Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "SerialKey"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain> FUserDomain::SerialKey(
         const FString SerialKeyCode
     ) const

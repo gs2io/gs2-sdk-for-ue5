@@ -309,6 +309,34 @@ namespace Gs2::News::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeProgresses(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::News::Model::FProgress::TypeName,
+            Gs2::News::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Progress"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeProgresses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::News::Model::FProgress::TypeName,
+            Gs2::News::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Progress"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::News::Domain::Model::FProgressDomain> FNamespaceDomain::Progress(
         const FString UploadToken
     ) const
@@ -441,6 +469,37 @@ namespace Gs2::News::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::News::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::News::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::News::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::News::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::News::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::News::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

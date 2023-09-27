@@ -108,6 +108,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzInventoryGameSessionDomain::SubscribeItemSets(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeItemSets(
+            Callback
+        );
+    }
+
+    void FEzInventoryGameSessionDomain::UnsubscribeItemSets(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeItemSets(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Inventory::Domain::Model::FEzItemSetGameSessionDomainPtr FEzInventoryGameSessionDomain::ItemSet(
         const FString ItemName,
         const TOptional<FString> ItemSetName
@@ -160,5 +174,22 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzInventoryGameSessionDomain::FModelTask>> FEzInventoryGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzInventoryGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzInventoryPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Inventory::Model::FInventoryPtr Item)
+            {
+                Callback(Gs2::UE5::Inventory::Model::FEzInventory::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzInventoryGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
     }
 }

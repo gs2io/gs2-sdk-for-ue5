@@ -96,6 +96,36 @@ namespace Gs2::Formation::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeMolds(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FMold::TypeName,
+            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Mold"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeMolds(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FMold::TypeName,
+            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Mold"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain> FUserAccessTokenDomain::Mold(
         const FString MoldModelName
     ) const
@@ -121,6 +151,36 @@ namespace Gs2::Formation::Domain::Model
             NamespaceName,
             AccessToken,
             PropertyFormModelName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribePropertyForms(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FPropertyForm::TypeName,
+            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "PropertyForm"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribePropertyForms(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FPropertyForm::TypeName,
+            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "PropertyForm"
+            ),
+            CallbackID
         );
     }
 

@@ -90,6 +90,36 @@ namespace Gs2::Limit::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeCounters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Limit::Model::FCounter::TypeName,
+            Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Counter"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeCounters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Limit::Model::FCounter::TypeName,
+            Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Counter"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Limit::Domain::Model::FCounterAccessTokenDomain> FUserAccessTokenDomain::Counter(
         const FString LimitName,
         const FString CounterName

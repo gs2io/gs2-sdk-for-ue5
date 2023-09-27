@@ -286,6 +286,37 @@ namespace Gs2::StateMachine::Domain::Model
     TSharedPtr<FAsyncTask<FStateMachineMasterDomain::FModelTask>> FStateMachineMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStateMachineMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FStateMachineMasterDomain::Subscribe(
+        TFunction<void(Gs2::StateMachine::Model::FStateMachineMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
+            ParentKey,
+            Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
+                Version.IsSet() ? FString::FromInt(*Version) : TOptional<FString>()
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::StateMachine::Model::FStateMachineMaster>(obj));
+            }
+        );
+    }
+
+    void FStateMachineMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
+            ParentKey,
+            Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
+                Version.IsSet() ? FString::FromInt(*Version) : TOptional<FString>()
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -103,6 +103,36 @@ namespace Gs2::LoginReward::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeReceiveStatuses(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::LoginReward::Model::FReceiveStatus::TypeName,
+            Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "ReceiveStatus"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeReceiveStatuses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::LoginReward::Model::FReceiveStatus::TypeName,
+            Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "ReceiveStatus"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::LoginReward::Domain::Model::FReceiveStatusAccessTokenDomain> FUserAccessTokenDomain::ReceiveStatus(
         const FString BonusModelName
     ) const

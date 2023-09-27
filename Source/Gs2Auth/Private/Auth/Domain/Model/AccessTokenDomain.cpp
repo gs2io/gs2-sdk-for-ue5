@@ -221,6 +221,35 @@ namespace Gs2::Auth::Domain::Model
     TSharedPtr<FAsyncTask<FAccessTokenDomain::FModelTask>> FAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Auth::Model::FAccessTokenPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Auth::Model::FAccessToken::TypeName,
+            ParentKey,
+            Gs2::Auth::Domain::Model::FAccessTokenDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Auth::Model::FAccessToken>(obj));
+            }
+        );
+    }
+
+    void FAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Auth::Model::FAccessToken::TypeName,
+            ParentKey,
+            Gs2::Auth::Domain::Model::FAccessTokenDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

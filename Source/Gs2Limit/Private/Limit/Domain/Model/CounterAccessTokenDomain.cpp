@@ -319,6 +319,39 @@ namespace Gs2::Limit::Domain::Model
     TSharedPtr<FAsyncTask<FCounterAccessTokenDomain::FModelTask>> FCounterAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCounterAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCounterAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Limit::Model::FCounterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Limit::Model::FCounter::TypeName,
+            ParentKey,
+            Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
+                LimitName,
+                CounterName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Limit::Model::FCounter>(obj));
+            }
+        );
+    }
+
+    void FCounterAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Limit::Model::FCounter::TypeName,
+            ParentKey,
+            Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
+                LimitName,
+                CounterName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

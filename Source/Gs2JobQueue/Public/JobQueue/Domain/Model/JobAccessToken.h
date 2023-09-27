@@ -124,6 +124,14 @@ namespace Gs2::JobQueue::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::JobQueue::Model::FJobPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
     };
 
     typedef TSharedPtr<FJobAccessTokenDomain> FJobAccessTokenDomainPtr;

@@ -75,4 +75,21 @@ namespace Gs2::UE5::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FEzBlackListDomain::FModelTask>> FEzBlackListDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzBlackListDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzBlackListPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Friend::Model::FBlackListPtr Item)
+            {
+                Callback(Gs2::UE5::Friend::Model::FEzBlackList::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzBlackListDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

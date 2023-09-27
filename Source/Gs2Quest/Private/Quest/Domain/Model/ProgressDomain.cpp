@@ -434,6 +434,35 @@ namespace Gs2::Quest::Domain::Model
     TSharedPtr<FAsyncTask<FProgressDomain::FModelTask>> FProgressDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FProgressDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FProgressDomain::Subscribe(
+        TFunction<void(Gs2::Quest::Model::FProgressPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Quest::Model::FProgress::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Quest::Model::FProgress>(obj));
+            }
+        );
+    }
+
+    void FProgressDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Quest::Model::FProgress::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FProgressDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

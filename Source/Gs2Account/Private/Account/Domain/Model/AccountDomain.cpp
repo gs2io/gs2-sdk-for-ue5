@@ -60,6 +60,20 @@ namespace Gs2::Account::Domain::Model
             "Account"
         ))
     {
+    }
+
+    FAccountDomain::FAccountDomain(
+        const FAccountDomain& From
+    ):
+        Cache(From.Cache),
+        JobQueueDomain(From.JobQueueDomain),
+        StampSheetConfiguration(From.StampSheetConfiguration),
+        Session(From.Session),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        ParentKey(From.ParentKey)
+    {
 
     }
 
@@ -168,7 +182,7 @@ namespace Gs2::Account::Domain::Model
                     "Account"
                 );
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                    Self->UserId
+                    ResultModel->GetItem()->GetUserId()
                 );
                 Self->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
@@ -189,6 +203,134 @@ namespace Gs2::Account::Domain::Model
         Request::FUpdateBannedRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FUpdateBannedTask>>(this->AsShared(), Request);
+    }
+
+    FAccountDomain::FAddBanTask::FAddBanTask(
+        const TSharedPtr<FAccountDomain> Self,
+        const Request::FAddBanRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccountDomain::FAddBanTask::FAddBanTask(
+        const FAddBanTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccountDomain::FAddBanTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->AddBan(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "Account"
+                );
+                const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetUserId()
+                );
+                Self->Cache->Put(
+                    Gs2::Account::Model::FAccount::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccountDomain::FAddBanTask>> FAccountDomain::AddBan(
+        Request::FAddBanRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FAddBanTask>>(this->AsShared(), Request);
+    }
+
+    FAccountDomain::FRemoveBanTask::FRemoveBanTask(
+        const TSharedPtr<FAccountDomain> Self,
+        const Request::FRemoveBanRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccountDomain::FRemoveBanTask::FRemoveBanTask(
+        const FRemoveBanTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccountDomain::FRemoveBanTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->RemoveBan(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "Account"
+                );
+                const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetUserId()
+                );
+                Self->Cache->Put(
+                    Gs2::Account::Model::FAccount::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccountDomain::FRemoveBanTask>> FAccountDomain::RemoveBan(
+        Request::FRemoveBanRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FRemoveBanTask>>(this->AsShared(), Request);
     }
 
     FAccountDomain::FGetTask::FGetTask(
@@ -453,6 +595,36 @@ namespace Gs2::Account::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FAccountDomain::SubscribeTakeOvers(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "TakeOver"
+            ),
+            Callback
+        );
+    }
+
+    void FAccountDomain::UnsubscribeTakeOvers(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "TakeOver"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain> FAccountDomain::TakeOver(
         const int32 Type
     ) const
@@ -487,7 +659,7 @@ namespace Gs2::Account::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
@@ -497,7 +669,7 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> UserId
     )
     {
-        return FString() +
+        return FString("") +
             (UserId.IsSet() ? *UserId : "null");
     }
 
@@ -520,8 +692,8 @@ namespace Gs2::Account::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::Account::Model::FAccountPtr Value;
-        const auto bCacheHit = Self->Cache->TryGet<Gs2::Account::Model::FAccount>(
+        TSharedPtr<Gs2::Account::Model::FAccount> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::Account::Model::FAccount>(
             Self->ParentKey,
             Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                 Self->UserId
@@ -540,14 +712,15 @@ namespace Gs2::Account::Domain::Model
                     return Future->GetTask().Error();
                 }
 
+                const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                    Self->UserId
+                );
                 Self->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
                     Self->ParentKey,
-                    Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                        Self->UserId
-                    ),
+                    Key,
                     nullptr,
-                 FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
 
                 if (Future->GetTask().Error()->Detail(0)->GetComponent() != "account")
@@ -571,6 +744,37 @@ namespace Gs2::Account::Domain::Model
 
     TSharedPtr<FAsyncTask<FAccountDomain::FModelTask>> FAccountDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FAccountDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FAccountDomain::Subscribe(
+        TFunction<void(Gs2::Account::Model::FAccountPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Account::Model::FAccount::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                UserId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Account::Model::FAccount>(obj));
+            }
+        );
+    }
+
+    void FAccountDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Account::Model::FAccount::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+                UserId
+            ),
+            CallbackID
+        );
     }
 }
 

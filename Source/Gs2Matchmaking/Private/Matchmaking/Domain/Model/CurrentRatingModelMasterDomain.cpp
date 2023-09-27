@@ -409,6 +409,35 @@ namespace Gs2::Matchmaking::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentRatingModelMasterDomain::FModelTask>> FCurrentRatingModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentRatingModelMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentRatingModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::Matchmaking::Model::FCurrentRatingModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Matchmaking::Model::FCurrentRatingModelMaster::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FCurrentRatingModelMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentRatingModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Matchmaking::Model::FCurrentRatingModelMaster::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -216,6 +216,14 @@ namespace Gs2::MegaField::Domain::Model
         Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIteratorPtr AreaModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeAreaModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeAreaModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::MegaField::Domain::Model::FAreaModelDomain> AreaModel(
             const FString AreaModelName
         ) const;
@@ -230,6 +238,14 @@ namespace Gs2::MegaField::Domain::Model
 
         Gs2::MegaField::Domain::Iterator::FDescribeAreaModelMastersIteratorPtr AreaModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeAreaModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeAreaModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::MegaField::Domain::Model::FAreaModelMasterDomain> AreaModelMaster(
             const FString AreaModelName
@@ -265,6 +281,14 @@ namespace Gs2::MegaField::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::MegaField::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

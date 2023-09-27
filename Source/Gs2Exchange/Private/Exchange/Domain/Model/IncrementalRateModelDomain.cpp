@@ -234,6 +234,37 @@ namespace Gs2::Exchange::Domain::Model
     TSharedPtr<FAsyncTask<FIncrementalRateModelDomain::FModelTask>> FIncrementalRateModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FIncrementalRateModelDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FIncrementalRateModelDomain::Subscribe(
+        TFunction<void(Gs2::Exchange::Model::FIncrementalRateModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Exchange::Model::FIncrementalRateModel::TypeName,
+            ParentKey,
+            Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain::CreateCacheKey(
+                RateName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Exchange::Model::FIncrementalRateModel>(obj));
+            }
+        );
+    }
+
+    void FIncrementalRateModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Exchange::Model::FIncrementalRateModel::TypeName,
+            ParentKey,
+            Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain::CreateCacheKey(
+                RateName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

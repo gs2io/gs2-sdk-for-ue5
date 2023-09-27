@@ -116,6 +116,14 @@ namespace Gs2::Version::Domain::Model
         Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsByUserIdIteratorPtr AcceptVersions(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeAcceptVersions(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeAcceptVersions(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Version::Domain::Model::FAcceptVersionDomain> AcceptVersion(
             const FString VersionName
         ) const;

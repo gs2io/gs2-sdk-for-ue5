@@ -139,6 +139,28 @@ namespace Gs2::Matchmaking::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2MatchmakingDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Matchmaking::Model::FNamespace::TypeName,
+            "matchmaking:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2MatchmakingDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Matchmaking::Model::FNamespace::TypeName,
+            "matchmaking:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FNamespaceDomain> FGs2MatchmakingDomain::Namespace(
         const FString NamespaceName
     ) const

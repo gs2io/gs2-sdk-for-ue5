@@ -414,6 +414,35 @@ namespace Gs2::Showcase::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentShowcaseMasterDomain::FModelTask>> FCurrentShowcaseMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentShowcaseMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentShowcaseMasterDomain::Subscribe(
+        TFunction<void(Gs2::Showcase::Model::FCurrentShowcaseMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Showcase::Model::FCurrentShowcaseMaster::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FCurrentShowcaseMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentShowcaseMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Showcase::Model::FCurrentShowcaseMaster::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

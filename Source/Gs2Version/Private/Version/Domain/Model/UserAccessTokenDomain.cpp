@@ -90,6 +90,36 @@ namespace Gs2::Version::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeAcceptVersions(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Version::Model::FAcceptVersion::TypeName,
+            Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "AcceptVersion"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeAcceptVersions(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Version::Model::FAcceptVersion::TypeName,
+            Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "AcceptVersion"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomain> FUserAccessTokenDomain::AcceptVersion(
         const FString VersionName
     ) const

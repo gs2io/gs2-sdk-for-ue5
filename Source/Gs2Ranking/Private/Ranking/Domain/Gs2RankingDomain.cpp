@@ -139,6 +139,28 @@ namespace Gs2::Ranking::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2RankingDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Ranking::Model::FNamespace::TypeName,
+            "ranking:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2RankingDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Ranking::Model::FNamespace::TypeName,
+            "ranking:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Ranking::Domain::Model::FNamespaceDomain> FGs2RankingDomain::Namespace(
         const FString NamespaceName
     ) const

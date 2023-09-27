@@ -141,6 +141,28 @@ namespace Gs2::Mission::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2MissionDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FNamespace::TypeName,
+            "mission:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2MissionDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FNamespace::TypeName,
+            "mission:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Mission::Domain::Model::FNamespaceDomain> FGs2MissionDomain::Namespace(
         const FString NamespaceName
     ) const

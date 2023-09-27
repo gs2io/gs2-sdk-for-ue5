@@ -142,6 +142,28 @@ namespace Gs2::Formation::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2FormationDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FNamespace::TypeName,
+            "formation:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2FormationDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FNamespace::TypeName,
+            "formation:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Formation::Domain::Model::FNamespaceDomain> FGs2FormationDomain::Namespace(
         const FString NamespaceName
     ) const

@@ -501,6 +501,38 @@ namespace Gs2::Datastore::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FDataObjectDomain::SubscribeDataObjectHistories(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Datastore::Model::FDataObjectHistory::TypeName,
+            Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                DataObjectName,
+                "DataObjectHistory"
+            ),
+            Callback
+        );
+    }
+
+    void FDataObjectDomain::UnsubscribeDataObjectHistories(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Datastore::Model::FDataObjectHistory::TypeName,
+            Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                DataObjectName,
+                "DataObjectHistory"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain> FDataObjectDomain::DataObjectHistory(
         const FString Generation
     ) const
@@ -573,6 +605,37 @@ namespace Gs2::Datastore::Domain::Model
 
     TSharedPtr<FAsyncTask<FDataObjectDomain::FModelTask>> FDataObjectDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDataObjectDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FDataObjectDomain::Subscribe(
+        TFunction<void(Gs2::Datastore::Model::FDataObjectPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Datastore::Model::FDataObject::TypeName,
+            ParentKey,
+            Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
+                DataObjectName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Datastore::Model::FDataObject>(obj));
+            }
+        );
+    }
+
+    void FDataObjectDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Datastore::Model::FDataObject::TypeName,
+            ParentKey,
+            Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
+                DataObjectName
+            ),
+            CallbackID
+        );
     }
 }
 

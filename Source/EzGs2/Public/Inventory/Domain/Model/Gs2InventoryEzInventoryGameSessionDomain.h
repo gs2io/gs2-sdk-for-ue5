@@ -84,6 +84,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeItemSetsIteratorPtr ItemSets(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeItemSets(TFunction<void()> Callback);
+
+        void UnsubscribeItemSets(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Inventory::Domain::Model::FEzItemSetGameSessionDomainPtr ItemSet(
             const FString ItemName,
             const TOptional<FString> ItemSetName = TOptional<FString>()
@@ -106,6 +110,10 @@ namespace Gs2::UE5::Inventory::Domain::Model
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzInventoryPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzInventoryGameSessionDomain> FEzInventoryGameSessionDomainPtr;

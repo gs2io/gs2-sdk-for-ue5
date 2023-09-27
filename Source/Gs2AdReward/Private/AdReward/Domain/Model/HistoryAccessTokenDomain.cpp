@@ -135,6 +135,37 @@ namespace Gs2::AdReward::Domain::Model
     TSharedPtr<FAsyncTask<FHistoryAccessTokenDomain::FModelTask>> FHistoryAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FHistoryAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FHistoryAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::AdReward::Model::FHistoryPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::AdReward::Model::FHistory::TypeName,
+            ParentKey,
+            Gs2::AdReward::Domain::Model::FHistoryDomain::CreateCacheKey(
+                TransactionId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::AdReward::Model::FHistory>(obj));
+            }
+        );
+    }
+
+    void FHistoryAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::AdReward::Model::FHistory::TypeName,
+            ParentKey,
+            Gs2::AdReward::Domain::Model::FHistoryDomain::CreateCacheKey(
+                TransactionId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

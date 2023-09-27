@@ -303,6 +303,38 @@ namespace Gs2::Chat::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FRoomAccessTokenDomain::SubscribeMessages(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Chat::Model::FMessage::TypeName,
+            Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                RoomName,
+                "Message"
+            ),
+            Callback
+        );
+    }
+
+    void FRoomAccessTokenDomain::UnsubscribeMessages(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Chat::Model::FMessage::TypeName,
+            Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                RoomName,
+                "Message"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Chat::Domain::Model::FMessageAccessTokenDomain> FRoomAccessTokenDomain::Message(
         const FString MessageName
     ) const
@@ -376,6 +408,37 @@ namespace Gs2::Chat::Domain::Model
 
     TSharedPtr<FAsyncTask<FRoomAccessTokenDomain::FModelTask>> FRoomAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRoomAccessTokenDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FRoomAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Chat::Model::FRoomPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Chat::Model::FRoom::TypeName,
+            ParentKey,
+            Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
+                RoomName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Chat::Model::FRoom>(obj));
+            }
+        );
+    }
+
+    void FRoomAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Chat::Model::FRoom::TypeName,
+            ParentKey,
+            Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
+                RoomName
+            ),
+            CallbackID
+        );
     }
 }
 

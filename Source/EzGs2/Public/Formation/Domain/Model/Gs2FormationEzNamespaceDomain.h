@@ -63,12 +63,20 @@ namespace Gs2::UE5::Formation::Domain::Model
         Gs2::UE5::Formation::Domain::Iterator::FEzDescribeMoldModelsIteratorPtr MoldModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMoldModels(TFunction<void()> Callback);
+
+        void UnsubscribeMoldModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Formation::Domain::Model::FEzMoldModelDomainPtr MoldModel(
             const FString MoldModelName
         ) const;
 
         Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormModelsIteratorPtr PropertyFormModels(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribePropertyFormModels(TFunction<void()> Callback);
+
+        void UnsubscribePropertyFormModels(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Formation::Domain::Model::FEzPropertyFormModelDomainPtr PropertyFormModel(
             const FString PropertyFormModelName

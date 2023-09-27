@@ -172,6 +172,36 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FBigInventoryModelDomain::SubscribeBigItemModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FBigItemModel::TypeName,
+            Gs2::Inventory::Domain::Model::FBigInventoryModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                InventoryName,
+                "BigItemModel"
+            ),
+            Callback
+        );
+    }
+
+    void FBigInventoryModelDomain::UnsubscribeBigItemModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FBigItemModel::TypeName,
+            Gs2::Inventory::Domain::Model::FBigInventoryModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                InventoryName,
+                "BigItemModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FBigItemModelDomain> FBigInventoryModelDomain::BigItemModel(
         const FString ItemName
     ) const
@@ -278,6 +308,37 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FBigInventoryModelDomain::FModelTask>> FBigInventoryModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBigInventoryModelDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FBigInventoryModelDomain::Subscribe(
+        TFunction<void(Gs2::Inventory::Model::FBigInventoryModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inventory::Model::FBigInventoryModel::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FBigInventoryModelDomain::CreateCacheKey(
+                InventoryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FBigInventoryModel>(obj));
+            }
+        );
+    }
+
+    void FBigInventoryModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inventory::Model::FBigInventoryModel::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FBigInventoryModelDomain::CreateCacheKey(
+                InventoryName
+            ),
+            CallbackID
+        );
     }
 }
 

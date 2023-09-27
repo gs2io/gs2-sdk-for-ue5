@@ -406,6 +406,35 @@ namespace Gs2::Enhance::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentRateMasterDomain::FModelTask>> FCurrentRateMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentRateMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentRateMasterDomain::Subscribe(
+        TFunction<void(Gs2::Enhance::Model::FCurrentRateMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Enhance::Model::FCurrentRateMaster::TypeName,
+            ParentKey,
+            Gs2::Enhance::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Enhance::Model::FCurrentRateMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentRateMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Enhance::Model::FCurrentRateMaster::TypeName,
+            ParentKey,
+            Gs2::Enhance::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

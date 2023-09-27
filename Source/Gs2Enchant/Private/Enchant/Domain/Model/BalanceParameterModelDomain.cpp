@@ -234,6 +234,37 @@ namespace Gs2::Enchant::Domain::Model
     TSharedPtr<FAsyncTask<FBalanceParameterModelDomain::FModelTask>> FBalanceParameterModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBalanceParameterModelDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FBalanceParameterModelDomain::Subscribe(
+        TFunction<void(Gs2::Enchant::Model::FBalanceParameterModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Enchant::Model::FBalanceParameterModel::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FBalanceParameterModelDomain::CreateCacheKey(
+                ParameterName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Enchant::Model::FBalanceParameterModel>(obj));
+            }
+        );
+    }
+
+    void FBalanceParameterModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Enchant::Model::FBalanceParameterModel::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FBalanceParameterModelDomain::CreateCacheKey(
+                ParameterName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

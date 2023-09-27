@@ -138,6 +138,28 @@ namespace Gs2::MegaField::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2MegaFieldDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::MegaField::Model::FNamespace::TypeName,
+            "megaField:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2MegaFieldDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::MegaField::Model::FNamespace::TypeName,
+            "megaField:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::MegaField::Domain::Model::FNamespaceDomain> FGs2MegaFieldDomain::Namespace(
         const FString NamespaceName
     ) const

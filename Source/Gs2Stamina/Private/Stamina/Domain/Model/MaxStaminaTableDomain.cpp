@@ -118,6 +118,35 @@ namespace Gs2::Stamina::Domain::Model
     TSharedPtr<FAsyncTask<FMaxStaminaTableDomain::FModelTask>> FMaxStaminaTableDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FMaxStaminaTableDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FMaxStaminaTableDomain::Subscribe(
+        TFunction<void(Gs2::Stamina::Model::FMaxStaminaTablePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Stamina::Model::FMaxStaminaTable::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FMaxStaminaTableDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Stamina::Model::FMaxStaminaTable>(obj));
+            }
+        );
+    }
+
+    void FMaxStaminaTableDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Stamina::Model::FMaxStaminaTable::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FMaxStaminaTableDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

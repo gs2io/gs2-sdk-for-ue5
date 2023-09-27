@@ -50,6 +50,20 @@ namespace Gs2::UE5::Ranking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeCategoryModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeCategoryModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeCategoryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeCategoryModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Ranking::Domain::Model::FEzCategoryModelDomainPtr FEzNamespaceDomain::CategoryModel(
         const FString CategoryName
     ) const

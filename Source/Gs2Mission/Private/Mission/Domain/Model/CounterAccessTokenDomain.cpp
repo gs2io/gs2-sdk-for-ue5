@@ -245,6 +245,37 @@ namespace Gs2::Mission::Domain::Model
     TSharedPtr<FAsyncTask<FCounterAccessTokenDomain::FModelTask>> FCounterAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCounterAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCounterAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Mission::Model::FCounterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Mission::Model::FCounter::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                CounterName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Mission::Model::FCounter>(obj));
+            }
+        );
+    }
+
+    void FCounterAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Mission::Model::FCounter::TypeName,
+            ParentKey,
+            Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                CounterName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

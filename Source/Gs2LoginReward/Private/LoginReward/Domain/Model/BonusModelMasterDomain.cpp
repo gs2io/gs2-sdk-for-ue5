@@ -354,6 +354,37 @@ namespace Gs2::LoginReward::Domain::Model
     TSharedPtr<FAsyncTask<FBonusModelMasterDomain::FModelTask>> FBonusModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBonusModelMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FBonusModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::LoginReward::Model::FBonusModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
+            ParentKey,
+            Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain::CreateCacheKey(
+                BonusModelName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::LoginReward::Model::FBonusModelMaster>(obj));
+            }
+        );
+    }
+
+    void FBonusModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
+            ParentKey,
+            Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain::CreateCacheKey(
+                BonusModelName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

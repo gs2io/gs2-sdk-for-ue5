@@ -368,6 +368,37 @@ namespace Gs2::Quest::Domain::Model
     TSharedPtr<FAsyncTask<FQuestModelMasterDomain::FModelTask>> FQuestModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FQuestModelMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FQuestModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::Quest::Model::FQuestModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Quest::Model::FQuestModelMaster::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
+                QuestName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Quest::Model::FQuestModelMaster>(obj));
+            }
+        );
+    }
+
+    void FQuestModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Quest::Model::FQuestModelMaster::TypeName,
+            ParentKey,
+            Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
+                QuestName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

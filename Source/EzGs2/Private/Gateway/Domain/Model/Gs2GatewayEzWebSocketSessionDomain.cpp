@@ -80,4 +80,21 @@ namespace Gs2::UE5::Gateway::Domain::Model
     TSharedPtr<FAsyncTask<FEzWebSocketSessionDomain::FModelTask>> FEzWebSocketSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzWebSocketSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Gateway::Model::FEzWebSocketSessionPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Gateway::Model::FWebSocketSessionPtr Item)
+            {
+                Callback(Gs2::UE5::Gateway::Model::FEzWebSocketSession::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzWebSocketSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

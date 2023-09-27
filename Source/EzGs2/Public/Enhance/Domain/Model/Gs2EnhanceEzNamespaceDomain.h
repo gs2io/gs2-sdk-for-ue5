@@ -53,6 +53,10 @@ namespace Gs2::UE5::Enhance::Domain::Model
         Gs2::UE5::Enhance::Domain::Iterator::FEzDescribeRateModelsIteratorPtr RateModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRateModels(TFunction<void()> Callback);
+
+        void UnsubscribeRateModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Enhance::Domain::Model::FEzRateModelDomainPtr RateModel(
             const FString RateName
         ) const;

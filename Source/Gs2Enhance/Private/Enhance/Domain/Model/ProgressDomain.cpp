@@ -529,6 +529,35 @@ namespace Gs2::Enhance::Domain::Model
     TSharedPtr<FAsyncTask<FProgressDomain::FModelTask>> FProgressDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FProgressDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FProgressDomain::Subscribe(
+        TFunction<void(Gs2::Enhance::Model::FProgressPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Enhance::Model::FProgress::TypeName,
+            ParentKey,
+            Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Enhance::Model::FProgress>(obj));
+            }
+        );
+    }
+
+    void FProgressDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Enhance::Model::FProgress::TypeName,
+            ParentKey,
+            Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

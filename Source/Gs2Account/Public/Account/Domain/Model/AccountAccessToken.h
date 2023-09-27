@@ -92,6 +92,14 @@ namespace Gs2::Account::Domain::Model
         Gs2::Account::Domain::Iterator::FDescribeTakeOversIteratorPtr TakeOvers(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeTakeOvers(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeTakeOvers(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain> TakeOver(
             const int32 Type
         ) const;
@@ -130,6 +138,14 @@ namespace Gs2::Account::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Account::Model::FAccountPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

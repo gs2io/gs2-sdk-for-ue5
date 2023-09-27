@@ -93,6 +93,20 @@ namespace Gs2::UE5::MegaField::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzAreaModelDomain::SubscribeLayerModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeLayerModels(
+            Callback
+        );
+    }
+
+    void FEzAreaModelDomain::UnsubscribeLayerModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeLayerModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::MegaField::Domain::Model::FEzLayerModelDomainPtr FEzAreaModelDomain::LayerModel(
         const FString LayerModelName
     ) const
@@ -143,5 +157,22 @@ namespace Gs2::UE5::MegaField::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzAreaModelDomain::FModelTask>> FEzAreaModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzAreaModelDomain::Subscribe(TFunction<void(Gs2::UE5::MegaField::Model::FEzAreaModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::MegaField::Model::FAreaModelPtr Item)
+            {
+                Callback(Gs2::UE5::MegaField::Model::FEzAreaModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzAreaModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
     }
 }

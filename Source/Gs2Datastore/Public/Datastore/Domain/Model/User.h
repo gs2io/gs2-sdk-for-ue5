@@ -171,6 +171,14 @@ namespace Gs2::Datastore::Domain::Model
             const TOptional<FString> Status
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeDataObjects(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeDataObjects(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectDomain> DataObject(
             const FString DataObjectName
         ) const;

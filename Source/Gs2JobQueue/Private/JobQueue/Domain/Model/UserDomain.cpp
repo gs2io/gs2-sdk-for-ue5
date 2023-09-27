@@ -62,6 +62,20 @@ namespace Gs2::JobQueue::Domain::Model
             "User"
         ))
     {
+    }
+
+    FUserDomain::FUserDomain(
+        const FUserDomain& From
+    ):
+        Cache(From.Cache),
+        JobQueueDomain(From.JobQueueDomain),
+        StampSheetConfiguration(From.StampSheetConfiguration),
+        Session(From.Session),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        ParentKey(From.ParentKey)
+    {
 
     }
 
@@ -256,6 +270,36 @@ namespace Gs2::JobQueue::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeJobs(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::JobQueue::Model::FJob::TypeName,
+            Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Job"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeJobs(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::JobQueue::Model::FJob::TypeName,
+            Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Job"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::JobQueue::Domain::Model::FJobDomain> FUserDomain::Job(
         const FString JobName
     ) const
@@ -267,7 +311,7 @@ namespace Gs2::JobQueue::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            JobName
+            JobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(JobName)
         );
     }
 
@@ -282,6 +326,36 @@ namespace Gs2::JobQueue::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeDeadLetterJobs(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::JobQueue::Model::FDeadLetterJob::TypeName,
+            Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "DeadLetterJob"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeDeadLetterJobs(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::JobQueue::Model::FDeadLetterJob::TypeName,
+            Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "DeadLetterJob"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain> FUserDomain::DeadLetterJob(
         const FString DeadLetterJobName
     ) const
@@ -293,7 +367,7 @@ namespace Gs2::JobQueue::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            DeadLetterJobName
+            DeadLetterJobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DeadLetterJobName)
         );
     }
 
@@ -303,7 +377,7 @@ namespace Gs2::JobQueue::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
@@ -313,7 +387,7 @@ namespace Gs2::JobQueue::Domain::Model
         TOptional<FString> UserId
     )
     {
-        return FString() +
+        return FString("") +
             (UserId.IsSet() ? *UserId : "null");
     }
 }

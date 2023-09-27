@@ -82,6 +82,14 @@ namespace Gs2::Money::Domain::Model
         Gs2::Money::Domain::Iterator::FDescribeWalletsIteratorPtr Wallets(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeWallets(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeWallets(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Money::Domain::Model::FWalletAccessTokenDomain> Wallet(
             const int32 Slot
         ) const;

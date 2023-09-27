@@ -84,6 +84,10 @@ namespace Gs2::UE5::SkillTree::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::SkillTree::Model::FEzNodeModelPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
+
     };
     typedef TSharedPtr<FEzNodeModelDomain> FEzNodeModelDomainPtr;
 }

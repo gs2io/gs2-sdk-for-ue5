@@ -232,6 +232,37 @@ namespace Gs2::Enhance::Domain::Model
     TSharedPtr<FAsyncTask<FRateModelDomain::FModelTask>> FRateModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRateModelDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FRateModelDomain::Subscribe(
+        TFunction<void(Gs2::Enhance::Model::FRateModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Enhance::Model::FRateModel::TypeName,
+            ParentKey,
+            Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
+                RateName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Enhance::Model::FRateModel>(obj));
+            }
+        );
+    }
+
+    void FRateModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Enhance::Model::FRateModel::TypeName,
+            ParentKey,
+            Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
+                RateName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

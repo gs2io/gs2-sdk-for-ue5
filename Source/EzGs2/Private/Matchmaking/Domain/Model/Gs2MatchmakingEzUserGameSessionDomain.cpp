@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzUserGameSessionDomain.h"
@@ -193,6 +195,20 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingsIterator>(
             Domain->Ratings(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeRatings(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRatings(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeRatings(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRatings(
+            CallbackId
         );
     }
 

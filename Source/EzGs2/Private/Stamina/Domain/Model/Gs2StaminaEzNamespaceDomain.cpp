@@ -50,6 +50,20 @@ namespace Gs2::UE5::Stamina::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeStaminaModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeStaminaModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeStaminaModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeStaminaModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Stamina::Domain::Model::FEzStaminaModelDomainPtr FEzNamespaceDomain::StaminaModel(
         const FString StaminaName
     ) const

@@ -93,6 +93,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzSimpleInventoryModelDomain::SubscribeSimpleItemModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSimpleItemModels(
+            Callback
+        );
+    }
+
+    void FEzSimpleInventoryModelDomain::UnsubscribeSimpleItemModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSimpleItemModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemModelDomainPtr FEzSimpleInventoryModelDomain::SimpleItemModel(
         const FString ItemName
     ) const
@@ -143,5 +157,22 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzSimpleInventoryModelDomain::FModelTask>> FEzSimpleInventoryModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzSimpleInventoryModelDomain::Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzSimpleInventoryModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Inventory::Model::FSimpleInventoryModelPtr Item)
+            {
+                Callback(Gs2::UE5::Inventory::Model::FEzSimpleInventoryModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzSimpleInventoryModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
     }
 }

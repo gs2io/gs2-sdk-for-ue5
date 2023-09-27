@@ -322,6 +322,39 @@ namespace Gs2::Experience::Domain::Model
     TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FModelTask>> FStatusAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStatusAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FStatusAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Experience::Model::FStatus::TypeName,
+            ParentKey,
+            Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                ExperienceName,
+                PropertyId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Experience::Model::FStatus>(obj));
+            }
+        );
+    }
+
+    void FStatusAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Experience::Model::FStatus::TypeName,
+            ParentKey,
+            Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                ExperienceName,
+                PropertyId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

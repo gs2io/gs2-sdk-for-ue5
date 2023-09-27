@@ -76,7 +76,10 @@ namespace Gs2::Ranking::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -181,8 +184,8 @@ namespace Gs2::Ranking::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            CategoryName,
-            TargetUserId
+            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),
+            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
         );
     }
 
@@ -198,6 +201,36 @@ namespace Gs2::Ranking::Domain::Model
             CategoryName,
             UserId,
             AdditionalScopeName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeRankings(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Ranking::Model::FRanking::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Ranking"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeRankings(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Ranking::Model::FRanking::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Ranking"
+            ),
+            CallbackID
         );
     }
 
@@ -217,6 +250,36 @@ namespace Gs2::Ranking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeNearRankings(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Ranking::Model::FRanking::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                "NearRanking"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeNearRankings(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Ranking::Model::FRanking::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                TOptional<FString>("Singleton"),
+                "NearRanking"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Ranking::Domain::Model::FRankingDomain> FUserDomain::Ranking(
         const FString CategoryName
     ) const
@@ -228,7 +291,7 @@ namespace Gs2::Ranking::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            CategoryName
+            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
         );
     }
 
@@ -247,6 +310,36 @@ namespace Gs2::Ranking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeScores(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Ranking::Model::FScore::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Score"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeScores(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Ranking::Model::FScore::TypeName,
+            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Score"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Ranking::Domain::Model::FScoreDomain> FUserDomain::Score(
         const FString CategoryName,
         const FString ScorerUserId,
@@ -260,9 +353,9 @@ namespace Gs2::Ranking::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            CategoryName,
-            ScorerUserId,
-            UniqueId
+            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),
+            ScorerUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(ScorerUserId),
+            UniqueId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UniqueId)
         );
     }
 
@@ -272,7 +365,7 @@ namespace Gs2::Ranking::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
@@ -282,7 +375,7 @@ namespace Gs2::Ranking::Domain::Model
         TOptional<FString> UserId
     )
     {
-        return FString() +
+        return FString("") +
             (UserId.IsSet() ? *UserId : "null");
     }
 }

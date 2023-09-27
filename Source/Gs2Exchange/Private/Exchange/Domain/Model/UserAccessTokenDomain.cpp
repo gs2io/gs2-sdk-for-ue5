@@ -107,6 +107,36 @@ namespace Gs2::Exchange::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeAwaits(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Exchange::Model::FAwait::TypeName,
+            Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Await"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeAwaits(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Exchange::Model::FAwait::TypeName,
+            Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Await"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomain> FUserAccessTokenDomain::Await(
         const FString AwaitName
     ) const

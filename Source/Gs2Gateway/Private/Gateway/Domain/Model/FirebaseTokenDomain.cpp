@@ -398,6 +398,35 @@ namespace Gs2::Gateway::Domain::Model
     TSharedPtr<FAsyncTask<FFirebaseTokenDomain::FModelTask>> FFirebaseTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FFirebaseTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FFirebaseTokenDomain::Subscribe(
+        TFunction<void(Gs2::Gateway::Model::FFirebaseTokenPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Gateway::Model::FFirebaseToken::TypeName,
+            ParentKey,
+            Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Gateway::Model::FFirebaseToken>(obj));
+            }
+        );
+    }
+
+    void FFirebaseTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Gateway::Model::FFirebaseToken::TypeName,
+            ParentKey,
+            Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -123,4 +123,21 @@ namespace Gs2::UE5::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FEzPublicProfileDomain::FModelTask>> FEzPublicProfileDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzPublicProfileDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzPublicProfilePtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Friend::Model::FPublicProfilePtr Item)
+            {
+                Callback(Gs2::UE5::Friend::Model::FEzPublicProfile::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzPublicProfileDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

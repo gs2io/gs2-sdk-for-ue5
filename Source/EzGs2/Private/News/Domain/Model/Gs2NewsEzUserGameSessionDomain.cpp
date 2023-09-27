@@ -55,6 +55,20 @@ namespace Gs2::UE5::News::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeNewses(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeNewses(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeNewses(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeNewses(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::News::Domain::Model::FEzNewsGameSessionDomainPtr FEzUserGameSessionDomain::News(
     ) const
     {

@@ -172,6 +172,36 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FInventoryModelDomain::SubscribeItemModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FItemModel::TypeName,
+            Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                InventoryName,
+                "ItemModel"
+            ),
+            Callback
+        );
+    }
+
+    void FInventoryModelDomain::UnsubscribeItemModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FItemModel::TypeName,
+            Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+                NamespaceName,
+                InventoryName,
+                "ItemModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FItemModelDomain> FInventoryModelDomain::ItemModel(
         const FString ItemName
     ) const
@@ -278,6 +308,37 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FInventoryModelDomain::FModelTask>> FInventoryModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FInventoryModelDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FInventoryModelDomain::Subscribe(
+        TFunction<void(Gs2::Inventory::Model::FInventoryModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inventory::Model::FInventoryModel::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheKey(
+                InventoryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FInventoryModel>(obj));
+            }
+        );
+    }
+
+    void FInventoryModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inventory::Model::FInventoryModel::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheKey(
+                InventoryName
+            ),
+            CallbackID
+        );
     }
 }
 

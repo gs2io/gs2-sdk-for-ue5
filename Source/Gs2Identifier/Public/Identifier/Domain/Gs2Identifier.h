@@ -126,6 +126,14 @@ namespace Gs2::Identifier::Domain
         Gs2::Identifier::Domain::Iterator::FDescribeUsersIteratorPtr Users(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeUsers(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeUsers(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Identifier::Domain::Model::FUserDomain> User(
             const FString UserName
         ) const;
@@ -133,8 +141,24 @@ namespace Gs2::Identifier::Domain
         Gs2::Identifier::Domain::Iterator::FDescribeSecurityPoliciesIteratorPtr SecurityPolicies(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSecurityPolicies(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSecurityPolicies(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         Gs2::Identifier::Domain::Iterator::FDescribeCommonSecurityPoliciesIteratorPtr CommonSecurityPolicies(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCommonSecurityPolicies(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCommonSecurityPolicies(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain> SecurityPolicy(
             const FString SecurityPolicyName

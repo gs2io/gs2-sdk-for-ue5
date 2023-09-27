@@ -74,7 +74,11 @@ namespace Gs2::SerialKey::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        SerialKeyCode(From.SerialKeyCode),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -248,7 +252,7 @@ namespace Gs2::SerialKey::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (SerialKeyCode.IsSet() ? *SerialKeyCode : "null") + ":" +
@@ -259,7 +263,7 @@ namespace Gs2::SerialKey::Domain::Model
         TOptional<FString> SerialKeyCode
     )
     {
-        return FString() +
+        return FString("") +
             (SerialKeyCode.IsSet() ? *SerialKeyCode : "null");
     }
 
@@ -282,8 +286,8 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::SerialKey::Model::FSerialKeyPtr Value;
-        const auto bCacheHit = Self->Cache->TryGet<Gs2::SerialKey::Model::FSerialKey>(
+        TSharedPtr<Gs2::SerialKey::Model::FSerialKey> Value;
+        auto bCacheHit = Self->Cache->TryGet<Gs2::SerialKey::Model::FSerialKey>(
             Self->ParentKey,
             Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
                 Self->SerialKeyCode
@@ -302,12 +306,13 @@ namespace Gs2::SerialKey::Domain::Model
                     return Future->GetTask().Error();
                 }
 
+                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                    Self->SerialKeyCode
+                );
                 Self->Cache->Put(
                     Gs2::SerialKey::Model::FSerialKey::TypeName,
                     Self->ParentKey,
-                    Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                        Self->SerialKeyCode
-                    ),
+                    Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
@@ -333,6 +338,37 @@ namespace Gs2::SerialKey::Domain::Model
 
     TSharedPtr<FAsyncTask<FSerialKeyDomain::FModelTask>> FSerialKeyDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSerialKeyDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FSerialKeyDomain::Subscribe(
+        TFunction<void(Gs2::SerialKey::Model::FSerialKeyPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::SerialKey::Model::FSerialKey::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                SerialKeyCode
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FSerialKey>(obj));
+            }
+        );
+    }
+
+    void FSerialKeyDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::SerialKey::Model::FSerialKey::TypeName,
+            ParentKey,
+            Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
+                SerialKeyCode
+            ),
+            CallbackID
+        );
     }
 }
 

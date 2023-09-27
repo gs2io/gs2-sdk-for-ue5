@@ -75,6 +75,10 @@ namespace Gs2::UE5::Mission::Domain::Model
         Gs2::UE5::Mission::Domain::Iterator::FEzDescribeMissionTaskModelsIteratorPtr MissionTaskModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMissionTaskModels(TFunction<void()> Callback);
+
+        void UnsubscribeMissionTaskModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Mission::Domain::Model::FEzMissionTaskModelDomainPtr MissionTaskModel(
             const FString MissionTaskName
         ) const;
@@ -96,6 +100,10 @@ namespace Gs2::UE5::Mission::Domain::Model
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Mission::Model::FEzMissionGroupModelPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzMissionGroupModelDomain> FEzMissionGroupModelDomainPtr;

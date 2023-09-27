@@ -26,12 +26,16 @@ typedef FString FCacheKey;
 
 namespace Gs2::Core::Domain
 {
+    using CallbackID = int32;
+
     static int32 DefaultCacheMinutes = 5;
     
     class GS2CORE_API FCacheDatabase
     {
         TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<TSharedPtr<Gs2Object>, int64>>>> Cache;
+        TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TMap<CallbackID, TFunction<void(TSharedPtr<Gs2Object>)>>>>> CacheUpdateCallback;
         TMap<FTypeName, TSet<FParentCacheKey>> ListCached;
+        TMap<FTypeName, TMap<FParentCacheKey, TMap<CallbackID, TFunction<void()>>>> ListCacheUpdateCallback;
         TMap<FTypeName, TSet<FParentCacheKey>> ListCacheUpdateRequired;
         TMap<FTypeName, TMap<FParentCacheKey, TSharedPtr<Gs2Object>>> ListUpdateContexts;
 
@@ -67,6 +71,32 @@ namespace Gs2::Core::Domain
             FCacheKey Key,
             TSharedPtr<Gs2Object> Obj,
             FDateTime Ttl
+        );
+
+        CallbackID Subscribe(
+            FTypeName Kind,
+            FParentCacheKey ParentKey,
+            FCacheKey Key,
+            const TFunction<void(TSharedPtr<Gs2Object>)>& Callback
+        );
+
+        void Unsubscribe(
+            FTypeName Kind,
+            FParentCacheKey ParentKey,
+            FCacheKey Key,
+            CallbackID CallbackID
+        );
+
+        CallbackID ListSubscribe(
+            FTypeName Kind,
+            FParentCacheKey ParentKey,
+            const TFunction<void()>& Callback
+        );
+
+        void ListUnsubscribe(
+            FTypeName Kind,
+            FParentCacheKey ParentKey,
+            CallbackID CallbackID
         );
 
         void Delete(

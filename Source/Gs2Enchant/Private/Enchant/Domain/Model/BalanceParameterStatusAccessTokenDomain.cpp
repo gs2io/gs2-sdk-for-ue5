@@ -255,6 +255,39 @@ namespace Gs2::Enchant::Domain::Model
     TSharedPtr<FAsyncTask<FBalanceParameterStatusAccessTokenDomain::FModelTask>> FBalanceParameterStatusAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBalanceParameterStatusAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FBalanceParameterStatusAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Enchant::Model::FBalanceParameterStatusPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
+                ParameterName,
+                PropertyId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Enchant::Model::FBalanceParameterStatus>(obj));
+            }
+        );
+    }
+
+    void FBalanceParameterStatusAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
+                ParameterName,
+                PropertyId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

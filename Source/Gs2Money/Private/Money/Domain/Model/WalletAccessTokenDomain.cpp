@@ -305,6 +305,37 @@ namespace Gs2::Money::Domain::Model
     TSharedPtr<FAsyncTask<FWalletAccessTokenDomain::FModelTask>> FWalletAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FWalletAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FWalletAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Money::Model::FWalletPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Money::Model::FWallet::TypeName,
+            ParentKey,
+            Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
+                TOptional<FString>()
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Money::Model::FWallet>(obj));
+            }
+        );
+    }
+
+    void FWalletAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Money::Model::FWallet::TypeName,
+            ParentKey,
+            Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
+                TOptional<FString>()
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

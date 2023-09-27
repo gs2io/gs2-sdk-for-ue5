@@ -359,6 +359,37 @@ namespace Gs2::Lottery::Domain::Model
     TSharedPtr<FAsyncTask<FPrizeTableMasterDomain::FModelTask>> FPrizeTableMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FPrizeTableMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FPrizeTableMasterDomain::Subscribe(
+        TFunction<void(Gs2::Lottery::Model::FPrizeTableMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
+                PrizeTableName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FPrizeTableMaster>(obj));
+            }
+        );
+    }
+
+    void FPrizeTableMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Lottery::Model::FPrizeTableMaster::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain::CreateCacheKey(
+                PrizeTableName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -50,6 +50,20 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeMoldModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeMoldModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeMoldModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeMoldModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Formation::Domain::Model::FEzMoldModelDomainPtr FEzNamespaceDomain::MoldModel(
         const FString MoldModelName
     ) const
@@ -68,6 +82,20 @@ namespace Gs2::UE5::Formation::Domain::Model
         return MakeShared<Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormModelsIterator>(
             Domain->PropertyFormModels(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribePropertyFormModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribePropertyFormModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribePropertyFormModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribePropertyFormModels(
+            CallbackId
         );
     }
 

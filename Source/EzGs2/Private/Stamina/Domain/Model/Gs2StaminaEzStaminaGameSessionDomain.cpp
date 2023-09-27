@@ -369,4 +369,21 @@ namespace Gs2::UE5::Stamina::Domain::Model
     TSharedPtr<FAsyncTask<FEzStaminaGameSessionDomain::FModelTask>> FEzStaminaGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzStaminaGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Stamina::Model::FEzStaminaPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Stamina::Model::FStaminaPtr Item)
+            {
+                Callback(Gs2::UE5::Stamina::Model::FEzStamina::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzStaminaGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

@@ -248,12 +248,28 @@ namespace Gs2::Enchant::Domain::Model
         Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterModelsIteratorPtr BalanceParameterModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBalanceParameterModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeBalanceParameterModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterModelDomain> BalanceParameterModel(
             const FString ParameterName
         ) const;
 
         Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterModelMastersIteratorPtr BalanceParameterModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeBalanceParameterModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeBalanceParameterModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterModelMasterDomain> BalanceParameterModelMaster(
             const FString ParameterName
@@ -262,12 +278,28 @@ namespace Gs2::Enchant::Domain::Model
         Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterModelsIteratorPtr RarityParameterModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRarityParameterModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRarityParameterModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterModelDomain> RarityParameterModel(
             const FString ParameterName
         ) const;
 
         Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterModelMastersIteratorPtr RarityParameterModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeRarityParameterModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRarityParameterModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain> RarityParameterModelMaster(
             const FString ParameterName
@@ -311,6 +343,14 @@ namespace Gs2::Enchant::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Enchant::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

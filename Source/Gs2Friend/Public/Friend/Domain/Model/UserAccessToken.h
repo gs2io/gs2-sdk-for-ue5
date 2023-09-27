@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -136,6 +138,16 @@ namespace Gs2::Friend::Domain::Model
             const TOptional<bool> WithProfile
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeFollows(
+            TFunction<void()> Callback,
+            bool WithProfile
+        );
+
+        void UnsubscribeFollows(
+            Gs2::Core::Domain::CallbackID CallbackID,
+            bool WithProfile
+        );
+
         TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain> FollowUser(
             const FString TargetUserId,
             const bool WithProfile
@@ -145,6 +157,16 @@ namespace Gs2::Friend::Domain::Model
             const TOptional<bool> WithProfile
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeFriends(
+            TFunction<void()> Callback,
+            bool WithProfile
+        );
+
+        void UnsubscribeFriends(
+            Gs2::Core::Domain::CallbackID CallbackID,
+            bool WithProfile
+        );
+
         TSharedPtr<Gs2::Friend::Domain::Model::FFriendAccessTokenDomain> Friend(
             const bool WithProfile
         ) const;
@@ -152,12 +174,28 @@ namespace Gs2::Friend::Domain::Model
         Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIteratorPtr SendRequests(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSendRequests(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSendRequests(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain> SendFriendRequest(
             const FString TargetUserId
         ) const;
 
         Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr ReceiveRequests(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeReceiveRequests(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeReceiveRequests(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain> ReceiveFriendRequest(
             const FString FromUserId

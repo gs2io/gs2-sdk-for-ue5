@@ -648,6 +648,35 @@ namespace Gs2::SkillTree::Domain::Model
     TSharedPtr<FAsyncTask<FStatusDomain::FModelTask>> FStatusDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStatusDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FStatusDomain::Subscribe(
+        TFunction<void(Gs2::SkillTree::Model::FStatusPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::SkillTree::Model::FStatus::TypeName,
+            ParentKey,
+            Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::SkillTree::Model::FStatus>(obj));
+            }
+        );
+    }
+
+    void FStatusDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::SkillTree::Model::FStatus::TypeName,
+            ParentKey,
+            Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

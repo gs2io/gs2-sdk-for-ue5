@@ -90,6 +90,14 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsIteratorPtr RandomDisplayItems(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRandomDisplayItems(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRandomDisplayItems(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomain> RandomDisplayItem(
             const FString DisplayItemName
         ) const;
@@ -126,6 +134,14 @@ namespace Gs2::Showcase::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Showcase::Model::FRandomShowcasePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

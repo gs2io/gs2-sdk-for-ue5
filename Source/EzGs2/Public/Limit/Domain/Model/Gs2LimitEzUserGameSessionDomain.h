@@ -49,6 +49,10 @@ namespace Gs2::UE5::Limit::Domain::Model
             const TOptional<FString> LimitName = TOptional<FString>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeCounters(TFunction<void()> Callback);
+
+        void UnsubscribeCounters(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Limit::Domain::Model::FEzCounterGameSessionDomainPtr Counter(
             const FString LimitName,
             const FString CounterName

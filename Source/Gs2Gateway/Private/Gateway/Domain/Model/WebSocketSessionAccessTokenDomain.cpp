@@ -198,6 +198,35 @@ namespace Gs2::Gateway::Domain::Model
     TSharedPtr<FAsyncTask<FWebSocketSessionAccessTokenDomain::FModelTask>> FWebSocketSessionAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FWebSocketSessionAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FWebSocketSessionAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Gateway::Model::FWebSocketSessionPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Gateway::Model::FWebSocketSession::TypeName,
+            ParentKey,
+            Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Gateway::Model::FWebSocketSession>(obj));
+            }
+        );
+    }
+
+    void FWebSocketSessionAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Gateway::Model::FWebSocketSession::TypeName,
+            ParentKey,
+            Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

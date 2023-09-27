@@ -590,6 +590,34 @@ namespace Gs2::Stamina::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStaminaModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Stamina::Model::FStaminaModel::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StaminaModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeStaminaModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Stamina::Model::FStaminaModel::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StaminaModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaModelDomain> FNamespaceDomain::StaminaModel(
         const FString StaminaName
     ) const
@@ -642,6 +670,34 @@ namespace Gs2::Stamina::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRecoverIntervalTableMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RecoverIntervalTableMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRecoverIntervalTableMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RecoverIntervalTableMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain> FNamespaceDomain::RecoverIntervalTableMaster(
         const FString RecoverIntervalTableName
     ) const
@@ -663,6 +719,34 @@ namespace Gs2::Stamina::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMaxStaminaTableMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MaxStaminaTableMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeMaxStaminaTableMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MaxStaminaTableMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -690,6 +774,34 @@ namespace Gs2::Stamina::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRecoverValueTableMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Stamina::Model::FRecoverValueTableMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RecoverValueTableMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRecoverValueTableMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Stamina::Model::FRecoverValueTableMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RecoverValueTableMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain> FNamespaceDomain::RecoverValueTableMaster(
         const FString RecoverValueTableName
     ) const
@@ -711,6 +823,34 @@ namespace Gs2::Stamina::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStaminaModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StaminaModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeStaminaModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StaminaModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -818,6 +958,37 @@ namespace Gs2::Stamina::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Stamina::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Stamina::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Stamina::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Stamina::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

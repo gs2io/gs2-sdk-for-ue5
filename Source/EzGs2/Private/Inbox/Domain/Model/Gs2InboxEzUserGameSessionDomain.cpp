@@ -104,6 +104,20 @@ namespace Gs2::UE5::Inbox::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeMessages(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeMessages(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeMessages(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeMessages(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomainPtr FEzUserGameSessionDomain::Message(
         const FString MessageName
     ) const

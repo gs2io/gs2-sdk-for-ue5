@@ -124,6 +124,14 @@ namespace Gs2::Ranking::Domain::Model
             const FString CategoryName
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSubscribeUsers(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSubscribeUsers(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain> SubscribeUser(
             const FString CategoryName,
             const FString TargetUserId
@@ -134,6 +142,14 @@ namespace Gs2::Ranking::Domain::Model
             const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRankings(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRankings(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Ranking::Domain::Model::FRankingAccessTokenDomain> Ranking(
             const FString CategoryName
         ) const;
@@ -142,6 +158,14 @@ namespace Gs2::Ranking::Domain::Model
             const FString CategoryName,
             const FString ScorerUserId
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeScores(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeScores(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Ranking::Domain::Model::FScoreAccessTokenDomain> Score(
             const FString CategoryName,

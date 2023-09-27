@@ -23,17 +23,30 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
 #include "Inventory/Gs2Inventory.h"
+#include "Inventory/Domain/Model/ItemSetEntry.h"
 #include "Inventory/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelMastersIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemModelMastersIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleInventoryModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleInventoryModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigInventoryModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigInventoryModelsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigItemModelMastersIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigItemModelsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoriesIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoriesByUserIdIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemSetsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeItemSetsByUserIdIterator.h"
 #include "Inventory/Domain/Iterator/DescribeReferenceOfIterator.h"
 #include "Inventory/Domain/Iterator/DescribeReferenceOfByUserIdIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeSimpleItemsByUserIdIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigItemsIterator.h"
+#include "Inventory/Domain/Iterator/DescribeBigItemsByUserIdIterator.h"
 
 namespace Gs2::Inventory::Domain::Model
 {
@@ -42,6 +55,14 @@ namespace Gs2::Inventory::Domain::Model
     class FInventoryModelDomain;
     class FItemModelMasterDomain;
     class FItemModelDomain;
+    class FSimpleInventoryModelMasterDomain;
+    class FSimpleInventoryModelDomain;
+    class FSimpleItemModelMasterDomain;
+    class FSimpleItemModelDomain;
+    class FBigInventoryModelMasterDomain;
+    class FBigInventoryModelDomain;
+    class FBigItemModelMasterDomain;
+    class FBigItemModelDomain;
     class FCurrentItemModelMasterDomain;
     class FInventoryDomain;
     class FInventoryAccessTokenDomain;
@@ -49,9 +70,16 @@ namespace Gs2::Inventory::Domain::Model
     class FItemSetAccessTokenDomain;
     class FReferenceOfDomain;
     class FReferenceOfAccessTokenDomain;
+    class FSimpleInventoryDomain;
+    class FSimpleInventoryAccessTokenDomain;
+    class FSimpleItemDomain;
+    class FSimpleItemAccessTokenDomain;
+    class FBigInventoryDomain;
+    class FBigInventoryAccessTokenDomain;
+    class FBigItemDomain;
+    class FBigItemAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
-    class FItemSetEntry;
 
     class GS2INVENTORY_API FItemSetAccessTokenDomain:
         public TSharedFromThis<FItemSetAccessTokenDomain>
@@ -253,6 +281,14 @@ namespace Gs2::Inventory::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(TSharedPtr<Gs2::Inventory::Model::FItemSetEntry>)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

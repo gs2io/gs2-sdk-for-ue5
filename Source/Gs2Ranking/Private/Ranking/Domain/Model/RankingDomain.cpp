@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -330,6 +332,37 @@ namespace Gs2::Ranking::Domain::Model
         const TOptional<FString> ScorerUserId
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FRankingDomain::FModelTask>>(this->AsShared(), ScorerUserId);
+    }
+
+    Gs2::Core::Domain::CallbackID FRankingDomain::Subscribe(
+        TFunction<void(Gs2::Ranking::Model::FRankingPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Ranking::Model::FRanking::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
+            CategoryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Ranking::Model::FRanking>(obj));
+            }
+        );
+    }
+
+    void FRankingDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Ranking::Model::FRanking::TypeName,
+            ParentKey,
+            Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
+            CategoryName
+            ),
+            CallbackID
+        );
     }
 }
 

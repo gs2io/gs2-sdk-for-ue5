@@ -406,6 +406,35 @@ namespace Gs2::MegaField::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentFieldMasterDomain::FModelTask>> FCurrentFieldMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentFieldMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentFieldMasterDomain::Subscribe(
+        TFunction<void(Gs2::MegaField::Model::FCurrentFieldMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::MegaField::Model::FCurrentFieldMaster::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FCurrentFieldMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentFieldMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::MegaField::Model::FCurrentFieldMaster::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

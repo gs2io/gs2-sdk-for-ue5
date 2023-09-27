@@ -439,6 +439,34 @@ namespace Gs2::Exchange::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRateModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Exchange::Model::FRateModelMaster::TypeName,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RateModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRateModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Exchange::Model::FRateModelMaster::TypeName,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RateModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Exchange::Domain::Model::FRateModelMasterDomain> FNamespaceDomain::RateModelMaster(
         const FString RateName
     ) const
@@ -472,6 +500,34 @@ namespace Gs2::Exchange::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRateModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Exchange::Model::FRateModel::TypeName,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RateModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRateModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Exchange::Model::FRateModel::TypeName,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RateModel"
+            ),
+            CallbackID
         );
     }
 
@@ -527,6 +583,34 @@ namespace Gs2::Exchange::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeIncrementalRateModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Exchange::Model::FIncrementalRateModel::TypeName,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "IncrementalRateModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeIncrementalRateModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Exchange::Model::FIncrementalRateModel::TypeName,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "IncrementalRateModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain> FNamespaceDomain::IncrementalRateModel(
         const FString RateName
     ) const
@@ -548,6 +632,34 @@ namespace Gs2::Exchange::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeIncrementalRateModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Exchange::Model::FIncrementalRateModelMaster::TypeName,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "IncrementalRateModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeIncrementalRateModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Exchange::Model::FIncrementalRateModelMaster::TypeName,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "IncrementalRateModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -655,6 +767,37 @@ namespace Gs2::Exchange::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Exchange::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Exchange::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Exchange::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Exchange::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

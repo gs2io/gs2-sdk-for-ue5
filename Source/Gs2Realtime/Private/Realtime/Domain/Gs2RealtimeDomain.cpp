@@ -131,6 +131,28 @@ namespace Gs2::Realtime::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2RealtimeDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Realtime::Model::FNamespace::TypeName,
+            "realtime:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2RealtimeDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Realtime::Model::FNamespace::TypeName,
+            "realtime:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Realtime::Domain::Model::FNamespaceDomain> FGs2RealtimeDomain::Namespace(
         const FString NamespaceName
     ) const

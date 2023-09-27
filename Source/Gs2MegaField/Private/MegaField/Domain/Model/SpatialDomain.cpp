@@ -314,6 +314,39 @@ namespace Gs2::MegaField::Domain::Model
     TSharedPtr<FAsyncTask<FSpatialDomain::FModelTask>> FSpatialDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSpatialDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FSpatialDomain::Subscribe(
+        TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::MegaField::Model::FSpatial::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
+                AreaModelName,
+                LayerModelName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FSpatial>(obj));
+            }
+        );
+    }
+
+    void FSpatialDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::MegaField::Model::FSpatial::TypeName,
+            ParentKey,
+            Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
+                AreaModelName,
+                LayerModelName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

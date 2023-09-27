@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Friend/Domain/Model/Gs2FriendEzUserGameSessionDomain.h"
@@ -134,6 +136,28 @@ namespace Gs2::UE5::Friend::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeFollows(
+        TFunction<void()> Callback,
+        bool WithProfile
+    )
+    {
+        return Domain->SubscribeFollows(
+            Callback,
+            WithProfile
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeFollows(
+        Gs2::Core::Domain::CallbackID CallbackId,
+        bool WithProfile
+    )
+    {
+        Domain->UnsubscribeFollows(
+            CallbackId,
+            WithProfile
+        );
+    }
+
     Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomainPtr FEzUserGameSessionDomain::FollowUser(
         const FString TargetUserId,
         const bool WithProfile
@@ -159,6 +183,28 @@ namespace Gs2::UE5::Friend::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeFriends(
+        TFunction<void()> Callback,
+        bool WithProfile
+    )
+    {
+        return Domain->SubscribeFriends(
+            Callback,
+            WithProfile
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeFriends(
+        Gs2::Core::Domain::CallbackID CallbackId,
+        bool WithProfile
+    )
+    {
+        Domain->UnsubscribeFriends(
+            CallbackId,
+            WithProfile
+        );
+    }
+
     Gs2::UE5::Friend::Domain::Model::FEzFriendGameSessionDomainPtr FEzUserGameSessionDomain::Friend(
         const bool WithProfile
     ) const
@@ -180,6 +226,20 @@ namespace Gs2::UE5::Friend::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeSendRequests(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeSendRequests(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeSendRequests(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeSendRequests(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Friend::Domain::Model::FEzSendFriendRequestGameSessionDomainPtr FEzUserGameSessionDomain::SendFriendRequest(
         const FString TargetUserId
     ) const
@@ -198,6 +258,20 @@ namespace Gs2::UE5::Friend::Domain::Model
         return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeReceiveRequestsIterator>(
             Domain->ReceiveRequests(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeReceiveRequests(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeReceiveRequests(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeReceiveRequests(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeReceiveRequests(
+            CallbackId
         );
     }
 

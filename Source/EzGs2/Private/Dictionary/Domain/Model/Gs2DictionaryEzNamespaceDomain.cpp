@@ -50,6 +50,20 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeEntryModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeEntryModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeEntryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeEntryModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Dictionary::Domain::Model::FEzEntryModelDomainPtr FEzNamespaceDomain::EntryModel(
         const FString EntryName
     ) const

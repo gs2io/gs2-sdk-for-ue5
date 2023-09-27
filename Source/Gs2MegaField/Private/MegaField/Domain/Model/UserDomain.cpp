@@ -63,6 +63,20 @@ namespace Gs2::MegaField::Domain::Model
             "User"
         ))
     {
+    }
+
+    FUserDomain::FUserDomain(
+        const FUserDomain& From
+    ):
+        Cache(From.Cache),
+        JobQueueDomain(From.JobQueueDomain),
+        StampSheetConfiguration(From.StampSheetConfiguration),
+        Session(From.Session),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        ParentKey(From.ParentKey)
+    {
 
     }
 
@@ -234,8 +248,8 @@ namespace Gs2::MegaField::Domain::Model
             Session,
             NamespaceName,
             UserId,
-            AreaModelName,
-            LayerModelName
+            AreaModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AreaModelName),
+            LayerModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LayerModelName)
         );
     }
 
@@ -245,7 +259,7 @@ namespace Gs2::MegaField::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
@@ -255,7 +269,7 @@ namespace Gs2::MegaField::Domain::Model
         TOptional<FString> UserId
     )
     {
-        return FString() +
+        return FString("") +
             (UserId.IsSet() ? *UserId : "null");
     }
 }

@@ -60,6 +60,10 @@ namespace Gs2::UE5::Exchange::Domain::Model
             const TOptional<FString> RateName = TOptional<FString>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeAwaits(TFunction<void()> Callback);
+
+        void UnsubscribeAwaits(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomainPtr Await(
             const FString AwaitName
         ) const;

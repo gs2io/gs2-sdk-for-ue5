@@ -91,12 +91,28 @@ namespace Gs2::Mission::Domain::Model
         Gs2::Mission::Domain::Iterator::FDescribeCountersIteratorPtr Counters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeCounters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCounters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain> Counter(
             const FString CounterName
         ) const;
 
         Gs2::Mission::Domain::Iterator::FDescribeCompletesIteratorPtr Completes(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCompletes(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCompletes(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain> Complete(
             const FString MissionGroupName

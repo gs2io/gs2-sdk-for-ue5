@@ -139,6 +139,28 @@ namespace Gs2::Quest::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2QuestDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Quest::Model::FNamespace::TypeName,
+            "quest:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2QuestDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Quest::Model::FNamespace::TypeName,
+            "quest:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Quest::Domain::Model::FNamespaceDomain> FGs2QuestDomain::Namespace(
         const FString NamespaceName
     ) const

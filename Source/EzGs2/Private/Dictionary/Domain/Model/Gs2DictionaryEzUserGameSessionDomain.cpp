@@ -50,6 +50,20 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeEntries(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeEntries(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeEntries(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeEntries(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomainPtr FEzUserGameSessionDomain::Entry(
         const FString EntryName
     ) const

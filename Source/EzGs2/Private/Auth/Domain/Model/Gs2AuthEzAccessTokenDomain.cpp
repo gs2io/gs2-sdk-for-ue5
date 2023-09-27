@@ -146,4 +146,21 @@ namespace Gs2::UE5::Auth::Domain::Model
     TSharedPtr<FAsyncTask<FEzAccessTokenDomain::FModelTask>> FEzAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzAccessTokenDomain::Subscribe(TFunction<void(Gs2::UE5::Auth::Model::FEzAccessTokenPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Auth::Model::FAccessTokenPtr Item)
+            {
+                Callback(Gs2::UE5::Auth::Model::FEzAccessToken::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzAccessTokenDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

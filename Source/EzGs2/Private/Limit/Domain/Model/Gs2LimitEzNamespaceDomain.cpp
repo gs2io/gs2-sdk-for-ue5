@@ -50,6 +50,20 @@ namespace Gs2::UE5::Limit::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeLimitModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeLimitModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeLimitModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeLimitModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Limit::Domain::Model::FEzLimitModelDomainPtr FEzNamespaceDomain::LimitModel(
         const FString LimitName
     ) const

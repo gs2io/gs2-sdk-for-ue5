@@ -214,6 +214,14 @@ namespace Gs2::Enhance::Domain::Model
         Gs2::Enhance::Domain::Iterator::FDescribeRateModelsIteratorPtr RateModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRateModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRateModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Enhance::Domain::Model::FRateModelDomain> RateModel(
             const FString RateName
         ) const;
@@ -228,6 +236,14 @@ namespace Gs2::Enhance::Domain::Model
 
         Gs2::Enhance::Domain::Iterator::FDescribeRateModelMastersIteratorPtr RateModelMasters(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeRateModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRateModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Enhance::Domain::Model::FRateModelMasterDomain> RateModelMaster(
             const FString RateName
@@ -263,6 +279,14 @@ namespace Gs2::Enhance::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Enhance::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

@@ -136,6 +136,28 @@ namespace Gs2::Dictionary::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2DictionaryDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Dictionary::Model::FNamespace::TypeName,
+            "dictionary:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2DictionaryDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Dictionary::Model::FNamespace::TypeName,
+            "dictionary:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Dictionary::Domain::Model::FNamespaceDomain> FGs2DictionaryDomain::Namespace(
         const FString NamespaceName
     ) const

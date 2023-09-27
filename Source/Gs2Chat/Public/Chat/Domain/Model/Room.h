@@ -184,6 +184,14 @@ namespace Gs2::Chat::Domain::Model
         Gs2::Chat::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr Messages(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeMessages(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMessages(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Chat::Domain::Model::FMessageDomain> Message(
             const FString MessageName
         ) const;
@@ -220,6 +228,14 @@ namespace Gs2::Chat::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Chat::Model::FRoomPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

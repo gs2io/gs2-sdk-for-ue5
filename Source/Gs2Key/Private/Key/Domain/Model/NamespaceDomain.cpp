@@ -430,6 +430,34 @@ namespace Gs2::Key::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeKeys(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Key::Model::FKey::TypeName,
+            Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Key"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeKeys(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Key::Model::FKey::TypeName,
+            Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "Key"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Key::Domain::Model::FKeyDomain> FNamespaceDomain::Key(
         const FString KeyName
     ) const
@@ -451,6 +479,34 @@ namespace Gs2::Key::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGitHubApiKeys(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Key::Model::FGitHubApiKey::TypeName,
+            Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "GitHubApiKey"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeGitHubApiKeys(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Key::Model::FGitHubApiKey::TypeName,
+            Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "GitHubApiKey"
+            ),
+            CallbackID
         );
     }
 
@@ -558,6 +614,37 @@ namespace Gs2::Key::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Key::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Key::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Key::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Key::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

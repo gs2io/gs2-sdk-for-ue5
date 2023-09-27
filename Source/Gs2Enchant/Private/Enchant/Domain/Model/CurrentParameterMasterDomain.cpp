@@ -408,6 +408,35 @@ namespace Gs2::Enchant::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentParameterMasterDomain::FModelTask>> FCurrentParameterMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentParameterMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentParameterMasterDomain::Subscribe(
+        TFunction<void(Gs2::Enchant::Model::FCurrentParameterMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Enchant::Model::FCurrentParameterMaster::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Enchant::Model::FCurrentParameterMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentParameterMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Enchant::Model::FCurrentParameterMaster::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

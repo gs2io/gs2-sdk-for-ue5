@@ -244,6 +244,37 @@ namespace Gs2::Matchmaking::Domain::Model
     TSharedPtr<FAsyncTask<FRatingAccessTokenDomain::FModelTask>> FRatingAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRatingAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FRatingAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Matchmaking::Model::FRatingPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Matchmaking::Model::FRating::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
+                RatingName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FRating>(obj));
+            }
+        );
+    }
+
+    void FRatingAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Matchmaking::Model::FRating::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
+                RatingName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

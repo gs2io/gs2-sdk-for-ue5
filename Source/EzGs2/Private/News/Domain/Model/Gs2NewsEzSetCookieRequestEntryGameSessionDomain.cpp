@@ -85,4 +85,21 @@ namespace Gs2::UE5::News::Domain::Model
     TSharedPtr<FAsyncTask<FEzSetCookieRequestEntryGameSessionDomain::FModelTask>> FEzSetCookieRequestEntryGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzSetCookieRequestEntryGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::News::Model::FEzSetCookieRequestEntryPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::News::Model::FSetCookieRequestEntryPtr Item)
+            {
+                Callback(Gs2::UE5::News::Model::FEzSetCookieRequestEntry::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzSetCookieRequestEntryGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

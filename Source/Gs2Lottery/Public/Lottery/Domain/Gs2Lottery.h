@@ -116,6 +116,14 @@ namespace Gs2::Lottery::Domain
         Gs2::Lottery::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNamespaces(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNamespaces(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Lottery::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
         ) const;

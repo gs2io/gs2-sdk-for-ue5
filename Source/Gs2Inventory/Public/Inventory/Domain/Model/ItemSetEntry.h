@@ -29,6 +29,9 @@ namespace Gs2::Inventory::Model
 
         explicit FItemSetEntry(
             const TArray<FItemSetPtr>& Value
+            );
+        explicit FItemSetEntry(
+            const FItemSetEntry& Value
         );
         explicit FItemSetEntry(
             const FItemSetPtr& Value

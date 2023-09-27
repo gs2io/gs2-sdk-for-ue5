@@ -363,6 +363,34 @@ namespace Gs2::StateMachine::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStateMachineMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
+            Gs2::StateMachine::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StateMachineMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeStateMachineMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
+            Gs2::StateMachine::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "StateMachineMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain> FNamespaceDomain::StateMachineMaster(
         const int64 Version
     ) const
@@ -495,6 +523,37 @@ namespace Gs2::StateMachine::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::StateMachine::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::StateMachine::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::StateMachine::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::StateMachine::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::StateMachine::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::StateMachine::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

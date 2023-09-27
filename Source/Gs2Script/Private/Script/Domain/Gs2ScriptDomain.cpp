@@ -131,6 +131,28 @@ namespace Gs2::Script::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2ScriptDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Script::Model::FNamespace::TypeName,
+            "script:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2ScriptDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Script::Model::FNamespace::TypeName,
+            "script:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Script::Domain::Model::FNamespaceDomain> FGs2ScriptDomain::Namespace(
         const FString NamespaceName
     ) const

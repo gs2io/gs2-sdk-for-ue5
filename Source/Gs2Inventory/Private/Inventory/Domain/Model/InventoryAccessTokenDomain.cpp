@@ -180,6 +180,38 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FInventoryAccessTokenDomain::SubscribeItemSets(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Inventory::Model::FItemSet::TypeName,
+            Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                InventoryName,
+                "ItemSet"
+            ),
+            Callback
+        );
+    }
+
+    void FInventoryAccessTokenDomain::UnsubscribeItemSets(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FItemSet::TypeName,
+            Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                InventoryName,
+                "ItemSet"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Inventory::Domain::Model::FItemSetAccessTokenDomain> FInventoryAccessTokenDomain::ItemSet(
         const FString ItemName,
         const TOptional<FString> ItemSetName
@@ -291,6 +323,37 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<FAsyncTask<FInventoryAccessTokenDomain::FModelTask>> FInventoryAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FInventoryAccessTokenDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FInventoryAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Inventory::Model::FInventoryPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inventory::Model::FInventory::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                InventoryName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FInventory>(obj));
+            }
+        );
+    }
+
+    void FInventoryAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inventory::Model::FInventory::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                InventoryName
+            ),
+            CallbackID
+        );
     }
 }
 

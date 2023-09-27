@@ -116,6 +116,35 @@ namespace Gs2::Experience::Domain::Model
     TSharedPtr<FAsyncTask<FThresholdDomain::FModelTask>> FThresholdDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FThresholdDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FThresholdDomain::Subscribe(
+        TFunction<void(Gs2::Experience::Model::FThresholdPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Experience::Model::FThreshold::TypeName,
+            ParentKey,
+            Gs2::Experience::Domain::Model::FThresholdDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Experience::Model::FThreshold>(obj));
+            }
+        );
+    }
+
+    void FThresholdDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Experience::Model::FThreshold::TypeName,
+            ParentKey,
+            Gs2::Experience::Domain::Model::FThresholdDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

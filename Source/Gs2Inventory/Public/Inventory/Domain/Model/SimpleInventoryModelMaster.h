@@ -223,6 +223,14 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Inventory::Domain::Iterator::FDescribeSimpleItemModelMastersIteratorPtr SimpleItemModelMasters(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSimpleItemModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSimpleItemModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemModelMasterDomain> SimpleItemModelMaster(
             const FString ItemName
         ) const;
@@ -258,6 +266,14 @@ namespace Gs2::Inventory::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Inventory::Model::FSimpleInventoryModelMasterPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

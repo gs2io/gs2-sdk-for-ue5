@@ -142,6 +142,28 @@ namespace Gs2::Distributor::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2DistributorDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Distributor::Model::FNamespace::TypeName,
+            "distributor:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2DistributorDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Distributor::Model::FNamespace::TypeName,
+            "distributor:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Distributor::Domain::Model::FNamespaceDomain> FGs2DistributorDomain::Namespace(
         const FString NamespaceName
     ) const

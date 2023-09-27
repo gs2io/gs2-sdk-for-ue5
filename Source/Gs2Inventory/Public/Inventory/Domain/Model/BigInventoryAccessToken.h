@@ -122,6 +122,14 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Inventory::Domain::Iterator::FDescribeBigItemsIteratorPtr BigItems(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeBigItems(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeBigItems(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Inventory::Domain::Model::FBigItemAccessTokenDomain> BigItem(
             const FString ItemName
         ) const;
@@ -158,6 +166,14 @@ namespace Gs2::Inventory::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Inventory::Model::FBigInventoryPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

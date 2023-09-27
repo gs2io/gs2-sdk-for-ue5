@@ -180,6 +180,36 @@ namespace Gs2::Chat::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeSubscribes(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Chat::Model::FSubscribe::TypeName,
+            Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Subscribe"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeSubscribes(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Chat::Model::FSubscribe::TypeName,
+            Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Subscribe"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Chat::Domain::Model::FSubscribeAccessTokenDomain> FUserAccessTokenDomain::Subscribe(
         const FString RoomName
     ) const

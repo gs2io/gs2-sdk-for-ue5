@@ -139,6 +139,28 @@ namespace Gs2::Enchant::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2EnchantDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Enchant::Model::FNamespace::TypeName,
+            "enchant:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2EnchantDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Enchant::Model::FNamespace::TypeName,
+            "enchant:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Enchant::Domain::Model::FNamespaceDomain> FGs2EnchantDomain::Namespace(
         const FString NamespaceName
     ) const

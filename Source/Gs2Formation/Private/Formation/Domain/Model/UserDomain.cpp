@@ -95,6 +95,36 @@ namespace Gs2::Formation::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeMolds(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FMold::TypeName,
+            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Mold"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeMolds(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FMold::TypeName,
+            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Mold"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldDomain> FUserDomain::Mold(
         const FString MoldModelName
     ) const
@@ -120,6 +150,36 @@ namespace Gs2::Formation::Domain::Model
             NamespaceName,
             UserId,
             PropertyFormModelName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribePropertyForms(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FPropertyForm::TypeName,
+            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "PropertyForm"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribePropertyForms(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FPropertyForm::TypeName,
+            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "PropertyForm"
+            ),
+            CallbackID
         );
     }
 

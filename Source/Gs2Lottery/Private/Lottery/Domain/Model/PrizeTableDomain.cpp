@@ -156,6 +156,36 @@ namespace Gs2::Lottery::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FPrizeTableDomain::SubscribePrizeLimits(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lottery::Model::FPrizeLimit::TypeName,
+            Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheParentKey(
+                NamespaceName,
+                PrizeTableName,
+                "PrizeLimit"
+            ),
+            Callback
+        );
+    }
+
+    void FPrizeTableDomain::UnsubscribePrizeLimits(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FPrizeLimit::TypeName,
+            Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheParentKey(
+                NamespaceName,
+                PrizeTableName,
+                "PrizeLimit"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeLimitDomain> FPrizeTableDomain::PrizeLimit(
         const FString PrizeId
     ) const
@@ -262,6 +292,37 @@ namespace Gs2::Lottery::Domain::Model
 
     TSharedPtr<FAsyncTask<FPrizeTableDomain::FModelTask>> FPrizeTableDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FPrizeTableDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FPrizeTableDomain::Subscribe(
+        TFunction<void(Gs2::Lottery::Model::FPrizeTablePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Lottery::Model::FPrizeTable::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
+                PrizeTableName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FPrizeTable>(obj));
+            }
+        );
+    }
+
+    void FPrizeTableDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Lottery::Model::FPrizeTable::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
+                PrizeTableName
+            ),
+            CallbackID
+        );
     }
 }
 

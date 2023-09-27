@@ -136,6 +136,28 @@ namespace Gs2::Schedule::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2ScheduleDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Schedule::Model::FNamespace::TypeName,
+            "schedule:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2ScheduleDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Schedule::Model::FNamespace::TypeName,
+            "schedule:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Schedule::Domain::Model::FNamespaceDomain> FGs2ScheduleDomain::Namespace(
         const FString NamespaceName
     ) const

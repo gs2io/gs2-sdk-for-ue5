@@ -52,6 +52,20 @@ namespace Gs2::UE5::Enchant::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeBalanceParameterStatuses(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeBalanceParameterStatuses(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeBalanceParameterStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeBalanceParameterStatuses(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterStatusGameSessionDomainPtr FEzUserGameSessionDomain::BalanceParameterStatus(
         const FString ParameterName,
         const FString PropertyId
@@ -74,6 +88,20 @@ namespace Gs2::UE5::Enchant::Domain::Model
             Domain->RarityParameterStatuses(
                 ParameterName
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeRarityParameterStatuses(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRarityParameterStatuses(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeRarityParameterStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRarityParameterStatuses(
+            CallbackId
         );
     }
 

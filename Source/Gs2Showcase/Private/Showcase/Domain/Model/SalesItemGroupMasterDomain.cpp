@@ -362,6 +362,37 @@ namespace Gs2::Showcase::Domain::Model
     TSharedPtr<FAsyncTask<FSalesItemGroupMasterDomain::FModelTask>> FSalesItemGroupMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSalesItemGroupMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FSalesItemGroupMasterDomain::Subscribe(
+        TFunction<void(Gs2::Showcase::Model::FSalesItemGroupMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
+                SalesItemGroupName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FSalesItemGroupMaster>(obj));
+            }
+        );
+    }
+
+    void FSalesItemGroupMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
+                SalesItemGroupName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

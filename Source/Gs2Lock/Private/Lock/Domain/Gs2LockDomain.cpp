@@ -133,6 +133,28 @@ namespace Gs2::Lock::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2LockDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Lock::Model::FNamespace::TypeName,
+            "lock:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2LockDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Lock::Model::FNamespace::TypeName,
+            "lock:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Lock::Domain::Model::FNamespaceDomain> FGs2LockDomain::Namespace(
         const FString NamespaceName
     ) const

@@ -85,4 +85,21 @@ namespace Gs2::UE5::Datastore::Domain::Model
     TSharedPtr<FAsyncTask<FEzDataObjectHistoryGameSessionDomain::FModelTask>> FEzDataObjectHistoryGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzDataObjectHistoryGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Datastore::Model::FEzDataObjectHistoryPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Datastore::Model::FDataObjectHistoryPtr Item)
+            {
+                Callback(Gs2::UE5::Datastore::Model::FEzDataObjectHistory::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzDataObjectHistoryGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

@@ -136,6 +136,28 @@ namespace Gs2::SkillTree::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2SkillTreeDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::SkillTree::Model::FNamespace::TypeName,
+            "skillTree:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2SkillTreeDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::SkillTree::Model::FNamespace::TypeName,
+            "skillTree:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::SkillTree::Domain::Model::FNamespaceDomain> FGs2SkillTreeDomain::Namespace(
         const FString NamespaceName
     ) const

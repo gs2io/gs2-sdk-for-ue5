@@ -80,4 +80,21 @@ namespace Gs2::UE5::LoginReward::Domain::Model
     TSharedPtr<FAsyncTask<FEzReceiveStatusDomain::FModelTask>> FEzReceiveStatusDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzReceiveStatusDomain::Subscribe(TFunction<void(Gs2::UE5::LoginReward::Model::FEzReceiveStatusPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::LoginReward::Model::FReceiveStatusPtr Item)
+            {
+                Callback(Gs2::UE5::LoginReward::Model::FEzReceiveStatus::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzReceiveStatusDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

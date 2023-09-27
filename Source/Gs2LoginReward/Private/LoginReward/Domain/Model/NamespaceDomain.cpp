@@ -367,6 +367,34 @@ namespace Gs2::LoginReward::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBonusModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
+            Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BonusModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeBonusModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
+            Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BonusModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain> FNamespaceDomain::BonusModelMaster(
         const FString BonusModelName
     ) const
@@ -428,6 +456,34 @@ namespace Gs2::LoginReward::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBonusModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::LoginReward::Model::FBonusModel::TypeName,
+            Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BonusModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeBonusModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::LoginReward::Model::FBonusModel::TypeName,
+            Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BonusModel"
+            ),
+            CallbackID
         );
     }
 
@@ -535,6 +591,37 @@ namespace Gs2::LoginReward::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::LoginReward::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::LoginReward::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::LoginReward::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::LoginReward::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

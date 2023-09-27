@@ -81,6 +81,14 @@ namespace Gs2::Chat::Domain::Model
         Gs2::Chat::Domain::Iterator::FDescribeRoomsIteratorPtr Rooms(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeRooms(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRooms(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Chat::Domain::Model::FRoomDomain> Room(
             const FString RoomName,
             const TOptional<FString> Password = TOptional<FString>()
@@ -89,9 +97,25 @@ namespace Gs2::Chat::Domain::Model
         Gs2::Chat::Domain::Iterator::FDescribeSubscribesByUserIdIteratorPtr Subscribes(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSubscribes(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSubscribes(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         Gs2::Chat::Domain::Iterator::FDescribeSubscribesByRoomNameIteratorPtr SubscribesByRoomName(
             const FString RoomName
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscribesByRoomName(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSubscribesByRoomName(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Chat::Domain::Model::FSubscribeDomain> Subscribe(
             const FString RoomName

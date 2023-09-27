@@ -215,6 +215,36 @@ namespace Gs2::Matchmaking::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeRatings(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Matchmaking::Model::FRating::TypeName,
+            Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Rating"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeRatings(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Matchmaking::Model::FRating::TypeName,
+            Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Rating"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingAccessTokenDomain> FUserAccessTokenDomain::Rating(
         const FString RatingName
     ) const

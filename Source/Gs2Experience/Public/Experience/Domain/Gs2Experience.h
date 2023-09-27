@@ -104,6 +104,14 @@ namespace Gs2::Experience::Domain
         Gs2::Experience::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNamespaces(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeNamespaces(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Experience::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
         ) const;

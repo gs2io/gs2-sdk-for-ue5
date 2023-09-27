@@ -137,6 +137,28 @@ namespace Gs2::Version::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2VersionDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Version::Model::FNamespace::TypeName,
+            "version:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2VersionDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Version::Model::FNamespace::TypeName,
+            "version:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Version::Domain::Model::FNamespaceDomain> FGs2VersionDomain::Namespace(
         const FString NamespaceName
     ) const

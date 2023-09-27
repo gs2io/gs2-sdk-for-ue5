@@ -60,6 +60,20 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeReceiveStatuses(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeReceiveStatuses(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeReceiveStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeReceiveStatuses(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::LoginReward::Domain::Model::FEzReceiveStatusGameSessionDomainPtr FEzUserGameSessionDomain::ReceiveStatus(
         const FString BonusModelName
     ) const

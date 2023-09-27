@@ -312,6 +312,37 @@ namespace Gs2::Lottery::Domain::Model
     TSharedPtr<FAsyncTask<FBoxItemsAccessTokenDomain::FModelTask>> FBoxItemsAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBoxItemsAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FBoxItemsAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Lottery::Model::FBoxItemsPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Lottery::Model::FBoxItems::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                PrizeTableName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FBoxItems>(obj));
+            }
+        );
+    }
+
+    void FBoxItemsAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Lottery::Model::FBoxItems::TypeName,
+            ParentKey,
+            Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                PrizeTableName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

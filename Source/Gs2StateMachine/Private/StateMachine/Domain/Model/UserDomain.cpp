@@ -160,6 +160,36 @@ namespace Gs2::StateMachine::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeStatuses(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::StateMachine::Model::FStatus::TypeName,
+            Gs2::StateMachine::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Status"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeStatuses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::StateMachine::Model::FStatus::TypeName,
+            Gs2::StateMachine::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Status"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::StateMachine::Domain::Model::FStatusDomain> FUserDomain::Status(
         const FString StatusName
     ) const

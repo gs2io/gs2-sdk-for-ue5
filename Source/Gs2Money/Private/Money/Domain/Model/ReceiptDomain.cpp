@@ -202,6 +202,37 @@ namespace Gs2::Money::Domain::Model
     TSharedPtr<FAsyncTask<FReceiptDomain::FModelTask>> FReceiptDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FReceiptDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FReceiptDomain::Subscribe(
+        TFunction<void(Gs2::Money::Model::FReceiptPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Money::Model::FReceipt::TypeName,
+            ParentKey,
+            Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
+                TransactionId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Money::Model::FReceipt>(obj));
+            }
+        );
+    }
+
+    void FReceiptDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Money::Model::FReceipt::TypeName,
+            ParentKey,
+            Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
+                TransactionId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

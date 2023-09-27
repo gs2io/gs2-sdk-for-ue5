@@ -82,6 +82,10 @@ namespace Gs2::UE5::Formation::Domain::Model
         Gs2::UE5::Formation::Domain::Iterator::FEzDescribeFormsIteratorPtr Forms(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeForms(TFunction<void()> Callback);
+
+        void UnsubscribeForms(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomainPtr Form(
             const int32 Index
         ) const;
@@ -103,6 +107,10 @@ namespace Gs2::UE5::Formation::Domain::Model
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Formation::Model::FEzMoldPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzMoldGameSessionDomain> FEzMoldGameSessionDomainPtr;

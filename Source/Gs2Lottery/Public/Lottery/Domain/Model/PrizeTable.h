@@ -116,6 +116,14 @@ namespace Gs2::Lottery::Domain::Model
         Gs2::Lottery::Domain::Iterator::FDescribePrizeLimitsIteratorPtr PrizeLimits(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribePrizeLimits(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribePrizeLimits(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeLimitDomain> PrizeLimit(
             const FString PrizeId
         ) const;
@@ -151,6 +159,14 @@ namespace Gs2::Lottery::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Lottery::Model::FPrizeTablePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

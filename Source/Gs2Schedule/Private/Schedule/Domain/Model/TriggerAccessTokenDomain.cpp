@@ -300,6 +300,37 @@ namespace Gs2::Schedule::Domain::Model
     TSharedPtr<FAsyncTask<FTriggerAccessTokenDomain::FModelTask>> FTriggerAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FTriggerAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FTriggerAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Schedule::Model::FTriggerPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Schedule::Model::FTrigger::TypeName,
+            ParentKey,
+            Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
+                TriggerName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Schedule::Model::FTrigger>(obj));
+            }
+        );
+    }
+
+    void FTriggerAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Schedule::Model::FTrigger::TypeName,
+            ParentKey,
+            Gs2::Schedule::Domain::Model::FTriggerDomain::CreateCacheKey(
+                TriggerName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

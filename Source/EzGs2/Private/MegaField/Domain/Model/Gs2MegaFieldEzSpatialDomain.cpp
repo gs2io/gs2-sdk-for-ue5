@@ -85,4 +85,21 @@ namespace Gs2::UE5::MegaField::Domain::Model
     TSharedPtr<FAsyncTask<FEzSpatialDomain::FModelTask>> FEzSpatialDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzSpatialDomain::Subscribe(TFunction<void(Gs2::UE5::MegaField::Model::FEzSpatialPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::MegaField::Model::FSpatialPtr Item)
+            {
+                Callback(Gs2::UE5::MegaField::Model::FEzSpatial::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzSpatialDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

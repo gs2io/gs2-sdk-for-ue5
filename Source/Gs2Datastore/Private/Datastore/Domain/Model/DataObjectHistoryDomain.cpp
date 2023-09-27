@@ -245,6 +245,37 @@ namespace Gs2::Datastore::Domain::Model
     TSharedPtr<FAsyncTask<FDataObjectHistoryDomain::FModelTask>> FDataObjectHistoryDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDataObjectHistoryDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FDataObjectHistoryDomain::Subscribe(
+        TFunction<void(Gs2::Datastore::Model::FDataObjectHistoryPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Datastore::Model::FDataObjectHistory::TypeName,
+            ParentKey,
+            Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
+                Generation
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Datastore::Model::FDataObjectHistory>(obj));
+            }
+        );
+    }
+
+    void FDataObjectHistoryDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Datastore::Model::FDataObjectHistory::TypeName,
+            ParentKey,
+            Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
+                Generation
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

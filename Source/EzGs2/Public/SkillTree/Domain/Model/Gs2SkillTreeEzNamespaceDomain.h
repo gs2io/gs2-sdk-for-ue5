@@ -54,6 +54,10 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         Gs2::UE5::SkillTree::Domain::Iterator::FEzDescribeNodeModelsIteratorPtr NodeModels(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeNodeModels(TFunction<void()> Callback);
+
+        void UnsubscribeNodeModels(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::SkillTree::Domain::Model::FEzNodeModelDomainPtr NodeModel(
             const FString NodeModelName
         ) const;

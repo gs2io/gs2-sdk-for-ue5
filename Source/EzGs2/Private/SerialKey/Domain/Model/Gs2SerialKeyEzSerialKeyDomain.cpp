@@ -85,4 +85,21 @@ namespace Gs2::UE5::SerialKey::Domain::Model
     TSharedPtr<FAsyncTask<FEzSerialKeyDomain::FModelTask>> FEzSerialKeyDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzSerialKeyDomain::Subscribe(TFunction<void(Gs2::UE5::SerialKey::Model::FEzSerialKeyPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::SerialKey::Model::FSerialKeyPtr Item)
+            {
+                Callback(Gs2::UE5::SerialKey::Model::FEzSerialKey::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzSerialKeyDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

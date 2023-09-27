@@ -50,6 +50,20 @@ namespace Gs2::UE5::Enchant::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeBalanceParameterModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeBalanceParameterModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeBalanceParameterModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeBalanceParameterModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterModelDomainPtr FEzNamespaceDomain::BalanceParameterModel(
         const FString ParameterName
     ) const
@@ -68,6 +82,20 @@ namespace Gs2::UE5::Enchant::Domain::Model
         return MakeShared<Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeRarityParameterModelsIterator>(
             Domain->RarityParameterModels(
             )
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeRarityParameterModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeRarityParameterModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeRarityParameterModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeRarityParameterModels(
+            CallbackId
         );
     }
 

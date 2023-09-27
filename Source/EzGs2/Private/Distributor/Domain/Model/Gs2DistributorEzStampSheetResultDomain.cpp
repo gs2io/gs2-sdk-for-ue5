@@ -80,4 +80,21 @@ namespace Gs2::UE5::Distributor::Domain::Model
     TSharedPtr<FAsyncTask<FEzStampSheetResultDomain::FModelTask>> FEzStampSheetResultDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzStampSheetResultDomain::Subscribe(TFunction<void(Gs2::UE5::Distributor::Model::FEzStampSheetResultPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Distributor::Model::FStampSheetResultPtr Item)
+            {
+                Callback(Gs2::UE5::Distributor::Model::FEzStampSheetResult::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzStampSheetResultDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

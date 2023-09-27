@@ -123,4 +123,21 @@ namespace Gs2::UE5::Mission::Domain::Model
     TSharedPtr<FAsyncTask<FEzCounterModelDomain::FModelTask>> FEzCounterModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzCounterModelDomain::Subscribe(TFunction<void(Gs2::UE5::Mission::Model::FEzCounterModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Mission::Model::FCounterModelPtr Item)
+            {
+                Callback(Gs2::UE5::Mission::Model::FEzCounterModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzCounterModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

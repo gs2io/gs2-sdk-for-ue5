@@ -521,6 +521,39 @@ namespace Gs2::Formation::Domain::Model
     TSharedPtr<FAsyncTask<FPropertyFormAccessTokenDomain::FModelTask>> FPropertyFormAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FPropertyFormAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FPropertyFormAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Formation::Model::FPropertyFormPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Formation::Model::FPropertyForm::TypeName,
+            ParentKey,
+            Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
+                PropertyFormModelName,
+                PropertyId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Formation::Model::FPropertyForm>(obj));
+            }
+        );
+    }
+
+    void FPropertyFormAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Formation::Model::FPropertyForm::TypeName,
+            ParentKey,
+            Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
+                PropertyFormModelName,
+                PropertyId
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

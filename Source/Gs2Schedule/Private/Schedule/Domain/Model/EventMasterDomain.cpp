@@ -353,6 +353,37 @@ namespace Gs2::Schedule::Domain::Model
     TSharedPtr<FAsyncTask<FEventMasterDomain::FModelTask>> FEventMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FEventMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEventMasterDomain::Subscribe(
+        TFunction<void(Gs2::Schedule::Model::FEventMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Schedule::Model::FEventMaster::TypeName,
+            ParentKey,
+            Gs2::Schedule::Domain::Model::FEventMasterDomain::CreateCacheKey(
+                EventName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Schedule::Model::FEventMaster>(obj));
+            }
+        );
+    }
+
+    void FEventMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Schedule::Model::FEventMaster::TypeName,
+            ParentKey,
+            Gs2::Schedule::Domain::Model::FEventMasterDomain::CreateCacheKey(
+                EventName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -70,7 +70,10 @@ namespace Gs2::Dictionary::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -307,6 +310,36 @@ namespace Gs2::Dictionary::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeEntries(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Dictionary::Model::FEntry::TypeName,
+            Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Entry"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeEntries(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Dictionary::Model::FEntry::TypeName,
+            Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Entry"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain> FUserDomain::Entry(
         const FString EntryName
     ) const
@@ -328,7 +361,7 @@ namespace Gs2::Dictionary::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             ChildType;
@@ -338,7 +371,7 @@ namespace Gs2::Dictionary::Domain::Model
         TOptional<FString> UserId
     )
     {
-        return FString() +
+        return FString("") +
             (UserId.IsSet() ? *UserId : "null");
     }
 }

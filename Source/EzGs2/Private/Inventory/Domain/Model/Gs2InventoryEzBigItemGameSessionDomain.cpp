@@ -186,4 +186,21 @@ namespace Gs2::UE5::Inventory::Domain::Model
     TSharedPtr<FAsyncTask<FEzBigItemGameSessionDomain::FModelTask>> FEzBigItemGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzBigItemGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzBigItemPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Inventory::Model::FBigItemPtr Item)
+            {
+                Callback(Gs2::UE5::Inventory::Model::FEzBigItem::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzBigItemGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

@@ -225,6 +225,35 @@ namespace Gs2::Account::Domain::Model
     TSharedPtr<FAsyncTask<FDataOwnerDomain::FModelTask>> FDataOwnerDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDataOwnerDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FDataOwnerDomain::Subscribe(
+        TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Account::Model::FDataOwner::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Account::Model::FDataOwner>(obj));
+            }
+        );
+    }
+
+    void FDataOwnerDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Account::Model::FDataOwner::TypeName,
+            ParentKey,
+            Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

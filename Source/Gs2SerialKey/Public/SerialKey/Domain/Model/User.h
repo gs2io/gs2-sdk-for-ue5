@@ -164,6 +164,14 @@ namespace Gs2::SerialKey::Domain::Model
             const TOptional<FString> IssueJobName
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeSerialKeys(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeSerialKeys(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain> SerialKey(
             const FString SerialKeyCode
         ) const;

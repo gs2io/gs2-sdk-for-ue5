@@ -52,6 +52,10 @@ namespace Gs2::UE5::Stamina::Domain::Model
         Gs2::UE5::Stamina::Domain::Iterator::FEzDescribeStaminasIteratorPtr Staminas(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStaminas(TFunction<void()> Callback);
+
+        void UnsubscribeStaminas(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomainPtr Stamina(
             const FString StaminaName
         ) const;

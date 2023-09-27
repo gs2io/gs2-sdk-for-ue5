@@ -84,6 +84,14 @@ namespace Gs2::LoginReward::Domain::Model
         Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesIteratorPtr ReceiveStatuses(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeReceiveStatuses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeReceiveStatuses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::LoginReward::Domain::Model::FReceiveStatusAccessTokenDomain> ReceiveStatus(
             const FString BonusModelName
         ) const;

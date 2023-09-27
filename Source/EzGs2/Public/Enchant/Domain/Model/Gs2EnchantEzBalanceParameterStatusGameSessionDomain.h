@@ -90,6 +90,10 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Enchant::Model::FEzBalanceParameterStatusPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
+
     };
     typedef TSharedPtr<FEzBalanceParameterStatusGameSessionDomain> FEzBalanceParameterStatusGameSessionDomainPtr;
 }

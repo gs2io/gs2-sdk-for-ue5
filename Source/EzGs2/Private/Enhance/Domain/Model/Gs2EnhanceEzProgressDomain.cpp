@@ -95,4 +95,21 @@ namespace Gs2::UE5::Enhance::Domain::Model
     TSharedPtr<FAsyncTask<FEzProgressDomain::FModelTask>> FEzProgressDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzProgressDomain::Subscribe(TFunction<void(Gs2::UE5::Enhance::Model::FEzProgressPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Enhance::Model::FProgressPtr Item)
+            {
+                Callback(Gs2::UE5::Enhance::Model::FEzProgress::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzProgressDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

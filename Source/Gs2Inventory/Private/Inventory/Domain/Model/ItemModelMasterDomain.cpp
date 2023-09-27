@@ -387,6 +387,37 @@ namespace Gs2::Inventory::Domain::Model
     TSharedPtr<FAsyncTask<FItemModelMasterDomain::FModelTask>> FItemModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FItemModelMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FItemModelMasterDomain::Subscribe(
+        TFunction<void(Gs2::Inventory::Model::FItemModelMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inventory::Model::FItemModelMaster::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
+                ItemName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FItemModelMaster>(obj));
+            }
+        );
+    }
+
+    void FItemModelMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inventory::Model::FItemModelMaster::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
+                ItemName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

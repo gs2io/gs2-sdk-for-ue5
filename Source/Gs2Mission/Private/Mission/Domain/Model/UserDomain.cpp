@@ -93,6 +93,36 @@ namespace Gs2::Mission::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeCounters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FCounter::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Counter"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeCounters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FCounter::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Counter"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Mission::Domain::Model::FCounterDomain> FUserDomain::Counter(
         const FString CounterName
     ) const
@@ -116,6 +146,36 @@ namespace Gs2::Mission::Domain::Model
             Client,
             NamespaceName,
             UserId
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeCompletes(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Mission::Model::FComplete::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Complete"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeCompletes(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FComplete::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Complete"
+            ),
+            CallbackID
         );
     }
 

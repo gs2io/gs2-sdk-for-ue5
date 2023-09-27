@@ -243,6 +243,36 @@ namespace Gs2::Quest::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeProgresses(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Quest::Model::FProgress::TypeName,
+            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Progress"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeProgresses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Quest::Model::FProgress::TypeName,
+            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Progress"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain> FUserDomain::Progress(
     ) const
     {
@@ -264,6 +294,36 @@ namespace Gs2::Quest::Domain::Model
             Client,
             NamespaceName,
             UserId
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeCompletedQuestLists(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Quest::Model::FCompletedQuestList::TypeName,
+            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "CompletedQuestList"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeCompletedQuestLists(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Quest::Model::FCompletedQuestList::TypeName,
+            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "CompletedQuestList"
+            ),
+            CallbackID
         );
     }
 

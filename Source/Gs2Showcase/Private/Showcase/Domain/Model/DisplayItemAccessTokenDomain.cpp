@@ -87,7 +87,12 @@ namespace Gs2::Showcase::Domain::Model
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        ShowcaseName(From.ShowcaseName),
+        DisplayItemId(From.DisplayItemId),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -180,7 +185,7 @@ namespace Gs2::Showcase::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (ShowcaseName.IsSet() ? *ShowcaseName : "null") + ":" +
@@ -192,7 +197,7 @@ namespace Gs2::Showcase::Domain::Model
         TOptional<FString> DisplayItemId
     )
     {
-        return FString() +
+        return FString("") +
             (DisplayItemId.IsSet() ? *DisplayItemId : "null");
     }
 
@@ -230,6 +235,37 @@ namespace Gs2::Showcase::Domain::Model
 
     TSharedPtr<FAsyncTask<FDisplayItemAccessTokenDomain::FModelTask>> FDisplayItemAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDisplayItemAccessTokenDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FDisplayItemAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Showcase::Model::FDisplayItemPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Showcase::Model::FDisplayItem::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FDisplayItemDomain::CreateCacheKey(
+                DisplayItemId
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FDisplayItem>(obj));
+            }
+        );
+    }
+
+    void FDisplayItemAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Showcase::Model::FDisplayItem::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FDisplayItemDomain::CreateCacheKey(
+                DisplayItemId
+            ),
+            CallbackID
+        );
     }
 }
 

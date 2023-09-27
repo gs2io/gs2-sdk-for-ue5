@@ -406,6 +406,35 @@ namespace Gs2::Version::Domain::Model
     TSharedPtr<FAsyncTask<FCurrentVersionMasterDomain::FModelTask>> FCurrentVersionMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentVersionMasterDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FCurrentVersionMasterDomain::Subscribe(
+        TFunction<void(Gs2::Version::Model::FCurrentVersionMasterPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Version::Model::FCurrentVersionMaster::TypeName,
+            ParentKey,
+            Gs2::Version::Domain::Model::FCurrentVersionMasterDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Version::Model::FCurrentVersionMaster>(obj));
+            }
+        );
+    }
+
+    void FCurrentVersionMasterDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Version::Model::FCurrentVersionMaster::TypeName,
+            ParentKey,
+            Gs2::Version::Domain::Model::FCurrentVersionMasterDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

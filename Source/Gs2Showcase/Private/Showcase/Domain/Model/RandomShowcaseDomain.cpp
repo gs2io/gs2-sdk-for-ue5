@@ -102,6 +102,38 @@ namespace Gs2::Showcase::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FRandomShowcaseDomain::SubscribeRandomDisplayItems(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+            Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                ShowcaseName,
+                "RandomDisplayItem"
+            ),
+            Callback
+        );
+    }
+
+    void FRandomShowcaseDomain::UnsubscribeRandomDisplayItems(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+            Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                ShowcaseName,
+                "RandomDisplayItem"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain> FRandomShowcaseDomain::RandomDisplayItem(
         const FString DisplayItemName
     ) const
@@ -174,6 +206,37 @@ namespace Gs2::Showcase::Domain::Model
 
     TSharedPtr<FAsyncTask<FRandomShowcaseDomain::FModelTask>> FRandomShowcaseDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRandomShowcaseDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FRandomShowcaseDomain::Subscribe(
+        TFunction<void(Gs2::Showcase::Model::FRandomShowcasePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Showcase::Model::FRandomShowcase::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheKey(
+                ShowcaseName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FRandomShowcase>(obj));
+            }
+        );
+    }
+
+    void FRandomShowcaseDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Showcase::Model::FRandomShowcase::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheKey(
+                ShowcaseName
+            ),
+            CallbackID
+        );
     }
 }
 

@@ -303,6 +303,35 @@ namespace Gs2::Friend::Domain::Model
     TSharedPtr<FAsyncTask<FProfileAccessTokenDomain::FModelTask>> FProfileAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FProfileAccessTokenDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FProfileAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Friend::Model::FProfilePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Friend::Model::FProfile::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FProfileDomain::CreateCacheKey(
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FProfile>(obj));
+            }
+        );
+    }
+
+    void FProfileAccessTokenDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Friend::Model::FProfile::TypeName,
+            ParentKey,
+            Gs2::Friend::Domain::Model::FProfileDomain::CreateCacheKey(
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -525,6 +525,34 @@ namespace Gs2::Formation::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMoldModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FMoldModel::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MoldModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeMoldModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FMoldModel::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MoldModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldModelDomain> FNamespaceDomain::MoldModel(
         const FString MoldModelName
     ) const
@@ -546,6 +574,34 @@ namespace Gs2::Formation::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribePropertyFormModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FPropertyFormModel::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "PropertyFormModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribePropertyFormModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FPropertyFormModel::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "PropertyFormModel"
+            ),
+            CallbackID
         );
     }
 
@@ -601,6 +657,34 @@ namespace Gs2::Formation::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribePropertyFormModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FPropertyFormModelMaster::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "PropertyFormModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribePropertyFormModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FPropertyFormModelMaster::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "PropertyFormModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain> FNamespaceDomain::PropertyFormModelMaster(
         const FString PropertyFormModelName
     ) const
@@ -625,6 +709,34 @@ namespace Gs2::Formation::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeFormModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FFormModelMaster::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "FormModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeFormModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FFormModelMaster::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "FormModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Formation::Domain::Model::FFormModelMasterDomain> FNamespaceDomain::FormModelMaster(
         const FString FormModelName
     ) const
@@ -646,6 +758,34 @@ namespace Gs2::Formation::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMoldModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Formation::Model::FMoldModelMaster::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MoldModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeMoldModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Formation::Model::FMoldModelMaster::TypeName,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MoldModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -753,6 +893,37 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Formation::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Formation::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Formation::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Formation::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

@@ -230,6 +230,37 @@ namespace Gs2::Limit::Domain::Model
     TSharedPtr<FAsyncTask<FLimitModelDomain::FModelTask>> FLimitModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FLimitModelDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FLimitModelDomain::Subscribe(
+        TFunction<void(Gs2::Limit::Model::FLimitModelPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Limit::Model::FLimitModel::TypeName,
+            ParentKey,
+            Gs2::Limit::Domain::Model::FLimitModelDomain::CreateCacheKey(
+                LimitName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Limit::Model::FLimitModel>(obj));
+            }
+        );
+    }
+
+    void FLimitModelDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Limit::Model::FLimitModel::TypeName,
+            ParentKey,
+            Gs2::Limit::Domain::Model::FLimitModelDomain::CreateCacheKey(
+                LimitName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

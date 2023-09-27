@@ -27,6 +27,7 @@
 #include "Gs2RankingEzRankingDomain.h"
 #include "Ranking/Domain/Iterator/Gs2RankingEzDescribeNearRankingsIterator.h"
 #include "Gs2RankingEzScoreDomain.h"
+#include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Util/Profile.h"
 
 namespace Gs2::UE5::Ranking::Domain::Model
@@ -69,6 +70,10 @@ namespace Gs2::UE5::Ranking::Domain::Model
         TSharedPtr<FAsyncTask<FModelTask>> Model(
             FString ScorerUserId
         );
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Ranking::Model::FEzRankingPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzRankingDomain> FEzRankingDomainPtr;

@@ -191,6 +191,39 @@ namespace Gs2::Matchmaking::Domain::Model
     TSharedPtr<FAsyncTask<FVoteDomain::FModelTask>> FVoteDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FVoteDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FVoteDomain::Subscribe(
+        TFunction<void(Gs2::Matchmaking::Model::FVotePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Matchmaking::Model::FVote::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FVoteDomain::CreateCacheKey(
+                RatingName,
+                GatheringName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FVote>(obj));
+            }
+        );
+    }
+
+    void FVoteDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Matchmaking::Model::FVote::TypeName,
+            ParentKey,
+            Gs2::Matchmaking::Domain::Model::FVoteDomain::CreateCacheKey(
+                RatingName,
+                GatheringName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

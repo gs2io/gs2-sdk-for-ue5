@@ -451,6 +451,34 @@ namespace Gs2::Enchant::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBalanceParameterModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Enchant::Model::FBalanceParameterModel::TypeName,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BalanceParameterModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeBalanceParameterModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Enchant::Model::FBalanceParameterModel::TypeName,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BalanceParameterModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterModelDomain> FNamespaceDomain::BalanceParameterModel(
         const FString ParameterName
     ) const
@@ -472,6 +500,34 @@ namespace Gs2::Enchant::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBalanceParameterModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Enchant::Model::FBalanceParameterModelMaster::TypeName,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BalanceParameterModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeBalanceParameterModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Enchant::Model::FBalanceParameterModelMaster::TypeName,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BalanceParameterModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -499,6 +555,34 @@ namespace Gs2::Enchant::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRarityParameterModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Enchant::Model::FRarityParameterModel::TypeName,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RarityParameterModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRarityParameterModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Enchant::Model::FRarityParameterModel::TypeName,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RarityParameterModel"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterModelDomain> FNamespaceDomain::RarityParameterModel(
         const FString ParameterName
     ) const
@@ -520,6 +604,34 @@ namespace Gs2::Enchant::Domain::Model
             Cache,
             Client,
             NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRarityParameterModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Enchant::Model::FRarityParameterModelMaster::TypeName,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RarityParameterModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeRarityParameterModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Enchant::Model::FRarityParameterModelMaster::TypeName,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "RarityParameterModelMaster"
+            ),
+            CallbackID
         );
     }
 
@@ -655,6 +767,37 @@ namespace Gs2::Enchant::Domain::Model
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
+        TFunction<void(Gs2::Enchant::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Enchant::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Enchant::Model::FNamespace>(obj));
+            }
+        );
+    }
+
+    void FNamespaceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Enchant::Model::FNamespace::TypeName,
+            ParentKey,
+            Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheKey(
+                NamespaceName
+            ),
+            CallbackID
+        );
     }
 }
 

@@ -485,6 +485,37 @@ namespace Gs2::Inventory::Domain::Model
     TSharedPtr<FAsyncTask<FBigItemDomain::FModelTask>> FBigItemDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBigItemDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FBigItemDomain::Subscribe(
+        TFunction<void(Gs2::Inventory::Model::FBigItemPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Inventory::Model::FBigItem::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
+                ItemName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FBigItem>(obj));
+            }
+        );
+    }
+
+    void FBigItemDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Inventory::Model::FBigItem::TypeName,
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
+                ItemName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -189,6 +189,14 @@ namespace Gs2::News::Domain::Model
         Gs2::News::Domain::Iterator::FDescribeProgressesIteratorPtr Progresses(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeProgresses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeProgresses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::News::Domain::Model::FProgressDomain> Progress(
             const FString UploadToken
         ) const;
@@ -231,6 +239,14 @@ namespace Gs2::News::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::News::Model::FNamespacePtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

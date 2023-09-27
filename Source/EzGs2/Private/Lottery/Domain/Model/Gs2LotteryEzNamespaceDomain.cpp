@@ -74,6 +74,20 @@ namespace Gs2::UE5::Lottery::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeLotteryModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeLotteryModels(
+            Callback
+        );
+    }
+
+    void FEzNamespaceDomain::UnsubscribeLotteryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeLotteryModels(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Lottery::Domain::Model::FEzLotteryModelDomainPtr FEzNamespaceDomain::LotteryModel(
         const FString LotteryName
     ) const

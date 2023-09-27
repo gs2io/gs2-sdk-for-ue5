@@ -123,4 +123,21 @@ namespace Gs2::UE5::Exchange::Domain::Model
     TSharedPtr<FAsyncTask<FEzIncrementalRateModelDomain::FModelTask>> FEzIncrementalRateModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzIncrementalRateModelDomain::Subscribe(TFunction<void(Gs2::UE5::Exchange::Model::FEzIncrementalRateModelPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Exchange::Model::FIncrementalRateModelPtr Item)
+            {
+                Callback(Gs2::UE5::Exchange::Model::FEzIncrementalRateModel::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzIncrementalRateModelDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

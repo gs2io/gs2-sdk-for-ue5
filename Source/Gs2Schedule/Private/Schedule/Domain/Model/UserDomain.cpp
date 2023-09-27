@@ -88,6 +88,36 @@ namespace Gs2::Schedule::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeTriggers(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Schedule::Model::FTrigger::TypeName,
+            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Trigger"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeTriggers(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Schedule::Model::FTrigger::TypeName,
+            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Trigger"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerDomain> FUserDomain::Trigger(
         const FString TriggerName
     ) const
@@ -111,6 +141,36 @@ namespace Gs2::Schedule::Domain::Model
             Client,
             NamespaceName,
             UserId
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeEvents(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Schedule::Model::FEvent::TypeName,
+            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Event"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeEvents(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Schedule::Model::FEvent::TypeName,
+            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Event"
+            ),
+            CallbackID
         );
     }
 

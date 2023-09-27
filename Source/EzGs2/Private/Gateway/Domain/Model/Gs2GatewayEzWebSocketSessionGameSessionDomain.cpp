@@ -133,4 +133,21 @@ namespace Gs2::UE5::Gateway::Domain::Model
     TSharedPtr<FAsyncTask<FEzWebSocketSessionGameSessionDomain::FModelTask>> FEzWebSocketSessionGameSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FEzWebSocketSessionGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Gateway::Model::FEzWebSocketSessionPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Gateway::Model::FWebSocketSessionPtr Item)
+            {
+                Callback(Gs2::UE5::Gateway::Model::FEzWebSocketSession::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzWebSocketSessionGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
+        );
+    }
 }

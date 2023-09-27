@@ -136,6 +136,28 @@ namespace Gs2::News::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2NewsDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::News::Model::FNamespace::TypeName,
+            "news:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2NewsDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::News::Model::FNamespace::TypeName,
+            "news:Namespace",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::News::Domain::Model::FNamespaceDomain> FGs2NewsDomain::Namespace(
         const FString NamespaceName
     ) const
