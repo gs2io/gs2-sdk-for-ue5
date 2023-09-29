@@ -19,6 +19,14 @@
 namespace Gs2::UE5::Lottery::Model
 {
 
+    TSharedPtr<FEzBoxItem> FEzBoxItem::WithPrizeId(
+        const TOptional<FString> PrizeId
+    )
+    {
+        this->PrizeIdValue = PrizeId;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzBoxItem> FEzBoxItem::WithAcquireActions(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Lottery::Model::FEzAcquireAction>>> AcquireActions
     )
@@ -41,6 +49,10 @@ namespace Gs2::UE5::Lottery::Model
     {
         this->InitialValue = Initial;
         return SharedThis(this);
+    }
+    TOptional<FString> FEzBoxItem::GetPrizeId() const
+    {
+        return PrizeIdValue;
     }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Lottery::Model::FEzAcquireAction>>> FEzBoxItem::GetAcquireActions() const
     {
@@ -76,6 +88,7 @@ namespace Gs2::UE5::Lottery::Model
     Gs2::Lottery::Model::FBoxItemPtr FEzBoxItem::ToModel() const
     {
         return MakeShared<Gs2::Lottery::Model::FBoxItem>()
+            ->WithPrizeId(PrizeIdValue)
             ->WithAcquireActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::Lottery::Model::FAcquireAction>>>();
@@ -101,6 +114,7 @@ namespace Gs2::UE5::Lottery::Model
             return nullptr;
         }
         return MakeShared<FEzBoxItem>()
+            ->WithPrizeId(Model->GetPrizeId())
             ->WithAcquireActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzAcquireAction>>>();

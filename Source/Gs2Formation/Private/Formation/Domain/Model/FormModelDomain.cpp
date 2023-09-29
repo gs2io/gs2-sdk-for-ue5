@@ -52,8 +52,7 @@ namespace Gs2::Formation::Domain::Model
         const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> MoldModelName,
-        const TOptional<FString> FormModelName
+        const TOptional<FString> MoldModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -63,7 +62,6 @@ namespace Gs2::Formation::Domain::Model
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Session)),
         NamespaceName(NamespaceName),
         MoldModelName(MoldModelName),
-        FormModelName(FormModelName),
         ParentKey(Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
             NamespaceName,
             MoldModelName,
@@ -82,7 +80,6 @@ namespace Gs2::Formation::Domain::Model
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         MoldModelName(From.MoldModelName),
-        FormModelName(From.FormModelName),
         ParentKey(From.ParentKey)
     {
 
@@ -108,8 +105,7 @@ namespace Gs2::Formation::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithMoldModelName(Self->MoldModelName)
-            ->WithFormModelName(Self->FormModelName);
+            ->WithMoldModelName(Self->MoldModelName);
         const auto Future = Self->Client->GetFormModel(
             Request
         );
@@ -131,7 +127,6 @@ namespace Gs2::Formation::Domain::Model
                     "FormModel"
                 );
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
                 );
                 Self->Cache->Put(
                     Gs2::Formation::Model::FFormModel::TypeName,
@@ -155,23 +150,19 @@ namespace Gs2::Formation::Domain::Model
     FString FFormModelDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> MoldModelName,
-        TOptional<FString> FormModelName,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (MoldModelName.IsSet() ? *MoldModelName : "null") + ":" +
-            (FormModelName.IsSet() ? *FormModelName : "null") + ":" +
             ChildType;
     }
 
     FString FFormModelDomain::CreateCacheKey(
-        TOptional<FString> FormModelName
     )
     {
-        return FString("") +
-            (FormModelName.IsSet() ? *FormModelName : "null");
+        return "Singleton";
     }
 
     FFormModelDomain::FModelTask::FModelTask(
@@ -197,7 +188,6 @@ namespace Gs2::Formation::Domain::Model
         auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FFormModel>(
             Self->ParentKey,
             Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                Self->FormModelName
             ),
             &Value
         );
@@ -214,7 +204,6 @@ namespace Gs2::Formation::Domain::Model
                 }
 
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                    Self->FormModelName
                 );
                 Self->Cache->Put(
                     Gs2::Formation::Model::FFormModel::TypeName,
@@ -232,7 +221,6 @@ namespace Gs2::Formation::Domain::Model
             Self->Cache->TryGet<Gs2::Formation::Model::FFormModel>(
                 Self->ParentKey,
                 Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                    Self->FormModelName
                 ),
                 &Value
             );
@@ -255,7 +243,6 @@ namespace Gs2::Formation::Domain::Model
             Gs2::Formation::Model::FFormModel::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                FormModelName
             ),
             [Callback](TSharedPtr<Gs2Object> obj)
             {
@@ -272,7 +259,6 @@ namespace Gs2::Formation::Domain::Model
             Gs2::Formation::Model::FFormModel::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-                FormModelName
             ),
             CallbackID
         );

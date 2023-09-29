@@ -19,6 +19,7 @@
 namespace Gs2::Lottery::Model
 {
     FBoxItem::FBoxItem():
+        PrizeIdValue(TOptional<FString>()),
         AcquireActionsValue(nullptr),
         RemainingValue(TOptional<int32>()),
         InitialValue(TOptional<int32>())
@@ -28,10 +29,19 @@ namespace Gs2::Lottery::Model
     FBoxItem::FBoxItem(
         const FBoxItem& From
     ):
+        PrizeIdValue(From.PrizeIdValue),
         AcquireActionsValue(From.AcquireActionsValue),
         RemainingValue(From.RemainingValue),
         InitialValue(From.InitialValue)
     {
+    }
+
+    TSharedPtr<FBoxItem> FBoxItem::WithPrizeId(
+        const TOptional<FString> PrizeId
+    )
+    {
+        this->PrizeIdValue = PrizeId;
+        return SharedThis(this);
     }
 
     TSharedPtr<FBoxItem> FBoxItem::WithAcquireActions(
@@ -56,6 +66,10 @@ namespace Gs2::Lottery::Model
     {
         this->InitialValue = Initial;
         return SharedThis(this);
+    }
+    TOptional<FString> FBoxItem::GetPrizeId() const
+    {
+        return PrizeIdValue;
     }
     TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FBoxItem::GetAcquireActions() const
     {
@@ -94,6 +108,15 @@ namespace Gs2::Lottery::Model
             return nullptr;
         }
         return MakeShared<FBoxItem>()
+            ->WithPrizeId(Data->HasField("prizeId") ? [Data]() -> TOptional<FString>
+                {
+                    FString v;
+                    if (Data->TryGetStringField("prizeId", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
@@ -129,6 +152,10 @@ namespace Gs2::Lottery::Model
     TSharedPtr<FJsonObject> FBoxItem::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (PrizeIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("prizeId", PrizeIdValue.GetValue());
+        }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {
             TArray<TSharedPtr<FJsonValue>> v;

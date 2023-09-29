@@ -112,7 +112,6 @@ namespace Gs2::Formation::Domain::Model
         );
 
         TSharedPtr<Gs2::Formation::Domain::Model::FFormModelDomain> FormModel(
-            const FString FormModelName
         ) const;
 
         static FString CreateCacheParentKey(

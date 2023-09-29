@@ -86,7 +86,7 @@ namespace Gs2::Formation::Model
 
     TOptional<FString> FFormModel::GetRegionFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):model:mold:(?<moldModelName>.+):model:form:(?<formModelName>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):model:mold:(?<moldModelName>.+):form"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -97,7 +97,7 @@ namespace Gs2::Formation::Model
 
     TOptional<FString> FFormModel::GetOwnerIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):model:mold:(?<moldModelName>.+):model:form:(?<formModelName>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):model:mold:(?<moldModelName>.+):form"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -108,7 +108,7 @@ namespace Gs2::Formation::Model
 
     TOptional<FString> FFormModel::GetNamespaceNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):model:mold:(?<moldModelName>.+):model:form:(?<formModelName>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):model:mold:(?<moldModelName>.+):form"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -119,22 +119,11 @@ namespace Gs2::Formation::Model
 
     TOptional<FString> FFormModel::GetMoldModelNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):model:mold:(?<moldModelName>.+):model:form:(?<formModelName>.+)"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):model:mold:(?<moldModelName>.+):form"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
             return Matcher.GetCaptureGroup(4);
-        }
-        return TOptional<FString>();
-    }
-
-    TOptional<FString> FFormModel::GetFormModelNameFromGrn(const FString Grn)
-    {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):formation:(?<namespaceName>.+):model:mold:(?<moldModelName>.+):model:form:(?<formModelName>.+)"));
-        FRegexMatcher Matcher(Pattern, Grn);
-        while (Matcher.FindNext())
-        {
-            return Matcher.GetCaptureGroup(5);
         }
         return TOptional<FString>();
     }

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Friend/Domain/Model/Gs2FriendEzReceiveFriendRequestGameSessionDomain.h"
@@ -39,6 +41,54 @@ namespace Gs2::UE5::Friend::Domain::Model
         Gs2::UE5::Util::FProfilePtr Profile
     ): Domain(Domain), ProfileValue(Profile) {
 
+    }
+
+    FEzReceiveFriendRequestGameSessionDomain::FGetReceiveRequestTask::FGetReceiveRequestTask(
+        TSharedPtr<FEzReceiveFriendRequestGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzReceiveFriendRequestGameSessionDomain::FGetReceiveRequestTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzFriendRequest>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FGetReceiveRequestTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Get(
+                    MakeShared<Gs2::Friend::Request::FGetReceiveRequestRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = Gs2::UE5::Friend::Model::FEzFriendRequest::FromModel(
+                    Task->GetTask().Result()
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzReceiveFriendRequestGameSessionDomain::FGetReceiveRequestTask>> FEzReceiveFriendRequestGameSessionDomain::GetReceiveRequest(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FGetReceiveRequestTask>>(
+            this->AsShared()
+        );
     }
 
     FEzReceiveFriendRequestGameSessionDomain::FAcceptTask::FAcceptTask(
@@ -136,6 +186,63 @@ namespace Gs2::UE5::Friend::Domain::Model
     {
         return Gs2::Core::Util::New<FAsyncTask<FRejectTask>>(
             this->AsShared()
+        );
+    }
+
+    FEzReceiveFriendRequestGameSessionDomain::FModelTask::FModelTask(
+        TSharedPtr<FEzReceiveFriendRequestGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzReceiveFriendRequestGameSessionDomain::FModelTask::Action(
+        TSharedPtr<Gs2::UE5::Friend::Model::FEzFriendRequestPtr> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FModelTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Model();
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = Gs2::UE5::Friend::Model::FEzFriendRequest::FromModel(Task->GetTask().Result());
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzReceiveFriendRequestGameSessionDomain::FModelTask>> FEzReceiveFriendRequestGameSessionDomain::Model() {
+        return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FEzReceiveFriendRequestGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzFriendRequestPtr)> Callback)
+    {
+        return Domain->Subscribe(
+            [&](Gs2::Friend::Model::FFriendRequestPtr Item)
+            {
+                Callback(Gs2::UE5::Friend::Model::FEzFriendRequest::FromModel(Item));
+            }
+        );
+    }
+
+    void FEzReceiveFriendRequestGameSessionDomain::Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->Unsubscribe(
+            CallbackId
         );
     }
 }

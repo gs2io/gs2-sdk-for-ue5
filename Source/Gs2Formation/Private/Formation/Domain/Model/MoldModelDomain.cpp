@@ -147,7 +147,6 @@ namespace Gs2::Formation::Domain::Model
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FFormModelDomain> FMoldModelDomain::FormModel(
-        const FString FormModelName
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FFormModelDomain>(
@@ -156,8 +155,7 @@ namespace Gs2::Formation::Domain::Model
             StampSheetConfiguration,
             Session,
             NamespaceName,
-            MoldModelName,
-            FormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(FormModelName)
+            MoldModelName
         );
     }
 

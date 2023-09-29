@@ -16,48 +16,48 @@
  * deny overwrite
  */
 
-#include "Formation/Action/Gs2FormationFormModelGetValue.h"
+#include "Friend/Action/Gs2FriendFollowUserGetValue.h"
 #include "Core/BpGs2Constant.h"
 
-UGs2FormationFormModelGetValueAsyncFunction::UGs2FormationFormModelGetValueAsyncFunction(
+UGs2FriendFollowUserGetValueAsyncFunction::UGs2FriendFollowUserGetValueAsyncFunction(
     const FObjectInitializer& ObjectInitializer
 ): Super(ObjectInitializer)
 {
     
 }
 
-UGs2FormationFormModelGetValueAsyncFunction* UGs2FormationFormModelGetValueAsyncFunction::FormModelGetValue(
+UGs2FriendFollowUserGetValueAsyncFunction* UGs2FriendFollowUserGetValueAsyncFunction::FollowUserGetValue(
     UObject* WorldContextObject,
-    FGs2FormationFormModel FormModel
+    FGs2FriendOwnFollowUser FollowUser
 )
 {
-    UGs2FormationFormModelGetValueAsyncFunction* Action = NewObject<UGs2FormationFormModelGetValueAsyncFunction>();
+    UGs2FriendFollowUserGetValueAsyncFunction* Action = NewObject<UGs2FriendFollowUserGetValueAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (FormModel.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationFormModelGetValueAsyncFunction::FormModelGetValue] FormModel parameter specification is missing."))
+    if (FollowUser.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendFollowUserGetValueAsyncFunction::FollowUserGetValue] FollowUser parameter specification is missing."))
         return Action;
     }
-    Action->FormModel = FormModel;
+    Action->FollowUser = FollowUser;
     return Action;
 }
 
-void UGs2FormationFormModelGetValueAsyncFunction::Activate()
+void UGs2FriendFollowUserGetValueAsyncFunction::Activate()
 {
-    auto Future = FormModel.Value->Model(
+    auto Future = FollowUser.Value->Model(
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
-        auto ReturnValue = EzFormModelToFGs2FormationFormModelValue(Result);
+        auto ReturnValue = EzFollowUserToFGs2FriendFollowUserValue(Result);
         const FGs2Error ReturnError;
         OnSuccess.Broadcast(ReturnValue, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](const auto Error)
     {
-        FGs2FormationFormModelValue ReturnFormModel;
+        FGs2FriendFollowUserValue ReturnFollowUser;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
-        OnError.Broadcast(ReturnFormModel, ReturnError);
+        OnError.Broadcast(ReturnFollowUser, ReturnError);
         SetReadyToDestroy();
     });
     Future->StartBackgroundTask();

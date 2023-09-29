@@ -85,12 +85,10 @@ namespace Gs2::UE5::Formation::Domain::Model
     }
 
     Gs2::UE5::Formation::Domain::Model::FEzFormModelDomainPtr FEzMoldModelDomain::FormModel(
-        const FString FormModelName
     ) const
     {
         return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzFormModelDomain>(
             Domain->FormModel(
-                FormModelName
             ),
             ProfileValue
         );

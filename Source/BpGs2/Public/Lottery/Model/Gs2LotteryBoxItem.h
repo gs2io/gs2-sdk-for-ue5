@@ -28,6 +28,8 @@ struct FGs2LotteryBoxItem
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadWrite)
+    FString PrizeId = "";
+    UPROPERTY(BlueprintReadWrite)
     TArray<FGs2LotteryAcquireAction> AcquireActions = TArray<FGs2LotteryAcquireAction>();
     UPROPERTY(BlueprintReadWrite)
     int32 Remaining = 0;
@@ -40,6 +42,7 @@ inline FGs2LotteryBoxItem EzBoxItemToFGs2LotteryBoxItem(
 )
 {
     FGs2LotteryBoxItem Value;
+    Value.PrizeId = Model->GetPrizeId() ? *Model->GetPrizeId() : "";
     Value.AcquireActions = Model->GetAcquireActions() ? [&]
     {
         TArray<FGs2LotteryAcquireAction> r;
@@ -58,6 +61,7 @@ inline Gs2::UE5::Lottery::Model::FEzBoxItemPtr FGs2LotteryBoxItemToEzBoxItem(
 )
 {
     return MakeShared<Gs2::UE5::Lottery::Model::FEzBoxItem>()
+        ->WithPrizeId(Model.PrizeId)
         ->WithAcquireActions([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Lottery::Model::FEzAcquireActionPtr>>();
             for (auto v : Model.AcquireActions) {

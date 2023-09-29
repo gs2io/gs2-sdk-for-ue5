@@ -29,11 +29,6 @@ namespace Gs2::UE5::Formation::Domain::Model
         return Domain->MoldModelName;
     }
 
-    TOptional<FString> FEzFormModelDomain::FormModelName() const
-    {
-        return Domain->FormModelName;
-    }
-
     FEzFormModelDomain::FEzFormModelDomain(
         Gs2::Formation::Domain::Model::FFormModelDomainPtr Domain,
         Gs2::UE5::Util::FProfilePtr Profile
@@ -42,8 +37,9 @@ namespace Gs2::UE5::Formation::Domain::Model
     }
 
     FEzFormModelDomain::FGetFormModelTask::FGetFormModelTask(
-        TSharedPtr<FEzFormModelDomain> Self
-    ): Self(Self)
+        TSharedPtr<FEzFormModelDomain> Self,
+        FString FormModelName
+    ): Self(Self), FormModelName(FormModelName)
     {
 
     }
@@ -56,6 +52,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Get(
                     MakeShared<Gs2::Formation::Request::FGetFormModelRequest>()
+                        ->WithFormModelName(FormModelName)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -82,10 +79,12 @@ namespace Gs2::UE5::Formation::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzFormModelDomain::FGetFormModelTask>> FEzFormModelDomain::GetFormModel(
+        FString FormModelName
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FGetFormModelTask>>(
-            this->AsShared()
+            this->AsShared(),
+            FormModelName
         );
     }
 

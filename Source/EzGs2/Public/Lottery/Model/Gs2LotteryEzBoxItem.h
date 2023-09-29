@@ -24,14 +24,18 @@ namespace Gs2::UE5::Lottery::Model
 {
 	class EZGS2_API FEzBoxItem final : public TSharedFromThis<FEzBoxItem>
 	{
+        TOptional<FString> PrizeIdValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Lottery::Model::FEzAcquireAction>>> AcquireActionsValue;
         TOptional<int32> RemainingValue;
         TOptional<int32> InitialValue;
 
 	public:
+        TSharedPtr<FEzBoxItem> WithPrizeId(const TOptional<FString> PrizeId);
         TSharedPtr<FEzBoxItem> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Lottery::Model::FEzAcquireAction>>> AcquireActions);
         TSharedPtr<FEzBoxItem> WithRemaining(const TOptional<int32> Remaining);
         TSharedPtr<FEzBoxItem> WithInitial(const TOptional<int32> Initial);
+
+        TOptional<FString> GetPrizeId() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Lottery::Model::FEzAcquireAction>>> GetAcquireActions() const;
 

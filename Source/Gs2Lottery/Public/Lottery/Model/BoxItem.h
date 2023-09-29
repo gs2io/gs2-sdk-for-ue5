@@ -24,6 +24,7 @@ namespace Gs2::Lottery::Model
 {
     class GS2LOTTERY_API FBoxItem final : public Gs2Object, public TSharedFromThis<FBoxItem>
     {
+        TOptional<FString> PrizeIdValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
         TOptional<int32> RemainingValue;
         TOptional<int32> InitialValue;
@@ -35,10 +36,12 @@ namespace Gs2::Lottery::Model
         );
         virtual ~FBoxItem() override = default;
 
+        TSharedPtr<FBoxItem> WithPrizeId(const TOptional<FString> PrizeId);
         TSharedPtr<FBoxItem> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
         TSharedPtr<FBoxItem> WithRemaining(const TOptional<int32> Remaining);
         TSharedPtr<FBoxItem> WithInitial(const TOptional<int32> Initial);
 
+        TOptional<FString> GetPrizeId() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
         TOptional<int32> GetRemaining() const;
         FString GetRemainingString() const;

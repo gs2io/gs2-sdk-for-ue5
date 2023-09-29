@@ -33,6 +33,7 @@ class BPGS2_API UGs2FormationFormModelGetValueAsyncFunction : public UBlueprintA
     FGs2FormationFormModel FormModel;
 
 public:
+    FString FormModelName;
 
     UPROPERTY(BlueprintAssignable)
     FGs2FormationFormModelGetValueSuccessDelegate OnSuccess;

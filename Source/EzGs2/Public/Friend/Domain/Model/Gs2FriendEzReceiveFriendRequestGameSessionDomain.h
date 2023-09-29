@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -46,6 +48,26 @@ namespace Gs2::UE5::Friend::Domain::Model
         FEzReceiveFriendRequestGameSessionDomain(
             Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::FProfilePtr Profile
+        );
+
+        class FGetReceiveRequestTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Model::FEzFriendRequest>,
+            public TSharedFromThis<FGetReceiveRequestTask>
+        {
+            TSharedPtr<FEzReceiveFriendRequestGameSessionDomain> Self;
+
+        public:
+            explicit FGetReceiveRequestTask(
+                TSharedPtr<FEzReceiveFriendRequestGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzFriendRequest>> Result
+            ) override;
+        };
+        friend FGetReceiveRequestTask;
+
+        TSharedPtr<FAsyncTask<FGetReceiveRequestTask>> GetReceiveRequest(
         );
 
         class FAcceptTask :
@@ -87,6 +109,28 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         TSharedPtr<FAsyncTask<FRejectTask>> Reject(
         );
+
+        class FModelTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Model::FEzFriendRequest>,
+            public TSharedFromThis<FModelTask>
+        {
+            TSharedPtr<FEzReceiveFriendRequestGameSessionDomain> Self;
+
+        public:
+            explicit FModelTask(
+                TSharedPtr<FEzReceiveFriendRequestGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<Gs2::UE5::Friend::Model::FEzFriendRequestPtr> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzFriendRequestPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzReceiveFriendRequestGameSessionDomain> FEzReceiveFriendRequestGameSessionDomainPtr;

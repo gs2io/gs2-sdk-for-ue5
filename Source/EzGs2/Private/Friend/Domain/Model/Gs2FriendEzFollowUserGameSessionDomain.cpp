@@ -41,6 +41,58 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     }
 
+    FEzFollowUserGameSessionDomain::FGetFollowUserTask::FGetFollowUserTask(
+        TSharedPtr<FEzFollowUserGameSessionDomain> Self,
+        TOptional<bool> WithProfile
+    ): Self(Self), WithProfile(WithProfile)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzFollowUserGameSessionDomain::FGetFollowUserTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzFollowUser>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FGetFollowUserTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Get(
+                    MakeShared<Gs2::Friend::Request::FGetFollowRequest>()
+                        ->WithWithProfile(WithProfile)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = Gs2::UE5::Friend::Model::FEzFollowUser::FromModel(
+                    Task->GetTask().Result()
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzFollowUserGameSessionDomain::FGetFollowUserTask>> FEzFollowUserGameSessionDomain::GetFollowUser(
+        TOptional<bool> WithProfile
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FGetFollowUserTask>>(
+            this->AsShared(),
+            WithProfile
+        );
+    }
+
     FEzFollowUserGameSessionDomain::FFollowTask::FFollowTask(
         TSharedPtr<FEzFollowUserGameSessionDomain> Self
     ): Self(Self)
