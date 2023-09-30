@@ -238,6 +238,28 @@ namespace Gs2::Deploy::Domain
         );
     }
 
+    Gs2::Core::Domain::CallbackID FGs2DeployDomain::SubscribeStacks(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::Deploy::Model::FStack::TypeName,
+            "deploy:Stack",
+            Callback
+        );
+    }
+
+    void FGs2DeployDomain::UnsubscribeStacks(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::Deploy::Model::FStack::TypeName,
+            "deploy:Stack",
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::Deploy::Domain::Model::FStackDomain> FGs2DeployDomain::Stack(
         const FString StackName
     ) const

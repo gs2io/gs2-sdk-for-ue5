@@ -149,6 +149,14 @@ namespace Gs2::Deploy::Domain
         Gs2::Deploy::Domain::Iterator::FDescribeStacksIteratorPtr Stacks(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeStacks(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStacks(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Deploy::Domain::Model::FStackDomain> Stack(
             const FString StackName
         ) const;

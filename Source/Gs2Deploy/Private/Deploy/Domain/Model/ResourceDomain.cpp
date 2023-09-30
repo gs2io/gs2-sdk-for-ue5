@@ -226,6 +226,37 @@ namespace Gs2::Deploy::Domain::Model
     TSharedPtr<FAsyncTask<FResourceDomain::FModelTask>> FResourceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FResourceDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FResourceDomain::Subscribe(
+        TFunction<void(Gs2::Deploy::Model::FResourcePtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Deploy::Model::FResource::TypeName,
+            ParentKey,
+            Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
+                ResourceName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Deploy::Model::FResource>(obj));
+            }
+        );
+    }
+
+    void FResourceDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Deploy::Model::FResource::TypeName,
+            ParentKey,
+            Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
+                ResourceName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

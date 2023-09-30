@@ -33,9 +33,6 @@ namespace Gs2::UE5::Inventory::Model
         TSharedPtr<TArray<FString>> ReferenceOfValue;
 
 	public:
-		FEzItemSet();
-		FEzItemSet(const FEzItemSet& From);
-		
         TSharedPtr<FEzItemSet> WithItemSetId(const TOptional<FString> ItemSetId);
         TSharedPtr<FEzItemSet> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzItemSet> WithInventoryName(const TOptional<FString> InventoryName);

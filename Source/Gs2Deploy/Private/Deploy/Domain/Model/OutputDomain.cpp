@@ -226,6 +226,37 @@ namespace Gs2::Deploy::Domain::Model
     TSharedPtr<FAsyncTask<FOutputDomain::FModelTask>> FOutputDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FOutputDomain::FModelTask>>(this->AsShared());
     }
+
+    Gs2::Core::Domain::CallbackID FOutputDomain::Subscribe(
+        TFunction<void(Gs2::Deploy::Model::FOutputPtr)> Callback
+    )
+    {
+        return Cache->Subscribe(
+            Gs2::Deploy::Model::FOutput::TypeName,
+            ParentKey,
+            Gs2::Deploy::Domain::Model::FOutputDomain::CreateCacheKey(
+                OutputName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Deploy::Model::FOutput>(obj));
+            }
+        );
+    }
+
+    void FOutputDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->Unsubscribe(
+            Gs2::Deploy::Model::FOutput::TypeName,
+            ParentKey,
+            Gs2::Deploy::Domain::Model::FOutputDomain::CreateCacheKey(
+                OutputName
+            ),
+            CallbackID
+        );
+    }
 }
 
 #if defined(_MSC_VER)

@@ -18,21 +18,6 @@
 
 namespace Gs2::UE5::Inventory::Model
 {
-    FEzItemSet::FEzItemSet()
-    {
-    }
-
-    FEzItemSet::FEzItemSet(const FEzItemSet& From):
-        ItemSetIdValue(From.ItemSetIdValue),
-        NameValue(From.NameValue),
-        InventoryNameValue(From.InventoryNameValue),
-        ItemNameValue(From.ItemNameValue),
-        CountValue(From.CountValue),
-        SortValueValue(From.SortValueValue),
-        ExpiresAtValue(From.ExpiresAtValue),
-        ReferenceOfValue(From.ReferenceOfValue)
-    {
-    }
 
     TSharedPtr<FEzItemSet> FEzItemSet::WithItemSetId(
         const TOptional<FString> ItemSetId
