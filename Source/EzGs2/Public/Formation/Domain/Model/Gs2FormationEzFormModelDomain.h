@@ -57,12 +57,10 @@ namespace Gs2::UE5::Formation::Domain::Model
             public TSharedFromThis<FGetFormModelTask>
         {
             TSharedPtr<FEzFormModelDomain> Self;
-            FString FormModelName;
 
         public:
             explicit FGetFormModelTask(
-                TSharedPtr<FEzFormModelDomain> Self,
-                FString FormModelName
+                TSharedPtr<FEzFormModelDomain> Self
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -72,7 +70,6 @@ namespace Gs2::UE5::Formation::Domain::Model
         friend FGetFormModelTask;
 
         TSharedPtr<FAsyncTask<FGetFormModelTask>> GetFormModel(
-            FString FormModelName
         );
 
         class FModelTask :

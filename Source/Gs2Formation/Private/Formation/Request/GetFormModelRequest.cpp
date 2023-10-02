@@ -20,8 +20,7 @@ namespace Gs2::Formation::Request
 {
     FGetFormModelRequest::FGetFormModelRequest():
         NamespaceNameValue(TOptional<FString>()),
-        MoldModelNameValue(TOptional<FString>()),
-        FormModelNameValue(TOptional<FString>())
+        MoldModelNameValue(TOptional<FString>())
     {
     }
 
@@ -29,8 +28,7 @@ namespace Gs2::Formation::Request
         const FGetFormModelRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        MoldModelNameValue(From.MoldModelNameValue),
-        FormModelNameValue(From.FormModelNameValue)
+        MoldModelNameValue(From.MoldModelNameValue)
     {
     }
 
@@ -58,14 +56,6 @@ namespace Gs2::Formation::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FGetFormModelRequest> FGetFormModelRequest::WithFormModelName(
-        const TOptional<FString> FormModelName
-    )
-    {
-        this->FormModelNameValue = FormModelName;
-        return SharedThis(this);
-    }
-
     TOptional<FString> FGetFormModelRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -79,11 +69,6 @@ namespace Gs2::Formation::Request
     TOptional<FString> FGetFormModelRequest::GetMoldModelName() const
     {
         return MoldModelNameValue;
-    }
-
-    TOptional<FString> FGetFormModelRequest::GetFormModelName() const
-    {
-        return FormModelNameValue;
     }
 
     TSharedPtr<FGetFormModelRequest> FGetFormModelRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -110,15 +95,6 @@ namespace Gs2::Formation::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>())
-            ->WithFormModelName(Data->HasField("formModelName") ? [Data]() -> TOptional<FString>
-              {
-                  FString v;
-                    if (Data->TryGetStringField("formModelName", v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -136,10 +112,6 @@ namespace Gs2::Formation::Request
         if (MoldModelNameValue.IsSet())
         {
             JsonRootObject->SetStringField("moldModelName", MoldModelNameValue.GetValue());
-        }
-        if (FormModelNameValue.IsSet())
-        {
-            JsonRootObject->SetStringField("formModelName", FormModelNameValue.GetValue());
         }
         return JsonRootObject;
     }
