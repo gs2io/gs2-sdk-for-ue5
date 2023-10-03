@@ -168,6 +168,32 @@ namespace Gs2::Inventory::Domain::Model
             Request::FConsumeBigItemRequestPtr Request
         );
 
+        class GS2INVENTORY_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FBigItemAccessTokenDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FBigItemAccessTokenDomain> Self;
+            const Request::FVerifyBigItemRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FBigItemAccessTokenDomain> Self,
+                const Request::FVerifyBigItemRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FBigItemAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyBigItemRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

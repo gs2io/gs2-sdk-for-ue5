@@ -241,6 +241,30 @@
 #include "Task/Rest/DeleteStatusByUserIdTask.h"
 #include "Task/WebSocket/DeleteStatusByUserIdTask.h"
 
+// VerifyRank
+#include "Request/VerifyRankRequest.h"
+#include "Result/VerifyRankResult.h"
+#include "Task/Rest/VerifyRankTask.h"
+#include "Task/WebSocket/VerifyRankTask.h"
+
+// VerifyRankByUserId
+#include "Request/VerifyRankByUserIdRequest.h"
+#include "Result/VerifyRankByUserIdResult.h"
+#include "Task/Rest/VerifyRankByUserIdTask.h"
+#include "Task/WebSocket/VerifyRankByUserIdTask.h"
+
+// VerifyRankCap
+#include "Request/VerifyRankCapRequest.h"
+#include "Result/VerifyRankCapResult.h"
+#include "Task/Rest/VerifyRankCapTask.h"
+#include "Task/WebSocket/VerifyRankCapTask.h"
+
+// VerifyRankCapByUserId
+#include "Request/VerifyRankCapByUserIdRequest.h"
+#include "Result/VerifyRankCapByUserIdResult.h"
+#include "Task/Rest/VerifyRankCapByUserIdTask.h"
+#include "Task/WebSocket/VerifyRankCapByUserIdTask.h"
+
 // AddExperienceByStampSheet
 #include "Request/AddExperienceByStampSheetRequest.h"
 #include "Result/AddExperienceByStampSheetResult.h"
@@ -282,6 +306,18 @@
 #include "Result/MultiplyAcquireActionsByStampSheetResult.h"
 #include "Task/Rest/MultiplyAcquireActionsByStampSheetTask.h"
 #include "Task/WebSocket/MultiplyAcquireActionsByStampSheetTask.h"
+
+// VerifyRankByStampTask
+#include "Request/VerifyRankByStampTaskRequest.h"
+#include "Result/VerifyRankByStampTaskResult.h"
+#include "Task/Rest/VerifyRankByStampTaskTask.h"
+#include "Task/WebSocket/VerifyRankByStampTaskTask.h"
+
+// VerifyRankCapByStampTask
+#include "Request/VerifyRankCapByStampTaskRequest.h"
+#include "Result/VerifyRankCapByStampTaskResult.h"
+#include "Task/Rest/VerifyRankCapByStampTaskTask.h"
+#include "Task/WebSocket/VerifyRankCapByStampTaskTask.h"
 
 // Client
 #include "Gs2ExperienceRestClient.h"

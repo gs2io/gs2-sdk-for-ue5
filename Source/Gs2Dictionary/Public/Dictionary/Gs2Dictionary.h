@@ -153,6 +153,18 @@
 #include "Task/Rest/ResetByUserIdTask.h"
 #include "Task/WebSocket/ResetByUserIdTask.h"
 
+// VerifyEntry
+#include "Request/VerifyEntryRequest.h"
+#include "Result/VerifyEntryResult.h"
+#include "Task/Rest/VerifyEntryTask.h"
+#include "Task/WebSocket/VerifyEntryTask.h"
+
+// VerifyEntryByUserId
+#include "Request/VerifyEntryByUserIdRequest.h"
+#include "Result/VerifyEntryByUserIdResult.h"
+#include "Task/Rest/VerifyEntryByUserIdTask.h"
+#include "Task/WebSocket/VerifyEntryByUserIdTask.h"
+
 // DeleteEntriesByUserId
 #include "Request/DeleteEntriesByUserIdRequest.h"
 #include "Result/DeleteEntriesByUserIdResult.h"
@@ -170,6 +182,12 @@
 #include "Result/DeleteEntriesByStampTaskResult.h"
 #include "Task/Rest/DeleteEntriesByStampTaskTask.h"
 #include "Task/WebSocket/DeleteEntriesByStampTaskTask.h"
+
+// VerifyEntryByStampTask
+#include "Request/VerifyEntryByStampTaskRequest.h"
+#include "Result/VerifyEntryByStampTaskResult.h"
+#include "Task/Rest/VerifyEntryByStampTaskTask.h"
+#include "Task/WebSocket/VerifyEntryByStampTaskTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

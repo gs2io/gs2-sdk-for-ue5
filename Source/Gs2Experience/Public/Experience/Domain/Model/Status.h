@@ -330,6 +330,58 @@ namespace Gs2::Experience::Domain::Model
             Request::FDeleteStatusByUserIdRequestPtr Request
         );
 
+        class GS2EXPERIENCE_API FVerifyRankTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
+            public TSharedFromThis<FVerifyRankTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const Request::FVerifyRankByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyRankTask(
+                const TSharedPtr<FStatusDomain> Self,
+                const Request::FVerifyRankByUserIdRequestPtr Request
+            );
+
+            FVerifyRankTask(
+                const FVerifyRankTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain>> Result
+            ) override;
+        };
+        friend FVerifyRankTask;
+
+        TSharedPtr<FAsyncTask<FVerifyRankTask>> VerifyRank(
+            Request::FVerifyRankByUserIdRequestPtr Request
+        );
+
+        class GS2EXPERIENCE_API FVerifyRankCapTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
+            public TSharedFromThis<FVerifyRankCapTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const Request::FVerifyRankCapByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyRankCapTask(
+                const TSharedPtr<FStatusDomain> Self,
+                const Request::FVerifyRankCapByUserIdRequestPtr Request
+            );
+
+            FVerifyRankCapTask(
+                const FVerifyRankCapTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusDomain>> Result
+            ) override;
+        };
+        friend FVerifyRankCapTask;
+
+        TSharedPtr<FAsyncTask<FVerifyRankCapTask>> VerifyRankCap(
+            Request::FVerifyRankCapByUserIdRequestPtr Request
+        );
+
         class GS2EXPERIENCE_API FMultiplyAcquireActionsTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FMultiplyAcquireActionsTask>

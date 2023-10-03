@@ -60,12 +60,18 @@
 #include "Task/Rest/GetEntryWithSignatureByUserIdTask.h"
 #include "Request/ResetByUserIdRequest.h"
 #include "Task/Rest/ResetByUserIdTask.h"
+#include "Request/VerifyEntryRequest.h"
+#include "Task/Rest/VerifyEntryTask.h"
+#include "Request/VerifyEntryByUserIdRequest.h"
+#include "Task/Rest/VerifyEntryByUserIdTask.h"
 #include "Request/DeleteEntriesByUserIdRequest.h"
 #include "Task/Rest/DeleteEntriesByUserIdTask.h"
 #include "Request/AddEntriesByStampSheetRequest.h"
 #include "Task/Rest/AddEntriesByStampSheetTask.h"
 #include "Request/DeleteEntriesByStampTaskRequest.h"
 #include "Task/Rest/DeleteEntriesByStampTaskTask.h"
+#include "Request/VerifyEntryByStampTaskRequest.h"
+#include "Task/Rest/VerifyEntryByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentEntryMasterRequest.h"
@@ -170,6 +176,14 @@ namespace Gs2::Dictionary
             const Request::FResetByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryTask>> VerifyEntry(
+            const Request::FVerifyEntryRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryByUserIdTask>> VerifyEntryByUserId(
+            const Request::FVerifyEntryByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteEntriesByUserIdTask>> DeleteEntriesByUserId(
             const Request::FDeleteEntriesByUserIdRequestPtr Request
         ) const;
@@ -180,6 +194,10 @@ namespace Gs2::Dictionary
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteEntriesByStampTaskTask>> DeleteEntriesByStampTask(
             const Request::FDeleteEntriesByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryByStampTaskTask>> VerifyEntryByStampTask(
+            const Request::FVerifyEntryByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

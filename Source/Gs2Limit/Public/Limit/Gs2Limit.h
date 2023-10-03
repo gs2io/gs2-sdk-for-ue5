@@ -109,6 +109,18 @@
 #include "Task/Rest/DeleteCounterByUserIdTask.h"
 #include "Task/WebSocket/DeleteCounterByUserIdTask.h"
 
+// VerifyCounter
+#include "Request/VerifyCounterRequest.h"
+#include "Result/VerifyCounterResult.h"
+#include "Task/Rest/VerifyCounterTask.h"
+#include "Task/WebSocket/VerifyCounterTask.h"
+
+// VerifyCounterByUserId
+#include "Request/VerifyCounterByUserIdRequest.h"
+#include "Result/VerifyCounterByUserIdResult.h"
+#include "Task/Rest/VerifyCounterByUserIdTask.h"
+#include "Task/WebSocket/VerifyCounterByUserIdTask.h"
+
 // CountUpByStampTask
 #include "Request/CountUpByStampTaskRequest.h"
 #include "Result/CountUpByStampTaskResult.h"
@@ -126,6 +138,12 @@
 #include "Result/DeleteByStampSheetResult.h"
 #include "Task/Rest/DeleteByStampSheetTask.h"
 #include "Task/WebSocket/DeleteByStampSheetTask.h"
+
+// VerifyCounterByStampTask
+#include "Request/VerifyCounterByStampTaskRequest.h"
+#include "Result/VerifyCounterByStampTaskResult.h"
+#include "Task/Rest/VerifyCounterByStampTaskTask.h"
+#include "Task/WebSocket/VerifyCounterByStampTaskTask.h"
 
 // DescribeLimitModelMasters
 #include "Request/DescribeLimitModelMastersRequest.h"

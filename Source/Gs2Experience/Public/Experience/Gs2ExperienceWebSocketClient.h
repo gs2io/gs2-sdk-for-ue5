@@ -88,6 +88,14 @@
 #include "Task/WebSocket/SetRankCapByUserIdTask.h"
 #include "Request/DeleteStatusByUserIdRequest.h"
 #include "Task/WebSocket/DeleteStatusByUserIdTask.h"
+#include "Request/VerifyRankRequest.h"
+#include "Task/WebSocket/VerifyRankTask.h"
+#include "Request/VerifyRankByUserIdRequest.h"
+#include "Task/WebSocket/VerifyRankByUserIdTask.h"
+#include "Request/VerifyRankCapRequest.h"
+#include "Task/WebSocket/VerifyRankCapTask.h"
+#include "Request/VerifyRankCapByUserIdRequest.h"
+#include "Task/WebSocket/VerifyRankCapByUserIdTask.h"
 #include "Request/AddExperienceByStampSheetRequest.h"
 #include "Task/WebSocket/AddExperienceByStampSheetTask.h"
 #include "Request/SubExperienceByStampTaskRequest.h"
@@ -102,6 +110,10 @@
 #include "Task/WebSocket/MultiplyAcquireActionsByUserIdTask.h"
 #include "Request/MultiplyAcquireActionsByStampSheetRequest.h"
 #include "Task/WebSocket/MultiplyAcquireActionsByStampSheetTask.h"
+#include "Request/VerifyRankByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyRankByStampTaskTask.h"
+#include "Request/VerifyRankCapByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyRankCapByStampTaskTask.h"
 
 namespace Gs2::Experience
 {
@@ -254,6 +266,22 @@ namespace Gs2::Experience
             const Request::FDeleteStatusByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankTask>> VerifyRank(
+            const Request::FVerifyRankRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankByUserIdTask>> VerifyRankByUserId(
+            const Request::FVerifyRankByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankCapTask>> VerifyRankCap(
+            const Request::FVerifyRankCapRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankCapByUserIdTask>> VerifyRankCapByUserId(
+            const Request::FVerifyRankCapByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FAddExperienceByStampSheetTask>> AddExperienceByStampSheet(
             const Request::FAddExperienceByStampSheetRequestPtr Request
         ) const;
@@ -280,6 +308,14 @@ namespace Gs2::Experience
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FMultiplyAcquireActionsByStampSheetTask>> MultiplyAcquireActionsByStampSheet(
             const Request::FMultiplyAcquireActionsByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankByStampTaskTask>> VerifyRankByStampTask(
+            const Request::FVerifyRankByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankCapByStampTaskTask>> VerifyRankCapByStampTask(
+            const Request::FVerifyRankCapByStampTaskRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ExperienceWebSocketClient, ESPMode::ThreadSafe> FGs2ExperienceWebSocketClientPtr;

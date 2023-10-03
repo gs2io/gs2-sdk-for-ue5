@@ -160,10 +160,16 @@
 #include "Task/WebSocket/ConsumeItemSetByUserIdTask.h"
 #include "Request/DeleteItemSetByUserIdRequest.h"
 #include "Task/WebSocket/DeleteItemSetByUserIdTask.h"
+#include "Request/VerifyItemSetRequest.h"
+#include "Task/WebSocket/VerifyItemSetTask.h"
+#include "Request/VerifyItemSetByUserIdRequest.h"
+#include "Task/WebSocket/VerifyItemSetByUserIdTask.h"
 #include "Request/AcquireItemSetByStampSheetRequest.h"
 #include "Task/WebSocket/AcquireItemSetByStampSheetTask.h"
 #include "Request/ConsumeItemSetByStampTaskRequest.h"
 #include "Task/WebSocket/ConsumeItemSetByStampTaskTask.h"
+#include "Request/VerifyItemSetByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyItemSetByStampTaskTask.h"
 #include "Request/DescribeReferenceOfRequest.h"
 #include "Task/WebSocket/DescribeReferenceOfTask.h"
 #include "Request/DescribeReferenceOfByUserIdRequest.h"
@@ -210,10 +216,16 @@
 #include "Task/WebSocket/ConsumeSimpleItemsByUserIdTask.h"
 #include "Request/DeleteSimpleItemsByUserIdRequest.h"
 #include "Task/WebSocket/DeleteSimpleItemsByUserIdTask.h"
+#include "Request/VerifySimpleItemRequest.h"
+#include "Task/WebSocket/VerifySimpleItemTask.h"
+#include "Request/VerifySimpleItemByUserIdRequest.h"
+#include "Task/WebSocket/VerifySimpleItemByUserIdTask.h"
 #include "Request/AcquireSimpleItemsByStampSheetRequest.h"
 #include "Task/WebSocket/AcquireSimpleItemsByStampSheetTask.h"
 #include "Request/ConsumeSimpleItemsByStampTaskRequest.h"
 #include "Task/WebSocket/ConsumeSimpleItemsByStampTaskTask.h"
+#include "Request/VerifySimpleItemByStampTaskRequest.h"
+#include "Task/WebSocket/VerifySimpleItemByStampTaskTask.h"
 #include "Request/DescribeBigItemsRequest.h"
 #include "Task/WebSocket/DescribeBigItemsTask.h"
 #include "Request/DescribeBigItemsByUserIdRequest.h"
@@ -230,10 +242,16 @@
 #include "Task/WebSocket/ConsumeBigItemByUserIdTask.h"
 #include "Request/DeleteBigItemByUserIdRequest.h"
 #include "Task/WebSocket/DeleteBigItemByUserIdTask.h"
+#include "Request/VerifyBigItemRequest.h"
+#include "Task/WebSocket/VerifyBigItemTask.h"
+#include "Request/VerifyBigItemByUserIdRequest.h"
+#include "Task/WebSocket/VerifyBigItemByUserIdTask.h"
 #include "Request/AcquireBigItemByStampSheetRequest.h"
 #include "Task/WebSocket/AcquireBigItemByStampSheetTask.h"
 #include "Request/ConsumeBigItemByStampTaskRequest.h"
 #include "Task/WebSocket/ConsumeBigItemByStampTaskTask.h"
+#include "Request/VerifyBigItemByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyBigItemByStampTaskTask.h"
 
 namespace Gs2::Inventory
 {
@@ -530,12 +548,24 @@ namespace Gs2::Inventory
             const Request::FDeleteItemSetByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyItemSetTask>> VerifyItemSet(
+            const Request::FVerifyItemSetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyItemSetByUserIdTask>> VerifyItemSetByUserId(
+            const Request::FVerifyItemSetByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireItemSetByStampSheetTask>> AcquireItemSetByStampSheet(
             const Request::FAcquireItemSetByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeItemSetByStampTaskTask>> ConsumeItemSetByStampTask(
             const Request::FConsumeItemSetByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyItemSetByStampTaskTask>> VerifyItemSetByStampTask(
+            const Request::FVerifyItemSetByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeReferenceOfTask>> DescribeReferenceOf(
@@ -630,12 +660,24 @@ namespace Gs2::Inventory
             const Request::FDeleteSimpleItemsByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySimpleItemTask>> VerifySimpleItem(
+            const Request::FVerifySimpleItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySimpleItemByUserIdTask>> VerifySimpleItemByUserId(
+            const Request::FVerifySimpleItemByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireSimpleItemsByStampSheetTask>> AcquireSimpleItemsByStampSheet(
             const Request::FAcquireSimpleItemsByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByStampTaskTask>> ConsumeSimpleItemsByStampTask(
             const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySimpleItemByStampTaskTask>> VerifySimpleItemByStampTask(
+            const Request::FVerifySimpleItemByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBigItemsTask>> DescribeBigItems(
@@ -670,12 +712,24 @@ namespace Gs2::Inventory
             const Request::FDeleteBigItemByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBigItemTask>> VerifyBigItem(
+            const Request::FVerifyBigItemRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBigItemByUserIdTask>> VerifyBigItemByUserId(
+            const Request::FVerifyBigItemByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireBigItemByStampSheetTask>> AcquireBigItemByStampSheet(
             const Request::FAcquireBigItemByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeBigItemByStampTaskTask>> ConsumeBigItemByStampTask(
             const Request::FConsumeBigItemByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBigItemByStampTaskTask>> VerifyBigItemByStampTask(
+            const Request::FVerifyBigItemByStampTaskRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2InventoryWebSocketClient, ESPMode::ThreadSafe> FGs2InventoryWebSocketClientPtr;

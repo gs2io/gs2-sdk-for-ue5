@@ -149,6 +149,58 @@ namespace Gs2::Experience::Domain::Model
             Request::FGetStatusWithSignatureRequestPtr Request
         );
 
+        class GS2EXPERIENCE_API FVerifyRankTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
+            public TSharedFromThis<FVerifyRankTask>
+        {
+            const TSharedPtr<FStatusAccessTokenDomain> Self;
+            const Request::FVerifyRankRequestPtr Request;
+        public:
+            explicit FVerifyRankTask(
+                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const Request::FVerifyRankRequestPtr Request
+            );
+
+            FVerifyRankTask(
+                const FVerifyRankTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyRankTask;
+
+        TSharedPtr<FAsyncTask<FVerifyRankTask>> VerifyRank(
+            Request::FVerifyRankRequestPtr Request
+        );
+
+        class GS2EXPERIENCE_API FVerifyRankCapTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
+            public TSharedFromThis<FVerifyRankCapTask>
+        {
+            const TSharedPtr<FStatusAccessTokenDomain> Self;
+            const Request::FVerifyRankCapRequestPtr Request;
+        public:
+            explicit FVerifyRankCapTask(
+                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const Request::FVerifyRankCapRequestPtr Request
+            );
+
+            FVerifyRankCapTask(
+                const FVerifyRankCapTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyRankCapTask;
+
+        TSharedPtr<FAsyncTask<FVerifyRankCapTask>> VerifyRankCap(
+            Request::FVerifyRankCapRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

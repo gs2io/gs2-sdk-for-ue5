@@ -208,6 +208,24 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryTask>> FGs2DictionaryWebSocketClient::VerifyEntry(
+        const Request::FVerifyEntryRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyEntryTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryByUserIdTask>> FGs2DictionaryWebSocketClient::VerifyEntryByUserId(
+        const Request::FVerifyEntryByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyEntryByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteEntriesByUserIdTask>> FGs2DictionaryWebSocketClient::DeleteEntriesByUserId(
         const Request::FDeleteEntriesByUserIdRequestPtr Request) const
     {
@@ -230,6 +248,15 @@ namespace Gs2::Dictionary
         const Request::FDeleteEntriesByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteEntriesByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryByStampTaskTask>> FGs2DictionaryWebSocketClient::VerifyEntryByStampTask(
+        const Request::FVerifyEntryByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyEntryByStampTaskTask>>(
             Session,
             Request
         );

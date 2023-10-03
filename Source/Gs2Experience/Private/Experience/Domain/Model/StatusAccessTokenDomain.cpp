@@ -221,6 +221,102 @@ namespace Gs2::Experience::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetWithSignatureTask>>(this->AsShared(), Request);
     }
 
+    FStatusAccessTokenDomain::FVerifyRankTask::FVerifyRankTask(
+        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const Request::FVerifyRankRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusAccessTokenDomain::FVerifyRankTask::FVerifyRankTask(
+        const FVerifyRankTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusAccessTokenDomain::FVerifyRankTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithExperienceName(Self->ExperienceName)
+            ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->VerifyRank(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FVerifyRankTask>> FStatusAccessTokenDomain::VerifyRank(
+        Request::FVerifyRankRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyRankTask>>(this->AsShared(), Request);
+    }
+
+    FStatusAccessTokenDomain::FVerifyRankCapTask::FVerifyRankCapTask(
+        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const Request::FVerifyRankCapRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusAccessTokenDomain::FVerifyRankCapTask::FVerifyRankCapTask(
+        const FVerifyRankCapTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusAccessTokenDomain::FVerifyRankCapTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithExperienceName(Self->ExperienceName)
+            ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->VerifyRankCap(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FVerifyRankCapTask>> FStatusAccessTokenDomain::VerifyRankCap(
+        Request::FVerifyRankCapRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyRankCapTask>>(this->AsShared(), Request);
+    }
+
     FString FStatusAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

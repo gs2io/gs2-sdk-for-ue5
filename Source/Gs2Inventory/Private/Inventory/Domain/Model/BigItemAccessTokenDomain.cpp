@@ -260,6 +260,54 @@ namespace Gs2::Inventory::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FConsumeTask>>(this->AsShared(), Request);
     }
 
+    FBigItemAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const TSharedPtr<FBigItemAccessTokenDomain> Self,
+        const Request::FVerifyBigItemRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FBigItemAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const FVerifyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FBigItemAccessTokenDomain::FVerifyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FBigItemAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithInventoryName(Self->InventoryName)
+            ->WithItemName(Self->ItemName);
+        const auto Future = Self->Client->VerifyBigItem(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FBigItemAccessTokenDomain::FVerifyTask>> FBigItemAccessTokenDomain::Verify(
+        Request::FVerifyBigItemRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyTask>>(this->AsShared(), Request);
+    }
+
     FString FBigItemAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

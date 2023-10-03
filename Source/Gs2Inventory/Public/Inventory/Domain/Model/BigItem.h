@@ -219,6 +219,32 @@ namespace Gs2::Inventory::Domain::Model
             Request::FDeleteBigItemByUserIdRequestPtr Request
         );
 
+        class GS2INVENTORY_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FBigItemDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FBigItemDomain> Self;
+            const Request::FVerifyBigItemByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FBigItemDomain> Self,
+                const Request::FVerifyBigItemByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FBigItemDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyBigItemByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

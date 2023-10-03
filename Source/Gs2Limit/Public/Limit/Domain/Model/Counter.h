@@ -178,6 +178,32 @@ namespace Gs2::Limit::Domain::Model
             Request::FDeleteCounterByUserIdRequestPtr Request
         );
 
+        class GS2LIMIT_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCounterDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FCounterDomain> Self;
+            const Request::FVerifyCounterByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FCounterDomain> Self,
+                const Request::FVerifyCounterByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Limit::Domain::Model::FCounterDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyCounterByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

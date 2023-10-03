@@ -470,6 +470,18 @@
 #include "Task/Rest/DeleteItemSetByUserIdTask.h"
 #include "Task/WebSocket/DeleteItemSetByUserIdTask.h"
 
+// VerifyItemSet
+#include "Request/VerifyItemSetRequest.h"
+#include "Result/VerifyItemSetResult.h"
+#include "Task/Rest/VerifyItemSetTask.h"
+#include "Task/WebSocket/VerifyItemSetTask.h"
+
+// VerifyItemSetByUserId
+#include "Request/VerifyItemSetByUserIdRequest.h"
+#include "Result/VerifyItemSetByUserIdResult.h"
+#include "Task/Rest/VerifyItemSetByUserIdTask.h"
+#include "Task/WebSocket/VerifyItemSetByUserIdTask.h"
+
 // AcquireItemSetByStampSheet
 #include "Request/AcquireItemSetByStampSheetRequest.h"
 #include "Result/AcquireItemSetByStampSheetResult.h"
@@ -481,6 +493,12 @@
 #include "Result/ConsumeItemSetByStampTaskResult.h"
 #include "Task/Rest/ConsumeItemSetByStampTaskTask.h"
 #include "Task/WebSocket/ConsumeItemSetByStampTaskTask.h"
+
+// VerifyItemSetByStampTask
+#include "Request/VerifyItemSetByStampTaskRequest.h"
+#include "Result/VerifyItemSetByStampTaskResult.h"
+#include "Task/Rest/VerifyItemSetByStampTaskTask.h"
+#include "Task/WebSocket/VerifyItemSetByStampTaskTask.h"
 
 // DescribeReferenceOf
 #include "Request/DescribeReferenceOfRequest.h"
@@ -620,6 +638,18 @@
 #include "Task/Rest/DeleteSimpleItemsByUserIdTask.h"
 #include "Task/WebSocket/DeleteSimpleItemsByUserIdTask.h"
 
+// VerifySimpleItem
+#include "Request/VerifySimpleItemRequest.h"
+#include "Result/VerifySimpleItemResult.h"
+#include "Task/Rest/VerifySimpleItemTask.h"
+#include "Task/WebSocket/VerifySimpleItemTask.h"
+
+// VerifySimpleItemByUserId
+#include "Request/VerifySimpleItemByUserIdRequest.h"
+#include "Result/VerifySimpleItemByUserIdResult.h"
+#include "Task/Rest/VerifySimpleItemByUserIdTask.h"
+#include "Task/WebSocket/VerifySimpleItemByUserIdTask.h"
+
 // AcquireSimpleItemsByStampSheet
 #include "Request/AcquireSimpleItemsByStampSheetRequest.h"
 #include "Result/AcquireSimpleItemsByStampSheetResult.h"
@@ -631,6 +661,12 @@
 #include "Result/ConsumeSimpleItemsByStampTaskResult.h"
 #include "Task/Rest/ConsumeSimpleItemsByStampTaskTask.h"
 #include "Task/WebSocket/ConsumeSimpleItemsByStampTaskTask.h"
+
+// VerifySimpleItemByStampTask
+#include "Request/VerifySimpleItemByStampTaskRequest.h"
+#include "Result/VerifySimpleItemByStampTaskResult.h"
+#include "Task/Rest/VerifySimpleItemByStampTaskTask.h"
+#include "Task/WebSocket/VerifySimpleItemByStampTaskTask.h"
 
 // DescribeBigItems
 #include "Request/DescribeBigItemsRequest.h"
@@ -680,6 +716,18 @@
 #include "Task/Rest/DeleteBigItemByUserIdTask.h"
 #include "Task/WebSocket/DeleteBigItemByUserIdTask.h"
 
+// VerifyBigItem
+#include "Request/VerifyBigItemRequest.h"
+#include "Result/VerifyBigItemResult.h"
+#include "Task/Rest/VerifyBigItemTask.h"
+#include "Task/WebSocket/VerifyBigItemTask.h"
+
+// VerifyBigItemByUserId
+#include "Request/VerifyBigItemByUserIdRequest.h"
+#include "Result/VerifyBigItemByUserIdResult.h"
+#include "Task/Rest/VerifyBigItemByUserIdTask.h"
+#include "Task/WebSocket/VerifyBigItemByUserIdTask.h"
+
 // AcquireBigItemByStampSheet
 #include "Request/AcquireBigItemByStampSheetRequest.h"
 #include "Result/AcquireBigItemByStampSheetResult.h"
@@ -691,6 +739,12 @@
 #include "Result/ConsumeBigItemByStampTaskResult.h"
 #include "Task/Rest/ConsumeBigItemByStampTaskTask.h"
 #include "Task/WebSocket/ConsumeBigItemByStampTaskTask.h"
+
+// VerifyBigItemByStampTask
+#include "Request/VerifyBigItemByStampTaskRequest.h"
+#include "Result/VerifyBigItemByStampTaskResult.h"
+#include "Task/Rest/VerifyBigItemByStampTaskTask.h"
+#include "Task/WebSocket/VerifyBigItemByStampTaskTask.h"
 
 // Client
 #include "Gs2InventoryRestClient.h"

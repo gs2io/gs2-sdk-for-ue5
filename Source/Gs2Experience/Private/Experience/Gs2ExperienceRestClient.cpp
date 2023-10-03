@@ -334,6 +334,42 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankTask>> FGs2ExperienceRestClient::VerifyRank(
+        const Request::FVerifyRankRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRankTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankByUserIdTask>> FGs2ExperienceRestClient::VerifyRankByUserId(
+        const Request::FVerifyRankByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRankByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankCapTask>> FGs2ExperienceRestClient::VerifyRankCap(
+        const Request::FVerifyRankCapRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRankCapTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankCapByUserIdTask>> FGs2ExperienceRestClient::VerifyRankCapByUserId(
+        const Request::FVerifyRankCapByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRankCapByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FAddExperienceByStampSheetTask>> FGs2ExperienceRestClient::AddExperienceByStampSheet(
         const Request::FAddExperienceByStampSheetRequestPtr Request) const
     {
@@ -392,6 +428,24 @@ namespace Gs2::Experience
         const Request::FMultiplyAcquireActionsByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FMultiplyAcquireActionsByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankByStampTaskTask>> FGs2ExperienceRestClient::VerifyRankByStampTask(
+        const Request::FVerifyRankByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRankByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankCapByStampTaskTask>> FGs2ExperienceRestClient::VerifyRankCapByStampTask(
+        const Request::FVerifyRankCapByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRankCapByStampTaskTask>>(
             Session,
             Request
         );

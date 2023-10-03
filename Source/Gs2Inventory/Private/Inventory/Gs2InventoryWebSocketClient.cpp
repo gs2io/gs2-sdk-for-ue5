@@ -658,6 +658,24 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyItemSetTask>> FGs2InventoryWebSocketClient::VerifyItemSet(
+        const Request::FVerifyItemSetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyItemSetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyItemSetByUserIdTask>> FGs2InventoryWebSocketClient::VerifyItemSetByUserId(
+        const Request::FVerifyItemSetByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyItemSetByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireItemSetByStampSheetTask>> FGs2InventoryWebSocketClient::AcquireItemSetByStampSheet(
         const Request::FAcquireItemSetByStampSheetRequestPtr Request) const
     {
@@ -671,6 +689,15 @@ namespace Gs2::Inventory
         const Request::FConsumeItemSetByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeItemSetByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyItemSetByStampTaskTask>> FGs2InventoryWebSocketClient::VerifyItemSetByStampTask(
+        const Request::FVerifyItemSetByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyItemSetByStampTaskTask>>(
             Session,
             Request
         );
@@ -883,6 +910,24 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySimpleItemTask>> FGs2InventoryWebSocketClient::VerifySimpleItem(
+        const Request::FVerifySimpleItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifySimpleItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySimpleItemByUserIdTask>> FGs2InventoryWebSocketClient::VerifySimpleItemByUserId(
+        const Request::FVerifySimpleItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifySimpleItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireSimpleItemsByStampSheetTask>> FGs2InventoryWebSocketClient::AcquireSimpleItemsByStampSheet(
         const Request::FAcquireSimpleItemsByStampSheetRequestPtr Request) const
     {
@@ -896,6 +941,15 @@ namespace Gs2::Inventory
         const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySimpleItemByStampTaskTask>> FGs2InventoryWebSocketClient::VerifySimpleItemByStampTask(
+        const Request::FVerifySimpleItemByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifySimpleItemByStampTaskTask>>(
             Session,
             Request
         );
@@ -973,6 +1027,24 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBigItemTask>> FGs2InventoryWebSocketClient::VerifyBigItem(
+        const Request::FVerifyBigItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyBigItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBigItemByUserIdTask>> FGs2InventoryWebSocketClient::VerifyBigItemByUserId(
+        const Request::FVerifyBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireBigItemByStampSheetTask>> FGs2InventoryWebSocketClient::AcquireBigItemByStampSheet(
         const Request::FAcquireBigItemByStampSheetRequestPtr Request) const
     {
@@ -986,6 +1058,15 @@ namespace Gs2::Inventory
         const Request::FConsumeBigItemByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeBigItemByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBigItemByStampTaskTask>> FGs2InventoryWebSocketClient::VerifyBigItemByStampTask(
+        const Request::FVerifyBigItemByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyBigItemByStampTaskTask>>(
             Session,
             Request
         );

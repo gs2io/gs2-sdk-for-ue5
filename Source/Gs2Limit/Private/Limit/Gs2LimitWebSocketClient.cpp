@@ -145,6 +145,24 @@ namespace Gs2::Limit
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterTask>> FGs2LimitWebSocketClient::VerifyCounter(
+        const Request::FVerifyCounterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCounterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterByUserIdTask>> FGs2LimitWebSocketClient::VerifyCounterByUserId(
+        const Request::FVerifyCounterByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FCountUpByStampTaskTask>> FGs2LimitWebSocketClient::CountUpByStampTask(
         const Request::FCountUpByStampTaskRequestPtr Request) const
     {
@@ -167,6 +185,15 @@ namespace Gs2::Limit
         const Request::FDeleteByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterByStampTaskTask>> FGs2LimitWebSocketClient::VerifyCounterByStampTask(
+        const Request::FVerifyCounterByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCounterByStampTaskTask>>(
             Session,
             Request
         );

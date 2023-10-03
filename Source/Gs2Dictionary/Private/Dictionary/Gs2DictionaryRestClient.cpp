@@ -208,6 +208,24 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryTask>> FGs2DictionaryRestClient::VerifyEntry(
+        const Request::FVerifyEntryRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyEntryTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryByUserIdTask>> FGs2DictionaryRestClient::VerifyEntryByUserId(
+        const Request::FVerifyEntryByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyEntryByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteEntriesByUserIdTask>> FGs2DictionaryRestClient::DeleteEntriesByUserId(
         const Request::FDeleteEntriesByUserIdRequestPtr Request) const
     {
@@ -230,6 +248,15 @@ namespace Gs2::Dictionary
         const Request::FDeleteEntriesByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteEntriesByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryByStampTaskTask>> FGs2DictionaryRestClient::VerifyEntryByStampTask(
+        const Request::FVerifyEntryByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyEntryByStampTaskTask>>(
             Session,
             Request
         );

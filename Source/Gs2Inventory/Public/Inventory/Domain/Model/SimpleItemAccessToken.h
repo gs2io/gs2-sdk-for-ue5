@@ -178,6 +178,32 @@ namespace Gs2::Inventory::Domain::Model
             Request::FGetSimpleItemWithSignatureRequestPtr Request
         );
 
+        class GS2INVENTORY_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FSimpleItemAccessTokenDomain> Self;
+            const Request::FVerifySimpleItemRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FSimpleItemAccessTokenDomain> Self,
+                const Request::FVerifySimpleItemRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifySimpleItemRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

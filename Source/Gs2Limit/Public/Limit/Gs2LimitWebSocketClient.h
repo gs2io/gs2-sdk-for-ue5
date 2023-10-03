@@ -46,12 +46,18 @@
 #include "Task/WebSocket/CountDownByUserIdTask.h"
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Task/WebSocket/DeleteCounterByUserIdTask.h"
+#include "Request/VerifyCounterRequest.h"
+#include "Task/WebSocket/VerifyCounterTask.h"
+#include "Request/VerifyCounterByUserIdRequest.h"
+#include "Task/WebSocket/VerifyCounterByUserIdTask.h"
 #include "Request/CountUpByStampTaskRequest.h"
 #include "Task/WebSocket/CountUpByStampTaskTask.h"
 #include "Request/CountDownByStampSheetRequest.h"
 #include "Task/WebSocket/CountDownByStampSheetTask.h"
 #include "Request/DeleteByStampSheetRequest.h"
 #include "Task/WebSocket/DeleteByStampSheetTask.h"
+#include "Request/VerifyCounterByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyCounterByStampTaskTask.h"
 #include "Request/DescribeLimitModelMastersRequest.h"
 #include "Task/WebSocket/DescribeLimitModelMastersTask.h"
 #include "Request/CreateLimitModelMasterRequest.h"
@@ -142,6 +148,14 @@ namespace Gs2::Limit
             const Request::FDeleteCounterByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterTask>> VerifyCounter(
+            const Request::FVerifyCounterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterByUserIdTask>> VerifyCounterByUserId(
+            const Request::FVerifyCounterByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FCountUpByStampTaskTask>> CountUpByStampTask(
             const Request::FCountUpByStampTaskRequestPtr Request
         ) const;
@@ -152,6 +166,10 @@ namespace Gs2::Limit
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteByStampSheetTask>> DeleteByStampSheet(
             const Request::FDeleteByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCounterByStampTaskTask>> VerifyCounterByStampTask(
+            const Request::FVerifyCounterByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLimitModelMastersTask>> DescribeLimitModelMasters(

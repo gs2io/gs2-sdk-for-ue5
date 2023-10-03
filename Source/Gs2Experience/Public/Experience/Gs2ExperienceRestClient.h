@@ -88,6 +88,14 @@
 #include "Task/Rest/SetRankCapByUserIdTask.h"
 #include "Request/DeleteStatusByUserIdRequest.h"
 #include "Task/Rest/DeleteStatusByUserIdTask.h"
+#include "Request/VerifyRankRequest.h"
+#include "Task/Rest/VerifyRankTask.h"
+#include "Request/VerifyRankByUserIdRequest.h"
+#include "Task/Rest/VerifyRankByUserIdTask.h"
+#include "Request/VerifyRankCapRequest.h"
+#include "Task/Rest/VerifyRankCapTask.h"
+#include "Request/VerifyRankCapByUserIdRequest.h"
+#include "Task/Rest/VerifyRankCapByUserIdTask.h"
 #include "Request/AddExperienceByStampSheetRequest.h"
 #include "Task/Rest/AddExperienceByStampSheetTask.h"
 #include "Request/SubExperienceByStampTaskRequest.h"
@@ -102,6 +110,10 @@
 #include "Task/Rest/MultiplyAcquireActionsByUserIdTask.h"
 #include "Request/MultiplyAcquireActionsByStampSheetRequest.h"
 #include "Task/Rest/MultiplyAcquireActionsByStampSheetTask.h"
+#include "Request/VerifyRankByStampTaskRequest.h"
+#include "Task/Rest/VerifyRankByStampTaskTask.h"
+#include "Request/VerifyRankCapByStampTaskRequest.h"
+#include "Task/Rest/VerifyRankCapByStampTaskTask.h"
 
 namespace Gs2::Experience
 {
@@ -254,6 +266,22 @@ namespace Gs2::Experience
             const Request::FDeleteStatusByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankTask>> VerifyRank(
+            const Request::FVerifyRankRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankByUserIdTask>> VerifyRankByUserId(
+            const Request::FVerifyRankByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankCapTask>> VerifyRankCap(
+            const Request::FVerifyRankCapRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankCapByUserIdTask>> VerifyRankCapByUserId(
+            const Request::FVerifyRankCapByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FAddExperienceByStampSheetTask>> AddExperienceByStampSheet(
             const Request::FAddExperienceByStampSheetRequestPtr Request
         ) const;
@@ -280,6 +308,14 @@ namespace Gs2::Experience
 
         TSharedPtr<FAsyncTask<Task::Rest::FMultiplyAcquireActionsByStampSheetTask>> MultiplyAcquireActionsByStampSheet(
             const Request::FMultiplyAcquireActionsByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankByStampTaskTask>> VerifyRankByStampTask(
+            const Request::FVerifyRankByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyRankCapByStampTaskTask>> VerifyRankCapByStampTask(
+            const Request::FVerifyRankCapByStampTaskRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2ExperienceRestClient, ESPMode::ThreadSafe> FGs2ExperienceRestClientPtr;

@@ -145,6 +145,24 @@ namespace Gs2::Limit
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterTask>> FGs2LimitRestClient::VerifyCounter(
+        const Request::FVerifyCounterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCounterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterByUserIdTask>> FGs2LimitRestClient::VerifyCounterByUserId(
+        const Request::FVerifyCounterByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FCountUpByStampTaskTask>> FGs2LimitRestClient::CountUpByStampTask(
         const Request::FCountUpByStampTaskRequestPtr Request) const
     {
@@ -167,6 +185,15 @@ namespace Gs2::Limit
         const Request::FDeleteByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterByStampTaskTask>> FGs2LimitRestClient::VerifyCounterByStampTask(
+        const Request::FVerifyCounterByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyCounterByStampTaskTask>>(
             Session,
             Request
         );

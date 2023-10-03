@@ -334,6 +334,42 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankTask>> FGs2ExperienceWebSocketClient::VerifyRank(
+        const Request::FVerifyRankRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyRankTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankByUserIdTask>> FGs2ExperienceWebSocketClient::VerifyRankByUserId(
+        const Request::FVerifyRankByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyRankByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankCapTask>> FGs2ExperienceWebSocketClient::VerifyRankCap(
+        const Request::FVerifyRankCapRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyRankCapTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankCapByUserIdTask>> FGs2ExperienceWebSocketClient::VerifyRankCapByUserId(
+        const Request::FVerifyRankCapByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyRankCapByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FAddExperienceByStampSheetTask>> FGs2ExperienceWebSocketClient::AddExperienceByStampSheet(
         const Request::FAddExperienceByStampSheetRequestPtr Request) const
     {
@@ -392,6 +428,24 @@ namespace Gs2::Experience
         const Request::FMultiplyAcquireActionsByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FMultiplyAcquireActionsByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankByStampTaskTask>> FGs2ExperienceWebSocketClient::VerifyRankByStampTask(
+        const Request::FVerifyRankByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyRankByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRankCapByStampTaskTask>> FGs2ExperienceWebSocketClient::VerifyRankCapByStampTask(
+        const Request::FVerifyRankCapByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyRankCapByStampTaskTask>>(
             Session,
             Request
         );

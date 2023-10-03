@@ -77,6 +77,52 @@ namespace Gs2::Dictionary::Domain::Model
 
     }
 
+    FUserAccessTokenDomain::FVerifyEntryTask::FVerifyEntryTask(
+        const TSharedPtr<FUserAccessTokenDomain> Self,
+        const Request::FVerifyEntryRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserAccessTokenDomain::FVerifyEntryTask::FVerifyEntryTask(
+        const FVerifyEntryTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FVerifyEntryTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FUserAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->VerifyEntry(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FVerifyEntryTask>> FUserAccessTokenDomain::VerifyEntry(
+        Request::FVerifyEntryRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyEntryTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIteratorPtr FUserAccessTokenDomain::Entries(
     ) const
     {

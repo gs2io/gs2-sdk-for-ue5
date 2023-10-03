@@ -46,12 +46,18 @@
 #include "Task/Rest/CountDownByUserIdTask.h"
 #include "Request/DeleteCounterByUserIdRequest.h"
 #include "Task/Rest/DeleteCounterByUserIdTask.h"
+#include "Request/VerifyCounterRequest.h"
+#include "Task/Rest/VerifyCounterTask.h"
+#include "Request/VerifyCounterByUserIdRequest.h"
+#include "Task/Rest/VerifyCounterByUserIdTask.h"
 #include "Request/CountUpByStampTaskRequest.h"
 #include "Task/Rest/CountUpByStampTaskTask.h"
 #include "Request/CountDownByStampSheetRequest.h"
 #include "Task/Rest/CountDownByStampSheetTask.h"
 #include "Request/DeleteByStampSheetRequest.h"
 #include "Task/Rest/DeleteByStampSheetTask.h"
+#include "Request/VerifyCounterByStampTaskRequest.h"
+#include "Task/Rest/VerifyCounterByStampTaskTask.h"
 #include "Request/DescribeLimitModelMastersRequest.h"
 #include "Task/Rest/DescribeLimitModelMastersTask.h"
 #include "Request/CreateLimitModelMasterRequest.h"
@@ -142,6 +148,14 @@ namespace Gs2::Limit
             const Request::FDeleteCounterByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterTask>> VerifyCounter(
+            const Request::FVerifyCounterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterByUserIdTask>> VerifyCounterByUserId(
+            const Request::FVerifyCounterByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FCountUpByStampTaskTask>> CountUpByStampTask(
             const Request::FCountUpByStampTaskRequestPtr Request
         ) const;
@@ -152,6 +166,10 @@ namespace Gs2::Limit
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteByStampSheetTask>> DeleteByStampSheet(
             const Request::FDeleteByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCounterByStampTaskTask>> VerifyCounterByStampTask(
+            const Request::FVerifyCounterByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeLimitModelMastersTask>> DescribeLimitModelMasters(

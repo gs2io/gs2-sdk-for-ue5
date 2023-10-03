@@ -658,6 +658,24 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyItemSetTask>> FGs2InventoryRestClient::VerifyItemSet(
+        const Request::FVerifyItemSetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyItemSetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyItemSetByUserIdTask>> FGs2InventoryRestClient::VerifyItemSetByUserId(
+        const Request::FVerifyItemSetByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyItemSetByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FAcquireItemSetByStampSheetTask>> FGs2InventoryRestClient::AcquireItemSetByStampSheet(
         const Request::FAcquireItemSetByStampSheetRequestPtr Request) const
     {
@@ -671,6 +689,15 @@ namespace Gs2::Inventory
         const Request::FConsumeItemSetByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeItemSetByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyItemSetByStampTaskTask>> FGs2InventoryRestClient::VerifyItemSetByStampTask(
+        const Request::FVerifyItemSetByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyItemSetByStampTaskTask>>(
             Session,
             Request
         );
@@ -883,6 +910,24 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifySimpleItemTask>> FGs2InventoryRestClient::VerifySimpleItem(
+        const Request::FVerifySimpleItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifySimpleItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifySimpleItemByUserIdTask>> FGs2InventoryRestClient::VerifySimpleItemByUserId(
+        const Request::FVerifySimpleItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifySimpleItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FAcquireSimpleItemsByStampSheetTask>> FGs2InventoryRestClient::AcquireSimpleItemsByStampSheet(
         const Request::FAcquireSimpleItemsByStampSheetRequestPtr Request) const
     {
@@ -896,6 +941,15 @@ namespace Gs2::Inventory
         const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeSimpleItemsByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifySimpleItemByStampTaskTask>> FGs2InventoryRestClient::VerifySimpleItemByStampTask(
+        const Request::FVerifySimpleItemByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifySimpleItemByStampTaskTask>>(
             Session,
             Request
         );
@@ -973,6 +1027,24 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyBigItemTask>> FGs2InventoryRestClient::VerifyBigItem(
+        const Request::FVerifyBigItemRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyBigItemTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyBigItemByUserIdTask>> FGs2InventoryRestClient::VerifyBigItemByUserId(
+        const Request::FVerifyBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FAcquireBigItemByStampSheetTask>> FGs2InventoryRestClient::AcquireBigItemByStampSheet(
         const Request::FAcquireBigItemByStampSheetRequestPtr Request) const
     {
@@ -986,6 +1058,15 @@ namespace Gs2::Inventory
         const Request::FConsumeBigItemByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeBigItemByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyBigItemByStampTaskTask>> FGs2InventoryRestClient::VerifyBigItemByStampTask(
+        const Request::FVerifyBigItemByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyBigItemByStampTaskTask>>(
             Session,
             Request
         );
