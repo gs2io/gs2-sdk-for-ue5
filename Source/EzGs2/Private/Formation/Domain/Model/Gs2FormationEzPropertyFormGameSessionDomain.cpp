@@ -230,6 +230,55 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
+    FEzPropertyFormGameSessionDomain::FDeletePropertyFormTask::FDeletePropertyFormTask(
+        TSharedPtr<FEzPropertyFormGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzPropertyFormGameSessionDomain::FDeletePropertyFormTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FDeletePropertyFormTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Delete(
+                    MakeShared<Gs2::Formation::Request::FDeletePropertyFormRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->ProfileValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzPropertyFormGameSessionDomain::FDeletePropertyFormTask>> FEzPropertyFormGameSessionDomain::DeletePropertyForm(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDeletePropertyFormTask>>(
+            this->AsShared()
+        );
+    }
+
     FEzPropertyFormGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzPropertyFormGameSessionDomain> Self
     ): Self(Self)

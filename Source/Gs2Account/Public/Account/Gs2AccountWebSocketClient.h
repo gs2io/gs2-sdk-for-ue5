@@ -68,6 +68,8 @@
 #include "Task/WebSocket/DeleteTakeOverTask.h"
 #include "Request/DeleteTakeOverByUserIdentifierRequest.h"
 #include "Task/WebSocket/DeleteTakeOverByUserIdentifierTask.h"
+#include "Request/DeleteTakeOverByUserIdRequest.h"
+#include "Task/WebSocket/DeleteTakeOverByUserIdTask.h"
 #include "Request/DoTakeOverRequest.h"
 #include "Task/WebSocket/DoTakeOverTask.h"
 #include "Request/GetDataOwnerByUserIdRequest.h"
@@ -184,6 +186,10 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteTakeOverByUserIdentifierTask>> DeleteTakeOverByUserIdentifier(
             const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteTakeOverByUserIdTask>> DeleteTakeOverByUserId(
+            const Request::FDeleteTakeOverByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDoTakeOverTask>> DoTakeOver(

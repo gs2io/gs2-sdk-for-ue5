@@ -175,6 +175,12 @@
 #include "Task/Rest/DeleteTakeOverByUserIdentifierTask.h"
 #include "Task/WebSocket/DeleteTakeOverByUserIdentifierTask.h"
 
+// DeleteTakeOverByUserId
+#include "Request/DeleteTakeOverByUserIdRequest.h"
+#include "Result/DeleteTakeOverByUserIdResult.h"
+#include "Task/Rest/DeleteTakeOverByUserIdTask.h"
+#include "Task/WebSocket/DeleteTakeOverByUserIdTask.h"
+
 // DoTakeOver
 #include "Request/DoTakeOverRequest.h"
 #include "Result/DoTakeOverResult.h"

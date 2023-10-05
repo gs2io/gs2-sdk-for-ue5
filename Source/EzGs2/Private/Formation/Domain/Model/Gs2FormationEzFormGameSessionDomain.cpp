@@ -230,6 +230,55 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
+    FEzFormGameSessionDomain::FDeleteFormTask::FDeleteFormTask(
+        TSharedPtr<FEzFormGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzFormGameSessionDomain::FDeleteFormTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ProfileValue->Run<FDeleteFormTask>(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Delete(
+                    MakeShared<Gs2::Formation::Request::FDeleteFormRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->ProfileValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzFormGameSessionDomain::FDeleteFormTask>> FEzFormGameSessionDomain::DeleteForm(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteFormTask>>(
+            this->AsShared()
+        );
+    }
+
     FEzFormGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzFormGameSessionDomain> Self
     ): Self(Self)

@@ -100,6 +100,7 @@ namespace Gs2::Identifier::Domain::Model
         Domain->AccessToken = Domain->AccessToken = ResultModel->GetAccessToken();
         Domain->TokenType = Domain->TokenType = ResultModel->GetTokenType();
         Domain->ExpiresIn = Domain->ExpiresIn = ResultModel->GetExpiresIn();
+        Domain->OwnerId = Domain->OwnerId = ResultModel->GetOwnerId();
         *Result = Domain;
         return nullptr;
     }

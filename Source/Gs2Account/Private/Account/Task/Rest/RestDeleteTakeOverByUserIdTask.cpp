@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Account/Task/Rest/RemoveBanTask.h"
+#include "Account/Task/Rest/DeleteTakeOverByUserIdTask.h"
 
 #include "HttpManager.h"
 #include "HttpModule.h"
@@ -25,21 +25,21 @@
 
 namespace Gs2::Account::Task::Rest
 {
-    FRemoveBanTask::FRemoveBanTask(
+    FDeleteTakeOverByUserIdTask::FDeleteTakeOverByUserIdTask(
         const Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Request::FRemoveBanRequestPtr Request
+        const Request::FDeleteTakeOverByUserIdRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FRemoveBanTask::FRemoveBanTask(
-        const FRemoveBanTask& From
+    FDeleteTakeOverByUserIdTask::FDeleteTakeOverByUserIdTask(
+        const FDeleteTakeOverByUserIdTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FRemoveBanTask::Action(
-        const TSharedPtr<Result::FRemoveBanResultPtr> Result
+    Core::Model::FGs2ErrorPtr FDeleteTakeOverByUserIdTask::Action(
+        const TSharedPtr<Result::FDeleteTakeOverByUserIdResultPtr> Result
     )
     {
 
@@ -69,7 +69,7 @@ namespace Gs2::Account::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("account"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/account/{userId}/ban/{banStatusName}");
+                .Append("/{namespaceName}/account/{userId}/takeover/type/{type}/takeover");
 
             Url = Url.Replace(
                 TEXT("{namespaceName}"),
@@ -82,9 +82,8 @@ namespace Gs2::Account::Task::Rest
                     TEXT("null") : ToCStr(*this->Request->GetUserId())
             );
             Url = Url.Replace(
-                TEXT("{banStatusName}"),
-                !this->Request->GetBanStatusName().IsSet() || this->Request->GetBanStatusName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetBanStatusName())
+                TEXT("{type}"),
+                ToCStr(*this->Request->GetTypeString())
             );
 
             TArray<FString> queryStrings;
@@ -130,7 +129,7 @@ namespace Gs2::Account::Task::Rest
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Details = TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>();
-                *Result = Result::FRemoveBanResult::FromJson(JsonRootObject);
+                *Result = Result::FDeleteTakeOverByUserIdResult::FromJson(JsonRootObject);
                 return nullptr;
             }
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();

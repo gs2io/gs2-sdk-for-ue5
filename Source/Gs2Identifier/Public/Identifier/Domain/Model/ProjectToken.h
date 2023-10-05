@@ -48,6 +48,7 @@ namespace Gs2::Identifier::Domain::Model
         TOptional<FString> AccessToken;
         TOptional<FString> TokenType;
         TOptional<int32> ExpiresIn;
+        TOptional<FString> OwnerId;
         TOptional<FString> GetAccessToken() const
         {
             return AccessToken;
@@ -59,6 +60,10 @@ namespace Gs2::Identifier::Domain::Model
         TOptional<int32> GetExpiresIn() const
         {
             return ExpiresIn;
+        }
+        TOptional<FString> GetOwnerId() const
+        {
+            return OwnerId;
         }
     private:
 

@@ -68,6 +68,8 @@
 #include "Task/Rest/DeleteTakeOverTask.h"
 #include "Request/DeleteTakeOverByUserIdentifierRequest.h"
 #include "Task/Rest/DeleteTakeOverByUserIdentifierTask.h"
+#include "Request/DeleteTakeOverByUserIdRequest.h"
+#include "Task/Rest/DeleteTakeOverByUserIdTask.h"
 #include "Request/DoTakeOverRequest.h"
 #include "Task/Rest/DoTakeOverTask.h"
 #include "Request/GetDataOwnerByUserIdRequest.h"
@@ -184,6 +186,10 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteTakeOverByUserIdentifierTask>> DeleteTakeOverByUserIdentifier(
             const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteTakeOverByUserIdTask>> DeleteTakeOverByUserId(
+            const Request::FDeleteTakeOverByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDoTakeOverTask>> DoTakeOver(

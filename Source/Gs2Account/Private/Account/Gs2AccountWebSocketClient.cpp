@@ -244,6 +244,15 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteTakeOverByUserIdTask>> FGs2AccountWebSocketClient::DeleteTakeOverByUserId(
+        const Request::FDeleteTakeOverByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteTakeOverByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDoTakeOverTask>> FGs2AccountWebSocketClient::DoTakeOver(
         const Request::FDoTakeOverRequestPtr Request) const
     {

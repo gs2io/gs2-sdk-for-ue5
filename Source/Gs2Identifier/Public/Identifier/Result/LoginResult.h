@@ -25,6 +25,7 @@ namespace Gs2::Identifier::Result
         TOptional<FString> AccessTokenValue;
         TOptional<FString> TokenTypeValue;
         TOptional<int32> ExpiresInValue;
+        TOptional<FString> OwnerIdValue;
         
     public:
         
@@ -37,11 +38,13 @@ namespace Gs2::Identifier::Result
         TSharedPtr<FLoginResult> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FLoginResult> WithTokenType(const TOptional<FString> TokenType);
         TSharedPtr<FLoginResult> WithExpiresIn(const TOptional<int32> ExpiresIn);
+        TSharedPtr<FLoginResult> WithOwnerId(const TOptional<FString> OwnerId);
 
         TOptional<FString> GetAccessToken() const;
         TOptional<FString> GetTokenType() const;
         TOptional<int32> GetExpiresIn() const;
         FString GetExpiresInString() const;
+        TOptional<FString> GetOwnerId() const;
 
         static TSharedPtr<FLoginResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

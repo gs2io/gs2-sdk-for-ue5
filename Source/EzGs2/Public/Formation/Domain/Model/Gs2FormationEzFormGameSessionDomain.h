@@ -128,6 +128,26 @@ namespace Gs2::UE5::Formation::Domain::Model
             FString KeyId
         );
 
+        class FDeleteFormTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>,
+            public TSharedFromThis<FDeleteFormTask>
+        {
+            TSharedPtr<FEzFormGameSessionDomain> Self;
+
+        public:
+            explicit FDeleteFormTask(
+                TSharedPtr<FEzFormGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>> Result
+            ) override;
+        };
+        friend FDeleteFormTask;
+
+        TSharedPtr<FAsyncTask<FDeleteFormTask>> DeleteForm(
+        );
+
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzForm>,
             public TSharedFromThis<FModelTask>

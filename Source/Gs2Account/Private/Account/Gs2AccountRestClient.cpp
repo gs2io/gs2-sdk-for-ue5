@@ -244,6 +244,15 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteTakeOverByUserIdTask>> FGs2AccountRestClient::DeleteTakeOverByUserId(
+        const Request::FDeleteTakeOverByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteTakeOverByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDoTakeOverTask>> FGs2AccountRestClient::DoTakeOver(
         const Request::FDoTakeOverRequestPtr Request) const
     {

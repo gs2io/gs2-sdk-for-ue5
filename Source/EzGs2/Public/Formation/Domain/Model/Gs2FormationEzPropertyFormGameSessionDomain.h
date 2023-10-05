@@ -128,6 +128,26 @@ namespace Gs2::UE5::Formation::Domain::Model
             FString KeyId
         );
 
+        class FDeletePropertyFormTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomain>,
+            public TSharedFromThis<FDeletePropertyFormTask>
+        {
+            TSharedPtr<FEzPropertyFormGameSessionDomain> Self;
+
+        public:
+            explicit FDeletePropertyFormTask(
+                TSharedPtr<FEzPropertyFormGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomain>> Result
+            ) override;
+        };
+        friend FDeletePropertyFormTask;
+
+        TSharedPtr<FAsyncTask<FDeletePropertyFormTask>> DeletePropertyForm(
+        );
+
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzPropertyForm>,
             public TSharedFromThis<FModelTask>

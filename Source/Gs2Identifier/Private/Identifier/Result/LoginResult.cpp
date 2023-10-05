@@ -23,7 +23,8 @@ namespace Gs2::Identifier::Result
     FLoginResult::FLoginResult():
         AccessTokenValue(TOptional<FString>()),
         TokenTypeValue(TOptional<FString>()),
-        ExpiresInValue(TOptional<int32>())
+        ExpiresInValue(TOptional<int32>()),
+        OwnerIdValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Identifier::Result
     ):
         AccessTokenValue(From.AccessTokenValue),
         TokenTypeValue(From.TokenTypeValue),
-        ExpiresInValue(From.ExpiresInValue)
+        ExpiresInValue(From.ExpiresInValue),
+        OwnerIdValue(From.OwnerIdValue)
     {
     }
 
@@ -60,6 +62,14 @@ namespace Gs2::Identifier::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FLoginResult> FLoginResult::WithOwnerId(
+        const TOptional<FString> OwnerId
+    )
+    {
+        this->OwnerIdValue = OwnerId;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FLoginResult::GetAccessToken() const
     {
         return AccessTokenValue;
@@ -84,6 +94,11 @@ namespace Gs2::Identifier::Result
         return FString::Printf(TEXT("%d"), ExpiresInValue.GetValue());
     }
 
+    TOptional<FString> FLoginResult::GetOwnerId() const
+    {
+        return OwnerIdValue;
+    }
+
     TSharedPtr<FLoginResult> FLoginResult::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
@@ -92,7 +107,7 @@ namespace Gs2::Identifier::Result
         return MakeShared<FLoginResult>()
             ->WithAccessToken(Data->HasField("access_token") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("access_token", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -101,7 +116,7 @@ namespace Gs2::Identifier::Result
                 }() : TOptional<FString>())
             ->WithTokenType(Data->HasField("token_type") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("token_type", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -116,7 +131,16 @@ namespace Gs2::Identifier::Result
                         return TOptional(v);
                     }
                     return TOptional<int32>();
-                }() : TOptional<int32>());
+                }() : TOptional<int32>())
+            ->WithOwnerId(Data->HasField("owner_id") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("owner_id", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FLoginResult::ToJson() const
@@ -133,6 +157,10 @@ namespace Gs2::Identifier::Result
         if (ExpiresInValue.IsSet())
         {
             JsonRootObject->SetNumberField("expires_in", ExpiresInValue.GetValue());
+        }
+        if (OwnerIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("owner_id", OwnerIdValue.GetValue());
         }
         return JsonRootObject;
     }
