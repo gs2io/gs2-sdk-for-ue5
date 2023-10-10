@@ -61,6 +61,11 @@ namespace Gs2::Exchange::Domain
         Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
+        TOptional<FString> Url;
+        TOptional<FString> GetUrl() const
+        {
+            return Url;
+        }
     private:
 
         FString ParentKey;
@@ -103,6 +108,110 @@ namespace Gs2::Exchange::Domain
 
         TSharedPtr<FAsyncTask<FCreateNamespaceTask>> CreateNamespace(
             Request::FCreateNamespaceRequestPtr Request
+        );
+
+        class GS2EXCHANGE_API FDumpUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2ExchangeDomain>,
+            public TSharedFromThis<FDumpUserDataTask>
+        {
+            const TSharedPtr<FGs2ExchangeDomain> Self;
+            const Request::FDumpUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FDumpUserDataTask(
+                const TSharedPtr<FGs2ExchangeDomain> Self,
+                const Request::FDumpUserDataByUserIdRequestPtr Request
+            );
+
+            FDumpUserDataTask(
+                const FDumpUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2ExchangeDomain>> Result
+            ) override;
+        };
+        friend FDumpUserDataTask;
+
+        TSharedPtr<FAsyncTask<FDumpUserDataTask>> DumpUserData(
+            Request::FDumpUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2EXCHANGE_API FCheckDumpUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2ExchangeDomain>,
+            public TSharedFromThis<FCheckDumpUserDataTask>
+        {
+            const TSharedPtr<FGs2ExchangeDomain> Self;
+            const Request::FCheckDumpUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCheckDumpUserDataTask(
+                const TSharedPtr<FGs2ExchangeDomain> Self,
+                const Request::FCheckDumpUserDataByUserIdRequestPtr Request
+            );
+
+            FCheckDumpUserDataTask(
+                const FCheckDumpUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2ExchangeDomain>> Result
+            ) override;
+        };
+        friend FCheckDumpUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCheckDumpUserDataTask>> CheckDumpUserData(
+            Request::FCheckDumpUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2EXCHANGE_API FCleanUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2ExchangeDomain>,
+            public TSharedFromThis<FCleanUserDataTask>
+        {
+            const TSharedPtr<FGs2ExchangeDomain> Self;
+            const Request::FCleanUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCleanUserDataTask(
+                const TSharedPtr<FGs2ExchangeDomain> Self,
+                const Request::FCleanUserDataByUserIdRequestPtr Request
+            );
+
+            FCleanUserDataTask(
+                const FCleanUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2ExchangeDomain>> Result
+            ) override;
+        };
+        friend FCleanUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCleanUserDataTask>> CleanUserData(
+            Request::FCleanUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2EXCHANGE_API FCheckCleanUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2ExchangeDomain>,
+            public TSharedFromThis<FCheckCleanUserDataTask>
+        {
+            const TSharedPtr<FGs2ExchangeDomain> Self;
+            const Request::FCheckCleanUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCheckCleanUserDataTask(
+                const TSharedPtr<FGs2ExchangeDomain> Self,
+                const Request::FCheckCleanUserDataByUserIdRequestPtr Request
+            );
+
+            FCheckCleanUserDataTask(
+                const FCheckCleanUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2ExchangeDomain>> Result
+            ) override;
+        };
+        friend FCheckCleanUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCheckCleanUserDataTask>> CheckCleanUserData(
+            Request::FCheckCleanUserDataByUserIdRequestPtr Request
         );
 
         Gs2::Exchange::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(

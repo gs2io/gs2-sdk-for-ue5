@@ -59,6 +59,14 @@ namespace Gs2::UE5::Enhance::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzRateModel> FEzRateModel::WithAcquireExperienceHierarchy(
+        const TSharedPtr<TArray<FString>> AcquireExperienceHierarchy
+    )
+    {
+        this->AcquireExperienceHierarchyValue = AcquireExperienceHierarchy;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzRateModel> FEzRateModel::WithExperienceModelId(
         const TOptional<FString> ExperienceModelId
     )
@@ -86,6 +94,10 @@ namespace Gs2::UE5::Enhance::Model
     {
         return MaterialInventoryModelIdValue;
     }
+    TSharedPtr<TArray<FString>> FEzRateModel::GetAcquireExperienceHierarchy() const
+    {
+        return AcquireExperienceHierarchyValue;
+    }
     TOptional<FString> FEzRateModel::GetExperienceModelId() const
     {
         return ExperienceModelIdValue;
@@ -99,6 +111,7 @@ namespace Gs2::UE5::Enhance::Model
             ->WithTargetInventoryModelId(TargetInventoryModelIdValue)
             ->WithAcquireExperienceSuffix(AcquireExperienceSuffixValue)
             ->WithMaterialInventoryModelId(MaterialInventoryModelIdValue)
+            ->WithAcquireExperienceHierarchy(AcquireExperienceHierarchyValue)
             ->WithExperienceModelId(ExperienceModelIdValue);
     }
 
@@ -114,6 +127,7 @@ namespace Gs2::UE5::Enhance::Model
             ->WithTargetInventoryModelId(Model->GetTargetInventoryModelId())
             ->WithAcquireExperienceSuffix(Model->GetAcquireExperienceSuffix())
             ->WithMaterialInventoryModelId(Model->GetMaterialInventoryModelId())
+            ->WithAcquireExperienceHierarchy(Model->GetAcquireExperienceHierarchy())
             ->WithExperienceModelId(Model->GetExperienceModelId());
     }
 }

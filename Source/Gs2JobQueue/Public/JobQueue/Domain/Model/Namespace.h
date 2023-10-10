@@ -48,9 +48,14 @@ namespace Gs2::JobQueue::Domain::Model
 
         public:
         TOptional<FString> Status;
+        TOptional<FString> Url;
         TOptional<FString> GetStatus() const
         {
             return Status;
+        }
+        TOptional<FString> GetUrl() const
+        {
+            return Url;
         }
         TOptional<FString> NamespaceName;
     private:

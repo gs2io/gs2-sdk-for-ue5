@@ -63,6 +63,11 @@ namespace Gs2::JobQueue::Domain
         Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
 
         public:
+        TOptional<FString> Url;
+        TOptional<FString> GetUrl() const
+        {
+            return Url;
+        }
     private:
 
         FString ParentKey;
@@ -105,6 +110,110 @@ namespace Gs2::JobQueue::Domain
 
         TSharedPtr<FAsyncTask<FCreateNamespaceTask>> CreateNamespace(
             Request::FCreateNamespaceRequestPtr Request
+        );
+
+        class GS2JOBQUEUE_API FDumpUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2JobQueueDomain>,
+            public TSharedFromThis<FDumpUserDataTask>
+        {
+            const TSharedPtr<FGs2JobQueueDomain> Self;
+            const Request::FDumpUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FDumpUserDataTask(
+                const TSharedPtr<FGs2JobQueueDomain> Self,
+                const Request::FDumpUserDataByUserIdRequestPtr Request
+            );
+
+            FDumpUserDataTask(
+                const FDumpUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+            ) override;
+        };
+        friend FDumpUserDataTask;
+
+        TSharedPtr<FAsyncTask<FDumpUserDataTask>> DumpUserData(
+            Request::FDumpUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2JOBQUEUE_API FCheckDumpUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2JobQueueDomain>,
+            public TSharedFromThis<FCheckDumpUserDataTask>
+        {
+            const TSharedPtr<FGs2JobQueueDomain> Self;
+            const Request::FCheckDumpUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCheckDumpUserDataTask(
+                const TSharedPtr<FGs2JobQueueDomain> Self,
+                const Request::FCheckDumpUserDataByUserIdRequestPtr Request
+            );
+
+            FCheckDumpUserDataTask(
+                const FCheckDumpUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+            ) override;
+        };
+        friend FCheckDumpUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCheckDumpUserDataTask>> CheckDumpUserData(
+            Request::FCheckDumpUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2JOBQUEUE_API FCleanUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2JobQueueDomain>,
+            public TSharedFromThis<FCleanUserDataTask>
+        {
+            const TSharedPtr<FGs2JobQueueDomain> Self;
+            const Request::FCleanUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCleanUserDataTask(
+                const TSharedPtr<FGs2JobQueueDomain> Self,
+                const Request::FCleanUserDataByUserIdRequestPtr Request
+            );
+
+            FCleanUserDataTask(
+                const FCleanUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+            ) override;
+        };
+        friend FCleanUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCleanUserDataTask>> CleanUserData(
+            Request::FCleanUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2JOBQUEUE_API FCheckCleanUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2JobQueueDomain>,
+            public TSharedFromThis<FCheckCleanUserDataTask>
+        {
+            const TSharedPtr<FGs2JobQueueDomain> Self;
+            const Request::FCheckCleanUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCheckCleanUserDataTask(
+                const TSharedPtr<FGs2JobQueueDomain> Self,
+                const Request::FCheckCleanUserDataByUserIdRequestPtr Request
+            );
+
+            FCheckCleanUserDataTask(
+                const FCheckCleanUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+            ) override;
+        };
+        friend FCheckCleanUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCheckCleanUserDataTask>> CheckCleanUserData(
+            Request::FCheckCleanUserDataByUserIdRequestPtr Request
         );
 
         Gs2::JobQueue::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(

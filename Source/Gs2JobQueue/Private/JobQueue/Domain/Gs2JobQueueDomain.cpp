@@ -73,7 +73,8 @@ namespace Gs2::JobQueue::Domain
         JobQueueDomain(From.JobQueueDomain),
         StampSheetConfiguration(From.StampSheetConfiguration),
         Session(From.Session),
-        Client(From.Client)
+        Client(From.Client),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -140,12 +141,207 @@ namespace Gs2::JobQueue::Domain
         return Gs2::Core::Util::New<FAsyncTask<FCreateNamespaceTask>>(this->AsShared(), Request);
     }
 
+    FGs2JobQueueDomain::FDumpUserDataTask::FDumpUserDataTask(
+        TSharedPtr<FGs2JobQueueDomain> Self,
+        const Request::FDumpUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2JobQueueDomain::FDumpUserDataTask::FDumpUserDataTask(
+        const FDumpUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2JobQueueDomain::FDumpUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->DumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2JobQueueDomain::FDumpUserDataTask>> FGs2JobQueueDomain::DumpUserData(
+        Request::FDumpUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDumpUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2JobQueueDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
+        TSharedPtr<FGs2JobQueueDomain> Self,
+        const Request::FCheckDumpUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2JobQueueDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
+        const FCheckDumpUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2JobQueueDomain::FCheckDumpUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->CheckDumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2JobQueueDomain::FCheckDumpUserDataTask>> FGs2JobQueueDomain::CheckDumpUserData(
+        Request::FCheckDumpUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCheckDumpUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2JobQueueDomain::FCleanUserDataTask::FCleanUserDataTask(
+        TSharedPtr<FGs2JobQueueDomain> Self,
+        const Request::FCleanUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2JobQueueDomain::FCleanUserDataTask::FCleanUserDataTask(
+        const FCleanUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2JobQueueDomain::FCleanUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->CleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2JobQueueDomain::FCleanUserDataTask>> FGs2JobQueueDomain::CleanUserData(
+        Request::FCleanUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCleanUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2JobQueueDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
+        TSharedPtr<FGs2JobQueueDomain> Self,
+        const Request::FCheckCleanUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2JobQueueDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
+        const FCheckCleanUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2JobQueueDomain::FCheckCleanUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->CheckCleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2JobQueueDomain::FCheckCleanUserDataTask>> FGs2JobQueueDomain::CheckCleanUserData(
+        Request::FCheckCleanUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCheckCleanUserDataTask>>(this->AsShared(), Request);
+    }
+
     Gs2::JobQueue::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2JobQueueDomain::Namespaces(
     ) const
     {
         return MakeShared<Gs2::JobQueue::Domain::Iterator::FDescribeNamespacesIterator>(
             Cache,
             Client
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FGs2JobQueueDomain::SubscribeNamespaces(
+    TFunction<void()> Callback
+    )
+    {
+        return Cache->ListSubscribe(
+            Gs2::JobQueue::Model::FNamespace::TypeName,
+            "jobQueue:Namespace",
+            Callback
+        );
+    }
+
+    void FGs2JobQueueDomain::UnsubscribeNamespaces(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Cache->ListUnsubscribe(
+            Gs2::JobQueue::Model::FNamespace::TypeName,
+            "jobQueue:Namespace",
+            CallbackID
         );
     }
 
@@ -158,7 +354,7 @@ namespace Gs2::JobQueue::Domain
             JobQueueDomain,
             StampSheetConfiguration,
             Session,
-            NamespaceName
+            NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
 
@@ -213,6 +409,35 @@ namespace Gs2::JobQueue::Domain
         const FString Request,
         const FString Result
     ) {
+        if (Method == "DeleteJobByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::JobQueue::Request::FDeleteJobByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::JobQueue::Result::FDeleteJobByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Job"
+                );
+                const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Cache->Delete(Gs2::JobQueue::Model::FJob::TypeName, ParentKey, Key);
+            }
+        }
     }
 
     void FGs2JobQueueDomain::UpdateCacheFromJobResult(
@@ -345,18 +570,18 @@ namespace Gs2::JobQueue::Domain
                     {
                         return Future->GetTask().Error();
                     }
-                    const auto Result2 = Future->GetTask().Result();
-                    if (Result2 != nullptr)
+                    const auto Result = Future->GetTask().Result();
+                    if (Result != nullptr)
                     {
                         Self->JobQueueDomain->OnExecutedEvent().Broadcast(
                             MakeShared<Gs2::JobQueue::Model::FJob>()
-                                ->WithScriptId(Result2->GetItem()->GetScriptId())
-                                ->WithArgs(Result2->GetItem()->GetArgs()),
+                                ->WithScriptId(Result->GetItem()->GetScriptId())
+                                ->WithArgs(Result->GetItem()->GetArgs()),
                             MakeShared<Gs2::JobQueue::Model::FJobResultBody>()
-                                ->WithTryNumber(Result2->GetItem()->GetTryNumber())
-                                ->WithStatusCode(Result2->GetItem()->GetStatusCode())
-                                ->WithResult(Result2->GetItem()->GetResult())
-                                ->WithTryAt(Result2->GetItem()->GetTryAt())
+                                ->WithTryNumber(Result->GetItem()->GetTryNumber())
+                                ->WithStatusCode(Result->GetItem()->GetStatusCode())
+                                ->WithResult(Result->GetItem()->GetResult())
+                                ->WithTryAt(Result->GetItem()->GetTryAt())
                         );
                     }
                     Future->EnsureCompletion();

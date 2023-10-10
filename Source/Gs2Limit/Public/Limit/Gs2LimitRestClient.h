@@ -30,6 +30,14 @@
 #include "Task/Rest/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/Rest/DeleteNamespaceTask.h"
+#include "Request/DumpUserDataByUserIdRequest.h"
+#include "Task/Rest/DumpUserDataByUserIdTask.h"
+#include "Request/CheckDumpUserDataByUserIdRequest.h"
+#include "Task/Rest/CheckDumpUserDataByUserIdTask.h"
+#include "Request/CleanUserDataByUserIdRequest.h"
+#include "Task/Rest/CleanUserDataByUserIdTask.h"
+#include "Request/CheckCleanUserDataByUserIdRequest.h"
+#include "Task/Rest/CheckCleanUserDataByUserIdTask.h"
 #include "Request/DescribeCountersRequest.h"
 #include "Task/Rest/DescribeCountersTask.h"
 #include "Request/DescribeCountersByUserIdRequest.h"
@@ -114,6 +122,22 @@ namespace Gs2::Limit
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDumpUserDataByUserIdTask>> DumpUserDataByUserId(
+            const Request::FDumpUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCheckDumpUserDataByUserIdTask>> CheckDumpUserDataByUserId(
+            const Request::FCheckDumpUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCleanUserDataByUserIdTask>> CleanUserDataByUserId(
+            const Request::FCleanUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCheckCleanUserDataByUserIdTask>> CheckCleanUserDataByUserId(
+            const Request::FCheckCleanUserDataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeCountersTask>> DescribeCounters(

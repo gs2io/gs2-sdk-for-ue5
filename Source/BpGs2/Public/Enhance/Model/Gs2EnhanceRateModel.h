@@ -45,6 +45,8 @@ struct FGs2EnhanceRateModelValue
     UPROPERTY(BlueprintReadOnly)
     FString MaterialInventoryModelId = "";
     UPROPERTY(BlueprintReadOnly)
+    TArray<FString> AcquireExperienceHierarchy = TArray<FString>();
+    UPROPERTY(BlueprintReadOnly)
     FString ExperienceModelId = "";
 };
 
@@ -62,6 +64,15 @@ inline FGs2EnhanceRateModelValue EzRateModelToFGs2EnhanceRateModelValue(
     Value.TargetInventoryModelId = Model->GetTargetInventoryModelId() ? *Model->GetTargetInventoryModelId() : "";
     Value.AcquireExperienceSuffix = Model->GetAcquireExperienceSuffix() ? *Model->GetAcquireExperienceSuffix() : "";
     Value.MaterialInventoryModelId = Model->GetMaterialInventoryModelId() ? *Model->GetMaterialInventoryModelId() : "";
+    Value.AcquireExperienceHierarchy = Model->GetAcquireExperienceHierarchy() ? [&]
+    {
+        TArray<FString> r;
+        for (auto v : *Model->GetAcquireExperienceHierarchy())
+        {
+            r.Add(v);
+        }
+        return r;
+    }() : TArray<FString>();
     Value.ExperienceModelId = Model->GetExperienceModelId() ? *Model->GetExperienceModelId() : "";
     return Value;
 }
@@ -76,6 +87,13 @@ inline Gs2::UE5::Enhance::Model::FEzRateModelPtr FGs2EnhanceRateModelValueToEzRa
         ->WithTargetInventoryModelId(Model.TargetInventoryModelId)
         ->WithAcquireExperienceSuffix(Model.AcquireExperienceSuffix)
         ->WithMaterialInventoryModelId(Model.MaterialInventoryModelId)
+        ->WithAcquireExperienceHierarchy([&]{
+            auto r = MakeShared<TArray<FString>>();
+            for (auto v : Model.AcquireExperienceHierarchy) {
+                r->Add(v);
+            }
+            return r;
+        }())
         ->WithExperienceModelId(Model.ExperienceModelId);
 }
 

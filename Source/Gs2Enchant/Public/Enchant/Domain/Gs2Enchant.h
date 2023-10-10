@@ -63,6 +63,11 @@ namespace Gs2::Enchant::Domain
         Gs2::Enchant::FGs2EnchantRestClientPtr Client;
 
         public:
+        TOptional<FString> Url;
+        TOptional<FString> GetUrl() const
+        {
+            return Url;
+        }
     private:
 
         FString ParentKey;
@@ -105,6 +110,110 @@ namespace Gs2::Enchant::Domain
 
         TSharedPtr<FAsyncTask<FCreateNamespaceTask>> CreateNamespace(
             Request::FCreateNamespaceRequestPtr Request
+        );
+
+        class GS2ENCHANT_API FDumpUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2EnchantDomain>,
+            public TSharedFromThis<FDumpUserDataTask>
+        {
+            const TSharedPtr<FGs2EnchantDomain> Self;
+            const Request::FDumpUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FDumpUserDataTask(
+                const TSharedPtr<FGs2EnchantDomain> Self,
+                const Request::FDumpUserDataByUserIdRequestPtr Request
+            );
+
+            FDumpUserDataTask(
+                const FDumpUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2EnchantDomain>> Result
+            ) override;
+        };
+        friend FDumpUserDataTask;
+
+        TSharedPtr<FAsyncTask<FDumpUserDataTask>> DumpUserData(
+            Request::FDumpUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2ENCHANT_API FCheckDumpUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2EnchantDomain>,
+            public TSharedFromThis<FCheckDumpUserDataTask>
+        {
+            const TSharedPtr<FGs2EnchantDomain> Self;
+            const Request::FCheckDumpUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCheckDumpUserDataTask(
+                const TSharedPtr<FGs2EnchantDomain> Self,
+                const Request::FCheckDumpUserDataByUserIdRequestPtr Request
+            );
+
+            FCheckDumpUserDataTask(
+                const FCheckDumpUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2EnchantDomain>> Result
+            ) override;
+        };
+        friend FCheckDumpUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCheckDumpUserDataTask>> CheckDumpUserData(
+            Request::FCheckDumpUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2ENCHANT_API FCleanUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2EnchantDomain>,
+            public TSharedFromThis<FCleanUserDataTask>
+        {
+            const TSharedPtr<FGs2EnchantDomain> Self;
+            const Request::FCleanUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCleanUserDataTask(
+                const TSharedPtr<FGs2EnchantDomain> Self,
+                const Request::FCleanUserDataByUserIdRequestPtr Request
+            );
+
+            FCleanUserDataTask(
+                const FCleanUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2EnchantDomain>> Result
+            ) override;
+        };
+        friend FCleanUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCleanUserDataTask>> CleanUserData(
+            Request::FCleanUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2ENCHANT_API FCheckCleanUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2EnchantDomain>,
+            public TSharedFromThis<FCheckCleanUserDataTask>
+        {
+            const TSharedPtr<FGs2EnchantDomain> Self;
+            const Request::FCheckCleanUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCheckCleanUserDataTask(
+                const TSharedPtr<FGs2EnchantDomain> Self,
+                const Request::FCheckCleanUserDataByUserIdRequestPtr Request
+            );
+
+            FCheckCleanUserDataTask(
+                const FCheckCleanUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2EnchantDomain>> Result
+            ) override;
+        };
+        friend FCheckCleanUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCheckCleanUserDataTask>> CheckCleanUserData(
+            Request::FCheckCleanUserDataByUserIdRequestPtr Request
         );
 
         Gs2::Enchant::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(

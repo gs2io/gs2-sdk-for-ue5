@@ -66,6 +66,30 @@
 #include "Task/Rest/DeleteNamespaceTask.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
 
+// DumpUserDataByUserId
+#include "Request/DumpUserDataByUserIdRequest.h"
+#include "Result/DumpUserDataByUserIdResult.h"
+#include "Task/Rest/DumpUserDataByUserIdTask.h"
+#include "Task/WebSocket/DumpUserDataByUserIdTask.h"
+
+// CheckDumpUserDataByUserId
+#include "Request/CheckDumpUserDataByUserIdRequest.h"
+#include "Result/CheckDumpUserDataByUserIdResult.h"
+#include "Task/Rest/CheckDumpUserDataByUserIdTask.h"
+#include "Task/WebSocket/CheckDumpUserDataByUserIdTask.h"
+
+// CleanUserDataByUserId
+#include "Request/CleanUserDataByUserIdRequest.h"
+#include "Result/CleanUserDataByUserIdResult.h"
+#include "Task/Rest/CleanUserDataByUserIdTask.h"
+#include "Task/WebSocket/CleanUserDataByUserIdTask.h"
+
+// CheckCleanUserDataByUserId
+#include "Request/CheckCleanUserDataByUserIdRequest.h"
+#include "Result/CheckCleanUserDataByUserIdResult.h"
+#include "Task/Rest/CheckCleanUserDataByUserIdTask.h"
+#include "Task/WebSocket/CheckCleanUserDataByUserIdTask.h"
+
 // DescribeCategoryModelMasters
 #include "Request/DescribeCategoryModelMastersRequest.h"
 #include "Result/DescribeCategoryModelMastersResult.h"

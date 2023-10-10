@@ -28,6 +28,7 @@ namespace Gs2::UE5::Enhance::Model
         TOptional<FString> TargetInventoryModelIdValue;
         TOptional<FString> AcquireExperienceSuffixValue;
         TOptional<FString> MaterialInventoryModelIdValue;
+        TSharedPtr<TArray<FString>> AcquireExperienceHierarchyValue;
         TOptional<FString> ExperienceModelIdValue;
 
 	public:
@@ -36,6 +37,7 @@ namespace Gs2::UE5::Enhance::Model
         TSharedPtr<FEzRateModel> WithTargetInventoryModelId(const TOptional<FString> TargetInventoryModelId);
         TSharedPtr<FEzRateModel> WithAcquireExperienceSuffix(const TOptional<FString> AcquireExperienceSuffix);
         TSharedPtr<FEzRateModel> WithMaterialInventoryModelId(const TOptional<FString> MaterialInventoryModelId);
+        TSharedPtr<FEzRateModel> WithAcquireExperienceHierarchy(const TSharedPtr<TArray<FString>> AcquireExperienceHierarchy);
         TSharedPtr<FEzRateModel> WithExperienceModelId(const TOptional<FString> ExperienceModelId);
 
         TOptional<FString> GetName() const;
@@ -47,6 +49,8 @@ namespace Gs2::UE5::Enhance::Model
         TOptional<FString> GetAcquireExperienceSuffix() const;
 
         TOptional<FString> GetMaterialInventoryModelId() const;
+
+        TSharedPtr<TArray<FString>> GetAcquireExperienceHierarchy() const;
 
         TOptional<FString> GetExperienceModelId() const;
 

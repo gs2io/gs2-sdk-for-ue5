@@ -128,6 +128,179 @@ namespace Gs2::Version::Domain
         return Gs2::Core::Util::New<FAsyncTask<FCreateNamespaceTask>>(this->AsShared(), Request);
     }
 
+    FGs2VersionDomain::FDumpUserDataTask::FDumpUserDataTask(
+        TSharedPtr<FGs2VersionDomain> Self,
+        const Request::FDumpUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2VersionDomain::FDumpUserDataTask::FDumpUserDataTask(
+        const FDumpUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2VersionDomain::FDumpUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2VersionDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->DumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2VersionDomain::FDumpUserDataTask>> FGs2VersionDomain::DumpUserData(
+        Request::FDumpUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDumpUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2VersionDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
+        TSharedPtr<FGs2VersionDomain> Self,
+        const Request::FCheckDumpUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2VersionDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
+        const FCheckDumpUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2VersionDomain::FCheckDumpUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2VersionDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->CheckDumpUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2VersionDomain::FCheckDumpUserDataTask>> FGs2VersionDomain::CheckDumpUserData(
+        Request::FCheckDumpUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCheckDumpUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2VersionDomain::FCleanUserDataTask::FCleanUserDataTask(
+        TSharedPtr<FGs2VersionDomain> Self,
+        const Request::FCleanUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2VersionDomain::FCleanUserDataTask::FCleanUserDataTask(
+        const FCleanUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2VersionDomain::FCleanUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2VersionDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->CleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2VersionDomain::FCleanUserDataTask>> FGs2VersionDomain::CleanUserData(
+        Request::FCleanUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCleanUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2VersionDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
+        TSharedPtr<FGs2VersionDomain> Self,
+        const Request::FCheckCleanUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2VersionDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
+        const FCheckCleanUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2VersionDomain::FCheckCleanUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2VersionDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->CheckCleanUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2VersionDomain::FCheckCleanUserDataTask>> FGs2VersionDomain::CheckCleanUserData(
+        Request::FCheckCleanUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCheckCleanUserDataTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Version::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2VersionDomain::Namespaces(
     ) const
     {

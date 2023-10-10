@@ -61,10 +61,15 @@ namespace Gs2::Lottery::Domain::Model
 
         public:
         TOptional<FString> Status;
+        TOptional<FString> Url;
         TOptional<FString> NextPageToken;
         TOptional<FString> GetStatus() const
         {
             return Status;
+        }
+        TOptional<FString> GetUrl() const
+        {
+            return Url;
         }
         TOptional<FString> GetNextPageToken() const
         {

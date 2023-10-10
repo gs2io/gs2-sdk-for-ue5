@@ -49,8 +49,8 @@ namespace Gs2::Realtime::Domain
         Gs2::Realtime::FGs2RealtimeRestClientPtr Client;
 
         public:
-        TSharedPtr<int64> Timestamp;
-        TSharedPtr<int64> GetTimestamp() const
+        TOptional<int64> Timestamp;
+        TOptional<int64> GetTimestamp() const
         {
             return Timestamp;
         }

@@ -49,6 +49,7 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
         public:
         TOptional<FString> Status() const;
+        TOptional<FString> Url() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
 

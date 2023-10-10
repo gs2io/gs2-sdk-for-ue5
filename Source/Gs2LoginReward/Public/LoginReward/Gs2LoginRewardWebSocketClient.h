@@ -30,6 +30,14 @@
 #include "Task/WebSocket/UpdateNamespaceTask.h"
 #include "Request/DeleteNamespaceRequest.h"
 #include "Task/WebSocket/DeleteNamespaceTask.h"
+#include "Request/DumpUserDataByUserIdRequest.h"
+#include "Task/WebSocket/DumpUserDataByUserIdTask.h"
+#include "Request/CheckDumpUserDataByUserIdRequest.h"
+#include "Task/WebSocket/CheckDumpUserDataByUserIdTask.h"
+#include "Request/CleanUserDataByUserIdRequest.h"
+#include "Task/WebSocket/CleanUserDataByUserIdTask.h"
+#include "Request/CheckCleanUserDataByUserIdRequest.h"
+#include "Task/WebSocket/CheckCleanUserDataByUserIdTask.h"
 #include "Request/DescribeBonusModelMastersRequest.h"
 #include "Task/WebSocket/DescribeBonusModelMastersTask.h"
 #include "Request/CreateBonusModelMasterRequest.h"
@@ -116,6 +124,22 @@ namespace Gs2::LoginReward
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteNamespaceTask>> DeleteNamespace(
             const Request::FDeleteNamespaceRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDumpUserDataByUserIdTask>> DumpUserDataByUserId(
+            const Request::FDumpUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCheckDumpUserDataByUserIdTask>> CheckDumpUserDataByUserId(
+            const Request::FCheckDumpUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCleanUserDataByUserIdTask>> CleanUserDataByUserId(
+            const Request::FCleanUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCheckCleanUserDataByUserIdTask>> CheckCleanUserDataByUserId(
+            const Request::FCheckCleanUserDataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBonusModelMastersTask>> DescribeBonusModelMasters(

@@ -38,6 +38,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
         public:
         TOptional<FString> Status() const;
+        TOptional<FString> Url() const;
         TOptional<FString> NamespaceName() const;
 
         FEzNamespaceDomain(

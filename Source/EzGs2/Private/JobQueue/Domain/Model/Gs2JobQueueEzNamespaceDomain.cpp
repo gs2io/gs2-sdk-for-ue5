@@ -24,6 +24,11 @@ namespace Gs2::UE5::JobQueue::Domain::Model
         return Domain->Status;
     }
 
+    TOptional<FString> FEzNamespaceDomain::Url() const
+    {
+        return Domain->Url;
+    }
+
     TOptional<FString> FEzNamespaceDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
