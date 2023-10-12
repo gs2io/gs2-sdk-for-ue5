@@ -422,6 +422,24 @@
 #include "Task/Rest/DeleteInventoryByUserIdTask.h"
 #include "Task/WebSocket/DeleteInventoryByUserIdTask.h"
 
+// VerifyInventoryCurrentMaxCapacity
+#include "Request/VerifyInventoryCurrentMaxCapacityRequest.h"
+#include "Result/VerifyInventoryCurrentMaxCapacityResult.h"
+#include "Task/Rest/VerifyInventoryCurrentMaxCapacityTask.h"
+#include "Task/WebSocket/VerifyInventoryCurrentMaxCapacityTask.h"
+
+// VerifyInventoryCurrentMaxCapacityByUserId
+#include "Request/VerifyInventoryCurrentMaxCapacityByUserIdRequest.h"
+#include "Result/VerifyInventoryCurrentMaxCapacityByUserIdResult.h"
+#include "Task/Rest/VerifyInventoryCurrentMaxCapacityByUserIdTask.h"
+#include "Task/WebSocket/VerifyInventoryCurrentMaxCapacityByUserIdTask.h"
+
+// VerifyInventoryCurrentMaxCapacityByStampTask
+#include "Request/VerifyInventoryCurrentMaxCapacityByStampTaskRequest.h"
+#include "Result/VerifyInventoryCurrentMaxCapacityByStampTaskResult.h"
+#include "Task/Rest/VerifyInventoryCurrentMaxCapacityByStampTaskTask.h"
+#include "Task/WebSocket/VerifyInventoryCurrentMaxCapacityByStampTaskTask.h"
+
 // AddCapacityByStampSheet
 #include "Request/AddCapacityByStampSheetRequest.h"
 #include "Result/AddCapacityByStampSheetResult.h"

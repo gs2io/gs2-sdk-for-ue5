@@ -586,6 +586,33 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyInventoryCurrentMaxCapacityTask>> FGs2InventoryRestClient::VerifyInventoryCurrentMaxCapacity(
+        const Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyInventoryCurrentMaxCapacityTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyInventoryCurrentMaxCapacityByUserIdTask>> FGs2InventoryRestClient::VerifyInventoryCurrentMaxCapacityByUserId(
+        const Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyInventoryCurrentMaxCapacityByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyInventoryCurrentMaxCapacityByStampTaskTask>> FGs2InventoryRestClient::VerifyInventoryCurrentMaxCapacityByStampTask(
+        const Request::FVerifyInventoryCurrentMaxCapacityByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyInventoryCurrentMaxCapacityByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FAddCapacityByStampSheetTask>> FGs2InventoryRestClient::AddCapacityByStampSheet(
         const Request::FAddCapacityByStampSheetRequestPtr Request) const
     {

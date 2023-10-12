@@ -168,6 +168,53 @@ namespace Gs2::Inventory::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FInventoryAccessTokenDomain::FVerifyCurrentMaxCapacityTask::FVerifyCurrentMaxCapacityTask(
+        const TSharedPtr<FInventoryAccessTokenDomain> Self,
+        const Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FInventoryAccessTokenDomain::FVerifyCurrentMaxCapacityTask::FVerifyCurrentMaxCapacityTask(
+        const FVerifyCurrentMaxCapacityTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FInventoryAccessTokenDomain::FVerifyCurrentMaxCapacityTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithInventoryName(Self->InventoryName);
+        const auto Future = Self->Client->VerifyInventoryCurrentMaxCapacity(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FInventoryAccessTokenDomain::FVerifyCurrentMaxCapacityTask>> FInventoryAccessTokenDomain::VerifyCurrentMaxCapacity(
+        Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyCurrentMaxCapacityTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Inventory::Domain::Iterator::FDescribeItemSetsIteratorPtr FInventoryAccessTokenDomain::ItemSets(
     ) const
     {

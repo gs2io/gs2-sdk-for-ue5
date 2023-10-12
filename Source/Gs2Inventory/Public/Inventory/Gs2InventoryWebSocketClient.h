@@ -144,6 +144,12 @@
 #include "Task/WebSocket/SetCapacityByUserIdTask.h"
 #include "Request/DeleteInventoryByUserIdRequest.h"
 #include "Task/WebSocket/DeleteInventoryByUserIdTask.h"
+#include "Request/VerifyInventoryCurrentMaxCapacityRequest.h"
+#include "Task/WebSocket/VerifyInventoryCurrentMaxCapacityTask.h"
+#include "Request/VerifyInventoryCurrentMaxCapacityByUserIdRequest.h"
+#include "Task/WebSocket/VerifyInventoryCurrentMaxCapacityByUserIdTask.h"
+#include "Request/VerifyInventoryCurrentMaxCapacityByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyInventoryCurrentMaxCapacityByStampTaskTask.h"
 #include "Request/AddCapacityByStampSheetRequest.h"
 #include "Task/WebSocket/AddCapacityByStampSheetTask.h"
 #include "Request/SetCapacityByStampSheetRequest.h"
@@ -522,6 +528,18 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteInventoryByUserIdTask>> DeleteInventoryByUserId(
             const Request::FDeleteInventoryByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyInventoryCurrentMaxCapacityTask>> VerifyInventoryCurrentMaxCapacity(
+            const Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyInventoryCurrentMaxCapacityByUserIdTask>> VerifyInventoryCurrentMaxCapacityByUserId(
+            const Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyInventoryCurrentMaxCapacityByStampTaskTask>> VerifyInventoryCurrentMaxCapacityByStampTask(
+            const Request::FVerifyInventoryCurrentMaxCapacityByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAddCapacityByStampSheetTask>> AddCapacityByStampSheet(

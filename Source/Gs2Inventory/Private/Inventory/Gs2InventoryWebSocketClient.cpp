@@ -586,6 +586,33 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyInventoryCurrentMaxCapacityTask>> FGs2InventoryWebSocketClient::VerifyInventoryCurrentMaxCapacity(
+        const Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyInventoryCurrentMaxCapacityTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyInventoryCurrentMaxCapacityByUserIdTask>> FGs2InventoryWebSocketClient::VerifyInventoryCurrentMaxCapacityByUserId(
+        const Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyInventoryCurrentMaxCapacityByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyInventoryCurrentMaxCapacityByStampTaskTask>> FGs2InventoryWebSocketClient::VerifyInventoryCurrentMaxCapacityByStampTask(
+        const Request::FVerifyInventoryCurrentMaxCapacityByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyInventoryCurrentMaxCapacityByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FAddCapacityByStampSheetTask>> FGs2InventoryWebSocketClient::AddCapacityByStampSheet(
         const Request::FAddCapacityByStampSheetRequestPtr Request) const
     {

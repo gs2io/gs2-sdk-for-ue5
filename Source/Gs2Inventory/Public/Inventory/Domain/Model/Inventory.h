@@ -227,6 +227,32 @@ namespace Gs2::Inventory::Domain::Model
             Request::FDeleteInventoryByUserIdRequestPtr Request
         );
 
+        class GS2INVENTORY_API FVerifyCurrentMaxCapacityTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FInventoryDomain>,
+            public TSharedFromThis<FVerifyCurrentMaxCapacityTask>
+        {
+            const TSharedPtr<FInventoryDomain> Self;
+            const Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyCurrentMaxCapacityTask(
+                const TSharedPtr<FInventoryDomain> Self,
+                const Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request
+            );
+
+            FVerifyCurrentMaxCapacityTask(
+                const FVerifyCurrentMaxCapacityTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryDomain>> Result
+            ) override;
+        };
+        friend FVerifyCurrentMaxCapacityTask;
+
+        TSharedPtr<FAsyncTask<FVerifyCurrentMaxCapacityTask>> VerifyCurrentMaxCapacity(
+            Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request
+        );
+
         Gs2::Inventory::Domain::Iterator::FDescribeItemSetsByUserIdIteratorPtr ItemSets(
         ) const;
 

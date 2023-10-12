@@ -150,6 +150,32 @@ namespace Gs2::Inventory::Domain::Model
             Request::FGetInventoryRequestPtr Request
         );
 
+        class GS2INVENTORY_API FVerifyCurrentMaxCapacityTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomain>,
+            public TSharedFromThis<FVerifyCurrentMaxCapacityTask>
+        {
+            const TSharedPtr<FInventoryAccessTokenDomain> Self;
+            const Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request;
+        public:
+            explicit FVerifyCurrentMaxCapacityTask(
+                const TSharedPtr<FInventoryAccessTokenDomain> Self,
+                const Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request
+            );
+
+            FVerifyCurrentMaxCapacityTask(
+                const FVerifyCurrentMaxCapacityTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyCurrentMaxCapacityTask;
+
+        TSharedPtr<FAsyncTask<FVerifyCurrentMaxCapacityTask>> VerifyCurrentMaxCapacity(
+            Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request
+        );
+
         Gs2::Inventory::Domain::Iterator::FDescribeItemSetsIteratorPtr ItemSets(
         ) const;
 

@@ -144,6 +144,12 @@
 #include "Task/Rest/SetCapacityByUserIdTask.h"
 #include "Request/DeleteInventoryByUserIdRequest.h"
 #include "Task/Rest/DeleteInventoryByUserIdTask.h"
+#include "Request/VerifyInventoryCurrentMaxCapacityRequest.h"
+#include "Task/Rest/VerifyInventoryCurrentMaxCapacityTask.h"
+#include "Request/VerifyInventoryCurrentMaxCapacityByUserIdRequest.h"
+#include "Task/Rest/VerifyInventoryCurrentMaxCapacityByUserIdTask.h"
+#include "Request/VerifyInventoryCurrentMaxCapacityByStampTaskRequest.h"
+#include "Task/Rest/VerifyInventoryCurrentMaxCapacityByStampTaskTask.h"
 #include "Request/AddCapacityByStampSheetRequest.h"
 #include "Task/Rest/AddCapacityByStampSheetTask.h"
 #include "Request/SetCapacityByStampSheetRequest.h"
@@ -522,6 +528,18 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteInventoryByUserIdTask>> DeleteInventoryByUserId(
             const Request::FDeleteInventoryByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyInventoryCurrentMaxCapacityTask>> VerifyInventoryCurrentMaxCapacity(
+            const Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyInventoryCurrentMaxCapacityByUserIdTask>> VerifyInventoryCurrentMaxCapacityByUserId(
+            const Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyInventoryCurrentMaxCapacityByStampTaskTask>> VerifyInventoryCurrentMaxCapacityByStampTask(
+            const Request::FVerifyInventoryCurrentMaxCapacityByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FAddCapacityByStampSheetTask>> AddCapacityByStampSheet(

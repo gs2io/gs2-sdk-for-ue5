@@ -359,6 +359,53 @@ namespace Gs2::Inventory::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FInventoryDomain::FVerifyCurrentMaxCapacityTask::FVerifyCurrentMaxCapacityTask(
+        const TSharedPtr<FInventoryDomain> Self,
+        const Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FInventoryDomain::FVerifyCurrentMaxCapacityTask::FVerifyCurrentMaxCapacityTask(
+        const FVerifyCurrentMaxCapacityTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FInventoryDomain::FVerifyCurrentMaxCapacityTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithInventoryName(Self->InventoryName);
+        const auto Future = Self->Client->VerifyInventoryCurrentMaxCapacityByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FInventoryDomain::FVerifyCurrentMaxCapacityTask>> FInventoryDomain::VerifyCurrentMaxCapacity(
+        Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyCurrentMaxCapacityTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Inventory::Domain::Iterator::FDescribeItemSetsByUserIdIteratorPtr FInventoryDomain::ItemSets(
     ) const
     {
