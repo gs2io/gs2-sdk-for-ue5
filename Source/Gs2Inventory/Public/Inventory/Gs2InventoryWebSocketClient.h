@@ -38,6 +38,12 @@
 #include "Task/WebSocket/CleanUserDataByUserIdTask.h"
 #include "Request/CheckCleanUserDataByUserIdRequest.h"
 #include "Task/WebSocket/CheckCleanUserDataByUserIdTask.h"
+#include "Request/PrepareImportUserDataByUserIdRequest.h"
+#include "Task/WebSocket/PrepareImportUserDataByUserIdTask.h"
+#include "Request/ImportUserDataByUserIdRequest.h"
+#include "Task/WebSocket/ImportUserDataByUserIdTask.h"
+#include "Request/CheckImportUserDataByUserIdRequest.h"
+#include "Task/WebSocket/CheckImportUserDataByUserIdTask.h"
 #include "Request/DescribeInventoryModelMastersRequest.h"
 #include "Task/WebSocket/DescribeInventoryModelMastersTask.h"
 #include "Request/CreateInventoryModelMasterRequest.h"
@@ -316,6 +322,18 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FCheckCleanUserDataByUserIdTask>> CheckCleanUserDataByUserId(
             const Request::FCheckCleanUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPrepareImportUserDataByUserIdTask>> PrepareImportUserDataByUserId(
+            const Request::FPrepareImportUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FImportUserDataByUserIdTask>> ImportUserDataByUserId(
+            const Request::FImportUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCheckImportUserDataByUserIdTask>> CheckImportUserDataByUserId(
+            const Request::FCheckImportUserDataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeInventoryModelMastersTask>> DescribeInventoryModelMasters(

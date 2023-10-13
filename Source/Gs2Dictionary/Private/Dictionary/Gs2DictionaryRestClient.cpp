@@ -109,6 +109,33 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>> FGs2DictionaryRestClient::PrepareImportUserDataByUserId(
+        const Request::FPrepareImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>> FGs2DictionaryRestClient::ImportUserDataByUserId(
+        const Request::FImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>> FGs2DictionaryRestClient::CheckImportUserDataByUserId(
+        const Request::FCheckImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeEntryModelsTask>> FGs2DictionaryRestClient::DescribeEntryModels(
         const Request::FDescribeEntryModelsRequestPtr Request) const
     {

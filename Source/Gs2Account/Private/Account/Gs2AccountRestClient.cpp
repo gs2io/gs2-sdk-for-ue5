@@ -109,6 +109,33 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>> FGs2AccountRestClient::PrepareImportUserDataByUserId(
+        const Request::FPrepareImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>> FGs2AccountRestClient::ImportUserDataByUserId(
+        const Request::FImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>> FGs2AccountRestClient::CheckImportUserDataByUserId(
+        const Request::FCheckImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeAccountsTask>> FGs2AccountRestClient::DescribeAccounts(
         const Request::FDescribeAccountsRequestPtr Request) const
     {

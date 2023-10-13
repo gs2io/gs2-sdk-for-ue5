@@ -109,6 +109,33 @@ namespace Gs2::Chat
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>> FGs2ChatRestClient::PrepareImportUserDataByUserId(
+        const Request::FPrepareImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>> FGs2ChatRestClient::ImportUserDataByUserId(
+        const Request::FImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>> FGs2ChatRestClient::CheckImportUserDataByUserId(
+        const Request::FCheckImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeRoomsTask>> FGs2ChatRestClient::DescribeRooms(
         const Request::FDescribeRoomsRequestPtr Request) const
     {

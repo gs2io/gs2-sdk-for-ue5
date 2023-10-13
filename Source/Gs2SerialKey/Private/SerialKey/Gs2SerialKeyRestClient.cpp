@@ -109,6 +109,33 @@ namespace Gs2::SerialKey
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>> FGs2SerialKeyRestClient::PrepareImportUserDataByUserId(
+        const Request::FPrepareImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>> FGs2SerialKeyRestClient::ImportUserDataByUserId(
+        const Request::FImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>> FGs2SerialKeyRestClient::CheckImportUserDataByUserId(
+        const Request::FCheckImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeIssueJobsTask>> FGs2SerialKeyRestClient::DescribeIssueJobs(
         const Request::FDescribeIssueJobsRequestPtr Request) const
     {

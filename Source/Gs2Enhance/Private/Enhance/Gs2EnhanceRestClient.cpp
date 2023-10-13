@@ -109,6 +109,33 @@ namespace Gs2::Enhance
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>> FGs2EnhanceRestClient::PrepareImportUserDataByUserId(
+        const Request::FPrepareImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>> FGs2EnhanceRestClient::ImportUserDataByUserId(
+        const Request::FImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>> FGs2EnhanceRestClient::CheckImportUserDataByUserId(
+        const Request::FCheckImportUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeRateModelsTask>> FGs2EnhanceRestClient::DescribeRateModels(
         const Request::FDescribeRateModelsRequestPtr Request) const
     {

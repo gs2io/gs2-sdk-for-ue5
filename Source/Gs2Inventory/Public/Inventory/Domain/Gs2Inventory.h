@@ -96,9 +96,19 @@ namespace Gs2::Inventory::Domain
 
         public:
         TOptional<FString> Url;
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
         TOptional<FString> GetUrl() const
         {
             return Url;
+        }
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
         }
     private:
 
@@ -246,6 +256,84 @@ namespace Gs2::Inventory::Domain
 
         TSharedPtr<FAsyncTask<FCheckCleanUserDataTask>> CheckCleanUserData(
             Request::FCheckCleanUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2INVENTORY_API FPrepareImportUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2InventoryDomain>,
+            public TSharedFromThis<FPrepareImportUserDataTask>
+        {
+            const TSharedPtr<FGs2InventoryDomain> Self;
+            const Request::FPrepareImportUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FPrepareImportUserDataTask(
+                const TSharedPtr<FGs2InventoryDomain> Self,
+                const Request::FPrepareImportUserDataByUserIdRequestPtr Request
+            );
+
+            FPrepareImportUserDataTask(
+                const FPrepareImportUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2InventoryDomain>> Result
+            ) override;
+        };
+        friend FPrepareImportUserDataTask;
+
+        TSharedPtr<FAsyncTask<FPrepareImportUserDataTask>> PrepareImportUserData(
+            Request::FPrepareImportUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2INVENTORY_API FImportUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2InventoryDomain>,
+            public TSharedFromThis<FImportUserDataTask>
+        {
+            const TSharedPtr<FGs2InventoryDomain> Self;
+            const Request::FImportUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FImportUserDataTask(
+                const TSharedPtr<FGs2InventoryDomain> Self,
+                const Request::FImportUserDataByUserIdRequestPtr Request
+            );
+
+            FImportUserDataTask(
+                const FImportUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2InventoryDomain>> Result
+            ) override;
+        };
+        friend FImportUserDataTask;
+
+        TSharedPtr<FAsyncTask<FImportUserDataTask>> ImportUserData(
+            Request::FImportUserDataByUserIdRequestPtr Request
+        );
+
+        class GS2INVENTORY_API FCheckImportUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<FGs2InventoryDomain>,
+            public TSharedFromThis<FCheckImportUserDataTask>
+        {
+            const TSharedPtr<FGs2InventoryDomain> Self;
+            const Request::FCheckImportUserDataByUserIdRequestPtr Request;
+        public:
+            explicit FCheckImportUserDataTask(
+                const TSharedPtr<FGs2InventoryDomain> Self,
+                const Request::FCheckImportUserDataByUserIdRequestPtr Request
+            );
+
+            FCheckImportUserDataTask(
+                const FCheckImportUserDataTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<FGs2InventoryDomain>> Result
+            ) override;
+        };
+        friend FCheckImportUserDataTask;
+
+        TSharedPtr<FAsyncTask<FCheckImportUserDataTask>> CheckImportUserData(
+            Request::FCheckImportUserDataByUserIdRequestPtr Request
         );
 
         Gs2::Inventory::Domain::Iterator::FDescribeNamespacesIteratorPtr Namespaces(

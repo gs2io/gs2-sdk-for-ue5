@@ -41,6 +41,8 @@ namespace Gs2::UE5::JobQueue::Domain::Model
         public:
         TOptional<FString> Status() const;
         TOptional<FString> Url() const;
+        TOptional<FString> UploadToken() const;
+        TOptional<FString> UploadUrl() const;
         TOptional<FString> NamespaceName() const;
 
         FEzNamespaceDomain(

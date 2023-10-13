@@ -53,6 +53,8 @@ namespace Gs2::Chat::Domain::Model
         public:
         TOptional<FString> Status;
         TOptional<FString> Url;
+        TOptional<FString> UploadToken;
+        TOptional<FString> UploadUrl;
         TOptional<FString> GetStatus() const
         {
             return Status;
@@ -60,6 +62,14 @@ namespace Gs2::Chat::Domain::Model
         TOptional<FString> GetUrl() const
         {
             return Url;
+        }
+        TOptional<FString> GetUploadToken() const
+        {
+            return UploadToken;
+        }
+        TOptional<FString> GetUploadUrl() const
+        {
+            return UploadUrl;
         }
         TOptional<FString> NamespaceName;
     private:

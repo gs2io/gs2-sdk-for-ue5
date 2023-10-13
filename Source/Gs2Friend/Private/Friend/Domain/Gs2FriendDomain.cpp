@@ -304,6 +304,138 @@ namespace Gs2::Friend::Domain
         return Gs2::Core::Util::New<FAsyncTask<FCheckCleanUserDataTask>>(this->AsShared(), Request);
     }
 
+    FGs2FriendDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
+        TSharedPtr<FGs2FriendDomain> Self,
+        const Request::FPrepareImportUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2FriendDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
+        const FPrepareImportUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2FriendDomain::FPrepareImportUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2FriendDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->PrepareImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2FriendDomain::FPrepareImportUserDataTask>> FGs2FriendDomain::PrepareImportUserData(
+        Request::FPrepareImportUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPrepareImportUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2FriendDomain::FImportUserDataTask::FImportUserDataTask(
+        TSharedPtr<FGs2FriendDomain> Self,
+        const Request::FImportUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2FriendDomain::FImportUserDataTask::FImportUserDataTask(
+        const FImportUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2FriendDomain::FImportUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2FriendDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->ImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2FriendDomain::FImportUserDataTask>> FGs2FriendDomain::ImportUserData(
+        Request::FImportUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FImportUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2FriendDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
+        TSharedPtr<FGs2FriendDomain> Self,
+        const Request::FCheckImportUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2FriendDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
+        const FCheckImportUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2FriendDomain::FCheckImportUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2FriendDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->CheckImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2FriendDomain::FCheckImportUserDataTask>> FGs2FriendDomain::CheckImportUserData(
+        Request::FCheckImportUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCheckImportUserDataTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Friend::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2FriendDomain::Namespaces(
     ) const
     {

@@ -80,6 +80,12 @@
 #include "Task/Rest/CleanUserDataByUserIdTask.h"
 #include "Request/CheckCleanUserDataByUserIdRequest.h"
 #include "Task/Rest/CheckCleanUserDataByUserIdTask.h"
+#include "Request/PrepareImportUserDataByUserIdRequest.h"
+#include "Task/Rest/PrepareImportUserDataByUserIdTask.h"
+#include "Request/ImportUserDataByUserIdRequest.h"
+#include "Task/Rest/ImportUserDataByUserIdTask.h"
+#include "Request/CheckImportUserDataByUserIdRequest.h"
+#include "Task/Rest/CheckImportUserDataByUserIdTask.h"
 #include "Request/DescribeCountersRequest.h"
 #include "Task/Rest/DescribeCountersTask.h"
 #include "Request/DescribeCountersByUserIdRequest.h"
@@ -262,6 +268,18 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FCheckCleanUserDataByUserIdTask>> CheckCleanUserDataByUserId(
             const Request::FCheckCleanUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPrepareImportUserDataByUserIdTask>> PrepareImportUserDataByUserId(
+            const Request::FPrepareImportUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FImportUserDataByUserIdTask>> ImportUserDataByUserId(
+            const Request::FImportUserDataByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCheckImportUserDataByUserIdTask>> CheckImportUserDataByUserId(
+            const Request::FCheckImportUserDataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeCountersTask>> DescribeCounters(

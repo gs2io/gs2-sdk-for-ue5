@@ -29,6 +29,16 @@ namespace Gs2::UE5::Gateway::Domain::Model
         return Domain->Url;
     }
 
+    TOptional<FString> FEzNamespaceDomain::UploadToken() const
+    {
+        return Domain->UploadToken;
+    }
+
+    TOptional<FString> FEzNamespaceDomain::UploadUrl() const
+    {
+        return Domain->UploadUrl;
+    }
+
     TOptional<FString> FEzNamespaceDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

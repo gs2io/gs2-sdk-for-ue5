@@ -90,6 +90,24 @@
 #include "Task/Rest/CheckCleanUserDataByUserIdTask.h"
 #include "Task/WebSocket/CheckCleanUserDataByUserIdTask.h"
 
+// PrepareImportUserDataByUserId
+#include "Request/PrepareImportUserDataByUserIdRequest.h"
+#include "Result/PrepareImportUserDataByUserIdResult.h"
+#include "Task/Rest/PrepareImportUserDataByUserIdTask.h"
+#include "Task/WebSocket/PrepareImportUserDataByUserIdTask.h"
+
+// ImportUserDataByUserId
+#include "Request/ImportUserDataByUserIdRequest.h"
+#include "Result/ImportUserDataByUserIdResult.h"
+#include "Task/Rest/ImportUserDataByUserIdTask.h"
+#include "Task/WebSocket/ImportUserDataByUserIdTask.h"
+
+// CheckImportUserDataByUserId
+#include "Request/CheckImportUserDataByUserIdRequest.h"
+#include "Result/CheckImportUserDataByUserIdResult.h"
+#include "Task/Rest/CheckImportUserDataByUserIdTask.h"
+#include "Task/WebSocket/CheckImportUserDataByUserIdTask.h"
+
 // DescribeCategoryModelMasters
 #include "Request/DescribeCategoryModelMastersRequest.h"
 #include "Result/DescribeCategoryModelMastersResult.h"
