@@ -25,13 +25,19 @@ namespace Gs2::Account::Error
     class GS2ACCOUNT_API FBannedInfinityError : public Core::Model::FUnauthorizedError
     {
     public:
-        inline static const FGs2ErrorType TypeString = "BannedInfinity";
+        inline static const FGs2ErrorType TypeString = "FBannedInfinityError";
+        inline static const FGs2ErrorType Class = TypeString;
 
         explicit FBannedInfinityError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FUnauthorizedError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FBannedInfinityError, ESPMode::ThreadSafe> FBannedInfinityErrorPtr;

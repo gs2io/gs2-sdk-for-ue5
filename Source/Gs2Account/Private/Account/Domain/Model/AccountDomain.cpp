@@ -506,8 +506,21 @@ namespace Gs2::Account::Domain::Model
             }
         }
         auto Domain = Self;
-        Domain->Body = *ResultModel->GetBody();
-        Domain->Signature = *ResultModel->GetSignature();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetBody().IsSet())
+            {
+                Domain->Body = *ResultModel->GetBody();
+            }
+            if (ResultModel->GetSignature().IsSet())
+            {
+                Domain->Signature = *ResultModel->GetSignature();
+            }
+            if (ResultModel->GetBanStatuses() != nullptr)
+            {
+                Domain->BanStatuses = ResultModel->GetBanStatuses();
+            }
+        }
 
         *Result = Domain;
         return nullptr;

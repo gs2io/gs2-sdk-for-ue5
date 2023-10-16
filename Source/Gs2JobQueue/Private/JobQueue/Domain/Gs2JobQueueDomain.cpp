@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -312,6 +310,138 @@ namespace Gs2::JobQueue::Domain
         Request::FCheckCleanUserDataByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FCheckCleanUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2JobQueueDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
+        TSharedPtr<FGs2JobQueueDomain> Self,
+        const Request::FPrepareImportUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2JobQueueDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
+        const FPrepareImportUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2JobQueueDomain::FPrepareImportUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->PrepareImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2JobQueueDomain::FPrepareImportUserDataTask>> FGs2JobQueueDomain::PrepareImportUserData(
+        Request::FPrepareImportUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPrepareImportUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2JobQueueDomain::FImportUserDataTask::FImportUserDataTask(
+        TSharedPtr<FGs2JobQueueDomain> Self,
+        const Request::FImportUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2JobQueueDomain::FImportUserDataTask::FImportUserDataTask(
+        const FImportUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2JobQueueDomain::FImportUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->ImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2JobQueueDomain::FImportUserDataTask>> FGs2JobQueueDomain::ImportUserData(
+        Request::FImportUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FImportUserDataTask>>(this->AsShared(), Request);
+    }
+
+    FGs2JobQueueDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
+        TSharedPtr<FGs2JobQueueDomain> Self,
+        const Request::FCheckImportUserDataByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGs2JobQueueDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
+        const FCheckImportUserDataTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2JobQueueDomain::FCheckImportUserDataTask::Action(
+        TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->CheckImportUserDataByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2JobQueueDomain::FCheckImportUserDataTask>> FGs2JobQueueDomain::CheckImportUserData(
+        Request::FCheckImportUserDataByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCheckImportUserDataTask>>(this->AsShared(), Request);
     }
 
     Gs2::JobQueue::Domain::Iterator::FDescribeNamespacesIteratorPtr FGs2JobQueueDomain::Namespaces(

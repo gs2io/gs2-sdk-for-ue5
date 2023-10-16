@@ -25,13 +25,19 @@ namespace Gs2::Chat::Error
     class GS2CHAT_API FPasswordIncorrectError : public Core::Model::FBadRequestError
     {
     public:
-        inline static const FGs2ErrorType TypeString = "PasswordIncorrect";
+        inline static const FGs2ErrorType TypeString = "FPasswordIncorrectError";
+        inline static const FGs2ErrorType Class = TypeString;
 
         explicit FPasswordIncorrectError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FBadRequestError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FPasswordIncorrectError, ESPMode::ThreadSafe> FPasswordIncorrectErrorPtr;

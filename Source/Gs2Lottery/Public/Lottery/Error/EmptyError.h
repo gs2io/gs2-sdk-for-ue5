@@ -33,6 +33,11 @@ namespace Gs2::Lottery::Error
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FBadRequestError::TypeString;
+        }
     };
     typedef TSharedPtr<FEmptyError, ESPMode::ThreadSafe> FEmptyErrorPtr;
 }

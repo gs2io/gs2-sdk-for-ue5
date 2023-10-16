@@ -69,12 +69,17 @@ namespace Gs2::Gateway::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("gateway"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/system/user/{userId}/import");
+                .Append("/system/user/{userId}/import/{uploadToken}");
 
             Url = Url.Replace(
                 TEXT("{userId}"),
                 !this->Request->GetUserId().IsSet() || this->Request->GetUserId().GetValue().Len() == 0 ?
                     TEXT("null") : ToCStr(*this->Request->GetUserId())
+            );
+            Url = Url.Replace(
+                TEXT("{uploadToken}"),
+                !this->Request->GetUploadToken().IsSet() || this->Request->GetUploadToken().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetUploadToken())
             );
 
             TArray<FString> queryStrings;

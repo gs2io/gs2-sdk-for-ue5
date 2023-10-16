@@ -62,6 +62,9 @@ namespace Gs2::Core::Model
     {
         TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details;
     public:
+        inline static const FGs2ErrorType TypeString = "FGs2Error";
+        inline static const FGs2ErrorType Class = TypeString;
+        
         explicit FGs2Error(
             const TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details
         );
@@ -86,6 +89,8 @@ namespace Gs2::Core::Model
         }
         
         virtual FGs2ErrorType Type() const = 0;
+        virtual FGs2ErrorType SuperType() const = 0;
+        bool IsChildOf( const FGs2ErrorType& BaseClass ) const;
         
         static TSharedPtr<FGs2Error> FromResponse(int32 StatusCode, FString Response);
         static TSharedPtr<FGs2Error> FromJson(int32 StatusCode, TArray<TSharedPtr<FJsonValue>> Objects);
@@ -96,7 +101,8 @@ namespace Gs2::Core::Model
     class GS2CORE_API FBadGatewayError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "BadGateway";
+        inline static const FGs2ErrorType TypeString = "FBadGatewayError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FBadGatewayError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FBadGatewayError(
@@ -108,12 +114,17 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FBadRequestError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "BadRequest";
+        inline static const FGs2ErrorType TypeString = "FBadRequestError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FBadRequestError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FBadRequestError(
@@ -125,12 +136,17 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FConflictError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "Conflict";
+        inline static const FGs2ErrorType TypeString = "FConflictError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FConflictError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FConflictError(
@@ -142,12 +158,18 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FInternalServerError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "InternalServerError";
+        inline static const FGs2ErrorType TypeString = "FInternalServerError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FInternalServerError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FInternalServerError(
@@ -159,12 +181,18 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FNotFoundError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "NotFound";
+        inline static const FGs2ErrorType TypeString = "FNotFoundError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FNotFoundError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FNotFoundError(
@@ -176,12 +204,18 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FQuotaLimitExceedError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "QuotaLimitExceed";
+        inline static const FGs2ErrorType TypeString = "FQuotaLimitExceedError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FQuotaLimitExceedError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FQuotaLimitExceedError(
@@ -193,12 +227,18 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FServiceUnavailableError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "ServiceUnavailable";
+        inline static const FGs2ErrorType TypeString = "FServiceUnavailableError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FServiceUnavailableError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FServiceUnavailableError(
@@ -210,12 +250,18 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FRequestTimeoutError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "RequestTimeout";
+        inline static const FGs2ErrorType TypeString = "FRequestTimeoutError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FRequestTimeoutError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FRequestTimeoutError(
@@ -227,12 +273,18 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FUnauthorizedError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "Unauthorized";
+        inline static const FGs2ErrorType TypeString = "FUnauthorizedError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FUnauthorizedError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FUnauthorizedError(
@@ -244,12 +296,18 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FUnknownError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "Unknown";
+        inline static const FGs2ErrorType TypeString = "FUnknownError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FUnknownError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FUnknownError(
@@ -261,12 +319,18 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FSessionNotOpenError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "SessionNotOpen";
+        inline static const FGs2ErrorType TypeString = "FSessionNotOpenError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FSessionNotOpenError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FSessionNotOpenError(
@@ -278,12 +342,18 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     class GS2CORE_API FNotExecutedError : public FGs2Error
     {
     public:
-        inline static const FGs2ErrorType TypeString = "Gs2NotExecuted";
+        inline static const FGs2ErrorType TypeString = "FNotExecutedError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         explicit FNotExecutedError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
         FNotExecutedError(
@@ -295,6 +365,11 @@ namespace Gs2::Core::Model
         {
             return TypeString;
         }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
     };
     
     template<class TTask>
@@ -302,7 +377,8 @@ namespace Gs2::Core::Model
     {
         TFunction<TSharedPtr<FAsyncTask<TTask>> ()> RetryFunction;
     public:
-        inline static const FGs2ErrorType TypeString = "Transaction";
+        inline static const FGs2ErrorType TypeString = "FTransactionError";
+        inline static const FGs2ErrorType Class = TypeString;
         
         FTransactionError(
             const TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details,
@@ -316,6 +392,11 @@ namespace Gs2::Core::Model
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
         }
 
         TSharedPtr<FAsyncTask<TTask>> Retry() const

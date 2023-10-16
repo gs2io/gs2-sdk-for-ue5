@@ -25,13 +25,19 @@ namespace Gs2::Money::Error
     class GS2MONEY_API FInsufficientError : public Core::Model::FBadRequestError
     {
     public:
-        inline static const FGs2ErrorType TypeString = "Insufficient";
+        inline static const FGs2ErrorType TypeString = "FInsufficientError";
+        inline static const FGs2ErrorType Class = TypeString;
 
         explicit FInsufficientError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FBadRequestError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FInsufficientError, ESPMode::ThreadSafe> FInsufficientErrorPtr;

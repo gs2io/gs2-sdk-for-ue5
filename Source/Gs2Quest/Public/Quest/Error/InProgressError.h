@@ -25,13 +25,19 @@ namespace Gs2::Quest::Error
     class GS2QUEST_API FInProgressError : public Core::Model::FBadRequestError
     {
     public:
-        inline static const FGs2ErrorType TypeString = "InProgress";
+        inline static const FGs2ErrorType TypeString = "FInProgressError";
+        inline static const FGs2ErrorType Class = TypeString;
 
         explicit FInProgressError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FBadRequestError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FInProgressError, ESPMode::ThreadSafe> FInProgressErrorPtr;

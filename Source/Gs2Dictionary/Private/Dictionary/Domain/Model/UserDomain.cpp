@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -236,6 +234,52 @@ namespace Gs2::Dictionary::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FResetTask>>(this->AsShared(), Request);
     }
 
+    FUserDomain::FVerifyEntryTask::FVerifyEntryTask(
+        const TSharedPtr<FUserDomain> Self,
+        const Request::FVerifyEntryByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FVerifyEntryTask::FVerifyEntryTask(
+        const FVerifyEntryTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FVerifyEntryTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FUserDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->VerifyEntryByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FVerifyEntryTask>> FUserDomain::VerifyEntry(
+        Request::FVerifyEntryByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyEntryTask>>(this->AsShared(), Request);
+    }
+
     FUserDomain::FDeleteEntriesTask::FDeleteEntriesTask(
         const TSharedPtr<FUserDomain> Self,
         const Request::FDeleteEntriesByUserIdRequestPtr Request
@@ -289,6 +333,35 @@ namespace Gs2::Dictionary::Domain::Model
             }
         }
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain>>>();
+        for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
+        {
+            Domain->Add(
+                MakeShared<Gs2::Dictionary::Domain::Model::FEntryDomain>(
+                    Self->Cache,
+                    Self->JobQueueDomain,
+                    Self->StampSheetConfiguration,
+                    Self->Session,
+                    Request->GetNamespaceName(),
+                    (*ResultModel->GetItems())[i]->GetUserId(),
+                    (*ResultModel->GetItems())[i]->GetName()
+                )
+            );
+            const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId,
+                "Entry"
+            );
+            const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
+                (*ResultModel->GetItems())[i]->GetName()
+            );
+            Self->Cache->Put(
+                Gs2::Dictionary::Model::FEntry::TypeName,
+                ParentKey,
+                Key,
+                (*ResultModel->GetItems())[i],
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
         *Result = Domain;
         return nullptr;
     }

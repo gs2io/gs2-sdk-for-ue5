@@ -25,13 +25,19 @@ namespace Gs2::SerialKey::Error
     class GS2SERIALKEY_API FCodeNotFoundError : public Core::Model::FNotFoundError
     {
     public:
-        inline static const FGs2ErrorType TypeString = "CodeNotFound";
+        inline static const FGs2ErrorType TypeString = "FCodeNotFoundError";
+        inline static const FGs2ErrorType Class = TypeString;
 
         explicit FCodeNotFoundError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FNotFoundError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FCodeNotFoundError, ESPMode::ThreadSafe> FCodeNotFoundErrorPtr;

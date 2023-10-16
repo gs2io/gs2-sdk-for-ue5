@@ -25,13 +25,19 @@ namespace Gs2::Money::Error
     class GS2MONEY_API FConflictError : public Core::Model::FConflictError
     {
     public:
-        inline static const FGs2ErrorType TypeString = "Conflict";
+        inline static const FGs2ErrorType TypeString = "FConflictError";
+        inline static const FGs2ErrorType Class = TypeString;
 
         explicit FConflictError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FConflictError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FConflictError, ESPMode::ThreadSafe> FConflictErrorPtr;

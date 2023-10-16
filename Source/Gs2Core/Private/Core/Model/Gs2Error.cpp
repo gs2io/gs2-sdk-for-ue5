@@ -71,6 +71,13 @@ namespace Gs2::Core::Model
         return CodeValue;
     }
 
+    bool FGs2Error::IsChildOf( const FGs2ErrorType& BaseClass ) const
+    {
+        const auto SuperTypeString = ":" + this->SuperType() + ":";
+        const auto BaseClassString = ":" + BaseClass + ":";
+        return SuperTypeString.Contains(BaseClassString);
+    }
+    
     TSharedPtr<FGs2Error> FGs2Error::FromResponse(int32 ResponseCode, FString Response)
     {
         UE_LOG(Gs2Log, Warning, TEXT("[%d] %s"), ResponseCode, ToCStr(Response));

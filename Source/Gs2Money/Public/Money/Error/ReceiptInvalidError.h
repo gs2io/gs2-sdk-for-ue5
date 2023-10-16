@@ -25,13 +25,19 @@ namespace Gs2::Money::Error
     class GS2MONEY_API FReceiptInvalidError : public Core::Model::FBadRequestError
     {
     public:
-        inline static const FGs2ErrorType TypeString = "ReceiptInvalid";
+        inline static const FGs2ErrorType TypeString = "FReceiptInvalidError";
+        inline static const FGs2ErrorType Class = TypeString;
 
         explicit FReceiptInvalidError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FBadRequestError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FReceiptInvalidError, ESPMode::ThreadSafe> FReceiptInvalidErrorPtr;

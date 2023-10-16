@@ -25,13 +25,19 @@ namespace Gs2::Datastore::Error
     class GS2DATASTORE_API FNotUploadedError : public Core::Model::FBadRequestError
     {
     public:
-        inline static const FGs2ErrorType TypeString = "NotUploaded";
+        inline static const FGs2ErrorType TypeString = "FNotUploadedError";
+        inline static const FGs2ErrorType Class = TypeString;
 
         explicit FNotUploadedError(Core::Model::FGs2ErrorPtr Error);
 
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FBadRequestError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FNotUploadedError, ESPMode::ThreadSafe> FNotUploadedErrorPtr;
