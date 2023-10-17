@@ -69,7 +69,7 @@ namespace Gs2::Mission::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("mission"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/system/user/{userId}/clean");
+                .Append("/system/clean/user/{userId}");
 
             Url = Url.Replace(
                 TEXT("{userId}"),

@@ -69,7 +69,7 @@ namespace Gs2::Lottery::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("lottery"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/system/user/{userId}/import/{uploadToken}");
+                .Append("/system/import/user/{userId}/{uploadToken}");
 
             Url = Url.Replace(
                 TEXT("{userId}"),

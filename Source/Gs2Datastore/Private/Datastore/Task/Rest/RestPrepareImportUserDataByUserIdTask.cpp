@@ -69,7 +69,7 @@ namespace Gs2::Datastore::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("datastore"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/system/user/{userId}/import/prepare");
+                .Append("/system/import/user/{userId}/prepare");
 
             Url = Url.Replace(
                 TEXT("{userId}"),

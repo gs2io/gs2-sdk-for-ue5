@@ -25,7 +25,8 @@ namespace Gs2::Lottery::Error
     class GS2LOTTERY_API FEmptyError : public Core::Model::FBadRequestError
     {
     public:
-        inline static const FGs2ErrorType TypeString = "Empty";
+        inline static const FGs2ErrorType TypeString = "FEmptyError";
+        inline static const FGs2ErrorType Class = TypeString;
 
         explicit FEmptyError(Core::Model::FGs2ErrorPtr Error);
 
@@ -36,7 +37,7 @@ namespace Gs2::Lottery::Error
 
         virtual FGs2ErrorType SuperType() const override
         {
-            return Core::Model::FBadRequestError::TypeString;
+            return Core::Model::FBadRequestError::SuperType() + ":" + TypeString;
         }
     };
     typedef TSharedPtr<FEmptyError, ESPMode::ThreadSafe> FEmptyErrorPtr;

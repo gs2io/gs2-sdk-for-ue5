@@ -69,7 +69,7 @@ namespace Gs2::Idle::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("idle"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/system/user/{userId}/dump");
+                .Append("/system/dump/user/{userId}");
 
             Url = Url.Replace(
                 TEXT("{userId}"),

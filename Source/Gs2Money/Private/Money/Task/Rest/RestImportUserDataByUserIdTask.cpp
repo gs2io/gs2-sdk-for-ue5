@@ -69,7 +69,7 @@ namespace Gs2::Money::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("money"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/system/user/{userId}/import");
+                .Append("/system/import/user/{userId}");
 
             Url = Url.Replace(
                 TEXT("{userId}"),
