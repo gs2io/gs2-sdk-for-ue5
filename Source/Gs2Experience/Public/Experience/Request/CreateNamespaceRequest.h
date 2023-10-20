@@ -31,7 +31,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
-        TOptional<FString> ExperienceCapScriptIdValue;
+        TOptional<FString> RankCapScriptIdValue;
         TSharedPtr<Model::FScriptSetting> ChangeExperienceScriptValue;
         TSharedPtr<Model::FScriptSetting> ChangeRankScriptValue;
         TSharedPtr<Model::FScriptSetting> ChangeRankCapScriptValue;
@@ -50,7 +50,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
-        TSharedPtr<FCreateNamespaceRequest> WithExperienceCapScriptId(const TOptional<FString> ExperienceCapScriptId);
+        TSharedPtr<FCreateNamespaceRequest> WithRankCapScriptId(const TOptional<FString> RankCapScriptId);
         TSharedPtr<FCreateNamespaceRequest> WithChangeExperienceScript(const TSharedPtr<Model::FScriptSetting> ChangeExperienceScript);
         TSharedPtr<FCreateNamespaceRequest> WithChangeRankScript(const TSharedPtr<Model::FScriptSetting> ChangeRankScript);
         TSharedPtr<FCreateNamespaceRequest> WithChangeRankCapScript(const TSharedPtr<Model::FScriptSetting> ChangeRankCapScript);
@@ -61,7 +61,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
-        TOptional<FString> GetExperienceCapScriptId() const;
+        TOptional<FString> GetRankCapScriptId() const;
         TSharedPtr<Model::FScriptSetting> GetChangeExperienceScript() const;
         TSharedPtr<Model::FScriptSetting> GetChangeRankScript() const;
         TSharedPtr<Model::FScriptSetting> GetChangeRankCapScript() const;

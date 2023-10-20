@@ -23,7 +23,7 @@ namespace Gs2::Experience::Model
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
-        ExperienceCapScriptIdValue(TOptional<FString>()),
+        RankCapScriptIdValue(TOptional<FString>()),
         ChangeExperienceScriptValue(nullptr),
         ChangeRankScriptValue(nullptr),
         ChangeRankCapScriptValue(nullptr),
@@ -42,7 +42,7 @@ namespace Gs2::Experience::Model
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
-        ExperienceCapScriptIdValue(From.ExperienceCapScriptIdValue),
+        RankCapScriptIdValue(From.RankCapScriptIdValue),
         ChangeExperienceScriptValue(From.ChangeExperienceScriptValue),
         ChangeRankScriptValue(From.ChangeRankScriptValue),
         ChangeRankCapScriptValue(From.ChangeRankCapScriptValue),
@@ -86,11 +86,11 @@ namespace Gs2::Experience::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FNamespace> FNamespace::WithExperienceCapScriptId(
-        const TOptional<FString> ExperienceCapScriptId
+    TSharedPtr<FNamespace> FNamespace::WithRankCapScriptId(
+        const TOptional<FString> RankCapScriptId
     )
     {
-        this->ExperienceCapScriptIdValue = ExperienceCapScriptId;
+        this->RankCapScriptIdValue = RankCapScriptId;
         return SharedThis(this);
     }
 
@@ -173,9 +173,9 @@ namespace Gs2::Experience::Model
     {
         return TransactionSettingValue;
     }
-    TOptional<FString> FNamespace::GetExperienceCapScriptId() const
+    TOptional<FString> FNamespace::GetRankCapScriptId() const
     {
-        return ExperienceCapScriptIdValue;
+        return RankCapScriptIdValue;
     }
     TSharedPtr<FScriptSetting> FNamespace::GetChangeExperienceScript() const
     {
@@ -311,10 +311,10 @@ namespace Gs2::Experience::Model
                     }
                     return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
                  }() : nullptr)
-            ->WithExperienceCapScriptId(Data->HasField("experienceCapScriptId") ? [Data]() -> TOptional<FString>
+            ->WithRankCapScriptId(Data->HasField("rankCapScriptId") ? [Data]() -> TOptional<FString>
                 {
                     FString v;
-                    if (Data->TryGetStringField("experienceCapScriptId", v))
+                    if (Data->TryGetStringField("rankCapScriptId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
@@ -408,9 +408,9 @@ namespace Gs2::Experience::Model
         {
             JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
-        if (ExperienceCapScriptIdValue.IsSet())
+        if (RankCapScriptIdValue.IsSet())
         {
-            JsonRootObject->SetStringField("experienceCapScriptId", ExperienceCapScriptIdValue.GetValue());
+            JsonRootObject->SetStringField("rankCapScriptId", RankCapScriptIdValue.GetValue());
         }
         if (ChangeExperienceScriptValue != nullptr && ChangeExperienceScriptValue.IsValid())
         {

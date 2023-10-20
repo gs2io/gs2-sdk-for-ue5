@@ -90,9 +90,9 @@ namespace Gs2::Experience::Task::Rest
             {
                 JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
             }
-            if (this->Request->GetExperienceCapScriptId().IsSet())
+            if (this->Request->GetRankCapScriptId().IsSet())
             {
-                JsonRootObject->SetStringField("experienceCapScriptId", this->Request->GetExperienceCapScriptId().GetValue());
+                JsonRootObject->SetStringField("rankCapScriptId", this->Request->GetRankCapScriptId().GetValue());
             }
             if (this->Request->GetChangeExperienceScript() != nullptr && this->Request->GetChangeExperienceScript().IsValid())
             {

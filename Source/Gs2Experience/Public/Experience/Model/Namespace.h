@@ -30,7 +30,7 @@ namespace Gs2::Experience::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
-        TOptional<FString> ExperienceCapScriptIdValue;
+        TOptional<FString> RankCapScriptIdValue;
         TSharedPtr<FScriptSetting> ChangeExperienceScriptValue;
         TSharedPtr<FScriptSetting> ChangeRankScriptValue;
         TSharedPtr<FScriptSetting> ChangeRankCapScriptValue;
@@ -51,7 +51,7 @@ namespace Gs2::Experience::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
-        TSharedPtr<FNamespace> WithExperienceCapScriptId(const TOptional<FString> ExperienceCapScriptId);
+        TSharedPtr<FNamespace> WithRankCapScriptId(const TOptional<FString> RankCapScriptId);
         TSharedPtr<FNamespace> WithChangeExperienceScript(const TSharedPtr<FScriptSetting> ChangeExperienceScript);
         TSharedPtr<FNamespace> WithChangeRankScript(const TSharedPtr<FScriptSetting> ChangeRankScript);
         TSharedPtr<FNamespace> WithChangeRankCapScript(const TSharedPtr<FScriptSetting> ChangeRankCapScript);
@@ -65,7 +65,7 @@ namespace Gs2::Experience::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
-        TOptional<FString> GetExperienceCapScriptId() const;
+        TOptional<FString> GetRankCapScriptId() const;
         TSharedPtr<FScriptSetting> GetChangeExperienceScript() const;
         TSharedPtr<FScriptSetting> GetChangeRankScript() const;
         TSharedPtr<FScriptSetting> GetChangeRankCapScript() const;
