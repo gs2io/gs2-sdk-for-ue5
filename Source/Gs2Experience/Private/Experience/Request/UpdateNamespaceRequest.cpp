@@ -26,7 +26,7 @@ namespace Gs2::Experience::Request
         ChangeExperienceScriptValue(nullptr),
         ChangeRankScriptValue(nullptr),
         ChangeRankCapScriptValue(nullptr),
-        OverflowExperienceScriptValue(nullptr),
+        OverflowExperienceScriptValue(TOptional<FString>()),
         LogSettingValue(nullptr)
     {
     }
@@ -111,7 +111,7 @@ namespace Gs2::Experience::Request
     }
 
     TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithOverflowExperienceScript(
-        const TSharedPtr<Model::FScriptSetting> OverflowExperienceScript
+        const TOptional<FString> OverflowExperienceScript
     )
     {
         this->OverflowExperienceScriptValue = OverflowExperienceScript;
@@ -182,12 +182,8 @@ namespace Gs2::Experience::Request
         return ChangeRankCapScriptValue;
     }
 
-    TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetOverflowExperienceScript() const
+    TOptional<FString> FUpdateNamespaceRequest::GetOverflowExperienceScript() const
     {
-        if (!OverflowExperienceScriptValue.IsValid())
-        {
-            return nullptr;
-        }
         return OverflowExperienceScriptValue;
     }
 
@@ -266,14 +262,15 @@ namespace Gs2::Experience::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("changeRankCapScript"));
              }() : nullptr)
-          ->WithOverflowExperienceScript(Data->HasField("overflowExperienceScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithOverflowExperienceScript(Data->HasField("overflowExperienceScript") ? [Data]() -> TOptional<FString>
               {
-                  if (Data->HasTypedField<EJson::Null>("overflowExperienceScript"))
+                  FString v;
+                    if (Data->TryGetStringField("overflowExperienceScript", v))
                   {
-                      return nullptr;
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
-                  return Model::FScriptSetting::FromJson(Data->GetObjectField("overflowExperienceScript"));
-             }() : nullptr)
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -319,9 +316,9 @@ namespace Gs2::Experience::Request
         {
             JsonRootObject->SetObjectField("changeRankCapScript", ChangeRankCapScriptValue->ToJson());
         }
-        if (OverflowExperienceScriptValue != nullptr && OverflowExperienceScriptValue.IsValid())
+        if (OverflowExperienceScriptValue.IsSet())
         {
-            JsonRootObject->SetObjectField("overflowExperienceScript", OverflowExperienceScriptValue->ToJson());
+            JsonRootObject->SetStringField("overflowExperienceScript", OverflowExperienceScriptValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

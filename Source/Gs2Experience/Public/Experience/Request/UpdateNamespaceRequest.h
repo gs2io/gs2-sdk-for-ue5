@@ -35,7 +35,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<Model::FScriptSetting> ChangeExperienceScriptValue;
         TSharedPtr<Model::FScriptSetting> ChangeRankScriptValue;
         TSharedPtr<Model::FScriptSetting> ChangeRankCapScriptValue;
-        TSharedPtr<Model::FScriptSetting> OverflowExperienceScriptValue;
+        TOptional<FString> OverflowExperienceScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -54,7 +54,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FUpdateNamespaceRequest> WithChangeExperienceScript(const TSharedPtr<Model::FScriptSetting> ChangeExperienceScript);
         TSharedPtr<FUpdateNamespaceRequest> WithChangeRankScript(const TSharedPtr<Model::FScriptSetting> ChangeRankScript);
         TSharedPtr<FUpdateNamespaceRequest> WithChangeRankCapScript(const TSharedPtr<Model::FScriptSetting> ChangeRankCapScript);
-        TSharedPtr<FUpdateNamespaceRequest> WithOverflowExperienceScript(const TSharedPtr<Model::FScriptSetting> OverflowExperienceScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithOverflowExperienceScript(const TOptional<FString> OverflowExperienceScript);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -65,7 +65,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<Model::FScriptSetting> GetChangeExperienceScript() const;
         TSharedPtr<Model::FScriptSetting> GetChangeRankScript() const;
         TSharedPtr<Model::FScriptSetting> GetChangeRankCapScript() const;
-        TSharedPtr<Model::FScriptSetting> GetOverflowExperienceScript() const;
+        TOptional<FString> GetOverflowExperienceScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

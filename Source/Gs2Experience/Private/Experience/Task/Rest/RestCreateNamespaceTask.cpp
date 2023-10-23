@@ -106,9 +106,9 @@ namespace Gs2::Experience::Task::Rest
             {
                 JsonRootObject->SetObjectField("changeRankCapScript", this->Request->GetChangeRankCapScript()->ToJson());
             }
-            if (this->Request->GetOverflowExperienceScript() != nullptr && this->Request->GetOverflowExperienceScript().IsValid())
+            if (this->Request->GetOverflowExperienceScript().IsSet())
             {
-                JsonRootObject->SetObjectField("overflowExperienceScript", this->Request->GetOverflowExperienceScript()->ToJson());
+                JsonRootObject->SetStringField("overflowExperienceScript", this->Request->GetOverflowExperienceScript().GetValue());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {

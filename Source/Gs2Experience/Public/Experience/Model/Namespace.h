@@ -34,7 +34,7 @@ namespace Gs2::Experience::Model
         TSharedPtr<FScriptSetting> ChangeExperienceScriptValue;
         TSharedPtr<FScriptSetting> ChangeRankScriptValue;
         TSharedPtr<FScriptSetting> ChangeRankCapScriptValue;
-        TSharedPtr<FScriptSetting> OverflowExperienceScriptValue;
+        TOptional<FString> OverflowExperienceScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -55,7 +55,7 @@ namespace Gs2::Experience::Model
         TSharedPtr<FNamespace> WithChangeExperienceScript(const TSharedPtr<FScriptSetting> ChangeExperienceScript);
         TSharedPtr<FNamespace> WithChangeRankScript(const TSharedPtr<FScriptSetting> ChangeRankScript);
         TSharedPtr<FNamespace> WithChangeRankCapScript(const TSharedPtr<FScriptSetting> ChangeRankCapScript);
-        TSharedPtr<FNamespace> WithOverflowExperienceScript(const TSharedPtr<FScriptSetting> OverflowExperienceScript);
+        TSharedPtr<FNamespace> WithOverflowExperienceScript(const TOptional<FString> OverflowExperienceScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -69,7 +69,7 @@ namespace Gs2::Experience::Model
         TSharedPtr<FScriptSetting> GetChangeExperienceScript() const;
         TSharedPtr<FScriptSetting> GetChangeRankScript() const;
         TSharedPtr<FScriptSetting> GetChangeRankCapScript() const;
-        TSharedPtr<FScriptSetting> GetOverflowExperienceScript() const;
+        TOptional<FString> GetOverflowExperienceScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
