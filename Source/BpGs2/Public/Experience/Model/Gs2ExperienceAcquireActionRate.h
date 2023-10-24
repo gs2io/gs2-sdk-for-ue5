@@ -29,7 +29,11 @@ struct FGs2ExperienceAcquireActionRate
     UPROPERTY(BlueprintReadWrite)
     FString Name = "";
     UPROPERTY(BlueprintReadWrite)
+    FString Mode = "";
+    UPROPERTY(BlueprintReadWrite)
     TArray<double> Rates = TArray<double>();
+    UPROPERTY(BlueprintReadWrite)
+    TArray<FString> BigRates = TArray<FString>();
 };
 
 inline FGs2ExperienceAcquireActionRate EzAcquireActionRateToFGs2ExperienceAcquireActionRate(

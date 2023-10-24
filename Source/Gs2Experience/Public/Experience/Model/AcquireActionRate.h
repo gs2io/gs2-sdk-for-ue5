@@ -24,7 +24,9 @@ namespace Gs2::Experience::Model
     class GS2EXPERIENCE_API FAcquireActionRate final : public Gs2Object, public TSharedFromThis<FAcquireActionRate>
     {
         TOptional<FString> NameValue;
+        TOptional<FString> ModeValue;
         TSharedPtr<TArray<double>> RatesValue;
+        TSharedPtr<TArray<FString>> BigRatesValue;
 
     public:
         FAcquireActionRate();
@@ -34,10 +36,14 @@ namespace Gs2::Experience::Model
         virtual ~FAcquireActionRate() override = default;
 
         TSharedPtr<FAcquireActionRate> WithName(const TOptional<FString> Name);
+        TSharedPtr<FAcquireActionRate> WithMode(const TOptional<FString> Mode);
         TSharedPtr<FAcquireActionRate> WithRates(const TSharedPtr<TArray<double>> Rates);
+        TSharedPtr<FAcquireActionRate> WithBigRates(const TSharedPtr<TArray<FString>> BigRates);
 
         TOptional<FString> GetName() const;
+        TOptional<FString> GetMode() const;
         TSharedPtr<TArray<double>> GetRates() const;
+        TSharedPtr<TArray<FString>> GetBigRates() const;
 
 
         static TSharedPtr<FAcquireActionRate> FromJson(const TSharedPtr<FJsonObject> Data);

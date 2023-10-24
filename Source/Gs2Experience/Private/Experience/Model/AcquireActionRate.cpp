@@ -20,7 +20,9 @@ namespace Gs2::Experience::Model
 {
     FAcquireActionRate::FAcquireActionRate():
         NameValue(TOptional<FString>()),
-        RatesValue(nullptr)
+        ModeValue(TOptional<FString>()),
+        RatesValue(nullptr),
+        BigRatesValue(nullptr)
     {
     }
 
@@ -28,7 +30,9 @@ namespace Gs2::Experience::Model
         const FAcquireActionRate& From
     ):
         NameValue(From.NameValue),
-        RatesValue(From.RatesValue)
+        ModeValue(From.ModeValue),
+        RatesValue(From.RatesValue),
+        BigRatesValue(From.BigRatesValue)
     {
     }
 
@@ -40,6 +44,14 @@ namespace Gs2::Experience::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FAcquireActionRate> FAcquireActionRate::WithMode(
+        const TOptional<FString> Mode
+    )
+    {
+        this->ModeValue = Mode;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FAcquireActionRate> FAcquireActionRate::WithRates(
         const TSharedPtr<TArray<double>> Rates
     )
@@ -47,13 +59,29 @@ namespace Gs2::Experience::Model
         this->RatesValue = Rates;
         return SharedThis(this);
     }
+
+    TSharedPtr<FAcquireActionRate> FAcquireActionRate::WithBigRates(
+        const TSharedPtr<TArray<FString>> BigRates
+    )
+    {
+        this->BigRatesValue = BigRates;
+        return SharedThis(this);
+    }
     TOptional<FString> FAcquireActionRate::GetName() const
     {
         return NameValue;
     }
+    TOptional<FString> FAcquireActionRate::GetMode() const
+    {
+        return ModeValue;
+    }
     TSharedPtr<TArray<double>> FAcquireActionRate::GetRates() const
     {
         return RatesValue;
+    }
+    TSharedPtr<TArray<FString>> FAcquireActionRate::GetBigRates() const
+    {
+        return BigRatesValue;
     }
 
     TSharedPtr<FAcquireActionRate> FAcquireActionRate::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -71,6 +99,15 @@ namespace Gs2::Experience::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithMode(Data->HasField("mode") ? [Data]() -> TOptional<FString>
+                {
+                    FString v;
+                    if (Data->TryGetStringField("mode", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithRates(Data->HasField("rates") ? [Data]() -> TSharedPtr<TArray<double>>
                 {
                     auto v = MakeShared<TArray<double>>();
@@ -82,7 +119,19 @@ namespace Gs2::Experience::Model
                         }
                     }
                     return v;
-                 }() : MakeShared<TArray<double>>());
+                 }() : MakeShared<TArray<double>>())
+            ->WithBigRates(Data->HasField("bigRates") ? [Data]() -> TSharedPtr<TArray<FString>>
+                {
+                    auto v = MakeShared<TArray<FString>>();
+                    if (!Data->HasTypedField<EJson::Null>("bigRates") && Data->HasTypedField<EJson::Array>("bigRates"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("bigRates"))
+                        {
+                            v->Add(JsonObjectValue->AsString());
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<FString>>());
     }
 
     TSharedPtr<FJsonObject> FAcquireActionRate::ToJson() const
@@ -92,6 +141,10 @@ namespace Gs2::Experience::Model
         {
             JsonRootObject->SetStringField("name", NameValue.GetValue());
         }
+        if (ModeValue.IsSet())
+        {
+            JsonRootObject->SetStringField("mode", ModeValue.GetValue());
+        }
         if (RatesValue != nullptr && RatesValue.IsValid())
         {
             TArray<TSharedPtr<FJsonValue>> v;
@@ -100,6 +153,15 @@ namespace Gs2::Experience::Model
                 v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("rates", v);
+        }
+        if (BigRatesValue != nullptr && BigRatesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *BigRatesValue)
+            {
+                v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
+            }
+            JsonRootObject->SetArrayField("bigRates", v);
         }
         return JsonRootObject;
     }
