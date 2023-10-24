@@ -42,6 +42,10 @@ ULoginAsyncFunction* ULoginAsyncFunction::Gs2Login(
 
 void ULoginAsyncFunction::Activate()
 {
+    if (Client.Profile == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[ULoginAsyncFunction::Activate] Client parameter specification is missing."))
+        return;
+    }
     if (Authenticator.Value == nullptr) {
         UE_LOG(BpGs2Log, Error, TEXT("[ULoginAsyncFunction::Activate] Authenticator parameter specification is missing."))
         return;
