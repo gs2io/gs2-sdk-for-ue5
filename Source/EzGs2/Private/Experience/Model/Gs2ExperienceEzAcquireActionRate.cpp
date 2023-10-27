@@ -27,6 +27,14 @@ namespace Gs2::UE5::Experience::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzAcquireActionRate> FEzAcquireActionRate::WithMode(
+        const TOptional<FString> Mode
+    )
+    {
+        this->ModeValue = Mode;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzAcquireActionRate> FEzAcquireActionRate::WithRates(
         const TSharedPtr<TArray<double>> Rates
     )
@@ -34,20 +42,38 @@ namespace Gs2::UE5::Experience::Model
         this->RatesValue = Rates;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzAcquireActionRate> FEzAcquireActionRate::WithBigRates(
+        const TSharedPtr<TArray<FString>> BigRates
+    )
+    {
+        this->BigRatesValue = BigRates;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzAcquireActionRate::GetName() const
     {
         return NameValue;
     }
+    TOptional<FString> FEzAcquireActionRate::GetMode() const
+    {
+        return ModeValue;
+    }
     TSharedPtr<TArray<double>> FEzAcquireActionRate::GetRates() const
     {
         return RatesValue;
+    }
+    TSharedPtr<TArray<FString>> FEzAcquireActionRate::GetBigRates() const
+    {
+        return BigRatesValue;
     }
 
     Gs2::Experience::Model::FAcquireActionRatePtr FEzAcquireActionRate::ToModel() const
     {
         return MakeShared<Gs2::Experience::Model::FAcquireActionRate>()
             ->WithName(NameValue)
-            ->WithRates(RatesValue);
+            ->WithMode(ModeValue)
+            ->WithRates(RatesValue)
+            ->WithBigRates(BigRatesValue);
     }
 
     TSharedPtr<FEzAcquireActionRate> FEzAcquireActionRate::FromModel(const Gs2::Experience::Model::FAcquireActionRatePtr Model)
@@ -58,6 +84,8 @@ namespace Gs2::UE5::Experience::Model
         }
         return MakeShared<FEzAcquireActionRate>()
             ->WithName(Model->GetName())
-            ->WithRates(Model->GetRates());
+            ->WithMode(Model->GetMode())
+            ->WithRates(Model->GetRates())
+            ->WithBigRates(Model->GetBigRates());
     }
 }

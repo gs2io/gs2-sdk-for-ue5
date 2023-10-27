@@ -42,6 +42,7 @@ inline FGs2ExperienceAcquireActionRate EzAcquireActionRateToFGs2ExperienceAcquir
 {
     FGs2ExperienceAcquireActionRate Value;
     Value.Name = Model->GetName() ? *Model->GetName() : "";
+    Value.Mode = Model->GetMode() ? *Model->GetMode() : "";
     Value.Rates = Model->GetRates() ? [&]
     {
         TArray<double> r;
@@ -51,6 +52,15 @@ inline FGs2ExperienceAcquireActionRate EzAcquireActionRateToFGs2ExperienceAcquir
         }
         return r;
     }() : TArray<double>();
+    Value.BigRates = Model->GetBigRates() ? [&]
+    {
+        TArray<FString> r;
+        for (auto v : *Model->GetBigRates())
+        {
+            r.Add(v);
+        }
+        return r;
+    }() : TArray<FString>();
     return Value;
 }
 
@@ -60,9 +70,17 @@ inline Gs2::UE5::Experience::Model::FEzAcquireActionRatePtr FGs2ExperienceAcquir
 {
     return MakeShared<Gs2::UE5::Experience::Model::FEzAcquireActionRate>()
         ->WithName(Model.Name)
+        ->WithMode(Model.Mode)
         ->WithRates([&]{
             auto r = MakeShared<TArray<double>>();
             for (auto v : Model.Rates) {
+                r->Add(v);
+            }
+            return r;
+        }())
+        ->WithBigRates([&]{
+            auto r = MakeShared<TArray<FString>>();
+            for (auto v : Model.BigRates) {
                 r->Add(v);
             }
             return r;
