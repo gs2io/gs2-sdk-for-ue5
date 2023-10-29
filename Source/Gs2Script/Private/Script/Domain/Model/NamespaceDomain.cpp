@@ -454,6 +454,7 @@ namespace Gs2::Script::Domain::Model
         const auto Domain = Self;
         Domain->Code = Domain->Code = ResultModel->GetCode();
         Domain->Result = Domain->Result = ResultModel->GetResult();
+        Domain->Transaction = Domain->Transaction = ResultModel->GetTransaction();
         Domain->ExecuteTime = Domain->ExecuteTime = ResultModel->GetExecuteTime();
         Domain->Charged = Domain->Charged = ResultModel->GetCharged();
         Domain->Output = Domain->Output = ResultModel->GetOutput();
@@ -502,6 +503,7 @@ namespace Gs2::Script::Domain::Model
         const auto Domain = Self;
         Domain->Code = Domain->Code = ResultModel->GetCode();
         Domain->Result = Domain->Result = ResultModel->GetResult();
+        Domain->Transaction = Domain->Transaction = ResultModel->GetTransaction();
         Domain->ExecuteTime = Domain->ExecuteTime = ResultModel->GetExecuteTime();
         Domain->Charged = Domain->Charged = ResultModel->GetCharged();
         Domain->Output = Domain->Output = ResultModel->GetOutput();

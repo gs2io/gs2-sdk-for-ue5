@@ -24,6 +24,7 @@ namespace Gs2::Script::Result
     {
         TOptional<int32> CodeValue;
         TOptional<FString> ResultValue;
+        TOptional<FString> TransactionValue;
         TOptional<int32> ExecuteTimeValue;
         TOptional<int32> ChargedValue;
         TSharedPtr<TArray<FString>> OutputValue;
@@ -38,6 +39,7 @@ namespace Gs2::Script::Result
 
         TSharedPtr<FDebugInvokeResult> WithCode(const TOptional<int32> Code);
         TSharedPtr<FDebugInvokeResult> WithResult(const TOptional<FString> Result);
+        TSharedPtr<FDebugInvokeResult> WithTransaction(const TOptional<FString> Transaction);
         TSharedPtr<FDebugInvokeResult> WithExecuteTime(const TOptional<int32> ExecuteTime);
         TSharedPtr<FDebugInvokeResult> WithCharged(const TOptional<int32> Charged);
         TSharedPtr<FDebugInvokeResult> WithOutput(const TSharedPtr<TArray<FString>> Output);
@@ -45,6 +47,7 @@ namespace Gs2::Script::Result
         TOptional<int32> GetCode() const;
         FString GetCodeString() const;
         TOptional<FString> GetResult() const;
+        TOptional<FString> GetTransaction() const;
         TOptional<int32> GetExecuteTime() const;
         FString GetExecuteTimeString() const;
         TOptional<int32> GetCharged() const;

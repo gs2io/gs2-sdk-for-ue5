@@ -21,6 +21,7 @@ namespace Gs2::Script::Result
     FInvokeScriptResult::FInvokeScriptResult():
         CodeValue(TOptional<int32>()),
         ResultValue(TOptional<FString>()),
+        TransactionValue(TOptional<FString>()),
         ExecuteTimeValue(TOptional<int32>()),
         ChargedValue(TOptional<int32>()),
         OutputValue(nullptr)
@@ -32,6 +33,7 @@ namespace Gs2::Script::Result
     ):
         CodeValue(From.CodeValue),
         ResultValue(From.ResultValue),
+        TransactionValue(From.TransactionValue),
         ExecuteTimeValue(From.ExecuteTimeValue),
         ChargedValue(From.ChargedValue),
         OutputValue(From.OutputValue)
@@ -51,6 +53,14 @@ namespace Gs2::Script::Result
     )
     {
         this->ResultValue = Result;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FInvokeScriptResult> FInvokeScriptResult::WithTransaction(
+        const TOptional<FString> Transaction
+    )
+    {
+        this->TransactionValue = Transaction;
         return SharedThis(this);
     }
 
@@ -95,6 +105,11 @@ namespace Gs2::Script::Result
     TOptional<FString> FInvokeScriptResult::GetResult() const
     {
         return ResultValue;
+    }
+
+    TOptional<FString> FInvokeScriptResult::GetTransaction() const
+    {
+        return TransactionValue;
     }
 
     TOptional<int32> FInvokeScriptResult::GetExecuteTime() const
@@ -158,6 +173,15 @@ namespace Gs2::Script::Result
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTransaction(Data->HasField("transaction") ? [Data]() -> TOptional<FString>
+                {
+                    FString v;
+                    if (Data->TryGetStringField("transaction", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithExecuteTime(Data->HasField("executeTime") ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -200,6 +224,10 @@ namespace Gs2::Script::Result
         if (ResultValue.IsSet())
         {
             JsonRootObject->SetStringField("result", ResultValue.GetValue());
+        }
+        if (TransactionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("transaction", TransactionValue.GetValue());
         }
         if (ExecuteTimeValue.IsSet())
         {
