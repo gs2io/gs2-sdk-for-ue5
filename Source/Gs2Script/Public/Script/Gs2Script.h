@@ -21,6 +21,8 @@
 #include "Model/Script.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/RandomStatus.h"
+#include "Model/RandomUsed.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

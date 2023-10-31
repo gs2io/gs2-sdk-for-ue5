@@ -22,6 +22,7 @@ namespace Gs2::Script::Result
         CodeValue(TOptional<int32>()),
         ResultValue(TOptional<FString>()),
         TransactionValue(TOptional<FString>()),
+        RandomStatusValue(nullptr),
         ExecuteTimeValue(TOptional<int32>()),
         ChargedValue(TOptional<int32>()),
         OutputValue(nullptr)
@@ -34,6 +35,7 @@ namespace Gs2::Script::Result
         CodeValue(From.CodeValue),
         ResultValue(From.ResultValue),
         TransactionValue(From.TransactionValue),
+        RandomStatusValue(From.RandomStatusValue),
         ExecuteTimeValue(From.ExecuteTimeValue),
         ChargedValue(From.ChargedValue),
         OutputValue(From.OutputValue)
@@ -61,6 +63,14 @@ namespace Gs2::Script::Result
     )
     {
         this->TransactionValue = Transaction;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FInvokeScriptResult> FInvokeScriptResult::WithRandomStatus(
+        const TSharedPtr<Model::FRandomStatus> RandomStatus
+    )
+    {
+        this->RandomStatusValue = RandomStatus;
         return SharedThis(this);
     }
 
@@ -110,6 +120,15 @@ namespace Gs2::Script::Result
     TOptional<FString> FInvokeScriptResult::GetTransaction() const
     {
         return TransactionValue;
+    }
+
+    TSharedPtr<Model::FRandomStatus> FInvokeScriptResult::GetRandomStatus() const
+    {
+        if (!RandomStatusValue.IsValid())
+        {
+            return nullptr;
+        }
+        return RandomStatusValue;
     }
 
     TOptional<int32> FInvokeScriptResult::GetExecuteTime() const
@@ -182,6 +201,14 @@ namespace Gs2::Script::Result
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithRandomStatus(Data->HasField("randomStatus") ? [Data]() -> Model::FRandomStatusPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("randomStatus"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FRandomStatus::FromJson(Data->GetObjectField("randomStatus"));
+                 }() : nullptr)
             ->WithExecuteTime(Data->HasField("executeTime") ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -228,6 +255,10 @@ namespace Gs2::Script::Result
         if (TransactionValue.IsSet())
         {
             JsonRootObject->SetStringField("transaction", TransactionValue.GetValue());
+        }
+        if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
         }
         if (ExecuteTimeValue.IsSet())
         {

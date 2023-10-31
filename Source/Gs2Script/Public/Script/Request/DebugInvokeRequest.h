@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/RandomStatus.h"
 
 namespace Gs2::Script::Request
 {
@@ -27,6 +28,7 @@ namespace Gs2::Script::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> ScriptValue;
         TOptional<FString> ArgsValue;
+        TSharedPtr<Model::FRandomStatus> RandomStatusValue;
         
     public:
         
@@ -39,10 +41,12 @@ namespace Gs2::Script::Request
         TSharedPtr<FDebugInvokeRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDebugInvokeRequest> WithScript(const TOptional<FString> Script);
         TSharedPtr<FDebugInvokeRequest> WithArgs(const TOptional<FString> Args);
+        TSharedPtr<FDebugInvokeRequest> WithRandomStatus(const TSharedPtr<Model::FRandomStatus> RandomStatus);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetScript() const;
         TOptional<FString> GetArgs() const;
+        TSharedPtr<Model::FRandomStatus> GetRandomStatus() const;
 
         static TSharedPtr<FDebugInvokeRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

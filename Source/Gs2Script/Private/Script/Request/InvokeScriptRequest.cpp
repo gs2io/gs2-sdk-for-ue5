@@ -21,7 +21,8 @@ namespace Gs2::Script::Request
     FInvokeScriptRequest::FInvokeScriptRequest():
         ScriptIdValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        ArgsValue(TOptional<FString>())
+        ArgsValue(TOptional<FString>()),
+        RandomStatusValue(nullptr)
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Script::Request
     ):
         ScriptIdValue(From.ScriptIdValue),
         UserIdValue(From.UserIdValue),
-        ArgsValue(From.ArgsValue)
+        ArgsValue(From.ArgsValue),
+        RandomStatusValue(From.RandomStatusValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Script::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FInvokeScriptRequest> FInvokeScriptRequest::WithRandomStatus(
+        const TSharedPtr<Model::FRandomStatus> RandomStatus
+    )
+    {
+        this->RandomStatusValue = RandomStatus;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FInvokeScriptRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -84,6 +94,15 @@ namespace Gs2::Script::Request
     TOptional<FString> FInvokeScriptRequest::GetArgs() const
     {
         return ArgsValue;
+    }
+
+    TSharedPtr<Model::FRandomStatus> FInvokeScriptRequest::GetRandomStatus() const
+    {
+        if (!RandomStatusValue.IsValid())
+        {
+            return nullptr;
+        }
+        return RandomStatusValue;
     }
 
     TSharedPtr<FInvokeScriptRequest> FInvokeScriptRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -119,7 +138,15 @@ namespace Gs2::Script::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+          ->WithRandomStatus(Data->HasField("randomStatus") ? [Data]() -> Model::FRandomStatusPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>("randomStatus"))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FRandomStatus::FromJson(Data->GetObjectField("randomStatus"));
+             }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FInvokeScriptRequest::ToJson() const
@@ -140,6 +167,10 @@ namespace Gs2::Script::Request
         if (ArgsValue.IsSet())
         {
             JsonRootObject->SetStringField("args", ArgsValue.GetValue());
+        }
+        if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
         }
         return JsonRootObject;
     }
