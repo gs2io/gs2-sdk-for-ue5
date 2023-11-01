@@ -41,54 +41,6 @@ namespace Gs2::UE5::Distributor::Domain::Model
 
     }
 
-    FEzStampSheetResultGameSessionDomain::FGetStampSheetResultTask::FGetStampSheetResultTask(
-        TSharedPtr<FEzStampSheetResultGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzStampSheetResultGameSessionDomain::FGetStampSheetResultTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Distributor::Model::FEzStampSheetResult>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetStampSheetResultTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Distributor::Request::FGetStampSheetResultRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Distributor::Model::FEzStampSheetResult::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzStampSheetResultGameSessionDomain::FGetStampSheetResultTask>> FEzStampSheetResultGameSessionDomain::GetStampSheetResult(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetStampSheetResultTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzStampSheetResultGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzStampSheetResultGameSessionDomain> Self
     ): Self(Self)

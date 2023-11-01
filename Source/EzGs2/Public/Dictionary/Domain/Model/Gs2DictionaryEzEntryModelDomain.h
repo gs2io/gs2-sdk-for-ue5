@@ -44,26 +44,6 @@ namespace Gs2::UE5::Dictionary::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetEntryModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Dictionary::Model::FEzEntryModel>,
-            public TSharedFromThis<FGetEntryModelTask>
-        {
-            TSharedPtr<FEzEntryModelDomain> Self;
-
-        public:
-            explicit FGetEntryModelTask(
-                TSharedPtr<FEzEntryModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Dictionary::Model::FEzEntryModel>> Result
-            ) override;
-        };
-        friend FGetEntryModelTask;
-
-        TSharedPtr<FAsyncTask<FGetEntryModelTask>> GetEntryModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Dictionary::Model::FEzEntryModel>,
             public TSharedFromThis<FModelTask>

@@ -46,26 +46,6 @@ namespace Gs2::UE5::Distributor::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetStampSheetResultTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Distributor::Model::FEzStampSheetResult>,
-            public TSharedFromThis<FGetStampSheetResultTask>
-        {
-            TSharedPtr<FEzStampSheetResultGameSessionDomain> Self;
-
-        public:
-            explicit FGetStampSheetResultTask(
-                TSharedPtr<FEzStampSheetResultGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Distributor::Model::FEzStampSheetResult>> Result
-            ) override;
-        };
-        friend FGetStampSheetResultTask;
-
-        TSharedPtr<FAsyncTask<FGetStampSheetResultTask>> GetStampSheetResult(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Distributor::Model::FEzStampSheetResult>,
             public TSharedFromThis<FModelTask>

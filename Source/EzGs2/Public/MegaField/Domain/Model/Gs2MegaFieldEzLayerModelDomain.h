@@ -49,26 +49,6 @@ namespace Gs2::UE5::MegaField::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetLayerModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::MegaField::Model::FEzLayerModel>,
-            public TSharedFromThis<FGetLayerModelTask>
-        {
-            TSharedPtr<FEzLayerModelDomain> Self;
-
-        public:
-            explicit FGetLayerModelTask(
-                TSharedPtr<FEzLayerModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::MegaField::Model::FEzLayerModel>> Result
-            ) override;
-        };
-        friend FGetLayerModelTask;
-
-        TSharedPtr<FAsyncTask<FGetLayerModelTask>> GetLayerModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::MegaField::Model::FEzLayerModel>,
             public TSharedFromThis<FModelTask>

@@ -47,26 +47,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetRateModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Model::FEzRateModel>,
-            public TSharedFromThis<FGetRateModelTask>
-        {
-            TSharedPtr<FEzRateModelDomain> Self;
-
-        public:
-            explicit FGetRateModelTask(
-                TSharedPtr<FEzRateModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Model::FEzRateModel>> Result
-            ) override;
-        };
-        friend FGetRateModelTask;
-
-        TSharedPtr<FAsyncTask<FGetRateModelTask>> GetRateModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Model::FEzRateModel>,
             public TSharedFromThis<FModelTask>

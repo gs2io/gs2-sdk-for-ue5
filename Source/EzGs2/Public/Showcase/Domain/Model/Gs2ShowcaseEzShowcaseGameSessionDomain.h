@@ -50,26 +50,6 @@ namespace Gs2::UE5::Showcase::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetShowcaseTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Model::FEzShowcase>,
-            public TSharedFromThis<FGetShowcaseTask>
-        {
-            TSharedPtr<FEzShowcaseGameSessionDomain> Self;
-
-        public:
-            explicit FGetShowcaseTask(
-                TSharedPtr<FEzShowcaseGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Model::FEzShowcase>> Result
-            ) override;
-        };
-        friend FGetShowcaseTask;
-
-        TSharedPtr<FAsyncTask<FGetShowcaseTask>> GetShowcase(
-        );
-
         Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomainPtr DisplayItem(
             const FString DisplayItemId
         ) const;

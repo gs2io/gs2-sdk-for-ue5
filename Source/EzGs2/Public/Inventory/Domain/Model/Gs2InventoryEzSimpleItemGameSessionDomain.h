@@ -60,26 +60,6 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetSimpleItemTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Model::FEzSimpleItem>,
-            public TSharedFromThis<FGetSimpleItemTask>
-        {
-            TSharedPtr<FEzSimpleItemGameSessionDomain> Self;
-
-        public:
-            explicit FGetSimpleItemTask(
-                TSharedPtr<FEzSimpleItemGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Model::FEzSimpleItem>> Result
-            ) override;
-        };
-        friend FGetSimpleItemTask;
-
-        TSharedPtr<FAsyncTask<FGetSimpleItemTask>> GetSimpleItem(
-        );
-
         class FGetSimpleItemWithSignatureTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemGameSessionDomain>,
             public TSharedFromThis<FGetSimpleItemWithSignatureTask>

@@ -36,54 +36,6 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     }
 
-    FEzCounterModelDomain::FGetCounterModelTask::FGetCounterModelTask(
-        TSharedPtr<FEzCounterModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzCounterModelDomain::FGetCounterModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Model::FEzCounterModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetCounterModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Mission::Request::FGetCounterModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Mission::Model::FEzCounterModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzCounterModelDomain::FGetCounterModelTask>> FEzCounterModelDomain::GetCounterModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetCounterModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzCounterModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzCounterModelDomain> Self
     ): Self(Self)

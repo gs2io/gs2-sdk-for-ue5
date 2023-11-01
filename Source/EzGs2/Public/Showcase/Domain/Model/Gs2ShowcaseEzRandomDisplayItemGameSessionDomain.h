@@ -53,26 +53,6 @@ namespace Gs2::UE5::Showcase::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetRandomShowcaseDisplayItemTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Model::FEzRandomDisplayItem>,
-            public TSharedFromThis<FGetRandomShowcaseDisplayItemTask>
-        {
-            TSharedPtr<FEzRandomDisplayItemGameSessionDomain> Self;
-
-        public:
-            explicit FGetRandomShowcaseDisplayItemTask(
-                TSharedPtr<FEzRandomDisplayItemGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Model::FEzRandomDisplayItem>> Result
-            ) override;
-        };
-        friend FGetRandomShowcaseDisplayItemTask;
-
-        TSharedPtr<FAsyncTask<FGetRandomShowcaseDisplayItemTask>> GetRandomShowcaseDisplayItem(
-        );
-
         class FRandomShowcaseBuyTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomain>,
             public TSharedFromThis<FRandomShowcaseBuyTask>

@@ -43,7 +43,7 @@ UGs2SerialKeySerialKeyGetValueAsyncFunction* UGs2SerialKeySerialKeyGetValueAsync
 
 void UGs2SerialKeySerialKeyGetValueAsyncFunction::Activate()
 {
-    auto Future = User.Value->Get(
+    auto Future = User.Value->Model(
         Code
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)

@@ -41,54 +41,6 @@ namespace Gs2::UE5::SerialKey::Domain::Model
 
     }
 
-    FEzCampaignModelDomain::FGetCampaignModelTask::FGetCampaignModelTask(
-        TSharedPtr<FEzCampaignModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzCampaignModelDomain::FGetCampaignModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::SerialKey::Model::FEzCampaignModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetCampaignModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::SerialKey::Request::FGetCampaignModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::SerialKey::Model::FEzCampaignModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzCampaignModelDomain::FGetCampaignModelTask>> FEzCampaignModelDomain::GetCampaignModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetCampaignModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzCampaignModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzCampaignModelDomain> Self
     ): Self(Self)

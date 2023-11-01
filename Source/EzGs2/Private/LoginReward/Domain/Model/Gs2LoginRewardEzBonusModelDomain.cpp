@@ -36,54 +36,6 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
     }
 
-    FEzBonusModelDomain::FGetBonusModelTask::FGetBonusModelTask(
-        TSharedPtr<FEzBonusModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzBonusModelDomain::FGetBonusModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzBonusModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetBonusModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::LoginReward::Request::FGetBonusModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::LoginReward::Model::FEzBonusModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzBonusModelDomain::FGetBonusModelTask>> FEzBonusModelDomain::GetBonusModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetBonusModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzBonusModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzBonusModelDomain> Self
     ): Self(Self)

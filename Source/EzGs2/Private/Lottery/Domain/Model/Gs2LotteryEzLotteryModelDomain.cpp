@@ -36,54 +36,6 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
     }
 
-    FEzLotteryModelDomain::FGetLotteryModelTask::FGetLotteryModelTask(
-        TSharedPtr<FEzLotteryModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzLotteryModelDomain::FGetLotteryModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Lottery::Model::FEzLotteryModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetLotteryModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Lottery::Request::FGetLotteryModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Lottery::Model::FEzLotteryModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzLotteryModelDomain::FGetLotteryModelTask>> FEzLotteryModelDomain::GetLotteryModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetLotteryModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzLotteryModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzLotteryModelDomain> Self
     ): Self(Self)

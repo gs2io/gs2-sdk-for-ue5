@@ -36,54 +36,6 @@ namespace Gs2::UE5::Limit::Domain::Model
 
     }
 
-    FEzLimitModelDomain::FGetLimitModelTask::FGetLimitModelTask(
-        TSharedPtr<FEzLimitModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzLimitModelDomain::FGetLimitModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Limit::Model::FEzLimitModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetLimitModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Limit::Request::FGetLimitModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Limit::Model::FEzLimitModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzLimitModelDomain::FGetLimitModelTask>> FEzLimitModelDomain::GetLimitModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetLimitModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzLimitModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzLimitModelDomain> Self
     ): Self(Self)

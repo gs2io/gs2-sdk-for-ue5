@@ -51,54 +51,6 @@ namespace Gs2::UE5::Inbox::Domain::Model
 
     }
 
-    FEzMessageGameSessionDomain::FGetTask::FGetTask(
-        TSharedPtr<FEzMessageGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzMessageGameSessionDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Inbox::Model::FEzMessage>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Inbox::Request::FGetMessageRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Inbox::Model::FEzMessage::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzMessageGameSessionDomain::FGetTask>> FEzMessageGameSessionDomain::Get(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzMessageGameSessionDomain::FReadTask::FReadTask(
         TSharedPtr<FEzMessageGameSessionDomain> Self
     ): Self(Self)

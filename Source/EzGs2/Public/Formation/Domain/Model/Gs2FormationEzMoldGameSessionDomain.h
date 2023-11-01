@@ -59,26 +59,6 @@ namespace Gs2::UE5::Formation::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetMoldTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzMold>,
-            public TSharedFromThis<FGetMoldTask>
-        {
-            TSharedPtr<FEzMoldGameSessionDomain> Self;
-
-        public:
-            explicit FGetMoldTask(
-                TSharedPtr<FEzMoldGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Model::FEzMold>> Result
-            ) override;
-        };
-        friend FGetMoldTask;
-
-        TSharedPtr<FAsyncTask<FGetMoldTask>> GetMold(
-        );
-
         Gs2::UE5::Formation::Domain::Iterator::FEzDescribeFormsIteratorPtr Forms(
         ) const;
 

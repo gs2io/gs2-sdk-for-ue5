@@ -41,54 +41,6 @@ namespace Gs2::UE5::Quest::Domain::Model
 
     }
 
-    FEzCompletedQuestListGameSessionDomain::FGetCompletedQuestListTask::FGetCompletedQuestListTask(
-        TSharedPtr<FEzCompletedQuestListGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzCompletedQuestListGameSessionDomain::FGetCompletedQuestListTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Model::FEzCompletedQuestList>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetCompletedQuestListTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Quest::Request::FGetCompletedQuestListRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Quest::Model::FEzCompletedQuestList::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzCompletedQuestListGameSessionDomain::FGetCompletedQuestListTask>> FEzCompletedQuestListGameSessionDomain::GetCompletedQuestList(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetCompletedQuestListTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzCompletedQuestListGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzCompletedQuestListGameSessionDomain> Self
     ): Self(Self)

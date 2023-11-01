@@ -46,26 +46,6 @@ namespace Gs2::UE5::Idle::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetCategoryModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Idle::Model::FEzCategoryModel>,
-            public TSharedFromThis<FGetCategoryModelTask>
-        {
-            TSharedPtr<FEzCategoryModelDomain> Self;
-
-        public:
-            explicit FGetCategoryModelTask(
-                TSharedPtr<FEzCategoryModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Idle::Model::FEzCategoryModel>> Result
-            ) override;
-        };
-        friend FGetCategoryModelTask;
-
-        TSharedPtr<FAsyncTask<FGetCategoryModelTask>> GetCategoryModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Idle::Model::FEzCategoryModel>,
             public TSharedFromThis<FModelTask>

@@ -46,54 +46,6 @@ namespace Gs2::UE5::Limit::Domain::Model
 
     }
 
-    FEzCounterGameSessionDomain::FGetCounterTask::FGetCounterTask(
-        TSharedPtr<FEzCounterGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzCounterGameSessionDomain::FGetCounterTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Limit::Model::FEzCounter>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetCounterTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Limit::Request::FGetCounterRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Limit::Model::FEzCounter::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzCounterGameSessionDomain::FGetCounterTask>> FEzCounterGameSessionDomain::GetCounter(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetCounterTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzCounterGameSessionDomain::FCountUpTask::FCountUpTask(
         TSharedPtr<FEzCounterGameSessionDomain> Self,
         TOptional<int32> CountUpValue,

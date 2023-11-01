@@ -71,26 +71,6 @@ namespace Gs2::UE5::Account::Domain::Model
             FString Password
         );
 
-        class FGetTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Model::FEzTakeOver>,
-            public TSharedFromThis<FGetTask>
-        {
-            TSharedPtr<FEzTakeOverGameSessionDomain> Self;
-
-        public:
-            explicit FGetTask(
-                TSharedPtr<FEzTakeOverGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Model::FEzTakeOver>> Result
-            ) override;
-        };
-        friend FGetTask;
-
-        TSharedPtr<FAsyncTask<FGetTask>> Get(
-        );
-
         class FUpdateTakeOverSettingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>,
             public TSharedFromThis<FUpdateTakeOverSettingTask>

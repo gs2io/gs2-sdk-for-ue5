@@ -48,26 +48,6 @@ namespace Gs2::UE5::Stamina::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetStaminaTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Model::FEzStamina>,
-            public TSharedFromThis<FGetStaminaTask>
-        {
-            TSharedPtr<FEzStaminaGameSessionDomain> Self;
-
-        public:
-            explicit FGetStaminaTask(
-                TSharedPtr<FEzStaminaGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Model::FEzStamina>> Result
-            ) override;
-        };
-        friend FGetStaminaTask;
-
-        TSharedPtr<FAsyncTask<FGetStaminaTask>> GetStamina(
-        );
-
         class FConsumeTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>,
             public TSharedFromThis<FConsumeTask>

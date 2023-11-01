@@ -46,26 +46,6 @@ namespace Gs2::UE5::Version::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetVersionModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Version::Model::FEzVersionModel>,
-            public TSharedFromThis<FGetVersionModelTask>
-        {
-            TSharedPtr<FEzVersionModelDomain> Self;
-
-        public:
-            explicit FGetVersionModelTask(
-                TSharedPtr<FEzVersionModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Version::Model::FEzVersionModel>> Result
-            ) override;
-        };
-        friend FGetVersionModelTask;
-
-        TSharedPtr<FAsyncTask<FGetVersionModelTask>> GetVersionModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Version::Model::FEzVersionModel>,
             public TSharedFromThis<FModelTask>

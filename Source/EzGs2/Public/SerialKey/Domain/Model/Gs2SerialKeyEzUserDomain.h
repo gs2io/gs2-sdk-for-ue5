@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
@@ -47,15 +49,15 @@ namespace Gs2::UE5::SerialKey::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetTask :
+        class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SerialKey::Model::FEzSerialKey>,
-            public TSharedFromThis<FGetTask>
+            public TSharedFromThis<FModelTask>
         {
             TSharedPtr<FEzUserDomain> Self;
             FString Code;
 
         public:
-            explicit FGetTask(
+            explicit FModelTask(
                 TSharedPtr<FEzUserDomain> Self,
                 FString Code
             );
@@ -64,9 +66,9 @@ namespace Gs2::UE5::SerialKey::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::UE5::SerialKey::Model::FEzSerialKey>> Result
             ) override;
         };
-        friend FGetTask;
+        friend FModelTask;
 
-        TSharedPtr<FAsyncTask<FGetTask>> Get(
+        TSharedPtr<FAsyncTask<FModelTask>> Model(
             FString Code
         );
 

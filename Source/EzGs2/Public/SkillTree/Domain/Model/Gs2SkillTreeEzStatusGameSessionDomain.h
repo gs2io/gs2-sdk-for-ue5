@@ -93,26 +93,6 @@ namespace Gs2::UE5::SkillTree::Domain::Model
             TArray<FString> NodeModelNames
         );
 
-        class FGetStatusTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Model::FEzStatus>,
-            public TSharedFromThis<FGetStatusTask>
-        {
-            TSharedPtr<FEzStatusGameSessionDomain> Self;
-
-        public:
-            explicit FGetStatusTask(
-                TSharedPtr<FEzStatusGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzStatus>> Result
-            ) override;
-        };
-        friend FGetStatusTask;
-
-        TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
-        );
-
         class FResetTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FResetTask>

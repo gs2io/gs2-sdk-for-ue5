@@ -50,26 +50,6 @@ namespace Gs2::UE5::Mission::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetCounterModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzCounterModel>,
-            public TSharedFromThis<FGetCounterModelTask>
-        {
-            TSharedPtr<FEzCounterModelDomain> Self;
-
-        public:
-            explicit FGetCounterModelTask(
-                TSharedPtr<FEzCounterModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Model::FEzCounterModel>> Result
-            ) override;
-        };
-        friend FGetCounterModelTask;
-
-        TSharedPtr<FAsyncTask<FGetCounterModelTask>> GetCounterModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzCounterModel>,
             public TSharedFromThis<FModelTask>

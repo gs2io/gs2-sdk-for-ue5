@@ -36,54 +36,6 @@ namespace Gs2::UE5::Version::Domain::Model
 
     }
 
-    FEzVersionModelDomain::FGetVersionModelTask::FGetVersionModelTask(
-        TSharedPtr<FEzVersionModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzVersionModelDomain::FGetVersionModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Version::Model::FEzVersionModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetVersionModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Version::Request::FGetVersionModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Version::Model::FEzVersionModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzVersionModelDomain::FGetVersionModelTask>> FEzVersionModelDomain::GetVersionModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetVersionModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzVersionModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzVersionModelDomain> Self
     ): Self(Self)

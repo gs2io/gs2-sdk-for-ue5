@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "SerialKey/Domain/Model/Gs2SerialKeyEzUserDomain.h"
@@ -46,7 +48,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
 
     }
 
-    FEzUserDomain::FGetTask::FGetTask(
+    FEzUserDomain::FModelTask::FModelTask(
         TSharedPtr<FEzUserDomain> Self,
         FString Code
     ): Self(Self), Code(Code)
@@ -54,11 +56,11 @@ namespace Gs2::UE5::SerialKey::Domain::Model
 
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FEzUserDomain::FGetTask::Action(
+    Gs2::Core::Model::FGs2ErrorPtr FEzUserDomain::FModelTask::Action(
         TSharedPtr<TSharedPtr<Gs2::UE5::SerialKey::Model::FEzSerialKey>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FGetTask>(
+        const auto Future = Self->ProfileValue->Run<FModelTask>(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->GetSerialKey(
                     MakeShared<Gs2::SerialKey::Request::FGetSerialKeyRequest>()
@@ -88,11 +90,11 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FEzUserDomain::FGetTask>> FEzUserDomain::Get(
+    TSharedPtr<FAsyncTask<FEzUserDomain::FModelTask>> FEzUserDomain::Model(
         FString Code
     )
     {
-        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(
+        return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(
             this->AsShared(),
             Code
         );

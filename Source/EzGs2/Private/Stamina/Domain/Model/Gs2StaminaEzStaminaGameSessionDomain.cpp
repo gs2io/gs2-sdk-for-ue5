@@ -46,54 +46,6 @@ namespace Gs2::UE5::Stamina::Domain::Model
 
     }
 
-    FEzStaminaGameSessionDomain::FGetStaminaTask::FGetStaminaTask(
-        TSharedPtr<FEzStaminaGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzStaminaGameSessionDomain::FGetStaminaTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Model::FEzStamina>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetStaminaTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Stamina::Request::FGetStaminaRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Stamina::Model::FEzStamina::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzStaminaGameSessionDomain::FGetStaminaTask>> FEzStaminaGameSessionDomain::GetStamina(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetStaminaTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzStaminaGameSessionDomain::FConsumeTask::FConsumeTask(
         TSharedPtr<FEzStaminaGameSessionDomain> Self,
         int32 ConsumeValue

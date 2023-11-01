@@ -41,54 +41,6 @@ namespace Gs2::UE5::MegaField::Domain::Model
 
     }
 
-    FEzLayerModelDomain::FGetLayerModelTask::FGetLayerModelTask(
-        TSharedPtr<FEzLayerModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzLayerModelDomain::FGetLayerModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::MegaField::Model::FEzLayerModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetLayerModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::MegaField::Request::FGetLayerModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::MegaField::Model::FEzLayerModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzLayerModelDomain::FGetLayerModelTask>> FEzLayerModelDomain::GetLayerModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetLayerModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzLayerModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzLayerModelDomain> Self
     ): Self(Self)

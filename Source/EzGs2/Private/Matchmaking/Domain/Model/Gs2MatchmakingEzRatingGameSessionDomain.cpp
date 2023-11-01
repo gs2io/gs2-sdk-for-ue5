@@ -41,54 +41,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
     }
 
-    FEzRatingGameSessionDomain::FGetRatingTask::FGetRatingTask(
-        TSharedPtr<FEzRatingGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzRatingGameSessionDomain::FGetRatingTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzRating>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetRatingTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Matchmaking::Request::FGetRatingRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Matchmaking::Model::FEzRating::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzRatingGameSessionDomain::FGetRatingTask>> FEzRatingGameSessionDomain::GetRating(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetRatingTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzRatingGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzRatingGameSessionDomain> Self
     ): Self(Self)

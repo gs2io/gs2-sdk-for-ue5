@@ -50,26 +50,6 @@ namespace Gs2::UE5::MegaField::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetAreaModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::MegaField::Model::FEzAreaModel>,
-            public TSharedFromThis<FGetAreaModelTask>
-        {
-            TSharedPtr<FEzAreaModelDomain> Self;
-
-        public:
-            explicit FGetAreaModelTask(
-                TSharedPtr<FEzAreaModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::MegaField::Model::FEzAreaModel>> Result
-            ) override;
-        };
-        friend FGetAreaModelTask;
-
-        TSharedPtr<FAsyncTask<FGetAreaModelTask>> GetAreaModel(
-        );
-
         Gs2::UE5::MegaField::Domain::Iterator::FEzDescribeLayerModelsIteratorPtr LayerModels(
         ) const;
 

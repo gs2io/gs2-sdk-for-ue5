@@ -45,26 +45,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetCategoryTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking::Model::FEzCategoryModel>,
-            public TSharedFromThis<FGetCategoryTask>
-        {
-            TSharedPtr<FEzCategoryModelDomain> Self;
-
-        public:
-            explicit FGetCategoryTask(
-                TSharedPtr<FEzCategoryModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking::Model::FEzCategoryModel>> Result
-            ) override;
-        };
-        friend FGetCategoryTask;
-
-        TSharedPtr<FAsyncTask<FGetCategoryTask>> GetCategory(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking::Model::FEzCategoryModel>,
             public TSharedFromThis<FModelTask>

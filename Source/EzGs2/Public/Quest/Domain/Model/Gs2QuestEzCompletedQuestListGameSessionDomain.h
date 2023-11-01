@@ -51,26 +51,6 @@ namespace Gs2::UE5::Quest::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetCompletedQuestListTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Model::FEzCompletedQuestList>,
-            public TSharedFromThis<FGetCompletedQuestListTask>
-        {
-            TSharedPtr<FEzCompletedQuestListGameSessionDomain> Self;
-
-        public:
-            explicit FGetCompletedQuestListTask(
-                TSharedPtr<FEzCompletedQuestListGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Model::FEzCompletedQuestList>> Result
-            ) override;
-        };
-        friend FGetCompletedQuestListTask;
-
-        TSharedPtr<FAsyncTask<FGetCompletedQuestListTask>> GetCompletedQuestList(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Model::FEzCompletedQuestList>,
             public TSharedFromThis<FModelTask>

@@ -56,54 +56,6 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     }
 
-    FEzMoldGameSessionDomain::FGetMoldTask::FGetMoldTask(
-        TSharedPtr<FEzMoldGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzMoldGameSessionDomain::FGetMoldTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Model::FEzMold>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetMoldTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Formation::Request::FGetMoldRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Formation::Model::FEzMold::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzMoldGameSessionDomain::FGetMoldTask>> FEzMoldGameSessionDomain::GetMold(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetMoldTask>>(
-            this->AsShared()
-        );
-    }
-
     Gs2::UE5::Formation::Domain::Iterator::FEzDescribeFormsIteratorPtr FEzMoldGameSessionDomain::Forms(
     ) const
     {

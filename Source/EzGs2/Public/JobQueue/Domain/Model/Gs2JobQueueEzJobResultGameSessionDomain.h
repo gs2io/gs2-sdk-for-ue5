@@ -46,26 +46,6 @@ namespace Gs2::UE5::JobQueue::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetResultTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::JobQueue::Model::FEzJobResult>,
-            public TSharedFromThis<FGetResultTask>
-        {
-            TSharedPtr<FEzJobResultGameSessionDomain> Self;
-
-        public:
-            explicit FGetResultTask(
-                TSharedPtr<FEzJobResultGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::JobQueue::Model::FEzJobResult>> Result
-            ) override;
-        };
-        friend FGetResultTask;
-
-        TSharedPtr<FAsyncTask<FGetResultTask>> GetResult(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::JobQueue::Model::FEzJobResult>,
             public TSharedFromThis<FModelTask>

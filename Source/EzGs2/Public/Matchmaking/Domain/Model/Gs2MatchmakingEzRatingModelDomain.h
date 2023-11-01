@@ -52,26 +52,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetRatingModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Model::FEzRatingModel>,
-            public TSharedFromThis<FGetRatingModelTask>
-        {
-            TSharedPtr<FEzRatingModelDomain> Self;
-
-        public:
-            explicit FGetRatingModelTask(
-                TSharedPtr<FEzRatingModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzRatingModel>> Result
-            ) override;
-        };
-        friend FGetRatingModelTask;
-
-        TSharedPtr<FAsyncTask<FGetRatingModelTask>> GetRatingModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Model::FEzRatingModel>,
             public TSharedFromThis<FModelTask>

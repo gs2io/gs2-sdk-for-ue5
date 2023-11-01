@@ -51,26 +51,6 @@ namespace Gs2::UE5::Mission::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetCounterTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzCounter>,
-            public TSharedFromThis<FGetCounterTask>
-        {
-            TSharedPtr<FEzCounterGameSessionDomain> Self;
-
-        public:
-            explicit FGetCounterTask(
-                TSharedPtr<FEzCounterGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Model::FEzCounter>> Result
-            ) override;
-        };
-        friend FGetCounterTask;
-
-        TSharedPtr<FAsyncTask<FGetCounterTask>> GetCounter(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzCounter>,
             public TSharedFromThis<FModelTask>

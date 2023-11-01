@@ -66,55 +66,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
     }
 
-    FEzBallotGameSessionDomain::FCreateVoteTask::FCreateVoteTask(
-        TSharedPtr<FEzBallotGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzBallotGameSessionDomain::FCreateVoteTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotGameSessionDomain>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FCreateVoteTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Matchmaking::Request::FGetBallotRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotGameSessionDomain>(
-                    Task->GetTask().Result(),
-                    Self->ProfileValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzBallotGameSessionDomain::FCreateVoteTask>> FEzBallotGameSessionDomain::CreateVote(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FCreateVoteTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzBallotGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzBallotGameSessionDomain> Self
     ): Self(Self)

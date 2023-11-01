@@ -43,26 +43,6 @@ namespace Gs2::UE5::Money::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Money::Model::FEzWallet>,
-            public TSharedFromThis<FGetTask>
-        {
-            TSharedPtr<FEzWalletGameSessionDomain> Self;
-
-        public:
-            explicit FGetTask(
-                TSharedPtr<FEzWalletGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Money::Model::FEzWallet>> Result
-            ) override;
-        };
-        friend FGetTask;
-
-        TSharedPtr<FAsyncTask<FGetTask>> Get(
-        );
-
         class FWithdrawTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Money::Domain::Model::FEzWalletGameSessionDomain>,
             public TSharedFromThis<FWithdrawTask>

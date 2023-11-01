@@ -281,12 +281,12 @@ namespace Gs2::UE5::Inventory::Domain::Model
     Gs2::Core::Domain::CallbackID FEzItemSetGameSessionDomain::Subscribe(TFunction<void(TArray<Gs2::UE5::Inventory::Model::FEzItemSetPtr>)> Callback)
     {
         return Domain->Subscribe(
-            [&](TSharedPtr<Gs2::Inventory::Model::FItemSetEntry> Items)
+            [=](TSharedPtr<Gs2::Inventory::Model::FItemSetEntry> Items)
             {
                 TArray<Gs2::UE5::Inventory::Model::FEzItemSetPtr> Arr;
-                for (auto Item : Items->Value)
+                for (auto ItemSet : Items->Value)
                 {
-                    Arr.Add(Gs2::UE5::Inventory::Model::FEzItemSet::FromModel(Item));
+                    Arr.Add(Gs2::UE5::Inventory::Model::FEzItemSet::FromModel(ItemSet));
                 }
                 Callback(Arr);
             }

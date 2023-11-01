@@ -36,54 +36,6 @@ namespace Gs2::UE5::MegaField::Domain::Model
 
     }
 
-    FEzAreaModelDomain::FGetAreaModelTask::FGetAreaModelTask(
-        TSharedPtr<FEzAreaModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzAreaModelDomain::FGetAreaModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::MegaField::Model::FEzAreaModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetAreaModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::MegaField::Request::FGetAreaModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::MegaField::Model::FEzAreaModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzAreaModelDomain::FGetAreaModelTask>> FEzAreaModelDomain::GetAreaModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetAreaModelTask>>(
-            this->AsShared()
-        );
-    }
-
     Gs2::UE5::MegaField::Domain::Iterator::FEzDescribeLayerModelsIteratorPtr FEzAreaModelDomain::LayerModels(
     ) const
     {

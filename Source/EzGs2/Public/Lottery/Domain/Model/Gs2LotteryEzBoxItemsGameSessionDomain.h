@@ -49,26 +49,6 @@ namespace Gs2::UE5::Lottery::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetBoxTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Lottery::Model::FEzBoxItems>,
-            public TSharedFromThis<FGetBoxTask>
-        {
-            TSharedPtr<FEzBoxItemsGameSessionDomain> Self;
-
-        public:
-            explicit FGetBoxTask(
-                TSharedPtr<FEzBoxItemsGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Lottery::Model::FEzBoxItems>> Result
-            ) override;
-        };
-        friend FGetBoxTask;
-
-        TSharedPtr<FAsyncTask<FGetBoxTask>> GetBox(
-        );
-
         class FResetBoxTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Lottery::Domain::Model::FEzBoxItemsGameSessionDomain>,
             public TSharedFromThis<FResetBoxTask>

@@ -52,26 +52,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetGatheringTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Model::FEzGathering>,
-            public TSharedFromThis<FGetGatheringTask>
-        {
-            TSharedPtr<FEzGatheringDomain> Self;
-
-        public:
-            explicit FGetGatheringTask(
-                TSharedPtr<FEzGatheringDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGathering>> Result
-            ) override;
-        };
-        friend FGetGatheringTask;
-
-        TSharedPtr<FAsyncTask<FGetGatheringTask>> GetGathering(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Model::FEzGathering>,
             public TSharedFromThis<FModelTask>

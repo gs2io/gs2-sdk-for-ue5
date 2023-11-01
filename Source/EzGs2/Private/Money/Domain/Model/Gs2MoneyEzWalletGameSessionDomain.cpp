@@ -46,54 +46,6 @@ namespace Gs2::UE5::Money::Domain::Model
 
     }
 
-    FEzWalletGameSessionDomain::FGetTask::FGetTask(
-        TSharedPtr<FEzWalletGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzWalletGameSessionDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Money::Model::FEzWallet>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Money::Request::FGetWalletRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Money::Model::FEzWallet::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzWalletGameSessionDomain::FGetTask>> FEzWalletGameSessionDomain::Get(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzWalletGameSessionDomain::FWithdrawTask::FWithdrawTask(
         TSharedPtr<FEzWalletGameSessionDomain> Self,
         int32 Count,

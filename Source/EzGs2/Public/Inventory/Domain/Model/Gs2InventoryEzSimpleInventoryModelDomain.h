@@ -58,26 +58,6 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetSimpleInventoryModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Model::FEzSimpleInventoryModel>,
-            public TSharedFromThis<FGetSimpleInventoryModelTask>
-        {
-            TSharedPtr<FEzSimpleInventoryModelDomain> Self;
-
-        public:
-            explicit FGetSimpleInventoryModelTask(
-                TSharedPtr<FEzSimpleInventoryModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Model::FEzSimpleInventoryModel>> Result
-            ) override;
-        };
-        friend FGetSimpleInventoryModelTask;
-
-        TSharedPtr<FAsyncTask<FGetSimpleInventoryModelTask>> GetSimpleInventoryModel(
-        );
-
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeSimpleItemModelsIteratorPtr SimpleItemModels(
         ) const;
 

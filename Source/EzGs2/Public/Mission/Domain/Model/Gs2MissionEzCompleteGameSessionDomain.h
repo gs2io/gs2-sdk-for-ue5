@@ -76,26 +76,6 @@ namespace Gs2::UE5::Mission::Domain::Model
             FString MissionTaskName
         );
 
-        class FGetCompleteTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzComplete>,
-            public TSharedFromThis<FGetCompleteTask>
-        {
-            TSharedPtr<FEzCompleteGameSessionDomain> Self;
-
-        public:
-            explicit FGetCompleteTask(
-                TSharedPtr<FEzCompleteGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Model::FEzComplete>> Result
-            ) override;
-        };
-        friend FGetCompleteTask;
-
-        TSharedPtr<FAsyncTask<FGetCompleteTask>> GetComplete(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzComplete>,
             public TSharedFromThis<FModelTask>

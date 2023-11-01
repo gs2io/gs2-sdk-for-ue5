@@ -36,54 +36,6 @@ namespace Gs2::UE5::Quest::Domain::Model
 
     }
 
-    FEzQuestGroupModelDomain::FGetQuestGroupTask::FGetQuestGroupTask(
-        TSharedPtr<FEzQuestGroupModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzQuestGroupModelDomain::FGetQuestGroupTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Model::FEzQuestGroupModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetQuestGroupTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Quest::Request::FGetQuestGroupModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Quest::Model::FEzQuestGroupModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzQuestGroupModelDomain::FGetQuestGroupTask>> FEzQuestGroupModelDomain::GetQuestGroup(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetQuestGroupTask>>(
-            this->AsShared()
-        );
-    }
-
     Gs2::UE5::Quest::Domain::Iterator::FEzDescribeQuestModelsIteratorPtr FEzQuestGroupModelDomain::QuestModels(
     ) const
     {

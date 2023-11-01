@@ -46,26 +46,6 @@ namespace Gs2::UE5::Experience::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetExperienceModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Experience::Model::FEzExperienceModel>,
-            public TSharedFromThis<FGetExperienceModelTask>
-        {
-            TSharedPtr<FEzExperienceModelDomain> Self;
-
-        public:
-            explicit FGetExperienceModelTask(
-                TSharedPtr<FEzExperienceModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Experience::Model::FEzExperienceModel>> Result
-            ) override;
-        };
-        friend FGetExperienceModelTask;
-
-        TSharedPtr<FAsyncTask<FGetExperienceModelTask>> GetExperienceModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Experience::Model::FEzExperienceModel>,
             public TSharedFromThis<FModelTask>

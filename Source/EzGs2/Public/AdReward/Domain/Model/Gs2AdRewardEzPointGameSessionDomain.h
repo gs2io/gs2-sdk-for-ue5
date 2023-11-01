@@ -41,26 +41,6 @@ namespace Gs2::UE5::AdReward::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetPointTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::AdReward::Model::FEzPoint>,
-            public TSharedFromThis<FGetPointTask>
-        {
-            TSharedPtr<FEzPointGameSessionDomain> Self;
-
-        public:
-            explicit FGetPointTask(
-                TSharedPtr<FEzPointGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::AdReward::Model::FEzPoint>> Result
-            ) override;
-        };
-        friend FGetPointTask;
-
-        TSharedPtr<FAsyncTask<FGetPointTask>> GetPoint(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::AdReward::Model::FEzPoint>,
             public TSharedFromThis<FModelTask>

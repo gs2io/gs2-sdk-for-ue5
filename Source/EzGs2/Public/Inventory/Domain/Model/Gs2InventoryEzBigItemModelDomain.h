@@ -57,26 +57,6 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetBigItemModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Model::FEzBigItemModel>,
-            public TSharedFromThis<FGetBigItemModelTask>
-        {
-            TSharedPtr<FEzBigItemModelDomain> Self;
-
-        public:
-            explicit FGetBigItemModelTask(
-                TSharedPtr<FEzBigItemModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Model::FEzBigItemModel>> Result
-            ) override;
-        };
-        friend FGetBigItemModelTask;
-
-        TSharedPtr<FAsyncTask<FGetBigItemModelTask>> GetBigItemModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Model::FEzBigItemModel>,
             public TSharedFromThis<FModelTask>

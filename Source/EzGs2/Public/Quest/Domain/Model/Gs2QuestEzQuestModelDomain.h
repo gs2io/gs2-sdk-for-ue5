@@ -51,26 +51,6 @@ namespace Gs2::UE5::Quest::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetQuestTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Model::FEzQuestModel>,
-            public TSharedFromThis<FGetQuestTask>
-        {
-            TSharedPtr<FEzQuestModelDomain> Self;
-
-        public:
-            explicit FGetQuestTask(
-                TSharedPtr<FEzQuestModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Model::FEzQuestModel>> Result
-            ) override;
-        };
-        friend FGetQuestTask;
-
-        TSharedPtr<FAsyncTask<FGetQuestTask>> GetQuest(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Quest::Model::FEzQuestModel>,
             public TSharedFromThis<FModelTask>

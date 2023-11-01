@@ -48,26 +48,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetScoreTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking::Model::FEzScore>,
-            public TSharedFromThis<FGetScoreTask>
-        {
-            TSharedPtr<FEzScoreGameSessionDomain> Self;
-
-        public:
-            explicit FGetScoreTask(
-                TSharedPtr<FEzScoreGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking::Model::FEzScore>> Result
-            ) override;
-        };
-        friend FGetScoreTask;
-
-        TSharedPtr<FAsyncTask<FGetScoreTask>> GetScore(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking::Model::FEzScore>,
             public TSharedFromThis<FModelTask>

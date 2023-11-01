@@ -46,54 +46,6 @@ namespace Gs2::UE5::JobQueue::Domain::Model
 
     }
 
-    FEzJobResultGameSessionDomain::FGetResultTask::FGetResultTask(
-        TSharedPtr<FEzJobResultGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzJobResultGameSessionDomain::FGetResultTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::JobQueue::Model::FEzJobResult>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetResultTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::JobQueue::Request::FGetJobResultRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::JobQueue::Model::FEzJobResult::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzJobResultGameSessionDomain::FGetResultTask>> FEzJobResultGameSessionDomain::GetResult(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetResultTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzJobResultGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzJobResultGameSessionDomain> Self
     ): Self(Self)

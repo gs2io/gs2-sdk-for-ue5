@@ -50,26 +50,6 @@ namespace Gs2::UE5::Enchant::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetRarityParameterModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enchant::Model::FEzRarityParameterModel>,
-            public TSharedFromThis<FGetRarityParameterModelTask>
-        {
-            TSharedPtr<FEzRarityParameterModelDomain> Self;
-
-        public:
-            explicit FGetRarityParameterModelTask(
-                TSharedPtr<FEzRarityParameterModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Enchant::Model::FEzRarityParameterModel>> Result
-            ) override;
-        };
-        friend FGetRarityParameterModelTask;
-
-        TSharedPtr<FAsyncTask<FGetRarityParameterModelTask>> GetRarityParameterModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enchant::Model::FEzRarityParameterModel>,
             public TSharedFromThis<FModelTask>

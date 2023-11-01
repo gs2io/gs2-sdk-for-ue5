@@ -47,26 +47,6 @@ namespace Gs2::UE5::LoginReward::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetBonusModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::LoginReward::Model::FEzBonusModel>,
-            public TSharedFromThis<FGetBonusModelTask>
-        {
-            TSharedPtr<FEzBonusModelDomain> Self;
-
-        public:
-            explicit FGetBonusModelTask(
-                TSharedPtr<FEzBonusModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzBonusModel>> Result
-            ) override;
-        };
-        friend FGetBonusModelTask;
-
-        TSharedPtr<FAsyncTask<FGetBonusModelTask>> GetBonusModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::LoginReward::Model::FEzBonusModel>,
             public TSharedFromThis<FModelTask>

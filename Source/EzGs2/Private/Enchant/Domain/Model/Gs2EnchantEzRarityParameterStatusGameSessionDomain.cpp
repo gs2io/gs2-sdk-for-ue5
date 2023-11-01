@@ -46,54 +46,6 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
     }
 
-    FEzRarityParameterStatusGameSessionDomain::FGetRarityParameterStatusTask::FGetRarityParameterStatusTask(
-        TSharedPtr<FEzRarityParameterStatusGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzRarityParameterStatusGameSessionDomain::FGetRarityParameterStatusTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Enchant::Model::FEzRarityParameterStatus>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetRarityParameterStatusTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Enchant::Request::FGetRarityParameterStatusRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Enchant::Model::FEzRarityParameterStatus::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzRarityParameterStatusGameSessionDomain::FGetRarityParameterStatusTask>> FEzRarityParameterStatusGameSessionDomain::GetRarityParameterStatus(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetRarityParameterStatusTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzRarityParameterStatusGameSessionDomain::FVerifyRarityParameterStatusTask::FVerifyRarityParameterStatusTask(
         TSharedPtr<FEzRarityParameterStatusGameSessionDomain> Self,
         FString VerifyType,

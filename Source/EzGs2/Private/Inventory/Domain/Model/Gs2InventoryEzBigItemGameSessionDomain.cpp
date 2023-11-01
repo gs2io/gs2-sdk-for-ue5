@@ -46,54 +46,6 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     }
 
-    FEzBigItemGameSessionDomain::FGetBigItemTask::FGetBigItemTask(
-        TSharedPtr<FEzBigItemGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzBigItemGameSessionDomain::FGetBigItemTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Model::FEzBigItem>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetBigItemTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Inventory::Request::FGetBigItemRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Inventory::Model::FEzBigItem::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzBigItemGameSessionDomain::FGetBigItemTask>> FEzBigItemGameSessionDomain::GetBigItem(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetBigItemTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzBigItemGameSessionDomain::FConsumeBigItemTask::FConsumeBigItemTask(
         TSharedPtr<FEzBigItemGameSessionDomain> Self,
         FString ConsumeCount

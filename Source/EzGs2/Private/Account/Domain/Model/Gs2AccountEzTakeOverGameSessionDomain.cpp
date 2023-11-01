@@ -98,54 +98,6 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
-    FEzTakeOverGameSessionDomain::FGetTask::FGetTask(
-        TSharedPtr<FEzTakeOverGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzTakeOverGameSessionDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Model::FEzTakeOver>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Account::Request::FGetTakeOverRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Account::Model::FEzTakeOver::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzTakeOverGameSessionDomain::FGetTask>> FEzTakeOverGameSessionDomain::Get(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzTakeOverGameSessionDomain::FUpdateTakeOverSettingTask::FUpdateTakeOverSettingTask(
         TSharedPtr<FEzTakeOverGameSessionDomain> Self,
         FString OldPassword,

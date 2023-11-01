@@ -51,26 +51,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetAwaitTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Model::FEzAwait>,
-            public TSharedFromThis<FGetAwaitTask>
-        {
-            TSharedPtr<FEzAwaitGameSessionDomain> Self;
-
-        public:
-            explicit FGetAwaitTask(
-                TSharedPtr<FEzAwaitGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Model::FEzAwait>> Result
-            ) override;
-        };
-        friend FGetAwaitTask;
-
-        TSharedPtr<FAsyncTask<FGetAwaitTask>> GetAwait(
-        );
-
         class FAcquireTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>,
             public TSharedFromThis<FAcquireTask>

@@ -41,54 +41,6 @@ namespace Gs2::UE5::Quest::Domain::Model
 
     }
 
-    FEzQuestModelDomain::FGetQuestTask::FGetQuestTask(
-        TSharedPtr<FEzQuestModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzQuestModelDomain::FGetQuestTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Model::FEzQuestModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetQuestTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Quest::Request::FGetQuestModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Quest::Model::FEzQuestModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzQuestModelDomain::FGetQuestTask>> FEzQuestModelDomain::GetQuest(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetQuestTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzQuestModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzQuestModelDomain> Self
     ): Self(Self)

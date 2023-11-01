@@ -41,54 +41,6 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     }
 
-    FEzMissionTaskModelDomain::FGetMissionTaskModelTask::FGetMissionTaskModelTask(
-        TSharedPtr<FEzMissionTaskModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzMissionTaskModelDomain::FGetMissionTaskModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Model::FEzMissionTaskModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetMissionTaskModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Mission::Request::FGetMissionTaskModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Mission::Model::FEzMissionTaskModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzMissionTaskModelDomain::FGetMissionTaskModelTask>> FEzMissionTaskModelDomain::GetMissionTaskModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetMissionTaskModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzMissionTaskModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzMissionTaskModelDomain> Self
     ): Self(Self)

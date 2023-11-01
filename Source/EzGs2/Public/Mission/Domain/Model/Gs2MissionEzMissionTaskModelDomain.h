@@ -51,26 +51,6 @@ namespace Gs2::UE5::Mission::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetMissionTaskModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzMissionTaskModel>,
-            public TSharedFromThis<FGetMissionTaskModelTask>
-        {
-            TSharedPtr<FEzMissionTaskModelDomain> Self;
-
-        public:
-            explicit FGetMissionTaskModelTask(
-                TSharedPtr<FEzMissionTaskModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Model::FEzMissionTaskModel>> Result
-            ) override;
-        };
-        friend FGetMissionTaskModelTask;
-
-        TSharedPtr<FAsyncTask<FGetMissionTaskModelTask>> GetMissionTaskModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Mission::Model::FEzMissionTaskModel>,
             public TSharedFromThis<FModelTask>

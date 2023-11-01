@@ -36,54 +36,6 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     }
 
-    FEzSimpleInventoryModelDomain::FGetSimpleInventoryModelTask::FGetSimpleInventoryModelTask(
-        TSharedPtr<FEzSimpleInventoryModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzSimpleInventoryModelDomain::FGetSimpleInventoryModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Model::FEzSimpleInventoryModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetSimpleInventoryModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Inventory::Request::FGetSimpleInventoryModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Inventory::Model::FEzSimpleInventoryModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzSimpleInventoryModelDomain::FGetSimpleInventoryModelTask>> FEzSimpleInventoryModelDomain::GetSimpleInventoryModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetSimpleInventoryModelTask>>(
-            this->AsShared()
-        );
-    }
-
     Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeSimpleItemModelsIteratorPtr FEzSimpleInventoryModelDomain::SimpleItemModels(
     ) const
     {

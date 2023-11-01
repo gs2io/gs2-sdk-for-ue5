@@ -43,26 +43,6 @@ namespace Gs2::UE5::SerialKey::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetCampaignModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::SerialKey::Model::FEzCampaignModel>,
-            public TSharedFromThis<FGetCampaignModelTask>
-        {
-            TSharedPtr<FEzCampaignModelDomain> Self;
-
-        public:
-            explicit FGetCampaignModelTask(
-                TSharedPtr<FEzCampaignModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::SerialKey::Model::FEzCampaignModel>> Result
-            ) override;
-        };
-        friend FGetCampaignModelTask;
-
-        TSharedPtr<FAsyncTask<FGetCampaignModelTask>> GetCampaignModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SerialKey::Model::FEzCampaignModel>,
             public TSharedFromThis<FModelTask>

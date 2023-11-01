@@ -57,26 +57,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FCreateVoteTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotGameSessionDomain>,
-            public TSharedFromThis<FCreateVoteTask>
-        {
-            TSharedPtr<FEzBallotGameSessionDomain> Self;
-
-        public:
-            explicit FCreateVoteTask(
-                TSharedPtr<FEzBallotGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotGameSessionDomain>> Result
-            ) override;
-        };
-        friend FCreateVoteTask;
-
-        TSharedPtr<FAsyncTask<FCreateVoteTask>> CreateVote(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Model::FEzBallot>,
             public TSharedFromThis<FModelTask>

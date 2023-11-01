@@ -48,26 +48,6 @@ namespace Gs2::UE5::LoginReward::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetReceiveStatusTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::LoginReward::Model::FEzReceiveStatus>,
-            public TSharedFromThis<FGetReceiveStatusTask>
-        {
-            TSharedPtr<FEzReceiveStatusGameSessionDomain> Self;
-
-        public:
-            explicit FGetReceiveStatusTask(
-                TSharedPtr<FEzReceiveStatusGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzReceiveStatus>> Result
-            ) override;
-        };
-        friend FGetReceiveStatusTask;
-
-        TSharedPtr<FAsyncTask<FGetReceiveStatusTask>> GetReceiveStatus(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::LoginReward::Model::FEzReceiveStatus>,
             public TSharedFromThis<FModelTask>

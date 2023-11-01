@@ -47,26 +47,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetIncrementalRateModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Model::FEzIncrementalRateModel>,
-            public TSharedFromThis<FGetIncrementalRateModelTask>
-        {
-            TSharedPtr<FEzIncrementalRateModelDomain> Self;
-
-        public:
-            explicit FGetIncrementalRateModelTask(
-                TSharedPtr<FEzIncrementalRateModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Model::FEzIncrementalRateModel>> Result
-            ) override;
-        };
-        friend FGetIncrementalRateModelTask;
-
-        TSharedPtr<FAsyncTask<FGetIncrementalRateModelTask>> GetIncrementalRateModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Model::FEzIncrementalRateModel>,
             public TSharedFromThis<FModelTask>

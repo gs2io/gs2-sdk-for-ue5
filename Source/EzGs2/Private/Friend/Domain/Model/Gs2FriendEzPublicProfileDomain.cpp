@@ -36,54 +36,6 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     }
 
-    FEzPublicProfileDomain::FGetPublicProfileTask::FGetPublicProfileTask(
-        TSharedPtr<FEzPublicProfileDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzPublicProfileDomain::FGetPublicProfileTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzPublicProfile>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetPublicProfileTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Friend::Request::FGetPublicProfileRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Friend::Model::FEzPublicProfile::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzPublicProfileDomain::FGetPublicProfileTask>> FEzPublicProfileDomain::GetPublicProfile(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetPublicProfileTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzPublicProfileDomain::FModelTask::FModelTask(
         TSharedPtr<FEzPublicProfileDomain> Self
     ): Self(Self)

@@ -46,26 +46,6 @@ namespace Gs2::UE5::Distributor::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetDistributorModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Distributor::Model::FEzDistributorModel>,
-            public TSharedFromThis<FGetDistributorModelTask>
-        {
-            TSharedPtr<FEzDistributorModelDomain> Self;
-
-        public:
-            explicit FGetDistributorModelTask(
-                TSharedPtr<FEzDistributorModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Distributor::Model::FEzDistributorModel>> Result
-            ) override;
-        };
-        friend FGetDistributorModelTask;
-
-        TSharedPtr<FAsyncTask<FGetDistributorModelTask>> GetDistributorModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Distributor::Model::FEzDistributorModel>,
             public TSharedFromThis<FModelTask>

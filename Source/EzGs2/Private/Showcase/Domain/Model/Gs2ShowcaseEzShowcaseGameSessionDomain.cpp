@@ -41,54 +41,6 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
     }
 
-    FEzShowcaseGameSessionDomain::FGetShowcaseTask::FGetShowcaseTask(
-        TSharedPtr<FEzShowcaseGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzShowcaseGameSessionDomain::FGetShowcaseTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Model::FEzShowcase>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetShowcaseTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Showcase::Request::FGetShowcaseRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Showcase::Model::FEzShowcase::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzShowcaseGameSessionDomain::FGetShowcaseTask>> FEzShowcaseGameSessionDomain::GetShowcase(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetShowcaseTask>>(
-            this->AsShared()
-        );
-    }
-
     Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomainPtr FEzShowcaseGameSessionDomain::DisplayItem(
         const FString DisplayItemId
     ) const

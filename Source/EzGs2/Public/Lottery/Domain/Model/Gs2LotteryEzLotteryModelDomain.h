@@ -48,26 +48,6 @@ namespace Gs2::UE5::Lottery::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetLotteryModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Lottery::Model::FEzLotteryModel>,
-            public TSharedFromThis<FGetLotteryModelTask>
-        {
-            TSharedPtr<FEzLotteryModelDomain> Self;
-
-        public:
-            explicit FGetLotteryModelTask(
-                TSharedPtr<FEzLotteryModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Lottery::Model::FEzLotteryModel>> Result
-            ) override;
-        };
-        friend FGetLotteryModelTask;
-
-        TSharedPtr<FAsyncTask<FGetLotteryModelTask>> GetLotteryModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Lottery::Model::FEzLotteryModel>,
             public TSharedFromThis<FModelTask>

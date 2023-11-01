@@ -41,54 +41,6 @@ namespace Gs2::UE5::Schedule::Domain::Model
 
     }
 
-    FEzTriggerGameSessionDomain::FGetTriggerTask::FGetTriggerTask(
-        TSharedPtr<FEzTriggerGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzTriggerGameSessionDomain::FGetTriggerTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Schedule::Model::FEzTrigger>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetTriggerTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Schedule::Request::FGetTriggerRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Schedule::Model::FEzTrigger::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzTriggerGameSessionDomain::FGetTriggerTask>> FEzTriggerGameSessionDomain::GetTrigger(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetTriggerTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzTriggerGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzTriggerGameSessionDomain> Self
     ): Self(Self)

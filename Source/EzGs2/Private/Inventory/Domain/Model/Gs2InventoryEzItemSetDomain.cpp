@@ -114,7 +114,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
     Gs2::Core::Domain::CallbackID FEzItemSetDomain::Subscribe(TFunction<void(TArray<Gs2::UE5::Inventory::Model::FEzItemSetPtr>)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Inventory::Model::FItemSetEntryPtr Item)
+            [=](Gs2::Inventory::Model::FItemSetEntryPtr Item)
             {
                 TArray<Gs2::UE5::Inventory::Model::FEzItemSetPtr> Arr;
                 for (auto ItemSet : Item->Value)

@@ -46,26 +46,6 @@ namespace Gs2::UE5::SkillTree::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetNodeModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Model::FEzNodeModel>,
-            public TSharedFromThis<FGetNodeModelTask>
-        {
-            TSharedPtr<FEzNodeModelDomain> Self;
-
-        public:
-            explicit FGetNodeModelTask(
-                TSharedPtr<FEzNodeModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzNodeModel>> Result
-            ) override;
-        };
-        friend FGetNodeModelTask;
-
-        TSharedPtr<FAsyncTask<FGetNodeModelTask>> GetNodeModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::SkillTree::Model::FEzNodeModel>,
             public TSharedFromThis<FModelTask>

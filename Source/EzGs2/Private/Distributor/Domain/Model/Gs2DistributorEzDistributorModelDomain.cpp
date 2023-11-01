@@ -36,54 +36,6 @@ namespace Gs2::UE5::Distributor::Domain::Model
 
     }
 
-    FEzDistributorModelDomain::FGetDistributorModelTask::FGetDistributorModelTask(
-        TSharedPtr<FEzDistributorModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzDistributorModelDomain::FGetDistributorModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Distributor::Model::FEzDistributorModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetDistributorModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Distributor::Request::FGetDistributorModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Distributor::Model::FEzDistributorModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzDistributorModelDomain::FGetDistributorModelTask>> FEzDistributorModelDomain::GetDistributorModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetDistributorModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzDistributorModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzDistributorModelDomain> Self
     ): Self(Self)

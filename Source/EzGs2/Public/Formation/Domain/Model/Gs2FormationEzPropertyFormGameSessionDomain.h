@@ -59,26 +59,6 @@ namespace Gs2::UE5::Formation::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetPropertyFormTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzPropertyForm>,
-            public TSharedFromThis<FGetPropertyFormTask>
-        {
-            TSharedPtr<FEzPropertyFormGameSessionDomain> Self;
-
-        public:
-            explicit FGetPropertyFormTask(
-                TSharedPtr<FEzPropertyFormGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Model::FEzPropertyForm>> Result
-            ) override;
-        };
-        friend FGetPropertyFormTask;
-
-        TSharedPtr<FAsyncTask<FGetPropertyFormTask>> GetPropertyForm(
-        );
-
         class FGetPropertyFormWithSignatureTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Domain::Model::FEzPropertyFormGameSessionDomain>,
             public TSharedFromThis<FGetPropertyFormWithSignatureTask>

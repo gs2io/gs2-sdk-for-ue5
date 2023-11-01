@@ -36,54 +36,6 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
     }
 
-    FEzRarityParameterModelDomain::FGetRarityParameterModelTask::FGetRarityParameterModelTask(
-        TSharedPtr<FEzRarityParameterModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzRarityParameterModelDomain::FGetRarityParameterModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Enchant::Model::FEzRarityParameterModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetRarityParameterModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Enchant::Request::FGetRarityParameterModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Enchant::Model::FEzRarityParameterModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzRarityParameterModelDomain::FGetRarityParameterModelTask>> FEzRarityParameterModelDomain::GetRarityParameterModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetRarityParameterModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzRarityParameterModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzRarityParameterModelDomain> Self
     ): Self(Self)

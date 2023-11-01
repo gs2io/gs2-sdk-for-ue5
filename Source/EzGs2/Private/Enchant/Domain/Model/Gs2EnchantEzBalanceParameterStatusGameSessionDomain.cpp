@@ -46,54 +46,6 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
     }
 
-    FEzBalanceParameterStatusGameSessionDomain::FGetBalanceParameterStatusTask::FGetBalanceParameterStatusTask(
-        TSharedPtr<FEzBalanceParameterStatusGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzBalanceParameterStatusGameSessionDomain::FGetBalanceParameterStatusTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Enchant::Model::FEzBalanceParameterStatus>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetBalanceParameterStatusTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Enchant::Request::FGetBalanceParameterStatusRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Enchant::Model::FEzBalanceParameterStatus::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzBalanceParameterStatusGameSessionDomain::FGetBalanceParameterStatusTask>> FEzBalanceParameterStatusGameSessionDomain::GetBalanceParameterStatus(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetBalanceParameterStatusTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzBalanceParameterStatusGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzBalanceParameterStatusGameSessionDomain> Self
     ): Self(Self)

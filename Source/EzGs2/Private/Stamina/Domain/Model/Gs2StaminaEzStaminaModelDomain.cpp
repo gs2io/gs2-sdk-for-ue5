@@ -36,54 +36,6 @@ namespace Gs2::UE5::Stamina::Domain::Model
 
     }
 
-    FEzStaminaModelDomain::FGetStaminaModelTask::FGetStaminaModelTask(
-        TSharedPtr<FEzStaminaModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzStaminaModelDomain::FGetStaminaModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Model::FEzStaminaModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetStaminaModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Stamina::Request::FGetStaminaModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Stamina::Model::FEzStaminaModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzStaminaModelDomain::FGetStaminaModelTask>> FEzStaminaModelDomain::GetStaminaModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetStaminaModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzStaminaModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzStaminaModelDomain> Self
     ): Self(Self)

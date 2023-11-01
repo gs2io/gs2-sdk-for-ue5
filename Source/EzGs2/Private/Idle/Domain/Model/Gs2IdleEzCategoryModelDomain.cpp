@@ -36,54 +36,6 @@ namespace Gs2::UE5::Idle::Domain::Model
 
     }
 
-    FEzCategoryModelDomain::FGetCategoryModelTask::FGetCategoryModelTask(
-        TSharedPtr<FEzCategoryModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzCategoryModelDomain::FGetCategoryModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Idle::Model::FEzCategoryModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetCategoryModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Idle::Request::FGetCategoryModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Idle::Model::FEzCategoryModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzCategoryModelDomain::FGetCategoryModelTask>> FEzCategoryModelDomain::GetCategoryModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetCategoryModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzCategoryModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzCategoryModelDomain> Self
     ): Self(Self)

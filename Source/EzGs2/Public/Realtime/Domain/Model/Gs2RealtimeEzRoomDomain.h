@@ -41,26 +41,6 @@ namespace Gs2::UE5::Realtime::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetRoomTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Realtime::Model::FEzRoom>,
-            public TSharedFromThis<FGetRoomTask>
-        {
-            TSharedPtr<FEzRoomDomain> Self;
-
-        public:
-            explicit FGetRoomTask(
-                TSharedPtr<FEzRoomDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Realtime::Model::FEzRoom>> Result
-            ) override;
-        };
-        friend FGetRoomTask;
-
-        TSharedPtr<FAsyncTask<FGetRoomTask>> GetRoom(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Realtime::Model::FEzRoom>,
             public TSharedFromThis<FModelTask>

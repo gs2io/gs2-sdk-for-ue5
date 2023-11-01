@@ -36,54 +36,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     }
 
-    FEzCategoryModelDomain::FGetCategoryTask::FGetCategoryTask(
-        TSharedPtr<FEzCategoryModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzCategoryModelDomain::FGetCategoryTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Ranking::Model::FEzCategoryModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetCategoryTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Ranking::Request::FGetCategoryModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Ranking::Model::FEzCategoryModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzCategoryModelDomain::FGetCategoryTask>> FEzCategoryModelDomain::GetCategory(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetCategoryTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzCategoryModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzCategoryModelDomain> Self
     ): Self(Self)

@@ -41,54 +41,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
     }
 
-    FEzGatheringDomain::FGetGatheringTask::FGetGatheringTask(
-        TSharedPtr<FEzGatheringDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzGatheringDomain::FGetGatheringTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzGathering>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetGatheringTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Matchmaking::Request::FGetGatheringRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Matchmaking::Model::FEzGathering::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzGatheringDomain::FGetGatheringTask>> FEzGatheringDomain::GetGathering(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetGatheringTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzGatheringDomain::FModelTask::FModelTask(
         TSharedPtr<FEzGatheringDomain> Self
     ): Self(Self)

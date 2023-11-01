@@ -48,26 +48,6 @@ namespace Gs2::UE5::Enhance::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetProgressTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Model::FEzProgress>,
-            public TSharedFromThis<FGetProgressTask>
-        {
-            TSharedPtr<FEzProgressGameSessionDomain> Self;
-
-        public:
-            explicit FGetProgressTask(
-                TSharedPtr<FEzProgressGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Enhance::Model::FEzProgress>> Result
-            ) override;
-        };
-        friend FGetProgressTask;
-
-        TSharedPtr<FAsyncTask<FGetProgressTask>> GetProgress(
-        );
-
         class FStartTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>,
             public TSharedFromThis<FStartTask>

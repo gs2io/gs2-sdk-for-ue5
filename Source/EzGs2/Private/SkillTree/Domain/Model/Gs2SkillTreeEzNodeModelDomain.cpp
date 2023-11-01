@@ -36,54 +36,6 @@ namespace Gs2::UE5::SkillTree::Domain::Model
 
     }
 
-    FEzNodeModelDomain::FGetNodeModelTask::FGetNodeModelTask(
-        TSharedPtr<FEzNodeModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzNodeModelDomain::FGetNodeModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzNodeModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetNodeModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::SkillTree::Request::FGetNodeModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::SkillTree::Model::FEzNodeModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzNodeModelDomain::FGetNodeModelTask>> FEzNodeModelDomain::GetNodeModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetNodeModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzNodeModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzNodeModelDomain> Self
     ): Self(Self)

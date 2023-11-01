@@ -48,26 +48,6 @@ namespace Gs2::UE5::Schedule::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetEventTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Schedule::Model::FEzEvent>,
-            public TSharedFromThis<FGetEventTask>
-        {
-            TSharedPtr<FEzEventGameSessionDomain> Self;
-
-        public:
-            explicit FGetEventTask(
-                TSharedPtr<FEzEventGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Schedule::Model::FEzEvent>> Result
-            ) override;
-        };
-        friend FGetEventTask;
-
-        TSharedPtr<FAsyncTask<FGetEventTask>> GetEvent(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Schedule::Model::FEzEvent>,
             public TSharedFromThis<FModelTask>

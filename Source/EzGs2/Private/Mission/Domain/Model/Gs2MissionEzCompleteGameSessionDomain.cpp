@@ -104,54 +104,6 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
-    FEzCompleteGameSessionDomain::FGetCompleteTask::FGetCompleteTask(
-        TSharedPtr<FEzCompleteGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzCompleteGameSessionDomain::FGetCompleteTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Model::FEzComplete>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetCompleteTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Mission::Request::FGetCompleteRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Mission::Model::FEzComplete::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzCompleteGameSessionDomain::FGetCompleteTask>> FEzCompleteGameSessionDomain::GetComplete(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetCompleteTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzCompleteGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzCompleteGameSessionDomain> Self
     ): Self(Self)

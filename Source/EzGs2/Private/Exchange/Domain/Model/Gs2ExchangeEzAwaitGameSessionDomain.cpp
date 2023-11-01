@@ -56,54 +56,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
     }
 
-    FEzAwaitGameSessionDomain::FGetAwaitTask::FGetAwaitTask(
-        TSharedPtr<FEzAwaitGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzAwaitGameSessionDomain::FGetAwaitTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Model::FEzAwait>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetAwaitTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Exchange::Request::FGetAwaitRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Exchange::Model::FEzAwait::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzAwaitGameSessionDomain::FGetAwaitTask>> FEzAwaitGameSessionDomain::GetAwait(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetAwaitTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzAwaitGameSessionDomain::FAcquireTask::FAcquireTask(
         TSharedPtr<FEzAwaitGameSessionDomain> Self
     ): Self(Self)

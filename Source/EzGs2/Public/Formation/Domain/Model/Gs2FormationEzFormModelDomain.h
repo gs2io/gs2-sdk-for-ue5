@@ -52,26 +52,6 @@ namespace Gs2::UE5::Formation::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetFormModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzFormModel>,
-            public TSharedFromThis<FGetFormModelTask>
-        {
-            TSharedPtr<FEzFormModelDomain> Self;
-
-        public:
-            explicit FGetFormModelTask(
-                TSharedPtr<FEzFormModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Model::FEzFormModel>> Result
-            ) override;
-        };
-        friend FGetFormModelTask;
-
-        TSharedPtr<FAsyncTask<FGetFormModelTask>> GetFormModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Formation::Model::FEzFormModel>,
             public TSharedFromThis<FModelTask>

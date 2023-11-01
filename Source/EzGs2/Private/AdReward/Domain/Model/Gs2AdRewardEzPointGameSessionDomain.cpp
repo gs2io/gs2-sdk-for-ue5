@@ -36,54 +36,6 @@ namespace Gs2::UE5::AdReward::Domain::Model
 
     }
 
-    FEzPointGameSessionDomain::FGetPointTask::FGetPointTask(
-        TSharedPtr<FEzPointGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzPointGameSessionDomain::FGetPointTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::AdReward::Model::FEzPoint>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetPointTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::AdReward::Request::FGetPointRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::AdReward::Model::FEzPoint::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzPointGameSessionDomain::FGetPointTask>> FEzPointGameSessionDomain::GetPoint(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetPointTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzPointGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzPointGameSessionDomain> Self
     ): Self(Self)

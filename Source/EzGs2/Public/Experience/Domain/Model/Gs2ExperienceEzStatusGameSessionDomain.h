@@ -52,26 +52,6 @@ namespace Gs2::UE5::Experience::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetStatusTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Experience::Model::FEzStatus>,
-            public TSharedFromThis<FGetStatusTask>
-        {
-            TSharedPtr<FEzStatusGameSessionDomain> Self;
-
-        public:
-            explicit FGetStatusTask(
-                TSharedPtr<FEzStatusGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Experience::Model::FEzStatus>> Result
-            ) override;
-        };
-        friend FGetStatusTask;
-
-        TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
-        );
-
         class FGetStatusWithSignatureTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Experience::Domain::Model::FEzStatusGameSessionDomain>,
             public TSharedFromThis<FGetStatusWithSignatureTask>

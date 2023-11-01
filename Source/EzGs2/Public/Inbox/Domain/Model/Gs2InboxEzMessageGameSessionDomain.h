@@ -47,26 +47,6 @@ namespace Gs2::UE5::Inbox::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inbox::Model::FEzMessage>,
-            public TSharedFromThis<FGetTask>
-        {
-            TSharedPtr<FEzMessageGameSessionDomain> Self;
-
-        public:
-            explicit FGetTask(
-                TSharedPtr<FEzMessageGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Inbox::Model::FEzMessage>> Result
-            ) override;
-        };
-        friend FGetTask;
-
-        TSharedPtr<FAsyncTask<FGetTask>> Get(
-        );
-
         class FReadTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomain>,
             public TSharedFromThis<FReadTask>

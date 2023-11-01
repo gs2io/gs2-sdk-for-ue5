@@ -36,54 +36,6 @@ namespace Gs2::UE5::Experience::Domain::Model
 
     }
 
-    FEzExperienceModelDomain::FGetExperienceModelTask::FGetExperienceModelTask(
-        TSharedPtr<FEzExperienceModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzExperienceModelDomain::FGetExperienceModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Experience::Model::FEzExperienceModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetExperienceModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Experience::Request::FGetExperienceModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Experience::Model::FEzExperienceModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzExperienceModelDomain::FGetExperienceModelTask>> FEzExperienceModelDomain::GetExperienceModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetExperienceModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzExperienceModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzExperienceModelDomain> Self
     ): Self(Self)

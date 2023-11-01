@@ -51,54 +51,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     }
 
-    FEzScoreGameSessionDomain::FGetScoreTask::FGetScoreTask(
-        TSharedPtr<FEzScoreGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzScoreGameSessionDomain::FGetScoreTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Ranking::Model::FEzScore>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetScoreTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Ranking::Request::FGetScoreRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Ranking::Model::FEzScore::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzScoreGameSessionDomain::FGetScoreTask>> FEzScoreGameSessionDomain::GetScore(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetScoreTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzScoreGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzScoreGameSessionDomain> Self
     ): Self(Self)

@@ -52,26 +52,6 @@ namespace Gs2::UE5::Enchant::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetRarityParameterStatusTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enchant::Model::FEzRarityParameterStatus>,
-            public TSharedFromThis<FGetRarityParameterStatusTask>
-        {
-            TSharedPtr<FEzRarityParameterStatusGameSessionDomain> Self;
-
-        public:
-            explicit FGetRarityParameterStatusTask(
-                TSharedPtr<FEzRarityParameterStatusGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Enchant::Model::FEzRarityParameterStatus>> Result
-            ) override;
-        };
-        friend FGetRarityParameterStatusTask;
-
-        TSharedPtr<FAsyncTask<FGetRarityParameterStatusTask>> GetRarityParameterStatus(
-        );
-
         class FVerifyRarityParameterStatusTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enchant::Domain::Model::FEzRarityParameterStatusGameSessionDomain>,
             public TSharedFromThis<FVerifyRarityParameterStatusTask>

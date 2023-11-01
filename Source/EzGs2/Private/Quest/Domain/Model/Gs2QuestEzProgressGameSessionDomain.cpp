@@ -46,54 +46,6 @@ namespace Gs2::UE5::Quest::Domain::Model
 
     }
 
-    FEzProgressGameSessionDomain::FGetProgressTask::FGetProgressTask(
-        TSharedPtr<FEzProgressGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzProgressGameSessionDomain::FGetProgressTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Quest::Model::FEzProgress>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetProgressTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Quest::Request::FGetProgressRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Quest::Model::FEzProgress::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzProgressGameSessionDomain::FGetProgressTask>> FEzProgressGameSessionDomain::GetProgress(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetProgressTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzProgressGameSessionDomain::FEndTask::FEndTask(
         TSharedPtr<FEzProgressGameSessionDomain> Self,
         bool IsComplete,

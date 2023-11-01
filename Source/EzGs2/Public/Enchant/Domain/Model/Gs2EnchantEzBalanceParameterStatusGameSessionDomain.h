@@ -52,26 +52,6 @@ namespace Gs2::UE5::Enchant::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetBalanceParameterStatusTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enchant::Model::FEzBalanceParameterStatus>,
-            public TSharedFromThis<FGetBalanceParameterStatusTask>
-        {
-            TSharedPtr<FEzBalanceParameterStatusGameSessionDomain> Self;
-
-        public:
-            explicit FGetBalanceParameterStatusTask(
-                TSharedPtr<FEzBalanceParameterStatusGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Enchant::Model::FEzBalanceParameterStatus>> Result
-            ) override;
-        };
-        friend FGetBalanceParameterStatusTask;
-
-        TSharedPtr<FAsyncTask<FGetBalanceParameterStatusTask>> GetBalanceParameterStatus(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Enchant::Model::FEzBalanceParameterStatus>,
             public TSharedFromThis<FModelTask>

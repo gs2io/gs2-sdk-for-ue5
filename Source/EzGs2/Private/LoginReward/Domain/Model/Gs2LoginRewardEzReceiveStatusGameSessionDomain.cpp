@@ -41,54 +41,6 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
     }
 
-    FEzReceiveStatusGameSessionDomain::FGetReceiveStatusTask::FGetReceiveStatusTask(
-        TSharedPtr<FEzReceiveStatusGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzReceiveStatusGameSessionDomain::FGetReceiveStatusTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::LoginReward::Model::FEzReceiveStatus>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetReceiveStatusTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::LoginReward::Request::FGetReceiveStatusRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::LoginReward::Model::FEzReceiveStatus::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzReceiveStatusGameSessionDomain::FGetReceiveStatusTask>> FEzReceiveStatusGameSessionDomain::GetReceiveStatus(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetReceiveStatusTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzReceiveStatusGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzReceiveStatusGameSessionDomain> Self
     ): Self(Self)

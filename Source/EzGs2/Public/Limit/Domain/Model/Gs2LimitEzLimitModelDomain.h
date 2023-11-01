@@ -43,26 +43,6 @@ namespace Gs2::UE5::Limit::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetLimitModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Limit::Model::FEzLimitModel>,
-            public TSharedFromThis<FGetLimitModelTask>
-        {
-            TSharedPtr<FEzLimitModelDomain> Self;
-
-        public:
-            explicit FGetLimitModelTask(
-                TSharedPtr<FEzLimitModelDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Limit::Model::FEzLimitModel>> Result
-            ) override;
-        };
-        friend FGetLimitModelTask;
-
-        TSharedPtr<FAsyncTask<FGetLimitModelTask>> GetLimitModel(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Limit::Model::FEzLimitModel>,
             public TSharedFromThis<FModelTask>

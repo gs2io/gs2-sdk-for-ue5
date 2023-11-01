@@ -61,26 +61,6 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetInventoryTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Inventory::Model::FEzInventory>,
-            public TSharedFromThis<FGetInventoryTask>
-        {
-            TSharedPtr<FEzInventoryGameSessionDomain> Self;
-
-        public:
-            explicit FGetInventoryTask(
-                TSharedPtr<FEzInventoryGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Model::FEzInventory>> Result
-            ) override;
-        };
-        friend FGetInventoryTask;
-
-        TSharedPtr<FAsyncTask<FGetInventoryTask>> GetInventory(
-        );
-
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeItemSetsIteratorPtr ItemSets(
         ) const;
 

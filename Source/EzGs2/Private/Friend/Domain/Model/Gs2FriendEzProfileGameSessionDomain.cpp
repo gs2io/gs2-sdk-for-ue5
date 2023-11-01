@@ -36,54 +36,6 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     }
 
-    FEzProfileGameSessionDomain::FGetProfileTask::FGetProfileTask(
-        TSharedPtr<FEzProfileGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzProfileGameSessionDomain::FGetProfileTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzProfile>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetProfileTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Friend::Request::FGetProfileRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Friend::Model::FEzProfile::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzProfileGameSessionDomain::FGetProfileTask>> FEzProfileGameSessionDomain::GetProfile(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetProfileTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzProfileGameSessionDomain::FUpdateProfileTask::FUpdateProfileTask(
         TSharedPtr<FEzProfileGameSessionDomain> Self,
         TOptional<FString> PublicProfile,

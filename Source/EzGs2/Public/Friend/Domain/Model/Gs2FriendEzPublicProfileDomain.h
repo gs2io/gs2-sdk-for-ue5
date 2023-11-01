@@ -46,26 +46,6 @@ namespace Gs2::UE5::Friend::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetPublicProfileTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Model::FEzPublicProfile>,
-            public TSharedFromThis<FGetPublicProfileTask>
-        {
-            TSharedPtr<FEzPublicProfileDomain> Self;
-
-        public:
-            explicit FGetPublicProfileTask(
-                TSharedPtr<FEzPublicProfileDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzPublicProfile>> Result
-            ) override;
-        };
-        friend FGetPublicProfileTask;
-
-        TSharedPtr<FAsyncTask<FGetPublicProfileTask>> GetPublicProfile(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Model::FEzPublicProfile>,
             public TSharedFromThis<FModelTask>

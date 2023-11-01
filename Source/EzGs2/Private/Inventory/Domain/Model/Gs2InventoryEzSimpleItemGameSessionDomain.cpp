@@ -56,54 +56,6 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     }
 
-    FEzSimpleItemGameSessionDomain::FGetSimpleItemTask::FGetSimpleItemTask(
-        TSharedPtr<FEzSimpleItemGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzSimpleItemGameSessionDomain::FGetSimpleItemTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Model::FEzSimpleItem>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetSimpleItemTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Inventory::Request::FGetSimpleItemRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Inventory::Model::FEzSimpleItem::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzSimpleItemGameSessionDomain::FGetSimpleItemTask>> FEzSimpleItemGameSessionDomain::GetSimpleItem(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetSimpleItemTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzSimpleItemGameSessionDomain::FGetSimpleItemWithSignatureTask::FGetSimpleItemWithSignatureTask(
         TSharedPtr<FEzSimpleItemGameSessionDomain> Self,
         FString KeyId

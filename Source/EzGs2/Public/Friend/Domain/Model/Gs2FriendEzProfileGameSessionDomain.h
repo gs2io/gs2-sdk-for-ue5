@@ -46,26 +46,6 @@ namespace Gs2::UE5::Friend::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetProfileTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Model::FEzProfile>,
-            public TSharedFromThis<FGetProfileTask>
-        {
-            TSharedPtr<FEzProfileGameSessionDomain> Self;
-
-        public:
-            explicit FGetProfileTask(
-                TSharedPtr<FEzProfileGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzProfile>> Result
-            ) override;
-        };
-        friend FGetProfileTask;
-
-        TSharedPtr<FAsyncTask<FGetProfileTask>> GetProfile(
-        );
-
         class FUpdateProfileTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Domain::Model::FEzProfileGameSessionDomain>,
             public TSharedFromThis<FUpdateProfileTask>

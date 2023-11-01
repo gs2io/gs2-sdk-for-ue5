@@ -36,54 +36,6 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     }
 
-    FEzFormModelDomain::FGetFormModelTask::FGetFormModelTask(
-        TSharedPtr<FEzFormModelDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzFormModelDomain::FGetFormModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Model::FEzFormModel>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetFormModelTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Formation::Request::FGetFormModelRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Formation::Model::FEzFormModel::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzFormModelDomain::FGetFormModelTask>> FEzFormModelDomain::GetFormModel(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetFormModelTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzFormModelDomain::FModelTask::FModelTask(
         TSharedPtr<FEzFormModelDomain> Self
     ): Self(Self)

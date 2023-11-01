@@ -45,26 +45,6 @@ namespace Gs2::UE5::Schedule::Domain::Model
             Gs2::UE5::Util::FProfilePtr Profile
         );
 
-        class FGetTriggerTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Schedule::Model::FEzTrigger>,
-            public TSharedFromThis<FGetTriggerTask>
-        {
-            TSharedPtr<FEzTriggerGameSessionDomain> Self;
-
-        public:
-            explicit FGetTriggerTask(
-                TSharedPtr<FEzTriggerGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Schedule::Model::FEzTrigger>> Result
-            ) override;
-        };
-        friend FGetTriggerTask;
-
-        TSharedPtr<FAsyncTask<FGetTriggerTask>> GetTrigger(
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Schedule::Model::FEzTrigger>,
             public TSharedFromThis<FModelTask>
