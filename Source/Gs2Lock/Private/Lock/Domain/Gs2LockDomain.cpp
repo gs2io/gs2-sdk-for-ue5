@@ -29,22 +29,17 @@
 #include "Lock/Domain/Model/Mutex.h"
 #include "Lock/Domain/Model/User.h"
 #include "Lock/Domain/Model/UserAccessToken.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Lock::Domain
 {
 
     FGs2LockDomain::FGs2LockDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Lock::FGs2LockRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Lock::FGs2LockRestClient>(Gs2->RestSession)),
         ParentKey("lock")
     {
     }
@@ -52,10 +47,7 @@ namespace Gs2::Lock::Domain
     FGs2LockDomain::FGs2LockDomain(
         const FGs2LockDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -98,7 +90,7 @@ namespace Gs2::Lock::Domain
                 const auto Key = Gs2::Lock::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Lock::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -108,10 +100,7 @@ namespace Gs2::Lock::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Lock::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -128,7 +117,7 @@ namespace Gs2::Lock::Domain
     ) const
     {
         return MakeShared<Gs2::Lock::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -137,7 +126,7 @@ namespace Gs2::Lock::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Lock::Model::FNamespace::TypeName,
             "lock:Namespace",
             Callback
@@ -148,7 +137,7 @@ namespace Gs2::Lock::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Lock::Model::FNamespace::TypeName,
             "lock:Namespace",
             CallbackID
@@ -160,10 +149,7 @@ namespace Gs2::Lock::Domain
     ) const
     {
         return MakeShared<Gs2::Lock::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

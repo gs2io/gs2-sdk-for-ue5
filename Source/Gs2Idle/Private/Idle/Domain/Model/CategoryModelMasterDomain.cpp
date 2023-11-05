@@ -34,6 +34,7 @@
 #include "Idle/Domain/Model/StatusAccessToken.h"
 #include "Idle/Domain/Model/CurrentCategoryMaster.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -41,19 +42,13 @@ namespace Gs2::Idle::Domain::Model
 {
 
     FCategoryModelMasterDomain::FCategoryModelMasterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CategoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Idle::FGs2IdleRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Idle::FGs2IdleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         CategoryName(CategoryName),
         ParentKey(Gs2::Idle::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -66,10 +61,7 @@ namespace Gs2::Idle::Domain::Model
     FCategoryModelMasterDomain::FCategoryModelMasterDomain(
         const FCategoryModelMasterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         CategoryName(From.CategoryName),
@@ -121,7 +113,7 @@ namespace Gs2::Idle::Domain::Model
                 const auto Key = Gs2::Idle::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Idle::Model::FCategoryModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -183,7 +175,7 @@ namespace Gs2::Idle::Domain::Model
                 const auto Key = Gs2::Idle::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Idle::Model::FCategoryModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -247,7 +239,7 @@ namespace Gs2::Idle::Domain::Model
                 const auto Key = Gs2::Idle::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Idle::Model::FCategoryModelMaster::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Idle::Model::FCategoryModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -302,7 +294,7 @@ namespace Gs2::Idle::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Idle::Model::FCategoryModelMaster> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Idle::Model::FCategoryModelMaster>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Idle::Model::FCategoryModelMaster>(
             Self->ParentKey,
             Gs2::Idle::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(
                 Self->CategoryName
@@ -324,7 +316,7 @@ namespace Gs2::Idle::Domain::Model
                 const auto Key = Gs2::Idle::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(
                     Self->CategoryName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Idle::Model::FCategoryModelMaster::TypeName,
                     Self->ParentKey,
                     Key,
@@ -337,7 +329,7 @@ namespace Gs2::Idle::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Idle::Model::FCategoryModelMaster>(
+            Self->Gs2->Cache->TryGet<Gs2::Idle::Model::FCategoryModelMaster>(
                 Self->ParentKey,
                 Gs2::Idle::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(
                     Self->CategoryName
@@ -359,7 +351,7 @@ namespace Gs2::Idle::Domain::Model
         TFunction<void(Gs2::Idle::Model::FCategoryModelMasterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Idle::Model::FCategoryModelMaster::TypeName,
             ParentKey,
             Gs2::Idle::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(
@@ -376,7 +368,7 @@ namespace Gs2::Idle::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Idle::Model::FCategoryModelMaster::TypeName,
             ParentKey,
             Gs2::Idle::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(

@@ -26,6 +26,7 @@
 #include "Script/Domain/Model/Namespace.h"
 #include "Script/Domain/Model/Script.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -33,19 +34,13 @@ namespace Gs2::Script::Domain::Model
 {
 
     FScriptDomain::FScriptDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> ScriptName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Script::FGs2ScriptRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Script::FGs2ScriptRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ScriptName(ScriptName),
         ParentKey(Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -58,10 +53,7 @@ namespace Gs2::Script::Domain::Model
     FScriptDomain::FScriptDomain(
         const FScriptDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ScriptName(From.ScriptName),
@@ -113,7 +105,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Script::Model::FScript::TypeName,
                     ParentKey,
                     Key,
@@ -175,7 +167,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Script::Model::FScript::TypeName,
                     ParentKey,
                     Key,
@@ -239,7 +231,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Script::Model::FScript::TypeName,
                     ParentKey,
                     Key,
@@ -303,7 +295,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Script::Model::FScript::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Script::Model::FScript::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -358,7 +350,7 @@ namespace Gs2::Script::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Script::Model::FScript> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Script::Model::FScript>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Script::Model::FScript>(
             Self->ParentKey,
             Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                 Self->ScriptName
@@ -380,7 +372,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     Self->ScriptName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Script::Model::FScript::TypeName,
                     Self->ParentKey,
                     Key,
@@ -393,7 +385,7 @@ namespace Gs2::Script::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Script::Model::FScript>(
+            Self->Gs2->Cache->TryGet<Gs2::Script::Model::FScript>(
                 Self->ParentKey,
                 Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     Self->ScriptName
@@ -415,7 +407,7 @@ namespace Gs2::Script::Domain::Model
         TFunction<void(Gs2::Script::Model::FScriptPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Script::Model::FScript::TypeName,
             ParentKey,
             Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
@@ -432,7 +424,7 @@ namespace Gs2::Script::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Script::Model::FScript::TypeName,
             ParentKey,
             Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(

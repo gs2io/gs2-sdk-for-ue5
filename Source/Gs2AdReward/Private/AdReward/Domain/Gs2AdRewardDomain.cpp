@@ -29,22 +29,17 @@
 #include "AdReward/Domain/Model/User.h"
 #include "AdReward/Domain/Model/UserAccessToken.h"
 #include "AdReward/Domain/Model/Point.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::AdReward::Domain
 {
 
     FGs2AdRewardDomain::FGs2AdRewardDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::AdReward::FGs2AdRewardRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::AdReward::FGs2AdRewardRestClient>(Gs2->RestSession)),
         ParentKey("adReward")
     {
     }
@@ -52,10 +47,7 @@ namespace Gs2::AdReward::Domain
     FGs2AdRewardDomain::FGs2AdRewardDomain(
         const FGs2AdRewardDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -98,7 +90,7 @@ namespace Gs2::AdReward::Domain
                 const auto Key = Gs2::AdReward::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::AdReward::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -108,10 +100,7 @@ namespace Gs2::AdReward::Domain
             }
         }
         auto Domain = MakeShared<Gs2::AdReward::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -200,7 +189,13 @@ namespace Gs2::AdReward::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -330,8 +325,17 @@ namespace Gs2::AdReward::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -418,7 +422,13 @@ namespace Gs2::AdReward::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -433,7 +443,7 @@ namespace Gs2::AdReward::Domain
     ) const
     {
         return MakeShared<Gs2::AdReward::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -442,7 +452,7 @@ namespace Gs2::AdReward::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::AdReward::Model::FNamespace::TypeName,
             "adReward:Namespace",
             Callback
@@ -453,7 +463,7 @@ namespace Gs2::AdReward::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::AdReward::Model::FNamespace::TypeName,
             "adReward:Namespace",
             CallbackID
@@ -465,10 +475,7 @@ namespace Gs2::AdReward::Domain
     ) const
     {
         return MakeShared<Gs2::AdReward::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -503,7 +510,7 @@ namespace Gs2::AdReward::Domain
                 );
                 const auto Key = Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::AdReward::Model::FPoint::TypeName,
                     ParentKey,
                     Key,
@@ -544,7 +551,7 @@ namespace Gs2::AdReward::Domain
                 );
                 const auto Key = Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::AdReward::Model::FPoint::TypeName,
                     ParentKey,
                     Key,
@@ -593,7 +600,7 @@ namespace Gs2::AdReward::Domain
                 );
                 const auto Key = Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::AdReward::Model::FPoint::TypeName,
                     ParentKey,
                     Key,
@@ -622,7 +629,7 @@ namespace Gs2::AdReward::Domain
             );
             const auto Key = Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(
             );
-            Cache->Delete(Gs2::AdReward::Model::FPoint::TypeName, ParentKey, Key);
+            Gs2->Cache->Delete(Gs2::AdReward::Model::FPoint::TypeName, ParentKey, Key);
             ChangePointNotificationEvent.Broadcast(Gs2::AdReward::Model::FChangePointNotification::FromJson(PayloadJson));
         }
     }

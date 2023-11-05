@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "Core/Gs2Core.h"
 #include "Core/Domain/Gs2Core.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Lottery/Gs2Lottery.h"
@@ -54,6 +53,12 @@
 
 // Notification
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Lottery::Domain
 {
     DECLARE_EVENT_ThreeParams(FGs2LotteryDomain, FDrawnResultEvent, TOptional<FString>, TOptional<FString>, TSharedPtr<TArray<Gs2::Lottery::Model::FDrawnPrizePtr>>);
@@ -62,10 +67,7 @@ namespace Gs2::Lottery::Domain
         public TSharedFromThis<FGs2LotteryDomain>
     {
         FDrawnResultEvent DrawnResultEvent;
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
@@ -91,10 +93,7 @@ namespace Gs2::Lottery::Domain
     public:
 
         FGs2LotteryDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+            const Core::Domain::FGs2Ptr Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 

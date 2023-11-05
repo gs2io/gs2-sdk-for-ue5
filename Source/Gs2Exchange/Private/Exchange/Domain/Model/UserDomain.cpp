@@ -36,6 +36,7 @@
 #include "Exchange/Domain/Model/User.h"
 #include "Exchange/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -43,19 +44,13 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -68,10 +63,7 @@ namespace Gs2::Exchange::Domain::Model
     FUserDomain::FUserDomain(
         const FUserDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -124,7 +116,7 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Exchange::Model::FAwait::TypeName,
                     ParentKey,
                     Key,
@@ -134,15 +126,15 @@ namespace Gs2::Exchange::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Exchange::Domain::Model::FAwaitDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetName()
         );
-        Domain->UnlockAt = *ResultModel->GetUnlockAt();
+        if (ResultModel != nullptr)
+        {
+            Domain->UnlockAt = *ResultModel->GetUnlockAt();
+        }
 
         *Result = Domain;
         return nullptr;
@@ -158,10 +150,7 @@ namespace Gs2::Exchange::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FExchangeDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId
         );
@@ -172,7 +161,7 @@ namespace Gs2::Exchange::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Exchange::Domain::Iterator::FDescribeAwaitsByUserIdIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             UserId,
@@ -184,7 +173,7 @@ namespace Gs2::Exchange::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Exchange::Model::FAwait::TypeName,
             Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -199,7 +188,7 @@ namespace Gs2::Exchange::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Exchange::Model::FAwait::TypeName,
             Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -215,10 +204,7 @@ namespace Gs2::Exchange::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FAwaitDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             AwaitName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AwaitName)

@@ -42,6 +42,7 @@
 #include "Showcase/Domain/Model/RandomDisplayItem.h"
 #include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -49,19 +50,13 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -74,10 +69,7 @@ namespace Gs2::Showcase::Domain::Model
     FUserDomain::FUserDomain(
         const FUserDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -91,10 +83,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
@@ -106,10 +95,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
@@ -120,7 +106,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeShowcasesByUserIdIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             UserId
@@ -131,7 +117,7 @@ namespace Gs2::Showcase::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Showcase::Model::FShowcase::TypeName,
             Gs2::Showcase::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -146,7 +132,7 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Showcase::Model::FShowcase::TypeName,
             Gs2::Showcase::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -162,10 +148,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FShowcaseDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)

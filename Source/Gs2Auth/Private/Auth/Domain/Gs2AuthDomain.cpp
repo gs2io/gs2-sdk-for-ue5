@@ -26,22 +26,17 @@
 
 #include "Auth/Domain/Gs2Auth.h"
 #include "Auth/Domain/Model/AccessToken.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Auth::Domain
 {
 
     FGs2AuthDomain::FGs2AuthDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Auth::FGs2AuthRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Auth::FGs2AuthRestClient>(Gs2->RestSession)),
         ParentKey("auth")
     {
     }
@@ -49,10 +44,7 @@ namespace Gs2::Auth::Domain
     FGs2AuthDomain::FGs2AuthDomain(
         const FGs2AuthDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -63,10 +55,7 @@ namespace Gs2::Auth::Domain
     ) const
     {
         return MakeShared<Gs2::Auth::Domain::Model::FAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session
+            Gs2
         );
     }
 

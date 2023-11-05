@@ -37,6 +37,7 @@
 #include "Exchange/Domain/Model/User.h"
 #include "Exchange/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -44,19 +45,13 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         ParentKey(Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -69,10 +64,7 @@ namespace Gs2::Exchange::Domain::Model
     FUserAccessTokenDomain::FUserAccessTokenDomain(
         const FUserAccessTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -85,10 +77,7 @@ namespace Gs2::Exchange::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FExchangeAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             AccessToken
         );
@@ -99,7 +88,7 @@ namespace Gs2::Exchange::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             AccessToken,
@@ -111,7 +100,7 @@ namespace Gs2::Exchange::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Exchange::Model::FAwait::TypeName,
             Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -126,7 +115,7 @@ namespace Gs2::Exchange::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Exchange::Model::FAwait::TypeName,
             Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -142,10 +131,7 @@ namespace Gs2::Exchange::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             AccessToken,
             AwaitName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AwaitName)

@@ -40,6 +40,7 @@
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -47,21 +48,15 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FPropertyFormDomain::FPropertyFormDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> PropertyFormModelName,
         const TOptional<FString> PropertyId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         PropertyFormModelName(PropertyFormModelName),
@@ -77,10 +72,7 @@ namespace Gs2::Formation::Domain::Model
     FPropertyFormDomain::FPropertyFormDomain(
         const FPropertyFormDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -138,7 +130,7 @@ namespace Gs2::Formation::Domain::Model
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
@@ -155,7 +147,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelDomain::CreateCacheKey(
                     ResultModel->GetPropertyFormModel()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyFormModel::TypeName,
                     ParentKey,
                     Key,
@@ -221,7 +213,7 @@ namespace Gs2::Formation::Domain::Model
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
@@ -238,7 +230,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelDomain::CreateCacheKey(
                     ResultModel->GetPropertyFormModel()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyFormModel::TypeName,
                     ParentKey,
                     Key,
@@ -248,8 +240,11 @@ namespace Gs2::Formation::Domain::Model
             }
         }
         auto Domain = Self;
-        Domain->Body = *ResultModel->GetBody();
-        Domain->Signature = *ResultModel->GetSignature();
+        if (ResultModel != nullptr)
+        {
+            Domain->Body = *ResultModel->GetBody();
+            Domain->Signature = *ResultModel->GetSignature();
+        }
 
         *Result = Domain;
         return nullptr;
@@ -308,7 +303,7 @@ namespace Gs2::Formation::Domain::Model
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
@@ -325,7 +320,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelDomain::CreateCacheKey(
                     ResultModel->GetPropertyFormModel()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyFormModel::TypeName,
                     ParentKey,
                     Key,
@@ -393,7 +388,7 @@ namespace Gs2::Formation::Domain::Model
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
@@ -405,12 +400,12 @@ namespace Gs2::Formation::Domain::Model
         if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                Self->Cache,
-                Self->JobQueueDomain,
-                Self->Session,
+                Self->Gs2->Cache,
+                Self->Gs2->JobQueueDomain,
+                Self->Gs2->RestSession,
                 *ResultModel->GetStampSheet(),
                 *ResultModel->GetStampSheetEncryptionKeyId(),
-                Self->StampSheetConfiguration
+                Self->Gs2->StampSheetConfiguration
             );
             const auto Future3 = StampSheet->Run();
             Future3->StartSynchronousTask();
@@ -421,12 +416,12 @@ namespace Gs2::Formation::Domain::Model
                     [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
                     {
                         return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                            Self->Cache,
-                            Self->JobQueueDomain,
-                            Self->Session,
+                            Self->Gs2->Cache,
+                            Self->Gs2->JobQueueDomain,
+                            Self->Gs2->RestSession,
                             *ResultModel->GetStampSheet(),
                             *ResultModel->GetStampSheetEncryptionKeyId(),
-                            Self->StampSheetConfiguration
+                            Self->Gs2->StampSheetConfiguration
                         )->Run();
                     }
                 );
@@ -495,7 +490,7 @@ namespace Gs2::Formation::Domain::Model
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Self->Cache->Delete(Gs2::Formation::Model::FPropertyForm::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Formation::Model::FPropertyForm::TypeName, ParentKey, Key);
             }
             if (ResultModel->GetPropertyFormModel() != nullptr)
             {
@@ -506,7 +501,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelDomain::CreateCacheKey(
                     ResultModel->GetPropertyFormModel()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Formation::Model::FPropertyFormModel::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Formation::Model::FPropertyFormModel::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -567,7 +562,7 @@ namespace Gs2::Formation::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Formation::Model::FPropertyForm> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FPropertyForm>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FPropertyForm>(
             Self->ParentKey,
             Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
                 Self->PropertyFormModelName,
@@ -591,7 +586,7 @@ namespace Gs2::Formation::Domain::Model
                     Self->PropertyFormModelName,
                     Self->PropertyId
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyForm::TypeName,
                     Self->ParentKey,
                     Key,
@@ -604,7 +599,7 @@ namespace Gs2::Formation::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Formation::Model::FPropertyForm>(
+            Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FPropertyForm>(
                 Self->ParentKey,
                 Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
                     Self->PropertyFormModelName,
@@ -627,7 +622,7 @@ namespace Gs2::Formation::Domain::Model
         TFunction<void(Gs2::Formation::Model::FPropertyFormPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Formation::Model::FPropertyForm::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
@@ -645,7 +640,7 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Formation::Model::FPropertyForm::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(

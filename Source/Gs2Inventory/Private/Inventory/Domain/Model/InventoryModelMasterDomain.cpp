@@ -55,6 +55,7 @@
 #include "Inventory/Domain/Model/UserAccessToken.h"
 #include "Inventory/Domain/Model/ItemSetEntry.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -62,19 +63,13 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FInventoryModelMasterDomain::FInventoryModelMasterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> InventoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         InventoryName(InventoryName),
         ParentKey(Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -87,10 +82,7 @@ namespace Gs2::Inventory::Domain::Model
     FInventoryModelMasterDomain::FInventoryModelMasterDomain(
         const FInventoryModelMasterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         InventoryName(From.InventoryName),
@@ -142,7 +134,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FInventoryModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -204,7 +196,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FInventoryModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -268,7 +260,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Inventory::Model::FInventoryModelMaster::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Inventory::Model::FInventoryModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -327,7 +319,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FItemModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -337,10 +329,7 @@ namespace Gs2::Inventory::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FItemModelMasterDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetInventoryName(),
             ResultModel->GetItem()->GetName()
@@ -360,7 +349,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeItemModelMastersIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             InventoryName
@@ -371,7 +360,7 @@ namespace Gs2::Inventory::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Inventory::Model::FItemModelMaster::TypeName,
             Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -386,7 +375,7 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Inventory::Model::FItemModelMaster::TypeName,
             Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -402,10 +391,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FItemModelMasterDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             InventoryName,
             ItemName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ItemName)
@@ -452,7 +438,7 @@ namespace Gs2::Inventory::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Inventory::Model::FInventoryModelMaster> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Inventory::Model::FInventoryModelMaster>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FInventoryModelMaster>(
             Self->ParentKey,
             Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheKey(
                 Self->InventoryName
@@ -474,7 +460,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheKey(
                     Self->InventoryName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FInventoryModelMaster::TypeName,
                     Self->ParentKey,
                     Key,
@@ -487,7 +473,7 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Inventory::Model::FInventoryModelMaster>(
+            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FInventoryModelMaster>(
                 Self->ParentKey,
                 Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheKey(
                     Self->InventoryName
@@ -509,7 +495,7 @@ namespace Gs2::Inventory::Domain::Model
         TFunction<void(Gs2::Inventory::Model::FInventoryModelMasterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Inventory::Model::FInventoryModelMaster::TypeName,
             ParentKey,
             Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheKey(
@@ -526,7 +512,7 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Inventory::Model::FInventoryModelMaster::TypeName,
             ParentKey,
             Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheKey(

@@ -33,6 +33,7 @@
 #include "JobQueue/Domain/Model/User.h"
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -40,21 +41,15 @@ namespace Gs2::JobQueue::Domain::Model
 {
 
     FJobResultDomain::FJobResultDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> JobName,
         const TOptional<int32> TryNumber
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         JobName(JobName),
@@ -71,10 +66,7 @@ namespace Gs2::JobQueue::Domain::Model
     FJobResultDomain::FJobResultDomain(
         const FJobResultDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -131,7 +123,7 @@ namespace Gs2::JobQueue::Domain::Model
                 const auto Key = Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTryNumber().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetTryNumber()) : TOptional<FString>()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::JobQueue::Model::FJobResult::TypeName,
                     ParentKey,
                     Key,
@@ -194,7 +186,7 @@ namespace Gs2::JobQueue::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::JobQueue::Model::FJobResult> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::JobQueue::Model::FJobResult>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::JobQueue::Model::FJobResult>(
             Self->ParentKey,
             Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
                 Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
@@ -216,7 +208,7 @@ namespace Gs2::JobQueue::Domain::Model
                 const auto Key = Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
                     Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::JobQueue::Model::FJobResult::TypeName,
                     Self->ParentKey,
                     Key,
@@ -229,7 +221,7 @@ namespace Gs2::JobQueue::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::JobQueue::Model::FJobResult>(
+            Self->Gs2->Cache->TryGet<Gs2::JobQueue::Model::FJobResult>(
                 Self->ParentKey,
                 Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
                     Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
@@ -251,7 +243,7 @@ namespace Gs2::JobQueue::Domain::Model
         TFunction<void(Gs2::JobQueue::Model::FJobResultPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::JobQueue::Model::FJobResult::TypeName,
             ParentKey,
             Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
@@ -268,7 +260,7 @@ namespace Gs2::JobQueue::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::JobQueue::Model::FJobResult::TypeName,
             ParentKey,
             Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(

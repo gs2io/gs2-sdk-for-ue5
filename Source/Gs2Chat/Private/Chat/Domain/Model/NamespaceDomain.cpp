@@ -33,6 +33,7 @@
 #include "Chat/Domain/Model/User.h"
 #include "Chat/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -40,18 +41,12 @@ namespace Gs2::Chat::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("chat:Namespace")
     {
@@ -60,10 +55,7 @@ namespace Gs2::Chat::Domain::Model
     FNamespaceDomain::FNamespaceDomain(
         const FNamespaceDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -106,7 +98,13 @@ namespace Gs2::Chat::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->Status = Domain->Status = ResultModel->GetStatus();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetStatus().IsSet())
+            {
+                Self->Status = Domain->Status = ResultModel->GetStatus();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -155,7 +153,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Chat::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -212,7 +210,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Chat::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -271,7 +269,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Chat::Model::FNamespace::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Chat::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -291,10 +289,7 @@ namespace Gs2::Chat::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Model::FUserDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -305,10 +300,7 @@ namespace Gs2::Chat::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Model::FUserAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             AccessToken
         );
@@ -353,7 +345,7 @@ namespace Gs2::Chat::Domain::Model
         const auto ParentKey = FString("chat:Namespace");
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Chat::Model::FNamespace> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Chat::Model::FNamespace>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Chat::Model::FNamespace>(
             ParentKey,
             Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 Self->NamespaceName
@@ -375,7 +367,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Chat::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -388,7 +380,7 @@ namespace Gs2::Chat::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Chat::Model::FNamespace>(
+            Self->Gs2->Cache->TryGet<Gs2::Chat::Model::FNamespace>(
                 ParentKey,
                 Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
@@ -410,7 +402,7 @@ namespace Gs2::Chat::Domain::Model
         TFunction<void(Gs2::Chat::Model::FNamespacePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Chat::Model::FNamespace::TypeName,
             ParentKey,
             Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheKey(
@@ -427,7 +419,7 @@ namespace Gs2::Chat::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Chat::Model::FNamespace::TypeName,
             ParentKey,
             Gs2::Chat::Domain::Model::FNamespaceDomain::CreateCacheKey(

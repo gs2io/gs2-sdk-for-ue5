@@ -35,6 +35,7 @@
 #include "Stamina/Domain/Model/User.h"
 #include "Stamina/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -42,19 +43,13 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FStaminaModelMasterDomain::FStaminaModelMasterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> StaminaName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         StaminaName(StaminaName),
         ParentKey(Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -67,10 +62,7 @@ namespace Gs2::Stamina::Domain::Model
     FStaminaModelMasterDomain::FStaminaModelMasterDomain(
         const FStaminaModelMasterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         StaminaName(From.StaminaName),
@@ -122,7 +114,7 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -184,7 +176,7 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -248,7 +240,7 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Stamina::Model::FStaminaModelMaster::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Stamina::Model::FStaminaModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -303,7 +295,7 @@ namespace Gs2::Stamina::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Stamina::Model::FStaminaModelMaster> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FStaminaModelMaster>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Stamina::Model::FStaminaModelMaster>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(
                 Self->StaminaName
@@ -325,7 +317,7 @@ namespace Gs2::Stamina::Domain::Model
                 const auto Key = Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(
                     Self->StaminaName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
                     Self->ParentKey,
                     Key,
@@ -338,7 +330,7 @@ namespace Gs2::Stamina::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Stamina::Model::FStaminaModelMaster>(
+            Self->Gs2->Cache->TryGet<Gs2::Stamina::Model::FStaminaModelMaster>(
                 Self->ParentKey,
                 Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(
                     Self->StaminaName
@@ -360,7 +352,7 @@ namespace Gs2::Stamina::Domain::Model
         TFunction<void(Gs2::Stamina::Model::FStaminaModelMasterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
             ParentKey,
             Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(
@@ -377,7 +369,7 @@ namespace Gs2::Stamina::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Stamina::Model::FStaminaModelMaster::TypeName,
             ParentKey,
             Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain::CreateCacheKey(

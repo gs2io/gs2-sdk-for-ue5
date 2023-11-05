@@ -26,6 +26,12 @@
 #include "Deploy/Domain/Iterator/DescribeEventsIterator.h"
 #include "Deploy/Domain/Iterator/DescribeOutputsIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Deploy::Domain::Model
 {
     class FStackDomain;
@@ -36,10 +42,7 @@ namespace Gs2::Deploy::Domain::Model
     class GS2DEPLOY_API FResourceDomain:
         public TSharedFromThis<FResourceDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Deploy::FGs2DeployRestClientPtr Client;
 
         public:
@@ -52,10 +55,7 @@ namespace Gs2::Deploy::Domain::Model
     public:
 
         FResourceDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> StackName,
             const TOptional<FString> ResourceName
             // ReSharper disable once CppMemberInitializersOrder

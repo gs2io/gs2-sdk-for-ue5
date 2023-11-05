@@ -31,6 +31,7 @@
 #include "Money/Domain/Model/Receipt.h"
 #include "Money/Domain/Model/ReceiptAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -38,20 +39,14 @@ namespace Gs2::Money::Domain::Model
 {
 
     FReceiptDomain::FReceiptDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TransactionId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         TransactionId(TransactionId),
@@ -66,10 +61,7 @@ namespace Gs2::Money::Domain::Model
     FReceiptDomain::FReceiptDomain(
         const FReceiptDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -124,7 +116,7 @@ namespace Gs2::Money::Domain::Model
                 const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTransactionId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Money::Model::FReceipt::TypeName,
                     ParentKey,
                     Key,
@@ -187,7 +179,7 @@ namespace Gs2::Money::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Money::Model::FReceipt> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Money::Model::FReceipt>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Money::Model::FReceipt>(
             Self->ParentKey,
             Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                 Self->TransactionId
@@ -207,7 +199,7 @@ namespace Gs2::Money::Domain::Model
         TFunction<void(Gs2::Money::Model::FReceiptPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Money::Model::FReceipt::TypeName,
             ParentKey,
             Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
@@ -224,7 +216,7 @@ namespace Gs2::Money::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Money::Model::FReceipt::TypeName,
             ParentKey,
             Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(

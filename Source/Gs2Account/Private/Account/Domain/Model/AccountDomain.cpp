@@ -33,6 +33,7 @@
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -40,19 +41,13 @@ namespace Gs2::Account::Domain::Model
 {
 
     FAccountDomain::FAccountDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Account::FGs2AccountRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Account::FGs2AccountRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -65,10 +60,7 @@ namespace Gs2::Account::Domain::Model
     FAccountDomain::FAccountDomain(
         const FAccountDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -120,7 +112,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
@@ -184,7 +176,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
@@ -248,7 +240,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
@@ -312,7 +304,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetUserId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
@@ -376,7 +368,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
@@ -438,7 +430,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Delete(Gs2::Account::Model::FAccount::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Account::Model::FAccount::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -496,7 +488,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
                     ParentKey,
                     Key,
@@ -575,14 +567,11 @@ namespace Gs2::Account::Domain::Model
                 );
                 const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete(Gs2::Account::Model::FDataOwner::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Account::Model::FDataOwner::TypeName, ParentKey, Key);
             }
         }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FDataOwnerDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId()
         );
@@ -601,7 +590,7 @@ namespace Gs2::Account::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Account::Domain::Iterator::FDescribeTakeOversByUserIdIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             UserId
@@ -612,7 +601,7 @@ namespace Gs2::Account::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Account::Model::FTakeOver::TypeName,
             Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -627,7 +616,7 @@ namespace Gs2::Account::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Account::Model::FTakeOver::TypeName,
             Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -643,10 +632,7 @@ namespace Gs2::Account::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             Type
@@ -657,10 +643,7 @@ namespace Gs2::Account::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Account::Domain::Model::FDataOwnerDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId
         );
@@ -706,7 +689,7 @@ namespace Gs2::Account::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Account::Model::FAccount> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Account::Model::FAccount>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FAccount>(
             Self->ParentKey,
             Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                 Self->UserId
@@ -728,7 +711,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FAccount::TypeName,
                     Self->ParentKey,
                     Key,
@@ -741,7 +724,7 @@ namespace Gs2::Account::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Account::Model::FAccount>(
+            Self->Gs2->Cache->TryGet<Gs2::Account::Model::FAccount>(
                 Self->ParentKey,
                 Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
                     Self->UserId
@@ -763,7 +746,7 @@ namespace Gs2::Account::Domain::Model
         TFunction<void(Gs2::Account::Model::FAccountPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Account::Model::FAccount::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
@@ -780,7 +763,7 @@ namespace Gs2::Account::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Account::Model::FAccount::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(

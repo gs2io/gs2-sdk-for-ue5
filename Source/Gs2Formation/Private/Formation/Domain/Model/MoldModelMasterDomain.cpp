@@ -40,6 +40,7 @@
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -47,19 +48,13 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FMoldModelMasterDomain::FMoldModelMasterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> MoldModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         MoldModelName(MoldModelName),
         ParentKey(Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -72,10 +67,7 @@ namespace Gs2::Formation::Domain::Model
     FMoldModelMasterDomain::FMoldModelMasterDomain(
         const FMoldModelMasterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         MoldModelName(From.MoldModelName),
@@ -127,7 +119,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FMoldModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -189,7 +181,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FMoldModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -253,7 +245,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Formation::Model::FMoldModelMaster::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Formation::Model::FMoldModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -308,7 +300,7 @@ namespace Gs2::Formation::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Formation::Model::FMoldModelMaster> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FMoldModelMaster>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FMoldModelMaster>(
             Self->ParentKey,
             Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                 Self->MoldModelName
@@ -330,7 +322,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                     Self->MoldModelName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FMoldModelMaster::TypeName,
                     Self->ParentKey,
                     Key,
@@ -343,7 +335,7 @@ namespace Gs2::Formation::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Formation::Model::FMoldModelMaster>(
+            Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FMoldModelMaster>(
                 Self->ParentKey,
                 Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                     Self->MoldModelName
@@ -365,7 +357,7 @@ namespace Gs2::Formation::Domain::Model
         TFunction<void(Gs2::Formation::Model::FMoldModelMasterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Formation::Model::FMoldModelMaster::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
@@ -382,7 +374,7 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Formation::Model::FMoldModelMaster::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(

@@ -29,6 +29,7 @@
 #include "Identifier/Domain/Model/Password.h"
 #include "Identifier/Domain/Model/AttachSecurityPolicy.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -36,18 +37,12 @@ namespace Gs2::Identifier::Domain::Model
 {
 
     FPasswordDomain::FPasswordDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> UserName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Gs2->RestSession)),
         UserName(UserName),
         ParentKey(Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
             UserName,
@@ -59,10 +54,7 @@ namespace Gs2::Identifier::Domain::Model
     FPasswordDomain::FPasswordDomain(
         const FPasswordDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         UserName(From.UserName),
         ParentKey(From.ParentKey)
@@ -111,7 +103,7 @@ namespace Gs2::Identifier::Domain::Model
                 );
                 const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Identifier::Model::FPassword::TypeName,
                     ParentKey,
                     Key,
@@ -173,7 +165,7 @@ namespace Gs2::Identifier::Domain::Model
                 );
                 const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Identifier::Model::FPassword::TypeName,
                     ParentKey,
                     Key,
@@ -233,7 +225,7 @@ namespace Gs2::Identifier::Domain::Model
                 );
                 const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete(Gs2::Identifier::Model::FPassword::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Identifier::Model::FPassword::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -284,7 +276,7 @@ namespace Gs2::Identifier::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Identifier::Model::FPassword> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Identifier::Model::FPassword>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FPassword>(
             Self->ParentKey,
             Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
             ),
@@ -304,7 +296,7 @@ namespace Gs2::Identifier::Domain::Model
 
                 const auto Key = Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Identifier::Model::FPassword::TypeName,
                     Self->ParentKey,
                     Key,
@@ -317,7 +309,7 @@ namespace Gs2::Identifier::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Identifier::Model::FPassword>(
+            Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FPassword>(
                 Self->ParentKey,
                 Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
                 ),
@@ -338,7 +330,7 @@ namespace Gs2::Identifier::Domain::Model
         TFunction<void(Gs2::Identifier::Model::FPasswordPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Identifier::Model::FPassword::TypeName,
             ParentKey,
             Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(
@@ -354,7 +346,7 @@ namespace Gs2::Identifier::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Identifier::Model::FPassword::TypeName,
             ParentKey,
             Gs2::Identifier::Domain::Model::FPasswordDomain::CreateCacheKey(

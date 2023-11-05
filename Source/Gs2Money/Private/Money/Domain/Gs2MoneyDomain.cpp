@@ -30,22 +30,17 @@
 #include "Money/Domain/Model/UserAccessToken.h"
 #include "Money/Domain/Model/Wallet.h"
 #include "Money/Domain/Model/Receipt.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Money::Domain
 {
 
     FGs2MoneyDomain::FGs2MoneyDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Gs2->RestSession)),
         ParentKey("money")
     {
     }
@@ -53,10 +48,7 @@ namespace Gs2::Money::Domain
     FGs2MoneyDomain::FGs2MoneyDomain(
         const FGs2MoneyDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -99,7 +91,7 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Money::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -109,10 +101,7 @@ namespace Gs2::Money::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Money::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -201,7 +190,13 @@ namespace Gs2::Money::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -331,8 +326,17 @@ namespace Gs2::Money::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -419,7 +423,13 @@ namespace Gs2::Money::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -434,7 +444,7 @@ namespace Gs2::Money::Domain
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -443,7 +453,7 @@ namespace Gs2::Money::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Money::Model::FNamespace::TypeName,
             "money:Namespace",
             Callback
@@ -454,7 +464,7 @@ namespace Gs2::Money::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Money::Model::FNamespace::TypeName,
             "money:Namespace",
             CallbackID
@@ -466,10 +476,7 @@ namespace Gs2::Money::Domain
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -505,7 +512,7 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                     TOptional<FString>()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Money::Model::FWallet::TypeName,
                     ParentKey,
                     Key,
@@ -540,7 +547,7 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTransactionId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Money::Model::FReceipt::TypeName,
                     ParentKey,
                     Key,
@@ -582,7 +589,7 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                     TOptional<FString>()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Money::Model::FWallet::TypeName,
                     ParentKey,
                     Key,
@@ -617,7 +624,7 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTransactionId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Money::Model::FReceipt::TypeName,
                     ParentKey,
                     Key,
@@ -667,7 +674,7 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
                     TOptional<FString>()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Money::Model::FWallet::TypeName,
                     ParentKey,
                     Key,
@@ -710,7 +717,7 @@ namespace Gs2::Money::Domain
                 const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTransactionId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Money::Model::FReceipt::TypeName,
                     ParentKey,
                     Key,

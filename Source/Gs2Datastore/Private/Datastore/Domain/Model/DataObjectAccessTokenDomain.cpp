@@ -32,6 +32,7 @@
 #include "Datastore/Domain/Model/User.h"
 #include "Datastore/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -39,20 +40,14 @@ namespace Gs2::Datastore::Domain::Model
 {
 
     FDataObjectAccessTokenDomain::FDataObjectAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const TOptional<FString> DataObjectName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Datastore::FGs2DatastoreRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Datastore::FGs2DatastoreRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         DataObjectName(DataObjectName),
@@ -67,10 +62,7 @@ namespace Gs2::Datastore::Domain::Model
     FDataObjectAccessTokenDomain::FDataObjectAccessTokenDomain(
         const FDataObjectAccessTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -125,7 +117,7 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
@@ -191,7 +183,7 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
@@ -201,7 +193,10 @@ namespace Gs2::Datastore::Domain::Model
             }
         }
         auto Domain = Self;
-        Domain->UploadUrl = *ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            Domain->UploadUrl = *ResultModel->GetUploadUrl();
+        }
 
         *Result = Domain;
         return nullptr;
@@ -258,14 +253,14 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-                Self->Cache->ClearListCache(
+                Self->Gs2->Cache->ClearListCache(
                     Gs2::Datastore::Model::FDataObjectHistory::TypeName,
                     Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
                         Self->NamespaceName,
@@ -333,7 +328,7 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
@@ -399,7 +394,7 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
@@ -409,8 +404,11 @@ namespace Gs2::Datastore::Domain::Model
             }
         }
         auto Domain = Self;
-        Domain->FileUrl = *ResultModel->GetFileUrl();
-        Domain->ContentLength = *ResultModel->GetContentLength();
+        if (ResultModel != nullptr)
+        {
+            Domain->FileUrl = *ResultModel->GetFileUrl();
+            Domain->ContentLength = *ResultModel->GetContentLength();
+        }
 
         *Result = Domain;
         return nullptr;
@@ -467,7 +465,7 @@ namespace Gs2::Datastore::Domain::Model
                 const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Datastore::Model::FDataObject::TypeName,
                     ParentKey,
                     Key,
@@ -477,8 +475,11 @@ namespace Gs2::Datastore::Domain::Model
             }
         }
         auto Domain = Self;
-        Domain->FileUrl = *ResultModel->GetFileUrl();
-        Domain->ContentLength = *ResultModel->GetContentLength();
+        if (ResultModel != nullptr)
+        {
+            Domain->FileUrl = *ResultModel->GetFileUrl();
+            Domain->ContentLength = *ResultModel->GetContentLength();
+        }
 
         *Result = Domain;
         return nullptr;
@@ -494,7 +495,7 @@ namespace Gs2::Datastore::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Datastore::Domain::Iterator::FDescribeDataObjectHistoriesIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             AccessToken,
@@ -506,7 +507,7 @@ namespace Gs2::Datastore::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Datastore::Model::FDataObjectHistory::TypeName,
             Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -522,7 +523,7 @@ namespace Gs2::Datastore::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Datastore::Model::FDataObjectHistory::TypeName,
             Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -539,10 +540,7 @@ namespace Gs2::Datastore::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Datastore::Domain::Model::FDataObjectHistoryAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             AccessToken,
             DataObjectName,
@@ -592,7 +590,7 @@ namespace Gs2::Datastore::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Datastore::Model::FDataObject> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Datastore::Model::FDataObject>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Datastore::Model::FDataObject>(
             Self->ParentKey,
             Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
                 Self->DataObjectName
@@ -612,7 +610,7 @@ namespace Gs2::Datastore::Domain::Model
         TFunction<void(Gs2::Datastore::Model::FDataObjectPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Datastore::Model::FDataObject::TypeName,
             ParentKey,
             Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
@@ -629,7 +627,7 @@ namespace Gs2::Datastore::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Datastore::Model::FDataObject::TypeName,
             ParentKey,
             Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(

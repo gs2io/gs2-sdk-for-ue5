@@ -27,22 +27,17 @@
 #include "Realtime/Domain/Gs2Realtime.h"
 #include "Realtime/Domain/Model/Namespace.h"
 #include "Realtime/Domain/Model/Room.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Realtime::Domain
 {
 
     FGs2RealtimeDomain::FGs2RealtimeDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Realtime::FGs2RealtimeRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Realtime::FGs2RealtimeRestClient>(Gs2->RestSession)),
         ParentKey("realtime")
     {
     }
@@ -50,10 +45,7 @@ namespace Gs2::Realtime::Domain
     FGs2RealtimeDomain::FGs2RealtimeDomain(
         const FGs2RealtimeDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -96,7 +88,7 @@ namespace Gs2::Realtime::Domain
                 const auto Key = Gs2::Realtime::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Realtime::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -106,10 +98,7 @@ namespace Gs2::Realtime::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Realtime::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -126,7 +115,7 @@ namespace Gs2::Realtime::Domain
     ) const
     {
         return MakeShared<Gs2::Realtime::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -135,7 +124,7 @@ namespace Gs2::Realtime::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Realtime::Model::FNamespace::TypeName,
             "realtime:Namespace",
             Callback
@@ -146,7 +135,7 @@ namespace Gs2::Realtime::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Realtime::Model::FNamespace::TypeName,
             "realtime:Namespace",
             CallbackID
@@ -158,10 +147,7 @@ namespace Gs2::Realtime::Domain
     ) const
     {
         return MakeShared<Gs2::Realtime::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

@@ -26,6 +26,7 @@
 #include "Script/Domain/Model/Namespace.h"
 #include "Script/Domain/Model/Script.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -33,19 +34,13 @@ namespace Gs2::Script::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Script::FGs2ScriptRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Script::FGs2ScriptRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -58,10 +53,7 @@ namespace Gs2::Script::Domain::Model
     FUserDomain::FUserDomain(
         const FUserDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),

@@ -34,6 +34,7 @@
 #include "MegaField/Domain/Model/Spatial.h"
 #include "MegaField/Domain/Model/SpatialAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -41,19 +42,13 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FAreaModelMasterDomain::FAreaModelMasterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> AreaModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AreaModelName(AreaModelName),
         ParentKey(Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -66,10 +61,7 @@ namespace Gs2::MegaField::Domain::Model
     FAreaModelMasterDomain::FAreaModelMasterDomain(
         const FAreaModelMasterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AreaModelName(From.AreaModelName),
@@ -121,7 +113,7 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::MegaField::Model::FAreaModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -183,7 +175,7 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::MegaField::Model::FAreaModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -247,7 +239,7 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::MegaField::Model::FAreaModelMaster::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::MegaField::Model::FAreaModelMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -306,7 +298,7 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FLayerModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::MegaField::Model::FLayerModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -316,10 +308,7 @@ namespace Gs2::MegaField::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::MegaField::Domain::Model::FLayerModelMasterDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             Request->GetAreaModelName(),
             ResultModel->GetItem()->GetName()
@@ -339,7 +328,7 @@ namespace Gs2::MegaField::Domain::Model
     ) const
     {
         return MakeShared<Gs2::MegaField::Domain::Iterator::FDescribeLayerModelMastersIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             AreaModelName
@@ -350,7 +339,7 @@ namespace Gs2::MegaField::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::MegaField::Model::FLayerModelMaster::TypeName,
             Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -365,7 +354,7 @@ namespace Gs2::MegaField::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::MegaField::Model::FLayerModelMaster::TypeName,
             Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -381,10 +370,7 @@ namespace Gs2::MegaField::Domain::Model
     ) const
     {
         return MakeShared<Gs2::MegaField::Domain::Model::FLayerModelMasterDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             AreaModelName,
             LayerModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LayerModelName)
@@ -431,7 +417,7 @@ namespace Gs2::MegaField::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::MegaField::Model::FAreaModelMaster> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::MegaField::Model::FAreaModelMaster>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::MegaField::Model::FAreaModelMaster>(
             Self->ParentKey,
             Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
                 Self->AreaModelName
@@ -453,7 +439,7 @@ namespace Gs2::MegaField::Domain::Model
                 const auto Key = Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
                     Self->AreaModelName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::MegaField::Model::FAreaModelMaster::TypeName,
                     Self->ParentKey,
                     Key,
@@ -466,7 +452,7 @@ namespace Gs2::MegaField::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::MegaField::Model::FAreaModelMaster>(
+            Self->Gs2->Cache->TryGet<Gs2::MegaField::Model::FAreaModelMaster>(
                 Self->ParentKey,
                 Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
                     Self->AreaModelName
@@ -488,7 +474,7 @@ namespace Gs2::MegaField::Domain::Model
         TFunction<void(Gs2::MegaField::Model::FAreaModelMasterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::MegaField::Model::FAreaModelMaster::TypeName,
             ParentKey,
             Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(
@@ -505,7 +491,7 @@ namespace Gs2::MegaField::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::MegaField::Model::FAreaModelMaster::TypeName,
             ParentKey,
             Gs2::MegaField::Domain::Model::FAreaModelMasterDomain::CreateCacheKey(

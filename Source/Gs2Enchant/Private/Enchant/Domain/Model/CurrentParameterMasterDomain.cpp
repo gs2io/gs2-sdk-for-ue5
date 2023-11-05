@@ -36,6 +36,7 @@
 #include "Enchant/Domain/Model/RarityParameterStatus.h"
 #include "Enchant/Domain/Model/RarityParameterStatusAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -43,18 +44,12 @@ namespace Gs2::Enchant::Domain::Model
 {
 
     FCurrentParameterMasterDomain::FCurrentParameterMasterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
             NamespaceName,
@@ -66,10 +61,7 @@ namespace Gs2::Enchant::Domain::Model
     FCurrentParameterMasterDomain::FCurrentParameterMasterDomain(
         const FCurrentParameterMasterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -118,7 +110,7 @@ namespace Gs2::Enchant::Domain::Model
                 );
                 const auto Key = Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enchant::Model::FCurrentParameterMaster::TypeName,
                     ParentKey,
                     Key,
@@ -180,7 +172,7 @@ namespace Gs2::Enchant::Domain::Model
                 );
                 const auto Key = Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enchant::Model::FCurrentParameterMaster::TypeName,
                     ParentKey,
                     Key,
@@ -240,7 +232,7 @@ namespace Gs2::Enchant::Domain::Model
                 );
                 const auto Key = Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enchant::Model::FCurrentParameterMaster::TypeName,
                     ParentKey,
                     Key,
@@ -302,7 +294,7 @@ namespace Gs2::Enchant::Domain::Model
                 );
                 const auto Key = Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enchant::Model::FCurrentParameterMaster::TypeName,
                     ParentKey,
                     Key,
@@ -359,7 +351,7 @@ namespace Gs2::Enchant::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Enchant::Model::FCurrentParameterMaster> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Enchant::Model::FCurrentParameterMaster>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Enchant::Model::FCurrentParameterMaster>(
             Self->ParentKey,
             Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
             ),
@@ -379,7 +371,7 @@ namespace Gs2::Enchant::Domain::Model
 
                 const auto Key = Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enchant::Model::FCurrentParameterMaster::TypeName,
                     Self->ParentKey,
                     Key,
@@ -392,7 +384,7 @@ namespace Gs2::Enchant::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Enchant::Model::FCurrentParameterMaster>(
+            Self->Gs2->Cache->TryGet<Gs2::Enchant::Model::FCurrentParameterMaster>(
                 Self->ParentKey,
                 Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
                 ),
@@ -413,7 +405,7 @@ namespace Gs2::Enchant::Domain::Model
         TFunction<void(Gs2::Enchant::Model::FCurrentParameterMasterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Enchant::Model::FCurrentParameterMaster::TypeName,
             ParentKey,
             Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(
@@ -429,7 +421,7 @@ namespace Gs2::Enchant::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Enchant::Model::FCurrentParameterMaster::TypeName,
             ParentKey,
             Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain::CreateCacheKey(

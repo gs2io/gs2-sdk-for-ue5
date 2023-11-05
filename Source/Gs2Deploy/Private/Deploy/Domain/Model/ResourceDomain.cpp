@@ -28,6 +28,7 @@
 #include "Deploy/Domain/Model/Event.h"
 #include "Deploy/Domain/Model/Output.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -35,19 +36,13 @@ namespace Gs2::Deploy::Domain::Model
 {
 
     FResourceDomain::FResourceDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> StackName,
         const TOptional<FString> ResourceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Gs2->RestSession)),
         StackName(StackName),
         ResourceName(ResourceName),
         ParentKey(Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
@@ -60,10 +55,7 @@ namespace Gs2::Deploy::Domain::Model
     FResourceDomain::FResourceDomain(
         const FResourceDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         StackName(From.StackName),
         ResourceName(From.ResourceName),
@@ -115,7 +107,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FResource::TypeName,
                     ParentKey,
                     Key,
@@ -174,7 +166,7 @@ namespace Gs2::Deploy::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Deploy::Model::FResource> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Deploy::Model::FResource>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Deploy::Model::FResource>(
             Self->ParentKey,
             Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
                 Self->ResourceName
@@ -196,7 +188,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
                     Self->ResourceName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FResource::TypeName,
                     Self->ParentKey,
                     Key,
@@ -209,7 +201,7 @@ namespace Gs2::Deploy::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Deploy::Model::FResource>(
+            Self->Gs2->Cache->TryGet<Gs2::Deploy::Model::FResource>(
                 Self->ParentKey,
                 Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
                     Self->ResourceName
@@ -231,7 +223,7 @@ namespace Gs2::Deploy::Domain::Model
         TFunction<void(Gs2::Deploy::Model::FResourcePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Deploy::Model::FResource::TypeName,
             ParentKey,
             Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(
@@ -248,7 +240,7 @@ namespace Gs2::Deploy::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Deploy::Model::FResource::TypeName,
             ParentKey,
             Gs2::Deploy::Domain::Model::FResourceDomain::CreateCacheKey(

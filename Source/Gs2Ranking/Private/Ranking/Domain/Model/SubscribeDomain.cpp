@@ -40,6 +40,7 @@
 #include "Ranking/Domain/Model/User.h"
 #include "Ranking/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -47,20 +48,14 @@ namespace Gs2::Ranking::Domain::Model
 {
 
     FSubscribeDomain::FSubscribeDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> CategoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Ranking::FGs2RankingRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Ranking::FGs2RankingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         CategoryName(CategoryName),
@@ -75,10 +70,7 @@ namespace Gs2::Ranking::Domain::Model
     FSubscribeDomain::FSubscribeDomain(
         const FSubscribeDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -130,7 +122,7 @@ namespace Gs2::Ranking::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Ranking::Model::FSubscribe> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Ranking::Model::FSubscribe>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FSubscribe>(
             Self->ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeDomain::CreateCacheKey(
                 Self->CategoryName
@@ -150,11 +142,11 @@ namespace Gs2::Ranking::Domain::Model
         TFunction<void(Gs2::Ranking::Model::FSubscribePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Ranking::Model::FSubscribe::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeDomain::CreateCacheKey(
-            CategoryName
+                CategoryName
             ),
             [Callback](TSharedPtr<Gs2Object> obj)
             {
@@ -167,11 +159,11 @@ namespace Gs2::Ranking::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Ranking::Model::FSubscribe::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeDomain::CreateCacheKey(
-            CategoryName
+                CategoryName
             ),
             CallbackID
         );

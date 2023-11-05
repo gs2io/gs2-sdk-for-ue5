@@ -38,6 +38,7 @@
 #include "Mission/Domain/Model/User.h"
 #include "Mission/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -45,20 +46,14 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FCounterDomain::FCounterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> CounterName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         CounterName(CounterName),
@@ -73,10 +68,7 @@ namespace Gs2::Mission::Domain::Model
     FCounterDomain::FCounterDomain(
         const FCounterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -131,14 +123,14 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-                Self->Cache->ClearListCache(
+                Self->Gs2->Cache->ClearListCache(
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
                 );
@@ -201,7 +193,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
@@ -267,7 +259,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
@@ -331,7 +323,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Mission::Model::FCounter::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Mission::Model::FCounter::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -388,7 +380,7 @@ namespace Gs2::Mission::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Mission::Model::FCounter> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Mission::Model::FCounter>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Mission::Model::FCounter>(
             Self->ParentKey,
             Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                 Self->CounterName
@@ -410,7 +402,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     Self->CounterName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Mission::Model::FCounter::TypeName,
                     Self->ParentKey,
                     Key,
@@ -423,7 +415,7 @@ namespace Gs2::Mission::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Mission::Model::FCounter>(
+            Self->Gs2->Cache->TryGet<Gs2::Mission::Model::FCounter>(
                 Self->ParentKey,
                 Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     Self->CounterName
@@ -445,7 +437,7 @@ namespace Gs2::Mission::Domain::Model
         TFunction<void(Gs2::Mission::Model::FCounterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Mission::Model::FCounter::TypeName,
             ParentKey,
             Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
@@ -462,7 +454,7 @@ namespace Gs2::Mission::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Mission::Model::FCounter::TypeName,
             ParentKey,
             Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(

@@ -32,22 +32,17 @@
 #include "Dictionary/Domain/Model/CurrentEntryMaster.h"
 #include "Dictionary/Domain/Model/User.h"
 #include "Dictionary/Domain/Model/UserAccessToken.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Dictionary::Domain
 {
 
     FGs2DictionaryDomain::FGs2DictionaryDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Gs2->RestSession)),
         ParentKey("dictionary")
     {
     }
@@ -55,10 +50,7 @@ namespace Gs2::Dictionary::Domain
     FGs2DictionaryDomain::FGs2DictionaryDomain(
         const FGs2DictionaryDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -101,7 +93,7 @@ namespace Gs2::Dictionary::Domain
                 const auto Key = Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Dictionary::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -111,10 +103,7 @@ namespace Gs2::Dictionary::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Dictionary::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -203,7 +192,13 @@ namespace Gs2::Dictionary::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -333,8 +328,17 @@ namespace Gs2::Dictionary::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -421,7 +425,13 @@ namespace Gs2::Dictionary::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -436,7 +446,7 @@ namespace Gs2::Dictionary::Domain
     ) const
     {
         return MakeShared<Gs2::Dictionary::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -445,7 +455,7 @@ namespace Gs2::Dictionary::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Dictionary::Model::FNamespace::TypeName,
             "dictionary:Namespace",
             Callback
@@ -456,7 +466,7 @@ namespace Gs2::Dictionary::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Dictionary::Model::FNamespace::TypeName,
             "dictionary:Namespace",
             CallbackID
@@ -468,10 +478,7 @@ namespace Gs2::Dictionary::Domain
     ) const
     {
         return MakeShared<Gs2::Dictionary::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -507,7 +514,7 @@ namespace Gs2::Dictionary::Domain
                     const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Cache->Put(
+                    Gs2->Cache->Put(
                         Gs2::Dictionary::Model::FEntry::TypeName,
                         ParentKey,
                         Key,
@@ -550,7 +557,7 @@ namespace Gs2::Dictionary::Domain
                     const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Cache->Delete(
+                    Gs2->Cache->Delete(
                         Gs2::Dictionary::Model::FEntry::TypeName,
                         ParentKey,
                         Key
@@ -616,7 +623,7 @@ namespace Gs2::Dictionary::Domain
                     const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Cache->Put(
+                    Gs2->Cache->Put(
                         Gs2::Dictionary::Model::FEntry::TypeName,
                         ParentKey,
                         Key,

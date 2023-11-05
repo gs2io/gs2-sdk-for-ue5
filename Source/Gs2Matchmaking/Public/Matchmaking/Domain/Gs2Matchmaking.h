@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "Core/Gs2Core.h"
 #include "Core/Domain/Gs2Core.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Matchmaking/Gs2Matchmaking.h"
@@ -55,6 +54,12 @@
 #include "Matchmaking/Model/CompleteNotification.h"
 #include "Matchmaking/Model/ChangeRatingNotification.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Matchmaking::Domain
 {
     DECLARE_EVENT_OneParam(FGs2MatchmakingDomain, FJoinNotificationEvent, Gs2::Matchmaking::Model::FJoinNotificationPtr);
@@ -69,10 +74,7 @@ namespace Gs2::Matchmaking::Domain
         FLeaveNotificationEvent LeaveNotificationEvent;
         FCompleteNotificationEvent CompleteNotificationEvent;
         FChangeRatingNotificationEvent ChangeRatingNotificationEvent;
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client;
 
         public:
@@ -98,10 +100,7 @@ namespace Gs2::Matchmaking::Domain
     public:
 
         FGs2MatchmakingDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+            const Core::Domain::FGs2Ptr Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 

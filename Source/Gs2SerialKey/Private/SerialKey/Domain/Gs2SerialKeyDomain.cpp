@@ -33,22 +33,17 @@
 #include "SerialKey/Domain/Model/CampaignModel.h"
 #include "SerialKey/Domain/Model/CampaignModelMaster.h"
 #include "SerialKey/Domain/Model/CurrentCampaignMaster.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::SerialKey::Domain
 {
 
     FGs2SerialKeyDomain::FGs2SerialKeyDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Gs2->RestSession)),
         ParentKey("serialKey")
     {
     }
@@ -56,10 +51,7 @@ namespace Gs2::SerialKey::Domain
     FGs2SerialKeyDomain::FGs2SerialKeyDomain(
         const FGs2SerialKeyDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -102,7 +94,7 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::SerialKey::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -112,10 +104,7 @@ namespace Gs2::SerialKey::Domain
             }
         }
         auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -204,7 +193,13 @@ namespace Gs2::SerialKey::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -334,8 +329,17 @@ namespace Gs2::SerialKey::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -422,7 +426,13 @@ namespace Gs2::SerialKey::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -437,7 +447,7 @@ namespace Gs2::SerialKey::Domain
     ) const
     {
         return MakeShared<Gs2::SerialKey::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -446,7 +456,7 @@ namespace Gs2::SerialKey::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::SerialKey::Model::FNamespace::TypeName,
             "serialKey:Namespace",
             Callback
@@ -457,7 +467,7 @@ namespace Gs2::SerialKey::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::SerialKey::Model::FNamespace::TypeName,
             "serialKey:Namespace",
             CallbackID
@@ -469,10 +479,7 @@ namespace Gs2::SerialKey::Domain
     ) const
     {
         return MakeShared<Gs2::SerialKey::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -508,7 +515,7 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetCode()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::SerialKey::Model::FSerialKey::TypeName,
                     ParentKey,
                     Key,
@@ -525,7 +532,7 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
                     ResultModel->GetCampaignModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::SerialKey::Model::FCampaignModel::TypeName,
                     ParentKey,
                     Key,
@@ -567,7 +574,7 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetCode()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::SerialKey::Model::FSerialKey::TypeName,
                     ParentKey,
                     Key,
@@ -584,7 +591,7 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
                     ResultModel->GetCampaignModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::SerialKey::Model::FCampaignModel::TypeName,
                     ParentKey,
                     Key,
@@ -634,7 +641,7 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetCode()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::SerialKey::Model::FSerialKey::TypeName,
                     ParentKey,
                     Key,
@@ -651,7 +658,7 @@ namespace Gs2::SerialKey::Domain
                 const auto Key = Gs2::SerialKey::Domain::Model::FCampaignModelDomain::CreateCacheKey(
                     ResultModel->GetCampaignModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::SerialKey::Model::FCampaignModel::TypeName,
                     ParentKey,
                     Key,

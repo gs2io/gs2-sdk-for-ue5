@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "Core/Gs2Core.h"
 #include "Core/Domain/Gs2Core.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Friend/Gs2Friend.h"
@@ -64,6 +63,12 @@
 #include "Friend/Model/AcceptRequestNotification.h"
 #include "Friend/Model/ReceiveRequestNotification.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Friend::Domain
 {
     DECLARE_EVENT_OneParam(FGs2FriendDomain, FFollowNotificationEvent, Gs2::Friend::Model::FFollowNotificationPtr);
@@ -76,10 +81,7 @@ namespace Gs2::Friend::Domain
         FFollowNotificationEvent FollowNotificationEvent;
         FAcceptRequestNotificationEvent AcceptRequestNotificationEvent;
         FReceiveRequestNotificationEvent ReceiveRequestNotificationEvent;
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Friend::FGs2FriendRestClientPtr Client;
 
         public:
@@ -105,10 +107,7 @@ namespace Gs2::Friend::Domain
     public:
 
         FGs2FriendDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+            const Core::Domain::FGs2Ptr Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 

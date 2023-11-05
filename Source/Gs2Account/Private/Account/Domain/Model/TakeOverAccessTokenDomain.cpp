@@ -32,6 +32,7 @@
 #include "Account/Domain/Model/DataOwner.h"
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -39,20 +40,14 @@ namespace Gs2::Account::Domain::Model
 {
 
     FTakeOverAccessTokenDomain::FTakeOverAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const TOptional<int32> Type
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Account::FGs2AccountRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Account::FGs2AccountRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         Type(Type),
@@ -67,10 +62,7 @@ namespace Gs2::Account::Domain::Model
     FTakeOverAccessTokenDomain::FTakeOverAccessTokenDomain(
         const FTakeOverAccessTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -125,7 +117,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FTakeOver::TypeName,
                     ParentKey,
                     Key,
@@ -191,7 +183,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FTakeOver::TypeName,
                     ParentKey,
                     Key,
@@ -255,7 +247,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FTakeOver::TypeName,
                     ParentKey,
                     Key,
@@ -321,7 +313,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetType().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetType()) : TOptional<FString>()
                 );
-                Self->Cache->Delete(Gs2::Account::Model::FTakeOver::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Account::Model::FTakeOver::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -378,7 +370,7 @@ namespace Gs2::Account::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Account::Model::FTakeOver> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Account::Model::FTakeOver>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FTakeOver>(
             Self->ParentKey,
             Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                 Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()
@@ -400,7 +392,7 @@ namespace Gs2::Account::Domain::Model
                 const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                     Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FTakeOver::TypeName,
                     Self->ParentKey,
                     Key,
@@ -413,7 +405,7 @@ namespace Gs2::Account::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Account::Model::FTakeOver>(
+            Self->Gs2->Cache->TryGet<Gs2::Account::Model::FTakeOver>(
                 Self->ParentKey,
                 Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
                     Self->Type.IsSet() ? FString::FromInt(*Self->Type) : TOptional<FString>()
@@ -435,7 +427,7 @@ namespace Gs2::Account::Domain::Model
         TFunction<void(Gs2::Account::Model::FTakeOverPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Account::Model::FTakeOver::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
@@ -452,7 +444,7 @@ namespace Gs2::Account::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Account::Model::FTakeOver::TypeName,
             ParentKey,
             Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(

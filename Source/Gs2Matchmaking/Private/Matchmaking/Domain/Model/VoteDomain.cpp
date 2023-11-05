@@ -37,6 +37,7 @@
 #include "Matchmaking/Domain/Model/User.h"
 #include "Matchmaking/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -44,20 +45,14 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FVoteDomain::FVoteDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RatingName,
         const TOptional<FString> GatheringName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         RatingName(RatingName),
         GatheringName(GatheringName),
@@ -71,10 +66,7 @@ namespace Gs2::Matchmaking::Domain::Model
     FVoteDomain::FVoteDomain(
         const FVoteDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         RatingName(From.RatingName),
@@ -175,7 +167,7 @@ namespace Gs2::Matchmaking::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Matchmaking::Model::FVote> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Matchmaking::Model::FVote>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FVote>(
             Self->ParentKey,
             Gs2::Matchmaking::Domain::Model::FVoteDomain::CreateCacheKey(
                 Self->RatingName,
@@ -196,7 +188,7 @@ namespace Gs2::Matchmaking::Domain::Model
         TFunction<void(Gs2::Matchmaking::Model::FVotePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Matchmaking::Model::FVote::TypeName,
             ParentKey,
             Gs2::Matchmaking::Domain::Model::FVoteDomain::CreateCacheKey(
@@ -214,7 +206,7 @@ namespace Gs2::Matchmaking::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Matchmaking::Model::FVote::TypeName,
             ParentKey,
             Gs2::Matchmaking::Domain::Model::FVoteDomain::CreateCacheKey(

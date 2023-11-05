@@ -26,6 +26,7 @@
 #include "Script/Domain/Model/Namespace.h"
 #include "Script/Domain/Model/Script.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -33,18 +34,12 @@ namespace Gs2::Script::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Script::FGs2ScriptRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Script::FGs2ScriptRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("script:Namespace")
     {
@@ -53,10 +48,7 @@ namespace Gs2::Script::Domain::Model
     FNamespaceDomain::FNamespaceDomain(
         const FNamespaceDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -99,7 +91,13 @@ namespace Gs2::Script::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->Status = Domain->Status = ResultModel->GetStatus();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetStatus().IsSet())
+            {
+                Self->Status = Domain->Status = ResultModel->GetStatus();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -148,7 +146,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Script::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -205,7 +203,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Script::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -264,7 +262,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Script::Model::FNamespace::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Script::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -321,7 +319,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Script::Model::FScript::TypeName,
                     ParentKey,
                     Key,
@@ -331,10 +329,7 @@ namespace Gs2::Script::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -391,7 +386,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Script::Model::FScript::TypeName,
                     ParentKey,
                     Key,
@@ -401,10 +396,7 @@ namespace Gs2::Script::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -452,12 +444,30 @@ namespace Gs2::Script::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->Code = Domain->Code = ResultModel->GetCode();
-        Domain->Result = Domain->Result = ResultModel->GetResult();
-        Domain->Transaction = Domain->Transaction = ResultModel->GetTransaction();
-        Domain->ExecuteTime = Domain->ExecuteTime = ResultModel->GetExecuteTime();
-        Domain->Charged = Domain->Charged = ResultModel->GetCharged();
-        Domain->Output = Domain->Output = ResultModel->GetOutput();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetCode().IsSet())
+            {
+                Self->Code = Domain->Code = ResultModel->GetCode();
+            }
+            if (ResultModel->GetResult().IsSet())
+            {
+                Self->Result = Domain->Result = ResultModel->GetResult();
+            }
+            if (ResultModel->GetTransaction().IsSet())
+            {
+                Self->Transaction = Domain->Transaction = ResultModel->GetTransaction();
+            }
+            if (ResultModel->GetExecuteTime().IsSet())
+            {
+                Self->ExecuteTime = Domain->ExecuteTime = ResultModel->GetExecuteTime();
+            }
+            if (ResultModel->GetCharged().IsSet())
+            {
+                Self->Charged = Domain->Charged = ResultModel->GetCharged();
+            }
+            Self->Output = Domain->Output = ResultModel->GetOutput();
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -501,12 +511,30 @@ namespace Gs2::Script::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->Code = Domain->Code = ResultModel->GetCode();
-        Domain->Result = Domain->Result = ResultModel->GetResult();
-        Domain->Transaction = Domain->Transaction = ResultModel->GetTransaction();
-        Domain->ExecuteTime = Domain->ExecuteTime = ResultModel->GetExecuteTime();
-        Domain->Charged = Domain->Charged = ResultModel->GetCharged();
-        Domain->Output = Domain->Output = ResultModel->GetOutput();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetCode().IsSet())
+            {
+                Self->Code = Domain->Code = ResultModel->GetCode();
+            }
+            if (ResultModel->GetResult().IsSet())
+            {
+                Self->Result = Domain->Result = ResultModel->GetResult();
+            }
+            if (ResultModel->GetTransaction().IsSet())
+            {
+                Self->Transaction = Domain->Transaction = ResultModel->GetTransaction();
+            }
+            if (ResultModel->GetExecuteTime().IsSet())
+            {
+                Self->ExecuteTime = Domain->ExecuteTime = ResultModel->GetExecuteTime();
+            }
+            if (ResultModel->GetCharged().IsSet())
+            {
+                Self->Charged = Domain->Charged = ResultModel->GetCharged();
+            }
+            Self->Output = Domain->Output = ResultModel->GetOutput();
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -521,7 +549,7 @@ namespace Gs2::Script::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Script::Domain::Iterator::FDescribeScriptsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName
         );
@@ -531,7 +559,7 @@ namespace Gs2::Script::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Script::Model::FScript::TypeName,
             Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -545,7 +573,7 @@ namespace Gs2::Script::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Script::Model::FScript::TypeName,
             Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -560,10 +588,7 @@ namespace Gs2::Script::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             ScriptName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ScriptName)
         );
@@ -608,7 +633,7 @@ namespace Gs2::Script::Domain::Model
         const auto ParentKey = FString("script:Namespace");
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Script::Model::FNamespace> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Script::Model::FNamespace>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Script::Model::FNamespace>(
             ParentKey,
             Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 Self->NamespaceName
@@ -630,7 +655,7 @@ namespace Gs2::Script::Domain::Model
                 const auto Key = Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Script::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -643,7 +668,7 @@ namespace Gs2::Script::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Script::Model::FNamespace>(
+            Self->Gs2->Cache->TryGet<Gs2::Script::Model::FNamespace>(
                 ParentKey,
                 Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
@@ -665,7 +690,7 @@ namespace Gs2::Script::Domain::Model
         TFunction<void(Gs2::Script::Model::FNamespacePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Script::Model::FNamespace::TypeName,
             ParentKey,
             Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(
@@ -682,7 +707,7 @@ namespace Gs2::Script::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Script::Model::FNamespace::TypeName,
             ParentKey,
             Gs2::Script::Domain::Model::FNamespaceDomain::CreateCacheKey(

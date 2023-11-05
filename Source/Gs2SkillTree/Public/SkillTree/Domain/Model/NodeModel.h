@@ -25,6 +25,12 @@
 #include "SkillTree/Domain/Iterator/DescribeNodeModelsIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelMastersIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::SkillTree::Domain::Model
 {
     class FNamespaceDomain;
@@ -39,10 +45,7 @@ namespace Gs2::SkillTree::Domain::Model
     class GS2SKILLTREE_API FNodeModelDomain:
         public TSharedFromThis<FNodeModelDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
 
         public:
@@ -55,10 +58,7 @@ namespace Gs2::SkillTree::Domain::Model
     public:
 
         FNodeModelDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> NodeModelName
             // ReSharper disable once CppMemberInitializersOrder

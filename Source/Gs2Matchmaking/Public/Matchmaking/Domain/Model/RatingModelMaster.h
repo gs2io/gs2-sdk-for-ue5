@@ -31,6 +31,12 @@
 #include "Matchmaking/Domain/Iterator/DescribeRatingsIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeRatingsByUserIdIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Matchmaking::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,10 +56,7 @@ namespace Gs2::Matchmaking::Domain::Model
     class GS2MATCHMAKING_API FRatingModelMasterDomain:
         public TSharedFromThis<FRatingModelMasterDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client;
 
         public:
@@ -66,10 +69,7 @@ namespace Gs2::Matchmaking::Domain::Model
     public:
 
         FRatingModelMasterDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> RatingName
             // ReSharper disable once CppMemberInitializersOrder

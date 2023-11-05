@@ -44,6 +44,7 @@
 #include "Friend/Domain/Model/PublicProfileAccessToken.h"
 #include "Friend/Domain/Model/FriendRequest.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -51,20 +52,14 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FSendFriendRequestDomain::FSendFriendRequestDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TargetUserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         TargetUserId(TargetUserId),
@@ -79,10 +74,7 @@ namespace Gs2::Friend::Domain::Model
     FSendFriendRequestDomain::FSendFriendRequestDomain(
         const FSendFriendRequestDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -137,7 +129,7 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTargetUserId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Friend::Model::FFriendRequest::TypeName,
                     ParentKey,
                     Key,
@@ -201,14 +193,11 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTargetUserId()
                 );
-                Self->Cache->Delete(Gs2::Friend::Model::FFriendRequest::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Friend::Model::FFriendRequest::TypeName, ParentKey, Key);
             }
         }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetTargetUserId()
@@ -266,7 +255,7 @@ namespace Gs2::Friend::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Friend::Model::FFriendRequest> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
             Self->ParentKey,
             Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
                 Self->TargetUserId
@@ -288,7 +277,7 @@ namespace Gs2::Friend::Domain::Model
                 const auto Key = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
                     Self->TargetUserId
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Friend::Model::FFriendRequest::TypeName,
                     Self->ParentKey,
                     Key,
@@ -301,7 +290,7 @@ namespace Gs2::Friend::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
+            Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
                 Self->ParentKey,
                 Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
                     Self->TargetUserId
@@ -323,7 +312,7 @@ namespace Gs2::Friend::Domain::Model
         TFunction<void(Gs2::Friend::Model::FFriendRequestPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Friend::Model::FFriendRequest::TypeName,
             ParentKey,
             Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
@@ -340,7 +329,7 @@ namespace Gs2::Friend::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Friend::Model::FFriendRequest::TypeName,
             ParentKey,
             Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(

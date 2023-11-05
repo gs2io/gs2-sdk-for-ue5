@@ -38,6 +38,7 @@
 #include "Mission/Domain/Model/User.h"
 #include "Mission/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -45,19 +46,13 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FMissionGroupModelDomain::FMissionGroupModelDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> MissionGroupName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         MissionGroupName(MissionGroupName),
         ParentKey(Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -70,10 +65,7 @@ namespace Gs2::Mission::Domain::Model
     FMissionGroupModelDomain::FMissionGroupModelDomain(
         const FMissionGroupModelDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         MissionGroupName(From.MissionGroupName),
@@ -125,7 +117,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Mission::Model::FMissionGroupModel::TypeName,
                     ParentKey,
                     Key,
@@ -148,7 +140,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeMissionTaskModelsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             MissionGroupName
@@ -159,7 +151,7 @@ namespace Gs2::Mission::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Mission::Model::FMissionTaskModel::TypeName,
             Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -174,7 +166,7 @@ namespace Gs2::Mission::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Mission::Model::FMissionTaskModel::TypeName,
             Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -190,10 +182,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Model::FMissionTaskModelDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             MissionGroupName,
             MissionTaskName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MissionTaskName)
@@ -240,7 +229,7 @@ namespace Gs2::Mission::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Mission::Model::FMissionGroupModel> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Mission::Model::FMissionGroupModel>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Mission::Model::FMissionGroupModel>(
             Self->ParentKey,
             Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheKey(
                 Self->MissionGroupName
@@ -262,7 +251,7 @@ namespace Gs2::Mission::Domain::Model
                 const auto Key = Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheKey(
                     Self->MissionGroupName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Mission::Model::FMissionGroupModel::TypeName,
                     Self->ParentKey,
                     Key,
@@ -275,7 +264,7 @@ namespace Gs2::Mission::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Mission::Model::FMissionGroupModel>(
+            Self->Gs2->Cache->TryGet<Gs2::Mission::Model::FMissionGroupModel>(
                 Self->ParentKey,
                 Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheKey(
                     Self->MissionGroupName
@@ -297,7 +286,7 @@ namespace Gs2::Mission::Domain::Model
         TFunction<void(Gs2::Mission::Model::FMissionGroupModelPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Mission::Model::FMissionGroupModel::TypeName,
             ParentKey,
             Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheKey(
@@ -314,7 +303,7 @@ namespace Gs2::Mission::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Mission::Model::FMissionGroupModel::TypeName,
             ParentKey,
             Gs2::Mission::Domain::Model::FMissionGroupModelDomain::CreateCacheKey(

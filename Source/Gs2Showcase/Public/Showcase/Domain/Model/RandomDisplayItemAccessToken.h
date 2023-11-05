@@ -31,6 +31,12 @@
 #include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsIterator.h"
 #include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsByUserIdIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Showcase::Domain::Model
 {
     class FNamespaceDomain;
@@ -55,10 +61,7 @@ namespace Gs2::Showcase::Domain::Model
     class GS2SHOWCASE_API FRandomDisplayItemAccessTokenDomain:
         public TSharedFromThis<FRandomDisplayItemAccessTokenDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
@@ -84,10 +87,7 @@ namespace Gs2::Showcase::Domain::Model
     public:
 
         FRandomDisplayItemAccessTokenDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
             const TOptional<FString> ShowcaseName,

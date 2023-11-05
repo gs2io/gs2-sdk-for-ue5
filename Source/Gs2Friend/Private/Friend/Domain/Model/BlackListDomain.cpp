@@ -44,6 +44,7 @@
 #include "Friend/Domain/Model/PublicProfileAccessToken.h"
 #include "Friend/Domain/Model/FriendRequest.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -51,19 +52,13 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FBlackListDomain::FBlackListDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -77,10 +72,7 @@ namespace Gs2::Friend::Domain::Model
     FBlackListDomain::FBlackListDomain(
         const FBlackListDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -132,7 +124,7 @@ namespace Gs2::Friend::Domain::Model
                 );
                 const auto Key = Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Friend::Model::FBlackList::TypeName,
                     ParentKey,
                     Key,
@@ -140,7 +132,7 @@ namespace Gs2::Friend::Domain::Model
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
-            Self->Cache->ClearListCache(
+            Self->Gs2->Cache->ClearListCache(
                 Gs2::Friend::Model::FBlackListEntry::TypeName,
                 Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
@@ -204,7 +196,7 @@ namespace Gs2::Friend::Domain::Model
                 );
                 const auto Key = Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Friend::Model::FBlackList::TypeName,
                     ParentKey,
                     Key,
@@ -212,7 +204,7 @@ namespace Gs2::Friend::Domain::Model
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
-            Self->Cache->ClearListCache(
+            Self->Gs2->Cache->ClearListCache(
                 Gs2::Friend::Model::FBlackListEntry::TypeName,
                 Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
@@ -271,7 +263,7 @@ namespace Gs2::Friend::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Friend::Model::FBlackList> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Friend::Model::FBlackList>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FBlackList>(
             Self->ParentKey,
             Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
             ),
@@ -290,7 +282,7 @@ namespace Gs2::Friend::Domain::Model
         TFunction<void(Gs2::Friend::Model::FBlackListPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Friend::Model::FBlackList::TypeName,
             ParentKey,
             Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
@@ -306,7 +298,7 @@ namespace Gs2::Friend::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Friend::Model::FBlackList::TypeName,
             ParentKey,
             Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(

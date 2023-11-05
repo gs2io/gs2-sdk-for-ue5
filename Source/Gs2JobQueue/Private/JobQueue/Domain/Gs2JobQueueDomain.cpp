@@ -31,24 +31,19 @@
 #include "JobQueue/Domain/Model/DeadLetterJob.h"
 #include "JobQueue/Domain/Model/User.h"
 #include "JobQueue/Domain/Model/UserAccessToken.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::JobQueue::Domain
 {
 
     FGs2JobQueueDomain::FGs2JobQueueDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         CopiedCompletedJobs(MakeShared<TArray<Gs2::JobQueue::Model::FRunNotificationPtr>>()),
         CopiedCompletedJobsMutex(MakeShared<FCriticalSection>()),
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
         ParentKey("jobQueue")
     {
         OnPushNotification().AddLambda([&](
@@ -57,7 +52,7 @@ namespace Gs2::JobQueue::Domain
         {
             if (Notification->GetNamespaceName().IsSet())
             {
-                this->JobQueueDomain->Push(Notification->GetNamespaceName().GetValue());
+                this->Gs2->JobQueueDomain->Push(Notification->GetNamespaceName().GetValue());
             }
         });
     }
@@ -67,10 +62,7 @@ namespace Gs2::JobQueue::Domain
     ):
         CopiedCompletedJobs(From.CopiedCompletedJobs),
         CopiedCompletedJobsMutex(From.CopiedCompletedJobsMutex),
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -113,7 +105,7 @@ namespace Gs2::JobQueue::Domain
                 const auto Key = Gs2::JobQueue::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::JobQueue::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -123,10 +115,7 @@ namespace Gs2::JobQueue::Domain
             }
         }
         auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -215,7 +204,13 @@ namespace Gs2::JobQueue::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -345,8 +340,17 @@ namespace Gs2::JobQueue::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -433,7 +437,13 @@ namespace Gs2::JobQueue::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -448,7 +458,7 @@ namespace Gs2::JobQueue::Domain
     ) const
     {
         return MakeShared<Gs2::JobQueue::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -457,7 +467,7 @@ namespace Gs2::JobQueue::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::JobQueue::Model::FNamespace::TypeName,
             "jobQueue:Namespace",
             Callback
@@ -468,7 +478,7 @@ namespace Gs2::JobQueue::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::JobQueue::Model::FNamespace::TypeName,
             "jobQueue:Namespace",
             CallbackID
@@ -480,10 +490,7 @@ namespace Gs2::JobQueue::Domain
     ) const
     {
         return MakeShared<Gs2::JobQueue::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -519,7 +526,7 @@ namespace Gs2::JobQueue::Domain
                     const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Cache->Put(
+                    Gs2->Cache->Put(
                         Gs2::JobQueue::Model::FJob::TypeName,
                         ParentKey,
                         Key,
@@ -565,7 +572,7 @@ namespace Gs2::JobQueue::Domain
                 const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Delete(Gs2::JobQueue::Model::FJob::TypeName, ParentKey, Key);
+                Gs2->Cache->Delete(Gs2::JobQueue::Model::FJob::TypeName, ParentKey, Key);
             }
         }
     }
@@ -609,7 +616,7 @@ namespace Gs2::JobQueue::Domain
                     const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Cache->Put(
+                    Gs2->Cache->Put(
                         Gs2::JobQueue::Model::FJob::TypeName,
                         ParentKey,
                         Key,
@@ -685,7 +692,7 @@ namespace Gs2::JobQueue::Domain
                 }
 
                 const auto Client = MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(
-                    Self->Session
+                    Self->Gs2->RestSession
                 );
                 for (auto CompletedJob : CopiedCopiedCompletedJobsTemp)
                 {
@@ -703,7 +710,7 @@ namespace Gs2::JobQueue::Domain
                     const auto Result = Future->GetTask().Result();
                     if (Result != nullptr)
                     {
-                        Self->JobQueueDomain->OnExecutedEvent().Broadcast(
+                        Self->Gs2->JobQueueDomain->OnExecutedEvent().Broadcast(
                             MakeShared<Gs2::JobQueue::Model::FJob>()
                                 ->WithScriptId(Result->GetItem()->GetScriptId())
                                 ->WithArgs(Result->GetItem()->GetArgs()),

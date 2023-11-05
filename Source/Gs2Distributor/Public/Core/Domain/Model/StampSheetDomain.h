@@ -29,7 +29,7 @@ namespace Gs2::Core::Domain::Model
     {
         Gs2::Core::Domain::FCacheDatabasePtr Cache;
         Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Net::Rest::FGs2RestSessionPtr Session;
+        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
         FString StampSheet;
         FString StampSheetEncryptionKeyId;
         FStampSheetConfigurationPtr StampSheetConfiguration;

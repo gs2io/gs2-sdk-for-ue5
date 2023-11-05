@@ -35,6 +35,7 @@
 #include "LoginReward/Domain/Model/ReceiveStatus.h"
 #include "LoginReward/Domain/Model/ReceiveStatusAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -42,20 +43,14 @@ namespace Gs2::LoginReward::Domain::Model
 {
 
     FReceiveStatusAccessTokenDomain::FReceiveStatusAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const TOptional<FString> BonusModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         BonusModelName(BonusModelName),
@@ -70,10 +65,7 @@ namespace Gs2::LoginReward::Domain::Model
     FReceiveStatusAccessTokenDomain::FReceiveStatusAccessTokenDomain(
         const FReceiveStatusAccessTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -128,7 +120,7 @@ namespace Gs2::LoginReward::Domain::Model
                 const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetBonusModelName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FReceiveStatus::TypeName,
                     ParentKey,
                     Key,
@@ -145,7 +137,7 @@ namespace Gs2::LoginReward::Domain::Model
                 const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
                     ResultModel->GetBonusModel()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FBonusModel::TypeName,
                     ParentKey,
                     Key,
@@ -209,7 +201,7 @@ namespace Gs2::LoginReward::Domain::Model
                 const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetBonusModelName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FReceiveStatus::TypeName,
                     ParentKey,
                     Key,
@@ -226,7 +218,7 @@ namespace Gs2::LoginReward::Domain::Model
                 const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
                     ResultModel->GetBonusModel()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FBonusModel::TypeName,
                     ParentKey,
                     Key,
@@ -289,7 +281,7 @@ namespace Gs2::LoginReward::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::LoginReward::Model::FReceiveStatus> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::LoginReward::Model::FReceiveStatus>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::LoginReward::Model::FReceiveStatus>(
             Self->ParentKey,
             Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                 Self->BonusModelName
@@ -311,7 +303,7 @@ namespace Gs2::LoginReward::Domain::Model
                 const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                     Self->BonusModelName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FReceiveStatus::TypeName,
                     Self->ParentKey,
                     Key,
@@ -324,7 +316,7 @@ namespace Gs2::LoginReward::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::LoginReward::Model::FReceiveStatus>(
+            Self->Gs2->Cache->TryGet<Gs2::LoginReward::Model::FReceiveStatus>(
                 Self->ParentKey,
                 Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                     Self->BonusModelName
@@ -346,7 +338,7 @@ namespace Gs2::LoginReward::Domain::Model
         TFunction<void(Gs2::LoginReward::Model::FReceiveStatusPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::LoginReward::Model::FReceiveStatus::TypeName,
             ParentKey,
             Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
@@ -363,7 +355,7 @@ namespace Gs2::LoginReward::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::LoginReward::Model::FReceiveStatus::TypeName,
             ParentKey,
             Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(

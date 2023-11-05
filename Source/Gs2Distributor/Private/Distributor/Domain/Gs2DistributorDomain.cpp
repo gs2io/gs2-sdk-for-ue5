@@ -33,24 +33,19 @@
 #include "Distributor/Domain/Model/User.h"
 #include "Distributor/Domain/Model/UserAccessToken.h"
 #include "Distributor/Domain/Model/StampSheetResult.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Distributor::Domain
 {
 
     FGs2DistributorDomain::FGs2DistributorDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         CompletedStampSheets(MakeShared<TArray<Gs2::Distributor::Model::FAutoRunStampSheetNotificationPtr>>()),
         CompletedStampSheetsMutex(MakeShared<FCriticalSection>()),
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Gs2->RestSession)),
         ParentKey("distributor")
     {
     }
@@ -61,10 +56,7 @@ namespace Gs2::Distributor::Domain
         CompletedStampSheets(From.CompletedStampSheets),
         CompletedStampSheetsMutex(From.CompletedStampSheetsMutex),
         AutoRunStampSheetNotificationEvent(From.AutoRunStampSheetNotificationEvent),
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -107,7 +99,7 @@ namespace Gs2::Distributor::Domain
                 const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Distributor::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -117,10 +109,7 @@ namespace Gs2::Distributor::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Distributor::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -137,7 +126,7 @@ namespace Gs2::Distributor::Domain
     ) const
     {
         return MakeShared<Gs2::Distributor::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -146,7 +135,7 @@ namespace Gs2::Distributor::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Distributor::Model::FNamespace::TypeName,
             "distributor:Namespace",
             Callback
@@ -157,7 +146,7 @@ namespace Gs2::Distributor::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Distributor::Model::FNamespace::TypeName,
             "distributor:Namespace",
             CallbackID
@@ -169,10 +158,7 @@ namespace Gs2::Distributor::Domain
     ) const
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -251,13 +237,13 @@ namespace Gs2::Distributor::Domain
                         continue;
                     }
                     const auto Future = MakeShared<Gs2::Core::Domain::Model::FAutoStampSheetDomain>(
-                        Self->Cache,
-                        Self->JobQueueDomain,
-                        Self->Session,
+                        Self->Gs2->Cache,
+                        Self->Gs2->JobQueueDomain,
+                        Self->Gs2->RestSession,
                         AccessToken,
                         *CompletedStampSheet->GetNamespaceName(),
                         *CompletedStampSheet->GetTransactionId(),
-                        Self->StampSheetConfiguration
+                        Self->Gs2->StampSheetConfiguration
                     )->Run();
                     Future->StartSynchronousTask();
                     if (Future->GetTask().IsError())

@@ -42,6 +42,7 @@
 #include "Showcase/Domain/Model/RandomDisplayItem.h"
 #include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -49,19 +50,13 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FSalesItemGroupMasterDomain::FSalesItemGroupMasterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> SalesItemGroupName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         SalesItemGroupName(SalesItemGroupName),
         ParentKey(Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -74,10 +69,7 @@ namespace Gs2::Showcase::Domain::Model
     FSalesItemGroupMasterDomain::FSalesItemGroupMasterDomain(
         const FSalesItemGroupMasterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         SalesItemGroupName(From.SalesItemGroupName),
@@ -129,7 +121,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
                     ParentKey,
                     Key,
@@ -191,7 +183,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
                     ParentKey,
                     Key,
@@ -255,7 +247,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -310,7 +302,7 @@ namespace Gs2::Showcase::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Showcase::Model::FSalesItemGroupMaster> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Showcase::Model::FSalesItemGroupMaster>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FSalesItemGroupMaster>(
             Self->ParentKey,
             Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                 Self->SalesItemGroupName
@@ -332,7 +324,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                     Self->SalesItemGroupName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
                     Self->ParentKey,
                     Key,
@@ -345,7 +337,7 @@ namespace Gs2::Showcase::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Showcase::Model::FSalesItemGroupMaster>(
+            Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FSalesItemGroupMaster>(
                 Self->ParentKey,
                 Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
                     Self->SalesItemGroupName
@@ -367,7 +359,7 @@ namespace Gs2::Showcase::Domain::Model
         TFunction<void(Gs2::Showcase::Model::FSalesItemGroupMasterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
             ParentKey,
             Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(
@@ -384,7 +376,7 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Showcase::Model::FSalesItemGroupMaster::TypeName,
             ParentKey,
             Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain::CreateCacheKey(

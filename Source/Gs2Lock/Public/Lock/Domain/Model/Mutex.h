@@ -25,6 +25,12 @@
 #include "Lock/Domain/Iterator/DescribeMutexesIterator.h"
 #include "Lock/Domain/Iterator/DescribeMutexesByUserIdIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Lock::Domain::Model
 {
     class FNamespaceDomain;
@@ -36,10 +42,7 @@ namespace Gs2::Lock::Domain::Model
     class GS2LOCK_API FMutexDomain:
         public TSharedFromThis<FMutexDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Lock::FGs2LockRestClientPtr Client;
 
         public:
@@ -53,10 +56,7 @@ namespace Gs2::Lock::Domain::Model
     public:
 
         FMutexDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> PropertyId

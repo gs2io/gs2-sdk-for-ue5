@@ -31,6 +31,7 @@
 #include "Money/Domain/Model/Receipt.h"
 #include "Money/Domain/Model/ReceiptAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -38,19 +39,13 @@ namespace Gs2::Money::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Money::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -63,10 +58,7 @@ namespace Gs2::Money::Domain::Model
     FUserDomain::FUserDomain(
         const FUserDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -119,7 +111,7 @@ namespace Gs2::Money::Domain::Model
                 const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTransactionId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Money::Model::FReceipt::TypeName,
                     ParentKey,
                     Key,
@@ -129,10 +121,7 @@ namespace Gs2::Money::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetTransactionId()
@@ -192,7 +181,7 @@ namespace Gs2::Money::Domain::Model
                 const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetTransactionId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Money::Model::FReceipt::TypeName,
                     ParentKey,
                     Key,
@@ -202,10 +191,7 @@ namespace Gs2::Money::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetTransactionId()
@@ -225,7 +211,7 @@ namespace Gs2::Money::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             UserId
@@ -236,7 +222,7 @@ namespace Gs2::Money::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Money::Model::FWallet::TypeName,
             Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -251,7 +237,7 @@ namespace Gs2::Money::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Money::Model::FWallet::TypeName,
             Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -267,10 +253,7 @@ namespace Gs2::Money::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Model::FWalletDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             Slot
@@ -284,7 +267,7 @@ namespace Gs2::Money::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Iterator::FDescribeReceiptsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             UserId,
@@ -298,7 +281,7 @@ namespace Gs2::Money::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Money::Model::FReceipt::TypeName,
             Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -313,7 +296,7 @@ namespace Gs2::Money::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Money::Model::FReceipt::TypeName,
             Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -329,10 +312,7 @@ namespace Gs2::Money::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)

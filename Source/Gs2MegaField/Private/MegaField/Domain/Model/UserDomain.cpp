@@ -36,6 +36,7 @@
 #include "MegaField/Domain/Model/Spatial.h"
 #include "MegaField/Domain/Model/SpatialAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -43,19 +44,13 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -68,10 +63,7 @@ namespace Gs2::MegaField::Domain::Model
     FUserDomain::FUserDomain(
         const FUserDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -124,7 +116,7 @@ namespace Gs2::MegaField::Domain::Model
                         Item->GetAreaModelName(),
                         Item->GetLayerModelName()
                     );
-                    Self->Cache->Put(
+                    Self->Gs2->Cache->Put(
                         Gs2::MegaField::Model::FSpatial::TypeName,
                         ParentKey,
                         Key,
@@ -139,10 +131,7 @@ namespace Gs2::MegaField::Domain::Model
         {
             Domain->Add(
                 MakeShared<Gs2::MegaField::Domain::Model::FSpatialDomain>(
-                    Self->Cache,
-                    Self->JobQueueDomain,
-                    Self->StampSheetConfiguration,
-                    Self->Session,
+                    Self->Gs2,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItems())[i]->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetAreaModelName(),
@@ -158,13 +147,16 @@ namespace Gs2::MegaField::Domain::Model
                 (*ResultModel->GetItems())[i]->GetAreaModelName(),
                 (*ResultModel->GetItems())[i]->GetLayerModelName()
             );
-            Self->Cache->Put(
+            Self->Gs2->Cache->Put(
                 Gs2::MegaField::Model::FSpatial::TypeName,
                 ParentKey,
                 Key,
                 (*ResultModel->GetItems())[i],
                 FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
             );
+        }
+        if (ResultModel != nullptr)
+        {
         }
         *Result = Domain;
         return nullptr;
@@ -215,16 +207,16 @@ namespace Gs2::MegaField::Domain::Model
         {
             Domain->Add(
                 MakeShared<Gs2::MegaField::Domain::Model::FSpatialDomain>(
-                    Self->Cache,
-                    Self->JobQueueDomain,
-                    Self->StampSheetConfiguration,
-                    Self->Session,
+                    Self->Gs2,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItems())[i],
                     RequestModel->GetAreaModelName(),
                     RequestModel->GetLayerModelName()
                 )
             );
+        }
+        if (ResultModel != nullptr)
+        {
         }
         *Result = Domain;
         return nullptr;
@@ -242,10 +234,7 @@ namespace Gs2::MegaField::Domain::Model
     ) const
     {
         return MakeShared<Gs2::MegaField::Domain::Model::FSpatialDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             AreaModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AreaModelName),

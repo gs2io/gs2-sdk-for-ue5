@@ -35,6 +35,7 @@
 #include "Stamina/Domain/Model/User.h"
 #include "Stamina/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -42,17 +43,11 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FMaxStaminaTableDomain::FMaxStaminaTableDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         ParentKey("stamina:MaxStaminaTable")
     {
     }
@@ -60,10 +55,7 @@ namespace Gs2::Stamina::Domain::Model
     FMaxStaminaTableDomain::FMaxStaminaTableDomain(
         const FMaxStaminaTableDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -104,7 +96,7 @@ namespace Gs2::Stamina::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Stamina::Model::FMaxStaminaTable> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Stamina::Model::FMaxStaminaTable>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Stamina::Model::FMaxStaminaTable>(
             Self->ParentKey,
             Gs2::Stamina::Domain::Model::FMaxStaminaTableDomain::CreateCacheKey(
             ),
@@ -123,7 +115,7 @@ namespace Gs2::Stamina::Domain::Model
         TFunction<void(Gs2::Stamina::Model::FMaxStaminaTablePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Stamina::Model::FMaxStaminaTable::TypeName,
             ParentKey,
             Gs2::Stamina::Domain::Model::FMaxStaminaTableDomain::CreateCacheKey(
@@ -139,7 +131,7 @@ namespace Gs2::Stamina::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Stamina::Model::FMaxStaminaTable::TypeName,
             ParentKey,
             Gs2::Stamina::Domain::Model::FMaxStaminaTableDomain::CreateCacheKey(

@@ -34,6 +34,7 @@
 #include "MegaField/Domain/Model/Spatial.h"
 #include "MegaField/Domain/Model/SpatialAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -41,21 +42,15 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FSpatialDomain::FSpatialDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> AreaModelName,
         const TOptional<FString> LayerModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         AreaModelName(AreaModelName),
@@ -71,10 +66,7 @@ namespace Gs2::MegaField::Domain::Model
     FSpatialDomain::FSpatialDomain(
         const FSpatialDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -132,7 +124,7 @@ namespace Gs2::MegaField::Domain::Model
                     ResultModel->GetItem()->GetAreaModelName(),
                     ResultModel->GetItem()->GetLayerModelName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::MegaField::Model::FSpatial::TypeName,
                     ParentKey,
                     Key,
@@ -200,7 +192,7 @@ namespace Gs2::MegaField::Domain::Model
                         Item->GetAreaModelName(),
                         Item->GetLayerModelName()
                     );
-                    Self->Cache->Put(
+                    Self->Gs2->Cache->Put(
                         Gs2::MegaField::Model::FSpatial::TypeName,
                         ParentKey,
                         Key,
@@ -215,10 +207,7 @@ namespace Gs2::MegaField::Domain::Model
         {
             Domain->Add(
                 MakeShared<Gs2::MegaField::Domain::Model::FSpatialDomain>(
-                    Self->Cache,
-                    Self->JobQueueDomain,
-                    Self->StampSheetConfiguration,
-                    Self->Session,
+                    Self->Gs2,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItems())[i]->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetAreaModelName(),
@@ -234,7 +223,7 @@ namespace Gs2::MegaField::Domain::Model
                 (*ResultModel->GetItems())[i]->GetAreaModelName(),
                 (*ResultModel->GetItems())[i]->GetLayerModelName()
             );
-            Self->Cache->Put(
+            Self->Gs2->Cache->Put(
                 Gs2::MegaField::Model::FSpatial::TypeName,
                 ParentKey,
                 Key,
@@ -298,7 +287,7 @@ namespace Gs2::MegaField::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::MegaField::Model::FSpatial> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::MegaField::Model::FSpatial>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::MegaField::Model::FSpatial>(
             Self->ParentKey,
             Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
                 Self->AreaModelName,
@@ -319,7 +308,7 @@ namespace Gs2::MegaField::Domain::Model
         TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::MegaField::Model::FSpatial::TypeName,
             ParentKey,
             Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
@@ -337,7 +326,7 @@ namespace Gs2::MegaField::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::MegaField::Model::FSpatial::TypeName,
             ParentKey,
             Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(

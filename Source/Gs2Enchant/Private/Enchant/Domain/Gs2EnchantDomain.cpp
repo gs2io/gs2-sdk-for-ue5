@@ -35,22 +35,17 @@
 #include "Enchant/Domain/Model/UserAccessToken.h"
 #include "Enchant/Domain/Model/BalanceParameterStatus.h"
 #include "Enchant/Domain/Model/RarityParameterStatus.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Enchant::Domain
 {
 
     FGs2EnchantDomain::FGs2EnchantDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         ParentKey("enchant")
     {
     }
@@ -58,10 +53,7 @@ namespace Gs2::Enchant::Domain
     FGs2EnchantDomain::FGs2EnchantDomain(
         const FGs2EnchantDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -104,7 +96,7 @@ namespace Gs2::Enchant::Domain
                 const auto Key = Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enchant::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -114,10 +106,7 @@ namespace Gs2::Enchant::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Enchant::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -206,7 +195,13 @@ namespace Gs2::Enchant::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -336,8 +331,17 @@ namespace Gs2::Enchant::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -424,7 +428,13 @@ namespace Gs2::Enchant::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -439,7 +449,7 @@ namespace Gs2::Enchant::Domain
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -448,7 +458,7 @@ namespace Gs2::Enchant::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Enchant::Model::FNamespace::TypeName,
             "enchant:Namespace",
             Callback
@@ -459,7 +469,7 @@ namespace Gs2::Enchant::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Enchant::Model::FNamespace::TypeName,
             "enchant:Namespace",
             CallbackID
@@ -471,10 +481,7 @@ namespace Gs2::Enchant::Domain
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -511,7 +518,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -547,7 +554,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -583,7 +590,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -619,7 +626,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -655,7 +662,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -698,7 +705,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -749,7 +756,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -793,7 +800,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -837,7 +844,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -881,7 +888,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
                     ParentKey,
                     Key,
@@ -925,7 +932,7 @@ namespace Gs2::Enchant::Domain
                     ResultModel->GetItem()->GetParameterName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
                     ParentKey,
                     Key,

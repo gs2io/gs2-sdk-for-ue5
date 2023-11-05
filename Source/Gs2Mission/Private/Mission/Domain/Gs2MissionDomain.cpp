@@ -37,22 +37,17 @@
 #include "Mission/Domain/Model/MissionTaskModelMaster.h"
 #include "Mission/Domain/Model/User.h"
 #include "Mission/Domain/Model/UserAccessToken.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Mission::Domain
 {
 
     FGs2MissionDomain::FGs2MissionDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         ParentKey("mission")
     {
     }
@@ -60,10 +55,7 @@ namespace Gs2::Mission::Domain
     FGs2MissionDomain::FGs2MissionDomain(
         const FGs2MissionDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -106,7 +98,7 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Mission::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -116,10 +108,7 @@ namespace Gs2::Mission::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Mission::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -208,7 +197,13 @@ namespace Gs2::Mission::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -338,8 +333,17 @@ namespace Gs2::Mission::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -426,7 +430,13 @@ namespace Gs2::Mission::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -441,7 +451,7 @@ namespace Gs2::Mission::Domain
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -450,7 +460,7 @@ namespace Gs2::Mission::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Mission::Model::FNamespace::TypeName,
             "mission:Namespace",
             Callback
@@ -461,7 +471,7 @@ namespace Gs2::Mission::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Mission::Model::FNamespace::TypeName,
             "mission:Namespace",
             CallbackID
@@ -473,10 +483,7 @@ namespace Gs2::Mission::Domain
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -512,7 +519,7 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetMissionGroupName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey,
                     Key,
@@ -547,14 +554,14 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-                Cache->ClearListCache(
+                Gs2->Cache->ClearListCache(
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
                 );
@@ -593,7 +600,7 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetMissionGroupName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey,
                     Key,
@@ -628,7 +635,7 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
@@ -678,7 +685,7 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetMissionGroupName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey,
                     Key,
@@ -721,14 +728,14 @@ namespace Gs2::Mission::Domain
                 const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Mission::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
-                Cache->ClearListCache(
+                Gs2->Cache->ClearListCache(
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
                 );

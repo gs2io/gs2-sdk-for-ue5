@@ -38,22 +38,17 @@
 #include "Formation/Domain/Model/PropertyForm.h"
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Domain/Model/UserAccessToken.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Formation::Domain
 {
 
     FGs2FormationDomain::FGs2FormationDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         ParentKey("formation")
     {
     }
@@ -61,10 +56,7 @@ namespace Gs2::Formation::Domain
     FGs2FormationDomain::FGs2FormationDomain(
         const FGs2FormationDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -107,7 +99,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -117,10 +109,7 @@ namespace Gs2::Formation::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Formation::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -209,7 +198,13 @@ namespace Gs2::Formation::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -339,8 +334,17 @@ namespace Gs2::Formation::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -427,7 +431,13 @@ namespace Gs2::Formation::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -442,7 +452,7 @@ namespace Gs2::Formation::Domain
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -451,7 +461,7 @@ namespace Gs2::Formation::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Formation::Model::FNamespace::TypeName,
             "formation:Namespace",
             Callback
@@ -462,7 +472,7 @@ namespace Gs2::Formation::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Formation::Model::FNamespace::TypeName,
             "formation:Namespace",
             CallbackID
@@ -474,10 +484,7 @@ namespace Gs2::Formation::Domain
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -513,7 +520,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
@@ -530,7 +537,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
@@ -565,7 +572,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
@@ -582,7 +589,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
@@ -618,7 +625,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FForm::TypeName,
                     ParentKey,
                     Key,
@@ -636,7 +643,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetMold()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
@@ -672,7 +679,7 @@ namespace Gs2::Formation::Domain
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,
@@ -714,7 +721,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
@@ -731,7 +738,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
@@ -781,7 +788,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
@@ -798,7 +805,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
@@ -841,7 +848,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
@@ -858,7 +865,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
                     ResultModel->GetMoldModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMoldModel::TypeName,
                     ParentKey,
                     Key,
@@ -902,7 +909,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FForm::TypeName,
                     ParentKey,
                     Key,
@@ -920,7 +927,7 @@ namespace Gs2::Formation::Domain
                 const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
                     ResultModel->GetMold()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FMold::TypeName,
                     ParentKey,
                     Key,
@@ -964,7 +971,7 @@ namespace Gs2::Formation::Domain
                     ResultModel->GetItem()->GetName(),
                     RequestModel->GetPropertyId()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyForm::TypeName,
                     ParentKey,
                     Key,

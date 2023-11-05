@@ -48,6 +48,12 @@
 #include "Inventory/Domain/Iterator/DescribeBigItemsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeBigItemsByUserIdIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Inventory::Domain::Model
 {
     class FNamespaceDomain;
@@ -84,10 +90,7 @@ namespace Gs2::Inventory::Domain::Model
     class GS2INVENTORY_API FItemSetAccessTokenDomain:
         public TSharedFromThis<FItemSetAccessTokenDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
@@ -119,10 +122,7 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FItemSetAccessTokenDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
             const TOptional<FString> InventoryName,
@@ -211,6 +211,32 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<FAsyncTask<FConsumeTask>> Consume(
             Request::FConsumeItemSetRequestPtr Request
+        );
+
+        class GS2INVENTORY_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FItemSetAccessTokenDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FItemSetAccessTokenDomain> Self;
+            const Request::FVerifyItemSetRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FItemSetAccessTokenDomain> Self,
+                const Request::FVerifyItemSetRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FItemSetAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyItemSetRequestPtr Request
         );
 
         class GS2INVENTORY_API FAddReferenceOfTask final :

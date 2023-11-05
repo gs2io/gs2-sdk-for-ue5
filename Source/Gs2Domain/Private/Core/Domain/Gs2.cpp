@@ -68,47 +68,47 @@ namespace Gs2::Core::Domain
         RestSession(RestSession),
         WebSocketSession(_WebSocketSession),
         DistributorNamespaceName(DistributorNamespaceName),
-        Account(MakeShared<Account::Domain::FGs2AccountDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        AdReward(MakeShared<AdReward::Domain::FGs2AdRewardDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Auth(MakeShared<Auth::Domain::FGs2AuthDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Chat(MakeShared<Chat::Domain::FGs2ChatDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Datastore(MakeShared<Datastore::Domain::FGs2DatastoreDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Deploy(MakeShared<Deploy::Domain::FGs2DeployDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Dictionary(MakeShared<Dictionary::Domain::FGs2DictionaryDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Distributor(MakeShared<Distributor::Domain::FGs2DistributorDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Enchant(MakeShared<Enchant::Domain::FGs2EnchantDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Enhance(MakeShared<Enhance::Domain::FGs2EnhanceDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Exchange(MakeShared<Exchange::Domain::FGs2ExchangeDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Experience(MakeShared<Experience::Domain::FGs2ExperienceDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Formation(MakeShared<Formation::Domain::FGs2FormationDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Friend(MakeShared<Friend::Domain::FGs2FriendDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Gateway(MakeShared<Gateway::Domain::FGs2GatewayDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession, WebSocketSession)),
-        Identifier(MakeShared<Identifier::Domain::FGs2IdentifierDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Idle(MakeShared<Idle::Domain::FGs2IdleDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Inbox(MakeShared<Inbox::Domain::FGs2InboxDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Inventory(MakeShared<Inventory::Domain::FGs2InventoryDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        JobQueue(MakeShared<JobQueue::Domain::FGs2JobQueueDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Key(MakeShared<Key::Domain::FGs2KeyDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Limit(MakeShared<Limit::Domain::FGs2LimitDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        LoginReward(MakeShared<LoginReward::Domain::FGs2LoginRewardDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Lock(MakeShared<Lock::Domain::FGs2LockDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Lottery(MakeShared<Lottery::Domain::FGs2LotteryDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Matchmaking(MakeShared<Matchmaking::Domain::FGs2MatchmakingDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        MegaField(MakeShared<MegaField::Domain::FGs2MegaFieldDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Mission(MakeShared<Mission::Domain::FGs2MissionDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Money(MakeShared<Money::Domain::FGs2MoneyDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        News(MakeShared<News::Domain::FGs2NewsDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Quest(MakeShared<Quest::Domain::FGs2QuestDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Ranking(MakeShared<Ranking::Domain::FGs2RankingDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Realtime(MakeShared<Realtime::Domain::FGs2RealtimeDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Schedule(MakeShared<Schedule::Domain::FGs2ScheduleDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Script(MakeShared<Script::Domain::FGs2ScriptDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        SerialKey(MakeShared<SerialKey::Domain::FGs2SerialKeyDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Showcase(MakeShared<Showcase::Domain::FGs2ShowcaseDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        SkillTree(MakeShared<SkillTree::Domain::FGs2SkillTreeDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Stamina(MakeShared<Stamina::Domain::FGs2StaminaDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        StateMachine(MakeShared<StateMachine::Domain::FGs2StateMachineDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
-        Version(MakeShared<Version::Domain::FGs2VersionDomain>(Cache, JobQueueDomain, StampSheetConfiguration, RestSession)),
+        Account(nullptr),
+        AdReward(nullptr),
+        Auth(nullptr),
+        Chat(nullptr),
+        Datastore(nullptr),
+        Deploy(nullptr),
+        Dictionary(nullptr),
+        Distributor(nullptr),
+        Enchant(nullptr),
+        Enhance(nullptr),
+        Exchange(nullptr),
+        Experience(nullptr),
+        Formation(nullptr),
+        Friend(nullptr),
+        Gateway(nullptr),
+        Identifier(nullptr),
+        Idle(nullptr),
+        Inbox(nullptr),
+        Inventory(nullptr),
+        JobQueue(nullptr),
+        Key(nullptr),
+        Limit(nullptr),
+        LoginReward(nullptr),
+        Lock(nullptr),
+        Lottery(nullptr),
+        Matchmaking(nullptr),
+        MegaField(nullptr),
+        Mission(nullptr),
+        Money(nullptr),
+        News(nullptr),
+        Quest(nullptr),
+        Ranking(nullptr),
+        Realtime(nullptr),
+        Schedule(nullptr),
+        Script(nullptr),
+        SerialKey(nullptr),
+        Showcase(nullptr),
+        SkillTree(nullptr),
+        Stamina(nullptr),
+        StateMachine(nullptr),
+        Version(nullptr),
         Disposed(false)
     {
         if (WebSocketSession != nullptr)
@@ -359,6 +359,51 @@ namespace Gs2::Core::Domain
     FGs2::~FGs2()
     {
         Disposed = true;
+    }
+
+    void FGs2::Initialize()
+    {
+        Account = MakeShared<Account::Domain::FGs2AccountDomain>(SharedThis(this));
+        AdReward = MakeShared<AdReward::Domain::FGs2AdRewardDomain>(SharedThis(this));
+        Auth = MakeShared<Auth::Domain::FGs2AuthDomain>(SharedThis(this));
+        Chat = MakeShared<Chat::Domain::FGs2ChatDomain>(SharedThis(this));
+        Datastore = MakeShared<Datastore::Domain::FGs2DatastoreDomain>(SharedThis(this));
+        Deploy = MakeShared<Deploy::Domain::FGs2DeployDomain>(SharedThis(this));
+        Dictionary = MakeShared<Dictionary::Domain::FGs2DictionaryDomain>(SharedThis(this));
+        Distributor = MakeShared<Distributor::Domain::FGs2DistributorDomain>(SharedThis(this));
+        Enchant = MakeShared<Enchant::Domain::FGs2EnchantDomain>(SharedThis(this));
+        Enhance = MakeShared<Enhance::Domain::FGs2EnhanceDomain>(SharedThis(this));
+        Exchange = MakeShared<Exchange::Domain::FGs2ExchangeDomain>(SharedThis(this));
+        Experience = MakeShared<Experience::Domain::FGs2ExperienceDomain>(SharedThis(this));
+        Formation = MakeShared<Formation::Domain::FGs2FormationDomain>(SharedThis(this));
+        Friend = MakeShared<Friend::Domain::FGs2FriendDomain>(SharedThis(this));
+        Gateway = MakeShared<Gateway::Domain::FGs2GatewayDomain>(SharedThis(this));
+        Identifier = MakeShared<Identifier::Domain::FGs2IdentifierDomain>(SharedThis(this));
+        Idle = MakeShared<Idle::Domain::FGs2IdleDomain>(SharedThis(this));
+        Inbox = MakeShared<Inbox::Domain::FGs2InboxDomain>(SharedThis(this));
+        Inventory = MakeShared<Inventory::Domain::FGs2InventoryDomain>(SharedThis(this));
+        JobQueue = MakeShared<JobQueue::Domain::FGs2JobQueueDomain>(SharedThis(this));
+        Key = MakeShared<Key::Domain::FGs2KeyDomain>(SharedThis(this));
+        Limit = MakeShared<Limit::Domain::FGs2LimitDomain>(SharedThis(this));
+        LoginReward = MakeShared<LoginReward::Domain::FGs2LoginRewardDomain>(SharedThis(this));
+        Lock = MakeShared<Lock::Domain::FGs2LockDomain>(SharedThis(this));
+        Lottery = MakeShared<Lottery::Domain::FGs2LotteryDomain>(SharedThis(this));
+        Matchmaking = MakeShared<Matchmaking::Domain::FGs2MatchmakingDomain>(SharedThis(this));
+        MegaField = MakeShared<MegaField::Domain::FGs2MegaFieldDomain>(SharedThis(this));
+        Mission = MakeShared<Mission::Domain::FGs2MissionDomain>(SharedThis(this));
+        Money = MakeShared<Money::Domain::FGs2MoneyDomain>(SharedThis(this));
+        News = MakeShared<News::Domain::FGs2NewsDomain>(SharedThis(this));
+        Quest = MakeShared<Quest::Domain::FGs2QuestDomain>(SharedThis(this));
+        Ranking = MakeShared<Ranking::Domain::FGs2RankingDomain>(SharedThis(this));
+        Realtime = MakeShared<Realtime::Domain::FGs2RealtimeDomain>(SharedThis(this));
+        Schedule = MakeShared<Schedule::Domain::FGs2ScheduleDomain>(SharedThis(this));
+        Script = MakeShared<Script::Domain::FGs2ScriptDomain>(SharedThis(this));
+        SerialKey = MakeShared<SerialKey::Domain::FGs2SerialKeyDomain>(SharedThis(this));
+        Showcase = MakeShared<Showcase::Domain::FGs2ShowcaseDomain>(SharedThis(this));
+        SkillTree = MakeShared<SkillTree::Domain::FGs2SkillTreeDomain>(SharedThis(this));
+        Stamina = MakeShared<Stamina::Domain::FGs2StaminaDomain>(SharedThis(this));
+        StateMachine = MakeShared<StateMachine::Domain::FGs2StateMachineDomain>(SharedThis(this));
+        Version = MakeShared<Version::Domain::FGs2VersionDomain>(SharedThis(this));
     }
 
     void FGs2::UpdateCacheFromStampSheet(const FString Action, const FString Request, const FString Result) const

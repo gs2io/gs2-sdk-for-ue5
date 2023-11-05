@@ -23,10 +23,17 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
 #include "Deploy/Gs2Deploy.h"
+#include "Deploy/Domain/Iterator/DescribeEventsIterator.h"
 #include "Deploy/Domain/Iterator/DescribeStacksIterator.h"
 #include "Deploy/Domain/Iterator/DescribeResourcesIterator.h"
 #include "Deploy/Domain/Iterator/DescribeEventsIterator.h"
 #include "Deploy/Domain/Iterator/DescribeOutputsIterator.h"
+
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
 
 namespace Gs2::Deploy::Domain::Model
 {
@@ -38,10 +45,7 @@ namespace Gs2::Deploy::Domain::Model
     class GS2DEPLOY_API FStackDomain:
         public TSharedFromThis<FStackDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Deploy::FGs2DeployRestClientPtr Client;
 
         public:
@@ -63,10 +67,7 @@ namespace Gs2::Deploy::Domain::Model
     public:
 
         FStackDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> StackName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -312,6 +313,14 @@ namespace Gs2::Deploy::Domain::Model
         Gs2::Deploy::Domain::Iterator::FDescribeResourcesIteratorPtr Resources(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeResources(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeResources(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Deploy::Domain::Model::FResourceDomain> Resource(
             const FString ResourceName
         ) const;
@@ -319,12 +328,28 @@ namespace Gs2::Deploy::Domain::Model
         Gs2::Deploy::Domain::Iterator::FDescribeEventsIteratorPtr Events(
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeEvents(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeEvents(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::Deploy::Domain::Model::FEventDomain> Event(
             const FString EventName
         ) const;
 
         Gs2::Deploy::Domain::Iterator::FDescribeOutputsIteratorPtr Outputs(
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeOutputs(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeOutputs(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
         TSharedPtr<Gs2::Deploy::Domain::Model::FOutputDomain> Output(
             const FString OutputName
@@ -360,6 +385,14 @@ namespace Gs2::Deploy::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Deploy::Model::FStackPtr)> Callback
+        );
+
+        void Unsubscribe(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
 
     };
 

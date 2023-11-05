@@ -44,6 +44,7 @@
 #include "Showcase/Domain/Model/RandomDisplayItem.h"
 #include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -51,20 +52,14 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FRandomShowcaseStatusDomain::FRandomShowcaseStatusDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> ShowcaseName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ShowcaseName(ShowcaseName),
@@ -79,10 +74,7 @@ namespace Gs2::Showcase::Domain::Model
     FRandomShowcaseStatusDomain::FRandomShowcaseStatusDomain(
         const FRandomShowcaseStatusDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -138,7 +130,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
                     ParentKey,
                     Key,
@@ -148,10 +140,7 @@ namespace Gs2::Showcase::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             Request->GetUserId(),
             ResultModel->GetItem()->GetShowcaseName(),
@@ -214,7 +203,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
                     ParentKey,
                     Key,
@@ -224,10 +213,7 @@ namespace Gs2::Showcase::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             Request->GetUserId(),
             ResultModel->GetItem()->GetShowcaseName(),
@@ -290,7 +276,7 @@ namespace Gs2::Showcase::Domain::Model
                     const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Self->Cache->Put(
+                    Self->Gs2->Cache->Put(
                         Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
                         ParentKey,
                         Key,
@@ -305,10 +291,7 @@ namespace Gs2::Showcase::Domain::Model
         {
             Domain->Add(
                 MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
-                    Self->Cache,
-                    Self->JobQueueDomain,
-                    Self->StampSheetConfiguration,
-                    Self->Session,
+                    Self->Gs2,
                     Request->GetNamespaceName(),
                     Request->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetShowcaseName(),
@@ -324,7 +307,7 @@ namespace Gs2::Showcase::Domain::Model
             const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
                 (*ResultModel->GetItems())[i]->GetName()
             );
-            Self->Cache->Put(
+            Self->Gs2->Cache->Put(
                 Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
                 ParentKey,
                 Key,

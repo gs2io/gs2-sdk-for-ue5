@@ -39,6 +39,7 @@
 #include "Ranking/Domain/Model/User.h"
 #include "Ranking/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -46,19 +47,13 @@ namespace Gs2::Ranking::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Ranking::FGs2RankingRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Ranking::FGs2RankingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         ParentKey(Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -71,10 +66,7 @@ namespace Gs2::Ranking::Domain::Model
     FUserAccessTokenDomain::FUserAccessTokenDomain(
         const FUserAccessTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -128,7 +120,7 @@ namespace Gs2::Ranking::Domain::Model
                     ResultModel->GetItem()->GetCategoryName(),
                     ResultModel->GetItem()->GetTargetUserId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Ranking::Model::FSubscribeUser::TypeName,
                     ParentKey,
                     Key,
@@ -138,10 +130,7 @@ namespace Gs2::Ranking::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             Self->AccessToken,
             ResultModel->GetItem()->GetCategoryName(),
@@ -163,7 +152,7 @@ namespace Gs2::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             CategoryName,
@@ -175,7 +164,7 @@ namespace Gs2::Ranking::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Ranking::Model::FSubscribeUser::TypeName,
             Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -190,7 +179,7 @@ namespace Gs2::Ranking::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking::Model::FSubscribeUser::TypeName,
             Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -207,10 +196,7 @@ namespace Gs2::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             AccessToken,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),
@@ -224,7 +210,7 @@ namespace Gs2::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             CategoryName,
@@ -237,7 +223,7 @@ namespace Gs2::Ranking::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Ranking::Model::FRanking::TypeName,
             Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -252,7 +238,7 @@ namespace Gs2::Ranking::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking::Model::FRanking::TypeName,
             Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -268,10 +254,7 @@ namespace Gs2::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Model::FRankingAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             AccessToken,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
@@ -284,7 +267,7 @@ namespace Gs2::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeScoresIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             CategoryName,
@@ -297,7 +280,7 @@ namespace Gs2::Ranking::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Ranking::Model::FScore::TypeName,
             Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -312,7 +295,7 @@ namespace Gs2::Ranking::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking::Model::FScore::TypeName,
             Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -330,10 +313,7 @@ namespace Gs2::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Model::FScoreAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             AccessToken,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),

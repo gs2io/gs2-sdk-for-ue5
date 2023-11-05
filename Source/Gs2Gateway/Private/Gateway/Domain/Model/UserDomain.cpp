@@ -31,6 +31,7 @@
 #include "Gateway/Domain/Model/User.h"
 #include "Gateway/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -38,22 +39,14 @@ namespace Gs2::Gateway::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr Wssession,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Session)),
-        Wssession(Wssession),
-        Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Wssession)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Gs2->RestSession)),
+        Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Gs2->WebSocketSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Gateway::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -66,12 +59,8 @@ namespace Gs2::Gateway::Domain::Model
     FUserDomain::FUserDomain(
         const FUserDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
-        Wssession(From.Wssession),
         Wsclient(From.Wsclient),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -116,7 +105,13 @@ namespace Gs2::Gateway::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->Protocol = Domain->Protocol = ResultModel->GetProtocol();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetProtocol().IsSet())
+            {
+                Self->Protocol = Domain->Protocol = ResultModel->GetProtocol();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -170,7 +165,7 @@ namespace Gs2::Gateway::Domain::Model
                     );
                     const auto Key = Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
                     );
-                    Self->Cache->Put(
+                    Self->Gs2->Cache->Put(
                         Gs2::Gateway::Model::FWebSocketSession::TypeName,
                         ParentKey,
                         Key,
@@ -185,11 +180,7 @@ namespace Gs2::Gateway::Domain::Model
         {
             Domain->Add(
                 MakeShared<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain>(
-                    Self->Cache,
-                    Self->JobQueueDomain,
-                    Self->StampSheetConfiguration,
-                    Self->Session,
-                    Self->Wssession,
+                    Self->Gs2,
                     (*ResultModel->GetItems())[i]->GetNamespaceName(),
                     (*ResultModel->GetItems())[i]->GetUserId()
                 )
@@ -201,7 +192,7 @@ namespace Gs2::Gateway::Domain::Model
             );
             const auto Key = Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
             );
-            Self->Cache->Put(
+            Self->Gs2->Cache->Put(
                 Gs2::Gateway::Model::FWebSocketSession::TypeName,
                 ParentKey,
                 Key,
@@ -268,7 +259,7 @@ namespace Gs2::Gateway::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsByUserIdIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             UserId
@@ -279,7 +270,7 @@ namespace Gs2::Gateway::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Gateway::Model::FWebSocketSession::TypeName,
             Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -294,7 +285,7 @@ namespace Gs2::Gateway::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Gateway::Model::FWebSocketSession::TypeName,
             Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -309,11 +300,7 @@ namespace Gs2::Gateway::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
-            Wssession,
+            Gs2,
             NamespaceName,
             UserId
         );
@@ -323,11 +310,7 @@ namespace Gs2::Gateway::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
-            Wssession,
+            Gs2,
             NamespaceName,
             UserId
         );

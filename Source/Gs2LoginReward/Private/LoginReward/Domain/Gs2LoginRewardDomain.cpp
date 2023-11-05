@@ -33,22 +33,17 @@
 #include "LoginReward/Domain/Model/UserAccessToken.h"
 #include "LoginReward/Domain/Model/Bonus.h"
 #include "LoginReward/Domain/Model/ReceiveStatus.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::LoginReward::Domain
 {
 
     FGs2LoginRewardDomain::FGs2LoginRewardDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Gs2->RestSession)),
         ParentKey("loginReward")
     {
     }
@@ -56,10 +51,7 @@ namespace Gs2::LoginReward::Domain
     FGs2LoginRewardDomain::FGs2LoginRewardDomain(
         const FGs2LoginRewardDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -102,7 +94,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -112,10 +104,7 @@ namespace Gs2::LoginReward::Domain
             }
         }
         auto Domain = MakeShared<Gs2::LoginReward::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -204,7 +193,13 @@ namespace Gs2::LoginReward::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -334,8 +329,17 @@ namespace Gs2::LoginReward::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -422,7 +426,13 @@ namespace Gs2::LoginReward::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -437,7 +447,7 @@ namespace Gs2::LoginReward::Domain
     ) const
     {
         return MakeShared<Gs2::LoginReward::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -446,7 +456,7 @@ namespace Gs2::LoginReward::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::LoginReward::Model::FNamespace::TypeName,
             "loginReward:Namespace",
             Callback
@@ -457,7 +467,7 @@ namespace Gs2::LoginReward::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::LoginReward::Model::FNamespace::TypeName,
             "loginReward:Namespace",
             CallbackID
@@ -469,10 +479,7 @@ namespace Gs2::LoginReward::Domain
     ) const
     {
         return MakeShared<Gs2::LoginReward::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -508,7 +515,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetBonusModelName()
                 );
-                Cache->Delete(Gs2::LoginReward::Model::FReceiveStatus::TypeName, ParentKey, Key);
+                Gs2->Cache->Delete(Gs2::LoginReward::Model::FReceiveStatus::TypeName, ParentKey, Key);
             }
             if (ResultModel->GetBonusModel() != nullptr)
             {
@@ -519,7 +526,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
                     ResultModel->GetBonusModel()->GetName()
                 );
-                Cache->Delete(Gs2::LoginReward::Model::FBonusModel::TypeName, ParentKey, Key);
+                Gs2->Cache->Delete(Gs2::LoginReward::Model::FBonusModel::TypeName, ParentKey, Key);
             }
         }
         if (Method == "UnmarkReceivedByUserId") {
@@ -548,7 +555,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetBonusModelName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FReceiveStatus::TypeName,
                     ParentKey,
                     Key,
@@ -565,7 +572,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
                     ResultModel->GetBonusModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FBonusModel::TypeName,
                     ParentKey,
                     Key,
@@ -607,7 +614,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetBonusModelName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FReceiveStatus::TypeName,
                     ParentKey,
                     Key,
@@ -624,7 +631,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
                     ResultModel->GetBonusModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FBonusModel::TypeName,
                     ParentKey,
                     Key,
@@ -674,7 +681,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetBonusModelName()
                 );
-                Cache->Delete(Gs2::LoginReward::Model::FReceiveStatus::TypeName, ParentKey, Key);
+                Gs2->Cache->Delete(Gs2::LoginReward::Model::FReceiveStatus::TypeName, ParentKey, Key);
             }
             if (ResultModel->GetBonusModel() != nullptr)
             {
@@ -685,7 +692,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
                     ResultModel->GetBonusModel()->GetName()
                 );
-                Cache->Delete(Gs2::LoginReward::Model::FBonusModel::TypeName, ParentKey, Key);
+                Gs2->Cache->Delete(Gs2::LoginReward::Model::FBonusModel::TypeName, ParentKey, Key);
             }
         }
         if (Method == "unmark_received_by_user_id") {
@@ -722,7 +729,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetBonusModelName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FReceiveStatus::TypeName,
                     ParentKey,
                     Key,
@@ -739,7 +746,7 @@ namespace Gs2::LoginReward::Domain
                 const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
                     ResultModel->GetBonusModel()->GetName()
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FBonusModel::TypeName,
                     ParentKey,
                     Key,

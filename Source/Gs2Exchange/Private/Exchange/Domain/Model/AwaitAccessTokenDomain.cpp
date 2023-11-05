@@ -37,6 +37,7 @@
 #include "Exchange/Domain/Model/User.h"
 #include "Exchange/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -44,20 +45,14 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FAwaitAccessTokenDomain::FAwaitAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const TOptional<FString> AwaitName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         AwaitName(AwaitName),
@@ -72,10 +67,7 @@ namespace Gs2::Exchange::Domain::Model
     FAwaitAccessTokenDomain::FAwaitAccessTokenDomain(
         const FAwaitAccessTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -130,7 +122,7 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Exchange::Model::FAwait::TypeName,
                     ParentKey,
                     Key,
@@ -194,7 +186,7 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Exchange::Model::FAwait::TypeName,
                     ParentKey,
                     Key,
@@ -206,12 +198,12 @@ namespace Gs2::Exchange::Domain::Model
         if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                Self->Cache,
-                Self->JobQueueDomain,
-                Self->Session,
+                Self->Gs2->Cache,
+                Self->Gs2->JobQueueDomain,
+                Self->Gs2->RestSession,
                 *ResultModel->GetStampSheet(),
                 *ResultModel->GetStampSheetEncryptionKeyId(),
-                Self->StampSheetConfiguration
+                Self->Gs2->StampSheetConfiguration
             );
             const auto Future3 = StampSheet->Run();
             Future3->StartSynchronousTask();
@@ -222,12 +214,12 @@ namespace Gs2::Exchange::Domain::Model
                     [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
                     {
                         return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                            Self->Cache,
-                            Self->JobQueueDomain,
-                            Self->Session,
+                            Self->Gs2->Cache,
+                            Self->Gs2->JobQueueDomain,
+                            Self->Gs2->RestSession,
                             *ResultModel->GetStampSheet(),
                             *ResultModel->GetStampSheetEncryptionKeyId(),
-                            Self->StampSheetConfiguration
+                            Self->Gs2->StampSheetConfiguration
                         )->Run();
                     }
                 );
@@ -294,7 +286,7 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Exchange::Model::FAwait::TypeName,
                     ParentKey,
                     Key,
@@ -306,12 +298,12 @@ namespace Gs2::Exchange::Domain::Model
         if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                Self->Cache,
-                Self->JobQueueDomain,
-                Self->Session,
+                Self->Gs2->Cache,
+                Self->Gs2->JobQueueDomain,
+                Self->Gs2->RestSession,
                 *ResultModel->GetStampSheet(),
                 *ResultModel->GetStampSheetEncryptionKeyId(),
-                Self->StampSheetConfiguration
+                Self->Gs2->StampSheetConfiguration
             );
             const auto Future3 = StampSheet->Run();
             Future3->StartSynchronousTask();
@@ -322,12 +314,12 @@ namespace Gs2::Exchange::Domain::Model
                     [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
                     {
                         return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                            Self->Cache,
-                            Self->JobQueueDomain,
-                            Self->Session,
+                            Self->Gs2->Cache,
+                            Self->Gs2->JobQueueDomain,
+                            Self->Gs2->RestSession,
                             *ResultModel->GetStampSheet(),
                             *ResultModel->GetStampSheetEncryptionKeyId(),
-                            Self->StampSheetConfiguration
+                            Self->Gs2->StampSheetConfiguration
                         )->Run();
                     }
                 );
@@ -394,7 +386,7 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Exchange::Model::FAwait::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Exchange::Model::FAwait::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -451,7 +443,7 @@ namespace Gs2::Exchange::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Exchange::Model::FAwait> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Exchange::Model::FAwait>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Exchange::Model::FAwait>(
             Self->ParentKey,
             Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                 Self->AwaitName
@@ -473,7 +465,7 @@ namespace Gs2::Exchange::Domain::Model
                 const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     Self->AwaitName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Exchange::Model::FAwait::TypeName,
                     Self->ParentKey,
                     Key,
@@ -486,7 +478,7 @@ namespace Gs2::Exchange::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Exchange::Model::FAwait>(
+            Self->Gs2->Cache->TryGet<Gs2::Exchange::Model::FAwait>(
                 Self->ParentKey,
                 Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
                     Self->AwaitName
@@ -508,7 +500,7 @@ namespace Gs2::Exchange::Domain::Model
         TFunction<void(Gs2::Exchange::Model::FAwaitPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Exchange::Model::FAwait::TypeName,
             ParentKey,
             Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
@@ -525,7 +517,7 @@ namespace Gs2::Exchange::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Exchange::Model::FAwait::TypeName,
             ParentKey,
             Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(

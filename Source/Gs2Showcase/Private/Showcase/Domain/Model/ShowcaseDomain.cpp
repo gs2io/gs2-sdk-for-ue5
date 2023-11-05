@@ -43,6 +43,7 @@
 #include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
 #include "Showcase/Domain/Model/SalesItem.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -50,20 +51,14 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FShowcaseDomain::FShowcaseDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> ShowcaseName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ShowcaseName(ShowcaseName),
@@ -78,10 +73,7 @@ namespace Gs2::Showcase::Domain::Model
     FShowcaseDomain::FShowcaseDomain(
         const FShowcaseDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -136,7 +128,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Showcase::Model::FShowcase::TypeName,
                     ParentKey,
                     Key,
@@ -160,10 +152,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FDisplayItemDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             ShowcaseName,
@@ -213,7 +202,7 @@ namespace Gs2::Showcase::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Showcase::Model::FShowcase> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Showcase::Model::FShowcase>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FShowcase>(
             Self->ParentKey,
             Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
                 Self->ShowcaseName
@@ -235,7 +224,7 @@ namespace Gs2::Showcase::Domain::Model
                 const auto Key = Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
                     Self->ShowcaseName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Showcase::Model::FShowcase::TypeName,
                     Self->ParentKey,
                     Key,
@@ -248,7 +237,7 @@ namespace Gs2::Showcase::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Showcase::Model::FShowcase>(
+            Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FShowcase>(
                 Self->ParentKey,
                 Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
                     Self->ShowcaseName
@@ -270,7 +259,7 @@ namespace Gs2::Showcase::Domain::Model
         TFunction<void(Gs2::Showcase::Model::FShowcasePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Showcase::Model::FShowcase::TypeName,
             ParentKey,
             Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(
@@ -287,7 +276,7 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Showcase::Model::FShowcase::TypeName,
             ParentKey,
             Gs2::Showcase::Domain::Model::FShowcaseDomain::CreateCacheKey(

@@ -36,6 +36,7 @@
 #include "Quest/Domain/Model/User.h"
 #include "Quest/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -43,20 +44,14 @@ namespace Gs2::Quest::Domain::Model
 {
 
     FQuestModelDomain::FQuestModelDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> QuestGroupName,
         const TOptional<FString> QuestName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         QuestGroupName(QuestGroupName),
         QuestName(QuestName),
@@ -71,10 +66,7 @@ namespace Gs2::Quest::Domain::Model
     FQuestModelDomain::FQuestModelDomain(
         const FQuestModelDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         QuestGroupName(From.QuestGroupName),
@@ -129,7 +121,7 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FQuestModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Quest::Model::FQuestModel::TypeName,
                     ParentKey,
                     Key,
@@ -190,7 +182,7 @@ namespace Gs2::Quest::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Quest::Model::FQuestModel> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Quest::Model::FQuestModel>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Quest::Model::FQuestModel>(
             Self->ParentKey,
             Gs2::Quest::Domain::Model::FQuestModelDomain::CreateCacheKey(
                 Self->QuestName
@@ -212,7 +204,7 @@ namespace Gs2::Quest::Domain::Model
                 const auto Key = Gs2::Quest::Domain::Model::FQuestModelDomain::CreateCacheKey(
                     Self->QuestName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Quest::Model::FQuestModel::TypeName,
                     Self->ParentKey,
                     Key,
@@ -225,7 +217,7 @@ namespace Gs2::Quest::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Quest::Model::FQuestModel>(
+            Self->Gs2->Cache->TryGet<Gs2::Quest::Model::FQuestModel>(
                 Self->ParentKey,
                 Gs2::Quest::Domain::Model::FQuestModelDomain::CreateCacheKey(
                     Self->QuestName
@@ -247,7 +239,7 @@ namespace Gs2::Quest::Domain::Model
         TFunction<void(Gs2::Quest::Model::FQuestModelPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Quest::Model::FQuestModel::TypeName,
             ParentKey,
             Gs2::Quest::Domain::Model::FQuestModelDomain::CreateCacheKey(
@@ -264,7 +256,7 @@ namespace Gs2::Quest::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Quest::Model::FQuestModel::TypeName,
             ParentKey,
             Gs2::Quest::Domain::Model::FQuestModelDomain::CreateCacheKey(

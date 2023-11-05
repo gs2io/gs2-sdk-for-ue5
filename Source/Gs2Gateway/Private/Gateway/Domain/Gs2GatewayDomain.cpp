@@ -30,25 +30,18 @@
 #include "Gateway/Domain/Model/FirebaseToken.h"
 #include "Gateway/Domain/Model/User.h"
 #include "Gateway/Domain/Model/UserAccessToken.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Gateway::Domain
 {
 
     FGs2GatewayDomain::FGs2GatewayDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr Wssession
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Session)),
-        Wssession(Wssession),
-        Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Wssession)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Gs2->RestSession)),
+        Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Gs2->WebSocketSession)),
         ParentKey("gateway")
     {
     }
@@ -56,12 +49,8 @@ namespace Gs2::Gateway::Domain
     FGs2GatewayDomain::FGs2GatewayDomain(
         const FGs2GatewayDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
-        Wssession(From.Wssession),
         Wsclient(From.Wsclient),
         ParentKey(From.ParentKey)
     {
@@ -104,7 +93,7 @@ namespace Gs2::Gateway::Domain
                 const auto Key = Gs2::Gateway::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Gateway::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -114,11 +103,7 @@ namespace Gs2::Gateway::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Gateway::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
-            Self->Wssession,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -207,7 +192,13 @@ namespace Gs2::Gateway::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -337,8 +328,17 @@ namespace Gs2::Gateway::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -425,7 +425,13 @@ namespace Gs2::Gateway::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -440,7 +446,7 @@ namespace Gs2::Gateway::Domain
     ) const
     {
         return MakeShared<Gs2::Gateway::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -449,7 +455,7 @@ namespace Gs2::Gateway::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Gateway::Model::FNamespace::TypeName,
             "gateway:Namespace",
             Callback
@@ -460,7 +466,7 @@ namespace Gs2::Gateway::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Gateway::Model::FNamespace::TypeName,
             "gateway:Namespace",
             CallbackID
@@ -472,11 +478,7 @@ namespace Gs2::Gateway::Domain
     ) const
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
-            Wssession,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

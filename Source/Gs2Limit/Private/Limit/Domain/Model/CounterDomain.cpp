@@ -32,6 +32,7 @@
 #include "Limit/Domain/Model/User.h"
 #include "Limit/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -39,21 +40,15 @@ namespace Gs2::Limit::Domain::Model
 {
 
     FCounterDomain::FCounterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> LimitName,
         const TOptional<FString> CounterName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Limit::FGs2LimitRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Limit::FGs2LimitRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         LimitName(LimitName),
@@ -69,10 +64,7 @@ namespace Gs2::Limit::Domain::Model
     FCounterDomain::FCounterDomain(
         const FCounterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -130,7 +122,7 @@ namespace Gs2::Limit::Domain::Model
                     ResultModel->GetItem()->GetLimitName(),
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Limit::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
@@ -196,7 +188,7 @@ namespace Gs2::Limit::Domain::Model
                     ResultModel->GetItem()->GetLimitName(),
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Limit::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
@@ -264,7 +256,7 @@ namespace Gs2::Limit::Domain::Model
                     ResultModel->GetItem()->GetLimitName(),
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Limit::Model::FCounter::TypeName,
                     ParentKey,
                     Key,
@@ -332,7 +324,7 @@ namespace Gs2::Limit::Domain::Model
                     ResultModel->GetItem()->GetLimitName(),
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Limit::Model::FCounter::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Limit::Model::FCounter::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -441,7 +433,7 @@ namespace Gs2::Limit::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Limit::Model::FCounter> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Limit::Model::FCounter>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Limit::Model::FCounter>(
             Self->ParentKey,
             Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
                 Self->LimitName,
@@ -465,7 +457,7 @@ namespace Gs2::Limit::Domain::Model
                     Self->LimitName,
                     Self->CounterName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Limit::Model::FCounter::TypeName,
                     Self->ParentKey,
                     Key,
@@ -478,7 +470,7 @@ namespace Gs2::Limit::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Limit::Model::FCounter>(
+            Self->Gs2->Cache->TryGet<Gs2::Limit::Model::FCounter>(
                 Self->ParentKey,
                 Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
                     Self->LimitName,
@@ -501,7 +493,7 @@ namespace Gs2::Limit::Domain::Model
         TFunction<void(Gs2::Limit::Model::FCounterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Limit::Model::FCounter::TypeName,
             ParentKey,
             Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
@@ -519,7 +511,7 @@ namespace Gs2::Limit::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Limit::Model::FCounter::TypeName,
             ParentKey,
             Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(

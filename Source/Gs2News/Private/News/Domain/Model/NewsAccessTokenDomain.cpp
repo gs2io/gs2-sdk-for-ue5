@@ -34,6 +34,7 @@
 #include "News/Domain/Model/UserAccessToken.h"
 #include "News/Domain/Model/SetCookieRequestEntryAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -41,19 +42,13 @@ namespace Gs2::News::Domain::Model
 {
 
     FNewsAccessTokenDomain::FNewsAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         ParentKey(Gs2::News::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -67,10 +62,7 @@ namespace Gs2::News::Domain::Model
     FNewsAccessTokenDomain::FNewsAccessTokenDomain(
         const FNewsAccessTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -124,7 +116,7 @@ namespace Gs2::News::Domain::Model
                         Item->GetKey(),
                         Item->GetValue()
                     );
-                    Self->Cache->Put(
+                    Self->Gs2->Cache->Put(
                         Gs2::News::Model::FSetCookieRequestEntry::TypeName,
                         ParentKey,
                         Key,
@@ -139,10 +131,7 @@ namespace Gs2::News::Domain::Model
         {
             Domain->Add(
                 MakeShared<Gs2::News::Domain::Model::FSetCookieRequestEntryAccessTokenDomain>(
-                    Self->Cache,
-                    Self->JobQueueDomain,
-                    Self->StampSheetConfiguration,
-                    Self->Session,
+                    Self->Gs2,
                     Request->GetNamespaceName(),
                     Self->AccessToken,
                     (*ResultModel->GetItems())[i]->GetKey(),
@@ -158,7 +147,7 @@ namespace Gs2::News::Domain::Model
                 (*ResultModel->GetItems())[i]->GetKey(),
                 (*ResultModel->GetItems())[i]->GetValue()
             );
-            Self->Cache->Put(
+            Self->Gs2->Cache->Put(
                 Gs2::News::Model::FSetCookieRequestEntry::TypeName,
                 ParentKey,
                 Key,
@@ -166,8 +155,17 @@ namespace Gs2::News::Domain::Model
                 FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
             );
         }
-        Self->BrowserUrl = ResultModel->GetBrowserUrl();
-        Self->ZipUrl = ResultModel->GetZipUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetBrowserUrl().IsSet())
+            {
+                Self->BrowserUrl = ResultModel->GetBrowserUrl();
+            }
+            if (ResultModel->GetZipUrl().IsSet())
+            {
+                Self->ZipUrl = ResultModel->GetZipUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -216,7 +214,7 @@ namespace Gs2::News::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::News::Model::FNews> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::News::Model::FNews>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::News::Model::FNews>(
             Self->ParentKey,
             Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
             ),
@@ -235,7 +233,7 @@ namespace Gs2::News::Domain::Model
         TFunction<void(Gs2::News::Model::FNewsPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::News::Model::FNews::TypeName,
             ParentKey,
             Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
@@ -251,7 +249,7 @@ namespace Gs2::News::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::News::Model::FNews::TypeName,
             ParentKey,
             Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(

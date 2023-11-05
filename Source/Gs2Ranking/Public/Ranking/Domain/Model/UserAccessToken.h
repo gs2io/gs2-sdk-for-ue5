@@ -34,6 +34,12 @@
 #include "Ranking/Domain/Iterator/DescribeSubscribesByCategoryNameIterator.h"
 #include "Ranking/Domain/Iterator/DescribeSubscribesByCategoryNameAndUserIdIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Ranking::Domain::Model
 {
     class FNamespaceDomain;
@@ -54,10 +60,7 @@ namespace Gs2::Ranking::Domain::Model
     class GS2RANKING_API FUserAccessTokenDomain:
         public TSharedFromThis<FUserAccessTokenDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Ranking::FGs2RankingRestClientPtr Client;
 
         public:
@@ -81,10 +84,7 @@ namespace Gs2::Ranking::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
             // ReSharper disable once CppMemberInitializersOrder

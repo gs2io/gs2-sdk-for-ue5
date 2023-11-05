@@ -34,6 +34,7 @@
 #include "News/Domain/Model/News.h"
 #include "News/Domain/Model/SetCookieRequestEntry.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -41,18 +42,12 @@ namespace Gs2::News::Domain::Model
 {
 
     FCurrentNewsMasterDomain::FCurrentNewsMasterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::News::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
             NamespaceName,
@@ -64,10 +59,7 @@ namespace Gs2::News::Domain::Model
     FCurrentNewsMasterDomain::FCurrentNewsMasterDomain(
         const FCurrentNewsMasterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -110,8 +102,17 @@ namespace Gs2::News::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->TemplateUploadUrl = Domain->TemplateUploadUrl = ResultModel->GetTemplateUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetTemplateUploadUrl().IsSet())
+            {
+                Self->TemplateUploadUrl = Domain->TemplateUploadUrl = ResultModel->GetTemplateUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -202,7 +203,13 @@ namespace Gs2::News::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }

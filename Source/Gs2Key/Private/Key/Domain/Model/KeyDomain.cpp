@@ -27,6 +27,7 @@
 #include "Key/Domain/Model/Key.h"
 #include "Key/Domain/Model/GitHubApiKey.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -34,19 +35,13 @@ namespace Gs2::Key::Domain::Model
 {
 
     FKeyDomain::FKeyDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> KeyName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Key::FGs2KeyRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Key::FGs2KeyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         KeyName(KeyName),
         ParentKey(Gs2::Key::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -59,10 +54,7 @@ namespace Gs2::Key::Domain::Model
     FKeyDomain::FKeyDomain(
         const FKeyDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         KeyName(From.KeyName),
@@ -114,7 +106,7 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Key::Model::FKey::TypeName,
                     ParentKey,
                     Key,
@@ -178,7 +170,7 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Key::Model::FKey::TypeName,
                     ParentKey,
                     Key,
@@ -240,7 +232,7 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Key::Model::FKey::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Key::Model::FKey::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -291,7 +283,13 @@ namespace Gs2::Key::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->Data = Domain->Data = ResultModel->GetData();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetData().IsSet())
+            {
+                Self->Data = Domain->Data = ResultModel->GetData();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -338,7 +336,13 @@ namespace Gs2::Key::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->Data = Domain->Data = ResultModel->GetData();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetData().IsSet())
+            {
+                Self->Data = Domain->Data = ResultModel->GetData();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -389,7 +393,7 @@ namespace Gs2::Key::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Key::Model::FKey> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Key::Model::FKey>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Key::Model::FKey>(
             Self->ParentKey,
             Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                 Self->KeyName
@@ -411,7 +415,7 @@ namespace Gs2::Key::Domain::Model
                 const auto Key = Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     Self->KeyName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Key::Model::FKey::TypeName,
                     Self->ParentKey,
                     Key,
@@ -424,7 +428,7 @@ namespace Gs2::Key::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Key::Model::FKey>(
+            Self->Gs2->Cache->TryGet<Gs2::Key::Model::FKey>(
                 Self->ParentKey,
                 Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
                     Self->KeyName
@@ -446,7 +450,7 @@ namespace Gs2::Key::Domain::Model
         TFunction<void(Gs2::Key::Model::FKeyPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Key::Model::FKey::TypeName,
             ParentKey,
             Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(
@@ -463,7 +467,7 @@ namespace Gs2::Key::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Key::Model::FKey::TypeName,
             ParentKey,
             Gs2::Key::Domain::Model::FKeyDomain::CreateCacheKey(

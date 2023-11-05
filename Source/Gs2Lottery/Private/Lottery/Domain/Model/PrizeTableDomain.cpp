@@ -39,6 +39,7 @@
 #include "Lottery/Domain/Model/User.h"
 #include "Lottery/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -46,19 +47,13 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FPrizeTableDomain::FPrizeTableDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> PrizeTableName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         PrizeTableName(PrizeTableName),
         ParentKey(Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -71,10 +66,7 @@ namespace Gs2::Lottery::Domain::Model
     FPrizeTableDomain::FPrizeTableDomain(
         const FPrizeTableDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         PrizeTableName(From.PrizeTableName),
@@ -126,7 +118,7 @@ namespace Gs2::Lottery::Domain::Model
                 const auto Key = Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Lottery::Model::FPrizeTable::TypeName,
                     ParentKey,
                     Key,
@@ -149,7 +141,7 @@ namespace Gs2::Lottery::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribePrizeLimitsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             PrizeTableName
@@ -160,7 +152,7 @@ namespace Gs2::Lottery::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Lottery::Model::FPrizeLimit::TypeName,
             Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -175,7 +167,7 @@ namespace Gs2::Lottery::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Lottery::Model::FPrizeLimit::TypeName,
             Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -191,10 +183,7 @@ namespace Gs2::Lottery::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FPrizeLimitDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             PrizeTableName,
             PrizeId == TEXT("") ? TOptional<FString>() : TOptional<FString>(PrizeId)
@@ -241,7 +230,7 @@ namespace Gs2::Lottery::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Lottery::Model::FPrizeTable> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Lottery::Model::FPrizeTable>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FPrizeTable>(
             Self->ParentKey,
             Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
                 Self->PrizeTableName
@@ -263,7 +252,7 @@ namespace Gs2::Lottery::Domain::Model
                 const auto Key = Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
                     Self->PrizeTableName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Lottery::Model::FPrizeTable::TypeName,
                     Self->ParentKey,
                     Key,
@@ -276,7 +265,7 @@ namespace Gs2::Lottery::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Lottery::Model::FPrizeTable>(
+            Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FPrizeTable>(
                 Self->ParentKey,
                 Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
                     Self->PrizeTableName
@@ -298,7 +287,7 @@ namespace Gs2::Lottery::Domain::Model
         TFunction<void(Gs2::Lottery::Model::FPrizeTablePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Lottery::Model::FPrizeTable::TypeName,
             ParentKey,
             Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(
@@ -315,7 +304,7 @@ namespace Gs2::Lottery::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Lottery::Model::FPrizeTable::TypeName,
             ParentKey,
             Gs2::Lottery::Domain::Model::FPrizeTableDomain::CreateCacheKey(

@@ -65,6 +65,8 @@ namespace Gs2::Core::Domain
     class GS2DOMAIN_API FGs2 :
         public TSharedFromThis<FGs2>
     {
+    public:
+    
         const Gs2::Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
         const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
@@ -72,49 +74,47 @@ namespace Gs2::Core::Domain
         const Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr WebSocketSession;
         const TOptional<FString> DistributorNamespaceName;
 
-    public:
-    
-        const Gs2::Account::Domain::FGs2AccountDomainPtr Account;
-        const Gs2::AdReward::Domain::FGs2AdRewardDomainPtr AdReward;
-        const Gs2::Auth::Domain::FGs2AuthDomainPtr Auth;
-        const Gs2::Chat::Domain::FGs2ChatDomainPtr Chat;
-        const Gs2::Datastore::Domain::FGs2DatastoreDomainPtr Datastore;
-        const Gs2::Deploy::Domain::FGs2DeployDomainPtr Deploy;
-        const Gs2::Dictionary::Domain::FGs2DictionaryDomainPtr Dictionary;
-        const Gs2::Distributor::Domain::FGs2DistributorDomainPtr Distributor;
-        const Gs2::Enchant::Domain::FGs2EnchantDomainPtr Enchant;
-        const Gs2::Enhance::Domain::FGs2EnhanceDomainPtr Enhance;
-        const Gs2::Exchange::Domain::FGs2ExchangeDomainPtr Exchange;
-        const Gs2::Experience::Domain::FGs2ExperienceDomainPtr Experience;
-        const Gs2::Formation::Domain::FGs2FormationDomainPtr Formation;
-        const Gs2::Friend::Domain::FGs2FriendDomainPtr Friend;
-        const Gs2::Gateway::Domain::FGs2GatewayDomainPtr Gateway;
-        const Gs2::Identifier::Domain::FGs2IdentifierDomainPtr Identifier;
-        const Gs2::Idle::Domain::FGs2IdleDomainPtr Idle;
-        const Gs2::Inbox::Domain::FGs2InboxDomainPtr Inbox;
-        const Gs2::Inventory::Domain::FGs2InventoryDomainPtr Inventory;
-        const Gs2::JobQueue::Domain::FGs2JobQueueDomainPtr JobQueue;
-        const Gs2::Key::Domain::FGs2KeyDomainPtr Key;
-        const Gs2::Limit::Domain::FGs2LimitDomainPtr Limit;
-        const Gs2::LoginReward::Domain::FGs2LoginRewardDomainPtr LoginReward;
-        const Gs2::Lock::Domain::FGs2LockDomainPtr Lock;
-        const Gs2::Lottery::Domain::FGs2LotteryDomainPtr Lottery;
-        const Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr Matchmaking;
-        const Gs2::MegaField::Domain::FGs2MegaFieldDomainPtr MegaField;
-        const Gs2::Mission::Domain::FGs2MissionDomainPtr Mission;
-        const Gs2::Money::Domain::FGs2MoneyDomainPtr Money;
-        const Gs2::News::Domain::FGs2NewsDomainPtr News;
-        const Gs2::Quest::Domain::FGs2QuestDomainPtr Quest;
-        const Gs2::Ranking::Domain::FGs2RankingDomainPtr Ranking;
-        const Gs2::Realtime::Domain::FGs2RealtimeDomainPtr Realtime;
-        const Gs2::Schedule::Domain::FGs2ScheduleDomainPtr Schedule;
-        const Gs2::Script::Domain::FGs2ScriptDomainPtr Script;
-        const Gs2::SerialKey::Domain::FGs2SerialKeyDomainPtr SerialKey;
-        const Gs2::Showcase::Domain::FGs2ShowcaseDomainPtr Showcase;
-        const Gs2::SkillTree::Domain::FGs2SkillTreeDomainPtr SkillTree;
-        const Gs2::Stamina::Domain::FGs2StaminaDomainPtr Stamina;
-        const Gs2::StateMachine::Domain::FGs2StateMachineDomainPtr StateMachine;
-        const Gs2::Version::Domain::FGs2VersionDomainPtr Version;
+        Gs2::Account::Domain::FGs2AccountDomainPtr Account;
+        Gs2::AdReward::Domain::FGs2AdRewardDomainPtr AdReward;
+        Gs2::Auth::Domain::FGs2AuthDomainPtr Auth;
+        Gs2::Chat::Domain::FGs2ChatDomainPtr Chat;
+        Gs2::Datastore::Domain::FGs2DatastoreDomainPtr Datastore;
+        Gs2::Deploy::Domain::FGs2DeployDomainPtr Deploy;
+        Gs2::Dictionary::Domain::FGs2DictionaryDomainPtr Dictionary;
+        Gs2::Distributor::Domain::FGs2DistributorDomainPtr Distributor;
+        Gs2::Enchant::Domain::FGs2EnchantDomainPtr Enchant;
+        Gs2::Enhance::Domain::FGs2EnhanceDomainPtr Enhance;
+        Gs2::Exchange::Domain::FGs2ExchangeDomainPtr Exchange;
+        Gs2::Experience::Domain::FGs2ExperienceDomainPtr Experience;
+        Gs2::Formation::Domain::FGs2FormationDomainPtr Formation;
+        Gs2::Friend::Domain::FGs2FriendDomainPtr Friend;
+        Gs2::Gateway::Domain::FGs2GatewayDomainPtr Gateway;
+        Gs2::Identifier::Domain::FGs2IdentifierDomainPtr Identifier;
+        Gs2::Idle::Domain::FGs2IdleDomainPtr Idle;
+        Gs2::Inbox::Domain::FGs2InboxDomainPtr Inbox;
+        Gs2::Inventory::Domain::FGs2InventoryDomainPtr Inventory;
+        Gs2::JobQueue::Domain::FGs2JobQueueDomainPtr JobQueue;
+        Gs2::Key::Domain::FGs2KeyDomainPtr Key;
+        Gs2::Limit::Domain::FGs2LimitDomainPtr Limit;
+        Gs2::LoginReward::Domain::FGs2LoginRewardDomainPtr LoginReward;
+        Gs2::Lock::Domain::FGs2LockDomainPtr Lock;
+        Gs2::Lottery::Domain::FGs2LotteryDomainPtr Lottery;
+        Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr Matchmaking;
+        Gs2::MegaField::Domain::FGs2MegaFieldDomainPtr MegaField;
+        Gs2::Mission::Domain::FGs2MissionDomainPtr Mission;
+        Gs2::Money::Domain::FGs2MoneyDomainPtr Money;
+        Gs2::News::Domain::FGs2NewsDomainPtr News;
+        Gs2::Quest::Domain::FGs2QuestDomainPtr Quest;
+        Gs2::Ranking::Domain::FGs2RankingDomainPtr Ranking;
+        Gs2::Realtime::Domain::FGs2RealtimeDomainPtr Realtime;
+        Gs2::Schedule::Domain::FGs2ScheduleDomainPtr Schedule;
+        Gs2::Script::Domain::FGs2ScriptDomainPtr Script;
+        Gs2::SerialKey::Domain::FGs2SerialKeyDomainPtr SerialKey;
+        Gs2::Showcase::Domain::FGs2ShowcaseDomainPtr Showcase;
+        Gs2::SkillTree::Domain::FGs2SkillTreeDomainPtr SkillTree;
+        Gs2::Stamina::Domain::FGs2StaminaDomainPtr Stamina;
+        Gs2::StateMachine::Domain::FGs2StateMachineDomainPtr StateMachine;
+        Gs2::Version::Domain::FGs2VersionDomainPtr Version;
 
         bool Disposed;
 
@@ -127,9 +127,15 @@ namespace Gs2::Core::Domain
             const FGs2& From
         );
         virtual ~FGs2();
+
+        void Initialize();
     
-        void ClearCache() const
+        void ClearCache()
         {
+            if (Account == nullptr)
+            {
+                Initialize();
+            }
             Cache->Clear();
         }
         void UpdateCacheFromStampSheet(

@@ -163,8 +163,8 @@ namespace Gs2::Core::Domain::Model
             {
                 if(StampSheetResultJson->HasField("autoRunStampSheet") && !StampSheetResultJson->GetBoolField("autoRunStampSheet"))
                 {
-                    FString NewStampSheet;
-                    FString NewStampSheetEncryptionKeyId;
+                    FString NewStampSheet("");
+                    FString NewStampSheetEncryptionKeyId("");
                     if(StampSheetResultJson->HasField("stampSheet") && StampSheetResultJson->TryGetStringField("stampSheet", NewStampSheet) &&
                         StampSheetResultJson->HasField("stampSheetEncryptionKeyId") && StampSheetResultJson->TryGetStringField("stampSheetEncryptionKeyId", NewStampSheetEncryptionKeyId))
                     {
@@ -194,7 +194,7 @@ namespace Gs2::Core::Domain::Model
                 if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
                     FJsonSerializer::Deserialize(JsonReader, RequestJson))
                 {
-                    FString NamespaceName;
+                    FString NamespaceName("");
                     if(RequestJson->HasField("namespaceName") && RequestJson->TryGetStringField("namespaceName", NamespaceName))
                     {
                         Self->JobQueueDomain->Push(

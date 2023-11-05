@@ -39,6 +39,7 @@
 #include "Lottery/Domain/Model/User.h"
 #include "Lottery/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -46,19 +47,13 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FProbabilityDomain::FProbabilityDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -72,10 +67,7 @@ namespace Gs2::Lottery::Domain::Model
     FProbabilityDomain::FProbabilityDomain(
         const FProbabilityDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -122,7 +114,7 @@ namespace Gs2::Lottery::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Lottery::Model::FProbability> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Lottery::Model::FProbability>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FProbability>(
             Self->ParentKey,
             Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
             ),
@@ -141,7 +133,7 @@ namespace Gs2::Lottery::Domain::Model
         TFunction<void(Gs2::Lottery::Model::FProbabilityPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Lottery::Model::FProbability::TypeName,
             ParentKey,
             Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
@@ -157,7 +149,7 @@ namespace Gs2::Lottery::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Lottery::Model::FProbability::TypeName,
             ParentKey,
             Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(

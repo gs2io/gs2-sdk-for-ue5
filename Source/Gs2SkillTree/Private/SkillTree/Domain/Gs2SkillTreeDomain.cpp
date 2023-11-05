@@ -32,22 +32,17 @@
 #include "SkillTree/Domain/Model/CurrentTreeMaster.h"
 #include "SkillTree/Domain/Model/User.h"
 #include "SkillTree/Domain/Model/UserAccessToken.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::SkillTree::Domain
 {
 
     FGs2SkillTreeDomain::FGs2SkillTreeDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::SkillTree::FGs2SkillTreeRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::SkillTree::FGs2SkillTreeRestClient>(Gs2->RestSession)),
         ParentKey("skillTree")
     {
     }
@@ -55,10 +50,7 @@ namespace Gs2::SkillTree::Domain
     FGs2SkillTreeDomain::FGs2SkillTreeDomain(
         const FGs2SkillTreeDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -101,7 +93,7 @@ namespace Gs2::SkillTree::Domain
                 const auto Key = Gs2::SkillTree::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -111,10 +103,7 @@ namespace Gs2::SkillTree::Domain
             }
         }
         auto Domain = MakeShared<Gs2::SkillTree::Domain::Model::FNamespaceDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -203,7 +192,13 @@ namespace Gs2::SkillTree::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -333,8 +328,17 @@ namespace Gs2::SkillTree::Domain
             
         }
         const auto Domain = Self;
-        Domain->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
-        Domain->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUploadToken().IsSet())
+            {
+                Self->UploadToken = Domain->UploadToken = ResultModel->GetUploadToken();
+            }
+            if (ResultModel->GetUploadUrl().IsSet())
+            {
+                Self->UploadUrl = Domain->UploadUrl = ResultModel->GetUploadUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -421,7 +425,13 @@ namespace Gs2::SkillTree::Domain
             
         }
         const auto Domain = Self;
-        Domain->Url = Domain->Url = ResultModel->GetUrl();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetUrl().IsSet())
+            {
+                Self->Url = Domain->Url = ResultModel->GetUrl();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -436,7 +446,7 @@ namespace Gs2::SkillTree::Domain
     ) const
     {
         return MakeShared<Gs2::SkillTree::Domain::Iterator::FDescribeNamespacesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -445,7 +455,7 @@ namespace Gs2::SkillTree::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::SkillTree::Model::FNamespace::TypeName,
             "skillTree:Namespace",
             Callback
@@ -456,7 +466,7 @@ namespace Gs2::SkillTree::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::SkillTree::Model::FNamespace::TypeName,
             "skillTree:Namespace",
             CallbackID
@@ -468,10 +478,7 @@ namespace Gs2::SkillTree::Domain
     ) const
     {
         return MakeShared<Gs2::SkillTree::Domain::Model::FNamespaceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
@@ -506,7 +513,7 @@ namespace Gs2::SkillTree::Domain
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -547,7 +554,7 @@ namespace Gs2::SkillTree::Domain
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -596,7 +603,7 @@ namespace Gs2::SkillTree::Domain
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
                 );
-                Cache->Put(
+                Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
                     ParentKey,
                     Key,

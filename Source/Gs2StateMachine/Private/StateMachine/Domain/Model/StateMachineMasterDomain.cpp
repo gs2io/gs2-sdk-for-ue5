@@ -30,6 +30,7 @@
 #include "StateMachine/Domain/Model/User.h"
 #include "StateMachine/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -37,19 +38,13 @@ namespace Gs2::StateMachine::Domain::Model
 {
 
     FStateMachineMasterDomain::FStateMachineMasterDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<int64> Version
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::StateMachine::FGs2StateMachineRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::StateMachine::FGs2StateMachineRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         Version(Version),
         ParentKey(Gs2::StateMachine::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -62,10 +57,7 @@ namespace Gs2::StateMachine::Domain::Model
     FStateMachineMasterDomain::FStateMachineMasterDomain(
         const FStateMachineMasterDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         Version(From.Version),
@@ -117,7 +109,7 @@ namespace Gs2::StateMachine::Domain::Model
                 const auto Key = Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetVersion().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetVersion()) : TOptional<FString>()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
                     ParentKey,
                     Key,
@@ -179,7 +171,7 @@ namespace Gs2::StateMachine::Domain::Model
                 const auto Key = Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetVersion().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetVersion()) : TOptional<FString>()
                 );
-                Self->Cache->Delete(Gs2::StateMachine::Model::FStateMachineMaster::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::StateMachine::Model::FStateMachineMaster::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -234,7 +226,7 @@ namespace Gs2::StateMachine::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::StateMachine::Model::FStateMachineMaster> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::StateMachine::Model::FStateMachineMaster>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::StateMachine::Model::FStateMachineMaster>(
             Self->ParentKey,
             Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
                 Self->Version.IsSet() ? FString::FromInt(*Self->Version) : TOptional<FString>()
@@ -256,7 +248,7 @@ namespace Gs2::StateMachine::Domain::Model
                 const auto Key = Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
                     Self->Version.IsSet() ? FString::FromInt(*Self->Version) : TOptional<FString>()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
                     Self->ParentKey,
                     Key,
@@ -269,7 +261,7 @@ namespace Gs2::StateMachine::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::StateMachine::Model::FStateMachineMaster>(
+            Self->Gs2->Cache->TryGet<Gs2::StateMachine::Model::FStateMachineMaster>(
                 Self->ParentKey,
                 Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
                     Self->Version.IsSet() ? FString::FromInt(*Self->Version) : TOptional<FString>()
@@ -291,7 +283,7 @@ namespace Gs2::StateMachine::Domain::Model
         TFunction<void(Gs2::StateMachine::Model::FStateMachineMasterPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
             ParentKey,
             Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
@@ -308,7 +300,7 @@ namespace Gs2::StateMachine::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
             ParentKey,
             Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(

@@ -30,6 +30,7 @@
 #include "StateMachine/Domain/Model/User.h"
 #include "StateMachine/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -37,20 +38,14 @@ namespace Gs2::StateMachine::Domain::Model
 {
 
     FStatusDomain::FStatusDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> StatusName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::StateMachine::FGs2StateMachineRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::StateMachine::FGs2StateMachineRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         StatusName(StatusName),
@@ -65,10 +60,7 @@ namespace Gs2::StateMachine::Domain::Model
     FStatusDomain::FStatusDomain(
         const FStatusDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -123,7 +115,7 @@ namespace Gs2::StateMachine::Domain::Model
                 const auto Key = Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::StateMachine::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -187,7 +179,7 @@ namespace Gs2::StateMachine::Domain::Model
                 const auto Key = Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::StateMachine::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -253,7 +245,7 @@ namespace Gs2::StateMachine::Domain::Model
                 const auto Key = Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::StateMachine::Model::FStatus::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::StateMachine::Model::FStatus::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -313,7 +305,7 @@ namespace Gs2::StateMachine::Domain::Model
                 const auto Key = Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::StateMachine::Model::FStatus::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::StateMachine::Model::FStatus::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -370,7 +362,7 @@ namespace Gs2::StateMachine::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::StateMachine::Model::FStatus> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::StateMachine::Model::FStatus>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::StateMachine::Model::FStatus>(
             Self->ParentKey,
             Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
                 Self->StatusName
@@ -392,7 +384,7 @@ namespace Gs2::StateMachine::Domain::Model
                 const auto Key = Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
                     Self->StatusName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::StateMachine::Model::FStatus::TypeName,
                     Self->ParentKey,
                     Key,
@@ -405,7 +397,7 @@ namespace Gs2::StateMachine::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::StateMachine::Model::FStatus>(
+            Self->Gs2->Cache->TryGet<Gs2::StateMachine::Model::FStatus>(
                 Self->ParentKey,
                 Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
                     Self->StatusName
@@ -427,7 +419,7 @@ namespace Gs2::StateMachine::Domain::Model
         TFunction<void(Gs2::StateMachine::Model::FStatusPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::StateMachine::Model::FStatus::TypeName,
             ParentKey,
             Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
@@ -444,7 +436,7 @@ namespace Gs2::StateMachine::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::StateMachine::Model::FStatus::TypeName,
             ParentKey,
             Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(

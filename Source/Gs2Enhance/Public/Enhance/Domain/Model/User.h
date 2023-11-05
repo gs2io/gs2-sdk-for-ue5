@@ -25,6 +25,12 @@
 #include "Enhance/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Enhance/Domain/Iterator/DescribeRateModelMastersIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Enhance::Domain::Model
 {
     class FNamespaceDomain;
@@ -41,10 +47,7 @@ namespace Gs2::Enhance::Domain::Model
     class GS2ENHANCE_API FUserDomain:
         public TSharedFromThis<FUserDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
 
         public:
@@ -77,10 +80,7 @@ namespace Gs2::Enhance::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder

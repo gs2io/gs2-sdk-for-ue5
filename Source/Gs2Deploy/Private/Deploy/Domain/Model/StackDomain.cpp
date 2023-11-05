@@ -30,6 +30,7 @@
 #include "Deploy/Domain/Model/Event.h"
 #include "Deploy/Domain/Model/Output.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -37,18 +38,12 @@ namespace Gs2::Deploy::Domain::Model
 {
 
     FStackDomain::FStackDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> StackName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Gs2->RestSession)),
         StackName(StackName),
         ParentKey("deploy:Stack")
     {
@@ -57,10 +52,7 @@ namespace Gs2::Deploy::Domain::Model
     FStackDomain::FStackDomain(
         const FStackDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         StackName(From.StackName),
         ParentKey(From.ParentKey)
@@ -103,7 +95,13 @@ namespace Gs2::Deploy::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->Status = Domain->Status = ResultModel->GetStatus();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetStatus().IsSet())
+            {
+                Self->Status = Domain->Status = ResultModel->GetStatus();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -152,7 +150,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
@@ -209,7 +207,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
@@ -312,7 +310,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
@@ -371,7 +369,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Deploy::Model::FStack::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Deploy::Model::FStack::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -424,7 +422,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
@@ -483,7 +481,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Deploy::Model::FStack::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Deploy::Model::FStack::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -536,7 +534,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Deploy::Model::FStack::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Deploy::Model::FStack::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -555,9 +553,37 @@ namespace Gs2::Deploy::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeResourcesIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             StackName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FStackDomain::SubscribeResources(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Deploy::Model::FResource::TypeName,
+            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+                StackName,
+                "Resource"
+            ),
+            Callback
+        );
+    }
+
+    void FStackDomain::UnsubscribeResources(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Deploy::Model::FResource::TypeName,
+            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+                StackName,
+                "Resource"
+            ),
+            CallbackID
         );
     }
 
@@ -566,10 +592,7 @@ namespace Gs2::Deploy::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Model::FResourceDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             StackName,
             ResourceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ResourceName)
         );
@@ -579,9 +602,37 @@ namespace Gs2::Deploy::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeEventsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             StackName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FStackDomain::SubscribeEvents(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Deploy::Model::FEvent::TypeName,
+            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+                StackName,
+                "Event"
+            ),
+            Callback
+        );
+    }
+
+    void FStackDomain::UnsubscribeEvents(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Deploy::Model::FEvent::TypeName,
+            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+                StackName,
+                "Event"
+            ),
+            CallbackID
         );
     }
 
@@ -590,10 +641,7 @@ namespace Gs2::Deploy::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Model::FEventDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             StackName,
             EventName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EventName)
         );
@@ -603,9 +651,37 @@ namespace Gs2::Deploy::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeOutputsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             StackName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FStackDomain::SubscribeOutputs(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Deploy::Model::FOutput::TypeName,
+            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+                StackName,
+                "Output"
+            ),
+            Callback
+        );
+    }
+
+    void FStackDomain::UnsubscribeOutputs(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Deploy::Model::FOutput::TypeName,
+            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+                StackName,
+                "Output"
+            ),
+            CallbackID
         );
     }
 
@@ -614,10 +690,7 @@ namespace Gs2::Deploy::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Model::FOutputDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             StackName,
             OutputName == TEXT("") ? TOptional<FString>() : TOptional<FString>(OutputName)
         );
@@ -662,7 +735,7 @@ namespace Gs2::Deploy::Domain::Model
         const auto ParentKey = FString("deploy:Stack");
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Deploy::Model::FStack> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Deploy::Model::FStack>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Deploy::Model::FStack>(
             ParentKey,
             Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                 Self->StackName
@@ -684,7 +757,7 @@ namespace Gs2::Deploy::Domain::Model
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     Self->StackName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
@@ -697,7 +770,7 @@ namespace Gs2::Deploy::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Deploy::Model::FStack>(
+            Self->Gs2->Cache->TryGet<Gs2::Deploy::Model::FStack>(
                 ParentKey,
                 Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     Self->StackName
@@ -713,6 +786,37 @@ namespace Gs2::Deploy::Domain::Model
 
     TSharedPtr<FAsyncTask<FStackDomain::FModelTask>> FStackDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStackDomain::FModelTask>>(this->AsShared());
+    }
+
+    Gs2::Core::Domain::CallbackID FStackDomain::Subscribe(
+        TFunction<void(Gs2::Deploy::Model::FStackPtr)> Callback
+    )
+    {
+        return Gs2->Cache->Subscribe(
+            Gs2::Deploy::Model::FStack::TypeName,
+            ParentKey,
+            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
+                StackName
+            ),
+            [Callback](TSharedPtr<Gs2Object> obj)
+            {
+                Callback(StaticCastSharedPtr<Gs2::Deploy::Model::FStack>(obj));
+            }
+        );
+    }
+
+    void FStackDomain::Unsubscribe(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->Unsubscribe(
+            Gs2::Deploy::Model::FStack::TypeName,
+            ParentKey,
+            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
+                StackName
+            ),
+            CallbackID
+        );
     }
 }
 

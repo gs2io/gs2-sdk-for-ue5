@@ -34,6 +34,7 @@
 #include "Inbox/Domain/Model/Received.h"
 #include "Inbox/Domain/Model/ReceivedAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -41,19 +42,13 @@ namespace Gs2::Inbox::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Inbox::FGs2InboxRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Inbox::FGs2InboxRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Inbox::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -66,10 +61,7 @@ namespace Gs2::Inbox::Domain::Model
     FUserDomain::FUserDomain(
         const FUserDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -122,7 +114,7 @@ namespace Gs2::Inbox::Domain::Model
                 const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inbox::Model::FMessage::TypeName,
                     ParentKey,
                     Key,
@@ -132,10 +124,7 @@ namespace Gs2::Inbox::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Inbox::Domain::Model::FMessageDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetName()
@@ -195,7 +184,7 @@ namespace Gs2::Inbox::Domain::Model
                     const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                         Item->GetName()
                     );
-                    Self->Cache->Put(
+                    Self->Gs2->Cache->Put(
                         Gs2::Inbox::Model::FMessage::TypeName,
                         ParentKey,
                         Key,
@@ -204,7 +193,7 @@ namespace Gs2::Inbox::Domain::Model
                     );
                 }
             }
-            Self->Cache->Delete(
+            Self->Gs2->Cache->Delete(
                 Gs2::Inbox::Model::FReceived::TypeName,
                 Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
@@ -220,10 +209,7 @@ namespace Gs2::Inbox::Domain::Model
         {
             Domain->Add(
                 MakeShared<Gs2::Inbox::Domain::Model::FMessageDomain>(
-                    Self->Cache,
-                    Self->JobQueueDomain,
-                    Self->StampSheetConfiguration,
-                    Self->Session,
+                    Self->Gs2,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItem())[i]->GetUserId(),
                     (*ResultModel->GetItem())[i]->GetName()
@@ -237,7 +223,7 @@ namespace Gs2::Inbox::Domain::Model
             const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
                 (*ResultModel->GetItem())[i]->GetName()
             );
-            Self->Cache->Put(
+            Self->Gs2->Cache->Put(
                 Gs2::Inbox::Model::FMessage::TypeName,
                 ParentKey,
                 Key,
@@ -260,7 +246,7 @@ namespace Gs2::Inbox::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Iterator::FDescribeMessagesByUserIdIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName,
             UserId,
@@ -272,7 +258,7 @@ namespace Gs2::Inbox::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Inbox::Model::FMessage::TypeName,
             Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -287,7 +273,7 @@ namespace Gs2::Inbox::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Inbox::Model::FMessage::TypeName,
             Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -303,10 +289,7 @@ namespace Gs2::Inbox::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Model::FMessageDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId,
             MessageName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MessageName)
@@ -317,10 +300,7 @@ namespace Gs2::Inbox::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Model::FReceivedDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId
         );

@@ -31,6 +31,7 @@
 #include "Gateway/Domain/Model/User.h"
 #include "Gateway/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -38,22 +39,14 @@ namespace Gs2::Gateway::Domain::Model
 {
 
     FFirebaseTokenDomain::FFirebaseTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr Wssession,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Session)),
-        Wssession(Wssession),
-        Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Wssession)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Gs2->RestSession)),
+        Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Gs2->WebSocketSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -67,12 +60,8 @@ namespace Gs2::Gateway::Domain::Model
     FFirebaseTokenDomain::FFirebaseTokenDomain(
         const FFirebaseTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
-        Wssession(From.Wssession),
         Wsclient(From.Wsclient),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -124,7 +113,7 @@ namespace Gs2::Gateway::Domain::Model
                 );
                 const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Gateway::Model::FFirebaseToken::TypeName,
                     ParentKey,
                     Key,
@@ -188,7 +177,7 @@ namespace Gs2::Gateway::Domain::Model
                 );
                 const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Gateway::Model::FFirebaseToken::TypeName,
                     ParentKey,
                     Key,
@@ -250,7 +239,7 @@ namespace Gs2::Gateway::Domain::Model
                 );
                 const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
                 );
-                Self->Cache->Delete(Gs2::Gateway::Model::FFirebaseToken::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Gateway::Model::FFirebaseToken::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -349,7 +338,7 @@ namespace Gs2::Gateway::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Gateway::Model::FFirebaseToken> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Gateway::Model::FFirebaseToken>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Gateway::Model::FFirebaseToken>(
             Self->ParentKey,
             Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
             ),
@@ -369,7 +358,7 @@ namespace Gs2::Gateway::Domain::Model
 
                 const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Gateway::Model::FFirebaseToken::TypeName,
                     Self->ParentKey,
                     Key,
@@ -382,7 +371,7 @@ namespace Gs2::Gateway::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Gateway::Model::FFirebaseToken>(
+            Self->Gs2->Cache->TryGet<Gs2::Gateway::Model::FFirebaseToken>(
                 Self->ParentKey,
                 Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
                 ),
@@ -403,7 +392,7 @@ namespace Gs2::Gateway::Domain::Model
         TFunction<void(Gs2::Gateway::Model::FFirebaseTokenPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Gateway::Model::FFirebaseToken::TypeName,
             ParentKey,
             Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
@@ -419,7 +408,7 @@ namespace Gs2::Gateway::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Gateway::Model::FFirebaseToken::TypeName,
             ParentKey,
             Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(

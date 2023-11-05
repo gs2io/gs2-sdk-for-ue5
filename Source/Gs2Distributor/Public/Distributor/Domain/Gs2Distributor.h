@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "Core/Gs2Core.h"
 #include "Core/Domain/Gs2Core.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Distributor/Gs2Distributor.h"
@@ -42,6 +41,12 @@
 // Notification
 #include "Distributor/Model/AutoRunStampSheetNotification.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Distributor::Domain
 {
     DECLARE_EVENT_OneParam(FGs2DistributorDomain, FAutoRunStampSheetNotificationEvent, Gs2::Distributor::Model::FAutoRunStampSheetNotificationPtr);
@@ -53,10 +58,7 @@ namespace Gs2::Distributor::Domain
         TSharedPtr<TArray<Gs2::Distributor::Model::FAutoRunStampSheetNotificationPtr>> CompletedStampSheets;
         TSharedPtr<FCriticalSection> CompletedStampSheetsMutex;
         FAutoRunStampSheetNotificationEvent AutoRunStampSheetNotificationEvent;
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
@@ -67,10 +69,7 @@ namespace Gs2::Distributor::Domain
     public:
 
         FGs2DistributorDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+            const Core::Domain::FGs2Ptr Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 

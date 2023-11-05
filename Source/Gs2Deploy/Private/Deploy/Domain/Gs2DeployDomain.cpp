@@ -29,22 +29,17 @@
 #include "Deploy/Domain/Model/Resource.h"
 #include "Deploy/Domain/Model/Event.h"
 #include "Deploy/Domain/Model/Output.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Deploy::Domain
 {
 
     FGs2DeployDomain::FGs2DeployDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Gs2->RestSession)),
         ParentKey("deploy")
     {
     }
@@ -52,10 +47,7 @@ namespace Gs2::Deploy::Domain
     FGs2DeployDomain::FGs2DeployDomain(
         const FGs2DeployDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -98,7 +90,7 @@ namespace Gs2::Deploy::Domain
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
@@ -108,10 +100,7 @@ namespace Gs2::Deploy::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -160,7 +149,7 @@ namespace Gs2::Deploy::Domain
                 const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FStack::TypeName,
                     ParentKey,
                     Key,
@@ -170,10 +159,7 @@ namespace Gs2::Deploy::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -233,7 +219,7 @@ namespace Gs2::Deploy::Domain
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeStacksIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -242,7 +228,7 @@ namespace Gs2::Deploy::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Deploy::Model::FStack::TypeName,
             "deploy:Stack",
             Callback
@@ -253,7 +239,7 @@ namespace Gs2::Deploy::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Deploy::Model::FStack::TypeName,
             "deploy:Stack",
             CallbackID
@@ -265,10 +251,7 @@ namespace Gs2::Deploy::Domain
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             StackName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StackName)
         );
     }

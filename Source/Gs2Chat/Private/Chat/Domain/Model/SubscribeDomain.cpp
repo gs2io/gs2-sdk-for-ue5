@@ -33,6 +33,7 @@
 #include "Chat/Domain/Model/User.h"
 #include "Chat/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -40,20 +41,14 @@ namespace Gs2::Chat::Domain::Model
 {
 
     FSubscribeDomain::FSubscribeDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> RoomName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         RoomName(RoomName),
@@ -68,10 +63,7 @@ namespace Gs2::Chat::Domain::Model
     FSubscribeDomain::FSubscribeDomain(
         const FSubscribeDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -126,7 +118,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetRoomName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Chat::Model::FSubscribe::TypeName,
                     ParentKey,
                     Key,
@@ -192,7 +184,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetRoomName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Chat::Model::FSubscribe::TypeName,
                     ParentKey,
                     Key,
@@ -256,7 +248,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetRoomName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Chat::Model::FSubscribe::TypeName,
                     ParentKey,
                     Key,
@@ -322,7 +314,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetRoomName()
                 );
-                Self->Cache->Delete(Gs2::Chat::Model::FSubscribe::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Chat::Model::FSubscribe::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -379,7 +371,7 @@ namespace Gs2::Chat::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Chat::Model::FSubscribe> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Chat::Model::FSubscribe>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Chat::Model::FSubscribe>(
             Self->ParentKey,
             Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                 Self->RoomName
@@ -401,7 +393,7 @@ namespace Gs2::Chat::Domain::Model
                 const auto Key = Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                     Self->RoomName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Chat::Model::FSubscribe::TypeName,
                     Self->ParentKey,
                     Key,
@@ -414,7 +406,7 @@ namespace Gs2::Chat::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Chat::Model::FSubscribe>(
+            Self->Gs2->Cache->TryGet<Gs2::Chat::Model::FSubscribe>(
                 Self->ParentKey,
                 Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
                     Self->RoomName
@@ -436,7 +428,7 @@ namespace Gs2::Chat::Domain::Model
         TFunction<void(Gs2::Chat::Model::FSubscribePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Chat::Model::FSubscribe::TypeName,
             ParentKey,
             Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(
@@ -453,7 +445,7 @@ namespace Gs2::Chat::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Chat::Model::FSubscribe::TypeName,
             ParentKey,
             Gs2::Chat::Domain::Model::FSubscribeDomain::CreateCacheKey(

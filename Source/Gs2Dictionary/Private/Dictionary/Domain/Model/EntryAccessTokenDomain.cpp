@@ -33,6 +33,7 @@
 #include "Dictionary/Domain/Model/User.h"
 #include "Dictionary/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -40,20 +41,14 @@ namespace Gs2::Dictionary::Domain::Model
 {
 
     FEntryAccessTokenDomain::FEntryAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const TOptional<FString> EntryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         EntryName(EntryName),
@@ -68,10 +63,7 @@ namespace Gs2::Dictionary::Domain::Model
     FEntryAccessTokenDomain::FEntryAccessTokenDomain(
         const FEntryAccessTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -126,7 +118,7 @@ namespace Gs2::Dictionary::Domain::Model
                 const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Dictionary::Model::FEntry::TypeName,
                     ParentKey,
                     Key,
@@ -190,7 +182,7 @@ namespace Gs2::Dictionary::Domain::Model
                 const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Dictionary::Model::FEntry::TypeName,
                     ParentKey,
                     Key,
@@ -200,8 +192,11 @@ namespace Gs2::Dictionary::Domain::Model
             }
         }
         auto Domain = Self;
-        Domain->Body = *ResultModel->GetBody();
-        Domain->Signature = *ResultModel->GetSignature();
+        if (ResultModel != nullptr)
+        {
+            Domain->Body = *ResultModel->GetBody();
+            Domain->Signature = *ResultModel->GetSignature();
+        }
 
         *Result = Domain;
         return nullptr;
@@ -255,7 +250,7 @@ namespace Gs2::Dictionary::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Dictionary::Model::FEntry> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Dictionary::Model::FEntry>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Dictionary::Model::FEntry>(
             Self->ParentKey,
             Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                 Self->EntryName
@@ -277,7 +272,7 @@ namespace Gs2::Dictionary::Domain::Model
                 const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                     Self->EntryName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Dictionary::Model::FEntry::TypeName,
                     Self->ParentKey,
                     Key,
@@ -290,7 +285,7 @@ namespace Gs2::Dictionary::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Dictionary::Model::FEntry>(
+            Self->Gs2->Cache->TryGet<Gs2::Dictionary::Model::FEntry>(
                 Self->ParentKey,
                 Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
                     Self->EntryName
@@ -312,7 +307,7 @@ namespace Gs2::Dictionary::Domain::Model
         TFunction<void(Gs2::Dictionary::Model::FEntryPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Dictionary::Model::FEntry::TypeName,
             ParentKey,
             Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
@@ -329,7 +324,7 @@ namespace Gs2::Dictionary::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Dictionary::Model::FEntry::TypeName,
             ParentKey,
             Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(

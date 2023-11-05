@@ -40,6 +40,7 @@
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -47,18 +48,12 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("formation:Namespace")
     {
@@ -67,10 +62,7 @@ namespace Gs2::Formation::Domain::Model
     FNamespaceDomain::FNamespaceDomain(
         const FNamespaceDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -113,7 +105,13 @@ namespace Gs2::Formation::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->Status = Domain->Status = ResultModel->GetStatus();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetStatus().IsSet())
+            {
+                Self->Status = Domain->Status = ResultModel->GetStatus();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -162,7 +160,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -219,7 +217,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -278,7 +276,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Formation::Model::FNamespace::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Formation::Model::FNamespace::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -335,7 +333,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FPropertyFormModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -345,10 +343,7 @@ namespace Gs2::Formation::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -405,7 +400,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FFormModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FFormModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -415,10 +410,7 @@ namespace Gs2::Formation::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Formation::Domain::Model::FFormModelMasterDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -475,7 +467,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FMoldModelMasterDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FMoldModelMaster::TypeName,
                     ParentKey,
                     Key,
@@ -485,10 +477,7 @@ namespace Gs2::Formation::Domain::Model
             }
         }
         auto Domain = MakeShared<Gs2::Formation::Domain::Model::FMoldModelMasterDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -507,10 +496,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName
         );
     }
@@ -519,7 +505,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeMoldModelsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName
         );
@@ -529,7 +515,7 @@ namespace Gs2::Formation::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Formation::Model::FMoldModel::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -543,7 +529,7 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Formation::Model::FMoldModel::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -558,10 +544,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FMoldModelDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             MoldModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldModelName)
         );
@@ -571,7 +554,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelsIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName
         );
@@ -581,7 +564,7 @@ namespace Gs2::Formation::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Formation::Model::FPropertyFormModel::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -595,7 +578,7 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Formation::Model::FPropertyFormModel::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -610,10 +593,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FPropertyFormModelDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             PropertyFormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyFormModelName)
         );
@@ -624,10 +604,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FUserDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -638,10 +615,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FUserAccessTokenDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             AccessToken
         );
@@ -651,7 +625,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelMastersIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName
         );
@@ -661,7 +635,7 @@ namespace Gs2::Formation::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Formation::Model::FPropertyFormModelMaster::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -675,7 +649,7 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Formation::Model::FPropertyFormModelMaster::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -690,10 +664,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             PropertyFormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyFormModelName)
         );
@@ -703,7 +674,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeFormModelMastersIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName
         );
@@ -713,7 +684,7 @@ namespace Gs2::Formation::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Formation::Model::FFormModelMaster::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -727,7 +698,7 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Formation::Model::FFormModelMaster::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -742,10 +713,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FFormModelMasterDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             FormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(FormModelName)
         );
@@ -755,7 +723,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeMoldModelMastersIterator>(
-            Cache,
+            Gs2->Cache,
             Client,
             NamespaceName
         );
@@ -765,7 +733,7 @@ namespace Gs2::Formation::Domain::Model
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Formation::Model::FMoldModelMaster::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -779,7 +747,7 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Formation::Model::FMoldModelMaster::TypeName,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
                 NamespaceName,
@@ -794,10 +762,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Model::FMoldModelMasterDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             NamespaceName,
             MoldModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldModelName)
         );
@@ -842,7 +807,7 @@ namespace Gs2::Formation::Domain::Model
         const auto ParentKey = FString("formation:Namespace");
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Formation::Model::FNamespace> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Formation::Model::FNamespace>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FNamespace>(
             ParentKey,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
                 Self->NamespaceName
@@ -864,7 +829,7 @@ namespace Gs2::Formation::Domain::Model
                 const auto Key = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Formation::Model::FNamespace::TypeName,
                     ParentKey,
                     Key,
@@ -877,7 +842,7 @@ namespace Gs2::Formation::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Formation::Model::FNamespace>(
+            Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FNamespace>(
                 ParentKey,
                 Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
                     Self->NamespaceName
@@ -899,7 +864,7 @@ namespace Gs2::Formation::Domain::Model
         TFunction<void(Gs2::Formation::Model::FNamespacePtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Formation::Model::FNamespace::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(
@@ -916,7 +881,7 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Formation::Model::FNamespace::TypeName,
             ParentKey,
             Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheKey(

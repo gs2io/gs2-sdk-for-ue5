@@ -34,6 +34,7 @@
 #include "Enhance/Domain/Model/User.h"
 #include "Enhance/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -41,19 +42,13 @@ namespace Gs2::Enhance::Domain::Model
 {
 
     FEnhanceDomain::FEnhanceDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ParentKey(Gs2::Enhance::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -67,10 +62,7 @@ namespace Gs2::Enhance::Domain::Model
     FEnhanceDomain::FEnhanceDomain(
         const FEnhanceDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -122,7 +114,7 @@ namespace Gs2::Enhance::Domain::Model
                 const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enhance::Model::FRateModel::TypeName,
                     ParentKey,
                     Key,
@@ -134,12 +126,12 @@ namespace Gs2::Enhance::Domain::Model
         if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                Self->Cache,
-                Self->JobQueueDomain,
-                Self->Session,
+                Self->Gs2->Cache,
+                Self->Gs2->JobQueueDomain,
+                Self->Gs2->RestSession,
                 *ResultModel->GetStampSheet(),
                 *ResultModel->GetStampSheetEncryptionKeyId(),
-                Self->StampSheetConfiguration
+                Self->Gs2->StampSheetConfiguration
             );
             const auto Future3 = StampSheet->Run();
             Future3->StartSynchronousTask();
@@ -150,12 +142,12 @@ namespace Gs2::Enhance::Domain::Model
                     [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
                     {
                         return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                            Self->Cache,
-                            Self->JobQueueDomain,
-                            Self->Session,
+                            Self->Gs2->Cache,
+                            Self->Gs2->JobQueueDomain,
+                            Self->Gs2->RestSession,
                             *ResultModel->GetStampSheet(),
                             *ResultModel->GetStampSheetEncryptionKeyId(),
-                            Self->StampSheetConfiguration
+                            Self->Gs2->StampSheetConfiguration
                         )->Run();
                     }
                 );

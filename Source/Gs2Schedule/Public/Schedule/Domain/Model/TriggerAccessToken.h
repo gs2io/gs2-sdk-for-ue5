@@ -28,6 +28,12 @@
 #include "Schedule/Domain/Iterator/DescribeEventsIterator.h"
 #include "Schedule/Domain/Iterator/DescribeEventsByUserIdIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Schedule::Domain::Model
 {
     class FNamespaceDomain;
@@ -43,10 +49,7 @@ namespace Gs2::Schedule::Domain::Model
     class GS2SCHEDULE_API FTriggerAccessTokenDomain:
         public TSharedFromThis<FTriggerAccessTokenDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
@@ -61,10 +64,7 @@ namespace Gs2::Schedule::Domain::Model
     public:
 
         FTriggerAccessTokenDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
             const TOptional<FString> TriggerName

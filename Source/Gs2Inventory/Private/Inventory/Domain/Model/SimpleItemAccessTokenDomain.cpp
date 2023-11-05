@@ -56,6 +56,7 @@
 #include "Inventory/Domain/Model/UserAccessToken.h"
 #include "Inventory/Domain/Model/ItemSetEntry.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -63,21 +64,15 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FSimpleItemAccessTokenDomain::FSimpleItemAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const TOptional<FString> InventoryName,
         const TOptional<FString> ItemName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         InventoryName(InventoryName),
@@ -94,10 +89,7 @@ namespace Gs2::Inventory::Domain::Model
     FSimpleItemAccessTokenDomain::FSimpleItemAccessTokenDomain(
         const FSimpleItemAccessTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -155,7 +147,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetItemName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FSimpleItem::TypeName,
                     ParentKey,
                     Key,
@@ -173,7 +165,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FSimpleItemModel::TypeName,
                     ParentKey,
                     Key,
@@ -239,7 +231,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetItemName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FSimpleItem::TypeName,
                     ParentKey,
                     Key,
@@ -257,7 +249,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemModelDomain::CreateCacheKey(
                     ResultModel->GetSimpleItemModel()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FSimpleItemModel::TypeName,
                     ParentKey,
                     Key,
@@ -267,8 +259,11 @@ namespace Gs2::Inventory::Domain::Model
             }
         }
         auto Domain = Self;
-        Domain->Body = *ResultModel->GetBody();
-        Domain->Signature = *ResultModel->GetSignature();
+        if (ResultModel != nullptr)
+        {
+            Domain->Body = *ResultModel->GetBody();
+            Domain->Signature = *ResultModel->GetSignature();
+        }
 
         *Result = Domain;
         return nullptr;
@@ -372,7 +367,7 @@ namespace Gs2::Inventory::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Inventory::Model::FSimpleItem> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Inventory::Model::FSimpleItem>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FSimpleItem>(
             Self->ParentKey,
             Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
                 Self->ItemName
@@ -394,7 +389,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
                     Self->ItemName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FSimpleItem::TypeName,
                     Self->ParentKey,
                     Key,
@@ -407,7 +402,7 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Inventory::Model::FSimpleItem>(
+            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FSimpleItem>(
                 Self->ParentKey,
                 Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
                     Self->ItemName
@@ -429,7 +424,7 @@ namespace Gs2::Inventory::Domain::Model
         TFunction<void(Gs2::Inventory::Model::FSimpleItemPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Inventory::Model::FSimpleItem::TypeName,
             ParentKey,
             Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
@@ -446,7 +441,7 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Inventory::Model::FSimpleItem::TypeName,
             ParentKey,
             Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(

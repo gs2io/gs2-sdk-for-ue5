@@ -55,6 +55,7 @@
 #include "Inventory/Domain/Model/UserAccessToken.h"
 #include "Inventory/Domain/Model/ItemSetEntry.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -62,20 +63,14 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FBigItemModelDomain::FBigItemModelDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> InventoryName,
         const TOptional<FString> ItemName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         InventoryName(InventoryName),
         ItemName(ItemName),
@@ -90,10 +85,7 @@ namespace Gs2::Inventory::Domain::Model
     FBigItemModelDomain::FBigItemModelDomain(
         const FBigItemModelDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         InventoryName(From.InventoryName),
@@ -148,7 +140,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FBigItemModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FBigItemModel::TypeName,
                     ParentKey,
                     Key,
@@ -209,7 +201,7 @@ namespace Gs2::Inventory::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Inventory::Model::FBigItemModel> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Inventory::Model::FBigItemModel>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FBigItemModel>(
             Self->ParentKey,
             Gs2::Inventory::Domain::Model::FBigItemModelDomain::CreateCacheKey(
                 Self->ItemName
@@ -231,7 +223,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FBigItemModelDomain::CreateCacheKey(
                     Self->ItemName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FBigItemModel::TypeName,
                     Self->ParentKey,
                     Key,
@@ -244,7 +236,7 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Inventory::Model::FBigItemModel>(
+            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FBigItemModel>(
                 Self->ParentKey,
                 Gs2::Inventory::Domain::Model::FBigItemModelDomain::CreateCacheKey(
                     Self->ItemName
@@ -266,7 +258,7 @@ namespace Gs2::Inventory::Domain::Model
         TFunction<void(Gs2::Inventory::Model::FBigItemModelPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Inventory::Model::FBigItemModel::TypeName,
             ParentKey,
             Gs2::Inventory::Domain::Model::FBigItemModelDomain::CreateCacheKey(
@@ -283,7 +275,7 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Inventory::Model::FBigItemModel::TypeName,
             ParentKey,
             Gs2::Inventory::Domain::Model::FBigItemModelDomain::CreateCacheKey(

@@ -30,22 +30,17 @@
 #include "Identifier/Domain/Model/Identifier.h"
 #include "Identifier/Domain/Model/Password.h"
 #include "Identifier/Domain/Model/AttachSecurityPolicy.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Identifier::Domain
 {
 
     FGs2IdentifierDomain::FGs2IdentifierDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Gs2->RestSession)),
         ParentKey("identifier")
     {
     }
@@ -53,10 +48,7 @@ namespace Gs2::Identifier::Domain
     FGs2IdentifierDomain::FGs2IdentifierDomain(
         const FGs2IdentifierDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -99,7 +91,7 @@ namespace Gs2::Identifier::Domain
                 const auto Key = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Identifier::Model::FUser::TypeName,
                     ParentKey,
                     Key,
@@ -109,10 +101,7 @@ namespace Gs2::Identifier::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FUserDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -161,7 +150,7 @@ namespace Gs2::Identifier::Domain
                 const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                     ParentKey,
                     Key,
@@ -171,10 +160,7 @@ namespace Gs2::Identifier::Domain
             }
         }
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -191,7 +177,7 @@ namespace Gs2::Identifier::Domain
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeUsersIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -200,7 +186,7 @@ namespace Gs2::Identifier::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Identifier::Model::FUser::TypeName,
             "identifier:User",
             Callback
@@ -211,7 +197,7 @@ namespace Gs2::Identifier::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Identifier::Model::FUser::TypeName,
             "identifier:User",
             CallbackID
@@ -223,10 +209,7 @@ namespace Gs2::Identifier::Domain
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Model::FUserDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             UserName == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserName)
         );
     }
@@ -235,7 +218,7 @@ namespace Gs2::Identifier::Domain
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeSecurityPoliciesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -244,7 +227,7 @@ namespace Gs2::Identifier::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Identifier::Model::FSecurityPolicy::TypeName,
             "identifier:SecurityPolicy",
             Callback
@@ -255,7 +238,7 @@ namespace Gs2::Identifier::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Identifier::Model::FSecurityPolicy::TypeName,
             "identifier:SecurityPolicy",
             CallbackID
@@ -266,7 +249,7 @@ namespace Gs2::Identifier::Domain
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeCommonSecurityPoliciesIterator>(
-            Cache,
+            Gs2->Cache,
             Client
         );
     }
@@ -275,7 +258,7 @@ namespace Gs2::Identifier::Domain
     TFunction<void()> Callback
     )
     {
-        return Cache->ListSubscribe(
+        return Gs2->Cache->ListSubscribe(
             Gs2::Identifier::Model::FSecurityPolicy::TypeName,
             "identifier:SecurityPolicy",
             Callback
@@ -286,7 +269,7 @@ namespace Gs2::Identifier::Domain
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->ListUnsubscribe(
+        Gs2->Cache->ListUnsubscribe(
             Gs2::Identifier::Model::FSecurityPolicy::TypeName,
             "identifier:SecurityPolicy",
             CallbackID
@@ -298,10 +281,7 @@ namespace Gs2::Identifier::Domain
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>(
-            Cache,
-            JobQueueDomain,
-            StampSheetConfiguration,
-            Session,
+            Gs2,
             SecurityPolicyName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SecurityPolicyName)
         );
     }

@@ -28,6 +28,7 @@ namespace Gs2::UE5::Core::Domain
             Profile->Gs2WebSocketSession,
             Profile->DistributorNamespaceName
         );
+        Super->Initialize();
 
         Account = MakeShared<Gs2::UE5::Account::Domain::FEzGs2Account>(Super->Account, Profile);
         Auth = MakeShared<Gs2::UE5::Auth::Domain::FEzGs2Auth>(Super->Auth, Profile);

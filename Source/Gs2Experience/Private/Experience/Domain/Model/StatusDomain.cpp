@@ -33,6 +33,7 @@
 #include "Experience/Domain/Model/Status.h"
 #include "Experience/Domain/Model/StatusAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -40,21 +41,15 @@ namespace Gs2::Experience::Domain::Model
 {
 
     FStatusDomain::FStatusDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> ExperienceName,
         const TOptional<FString> PropertyId
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Experience::FGs2ExperienceRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Experience::FGs2ExperienceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
         ExperienceName(ExperienceName),
@@ -70,10 +65,7 @@ namespace Gs2::Experience::Domain::Model
     FStatusDomain::FStatusDomain(
         const FStatusDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -131,7 +123,7 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -197,7 +189,7 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -207,8 +199,11 @@ namespace Gs2::Experience::Domain::Model
             }
         }
         auto Domain = Self;
-        Domain->Body = *ResultModel->GetBody();
-        Domain->Signature = *ResultModel->GetSignature();
+        if (ResultModel != nullptr)
+        {
+            Domain->Body = *ResultModel->GetBody();
+            Domain->Signature = *ResultModel->GetSignature();
+        }
 
         *Result = Domain;
         return nullptr;
@@ -267,7 +262,7 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -335,7 +330,7 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -403,7 +398,7 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -471,7 +466,7 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -539,7 +534,7 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -607,7 +602,7 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FStatus::TypeName,
                     ParentKey,
                     Key,
@@ -675,7 +670,7 @@ namespace Gs2::Experience::Domain::Model
                     ResultModel->GetItem()->GetExperienceName(),
                     ResultModel->GetItem()->GetPropertyId()
                 );
-                Self->Cache->Delete(Gs2::Experience::Model::FStatus::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Experience::Model::FStatus::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -826,12 +821,12 @@ namespace Gs2::Experience::Domain::Model
         if (ResultModel && ResultModel->GetStampSheet())
         {
             const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                Self->Cache,
-                Self->JobQueueDomain,
-                Self->Session,
+                Self->Gs2->Cache,
+                Self->Gs2->JobQueueDomain,
+                Self->Gs2->RestSession,
                 *ResultModel->GetStampSheet(),
                 *ResultModel->GetStampSheetEncryptionKeyId(),
-                Self->StampSheetConfiguration
+                Self->Gs2->StampSheetConfiguration
             );
             const auto Future3 = StampSheet->Run();
             Future3->StartSynchronousTask();
@@ -842,12 +837,12 @@ namespace Gs2::Experience::Domain::Model
                     [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
                     {
                         return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                            Self->Cache,
-                            Self->JobQueueDomain,
-                            Self->Session,
+                            Self->Gs2->Cache,
+                            Self->Gs2->JobQueueDomain,
+                            Self->Gs2->RestSession,
                             *ResultModel->GetStampSheet(),
                             *ResultModel->GetStampSheetEncryptionKeyId(),
-                            Self->StampSheetConfiguration
+                            Self->Gs2->StampSheetConfiguration
                         )->Run();
                     }
                 );
@@ -915,7 +910,7 @@ namespace Gs2::Experience::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Experience::Model::FStatus> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Experience::Model::FStatus>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Experience::Model::FStatus>(
             Self->ParentKey,
             Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
                 Self->ExperienceName,
@@ -939,7 +934,7 @@ namespace Gs2::Experience::Domain::Model
                     Self->ExperienceName,
                     Self->PropertyId
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FStatus::TypeName,
                     Self->ParentKey,
                     Key,
@@ -952,7 +947,7 @@ namespace Gs2::Experience::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Experience::Model::FStatus>(
+            Self->Gs2->Cache->TryGet<Gs2::Experience::Model::FStatus>(
                 Self->ParentKey,
                 Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
                     Self->ExperienceName,
@@ -975,7 +970,7 @@ namespace Gs2::Experience::Domain::Model
         TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Experience::Model::FStatus::TypeName,
             ParentKey,
             Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
@@ -993,7 +988,7 @@ namespace Gs2::Experience::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Experience::Model::FStatus::TypeName,
             ParentKey,
             Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(

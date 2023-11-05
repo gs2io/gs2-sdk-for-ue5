@@ -45,6 +45,12 @@
 #include "Inventory/Domain/Iterator/DescribeBigItemsIterator.h"
 #include "Inventory/Domain/Iterator/DescribeBigItemsByUserIdIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::Inventory::Domain::Model
 {
     class FNamespaceDomain;
@@ -82,10 +88,7 @@ namespace Gs2::Inventory::Domain::Model
     class GS2INVENTORY_API FReferenceOfDomain:
         public TSharedFromThis<FReferenceOfDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
@@ -102,10 +105,7 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FReferenceOfDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> InventoryName,

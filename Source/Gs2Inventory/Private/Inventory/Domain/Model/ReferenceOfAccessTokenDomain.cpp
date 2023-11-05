@@ -31,6 +31,14 @@
 #include "Inventory/Domain/Model/InventoryModel.h"
 #include "Inventory/Domain/Model/ItemModelMaster.h"
 #include "Inventory/Domain/Model/ItemModel.h"
+#include "Inventory/Domain/Model/SimpleInventoryModelMaster.h"
+#include "Inventory/Domain/Model/SimpleInventoryModel.h"
+#include "Inventory/Domain/Model/SimpleItemModelMaster.h"
+#include "Inventory/Domain/Model/SimpleItemModel.h"
+#include "Inventory/Domain/Model/BigInventoryModelMaster.h"
+#include "Inventory/Domain/Model/BigInventoryModel.h"
+#include "Inventory/Domain/Model/BigItemModelMaster.h"
+#include "Inventory/Domain/Model/BigItemModel.h"
 #include "Inventory/Domain/Model/CurrentItemModelMaster.h"
 #include "Inventory/Domain/Model/Inventory.h"
 #include "Inventory/Domain/Model/InventoryAccessToken.h"
@@ -38,10 +46,19 @@
 #include "Inventory/Domain/Model/ItemSetAccessToken.h"
 #include "Inventory/Domain/Model/ReferenceOf.h"
 #include "Inventory/Domain/Model/ReferenceOfAccessToken.h"
+#include "Inventory/Domain/Model/SimpleInventory.h"
+#include "Inventory/Domain/Model/SimpleInventoryAccessToken.h"
+#include "Inventory/Domain/Model/SimpleItem.h"
+#include "Inventory/Domain/Model/SimpleItemAccessToken.h"
+#include "Inventory/Domain/Model/BigInventory.h"
+#include "Inventory/Domain/Model/BigInventoryAccessToken.h"
+#include "Inventory/Domain/Model/BigItem.h"
+#include "Inventory/Domain/Model/BigItemAccessToken.h"
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
 #include "Inventory/Domain/Model/ItemSetEntry.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -49,10 +66,7 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FReferenceOfAccessTokenDomain::FReferenceOfAccessTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const TOptional<FString> InventoryName,
@@ -61,11 +75,8 @@ namespace Gs2::Inventory::Domain::Model
         const TOptional<FString> ReferenceOf
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         InventoryName(InventoryName),
@@ -80,6 +91,21 @@ namespace Gs2::Inventory::Domain::Model
             ItemSetName,
             "ItemSet"
         ))
+    {
+    }
+
+    FReferenceOfAccessTokenDomain::FReferenceOfAccessTokenDomain(
+        const FReferenceOfAccessTokenDomain& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        AccessToken(From.AccessToken),
+        InventoryName(From.InventoryName),
+        ItemName(From.ItemName),
+        ItemSetName(From.ItemSetName),
+        ReferenceOf(From.ReferenceOf),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -134,7 +160,7 @@ namespace Gs2::Inventory::Domain::Model
                     ResultModel->GetItemSet()->GetItemName(),
                     ResultModel->GetItemSet()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FItemSet::TypeName,
                     ParentKey,
                     Key,
@@ -152,7 +178,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FItemModel::TypeName,
                     ParentKey,
                     Key,
@@ -232,7 +258,7 @@ namespace Gs2::Inventory::Domain::Model
                     ResultModel->GetItemSet()->GetItemName(),
                     ResultModel->GetItemSet()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FItemSet::TypeName,
                     ParentKey,
                     Key,
@@ -250,7 +276,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FItemModel::TypeName,
                     ParentKey,
                     Key,
@@ -271,10 +297,7 @@ namespace Gs2::Inventory::Domain::Model
             }
         }
         const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             Self->AccessToken,
             Request->GetInventoryName(),
@@ -342,7 +365,7 @@ namespace Gs2::Inventory::Domain::Model
                     ResultModel->GetItemSet()->GetItemName(),
                     ResultModel->GetItemSet()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Inventory::Model::FItemSet::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Inventory::Model::FItemSet::TypeName, ParentKey, Key);
             }
             if (ResultModel->GetItemModel() != nullptr)
             {
@@ -354,7 +377,7 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
                     ResultModel->GetItemModel()->GetName()
                 );
-                Self->Cache->Delete(Gs2::Inventory::Model::FItemModel::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Inventory::Model::FItemModel::TypeName, ParentKey, Key);
             }
             if (ResultModel->GetInventory() != nullptr)
             {
@@ -366,14 +389,11 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
-                Self->Cache->Delete(Gs2::Inventory::Model::FInventory::TypeName, ParentKey, Key);
+                Self->Gs2->Cache->Delete(Gs2::Inventory::Model::FInventory::TypeName, ParentKey, Key);
             }
         }
         const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain>(
-            Self->Cache,
-            Self->JobQueueDomain,
-            Self->StampSheetConfiguration,
-            Self->Session,
+            Self->Gs2,
             Request->GetNamespaceName(),
             Self->AccessToken,
             Request->GetInventoryName(),
@@ -401,7 +421,7 @@ namespace Gs2::Inventory::Domain::Model
         FString ChildType
     )
     {
-        return FString() +
+        return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (InventoryName.IsSet() ? *InventoryName : "null") + ":" +
@@ -415,7 +435,7 @@ namespace Gs2::Inventory::Domain::Model
         TOptional<FString> ReferenceOf
     )
     {
-        return FString() +
+        return FString("") +
             (ReferenceOf.IsSet() ? *ReferenceOf : "null");
     }
 
@@ -445,7 +465,7 @@ namespace Gs2::Inventory::Domain::Model
         );
         // ReSharper disable once CppLocalVariableMayBeConst
         Gs2::Inventory::Model::FItemSetPtr Value;
-        const auto bCacheHit = Self->Cache->TryGet<Gs2::Inventory::Model::FItemSet>(
+        const auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSet>(
             ParentKey,
             Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
                 Self->ItemName,
@@ -465,13 +485,14 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
 
-                Self->Cache->Put(
-                    Gs2::Inventory::Model::FItemSet::TypeName,
+                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                    Self->ItemName,
+                    Self->ItemSetName
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FReferenceOf::TypeName,
                     Self->ParentKey,
-                    Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                        Self->ItemName,
-                        Self->ItemSetName
-                    ),
+                    Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
@@ -481,8 +502,8 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Inventory::Model::FItemSet>(
-                ParentKey,
+            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSet>(
+                Self->ParentKey,
                 Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
                     Self->ItemName,
                     Self->ItemSetName

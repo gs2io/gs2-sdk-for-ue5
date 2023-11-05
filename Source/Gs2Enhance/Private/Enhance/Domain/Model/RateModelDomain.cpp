@@ -34,6 +34,7 @@
 #include "Enhance/Domain/Model/User.h"
 #include "Enhance/Domain/Model/UserAccessToken.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -41,19 +42,13 @@ namespace Gs2::Enhance::Domain::Model
 {
 
     FRateModelDomain::FRateModelDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+        const Core::Domain::FGs2Ptr Gs2,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RateName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         RateName(RateName),
         ParentKey(Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -66,10 +61,7 @@ namespace Gs2::Enhance::Domain::Model
     FRateModelDomain::FRateModelDomain(
         const FRateModelDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         RateName(From.RateName),
@@ -121,7 +113,7 @@ namespace Gs2::Enhance::Domain::Model
                 const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enhance::Model::FRateModel::TypeName,
                     ParentKey,
                     Key,
@@ -180,7 +172,7 @@ namespace Gs2::Enhance::Domain::Model
     {
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Enhance::Model::FRateModel> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Enhance::Model::FRateModel>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Enhance::Model::FRateModel>(
             Self->ParentKey,
             Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                 Self->RateName
@@ -202,7 +194,7 @@ namespace Gs2::Enhance::Domain::Model
                 const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                     Self->RateName
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enhance::Model::FRateModel::TypeName,
                     Self->ParentKey,
                     Key,
@@ -215,7 +207,7 @@ namespace Gs2::Enhance::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Cache->TryGet<Gs2::Enhance::Model::FRateModel>(
+            Self->Gs2->Cache->TryGet<Gs2::Enhance::Model::FRateModel>(
                 Self->ParentKey,
                 Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
                     Self->RateName
@@ -237,7 +229,7 @@ namespace Gs2::Enhance::Domain::Model
         TFunction<void(Gs2::Enhance::Model::FRateModelPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Enhance::Model::FRateModel::TypeName,
             ParentKey,
             Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
@@ -254,7 +246,7 @@ namespace Gs2::Enhance::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Enhance::Model::FRateModel::TypeName,
             ParentKey,
             Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(

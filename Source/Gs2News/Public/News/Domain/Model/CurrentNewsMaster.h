@@ -27,6 +27,12 @@
 #include "News/Domain/Iterator/DescribeNewsIterator.h"
 #include "News/Domain/Iterator/DescribeNewsByUserIdIterator.h"
 
+namespace Gs2::Core::Domain
+{
+    class FGs2;
+    typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
 namespace Gs2::News::Domain::Model
 {
     class FNamespaceDomain;
@@ -42,10 +48,7 @@ namespace Gs2::News::Domain::Model
     class GS2NEWS_API FCurrentNewsMasterDomain:
         public TSharedFromThis<FCurrentNewsMasterDomain>
     {
-        Core::Domain::FCacheDatabasePtr Cache;
-        Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
-        Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
+        const Core::Domain::FGs2Ptr Gs2;
         Gs2::News::FGs2NewsRestClientPtr Client;
 
         public:
@@ -67,10 +70,7 @@ namespace Gs2::News::Domain::Model
     public:
 
         FCurrentNewsMasterDomain(
-            const Core::Domain::FCacheDatabasePtr Cache,
-            const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-            const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session,
+            const Core::Domain::FGs2Ptr Gs2,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );

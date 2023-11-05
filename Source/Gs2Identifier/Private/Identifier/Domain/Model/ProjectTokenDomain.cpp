@@ -29,6 +29,7 @@
 #include "Identifier/Domain/Model/Password.h"
 #include "Identifier/Domain/Model/AttachSecurityPolicy.h"
 
+#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/StampSheetDomain.h"
 
@@ -36,17 +37,11 @@ namespace Gs2::Identifier::Domain::Model
 {
 
     FProjectTokenDomain::FProjectTokenDomain(
-        const Core::Domain::FCacheDatabasePtr Cache,
-        const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain,
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration,
-        const Gs2::Core::Net::Rest::FGs2RestSessionPtr Session
+        const Core::Domain::FGs2Ptr Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
-        JobQueueDomain(JobQueueDomain),
-        StampSheetConfiguration(StampSheetConfiguration),
-        Session(Session),
-        Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Session)),
+        Gs2(Gs2),
+        Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Gs2->RestSession)),
         ParentKey("identifier:ProjectToken")
     {
     }
@@ -54,10 +49,7 @@ namespace Gs2::Identifier::Domain::Model
     FProjectTokenDomain::FProjectTokenDomain(
         const FProjectTokenDomain& From
     ):
-        Cache(From.Cache),
-        JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
-        Session(From.Session),
+        Gs2(From.Gs2),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -97,10 +89,25 @@ namespace Gs2::Identifier::Domain::Model
             
         }
         const auto Domain = Self;
-        Domain->AccessToken = Domain->AccessToken = ResultModel->GetAccessToken();
-        Domain->TokenType = Domain->TokenType = ResultModel->GetTokenType();
-        Domain->ExpiresIn = Domain->ExpiresIn = ResultModel->GetExpiresIn();
-        Domain->OwnerId = Domain->OwnerId = ResultModel->GetOwnerId();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetAccessToken().IsSet())
+            {
+                Self->AccessToken = Domain->AccessToken = ResultModel->GetAccessToken();
+            }
+            if (ResultModel->GetTokenType().IsSet())
+            {
+                Self->TokenType = Domain->TokenType = ResultModel->GetTokenType();
+            }
+            if (ResultModel->GetExpiresIn().IsSet())
+            {
+                Self->ExpiresIn = Domain->ExpiresIn = ResultModel->GetExpiresIn();
+            }
+            if (ResultModel->GetOwnerId().IsSet())
+            {
+                Self->OwnerId = Domain->OwnerId = ResultModel->GetOwnerId();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -146,7 +153,7 @@ namespace Gs2::Identifier::Domain::Model
                 const auto ParentKey = FString("identifier:ProjectToken");
                 const auto Key = Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
                 );
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Identifier::Model::FProjectToken::TypeName,
                     ParentKey,
                     Key,
@@ -202,7 +209,7 @@ namespace Gs2::Identifier::Domain::Model
         const auto ParentKey = FString("identifier:ProjectToken");
         // ReSharper disable once CppLocalVariableMayBeConst
         TSharedPtr<Gs2::Identifier::Model::FProjectToken> Value;
-        auto bCacheHit = Self->Cache->TryGet<Gs2::Identifier::Model::FProjectToken>(
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FProjectToken>(
             ParentKey,
             Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
             ),
@@ -221,7 +228,7 @@ namespace Gs2::Identifier::Domain::Model
         TFunction<void(Gs2::Identifier::Model::FProjectTokenPtr)> Callback
     )
     {
-        return Cache->Subscribe(
+        return Gs2->Cache->Subscribe(
             Gs2::Identifier::Model::FProjectToken::TypeName,
             ParentKey,
             Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
@@ -237,7 +244,7 @@ namespace Gs2::Identifier::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Cache->Unsubscribe(
+        Gs2->Cache->Unsubscribe(
             Gs2::Identifier::Model::FProjectToken::TypeName,
             ParentKey,
             Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
