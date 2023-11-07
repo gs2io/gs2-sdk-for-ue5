@@ -134,6 +134,32 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FCancelMatchmakingRequestPtr Request
         );
 
+        class GS2MATCHMAKING_API FGetTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Model::FGathering>,
+            public TSharedFromThis<FGetTask>
+        {
+            const TSharedPtr<FGatheringAccessTokenDomain> Self;
+            const Request::FGetGatheringRequestPtr Request;
+        public:
+            explicit FGetTask(
+                const TSharedPtr<FGatheringAccessTokenDomain> Self,
+                const Request::FGetGatheringRequestPtr Request
+            );
+
+            FGetTask(
+                const FGetTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FGathering>> Result
+            ) override;
+        };
+        friend FGetTask;
+
+        TSharedPtr<FAsyncTask<FGetTask>> Get(
+            Request::FGetGatheringRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

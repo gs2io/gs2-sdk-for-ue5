@@ -279,6 +279,69 @@ namespace Gs2::Chat::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FPostTask>>(this->AsShared(), Request);
     }
 
+    FRoomAccessTokenDomain::FGetTask::FGetTask(
+        const TSharedPtr<FRoomAccessTokenDomain> Self,
+        const Request::FGetRoomRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FRoomAccessTokenDomain::FGetTask::FGetTask(
+        const FGetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRoomAccessTokenDomain::FGetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Chat::Model::FRoom>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithRoomName(Self->RoomName);
+        const auto Future = Self->Client->GetRoom(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Chat::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    TOptional<FString>("Singleton"),
+                    "Room"
+                );
+                const auto Key = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Chat::Model::FRoom::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRoomAccessTokenDomain::FGetTask>> FRoomAccessTokenDomain::Get(
+        Request::FGetRoomRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Chat::Domain::Iterator::FDescribeMessagesIteratorPtr FRoomAccessTokenDomain::Messages(
     ) const
     {
@@ -387,6 +450,43 @@ namespace Gs2::Chat::Domain::Model
             ),
             &Value
         );
+        if (!bCacheHit) {
+            const auto Future = Self->Get(
+                MakeShared<Gs2::Chat::Request::FGetRoomRequest>()
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                {
+                    return Future->GetTask().Error();
+                }
+
+                const auto Key = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
+                    Self->RoomName
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Chat::Model::FRoom::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "room")
+                {
+                    return Future->GetTask().Error();
+                }
+            }
+            Self->Gs2->Cache->TryGet<Gs2::Chat::Model::FRoom>(
+                Self->ParentKey,
+                Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheKey(
+                    Self->RoomName
+                ),
+                &Value
+            );
+            Future->EnsureCompletion();
+        }
         *Result = Value;
 
         return nullptr;

@@ -156,6 +156,32 @@ namespace Gs2::Chat::Domain::Model
             Request::FPostRequestPtr Request
         );
 
+        class GS2CHAT_API FGetTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Chat::Model::FRoom>,
+            public TSharedFromThis<FGetTask>
+        {
+            const TSharedPtr<FRoomAccessTokenDomain> Self;
+            const Request::FGetRoomRequestPtr Request;
+        public:
+            explicit FGetTask(
+                const TSharedPtr<FRoomAccessTokenDomain> Self,
+                const Request::FGetRoomRequestPtr Request
+            );
+
+            FGetTask(
+                const FGetTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Chat::Model::FRoom>> Result
+            ) override;
+        };
+        friend FGetTask;
+
+        TSharedPtr<FAsyncTask<FGetTask>> Get(
+            Request::FGetRoomRequestPtr Request
+        );
+
         Gs2::Chat::Domain::Iterator::FDescribeMessagesIteratorPtr Messages(
         ) const;
 

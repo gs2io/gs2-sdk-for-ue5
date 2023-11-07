@@ -204,6 +204,69 @@ namespace Gs2::Matchmaking::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCancelMatchmakingTask>>(this->AsShared(), Request);
     }
 
+    FGatheringAccessTokenDomain::FGetTask::FGetTask(
+        const TSharedPtr<FGatheringAccessTokenDomain> Self,
+        const Request::FGetGatheringRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGatheringAccessTokenDomain::FGetTask::FGetTask(
+        const FGetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGatheringAccessTokenDomain::FGetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FGathering>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithGatheringName(Self->GatheringName);
+        const auto Future = Self->Client->GetGathering(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    TOptional<FString>("Singleton"),
+                    "Gathering"
+                );
+                const auto Key = Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Matchmaking::Model::FGathering::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        *Result = ResultModel->GetItem();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGatheringAccessTokenDomain::FGetTask>> FGatheringAccessTokenDomain::Get(
+        Request::FGetGatheringRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
+    }
+
     FString FGatheringAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
@@ -253,6 +316,43 @@ namespace Gs2::Matchmaking::Domain::Model
             ),
             &Value
         );
+        if (!bCacheHit) {
+            const auto Future = Self->Get(
+                MakeShared<Gs2::Matchmaking::Request::FGetGatheringRequest>()
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                {
+                    return Future->GetTask().Error();
+                }
+
+                const auto Key = Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
+                    Self->GatheringName
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Matchmaking::Model::FGathering::TypeName,
+                    Self->ParentKey,
+                    Key,
+                    nullptr,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "gathering")
+                {
+                    return Future->GetTask().Error();
+                }
+            }
+            Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FGathering>(
+                Self->ParentKey,
+                Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
+                    Self->GatheringName
+                ),
+                &Value
+            );
+            Future->EnsureCompletion();
+        }
         *Result = Value;
 
         return nullptr;
