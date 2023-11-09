@@ -34,11 +34,11 @@ struct FGs2SkillTreeStatusValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString StatusId = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString UserId = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FString> ReleasedNodeNames = TArray<FString>();
 };
 

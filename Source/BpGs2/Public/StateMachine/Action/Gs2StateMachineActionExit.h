@@ -36,10 +36,10 @@ class BPGS2_API UGs2StateMachineExitAsyncFunction : public UBlueprintAsyncAction
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StateMachineExitSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StateMachineExitErrorDelegate OnError;
 
     UGs2StateMachineExitAsyncFunction(const FObjectInitializer& ObjectInitializer);

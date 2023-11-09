@@ -36,10 +36,10 @@ class BPGS2_API UGs2DatastoreDeleteDataObjectAsyncFunction : public UBlueprintAs
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreDeleteDataObjectSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreDeleteDataObjectErrorDelegate OnError;
 
     UGs2DatastoreDeleteDataObjectAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -34,9 +34,9 @@ struct FGs2RealtimeCreateNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString RoomName = "";
 };
 
@@ -58,7 +58,7 @@ struct FBpRealtimeCreateNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzRealtimeCreateNotificationEvent Value;
 };
 

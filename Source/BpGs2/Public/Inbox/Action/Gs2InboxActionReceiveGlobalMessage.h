@@ -36,10 +36,10 @@ class BPGS2_API UGs2InboxReceiveGlobalMessageAsyncFunction : public UBlueprintAs
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InboxReceiveGlobalMessageSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InboxReceiveGlobalMessageErrorDelegate OnError;
 
     UGs2InboxReceiveGlobalMessageAsyncFunction(const FObjectInitializer& ObjectInitializer);

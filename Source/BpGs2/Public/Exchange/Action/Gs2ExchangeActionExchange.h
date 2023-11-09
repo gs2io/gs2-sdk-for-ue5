@@ -40,10 +40,10 @@ class BPGS2_API UGs2ExchangeExchangeAsyncFunction : public UBlueprintAsyncAction
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeExchangeSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeExchangeErrorDelegate OnError;
 
     UGs2ExchangeExchangeAsyncFunction(const FObjectInitializer& ObjectInitializer);

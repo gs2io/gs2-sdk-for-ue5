@@ -34,10 +34,10 @@ class BPGS2_API UGs2EnhanceRateModelGetValueAsyncFunction : public UBlueprintAsy
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceRateModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceRateModelGetValueErrorDelegate OnError;
 
     UGs2EnhanceRateModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

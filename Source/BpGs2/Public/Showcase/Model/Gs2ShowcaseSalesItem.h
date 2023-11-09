@@ -28,13 +28,13 @@ struct FGs2ShowcaseSalesItem
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Name = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Metadata = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2ShowcaseConsumeAction> ConsumeActions = TArray<FGs2ShowcaseConsumeAction>();
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2ShowcaseAcquireAction> AcquireActions = TArray<FGs2ShowcaseAcquireAction>();
 };
 

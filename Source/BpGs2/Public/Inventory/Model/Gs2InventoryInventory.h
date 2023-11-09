@@ -34,13 +34,13 @@ struct FGs2InventoryInventoryValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString InventoryId = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString InventoryName = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 CurrentInventoryCapacityUsage = 0;
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 CurrentInventoryMaxCapacity = 0;
 };
 

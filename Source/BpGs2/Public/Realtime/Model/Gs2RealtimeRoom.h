@@ -34,13 +34,13 @@ struct FGs2RealtimeRoomValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString IpAddress = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 Port = 0;
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString EncryptionKey = "";
 };
 

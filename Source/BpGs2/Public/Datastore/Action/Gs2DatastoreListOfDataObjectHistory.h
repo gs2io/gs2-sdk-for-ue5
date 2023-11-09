@@ -34,10 +34,10 @@ class BPGS2_API UGs2DatastoreListOfDataObjectHistoryAsyncFunction : public UBlue
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreListOfDataObjectHistorySuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreListOfDataObjectHistoryErrorDelegate OnError;
 
     UGs2DatastoreListOfDataObjectHistoryAsyncFunction(const FObjectInitializer& ObjectInitializer);

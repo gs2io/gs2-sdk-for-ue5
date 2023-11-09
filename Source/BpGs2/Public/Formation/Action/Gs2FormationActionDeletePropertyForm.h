@@ -36,10 +36,10 @@ class BPGS2_API UGs2FormationDeletePropertyFormAsyncFunction : public UBlueprint
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationDeletePropertyFormSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationDeletePropertyFormErrorDelegate OnError;
 
     UGs2FormationDeletePropertyFormAsyncFunction(const FObjectInitializer& ObjectInitializer);

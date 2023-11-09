@@ -35,19 +35,19 @@ struct FGs2IdleCategoryModelValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 RewardIntervalMinutes = 0;
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 DefaultMaximumIdleMinutes = 0;
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2IdleAcquireActionList> AcquireActions = TArray<FGs2IdleAcquireActionList>();
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString IdlePeriodScheduleId = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString ReceivePeriodScheduleId = "";
 };
 

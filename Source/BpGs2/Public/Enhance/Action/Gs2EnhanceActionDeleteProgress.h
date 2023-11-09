@@ -36,10 +36,10 @@ class BPGS2_API UGs2EnhanceDeleteProgressAsyncFunction : public UBlueprintAsyncA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceDeleteProgressSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceDeleteProgressErrorDelegate OnError;
 
     UGs2EnhanceDeleteProgressAsyncFunction(const FObjectInitializer& ObjectInitializer);

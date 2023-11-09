@@ -26,13 +26,13 @@ struct FGs2StaminaMaxStaminaTable
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Name = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Metadata = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString ExperienceModelId = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<int32> Values = TArray<int32>();
 };
 

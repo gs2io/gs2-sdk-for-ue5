@@ -36,19 +36,19 @@ struct FGs2ExperienceExperienceModelValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 DefaultExperience = 0;
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 DefaultRankCap = 0;
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 MaxRankCap = 0;
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FGs2ExperienceThreshold RankThreshold = FGs2ExperienceThreshold();
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2ExperienceAcquireActionRate> AcquireActionRates = TArray<FGs2ExperienceAcquireActionRate>();
 };
 

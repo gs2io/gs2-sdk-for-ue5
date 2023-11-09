@@ -34,10 +34,10 @@ class BPGS2_API UGs2ScheduleTriggerGetValueAsyncFunction : public UBlueprintAsyn
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ScheduleTriggerGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ScheduleTriggerGetValueErrorDelegate OnError;
 
     UGs2ScheduleTriggerGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

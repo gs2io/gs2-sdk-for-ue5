@@ -26,9 +26,9 @@ struct FGs2MatchmakingAttribute
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Name = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 Value = 0;
 };
 

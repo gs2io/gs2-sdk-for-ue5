@@ -26,9 +26,9 @@ struct FGs2EnchantBalanceParameterValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Name = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int64 Value = 0;
 };
 

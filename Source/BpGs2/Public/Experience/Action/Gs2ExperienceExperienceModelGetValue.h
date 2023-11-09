@@ -34,10 +34,10 @@ class BPGS2_API UGs2ExperienceExperienceModelGetValueAsyncFunction : public UBlu
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExperienceExperienceModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExperienceExperienceModelGetValueErrorDelegate OnError;
 
     UGs2ExperienceExperienceModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

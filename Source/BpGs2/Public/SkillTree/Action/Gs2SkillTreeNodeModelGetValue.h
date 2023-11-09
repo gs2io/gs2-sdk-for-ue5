@@ -34,10 +34,10 @@ class BPGS2_API UGs2SkillTreeNodeModelGetValueAsyncFunction : public UBlueprintA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeNodeModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeNodeModelGetValueErrorDelegate OnError;
 
     UGs2SkillTreeNodeModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

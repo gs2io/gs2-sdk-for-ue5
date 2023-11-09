@@ -34,10 +34,10 @@ class BPGS2_API UGs2InventoryListOfSimpleItemModelAsyncFunction : public UBluepr
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InventoryListOfSimpleItemModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InventoryListOfSimpleItemModelErrorDelegate OnError;
 
     UGs2InventoryListOfSimpleItemModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -27,13 +27,13 @@ struct FGs2LotteryBoxItem
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString PrizeId = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2LotteryAcquireAction> AcquireActions = TArray<FGs2LotteryAcquireAction>();
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 Remaining = 0;
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 Initial = 0;
 };
 

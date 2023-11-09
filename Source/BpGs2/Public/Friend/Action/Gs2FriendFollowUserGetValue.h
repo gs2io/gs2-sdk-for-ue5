@@ -35,10 +35,10 @@ class BPGS2_API UGs2FriendFollowUserGetValueAsyncFunction : public UBlueprintAsy
 public:
     bool WithProfile;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendFollowUserGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendFollowUserGetValueErrorDelegate OnError;
 
     UGs2FriendFollowUserGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

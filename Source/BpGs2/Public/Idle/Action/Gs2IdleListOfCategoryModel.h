@@ -34,10 +34,10 @@ class BPGS2_API UGs2IdleListOfCategoryModelAsyncFunction : public UBlueprintAsyn
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleListOfCategoryModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleListOfCategoryModelErrorDelegate OnError;
 
     UGs2IdleListOfCategoryModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

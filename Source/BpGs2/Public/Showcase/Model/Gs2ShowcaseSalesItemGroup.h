@@ -27,11 +27,11 @@ struct FGs2ShowcaseSalesItemGroup
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Name = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Metadata = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2ShowcaseSalesItem> SalesItems = TArray<FGs2ShowcaseSalesItem>();
 };
 

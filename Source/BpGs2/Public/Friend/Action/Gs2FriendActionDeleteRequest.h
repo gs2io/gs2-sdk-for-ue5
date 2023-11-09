@@ -36,10 +36,10 @@ class BPGS2_API UGs2FriendDeleteRequestAsyncFunction : public UBlueprintAsyncAct
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendDeleteRequestSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendDeleteRequestErrorDelegate OnError;
 
     UGs2FriendDeleteRequestAsyncFunction(const FObjectInitializer& ObjectInitializer);

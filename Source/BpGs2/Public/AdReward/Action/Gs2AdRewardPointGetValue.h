@@ -34,10 +34,10 @@ class BPGS2_API UGs2AdRewardPointGetValueAsyncFunction : public UBlueprintAsyncA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AdRewardPointGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AdRewardPointGetValueErrorDelegate OnError;
 
     UGs2AdRewardPointGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

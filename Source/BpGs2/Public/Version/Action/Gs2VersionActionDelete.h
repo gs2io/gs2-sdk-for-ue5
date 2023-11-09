@@ -36,10 +36,10 @@ class BPGS2_API UGs2VersionDeleteAsyncFunction : public UBlueprintAsyncActionBas
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2VersionDeleteSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2VersionDeleteErrorDelegate OnError;
 
     UGs2VersionDeleteAsyncFunction(const FObjectInitializer& ObjectInitializer);

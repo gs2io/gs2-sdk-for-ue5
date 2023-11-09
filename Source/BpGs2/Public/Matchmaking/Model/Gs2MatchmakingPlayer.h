@@ -29,13 +29,13 @@ struct FGs2MatchmakingPlayer
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString UserId = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2MatchmakingAttribute> Attributes = TArray<FGs2MatchmakingAttribute>();
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString RoleName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FString> DenyUserIds = TArray<FString>();
 };
 

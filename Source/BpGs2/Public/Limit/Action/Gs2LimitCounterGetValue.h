@@ -34,10 +34,10 @@ class BPGS2_API UGs2LimitCounterGetValueAsyncFunction : public UBlueprintAsyncAc
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LimitCounterGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LimitCounterGetValueErrorDelegate OnError;
 
     UGs2LimitCounterGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

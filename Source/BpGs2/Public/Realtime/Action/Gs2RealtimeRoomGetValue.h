@@ -34,10 +34,10 @@ class BPGS2_API UGs2RealtimeRoomGetValueAsyncFunction : public UBlueprintAsyncAc
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RealtimeRoomGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RealtimeRoomGetValueErrorDelegate OnError;
 
     UGs2RealtimeRoomGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

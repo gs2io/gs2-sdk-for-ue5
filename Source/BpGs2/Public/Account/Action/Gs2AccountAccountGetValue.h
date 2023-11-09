@@ -34,10 +34,10 @@ class BPGS2_API UGs2AccountAccountGetValueAsyncFunction : public UBlueprintAsync
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AccountAccountGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AccountAccountGetValueErrorDelegate OnError;
 
     UGs2AccountAccountGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

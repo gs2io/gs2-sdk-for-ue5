@@ -37,10 +37,10 @@ class BPGS2_API UGs2NewsListOfNewsAsyncFunction : public UBlueprintAsyncActionBa
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2NewsListOfNewsSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2NewsListOfNewsErrorDelegate OnError;
 
     UGs2NewsListOfNewsAsyncFunction(const FObjectInitializer& ObjectInitializer);

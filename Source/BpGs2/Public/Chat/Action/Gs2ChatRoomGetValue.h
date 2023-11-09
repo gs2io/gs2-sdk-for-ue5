@@ -34,10 +34,10 @@ class BPGS2_API UGs2ChatRoomGetValueAsyncFunction : public UBlueprintAsyncAction
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatRoomGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatRoomGetValueErrorDelegate OnError;
 
     UGs2ChatRoomGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

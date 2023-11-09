@@ -34,10 +34,10 @@ class BPGS2_API UGs2LoginRewardListOfReceiveStatusAsyncFunction : public UBluepr
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LoginRewardListOfReceiveStatusSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LoginRewardListOfReceiveStatusErrorDelegate OnError;
 
     UGs2LoginRewardListOfReceiveStatusAsyncFunction(const FObjectInitializer& ObjectInitializer);

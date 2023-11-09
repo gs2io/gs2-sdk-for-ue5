@@ -38,10 +38,10 @@ class BPGS2_API UGs2IdlePredictionAsyncFunction : public UBlueprintAsyncActionBa
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdlePredictionSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdlePredictionErrorDelegate OnError;
 
     UGs2IdlePredictionAsyncFunction(const FObjectInitializer& ObjectInitializer);

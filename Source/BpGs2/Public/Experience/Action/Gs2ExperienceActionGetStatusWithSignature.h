@@ -37,10 +37,10 @@ class BPGS2_API UGs2ExperienceGetStatusWithSignatureAsyncFunction : public UBlue
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExperienceGetStatusWithSignatureSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExperienceGetStatusWithSignatureErrorDelegate OnError;
 
     UGs2ExperienceGetStatusWithSignatureAsyncFunction(const FObjectInitializer& ObjectInitializer);

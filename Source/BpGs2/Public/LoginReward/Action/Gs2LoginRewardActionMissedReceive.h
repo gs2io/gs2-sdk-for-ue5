@@ -40,10 +40,10 @@ class BPGS2_API UGs2LoginRewardMissedReceiveAsyncFunction : public UBlueprintAsy
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LoginRewardMissedReceiveSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LoginRewardMissedReceiveErrorDelegate OnError;
 
     UGs2LoginRewardMissedReceiveAsyncFunction(const FObjectInitializer& ObjectInitializer);

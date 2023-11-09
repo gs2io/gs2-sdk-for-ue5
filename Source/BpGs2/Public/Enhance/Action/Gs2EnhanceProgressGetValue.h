@@ -34,10 +34,10 @@ class BPGS2_API UGs2EnhanceProgressGetValueAsyncFunction : public UBlueprintAsyn
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceProgressGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceProgressGetValueErrorDelegate OnError;
 
     UGs2EnhanceProgressGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

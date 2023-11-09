@@ -34,10 +34,10 @@ class BPGS2_API UGs2MatchmakingGatheringGetValueAsyncFunction : public UBlueprin
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MatchmakingGatheringGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MatchmakingGatheringGetValueErrorDelegate OnError;
 
     UGs2MatchmakingGatheringGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

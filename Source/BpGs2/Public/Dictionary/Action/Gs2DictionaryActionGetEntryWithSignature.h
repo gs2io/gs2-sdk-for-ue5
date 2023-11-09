@@ -38,10 +38,10 @@ class BPGS2_API UGs2DictionaryGetEntryWithSignatureAsyncFunction : public UBluep
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DictionaryGetEntryWithSignatureSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DictionaryGetEntryWithSignatureErrorDelegate OnError;
 
     UGs2DictionaryGetEntryWithSignatureAsyncFunction(const FObjectInitializer& ObjectInitializer);

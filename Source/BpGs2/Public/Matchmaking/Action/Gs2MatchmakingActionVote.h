@@ -41,10 +41,10 @@ class BPGS2_API UGs2MatchmakingVoteAsyncFunction : public UBlueprintAsyncActionB
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MatchmakingVoteSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MatchmakingVoteErrorDelegate OnError;
 
     UGs2MatchmakingVoteAsyncFunction(const FObjectInitializer& ObjectInitializer);

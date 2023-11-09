@@ -38,10 +38,10 @@ class BPGS2_API UGs2NewsGetContentsUrlAsyncFunction : public UBlueprintAsyncActi
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2NewsGetContentsUrlSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2NewsGetContentsUrlErrorDelegate OnError;
 
     UGs2NewsGetContentsUrlAsyncFunction(const FObjectInitializer& ObjectInitializer);

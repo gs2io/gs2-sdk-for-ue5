@@ -34,10 +34,10 @@ class BPGS2_API UGs2LotteryListOfLotteryModelAsyncFunction : public UBlueprintAs
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LotteryListOfLotteryModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LotteryListOfLotteryModelErrorDelegate OnError;
 
     UGs2LotteryListOfLotteryModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -35,10 +35,10 @@ class BPGS2_API UGs2SerialKeySerialKeyGetValueAsyncFunction : public UBlueprintA
 public:
     FString Code;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SerialKeySerialKeyGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SerialKeySerialKeyGetValueErrorDelegate OnError;
 
     UGs2SerialKeySerialKeyGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -36,10 +36,10 @@ class BPGS2_API UGs2InboxReadAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InboxReadSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InboxReadErrorDelegate OnError;
 
     UGs2InboxReadAsyncFunction(const FObjectInitializer& ObjectInitializer);

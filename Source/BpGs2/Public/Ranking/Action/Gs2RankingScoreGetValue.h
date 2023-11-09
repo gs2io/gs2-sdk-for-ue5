@@ -34,10 +34,10 @@ class BPGS2_API UGs2RankingScoreGetValueAsyncFunction : public UBlueprintAsyncAc
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingScoreGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingScoreGetValueErrorDelegate OnError;
 
     UGs2RankingScoreGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

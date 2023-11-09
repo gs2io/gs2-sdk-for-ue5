@@ -37,10 +37,10 @@ class BPGS2_API UGs2InventoryGetItemWithSignatureAsyncFunction : public UBluepri
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InventoryGetItemWithSignatureSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InventoryGetItemWithSignatureErrorDelegate OnError;
 
     UGs2InventoryGetItemWithSignatureAsyncFunction(const FObjectInitializer& ObjectInitializer);

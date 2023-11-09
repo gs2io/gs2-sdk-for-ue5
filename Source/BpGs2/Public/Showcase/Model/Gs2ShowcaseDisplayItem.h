@@ -36,13 +36,13 @@ struct FGs2ShowcaseDisplayItemValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString DisplayItemId = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Type = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FGs2ShowcaseSalesItem SalesItem = FGs2ShowcaseSalesItem();
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FGs2ShowcaseSalesItemGroup SalesItemGroup = FGs2ShowcaseSalesItemGroup();
 };
 

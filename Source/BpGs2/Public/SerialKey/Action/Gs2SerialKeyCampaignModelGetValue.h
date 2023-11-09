@@ -34,10 +34,10 @@ class BPGS2_API UGs2SerialKeyCampaignModelGetValueAsyncFunction : public UBluepr
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SerialKeyCampaignModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SerialKeyCampaignModelGetValueErrorDelegate OnError;
 
     UGs2SerialKeyCampaignModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

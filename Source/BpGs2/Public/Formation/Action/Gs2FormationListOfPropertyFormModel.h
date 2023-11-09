@@ -34,10 +34,10 @@ class BPGS2_API UGs2FormationListOfPropertyFormModelAsyncFunction : public UBlue
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationListOfPropertyFormModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationListOfPropertyFormModelErrorDelegate OnError;
 
     UGs2FormationListOfPropertyFormModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

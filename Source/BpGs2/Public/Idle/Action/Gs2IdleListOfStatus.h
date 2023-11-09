@@ -34,10 +34,10 @@ class BPGS2_API UGs2IdleListOfStatusAsyncFunction : public UBlueprintAsyncAction
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleListOfStatusSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleListOfStatusErrorDelegate OnError;
 
     UGs2IdleListOfStatusAsyncFunction(const FObjectInitializer& ObjectInitializer);

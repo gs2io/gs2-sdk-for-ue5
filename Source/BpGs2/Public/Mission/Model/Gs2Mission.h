@@ -34,11 +34,11 @@ struct FGs2MissionCompleteNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString GroupName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString TaskName = "";
 };
 
@@ -61,7 +61,7 @@ struct FBpMissionCompleteNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzMissionCompleteNotificationEvent Value;
 };
 

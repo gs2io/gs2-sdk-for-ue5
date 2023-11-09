@@ -27,11 +27,11 @@ struct FGs2QuestContents
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Metadata = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2QuestAcquireAction> CompleteAcquireActions = TArray<FGs2QuestAcquireAction>();
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 Weight = 0;
 };
 

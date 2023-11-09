@@ -39,10 +39,10 @@ class BPGS2_API UGs2FriendUpdateProfileAsyncFunction : public UBlueprintAsyncAct
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendUpdateProfileSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendUpdateProfileErrorDelegate OnError;
 
     UGs2FriendUpdateProfileAsyncFunction(const FObjectInitializer& ObjectInitializer);

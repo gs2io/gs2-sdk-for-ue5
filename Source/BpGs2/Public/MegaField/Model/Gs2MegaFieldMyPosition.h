@@ -30,11 +30,11 @@ struct FGs2MegaFieldMyPosition
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FGs2MegaFieldPosition Position = FGs2MegaFieldPosition();
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FGs2MegaFieldVector Vector = FGs2MegaFieldVector();
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     float R = 0;
 };
 

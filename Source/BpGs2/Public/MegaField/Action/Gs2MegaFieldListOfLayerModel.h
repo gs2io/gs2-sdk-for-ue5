@@ -34,10 +34,10 @@ class BPGS2_API UGs2MegaFieldListOfLayerModelAsyncFunction : public UBlueprintAs
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldListOfLayerModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldListOfLayerModelErrorDelegate OnError;
 
     UGs2MegaFieldListOfLayerModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

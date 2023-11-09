@@ -34,9 +34,9 @@ struct FGs2FriendFollowNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString FromUserId = "";
 };
 
@@ -58,7 +58,7 @@ struct FBpFriendFollowNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzFriendFollowNotificationEvent Value;
 };
 
@@ -67,9 +67,9 @@ struct FGs2FriendAcceptRequestNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString TargetUserId = "";
 };
 
@@ -91,7 +91,7 @@ struct FBpFriendAcceptRequestNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzFriendAcceptRequestNotificationEvent Value;
 };
 
@@ -100,9 +100,9 @@ struct FGs2FriendReceiveRequestNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString FromUserId = "";
 };
 
@@ -124,7 +124,7 @@ struct FBpFriendReceiveRequestNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzFriendReceiveRequestNotificationEvent Value;
 };
 

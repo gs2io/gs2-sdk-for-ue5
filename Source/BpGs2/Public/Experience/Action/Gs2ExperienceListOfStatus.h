@@ -35,10 +35,10 @@ class BPGS2_API UGs2ExperienceListOfStatusAsyncFunction : public UBlueprintAsync
 public:
     FString ExperienceName;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExperienceListOfStatusSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExperienceListOfStatusErrorDelegate OnError;
 
     UGs2ExperienceListOfStatusAsyncFunction(const FObjectInitializer& ObjectInitializer);

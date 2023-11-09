@@ -35,11 +35,11 @@ struct FGs2EnchantRarityParameterStatusValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString ParameterName = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString PropertyId = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2EnchantRarityParameterValue> ParameterValues = TArray<FGs2EnchantRarityParameterValue>();
 };
 

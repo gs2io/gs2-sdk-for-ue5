@@ -38,10 +38,10 @@ class BPGS2_API UGs2ChatUpdateSubscribeSettingAsyncFunction : public UBlueprintA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatUpdateSubscribeSettingSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatUpdateSubscribeSettingErrorDelegate OnError;
 
     UGs2ChatUpdateSubscribeSettingAsyncFunction(const FObjectInitializer& ObjectInitializer);

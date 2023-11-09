@@ -34,9 +34,9 @@ struct FGs2QuestCompletedQuestListValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString QuestGroupName = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FString> CompleteQuestNames = TArray<FString>();
 };
 

@@ -36,10 +36,10 @@ class BPGS2_API UGs2JobQueueRunAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2JobQueueRunSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2JobQueueRunErrorDelegate OnError;
 
     UGs2JobQueueRunAsyncFunction(const FObjectInitializer& ObjectInitializer);

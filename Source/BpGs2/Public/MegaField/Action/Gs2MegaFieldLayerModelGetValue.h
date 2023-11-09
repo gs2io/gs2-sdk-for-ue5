@@ -34,10 +34,10 @@ class BPGS2_API UGs2MegaFieldLayerModelGetValueAsyncFunction : public UBlueprint
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldLayerModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldLayerModelGetValueErrorDelegate OnError;
 
     UGs2MegaFieldLayerModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

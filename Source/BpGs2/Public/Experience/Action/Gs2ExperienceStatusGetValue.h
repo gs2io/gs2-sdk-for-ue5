@@ -34,10 +34,10 @@ class BPGS2_API UGs2ExperienceStatusGetValueAsyncFunction : public UBlueprintAsy
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExperienceStatusGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExperienceStatusGetValueErrorDelegate OnError;
 
     UGs2ExperienceStatusGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

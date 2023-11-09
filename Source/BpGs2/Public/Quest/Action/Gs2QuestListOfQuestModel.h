@@ -34,10 +34,10 @@ class BPGS2_API UGs2QuestListOfQuestModelAsyncFunction : public UBlueprintAsyncA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestListOfQuestModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestListOfQuestModelErrorDelegate OnError;
 
     UGs2QuestListOfQuestModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

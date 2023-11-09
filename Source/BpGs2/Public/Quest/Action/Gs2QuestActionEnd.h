@@ -41,10 +41,10 @@ class BPGS2_API UGs2QuestEndAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestEndSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestEndErrorDelegate OnError;
 
     UGs2QuestEndAsyncFunction(const FObjectInitializer& ObjectInitializer);

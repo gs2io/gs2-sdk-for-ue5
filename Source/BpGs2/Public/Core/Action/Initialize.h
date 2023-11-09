@@ -36,10 +36,10 @@ class BPGS2_API UInitializeAsyncFunction : public UBlueprintAsyncActionBase
 	EGs2Region Region;
 	
 public:
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(Category = Gs2, BlueprintAssignable)
 	FInitializeSuccessDelegate OnSuccess;
 
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(Category = Gs2, BlueprintAssignable)
 	FInitializeErrorDelegate OnError;
 
 	UInitializeAsyncFunction(const FObjectInitializer& ObjectInitializer);

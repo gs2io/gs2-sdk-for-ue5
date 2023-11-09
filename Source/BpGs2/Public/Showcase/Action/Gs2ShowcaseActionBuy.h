@@ -39,10 +39,10 @@ class BPGS2_API UGs2ShowcaseBuyAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ShowcaseBuySuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ShowcaseBuyErrorDelegate OnError;
 
     UGs2ShowcaseBuyAsyncFunction(const FObjectInitializer& ObjectInitializer);

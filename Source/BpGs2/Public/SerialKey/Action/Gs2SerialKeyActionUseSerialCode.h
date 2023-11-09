@@ -37,10 +37,10 @@ class BPGS2_API UGs2SerialKeyUseSerialCodeAsyncFunction : public UBlueprintAsync
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SerialKeyUseSerialCodeSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SerialKeyUseSerialCodeErrorDelegate OnError;
 
     UGs2SerialKeyUseSerialCodeAsyncFunction(const FObjectInitializer& ObjectInitializer);

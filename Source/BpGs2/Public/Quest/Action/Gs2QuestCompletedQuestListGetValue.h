@@ -34,10 +34,10 @@ class BPGS2_API UGs2QuestCompletedQuestListGetValueAsyncFunction : public UBluep
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestCompletedQuestListGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestCompletedQuestListGetValueErrorDelegate OnError;
 
     UGs2QuestCompletedQuestListGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

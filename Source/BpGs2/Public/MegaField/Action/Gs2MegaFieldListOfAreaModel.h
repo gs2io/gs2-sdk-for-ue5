@@ -34,10 +34,10 @@ class BPGS2_API UGs2MegaFieldListOfAreaModelAsyncFunction : public UBlueprintAsy
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldListOfAreaModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldListOfAreaModelErrorDelegate OnError;
 
     UGs2MegaFieldListOfAreaModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -34,9 +34,9 @@ struct FGs2AdRewardChangePointNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString UserId = "";
 };
 
@@ -58,7 +58,7 @@ struct FBpAdRewardChangePointNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzAdRewardChangePointNotificationEvent Value;
 };
 

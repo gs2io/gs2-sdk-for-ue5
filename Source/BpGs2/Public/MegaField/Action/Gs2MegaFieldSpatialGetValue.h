@@ -34,10 +34,10 @@ class BPGS2_API UGs2MegaFieldSpatialGetValueAsyncFunction : public UBlueprintAsy
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldSpatialGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldSpatialGetValueErrorDelegate OnError;
 
     UGs2MegaFieldSpatialGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

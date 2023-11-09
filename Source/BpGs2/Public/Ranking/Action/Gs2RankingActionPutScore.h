@@ -38,10 +38,10 @@ class BPGS2_API UGs2RankingPutScoreAsyncFunction : public UBlueprintAsyncActionB
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingPutScoreSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingPutScoreErrorDelegate OnError;
 
     UGs2RankingPutScoreAsyncFunction(const FObjectInitializer& ObjectInitializer);

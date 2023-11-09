@@ -35,10 +35,10 @@ class BPGS2_API UGs2LimitListOfCounterAsyncFunction : public UBlueprintAsyncActi
 public:
     FString LimitName;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LimitListOfCounterSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LimitListOfCounterErrorDelegate OnError;
 
     UGs2LimitListOfCounterAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -34,10 +34,10 @@ class BPGS2_API UGs2RankingListOfCategoryModelAsyncFunction : public UBlueprintA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingListOfCategoryModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingListOfCategoryModelErrorDelegate OnError;
 
     UGs2RankingListOfCategoryModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

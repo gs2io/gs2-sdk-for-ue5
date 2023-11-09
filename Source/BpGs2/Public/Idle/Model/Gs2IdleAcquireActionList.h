@@ -29,7 +29,7 @@ struct FGs2IdleAcquireActionList
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2IdleAcquireAction> AcquireActions = TArray<FGs2IdleAcquireAction>();
 };
 

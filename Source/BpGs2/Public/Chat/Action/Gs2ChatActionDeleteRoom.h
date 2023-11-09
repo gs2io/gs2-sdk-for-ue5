@@ -36,10 +36,10 @@ class BPGS2_API UGs2ChatDeleteRoomAsyncFunction : public UBlueprintAsyncActionBa
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatDeleteRoomSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatDeleteRoomErrorDelegate OnError;
 
     UGs2ChatDeleteRoomAsyncFunction(const FObjectInitializer& ObjectInitializer);

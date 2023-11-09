@@ -34,10 +34,10 @@ class BPGS2_API UGs2QuestProgressGetValueAsyncFunction : public UBlueprintAsyncA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestProgressGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestProgressGetValueErrorDelegate OnError;
 
     UGs2QuestProgressGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

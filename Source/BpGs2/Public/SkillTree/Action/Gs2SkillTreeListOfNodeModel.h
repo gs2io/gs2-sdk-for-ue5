@@ -34,10 +34,10 @@ class BPGS2_API UGs2SkillTreeListOfNodeModelAsyncFunction : public UBlueprintAsy
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeListOfNodeModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeListOfNodeModelErrorDelegate OnError;
 
     UGs2SkillTreeListOfNodeModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

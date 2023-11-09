@@ -36,10 +36,10 @@ class BPGS2_API UGs2RankingUnsubscribeAsyncFunction : public UBlueprintAsyncActi
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingUnsubscribeSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingUnsubscribeErrorDelegate OnError;
 
     UGs2RankingUnsubscribeAsyncFunction(const FObjectInitializer& ObjectInitializer);

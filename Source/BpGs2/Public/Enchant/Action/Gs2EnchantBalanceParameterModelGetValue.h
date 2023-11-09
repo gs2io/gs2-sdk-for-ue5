@@ -34,10 +34,10 @@ class BPGS2_API UGs2EnchantBalanceParameterModelGetValueAsyncFunction : public U
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantBalanceParameterModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantBalanceParameterModelGetValueErrorDelegate OnError;
 
     UGs2EnchantBalanceParameterModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -37,10 +37,10 @@ class BPGS2_API UGs2SkillTreeReleaseAsyncFunction : public UBlueprintAsyncAction
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeReleaseSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeReleaseErrorDelegate OnError;
 
     UGs2SkillTreeReleaseAsyncFunction(const FObjectInitializer& ObjectInitializer);

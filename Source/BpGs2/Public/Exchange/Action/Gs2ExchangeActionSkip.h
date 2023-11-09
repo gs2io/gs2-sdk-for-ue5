@@ -36,10 +36,10 @@ class BPGS2_API UGs2ExchangeSkipAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeSkipSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeSkipErrorDelegate OnError;
 
     UGs2ExchangeSkipAsyncFunction(const FObjectInitializer& ObjectInitializer);

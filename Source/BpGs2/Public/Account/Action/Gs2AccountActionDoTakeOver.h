@@ -40,10 +40,10 @@ public:
     FString UserIdentifier;
     FString Password;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AccountDoTakeOverSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AccountDoTakeOverErrorDelegate OnError;
 
     UGs2AccountDoTakeOverAsyncFunction(const FObjectInitializer& ObjectInitializer);

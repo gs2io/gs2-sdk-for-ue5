@@ -39,10 +39,10 @@ class BPGS2_API UGs2EnchantVerifyRarityParameterStatusAsyncFunction : public UBl
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantVerifyRarityParameterStatusSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantVerifyRarityParameterStatusErrorDelegate OnError;
 
     UGs2EnchantVerifyRarityParameterStatusAsyncFunction(const FObjectInitializer& ObjectInitializer);

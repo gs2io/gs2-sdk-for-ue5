@@ -37,10 +37,10 @@ class BPGS2_API UGs2StaminaConsumeAsyncFunction : public UBlueprintAsyncActionBa
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaConsumeSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaConsumeErrorDelegate OnError;
 
     UGs2StaminaConsumeAsyncFunction(const FObjectInitializer& ObjectInitializer);

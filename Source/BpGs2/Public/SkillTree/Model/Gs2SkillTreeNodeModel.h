@@ -36,15 +36,15 @@ struct FGs2SkillTreeNodeModelValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2SkillTreeConsumeAction> ReleaseConsumeActions = TArray<FGs2SkillTreeConsumeAction>();
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2SkillTreeAcquireAction> ReturnAcquireActions = TArray<FGs2SkillTreeAcquireAction>();
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     float RestrainReturnRate = 0;
 };
 

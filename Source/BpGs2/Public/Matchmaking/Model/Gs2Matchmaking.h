@@ -34,11 +34,11 @@ struct FGs2MatchmakingJoinNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString GatheringName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString JoinUserId = "";
 };
 
@@ -61,7 +61,7 @@ struct FBpMatchmakingJoinNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzMatchmakingJoinNotificationEvent Value;
 };
 
@@ -70,11 +70,11 @@ struct FGs2MatchmakingLeaveNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString GatheringName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString LeaveUserId = "";
 };
 
@@ -97,7 +97,7 @@ struct FBpMatchmakingLeaveNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzMatchmakingLeaveNotificationEvent Value;
 };
 
@@ -106,9 +106,9 @@ struct FGs2MatchmakingCompleteNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString GatheringName = "";
 };
 
@@ -130,7 +130,7 @@ struct FBpMatchmakingCompleteNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzMatchmakingCompleteNotificationEvent Value;
 };
 
@@ -139,13 +139,13 @@ struct FGs2MatchmakingChangeRatingNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString RatingName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString UserId = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     float RateValue = 0;
 };
 
@@ -169,7 +169,7 @@ struct FBpMatchmakingChangeRatingNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzMatchmakingChangeRatingNotificationEvent Value;
 };
 

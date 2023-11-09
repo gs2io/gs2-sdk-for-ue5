@@ -34,10 +34,10 @@ class BPGS2_API UGs2MissionMissionGroupModelGetValueAsyncFunction : public UBlue
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MissionMissionGroupModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MissionMissionGroupModelGetValueErrorDelegate OnError;
 
     UGs2MissionMissionGroupModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

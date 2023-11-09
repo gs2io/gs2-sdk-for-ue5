@@ -35,10 +35,10 @@ class BPGS2_API UGs2StateMachineListOfStatusAsyncFunction : public UBlueprintAsy
 public:
     FString Status;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StateMachineListOfStatusSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StateMachineListOfStatusErrorDelegate OnError;
 
     UGs2StateMachineListOfStatusAsyncFunction(const FObjectInitializer& ObjectInitializer);

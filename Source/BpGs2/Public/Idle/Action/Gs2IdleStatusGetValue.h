@@ -34,10 +34,10 @@ class BPGS2_API UGs2IdleStatusGetValueAsyncFunction : public UBlueprintAsyncActi
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleStatusGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleStatusGetValueErrorDelegate OnError;
 
     UGs2IdleStatusGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

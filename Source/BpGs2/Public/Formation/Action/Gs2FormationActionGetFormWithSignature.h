@@ -37,10 +37,10 @@ class BPGS2_API UGs2FormationGetFormWithSignatureAsyncFunction : public UBluepri
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationGetFormWithSignatureSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationGetFormWithSignatureErrorDelegate OnError;
 
     UGs2FormationGetFormWithSignatureAsyncFunction(const FObjectInitializer& ObjectInitializer);

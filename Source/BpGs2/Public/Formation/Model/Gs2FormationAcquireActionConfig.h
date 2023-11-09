@@ -27,9 +27,9 @@ struct FGs2FormationAcquireActionConfig
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString Name = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2FormationConfig> Config = TArray<FGs2FormationConfig>();
 };
 

@@ -36,10 +36,10 @@ class BPGS2_API UGs2QuestDeleteProgressAsyncFunction : public UBlueprintAsyncAct
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestDeleteProgressSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2QuestDeleteProgressErrorDelegate OnError;
 
     UGs2QuestDeleteProgressAsyncFunction(const FObjectInitializer& ObjectInitializer);

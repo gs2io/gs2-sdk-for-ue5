@@ -34,10 +34,10 @@ class BPGS2_API UGs2EnhanceListOfRateModelAsyncFunction : public UBlueprintAsync
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceListOfRateModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceListOfRateModelErrorDelegate OnError;
 
     UGs2EnhanceListOfRateModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -34,10 +34,10 @@ class BPGS2_API UGs2DictionaryListOfEntryModelAsyncFunction : public UBlueprintA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DictionaryListOfEntryModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DictionaryListOfEntryModelErrorDelegate OnError;
 
     UGs2DictionaryListOfEntryModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

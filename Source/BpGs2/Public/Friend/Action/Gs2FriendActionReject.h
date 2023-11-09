@@ -36,10 +36,10 @@ class BPGS2_API UGs2FriendRejectAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendRejectSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendRejectErrorDelegate OnError;
 
     UGs2FriendRejectAsyncFunction(const FObjectInitializer& ObjectInitializer);

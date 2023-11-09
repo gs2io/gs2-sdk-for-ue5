@@ -34,10 +34,10 @@ class BPGS2_API UGs2LoginRewardListOfBonusModelAsyncFunction : public UBlueprint
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LoginRewardListOfBonusModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LoginRewardListOfBonusModelErrorDelegate OnError;
 
     UGs2LoginRewardListOfBonusModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

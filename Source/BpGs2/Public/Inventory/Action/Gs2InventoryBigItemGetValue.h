@@ -34,10 +34,10 @@ class BPGS2_API UGs2InventoryBigItemGetValueAsyncFunction : public UBlueprintAsy
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InventoryBigItemGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InventoryBigItemGetValueErrorDelegate OnError;
 
     UGs2InventoryBigItemGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

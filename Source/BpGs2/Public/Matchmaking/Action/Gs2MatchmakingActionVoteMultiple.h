@@ -41,10 +41,10 @@ class BPGS2_API UGs2MatchmakingVoteMultipleAsyncFunction : public UBlueprintAsyn
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MatchmakingVoteMultipleSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MatchmakingVoteMultipleErrorDelegate OnError;
 
     UGs2MatchmakingVoteMultipleAsyncFunction(const FObjectInitializer& ObjectInitializer);

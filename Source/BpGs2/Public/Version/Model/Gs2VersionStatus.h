@@ -28,9 +28,9 @@ struct FGs2VersionStatus
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FGs2VersionVersionModelValue VersionModel = FGs2VersionVersionModelValue();
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FGs2VersionVersion CurrentVersion = FGs2VersionVersion();
 };
 

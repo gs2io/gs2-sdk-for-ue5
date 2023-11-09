@@ -34,10 +34,10 @@ class BPGS2_API UGs2ShowcaseShowcaseGetValueAsyncFunction : public UBlueprintAsy
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ShowcaseShowcaseGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ShowcaseShowcaseGetValueErrorDelegate OnError;
 
     UGs2ShowcaseShowcaseGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -37,10 +37,10 @@ class BPGS2_API UGs2DatastoreRestoreDataObjectAsyncFunction : public UBlueprintA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreRestoreDataObjectSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreRestoreDataObjectErrorDelegate OnError;
 
     UGs2DatastoreRestoreDataObjectAsyncFunction(const FObjectInitializer& ObjectInitializer);

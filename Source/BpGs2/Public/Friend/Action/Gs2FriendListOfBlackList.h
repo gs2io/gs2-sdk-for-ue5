@@ -36,10 +36,10 @@ class BPGS2_API UGs2FriendListOfBlackListAsyncFunction : public UBlueprintAsyncA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendListOfBlackListSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendListOfBlackListErrorDelegate OnError;
 
     UGs2FriendListOfBlackListAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -34,10 +34,10 @@ class BPGS2_API UGs2DatastoreDataObjectGetValueAsyncFunction : public UBlueprint
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreDataObjectGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreDataObjectGetValueErrorDelegate OnError;
 
     UGs2DatastoreDataObjectGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

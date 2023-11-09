@@ -27,9 +27,9 @@ struct FGs2LotteryDrawnPrize
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString PrizeId = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2LotteryAcquireAction> AcquireActions = TArray<FGs2LotteryAcquireAction>();
 };
 

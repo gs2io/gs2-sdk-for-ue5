@@ -36,10 +36,10 @@ class BPGS2_API UGs2FriendUnfollowAsyncFunction : public UBlueprintAsyncActionBa
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendUnfollowSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendUnfollowErrorDelegate OnError;
 
     UGs2FriendUnfollowAsyncFunction(const FObjectInitializer& ObjectInitializer);

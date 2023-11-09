@@ -42,10 +42,10 @@ class BPGS2_API UGs2EnhanceEnhanceAsyncFunction : public UBlueprintAsyncActionBa
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceEnhanceSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnhanceEnhanceErrorDelegate OnError;
 
     UGs2EnhanceEnhanceAsyncFunction(const FObjectInitializer& ObjectInitializer);

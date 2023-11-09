@@ -36,10 +36,10 @@ class BPGS2_API UGs2FriendListOfSendFriendRequestAsyncFunction : public UBluepri
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendListOfSendFriendRequestSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendListOfSendFriendRequestErrorDelegate OnError;
 
     UGs2FriendListOfSendFriendRequestAsyncFunction(const FObjectInitializer& ObjectInitializer);

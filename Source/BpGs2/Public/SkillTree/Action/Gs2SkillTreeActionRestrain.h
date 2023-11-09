@@ -37,10 +37,10 @@ class BPGS2_API UGs2SkillTreeRestrainAsyncFunction : public UBlueprintAsyncActio
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeRestrainSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeRestrainErrorDelegate OnError;
 
     UGs2SkillTreeRestrainAsyncFunction(const FObjectInitializer& ObjectInitializer);

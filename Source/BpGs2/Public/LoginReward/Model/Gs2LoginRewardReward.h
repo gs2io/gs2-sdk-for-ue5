@@ -27,7 +27,7 @@ struct FGs2LoginRewardReward
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     TArray<FGs2LoginRewardAcquireAction> AcquireActions = TArray<FGs2LoginRewardAcquireAction>();
 };
 

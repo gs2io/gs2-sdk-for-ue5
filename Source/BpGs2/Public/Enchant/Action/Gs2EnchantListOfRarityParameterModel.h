@@ -34,10 +34,10 @@ class BPGS2_API UGs2EnchantListOfRarityParameterModelAsyncFunction : public UBlu
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantListOfRarityParameterModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantListOfRarityParameterModelErrorDelegate OnError;
 
     UGs2EnchantListOfRarityParameterModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -38,10 +38,10 @@ class BPGS2_API UGs2LimitCountUpAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LimitCountUpSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LimitCountUpErrorDelegate OnError;
 
     UGs2LimitCountUpAsyncFunction(const FObjectInitializer& ObjectInitializer);

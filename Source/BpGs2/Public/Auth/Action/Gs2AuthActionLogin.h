@@ -38,10 +38,10 @@ class BPGS2_API UGs2AuthLoginAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AuthLoginSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AuthLoginErrorDelegate OnError;
 
     UGs2AuthLoginAsyncFunction(const FObjectInitializer& ObjectInitializer);

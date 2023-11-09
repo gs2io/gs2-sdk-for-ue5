@@ -35,10 +35,10 @@ class BPGS2_API UGs2LotteryResetBoxAsyncFunction : public UBlueprintAsyncActionB
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LotteryResetBoxSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LotteryResetBoxErrorDelegate OnError;
 
     UGs2LotteryResetBoxAsyncFunction(const FObjectInitializer& ObjectInitializer);

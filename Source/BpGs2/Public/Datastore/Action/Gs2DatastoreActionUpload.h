@@ -43,10 +43,10 @@ class BPGS2_API UGs2DatastoreUploadAsyncFunction : public UBlueprintAsyncActionB
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreUploadSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreUploadErrorDelegate OnError;
 
     UGs2DatastoreUploadAsyncFunction(const FObjectInitializer& ObjectInitializer);

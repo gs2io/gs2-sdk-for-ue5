@@ -34,10 +34,10 @@ class BPGS2_API UGs2VersionVersionModelGetValueAsyncFunction : public UBlueprint
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2VersionVersionModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2VersionVersionModelGetValueErrorDelegate OnError;
 
     UGs2VersionVersionModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

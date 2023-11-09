@@ -35,10 +35,10 @@ class BPGS2_API UGs2InboxListOfMessageAsyncFunction : public UBlueprintAsyncActi
 public:
     bool IsRead;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InboxListOfMessageSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InboxListOfMessageErrorDelegate OnError;
 
     UGs2InboxListOfMessageAsyncFunction(const FObjectInitializer& ObjectInitializer);

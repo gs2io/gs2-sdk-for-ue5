@@ -34,10 +34,10 @@ class BPGS2_API UGs2ScheduleListOfTriggerAsyncFunction : public UBlueprintAsyncA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ScheduleListOfTriggerSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ScheduleListOfTriggerErrorDelegate OnError;
 
     UGs2ScheduleListOfTriggerAsyncFunction(const FObjectInitializer& ObjectInitializer);

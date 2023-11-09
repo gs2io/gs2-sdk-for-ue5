@@ -36,10 +36,10 @@ class BPGS2_API UGs2ExchangeDeleteAwaitAsyncFunction : public UBlueprintAsyncAct
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeDeleteAwaitSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeDeleteAwaitErrorDelegate OnError;
 
     UGs2ExchangeDeleteAwaitAsyncFunction(const FObjectInitializer& ObjectInitializer);

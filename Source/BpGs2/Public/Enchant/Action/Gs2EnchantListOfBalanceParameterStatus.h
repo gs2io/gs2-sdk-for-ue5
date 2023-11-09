@@ -35,10 +35,10 @@ class BPGS2_API UGs2EnchantListOfBalanceParameterStatusAsyncFunction : public UB
 public:
     FString ParameterName;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantListOfBalanceParameterStatusSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantListOfBalanceParameterStatusErrorDelegate OnError;
 
     UGs2EnchantListOfBalanceParameterStatusAsyncFunction(const FObjectInitializer& ObjectInitializer);

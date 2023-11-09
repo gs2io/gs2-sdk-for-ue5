@@ -34,10 +34,10 @@ class BPGS2_API UGs2MissionListOfCompleteAsyncFunction : public UBlueprintAsyncA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MissionListOfCompleteSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MissionListOfCompleteErrorDelegate OnError;
 
     UGs2MissionListOfCompleteAsyncFunction(const FObjectInitializer& ObjectInitializer);

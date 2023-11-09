@@ -35,10 +35,10 @@ class BPGS2_API UGs2LotteryListOfProbabilityAsyncFunction : public UBlueprintAsy
 public:
     FString LotteryName;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LotteryListOfProbabilitySuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LotteryListOfProbabilityErrorDelegate OnError;
 
     UGs2LotteryListOfProbabilityAsyncFunction(const FObjectInitializer& ObjectInitializer);

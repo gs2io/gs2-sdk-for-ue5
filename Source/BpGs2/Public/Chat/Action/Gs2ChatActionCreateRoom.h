@@ -40,10 +40,10 @@ class BPGS2_API UGs2ChatCreateRoomAsyncFunction : public UBlueprintAsyncActionBa
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatCreateRoomSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatCreateRoomErrorDelegate OnError;
 
     UGs2ChatCreateRoomAsyncFunction(const FObjectInitializer& ObjectInitializer);

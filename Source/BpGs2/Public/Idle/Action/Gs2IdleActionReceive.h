@@ -36,10 +36,10 @@ class BPGS2_API UGs2IdleReceiveAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleReceiveSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleReceiveErrorDelegate OnError;
 
     UGs2IdleReceiveAsyncFunction(const FObjectInitializer& ObjectInitializer);

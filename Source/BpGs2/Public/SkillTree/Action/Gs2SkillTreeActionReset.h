@@ -36,10 +36,10 @@ class BPGS2_API UGs2SkillTreeResetAsyncFunction : public UBlueprintAsyncActionBa
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeResetSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SkillTreeResetErrorDelegate OnError;
 
     UGs2SkillTreeResetAsyncFunction(const FObjectInitializer& ObjectInitializer);

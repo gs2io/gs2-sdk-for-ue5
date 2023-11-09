@@ -34,10 +34,10 @@ class BPGS2_API UGs2ShowcaseRandomDisplayItemGetValueAsyncFunction : public UBlu
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ShowcaseRandomDisplayItemGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ShowcaseRandomDisplayItemGetValueErrorDelegate OnError;
 
     UGs2ShowcaseRandomDisplayItemGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

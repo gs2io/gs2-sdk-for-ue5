@@ -34,7 +34,7 @@ struct FGs2AdRewardPointValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 Point = 0;
 };
 

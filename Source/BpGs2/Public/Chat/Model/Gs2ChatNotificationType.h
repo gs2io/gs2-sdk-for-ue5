@@ -26,9 +26,9 @@ struct FGs2ChatNotificationType
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 Category = 0;
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     bool EnableTransferMobilePushNotification = false;
 };
 

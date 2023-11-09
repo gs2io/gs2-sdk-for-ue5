@@ -35,10 +35,10 @@ class BPGS2_API UGs2FriendListOfFriendAsyncFunction : public UBlueprintAsyncActi
 public:
     bool WithProfile;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendListOfFriendSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendListOfFriendErrorDelegate OnError;
 
     UGs2FriendListOfFriendAsyncFunction(const FObjectInitializer& ObjectInitializer);

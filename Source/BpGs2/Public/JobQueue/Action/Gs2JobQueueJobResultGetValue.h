@@ -34,10 +34,10 @@ class BPGS2_API UGs2JobQueueJobResultGetValueAsyncFunction : public UBlueprintAs
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2JobQueueJobResultGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2JobQueueJobResultGetValueErrorDelegate OnError;
 
     UGs2JobQueueJobResultGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

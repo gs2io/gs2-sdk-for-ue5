@@ -34,10 +34,10 @@ class BPGS2_API UGs2LimitLimitModelGetValueAsyncFunction : public UBlueprintAsyn
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LimitLimitModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LimitLimitModelGetValueErrorDelegate OnError;
 
     UGs2LimitLimitModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -41,10 +41,10 @@ class BPGS2_API UGs2MegaFieldUpdateAsyncFunction : public UBlueprintAsyncActionB
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldUpdateSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MegaFieldUpdateErrorDelegate OnError;
 
     UGs2MegaFieldUpdateAsyncFunction(const FObjectInitializer& ObjectInitializer);

@@ -34,10 +34,10 @@ class BPGS2_API UGs2FormationListOfMoldModelAsyncFunction : public UBlueprintAsy
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationListOfMoldModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationListOfMoldModelErrorDelegate OnError;
 
     UGs2FormationListOfMoldModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

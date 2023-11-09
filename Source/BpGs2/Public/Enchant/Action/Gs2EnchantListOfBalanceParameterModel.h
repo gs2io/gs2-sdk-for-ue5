@@ -34,10 +34,10 @@ class BPGS2_API UGs2EnchantListOfBalanceParameterModelAsyncFunction : public UBl
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantListOfBalanceParameterModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2EnchantListOfBalanceParameterModelErrorDelegate OnError;
 
     UGs2EnchantListOfBalanceParameterModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

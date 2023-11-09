@@ -36,10 +36,10 @@ class BPGS2_API UGs2ChatUnsubscribeAsyncFunction : public UBlueprintAsyncActionB
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatUnsubscribeSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatUnsubscribeErrorDelegate OnError;
 
     UGs2ChatUnsubscribeAsyncFunction(const FObjectInitializer& ObjectInitializer);

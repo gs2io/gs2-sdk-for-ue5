@@ -39,10 +39,10 @@ class BPGS2_API UGs2StaminaSetRecoverIntervalAsyncFunction : public UBlueprintAs
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaSetRecoverIntervalSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaSetRecoverIntervalErrorDelegate OnError;
 
     UGs2StaminaSetRecoverIntervalAsyncFunction(const FObjectInitializer& ObjectInitializer);

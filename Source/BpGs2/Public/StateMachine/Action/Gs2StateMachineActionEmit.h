@@ -38,10 +38,10 @@ class BPGS2_API UGs2StateMachineEmitAsyncFunction : public UBlueprintAsyncAction
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StateMachineEmitSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StateMachineEmitErrorDelegate OnError;
 
     UGs2StateMachineEmitAsyncFunction(const FObjectInitializer& ObjectInitializer);

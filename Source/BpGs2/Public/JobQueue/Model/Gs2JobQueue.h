@@ -34,7 +34,7 @@ struct FGs2JobQueuePushNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
 };
 
@@ -55,7 +55,7 @@ struct FBpJobQueuePushNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzJobQueuePushNotificationEvent Value;
 };
 
@@ -64,9 +64,9 @@ struct FGs2JobQueueRunNotification
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString JobName = "";
 };
 
@@ -88,7 +88,7 @@ struct FBpJobQueueRunNotificationEvent
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FEzJobQueueRunNotificationEvent Value;
 };
 

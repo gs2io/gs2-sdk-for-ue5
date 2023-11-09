@@ -38,10 +38,10 @@ class BPGS2_API UGs2MoneyWithdrawAsyncFunction : public UBlueprintAsyncActionBas
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MoneyWithdrawSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MoneyWithdrawErrorDelegate OnError;
 
     UGs2MoneyWithdrawAsyncFunction(const FObjectInitializer& ObjectInitializer);

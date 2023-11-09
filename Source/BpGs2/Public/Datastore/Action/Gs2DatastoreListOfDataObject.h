@@ -35,10 +35,10 @@ class BPGS2_API UGs2DatastoreListOfDataObjectAsyncFunction : public UBlueprintAs
 public:
     FString Status;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreListOfDataObjectSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2DatastoreListOfDataObjectErrorDelegate OnError;
 
     UGs2DatastoreListOfDataObjectAsyncFunction(const FObjectInitializer& ObjectInitializer);

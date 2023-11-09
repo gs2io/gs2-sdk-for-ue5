@@ -34,10 +34,10 @@ class BPGS2_API UGs2StaminaListOfStaminaAsyncFunction : public UBlueprintAsyncAc
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaListOfStaminaSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaListOfStaminaErrorDelegate OnError;
 
     UGs2StaminaListOfStaminaAsyncFunction(const FObjectInitializer& ObjectInitializer);

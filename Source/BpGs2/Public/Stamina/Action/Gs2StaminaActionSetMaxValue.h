@@ -39,10 +39,10 @@ class BPGS2_API UGs2StaminaSetMaxValueAsyncFunction : public UBlueprintAsyncActi
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaSetMaxValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaSetMaxValueErrorDelegate OnError;
 
     UGs2StaminaSetMaxValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

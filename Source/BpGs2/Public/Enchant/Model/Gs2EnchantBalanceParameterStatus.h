@@ -35,11 +35,11 @@ struct FGs2EnchantBalanceParameterStatusValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString ParameterName = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString PropertyId = "";
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2EnchantBalanceParameterValue> ParameterValues = TArray<FGs2EnchantBalanceParameterValue>();
 };
 

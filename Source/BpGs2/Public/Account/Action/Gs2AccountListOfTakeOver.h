@@ -34,10 +34,10 @@ class BPGS2_API UGs2AccountListOfTakeOverAsyncFunction : public UBlueprintAsyncA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AccountListOfTakeOverSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AccountListOfTakeOverErrorDelegate OnError;
 
     UGs2AccountListOfTakeOverAsyncFunction(const FObjectInitializer& ObjectInitializer);

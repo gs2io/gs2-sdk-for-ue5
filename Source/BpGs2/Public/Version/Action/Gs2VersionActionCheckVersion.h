@@ -37,10 +37,10 @@ class BPGS2_API UGs2VersionCheckVersionAsyncFunction : public UBlueprintAsyncAct
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2VersionCheckVersionSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2VersionCheckVersionErrorDelegate OnError;
 
     UGs2VersionCheckVersionAsyncFunction(const FObjectInitializer& ObjectInitializer);

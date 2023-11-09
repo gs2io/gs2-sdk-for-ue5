@@ -37,10 +37,10 @@ class BPGS2_API UGs2FriendUnregisterBlackListAsyncFunction : public UBlueprintAs
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendUnregisterBlackListSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendUnregisterBlackListErrorDelegate OnError;
 
     UGs2FriendUnregisterBlackListAsyncFunction(const FObjectInitializer& ObjectInitializer);

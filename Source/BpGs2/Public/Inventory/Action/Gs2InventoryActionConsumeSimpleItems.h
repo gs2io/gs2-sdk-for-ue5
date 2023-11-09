@@ -38,10 +38,10 @@ class BPGS2_API UGs2InventoryConsumeSimpleItemsAsyncFunction : public UBlueprint
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InventoryConsumeSimpleItemsSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InventoryConsumeSimpleItemsErrorDelegate OnError;
 
     UGs2InventoryConsumeSimpleItemsAsyncFunction(const FObjectInitializer& ObjectInitializer);

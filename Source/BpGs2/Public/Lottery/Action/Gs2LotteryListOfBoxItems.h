@@ -34,10 +34,10 @@ class BPGS2_API UGs2LotteryListOfBoxItemsAsyncFunction : public UBlueprintAsyncA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LotteryListOfBoxItemsSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2LotteryListOfBoxItemsErrorDelegate OnError;
 
     UGs2LotteryListOfBoxItemsAsyncFunction(const FObjectInitializer& ObjectInitializer);

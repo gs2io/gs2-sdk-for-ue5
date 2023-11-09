@@ -34,10 +34,10 @@ class BPGS2_API UGs2IdleCategoryModelGetValueAsyncFunction : public UBlueprintAs
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleCategoryModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2IdleCategoryModelGetValueErrorDelegate OnError;
 
     UGs2IdleCategoryModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

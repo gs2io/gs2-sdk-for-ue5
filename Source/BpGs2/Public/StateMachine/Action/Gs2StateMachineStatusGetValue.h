@@ -34,10 +34,10 @@ class BPGS2_API UGs2StateMachineStatusGetValueAsyncFunction : public UBlueprintA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StateMachineStatusGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StateMachineStatusGetValueErrorDelegate OnError;
 
     UGs2StateMachineStatusGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

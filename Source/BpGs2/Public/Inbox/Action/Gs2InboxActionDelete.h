@@ -36,10 +36,10 @@ class BPGS2_API UGs2InboxDeleteAsyncFunction : public UBlueprintAsyncActionBase
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InboxDeleteSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2InboxDeleteErrorDelegate OnError;
 
     UGs2InboxDeleteAsyncFunction(const FObjectInitializer& ObjectInitializer);

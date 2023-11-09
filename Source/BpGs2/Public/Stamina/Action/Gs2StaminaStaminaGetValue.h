@@ -34,10 +34,10 @@ class BPGS2_API UGs2StaminaStaminaGetValueAsyncFunction : public UBlueprintAsync
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaStaminaGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2StaminaStaminaGetValueErrorDelegate OnError;
 
     UGs2StaminaStaminaGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

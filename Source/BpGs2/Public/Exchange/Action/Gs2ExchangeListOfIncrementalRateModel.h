@@ -34,10 +34,10 @@ class BPGS2_API UGs2ExchangeListOfIncrementalRateModelAsyncFunction : public UBl
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeListOfIncrementalRateModelSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeListOfIncrementalRateModelErrorDelegate OnError;
 
     UGs2ExchangeListOfIncrementalRateModelAsyncFunction(const FObjectInitializer& ObjectInitializer);

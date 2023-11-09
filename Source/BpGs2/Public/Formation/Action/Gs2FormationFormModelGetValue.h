@@ -34,10 +34,10 @@ class BPGS2_API UGs2FormationFormModelGetValueAsyncFunction : public UBlueprintA
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationFormModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationFormModelGetValueErrorDelegate OnError;
 
     UGs2FormationFormModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

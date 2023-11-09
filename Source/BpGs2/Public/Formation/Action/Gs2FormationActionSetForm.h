@@ -39,10 +39,10 @@ class BPGS2_API UGs2FormationSetFormAsyncFunction : public UBlueprintAsyncAction
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationSetFormSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FormationSetFormErrorDelegate OnError;
 
     UGs2FormationSetFormAsyncFunction(const FObjectInitializer& ObjectInitializer);

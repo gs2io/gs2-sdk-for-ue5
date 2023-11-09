@@ -34,10 +34,10 @@ class BPGS2_API UGs2MissionCounterGetValueAsyncFunction : public UBlueprintAsync
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MissionCounterGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MissionCounterGetValueErrorDelegate OnError;
 
     UGs2MissionCounterGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

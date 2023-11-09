@@ -34,10 +34,10 @@ class BPGS2_API UGs2NewsSetCookieRequestEntryGetValueAsyncFunction : public UBlu
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2NewsSetCookieRequestEntryGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2NewsSetCookieRequestEntryGetValueErrorDelegate OnError;
 
     UGs2NewsSetCookieRequestEntryGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

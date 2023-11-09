@@ -35,10 +35,10 @@ class BPGS2_API UGs2ExchangeListOfAwaitAsyncFunction : public UBlueprintAsyncAct
 public:
     FString RateName;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeListOfAwaitSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeListOfAwaitErrorDelegate OnError;
 
     UGs2ExchangeListOfAwaitAsyncFunction(const FObjectInitializer& ObjectInitializer);

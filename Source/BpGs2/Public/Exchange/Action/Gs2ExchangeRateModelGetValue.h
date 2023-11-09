@@ -34,10 +34,10 @@ class BPGS2_API UGs2ExchangeRateModelGetValueAsyncFunction : public UBlueprintAs
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeRateModelGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ExchangeRateModelGetValueErrorDelegate OnError;
 
     UGs2ExchangeRateModelGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);

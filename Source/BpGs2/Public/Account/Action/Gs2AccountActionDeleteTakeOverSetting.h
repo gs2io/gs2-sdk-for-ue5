@@ -36,10 +36,10 @@ class BPGS2_API UGs2AccountDeleteTakeOverSettingAsyncFunction : public UBlueprin
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AccountDeleteTakeOverSettingSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2AccountDeleteTakeOverSettingErrorDelegate OnError;
 
     UGs2AccountDeleteTakeOverSettingAsyncFunction(const FObjectInitializer& ObjectInitializer);

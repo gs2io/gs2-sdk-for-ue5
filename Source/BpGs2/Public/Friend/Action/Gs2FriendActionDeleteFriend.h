@@ -36,10 +36,10 @@ class BPGS2_API UGs2FriendDeleteFriendAsyncFunction : public UBlueprintAsyncActi
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendDeleteFriendSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendDeleteFriendErrorDelegate OnError;
 
     UGs2FriendDeleteFriendAsyncFunction(const FObjectInitializer& ObjectInitializer);

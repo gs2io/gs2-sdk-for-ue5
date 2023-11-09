@@ -34,10 +34,10 @@ class BPGS2_API UGs2MoneyWalletGetValueAsyncFunction : public UBlueprintAsyncAct
 
 public:
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MoneyWalletGetValueSuccessDelegate OnSuccess;
 
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2MoneyWalletGetValueErrorDelegate OnError;
 
     UGs2MoneyWalletGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);
