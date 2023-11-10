@@ -136,7 +136,7 @@ namespace Gs2::MegaField::Model
         return MakeShared<FAreaModel>()
             ->WithAreaModelId(Data->HasField("areaModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("areaModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -145,7 +145,7 @@ namespace Gs2::MegaField::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -154,7 +154,7 @@ namespace Gs2::MegaField::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

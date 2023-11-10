@@ -35,6 +35,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Chat::Domain
+{
+    class FGs2ChatDomain;
+    typedef TSharedPtr<FGs2ChatDomain> FGs2ChatDomainPtr;
+}
+
 namespace Gs2::Chat::Domain::Model
 {
     class FNamespaceDomain;
@@ -51,7 +57,8 @@ namespace Gs2::Chat::Domain::Model
         public TSharedFromThis<FRoomAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Chat::FGs2ChatRestClientPtr Client;
+        const Chat::Domain::FGs2ChatDomainPtr Service;
+        const Gs2::Chat::FGs2ChatRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -66,9 +73,10 @@ namespace Gs2::Chat::Domain::Model
     public:
 
         FRoomAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Chat::Domain::FGs2ChatDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> RoomName,
             const TOptional<FString> Password
             // ReSharper disable once CppMemberInitializersOrder
@@ -86,7 +94,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FUpdateRoomRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FRoomAccessTokenDomain> Self,
+                const TSharedPtr<FRoomAccessTokenDomain>& Self,
                 const Request::FUpdateRoomRequestPtr Request
             );
 
@@ -112,7 +120,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FDeleteRoomRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FRoomAccessTokenDomain> Self,
+                const TSharedPtr<FRoomAccessTokenDomain>& Self,
                 const Request::FDeleteRoomRequestPtr Request
             );
 
@@ -138,7 +146,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FPostRequestPtr Request;
         public:
             explicit FPostTask(
-                const TSharedPtr<FRoomAccessTokenDomain> Self,
+                const TSharedPtr<FRoomAccessTokenDomain>& Self,
                 const Request::FPostRequestPtr Request
             );
 
@@ -164,7 +172,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FGetRoomRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FRoomAccessTokenDomain> Self,
+                const TSharedPtr<FRoomAccessTokenDomain>& Self,
                 const Request::FGetRoomRequestPtr Request
             );
 
@@ -195,7 +203,7 @@ namespace Gs2::Chat::Domain::Model
 
         TSharedPtr<Gs2::Chat::Domain::Model::FMessageAccessTokenDomain> Message(
             const FString MessageName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

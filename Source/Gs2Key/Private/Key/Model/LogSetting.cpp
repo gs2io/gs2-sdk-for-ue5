@@ -50,7 +50,7 @@ namespace Gs2::Key::Model
         return MakeShared<FLogSetting>()
             ->WithLoggingNamespaceId(Data->HasField("loggingNamespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("loggingNamespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

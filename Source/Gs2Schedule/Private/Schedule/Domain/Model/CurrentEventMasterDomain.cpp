@@ -41,11 +41,13 @@ namespace Gs2::Schedule::Domain::Model
 {
 
     FCurrentEventMasterDomain::FCurrentEventMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Schedule::FGs2ScheduleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Schedule::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -59,6 +61,7 @@ namespace Gs2::Schedule::Domain::Model
         const FCurrentEventMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -67,7 +70,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FCurrentEventMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentEventMasterDomain> Self,
+        const TSharedPtr<FCurrentEventMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -129,7 +132,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FCurrentEventMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentEventMasterDomain> Self,
+        const TSharedPtr<FCurrentEventMasterDomain>& Self,
         const Request::FGetCurrentEventMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -189,7 +192,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FCurrentEventMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentEventMasterDomain> Self,
+        const TSharedPtr<FCurrentEventMasterDomain>& Self,
         const Request::FUpdateCurrentEventMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -251,7 +254,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FCurrentEventMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentEventMasterDomain> Self,
+        const TSharedPtr<FCurrentEventMasterDomain>& Self,
         const Request::FUpdateCurrentEventMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

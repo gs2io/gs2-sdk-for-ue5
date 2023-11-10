@@ -44,13 +44,15 @@ namespace Gs2::Quest::Domain::Model
 {
 
     FCompletedQuestListDomain::FCompletedQuestListDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Quest::Domain::FGs2QuestDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> QuestGroupName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -67,6 +69,7 @@ namespace Gs2::Quest::Domain::Model
         const FCompletedQuestListDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -77,7 +80,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FCompletedQuestListDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCompletedQuestListDomain> Self,
+        const TSharedPtr<FCompletedQuestListDomain>& Self,
         const Request::FGetCompletedQuestListByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -141,7 +144,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FCompletedQuestListDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FCompletedQuestListDomain> Self,
+        const TSharedPtr<FCompletedQuestListDomain>& Self,
         const Request::FDeleteCompletedQuestListByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

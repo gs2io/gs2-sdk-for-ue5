@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "SerialKey/Gs2SerialKey.h"
 #include "SerialKey/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "SerialKey/Domain/Iterator/DescribeIssueJobsIterator.h"
 #include "SerialKey/Domain/Iterator/DescribeSerialKeysIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::SerialKey::Domain
+{
+    class FGs2SerialKeyDomain;
+    typedef TSharedPtr<FGs2SerialKeyDomain> FGs2SerialKeyDomainPtr;
 }
 
 namespace Gs2::SerialKey::Domain::Model
@@ -49,7 +54,8 @@ namespace Gs2::SerialKey::Domain::Model
         public TSharedFromThis<FIssueJobDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr Service;
+        const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
 
         public:
         TSharedPtr<TArray<FString>> SerialCodes;
@@ -67,7 +73,8 @@ namespace Gs2::SerialKey::Domain::Model
     public:
 
         FIssueJobDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CampaignModelName,
             const TOptional<FString> IssueJobName
@@ -86,7 +93,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FGetIssueJobRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FIssueJobDomain> Self,
+                const TSharedPtr<FIssueJobDomain>& Self,
                 const Request::FGetIssueJobRequestPtr Request
             );
 

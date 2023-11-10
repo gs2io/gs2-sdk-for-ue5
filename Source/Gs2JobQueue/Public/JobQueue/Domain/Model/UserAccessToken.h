@@ -31,6 +31,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::JobQueue::Domain
+{
+    class FGs2JobQueueDomain;
+    typedef TSharedPtr<FGs2JobQueueDomain> FGs2JobQueueDomainPtr;
+}
+
 namespace Gs2::JobQueue::Domain::Model
 {
     class FNamespaceDomain;
@@ -47,7 +53,8 @@ namespace Gs2::JobQueue::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
+        const JobQueue::Domain::FGs2JobQueueDomainPtr Service;
+        const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
 
         public:
         TOptional<bool> AutoRun;
@@ -75,9 +82,10 @@ namespace Gs2::JobQueue::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -93,7 +101,7 @@ namespace Gs2::JobQueue::Domain::Model
             const Request::FRunRequestPtr Request;
         public:
             explicit FRunTask(
-                const TSharedPtr<FUserAccessTokenDomain> Self,
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
                 const Request::FRunRequestPtr Request
             );
 
@@ -113,11 +121,11 @@ namespace Gs2::JobQueue::Domain::Model
 
         TSharedPtr<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain> Job(
             const FString JobName
-        ) const;
+        );
 
         TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobAccessTokenDomain> DeadLetterJob(
             const FString DeadLetterJobName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

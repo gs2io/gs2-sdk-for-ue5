@@ -48,11 +48,13 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Formation::Domain::FGs2FormationDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("formation:Namespace")
@@ -63,6 +65,7 @@ namespace Gs2::Formation::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -71,7 +74,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -123,7 +126,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -180,7 +183,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -239,7 +242,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -292,7 +295,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FNamespaceDomain::FCreatePropertyFormModelMasterTask::FCreatePropertyFormModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreatePropertyFormModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -344,6 +347,7 @@ namespace Gs2::Formation::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -359,7 +363,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FNamespaceDomain::FCreateFormModelMasterTask::FCreateFormModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateFormModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -411,6 +415,7 @@ namespace Gs2::Formation::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Formation::Domain::Model::FFormModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -426,7 +431,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FNamespaceDomain::FCreateMoldModelMasterTask::FCreateMoldModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateMoldModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -478,6 +483,7 @@ namespace Gs2::Formation::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Formation::Domain::Model::FMoldModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -493,10 +499,11 @@ namespace Gs2::Formation::Domain::Model
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain> FNamespaceDomain::CurrentFormMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -541,10 +548,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldModelDomain> FNamespaceDomain::MoldModel(
         const FString MoldModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FMoldModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             MoldModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldModelName)
         );
@@ -590,10 +598,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelDomain> FNamespaceDomain::PropertyFormModel(
         const FString PropertyFormModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FPropertyFormModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             PropertyFormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyFormModelName)
         );
@@ -601,10 +610,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -612,10 +622,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -661,10 +672,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain> FNamespaceDomain::PropertyFormModelMaster(
         const FString PropertyFormModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             PropertyFormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyFormModelName)
         );
@@ -710,10 +722,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FFormModelMasterDomain> FNamespaceDomain::FormModelMaster(
         const FString FormModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FFormModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             FormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(FormModelName)
         );
@@ -759,10 +772,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldModelMasterDomain> FNamespaceDomain::MoldModelMaster(
         const FString MoldModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FMoldModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             MoldModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldModelName)
         );

@@ -96,7 +96,7 @@ namespace Gs2::MegaField::Model
         return MakeShared<FScope>()
             ->WithLayerName(Data->HasField("layerName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("layerName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

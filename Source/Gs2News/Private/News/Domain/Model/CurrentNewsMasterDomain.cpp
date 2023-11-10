@@ -42,11 +42,13 @@ namespace Gs2::News::Domain::Model
 {
 
     FCurrentNewsMasterDomain::FCurrentNewsMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const News::Domain::FGs2NewsDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::News::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -60,6 +62,7 @@ namespace Gs2::News::Domain::Model
         const FCurrentNewsMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -68,7 +71,7 @@ namespace Gs2::News::Domain::Model
     }
 
     FCurrentNewsMasterDomain::FPrepareUpdateTask::FPrepareUpdateTask(
-        const TSharedPtr<FCurrentNewsMasterDomain> Self,
+        const TSharedPtr<FCurrentNewsMasterDomain>& Self,
         const Request::FPrepareUpdateCurrentNewsMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -124,7 +127,7 @@ namespace Gs2::News::Domain::Model
     }
 
     FCurrentNewsMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentNewsMasterDomain> Self,
+        const TSharedPtr<FCurrentNewsMasterDomain>& Self,
         const Request::FUpdateCurrentNewsMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -169,7 +172,7 @@ namespace Gs2::News::Domain::Model
     }
 
     FCurrentNewsMasterDomain::FPrepareUpdateFromGitHubTask::FPrepareUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentNewsMasterDomain> Self,
+        const TSharedPtr<FCurrentNewsMasterDomain>& Self,
         const Request::FPrepareUpdateCurrentNewsMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

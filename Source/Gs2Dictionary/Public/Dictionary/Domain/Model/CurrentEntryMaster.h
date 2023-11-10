@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Dictionary/Gs2Dictionary.h"
 #include "Dictionary/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelsIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelMastersIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Dictionary::Domain
+{
+    class FGs2DictionaryDomain;
+    typedef TSharedPtr<FGs2DictionaryDomain> FGs2DictionaryDomainPtr;
 }
 
 namespace Gs2::Dictionary::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Dictionary::Domain::Model
         public TSharedFromThis<FCurrentEntryMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
+        const Dictionary::Domain::FGs2DictionaryDomainPtr Service;
+        const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -59,7 +65,8 @@ namespace Gs2::Dictionary::Domain::Model
     public:
 
         FCurrentEntryMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -76,7 +83,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentEntryMasterDomain> Self,
+                const TSharedPtr<FCurrentEntryMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -102,7 +109,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FGetCurrentEntryMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentEntryMasterDomain> Self,
+                const TSharedPtr<FCurrentEntryMasterDomain>& Self,
                 const Request::FGetCurrentEntryMasterRequestPtr Request
             );
 
@@ -128,7 +135,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FUpdateCurrentEntryMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentEntryMasterDomain> Self,
+                const TSharedPtr<FCurrentEntryMasterDomain>& Self,
                 const Request::FUpdateCurrentEntryMasterRequestPtr Request
             );
 
@@ -154,7 +161,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FUpdateCurrentEntryMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentEntryMasterDomain> Self,
+                const TSharedPtr<FCurrentEntryMasterDomain>& Self,
                 const Request::FUpdateCurrentEntryMasterFromGitHubRequestPtr Request
             );
 

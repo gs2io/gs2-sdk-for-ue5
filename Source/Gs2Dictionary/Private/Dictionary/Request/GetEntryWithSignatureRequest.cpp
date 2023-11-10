@@ -110,7 +110,7 @@ namespace Gs2::Dictionary::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -119,7 +119,7 @@ namespace Gs2::Dictionary::Request
               }() : TOptional<FString>())
             ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("xGs2AccessToken", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -128,7 +128,7 @@ namespace Gs2::Dictionary::Request
               }() : TOptional<FString>())
             ->WithEntryModelName(Data->HasField("entryModelName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("entryModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -137,7 +137,7 @@ namespace Gs2::Dictionary::Request
               }() : TOptional<FString>())
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("keyId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -42,12 +42,14 @@ namespace Gs2::Inbox::Domain::Model
 {
 
     FReceivedDomain::FReceivedDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inbox::Domain::FGs2InboxDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inbox::FGs2InboxRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -63,6 +65,7 @@ namespace Gs2::Inbox::Domain::Model
         const FReceivedDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FReceivedDomain::FGetTask::FGetTask(
-        const TSharedPtr<FReceivedDomain> Self,
+        const TSharedPtr<FReceivedDomain>& Self,
         const Request::FGetReceivedByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -134,7 +137,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FReceivedDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FReceivedDomain> Self,
+        const TSharedPtr<FReceivedDomain>& Self,
         const Request::FUpdateReceivedByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -198,7 +201,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FReceivedDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FReceivedDomain> Self,
+        const TSharedPtr<FReceivedDomain>& Self,
         const Request::FDeleteReceivedByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

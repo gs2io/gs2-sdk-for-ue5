@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Account/Gs2Account.h"
 #include "Account/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Account/Domain/Iterator/DescribeAccountsIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
@@ -30,6 +29,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Account::Domain
+{
+    class FGs2AccountDomain;
+    typedef TSharedPtr<FGs2AccountDomain> FGs2AccountDomainPtr;
 }
 
 namespace Gs2::Account::Domain::Model
@@ -46,7 +51,8 @@ namespace Gs2::Account::Domain::Model
         public TSharedFromThis<FTakeOverDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Account::FGs2AccountRestClientPtr Client;
+        const Account::Domain::FGs2AccountDomainPtr Service;
+        const Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -59,7 +65,8 @@ namespace Gs2::Account::Domain::Model
     public:
 
         FTakeOverDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Account::Domain::FGs2AccountDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<int32> Type
@@ -78,7 +85,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FCreateTakeOverByUserIdRequestPtr Request;
         public:
             explicit FCreateTask(
-                const TSharedPtr<FTakeOverDomain> Self,
+                const TSharedPtr<FTakeOverDomain>& Self,
                 const Request::FCreateTakeOverByUserIdRequestPtr Request
             );
 
@@ -104,7 +111,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FGetTakeOverByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FTakeOverDomain> Self,
+                const TSharedPtr<FTakeOverDomain>& Self,
                 const Request::FGetTakeOverByUserIdRequestPtr Request
             );
 
@@ -130,7 +137,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FUpdateTakeOverByUserIdRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FTakeOverDomain> Self,
+                const TSharedPtr<FTakeOverDomain>& Self,
                 const Request::FUpdateTakeOverByUserIdRequestPtr Request
             );
 

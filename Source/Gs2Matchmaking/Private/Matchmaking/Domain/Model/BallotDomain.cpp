@@ -47,7 +47,8 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FBallotDomain::FBallotDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> RatingName,
@@ -57,6 +58,7 @@ namespace Gs2::Matchmaking::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -76,6 +78,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FBallotDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -89,7 +92,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FBallotDomain::FGetTask::FGetTask(
-        const TSharedPtr<FBallotDomain> Self,
+        const TSharedPtr<FBallotDomain>& Self,
         const Request::FGetBallotByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

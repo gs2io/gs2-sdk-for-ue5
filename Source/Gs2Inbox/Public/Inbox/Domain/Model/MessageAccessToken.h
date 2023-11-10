@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Inbox::Domain
+{
+    class FGs2InboxDomain;
+    typedef TSharedPtr<FGs2InboxDomain> FGs2InboxDomainPtr;
+}
+
 namespace Gs2::Inbox::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::Inbox::Domain::Model
         public TSharedFromThis<FMessageAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inbox::FGs2InboxRestClientPtr Client;
+        const Inbox::Domain::FGs2InboxDomainPtr Service;
+        const Gs2::Inbox::FGs2InboxRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -74,9 +81,10 @@ namespace Gs2::Inbox::Domain::Model
     public:
 
         FMessageAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inbox::Domain::FGs2InboxDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> MessageName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -93,7 +101,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FGetMessageRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FMessageAccessTokenDomain> Self,
+                const TSharedPtr<FMessageAccessTokenDomain>& Self,
                 const Request::FGetMessageRequestPtr Request
             );
 
@@ -119,7 +127,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FOpenMessageRequestPtr Request;
         public:
             explicit FOpenTask(
-                const TSharedPtr<FMessageAccessTokenDomain> Self,
+                const TSharedPtr<FMessageAccessTokenDomain>& Self,
                 const Request::FOpenMessageRequestPtr Request
             );
 
@@ -143,10 +151,12 @@ namespace Gs2::Inbox::Domain::Model
         {
             const TSharedPtr<FMessageAccessTokenDomain> Self;
             const Request::FReadMessageRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FReadTask(
-                const TSharedPtr<FMessageAccessTokenDomain> Self,
-                const Request::FReadMessageRequestPtr Request
+                const TSharedPtr<FMessageAccessTokenDomain>& Self,
+                const Request::FReadMessageRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FReadTask(
@@ -160,7 +170,8 @@ namespace Gs2::Inbox::Domain::Model
         friend FReadTask;
 
         TSharedPtr<FAsyncTask<FReadTask>> Read(
-            Request::FReadMessageRequestPtr Request
+            Request::FReadMessageRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         class GS2INBOX_API FDeleteTask final :
@@ -171,7 +182,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FDeleteMessageRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FMessageAccessTokenDomain> Self,
+                const TSharedPtr<FMessageAccessTokenDomain>& Self,
                 const Request::FDeleteMessageRequestPtr Request
             );
 

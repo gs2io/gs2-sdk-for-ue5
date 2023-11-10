@@ -44,11 +44,13 @@ namespace Gs2::Enchant::Domain::Model
 {
 
     FCurrentParameterMasterDomain::FCurrentParameterMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enchant::Domain::FGs2EnchantDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Enchant::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -62,6 +64,7 @@ namespace Gs2::Enchant::Domain::Model
         const FCurrentParameterMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -70,7 +73,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FCurrentParameterMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentParameterMasterDomain> Self,
+        const TSharedPtr<FCurrentParameterMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,7 +135,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FCurrentParameterMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentParameterMasterDomain> Self,
+        const TSharedPtr<FCurrentParameterMasterDomain>& Self,
         const Request::FGetCurrentParameterMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -192,7 +195,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FCurrentParameterMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentParameterMasterDomain> Self,
+        const TSharedPtr<FCurrentParameterMasterDomain>& Self,
         const Request::FUpdateCurrentParameterMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -254,7 +257,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FCurrentParameterMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentParameterMasterDomain> Self,
+        const TSharedPtr<FCurrentParameterMasterDomain>& Self,
         const Request::FUpdateCurrentParameterMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

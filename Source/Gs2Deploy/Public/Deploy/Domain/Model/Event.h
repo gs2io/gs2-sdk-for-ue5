@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Deploy/Gs2Deploy.h"
 #include "Deploy/Domain/Iterator/DescribeStacksIterator.h"
 #include "Deploy/Domain/Iterator/DescribeResourcesIterator.h"
 #include "Deploy/Domain/Iterator/DescribeEventsIterator.h"
@@ -30,6 +29,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Deploy::Domain
+{
+    class FGs2DeployDomain;
+    typedef TSharedPtr<FGs2DeployDomain> FGs2DeployDomainPtr;
 }
 
 namespace Gs2::Deploy::Domain::Model
@@ -43,7 +48,8 @@ namespace Gs2::Deploy::Domain::Model
         public TSharedFromThis<FEventDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Deploy::FGs2DeployRestClientPtr Client;
+        const Deploy::Domain::FGs2DeployDomainPtr Service;
+        const Gs2::Deploy::FGs2DeployRestClientPtr Client;
 
         public:
         TOptional<FString> StackName;
@@ -55,7 +61,8 @@ namespace Gs2::Deploy::Domain::Model
     public:
 
         FEventDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Deploy::Domain::FGs2DeployDomainPtr& Service,
             const TOptional<FString> StackName,
             const TOptional<FString> EventName
             // ReSharper disable once CppMemberInitializersOrder
@@ -73,7 +80,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FGetEventRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FEventDomain> Self,
+                const TSharedPtr<FEventDomain>& Self,
                 const Request::FGetEventRequestPtr Request
             );
 

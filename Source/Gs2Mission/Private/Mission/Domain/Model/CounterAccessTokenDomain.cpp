@@ -47,13 +47,15 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FCounterAccessTokenDomain::FCounterAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> CounterName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -70,6 +72,7 @@ namespace Gs2::Mission::Domain::Model
         const FCounterAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -80,7 +83,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCounterAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCounterAccessTokenDomain> Self,
+        const TSharedPtr<FCounterAccessTokenDomain>& Self,
         const Request::FGetCounterRequestPtr Request
     ): Self(Self), Request(Request)
     {

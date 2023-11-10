@@ -65,7 +65,7 @@ namespace Gs2::Realtime::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("xGs2AccessToken", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -45,14 +45,16 @@ namespace Gs2::Enchant::Domain::Model
 {
 
     FBalanceParameterStatusAccessTokenDomain::FBalanceParameterStatusAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enchant::Domain::FGs2EnchantDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> ParameterName,
         const TOptional<FString> PropertyId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -70,6 +72,7 @@ namespace Gs2::Enchant::Domain::Model
         const FBalanceParameterStatusAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -81,7 +84,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FBalanceParameterStatusAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FBalanceParameterStatusAccessTokenDomain> Self,
+        const TSharedPtr<FBalanceParameterStatusAccessTokenDomain>& Self,
         const Request::FGetBalanceParameterStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {

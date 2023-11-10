@@ -22,7 +22,7 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Idle/Gs2Idle.h"
+#include "Idle/Domain/Gs2Idle.h"
 #include "Idle/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Idle/Domain/Iterator/DescribeCategoryModelMastersIterator.h"
 #include "Idle/Domain/Iterator/DescribeCategoryModelsIterator.h"
@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Idle::Domain
+{
+    class FGs2IdleDomain;
+    typedef TSharedPtr<FGs2IdleDomain> FGs2IdleDomainPtr;
 }
 
 namespace Gs2::Idle::Domain::Model
@@ -50,7 +56,8 @@ namespace Gs2::Idle::Domain::Model
         public TSharedFromThis<FStatusDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Idle::FGs2IdleRestClientPtr Client;
+        const Idle::Domain::FGs2IdleDomainPtr Service;
+        const Gs2::Idle::FGs2IdleRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -73,7 +80,8 @@ namespace Gs2::Idle::Domain::Model
     public:
 
         FStatusDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Idle::Domain::FGs2IdleDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> CategoryName
@@ -92,7 +100,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FGetStatusByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FGetStatusByUserIdRequestPtr Request
             );
 
@@ -118,7 +126,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FPredictionByUserIdRequestPtr Request;
         public:
             explicit FPredictionTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FPredictionByUserIdRequestPtr Request
             );
 
@@ -144,7 +152,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FReceiveByUserIdRequestPtr Request;
         public:
             explicit FReceiveTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FReceiveByUserIdRequestPtr Request
             );
 
@@ -170,7 +178,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FIncreaseMaximumIdleMinutesByUserIdRequestPtr Request;
         public:
             explicit FIncreaseMaximumIdleMinutesTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FIncreaseMaximumIdleMinutesByUserIdRequestPtr Request
             );
 
@@ -196,7 +204,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request;
         public:
             explicit FDecreaseMaximumIdleMinutesTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request
             );
 

@@ -216,7 +216,7 @@ namespace Gs2::Mission::Model
         return MakeShared<FCounter>()
             ->WithCounterId(Data->HasField("counterId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("counterId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -225,7 +225,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -234,7 +234,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

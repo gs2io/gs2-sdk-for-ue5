@@ -38,11 +38,13 @@ namespace Gs2::StateMachine::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const StateMachine::Domain::FGs2StateMachineDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::StateMachine::FGs2StateMachineRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("stateMachine:Namespace")
@@ -53,6 +55,7 @@ namespace Gs2::StateMachine::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -61,7 +64,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -113,7 +116,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -170,7 +173,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -229,7 +232,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -282,7 +285,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FNamespaceDomain::FUpdateStateMachineMasterTask::FUpdateStateMachineMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateStateMachineMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -334,6 +337,7 @@ namespace Gs2::StateMachine::Domain::Model
         }
         auto Domain = MakeShared<Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetVersion()
         );
@@ -388,10 +392,11 @@ namespace Gs2::StateMachine::Domain::Model
 
     TSharedPtr<Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain> FNamespaceDomain::StateMachineMaster(
         const int64 Version
-    ) const
+    )
     {
         return MakeShared<Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             Version
         );
@@ -399,10 +404,11 @@ namespace Gs2::StateMachine::Domain::Model
 
     TSharedPtr<Gs2::StateMachine::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::StateMachine::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -410,10 +416,11 @@ namespace Gs2::StateMachine::Domain::Model
 
     TSharedPtr<Gs2::StateMachine::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::StateMachine::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

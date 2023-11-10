@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Quest/Gs2Quest.h"
 #include "Quest/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Quest/Domain/Iterator/DescribeQuestGroupModelMastersIterator.h"
 #include "Quest/Domain/Iterator/DescribeQuestModelMastersIterator.h"
@@ -34,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Quest::Domain
+{
+    class FGs2QuestDomain;
+    typedef TSharedPtr<FGs2QuestDomain> FGs2QuestDomainPtr;
 }
 
 namespace Gs2::Quest::Domain::Model
@@ -55,7 +60,8 @@ namespace Gs2::Quest::Domain::Model
         public TSharedFromThis<FQuestGroupModelMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Quest::FGs2QuestRestClientPtr Client;
+        const Quest::Domain::FGs2QuestDomainPtr Service;
+        const Gs2::Quest::FGs2QuestRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -72,7 +78,8 @@ namespace Gs2::Quest::Domain::Model
     public:
 
         FQuestGroupModelMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Quest::Domain::FGs2QuestDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> QuestGroupName
             // ReSharper disable once CppMemberInitializersOrder
@@ -90,7 +97,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FGetQuestGroupModelMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FQuestGroupModelMasterDomain> Self,
+                const TSharedPtr<FQuestGroupModelMasterDomain>& Self,
                 const Request::FGetQuestGroupModelMasterRequestPtr Request
             );
 
@@ -116,7 +123,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FUpdateQuestGroupModelMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FQuestGroupModelMasterDomain> Self,
+                const TSharedPtr<FQuestGroupModelMasterDomain>& Self,
                 const Request::FUpdateQuestGroupModelMasterRequestPtr Request
             );
 
@@ -142,7 +149,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FDeleteQuestGroupModelMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FQuestGroupModelMasterDomain> Self,
+                const TSharedPtr<FQuestGroupModelMasterDomain>& Self,
                 const Request::FDeleteQuestGroupModelMasterRequestPtr Request
             );
 
@@ -168,7 +175,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FCreateQuestModelMasterRequestPtr Request;
         public:
             explicit FCreateQuestModelMasterTask(
-                const TSharedPtr<FQuestGroupModelMasterDomain> Self,
+                const TSharedPtr<FQuestGroupModelMasterDomain>& Self,
                 const Request::FCreateQuestModelMasterRequestPtr Request
             );
 
@@ -199,7 +206,7 @@ namespace Gs2::Quest::Domain::Model
 
         TSharedPtr<Gs2::Quest::Domain::Model::FQuestModelMasterDomain> QuestModelMaster(
             const FString QuestName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -38,11 +38,13 @@ namespace Gs2::Deploy::Domain::Model
 {
 
     FStackDomain::FStackDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Deploy::Domain::FGs2DeployDomainPtr& Service,
         const TOptional<FString> StackName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Gs2->RestSession)),
         StackName(StackName),
         ParentKey("deploy:Stack")
@@ -53,6 +55,7 @@ namespace Gs2::Deploy::Domain::Model
         const FStackDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         StackName(From.StackName),
         ParentKey(From.ParentKey)
@@ -61,7 +64,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FStackDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FStackDomain> Self,
+        const TSharedPtr<FStackDomain>& Self,
         const Request::FGetStackStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -113,7 +116,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FStackDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStackDomain> Self,
+        const TSharedPtr<FStackDomain>& Self,
         const Request::FGetStackRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -170,7 +173,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FStackDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FStackDomain> Self,
+        const TSharedPtr<FStackDomain>& Self,
         const Request::FUpdateStackRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -229,7 +232,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FStackDomain::FChangeSetTask::FChangeSetTask(
-        const TSharedPtr<FStackDomain> Self,
+        const TSharedPtr<FStackDomain>& Self,
         const Request::FChangeSetRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -273,7 +276,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FStackDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FStackDomain> Self,
+        const TSharedPtr<FStackDomain>& Self,
         const Request::FUpdateStackFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -332,7 +335,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FStackDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FStackDomain> Self,
+        const TSharedPtr<FStackDomain>& Self,
         const Request::FDeleteStackRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -385,7 +388,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FStackDomain::FForceDeleteTask::FForceDeleteTask(
-        const TSharedPtr<FStackDomain> Self,
+        const TSharedPtr<FStackDomain>& Self,
         const Request::FForceDeleteStackRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -444,7 +447,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FStackDomain::FDeleteResourcesTask::FDeleteResourcesTask(
-        const TSharedPtr<FStackDomain> Self,
+        const TSharedPtr<FStackDomain>& Self,
         const Request::FDeleteStackResourcesRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -497,7 +500,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FStackDomain::FDeleteEntityTask::FDeleteEntityTask(
-        const TSharedPtr<FStackDomain> Self,
+        const TSharedPtr<FStackDomain>& Self,
         const Request::FDeleteStackEntityRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -589,10 +592,11 @@ namespace Gs2::Deploy::Domain::Model
 
     TSharedPtr<Gs2::Deploy::Domain::Model::FResourceDomain> FStackDomain::Resource(
         const FString ResourceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Deploy::Domain::Model::FResourceDomain>(
             Gs2,
+            Service,
             StackName,
             ResourceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ResourceName)
         );
@@ -638,10 +642,11 @@ namespace Gs2::Deploy::Domain::Model
 
     TSharedPtr<Gs2::Deploy::Domain::Model::FEventDomain> FStackDomain::Event(
         const FString EventName
-    ) const
+    )
     {
         return MakeShared<Gs2::Deploy::Domain::Model::FEventDomain>(
             Gs2,
+            Service,
             StackName,
             EventName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EventName)
         );
@@ -687,10 +692,11 @@ namespace Gs2::Deploy::Domain::Model
 
     TSharedPtr<Gs2::Deploy::Domain::Model::FOutputDomain> FStackDomain::Output(
         const FString OutputName
-    ) const
+    )
     {
         return MakeShared<Gs2::Deploy::Domain::Model::FOutputDomain>(
             Gs2,
+            Service,
             StackName,
             OutputName == TEXT("") ? TOptional<FString>() : TOptional<FString>(OutputName)
         );

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Realtime/Gs2Realtime.h"
 #include "Realtime/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Realtime/Domain/Iterator/DescribeRoomsIterator.h"
 
@@ -28,6 +27,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Realtime::Domain
+{
+    class FGs2RealtimeDomain;
+    typedef TSharedPtr<FGs2RealtimeDomain> FGs2RealtimeDomainPtr;
 }
 
 namespace Gs2::Realtime::Domain::Model
@@ -39,7 +44,8 @@ namespace Gs2::Realtime::Domain::Model
         public TSharedFromThis<FRoomDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Realtime::FGs2RealtimeRestClientPtr Client;
+        const Realtime::Domain::FGs2RealtimeDomainPtr Service;
+        const Gs2::Realtime::FGs2RealtimeRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -51,7 +57,8 @@ namespace Gs2::Realtime::Domain::Model
     public:
 
         FRoomDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Realtime::Domain::FGs2RealtimeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> RoomName
             // ReSharper disable once CppMemberInitializersOrder
@@ -69,7 +76,7 @@ namespace Gs2::Realtime::Domain::Model
             const Request::FGetRoomRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FRoomDomain> Self,
+                const TSharedPtr<FRoomDomain>& Self,
                 const Request::FGetRoomRequestPtr Request
             );
 
@@ -95,7 +102,7 @@ namespace Gs2::Realtime::Domain::Model
             const Request::FDeleteRoomRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FRoomDomain> Self,
+                const TSharedPtr<FRoomDomain>& Self,
                 const Request::FDeleteRoomRequestPtr Request
             );
 

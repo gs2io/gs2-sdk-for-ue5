@@ -265,7 +265,7 @@ namespace Gs2::Exchange::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -274,7 +274,7 @@ namespace Gs2::Exchange::Request
               }() : TOptional<FString>())
             ->WithRateName(Data->HasField("rateName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("rateName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -283,7 +283,7 @@ namespace Gs2::Exchange::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -292,7 +292,7 @@ namespace Gs2::Exchange::Request
               }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("metadata", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -309,7 +309,7 @@ namespace Gs2::Exchange::Request
              }() : nullptr)
             ->WithCalculateType(Data->HasField("calculateType") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("calculateType", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -336,7 +336,7 @@ namespace Gs2::Exchange::Request
               }() : TOptional<int64>())
             ->WithCalculateScriptId(Data->HasField("calculateScriptId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("calculateScriptId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -345,7 +345,7 @@ namespace Gs2::Exchange::Request
               }() : TOptional<FString>())
             ->WithExchangeCountId(Data->HasField("exchangeCountId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("exchangeCountId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

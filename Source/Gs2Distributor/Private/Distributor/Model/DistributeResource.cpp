@@ -64,7 +64,7 @@ namespace Gs2::Distributor::Model
         return MakeShared<FDistributeResource>()
             ->WithAction(Data->HasField("action") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("action", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -73,7 +73,7 @@ namespace Gs2::Distributor::Model
                 }() : TOptional<FString>())
             ->WithRequest(Data->HasField("request") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("request", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

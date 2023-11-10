@@ -39,11 +39,13 @@ namespace Gs2::Money::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Money::Domain::FGs2MoneyDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("money:Namespace")
@@ -54,6 +56,7 @@ namespace Gs2::Money::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -62,7 +65,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -114,7 +117,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -171,7 +174,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -230,7 +233,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -284,10 +287,11 @@ namespace Gs2::Money::Domain::Model
 
     TSharedPtr<Gs2::Money::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Money::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -295,10 +299,11 @@ namespace Gs2::Money::Domain::Model
 
     TSharedPtr<Gs2::Money::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Money::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

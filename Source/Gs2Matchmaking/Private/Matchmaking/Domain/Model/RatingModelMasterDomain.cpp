@@ -45,12 +45,14 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FRatingModelMasterDomain::FRatingModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RatingName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         RatingName(RatingName),
@@ -65,6 +67,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FRatingModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         RatingName(From.RatingName),
@@ -74,7 +77,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FRatingModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRatingModelMasterDomain> Self,
+        const TSharedPtr<FRatingModelMasterDomain>& Self,
         const Request::FGetRatingModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -136,7 +139,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FRatingModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FRatingModelMasterDomain> Self,
+        const TSharedPtr<FRatingModelMasterDomain>& Self,
         const Request::FUpdateRatingModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -200,7 +203,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FRatingModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FRatingModelMasterDomain> Self,
+        const TSharedPtr<FRatingModelMasterDomain>& Self,
         const Request::FDeleteRatingModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

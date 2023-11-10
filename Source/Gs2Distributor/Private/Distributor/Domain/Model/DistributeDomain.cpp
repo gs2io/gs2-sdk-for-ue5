@@ -41,11 +41,13 @@ namespace Gs2::Distributor::Domain::Model
 {
 
     FDistributeDomain::FDistributeDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Distributor::Domain::FGs2DistributorDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -59,6 +61,7 @@ namespace Gs2::Distributor::Domain::Model
         const FDistributeDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)

@@ -289,7 +289,7 @@ namespace Gs2::Enhance::Model
         return MakeShared<FRateModelMaster>()
             ->WithRateModelId(Data->HasField("rateModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("rateModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -298,7 +298,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -307,7 +307,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -316,7 +316,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -325,7 +325,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithTargetInventoryModelId(Data->HasField("targetInventoryModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("targetInventoryModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -334,7 +334,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithAcquireExperienceSuffix(Data->HasField("acquireExperienceSuffix") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("acquireExperienceSuffix", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -343,7 +343,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithMaterialInventoryModelId(Data->HasField("materialInventoryModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("materialInventoryModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -364,7 +364,7 @@ namespace Gs2::Enhance::Model
                  }() : MakeShared<TArray<FString>>())
             ->WithExperienceModelId(Data->HasField("experienceModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("experienceModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

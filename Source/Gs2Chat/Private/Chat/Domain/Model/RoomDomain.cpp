@@ -41,7 +41,8 @@ namespace Gs2::Chat::Domain::Model
 {
 
     FRoomDomain::FRoomDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Chat::Domain::FGs2ChatDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> RoomName,
@@ -49,6 +50,7 @@ namespace Gs2::Chat::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -66,6 +68,7 @@ namespace Gs2::Chat::Domain::Model
         const FRoomDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -77,7 +80,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FRoomDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRoomDomain> Self,
+        const TSharedPtr<FRoomDomain>& Self,
         const Request::FGetRoomRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -140,7 +143,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FRoomDomain::FUpdateFromBackendTask::FUpdateFromBackendTask(
-        const TSharedPtr<FRoomDomain> Self,
+        const TSharedPtr<FRoomDomain>& Self,
         const Request::FUpdateRoomFromBackendRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -207,7 +210,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FRoomDomain::FDeleteFromBackendTask::FDeleteFromBackendTask(
-        const TSharedPtr<FRoomDomain> Self,
+        const TSharedPtr<FRoomDomain>& Self,
         const Request::FDeleteRoomFromBackendRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -267,7 +270,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FRoomDomain::FPostTask::FPostTask(
-        const TSharedPtr<FRoomDomain> Self,
+        const TSharedPtr<FRoomDomain>& Self,
         const Request::FPostByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -324,6 +327,7 @@ namespace Gs2::Chat::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Chat::Domain::Model::FMessageDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetRoomName(),
@@ -388,10 +392,11 @@ namespace Gs2::Chat::Domain::Model
 
     TSharedPtr<Gs2::Chat::Domain::Model::FMessageDomain> FRoomDomain::Message(
         const FString MessageName
-    ) const
+    )
     {
         return MakeShared<Gs2::Chat::Domain::Model::FMessageDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             RoomName,

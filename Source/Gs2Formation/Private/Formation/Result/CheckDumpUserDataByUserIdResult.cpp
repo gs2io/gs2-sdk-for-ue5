@@ -51,7 +51,7 @@ namespace Gs2::Formation::Result
         return MakeShared<FCheckDumpUserDataByUserIdResult>()
             ->WithUrl(Data->HasField("url") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("url", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

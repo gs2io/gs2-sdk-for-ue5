@@ -314,7 +314,7 @@ namespace Gs2::Quest::Model
         return MakeShared<FQuestModelMaster>()
             ->WithQuestModelId(Data->HasField("questModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("questModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -323,7 +323,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithQuestGroupName(Data->HasField("questGroupName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("questGroupName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -332,7 +332,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -341,7 +341,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -350,7 +350,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -371,7 +371,7 @@ namespace Gs2::Quest::Model
                  }() : MakeShared<TArray<Model::FContentsPtr>>())
             ->WithChallengePeriodEventId(Data->HasField("challengePeriodEventId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("challengePeriodEventId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -37,7 +37,7 @@ namespace Gs2::JobQueue::Domain
 {
 
     FGs2JobQueueDomain::FGs2JobQueueDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         CopiedCompletedJobs(MakeShared<TArray<Gs2::JobQueue::Model::FRunNotificationPtr>>()),
@@ -70,7 +70,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     FGs2JobQueueDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2JobQueueDomain> Self,
+        const TSharedPtr<FGs2JobQueueDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -116,6 +116,7 @@ namespace Gs2::JobQueue::Domain
         }
         auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -129,7 +130,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     FGs2JobQueueDomain::FDumpUserDataTask::FDumpUserDataTask(
-        TSharedPtr<FGs2JobQueueDomain> Self,
+        const TSharedPtr<FGs2JobQueueDomain>& Self,
         const Request::FDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -172,7 +173,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     FGs2JobQueueDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
-        TSharedPtr<FGs2JobQueueDomain> Self,
+        const TSharedPtr<FGs2JobQueueDomain>& Self,
         const Request::FCheckDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -222,7 +223,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     FGs2JobQueueDomain::FCleanUserDataTask::FCleanUserDataTask(
-        TSharedPtr<FGs2JobQueueDomain> Self,
+        const TSharedPtr<FGs2JobQueueDomain>& Self,
         const Request::FCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -265,7 +266,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     FGs2JobQueueDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
-        TSharedPtr<FGs2JobQueueDomain> Self,
+        const TSharedPtr<FGs2JobQueueDomain>& Self,
         const Request::FCheckCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -308,7 +309,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     FGs2JobQueueDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
-        TSharedPtr<FGs2JobQueueDomain> Self,
+        const TSharedPtr<FGs2JobQueueDomain>& Self,
         const Request::FPrepareImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -362,7 +363,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     FGs2JobQueueDomain::FImportUserDataTask::FImportUserDataTask(
-        TSharedPtr<FGs2JobQueueDomain> Self,
+        const TSharedPtr<FGs2JobQueueDomain>& Self,
         const Request::FImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -405,7 +406,7 @@ namespace Gs2::JobQueue::Domain
     }
 
     FGs2JobQueueDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
-        TSharedPtr<FGs2JobQueueDomain> Self,
+        const TSharedPtr<FGs2JobQueueDomain>& Self,
         const Request::FCheckImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -487,10 +488,11 @@ namespace Gs2::JobQueue::Domain
 
     TSharedPtr<Gs2::JobQueue::Domain::Model::FNamespaceDomain> FGs2JobQueueDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::JobQueue::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

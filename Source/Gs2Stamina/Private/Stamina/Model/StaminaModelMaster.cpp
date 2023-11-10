@@ -362,7 +362,7 @@ namespace Gs2::Stamina::Model
         return MakeShared<FStaminaModelMaster>()
             ->WithStaminaModelId(Data->HasField("staminaModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("staminaModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -371,7 +371,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -380,7 +380,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -389,7 +389,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -443,7 +443,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<int32>())
             ->WithMaxStaminaTableName(Data->HasField("maxStaminaTableName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("maxStaminaTableName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -452,7 +452,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithRecoverIntervalTableName(Data->HasField("recoverIntervalTableName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("recoverIntervalTableName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -461,7 +461,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithRecoverValueTableName(Data->HasField("recoverValueTableName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("recoverValueTableName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

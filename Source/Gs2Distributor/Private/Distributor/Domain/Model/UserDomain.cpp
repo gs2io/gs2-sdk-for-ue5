@@ -41,12 +41,14 @@ namespace Gs2::Distributor::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Distributor::Domain::FGs2DistributorDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -61,6 +63,7 @@ namespace Gs2::Distributor::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -71,10 +74,11 @@ namespace Gs2::Distributor::Domain::Model
 
     TSharedPtr<Gs2::Distributor::Domain::Model::FStampSheetResultDomain> FUserDomain::StampSheetResult(
         const FString TransactionId
-    ) const
+    )
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FStampSheetResultDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)

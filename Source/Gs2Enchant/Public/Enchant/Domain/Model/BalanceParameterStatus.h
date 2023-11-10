@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Enchant/Gs2Enchant.h"
 #include "Enchant/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Enchant/Domain/Iterator/DescribeBalanceParameterModelsIterator.h"
 #include "Enchant/Domain/Iterator/DescribeBalanceParameterModelMastersIterator.h"
@@ -35,6 +34,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Enchant::Domain
+{
+    class FGs2EnchantDomain;
+    typedef TSharedPtr<FGs2EnchantDomain> FGs2EnchantDomainPtr;
 }
 
 namespace Gs2::Enchant::Domain::Model
@@ -56,7 +61,8 @@ namespace Gs2::Enchant::Domain::Model
         public TSharedFromThis<FBalanceParameterStatusDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Enchant::FGs2EnchantRestClientPtr Client;
+        const Enchant::Domain::FGs2EnchantDomainPtr Service;
+        const Gs2::Enchant::FGs2EnchantRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -70,7 +76,8 @@ namespace Gs2::Enchant::Domain::Model
     public:
 
         FBalanceParameterStatusDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Enchant::Domain::FGs2EnchantDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> ParameterName,
@@ -90,7 +97,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FGetBalanceParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FBalanceParameterStatusDomain> Self,
+                const TSharedPtr<FBalanceParameterStatusDomain>& Self,
                 const Request::FGetBalanceParameterStatusByUserIdRequestPtr Request
             );
 
@@ -116,7 +123,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FDeleteBalanceParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FBalanceParameterStatusDomain> Self,
+                const TSharedPtr<FBalanceParameterStatusDomain>& Self,
                 const Request::FDeleteBalanceParameterStatusByUserIdRequestPtr Request
             );
 
@@ -142,7 +149,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FReDrawBalanceParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FReDrawTask(
-                const TSharedPtr<FBalanceParameterStatusDomain> Self,
+                const TSharedPtr<FBalanceParameterStatusDomain>& Self,
                 const Request::FReDrawBalanceParameterStatusByUserIdRequestPtr Request
             );
 
@@ -168,7 +175,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FSetTask(
-                const TSharedPtr<FBalanceParameterStatusDomain> Self,
+                const TSharedPtr<FBalanceParameterStatusDomain>& Self,
                 const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request
             );
 

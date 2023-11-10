@@ -38,12 +38,14 @@ namespace Gs2::StateMachine::Domain::Model
 {
 
     FStateMachineMasterDomain::FStateMachineMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const StateMachine::Domain::FGs2StateMachineDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<int64> Version
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::StateMachine::FGs2StateMachineRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         Version(Version),
@@ -58,6 +60,7 @@ namespace Gs2::StateMachine::Domain::Model
         const FStateMachineMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         Version(From.Version),
@@ -67,7 +70,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FStateMachineMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStateMachineMasterDomain> Self,
+        const TSharedPtr<FStateMachineMasterDomain>& Self,
         const Request::FGetStateMachineMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -129,7 +132,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FStateMachineMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FStateMachineMasterDomain> Self,
+        const TSharedPtr<FStateMachineMasterDomain>& Self,
         const Request::FDeleteStateMachineMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

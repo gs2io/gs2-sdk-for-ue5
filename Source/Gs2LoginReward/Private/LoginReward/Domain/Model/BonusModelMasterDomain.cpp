@@ -42,12 +42,14 @@ namespace Gs2::LoginReward::Domain::Model
 {
 
     FBonusModelMasterDomain::FBonusModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> BonusModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         BonusModelName(BonusModelName),
@@ -62,6 +64,7 @@ namespace Gs2::LoginReward::Domain::Model
         const FBonusModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         BonusModelName(From.BonusModelName),
@@ -71,7 +74,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FBonusModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FBonusModelMasterDomain> Self,
+        const TSharedPtr<FBonusModelMasterDomain>& Self,
         const Request::FGetBonusModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -133,7 +136,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FBonusModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FBonusModelMasterDomain> Self,
+        const TSharedPtr<FBonusModelMasterDomain>& Self,
         const Request::FUpdateBonusModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -197,7 +200,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FBonusModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FBonusModelMasterDomain> Self,
+        const TSharedPtr<FBonusModelMasterDomain>& Self,
         const Request::FDeleteBonusModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

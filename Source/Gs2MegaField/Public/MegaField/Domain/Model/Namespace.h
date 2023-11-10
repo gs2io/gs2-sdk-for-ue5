@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "MegaField/Gs2MegaField.h"
 #include "MegaField/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "MegaField/Domain/Iterator/DescribeAreaModelsIterator.h"
 #include "MegaField/Domain/Iterator/DescribeAreaModelMastersIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::MegaField::Domain
+{
+    class FGs2MegaFieldDomain;
+    typedef TSharedPtr<FGs2MegaFieldDomain> FGs2MegaFieldDomainPtr;
 }
 
 namespace Gs2::MegaField::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::MegaField::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
+        const MegaField::Domain::FGs2MegaFieldDomainPtr Service;
+        const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -71,7 +77,8 @@ namespace Gs2::MegaField::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -88,7 +95,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -114,7 +121,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -140,7 +147,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -166,7 +173,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -192,7 +199,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FCreateAreaModelMasterRequestPtr Request;
         public:
             explicit FCreateAreaModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateAreaModelMasterRequestPtr Request
             );
 
@@ -211,7 +218,7 @@ namespace Gs2::MegaField::Domain::Model
         );
 
         TSharedPtr<Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain> CurrentFieldMaster(
-        ) const;
+        );
 
         Gs2::MegaField::Domain::Iterator::FDescribeAreaModelsIteratorPtr AreaModels(
         ) const;
@@ -226,15 +233,15 @@ namespace Gs2::MegaField::Domain::Model
 
         TSharedPtr<Gs2::MegaField::Domain::Model::FAreaModelDomain> AreaModel(
             const FString AreaModelName
-        ) const;
+        );
 
         TSharedPtr<Gs2::MegaField::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::MegaField::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::MegaField::Domain::Iterator::FDescribeAreaModelMastersIteratorPtr AreaModelMasters(
         ) const;
@@ -249,7 +256,7 @@ namespace Gs2::MegaField::Domain::Model
 
         TSharedPtr<Gs2::MegaField::Domain::Model::FAreaModelMasterDomain> AreaModelMaster(
             const FString AreaModelName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

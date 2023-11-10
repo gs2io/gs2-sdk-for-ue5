@@ -105,7 +105,7 @@ namespace Gs2::Enhance::Result
         return MakeShared<FStartResult>()
             ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("transactionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -114,7 +114,7 @@ namespace Gs2::Enhance::Result
                 }() : TOptional<FString>())
             ->WithStampSheet(Data->HasField("stampSheet") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("stampSheet", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -123,7 +123,7 @@ namespace Gs2::Enhance::Result
                 }() : TOptional<FString>())
             ->WithStampSheetEncryptionKeyId(Data->HasField("stampSheetEncryptionKeyId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("stampSheetEncryptionKeyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

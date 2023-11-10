@@ -65,7 +65,8 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FReferenceOfDomain::FReferenceOfDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> InventoryName,
@@ -75,6 +76,7 @@ namespace Gs2::Inventory::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -97,6 +99,7 @@ namespace Gs2::Inventory::Domain::Model
         const FReferenceOfDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -110,7 +113,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FReferenceOfDomain::FGetTask::FGetTask(
-        const TSharedPtr<FReferenceOfDomain> Self,
+        const TSharedPtr<FReferenceOfDomain>& Self,
         const Request::FGetReferenceOfByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -208,7 +211,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FReferenceOfDomain::FVerifyTask::FVerifyTask(
-        const TSharedPtr<FReferenceOfDomain> Self,
+        const TSharedPtr<FReferenceOfDomain>& Self,
         const Request::FVerifyReferenceOfByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -297,6 +300,7 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetUserId(),
             Request->GetInventoryName(),
@@ -315,7 +319,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FReferenceOfDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FReferenceOfDomain> Self,
+        const TSharedPtr<FReferenceOfDomain>& Self,
         const Request::FDeleteReferenceOfByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -393,6 +397,7 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetUserId(),
             Request->GetInventoryName(),

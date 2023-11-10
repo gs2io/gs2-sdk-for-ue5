@@ -19,5 +19,9 @@ public class Gs2MegaField : ModuleRules
 			"Gs2Core",
 			"Gs2Auth",
 		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"Gs2Core"
+		});
 	}
 }

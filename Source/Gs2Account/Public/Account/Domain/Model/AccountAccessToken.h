@@ -32,6 +32,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Account::Domain
+{
+    class FGs2AccountDomain;
+    typedef TSharedPtr<FGs2AccountDomain> FGs2AccountDomainPtr;
+}
+
 namespace Gs2::Account::Domain::Model
 {
     class FNamespaceDomain;
@@ -46,7 +52,8 @@ namespace Gs2::Account::Domain::Model
         public TSharedFromThis<FAccountAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Account::FGs2AccountRestClientPtr Client;
+        const Account::Domain::FGs2AccountDomainPtr Service;
+        const Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
         TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> BanStatuses;
@@ -79,9 +86,10 @@ namespace Gs2::Account::Domain::Model
     public:
 
         FAccountAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Account::Domain::FGs2AccountDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -102,10 +110,10 @@ namespace Gs2::Account::Domain::Model
 
         TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain> TakeOver(
             const int32 Type
-        ) const;
+        );
 
         TSharedPtr<Gs2::Account::Domain::Model::FDataOwnerAccessTokenDomain> DataOwner(
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

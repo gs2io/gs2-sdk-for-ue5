@@ -188,7 +188,7 @@ namespace Gs2::Limit::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -197,7 +197,7 @@ namespace Gs2::Limit::Request
               }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("name", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -206,7 +206,7 @@ namespace Gs2::Limit::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -215,7 +215,7 @@ namespace Gs2::Limit::Request
               }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("metadata", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -224,7 +224,7 @@ namespace Gs2::Limit::Request
               }() : TOptional<FString>())
             ->WithResetType(Data->HasField("resetType") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("resetType", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -242,7 +242,7 @@ namespace Gs2::Limit::Request
               }() : TOptional<int32>())
             ->WithResetDayOfWeek(Data->HasField("resetDayOfWeek") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("resetDayOfWeek", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

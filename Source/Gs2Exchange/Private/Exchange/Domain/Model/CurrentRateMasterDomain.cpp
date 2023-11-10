@@ -44,11 +44,13 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FCurrentRateMasterDomain::FCurrentRateMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Exchange::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -62,6 +64,7 @@ namespace Gs2::Exchange::Domain::Model
         const FCurrentRateMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -70,7 +73,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FCurrentRateMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentRateMasterDomain> Self,
+        const TSharedPtr<FCurrentRateMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,7 +135,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FCurrentRateMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentRateMasterDomain> Self,
+        const TSharedPtr<FCurrentRateMasterDomain>& Self,
         const Request::FGetCurrentRateMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -192,7 +195,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FCurrentRateMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentRateMasterDomain> Self,
+        const TSharedPtr<FCurrentRateMasterDomain>& Self,
         const Request::FUpdateCurrentRateMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -254,7 +257,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FCurrentRateMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentRateMasterDomain> Self,
+        const TSharedPtr<FCurrentRateMasterDomain>& Self,
         const Request::FUpdateCurrentRateMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

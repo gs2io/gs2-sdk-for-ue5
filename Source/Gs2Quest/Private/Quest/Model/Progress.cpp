@@ -256,7 +256,7 @@ namespace Gs2::Quest::Model
         return MakeShared<FProgress>()
             ->WithProgressId(Data->HasField("progressId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("progressId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -265,7 +265,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -274,7 +274,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("transactionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -283,7 +283,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithQuestModelId(Data->HasField("questModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("questModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -313,7 +313,7 @@ namespace Gs2::Quest::Model
                  }() : MakeShared<TArray<Model::FRewardPtr>>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

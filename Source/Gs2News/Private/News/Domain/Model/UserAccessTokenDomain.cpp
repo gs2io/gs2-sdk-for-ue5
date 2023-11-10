@@ -42,12 +42,14 @@ namespace Gs2::News::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const News::Domain::FGs2NewsDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -62,6 +64,7 @@ namespace Gs2::News::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -112,10 +115,11 @@ namespace Gs2::News::Domain::Model
     }
 
     TSharedPtr<Gs2::News::Domain::Model::FNewsAccessTokenDomain> FUserAccessTokenDomain::News(
-    ) const
+    )
     {
         return MakeShared<Gs2::News::Domain::Model::FNewsAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

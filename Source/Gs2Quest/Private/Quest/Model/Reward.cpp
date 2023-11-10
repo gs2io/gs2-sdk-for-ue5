@@ -101,7 +101,7 @@ namespace Gs2::Quest::Model
         return MakeShared<FReward>()
             ->WithAction(Data->HasField("action") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("action", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -110,7 +110,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithRequest(Data->HasField("request") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("request", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -119,7 +119,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithItemId(Data->HasField("itemId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("itemId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -41,13 +41,15 @@ namespace Gs2::SerialKey::Domain::Model
 {
 
     FIssueJobDomain::FIssueJobDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CampaignModelName,
         const TOptional<FString> IssueJobName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         CampaignModelName(CampaignModelName),
@@ -64,6 +66,7 @@ namespace Gs2::SerialKey::Domain::Model
         const FIssueJobDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         CampaignModelName(From.CampaignModelName),
@@ -74,7 +77,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FIssueJobDomain::FGetTask::FGetTask(
-        const TSharedPtr<FIssueJobDomain> Self,
+        const TSharedPtr<FIssueJobDomain>& Self,
         const Request::FGetIssueJobRequestPtr Request
     ): Self(Self), Request(Request)
     {

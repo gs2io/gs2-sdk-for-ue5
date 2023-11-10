@@ -89,7 +89,7 @@ namespace Gs2::Version::Result
         return MakeShared<FCheckVersionResult>()
             ->WithProjectToken(Data->HasField("projectToken") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("projectToken", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

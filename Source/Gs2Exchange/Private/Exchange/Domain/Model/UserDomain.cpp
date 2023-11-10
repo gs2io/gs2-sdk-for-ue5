@@ -44,12 +44,14 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -64,6 +66,7 @@ namespace Gs2::Exchange::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -73,7 +76,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FUserDomain::FCreateAwaitTask::FCreateAwaitTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FCreateAwaitByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -127,6 +130,7 @@ namespace Gs2::Exchange::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Exchange::Domain::Model::FAwaitDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetName()
@@ -147,10 +151,11 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FExchangeDomain> FUserDomain::Exchange(
-    ) const
+    )
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FExchangeDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );
@@ -201,10 +206,11 @@ namespace Gs2::Exchange::Domain::Model
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FAwaitDomain> FUserDomain::Await(
         const FString AwaitName
-    ) const
+    )
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FAwaitDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             AwaitName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AwaitName)

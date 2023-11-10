@@ -110,7 +110,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<bool>())
             ->WithDistributorNamespaceId(Data->HasField("distributorNamespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("distributorNamespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -119,7 +119,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("keyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -128,7 +128,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("queueNamespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

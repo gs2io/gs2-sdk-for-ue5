@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Dictionary/Gs2Dictionary.h"
 #include "Dictionary/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelsIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelMastersIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Dictionary::Domain
+{
+    class FGs2DictionaryDomain;
+    typedef TSharedPtr<FGs2DictionaryDomain> FGs2DictionaryDomainPtr;
 }
 
 namespace Gs2::Dictionary::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Dictionary::Domain::Model
         public TSharedFromThis<FEntryModelMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
+        const Dictionary::Domain::FGs2DictionaryDomainPtr Service;
+        const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -60,7 +66,8 @@ namespace Gs2::Dictionary::Domain::Model
     public:
 
         FEntryModelMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> EntryName
             // ReSharper disable once CppMemberInitializersOrder
@@ -78,7 +85,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FGetEntryModelMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FEntryModelMasterDomain> Self,
+                const TSharedPtr<FEntryModelMasterDomain>& Self,
                 const Request::FGetEntryModelMasterRequestPtr Request
             );
 
@@ -104,7 +111,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FUpdateEntryModelMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FEntryModelMasterDomain> Self,
+                const TSharedPtr<FEntryModelMasterDomain>& Self,
                 const Request::FUpdateEntryModelMasterRequestPtr Request
             );
 
@@ -130,7 +137,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FDeleteEntryModelMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FEntryModelMasterDomain> Self,
+                const TSharedPtr<FEntryModelMasterDomain>& Self,
                 const Request::FDeleteEntryModelMasterRequestPtr Request
             );
 

@@ -32,6 +32,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Account::Domain
+{
+    class FGs2AccountDomain;
+    typedef TSharedPtr<FGs2AccountDomain> FGs2AccountDomainPtr;
+}
+
 namespace Gs2::Account::Domain::Model
 {
     class FNamespaceDomain;
@@ -46,7 +52,8 @@ namespace Gs2::Account::Domain::Model
         public TSharedFromThis<FTakeOverAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Account::FGs2AccountRestClientPtr Client;
+        const Account::Domain::FGs2AccountDomainPtr Service;
+        const Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -60,9 +67,10 @@ namespace Gs2::Account::Domain::Model
     public:
 
         FTakeOverAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Account::Domain::FGs2AccountDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<int32> Type
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -79,7 +87,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FCreateTakeOverRequestPtr Request;
         public:
             explicit FCreateTask(
-                const TSharedPtr<FTakeOverAccessTokenDomain> Self,
+                const TSharedPtr<FTakeOverAccessTokenDomain>& Self,
                 const Request::FCreateTakeOverRequestPtr Request
             );
 
@@ -105,7 +113,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FGetTakeOverRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FTakeOverAccessTokenDomain> Self,
+                const TSharedPtr<FTakeOverAccessTokenDomain>& Self,
                 const Request::FGetTakeOverRequestPtr Request
             );
 
@@ -131,7 +139,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FUpdateTakeOverRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FTakeOverAccessTokenDomain> Self,
+                const TSharedPtr<FTakeOverAccessTokenDomain>& Self,
                 const Request::FUpdateTakeOverRequestPtr Request
             );
 
@@ -157,7 +165,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FDeleteTakeOverRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FTakeOverAccessTokenDomain> Self,
+                const TSharedPtr<FTakeOverAccessTokenDomain>& Self,
                 const Request::FDeleteTakeOverRequestPtr Request
             );
 

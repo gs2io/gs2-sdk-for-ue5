@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Schedule/Gs2Schedule.h"
 #include "Schedule/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Schedule/Domain/Iterator/DescribeEventMastersIterator.h"
 #include "Schedule/Domain/Iterator/DescribeTriggersIterator.h"
@@ -32,6 +31,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Schedule::Domain
+{
+    class FGs2ScheduleDomain;
+    typedef TSharedPtr<FGs2ScheduleDomain> FGs2ScheduleDomainPtr;
 }
 
 namespace Gs2::Schedule::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Schedule::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
+        const Schedule::Domain::FGs2ScheduleDomainPtr Service;
+        const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -67,7 +73,8 @@ namespace Gs2::Schedule::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -90,7 +97,7 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerDomain> Trigger(
             const FString TriggerName
-        ) const;
+        );
 
         Gs2::Schedule::Domain::Iterator::FDescribeEventsByUserIdIteratorPtr Events(
         ) const;
@@ -105,7 +112,7 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FEventDomain> Event(
             const FString EventName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

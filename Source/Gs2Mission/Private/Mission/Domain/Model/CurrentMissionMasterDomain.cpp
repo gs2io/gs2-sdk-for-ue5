@@ -46,11 +46,13 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FCurrentMissionMasterDomain::FCurrentMissionMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Mission::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -64,6 +66,7 @@ namespace Gs2::Mission::Domain::Model
         const FCurrentMissionMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -72,7 +75,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCurrentMissionMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentMissionMasterDomain> Self,
+        const TSharedPtr<FCurrentMissionMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -134,7 +137,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCurrentMissionMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentMissionMasterDomain> Self,
+        const TSharedPtr<FCurrentMissionMasterDomain>& Self,
         const Request::FGetCurrentMissionMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -194,7 +197,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCurrentMissionMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentMissionMasterDomain> Self,
+        const TSharedPtr<FCurrentMissionMasterDomain>& Self,
         const Request::FUpdateCurrentMissionMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -256,7 +259,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCurrentMissionMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentMissionMasterDomain> Self,
+        const TSharedPtr<FCurrentMissionMasterDomain>& Self,
         const Request::FUpdateCurrentMissionMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

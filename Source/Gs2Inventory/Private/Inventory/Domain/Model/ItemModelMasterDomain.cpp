@@ -63,13 +63,15 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FItemModelMasterDomain::FItemModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> InventoryName,
         const TOptional<FString> ItemName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         InventoryName(InventoryName),
@@ -86,6 +88,7 @@ namespace Gs2::Inventory::Domain::Model
         const FItemModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         InventoryName(From.InventoryName),
@@ -96,7 +99,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FItemModelMasterDomain> Self,
+        const TSharedPtr<FItemModelMasterDomain>& Self,
         const Request::FGetItemModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -160,7 +163,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FItemModelMasterDomain> Self,
+        const TSharedPtr<FItemModelMasterDomain>& Self,
         const Request::FUpdateItemModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -226,7 +229,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FItemModelMasterDomain> Self,
+        const TSharedPtr<FItemModelMasterDomain>& Self,
         const Request::FDeleteItemModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

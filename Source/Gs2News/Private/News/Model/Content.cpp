@@ -78,7 +78,7 @@ namespace Gs2::News::Model
         return MakeShared<FContent>()
             ->WithSection(Data->HasField("section") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("section", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -87,7 +87,7 @@ namespace Gs2::News::Model
                 }() : TOptional<FString>())
             ->WithContent(Data->HasField("content") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("content", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -96,7 +96,7 @@ namespace Gs2::News::Model
                 }() : TOptional<FString>())
             ->WithFrontMatter(Data->HasField("frontMatter") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("frontMatter", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

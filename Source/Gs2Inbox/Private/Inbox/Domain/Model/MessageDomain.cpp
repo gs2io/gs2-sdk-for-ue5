@@ -42,13 +42,15 @@ namespace Gs2::Inbox::Domain::Model
 {
 
     FMessageDomain::FMessageDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inbox::Domain::FGs2InboxDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> MessageName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inbox::FGs2InboxRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -65,6 +67,7 @@ namespace Gs2::Inbox::Domain::Model
         const FMessageDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -75,7 +78,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FMessageDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMessageDomain> Self,
+        const TSharedPtr<FMessageDomain>& Self,
         const Request::FGetMessageByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -139,7 +142,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FMessageDomain::FOpenTask::FOpenTask(
-        const TSharedPtr<FMessageDomain> Self,
+        const TSharedPtr<FMessageDomain>& Self,
         const Request::FOpenMessageByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -203,7 +206,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FMessageDomain::FReadTask::FReadTask(
-        const TSharedPtr<FMessageDomain> Self,
+        const TSharedPtr<FMessageDomain>& Self,
         const Request::FReadMessageByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -303,7 +306,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FMessageDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FMessageDomain> Self,
+        const TSharedPtr<FMessageDomain>& Self,
         const Request::FDeleteMessageByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

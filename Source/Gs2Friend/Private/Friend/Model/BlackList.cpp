@@ -191,7 +191,7 @@ namespace Gs2::Friend::Model
         return MakeShared<FBlackList>()
             ->WithBlackListId(Data->HasField("blackListId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("blackListId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -200,7 +200,7 @@ namespace Gs2::Friend::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -66,7 +66,7 @@ namespace Gs2::Distributor::Result
         return MakeShared<FRunStampTaskWithoutNamespaceResult>()
             ->WithContextStack(Data->HasField("contextStack") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("contextStack", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -75,7 +75,7 @@ namespace Gs2::Distributor::Result
                 }() : TOptional<FString>())
             ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("result", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

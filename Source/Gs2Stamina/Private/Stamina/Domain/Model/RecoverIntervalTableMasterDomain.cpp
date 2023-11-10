@@ -43,12 +43,14 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FRecoverIntervalTableMasterDomain::FRecoverIntervalTableMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Stamina::Domain::FGs2StaminaDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RecoverIntervalTableName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         RecoverIntervalTableName(RecoverIntervalTableName),
@@ -63,6 +65,7 @@ namespace Gs2::Stamina::Domain::Model
         const FRecoverIntervalTableMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         RecoverIntervalTableName(From.RecoverIntervalTableName),
@@ -72,7 +75,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FRecoverIntervalTableMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRecoverIntervalTableMasterDomain> Self,
+        const TSharedPtr<FRecoverIntervalTableMasterDomain>& Self,
         const Request::FGetRecoverIntervalTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -134,7 +137,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FRecoverIntervalTableMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FRecoverIntervalTableMasterDomain> Self,
+        const TSharedPtr<FRecoverIntervalTableMasterDomain>& Self,
         const Request::FUpdateRecoverIntervalTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -198,7 +201,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FRecoverIntervalTableMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FRecoverIntervalTableMasterDomain> Self,
+        const TSharedPtr<FRecoverIntervalTableMasterDomain>& Self,
         const Request::FDeleteRecoverIntervalTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

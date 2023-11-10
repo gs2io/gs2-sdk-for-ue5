@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Version::Domain
+{
+    class FGs2VersionDomain;
+    typedef TSharedPtr<FGs2VersionDomain> FGs2VersionDomainPtr;
+}
+
 namespace Gs2::Version::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::Version::Domain::Model
         public TSharedFromThis<FAcceptVersionAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Version::FGs2VersionRestClientPtr Client;
+        const Version::Domain::FGs2VersionDomainPtr Service;
+        const Gs2::Version::FGs2VersionRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -64,9 +71,10 @@ namespace Gs2::Version::Domain::Model
     public:
 
         FAcceptVersionAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Version::Domain::FGs2VersionDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> VersionName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -83,7 +91,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FAcceptRequestPtr Request;
         public:
             explicit FAcceptTask(
-                const TSharedPtr<FAcceptVersionAccessTokenDomain> Self,
+                const TSharedPtr<FAcceptVersionAccessTokenDomain>& Self,
                 const Request::FAcceptRequestPtr Request
             );
 
@@ -109,7 +117,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FGetAcceptVersionRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FAcceptVersionAccessTokenDomain> Self,
+                const TSharedPtr<FAcceptVersionAccessTokenDomain>& Self,
                 const Request::FGetAcceptVersionRequestPtr Request
             );
 
@@ -135,7 +143,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FDeleteAcceptVersionRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FAcceptVersionAccessTokenDomain> Self,
+                const TSharedPtr<FAcceptVersionAccessTokenDomain>& Self,
                 const Request::FDeleteAcceptVersionRequestPtr Request
             );
 

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Inventory/Gs2Inventory.h"
 #include "Inventory/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelMastersIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelsIterator.h"
@@ -49,6 +48,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
 }
 
 namespace Gs2::Inventory::Domain::Model
@@ -89,7 +94,8 @@ namespace Gs2::Inventory::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inventory::FGs2InventoryRestClientPtr Client;
+        const Inventory::Domain::FGs2InventoryDomainPtr Service;
+        const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -106,7 +112,8 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inventory::Domain::FGs2InventoryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -129,15 +136,15 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryDomain> Inventory(
             const FString InventoryName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryDomain> SimpleInventory(
             const FString InventoryName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryDomain> BigInventory(
             const FString InventoryName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

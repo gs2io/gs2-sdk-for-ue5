@@ -48,12 +48,14 @@ namespace Gs2::Ranking::Domain::Model
 {
 
     FCategoryModelMasterDomain::FCategoryModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Ranking::Domain::FGs2RankingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CategoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Ranking::FGs2RankingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         CategoryName(CategoryName),
@@ -68,6 +70,7 @@ namespace Gs2::Ranking::Domain::Model
         const FCategoryModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         CategoryName(From.CategoryName),
@@ -77,7 +80,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FCategoryModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCategoryModelMasterDomain> Self,
+        const TSharedPtr<FCategoryModelMasterDomain>& Self,
         const Request::FGetCategoryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -139,7 +142,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FCategoryModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCategoryModelMasterDomain> Self,
+        const TSharedPtr<FCategoryModelMasterDomain>& Self,
         const Request::FUpdateCategoryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -203,7 +206,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FCategoryModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FCategoryModelMasterDomain> Self,
+        const TSharedPtr<FCategoryModelMasterDomain>& Self,
         const Request::FDeleteCategoryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -125,7 +125,7 @@ namespace Gs2::Inventory::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -134,7 +134,7 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
             ->WithInventoryName(Data->HasField("inventoryName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("inventoryName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -143,7 +143,7 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
             ->WithItemName(Data->HasField("itemName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("itemName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -152,7 +152,7 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -161,7 +161,7 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("metadata", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

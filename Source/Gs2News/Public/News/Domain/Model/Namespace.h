@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "News/Gs2News.h"
 #include "News/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "News/Domain/Iterator/DescribeProgressesIterator.h"
 #include "News/Domain/Iterator/DescribeOutputsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::News::Domain
+{
+    class FGs2NewsDomain;
+    typedef TSharedPtr<FGs2NewsDomain> FGs2NewsDomainPtr;
 }
 
 namespace Gs2::News::Domain::Model
@@ -49,7 +54,8 @@ namespace Gs2::News::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::News::FGs2NewsRestClientPtr Client;
+        const News::Domain::FGs2NewsDomainPtr Service;
+        const Gs2::News::FGs2NewsRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -70,7 +76,8 @@ namespace Gs2::News::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const News::Domain::FGs2NewsDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -87,7 +94,7 @@ namespace Gs2::News::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -113,7 +120,7 @@ namespace Gs2::News::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -139,7 +146,7 @@ namespace Gs2::News::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -165,7 +172,7 @@ namespace Gs2::News::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -184,7 +191,7 @@ namespace Gs2::News::Domain::Model
         );
 
         TSharedPtr<Gs2::News::Domain::Model::FCurrentNewsMasterDomain> CurrentNewsMaster(
-        ) const;
+        );
 
         Gs2::News::Domain::Iterator::FDescribeProgressesIteratorPtr Progresses(
         ) const;
@@ -199,15 +206,15 @@ namespace Gs2::News::Domain::Model
 
         TSharedPtr<Gs2::News::Domain::Model::FProgressDomain> Progress(
             const FString UploadToken
-        ) const;
+        );
 
         TSharedPtr<Gs2::News::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::News::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

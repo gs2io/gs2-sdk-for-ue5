@@ -47,13 +47,15 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FBoxItemsDomain::FBoxItemsDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> PrizeTableName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -70,6 +72,7 @@ namespace Gs2::Lottery::Domain::Model
         const FBoxItemsDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -80,7 +83,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FBoxItemsDomain::FGetTask::FGetTask(
-        const TSharedPtr<FBoxItemsDomain> Self,
+        const TSharedPtr<FBoxItemsDomain>& Self,
         const Request::FGetBoxByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -144,7 +147,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FBoxItemsDomain::FResetBoxTask::FResetBoxTask(
-        const TSharedPtr<FBoxItemsDomain> Self,
+        const TSharedPtr<FBoxItemsDomain>& Self,
         const Request::FResetBoxByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

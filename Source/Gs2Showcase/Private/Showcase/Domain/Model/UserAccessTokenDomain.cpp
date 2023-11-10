@@ -51,12 +51,14 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -71,6 +73,7 @@ namespace Gs2::Showcase::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -81,10 +84,11 @@ namespace Gs2::Showcase::Domain::Model
 
     TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomain> FUserAccessTokenDomain::RandomShowcase(
         const FString ShowcaseName
-    ) const
+    )
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
@@ -93,10 +97,11 @@ namespace Gs2::Showcase::Domain::Model
 
     TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusAccessTokenDomain> FUserAccessTokenDomain::RandomShowcaseStatus(
         const FString ShowcaseName
-    ) const
+    )
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
@@ -146,10 +151,11 @@ namespace Gs2::Showcase::Domain::Model
 
     TSharedPtr<Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomain> FUserAccessTokenDomain::Showcase(
         const FString ShowcaseName
-    ) const
+    )
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)

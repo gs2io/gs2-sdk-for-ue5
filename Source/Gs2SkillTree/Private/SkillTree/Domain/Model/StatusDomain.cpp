@@ -40,12 +40,14 @@ namespace Gs2::SkillTree::Domain::Model
 {
 
     FStatusDomain::FStatusDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SkillTree::FGs2SkillTreeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -61,6 +63,7 @@ namespace Gs2::SkillTree::Domain::Model
         const FStatusDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -70,7 +73,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FStatusDomain::FMarkReleaseTask::FMarkReleaseTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FMarkReleaseByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -134,7 +137,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FStatusDomain::FReleaseTask::FReleaseTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FReleaseByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -232,7 +235,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FStatusDomain::FMarkRestrainTask::FMarkRestrainTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FMarkRestrainByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -296,7 +299,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FStatusDomain::FRestrainTask::FRestrainTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FRestrainByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -394,7 +397,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FStatusDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FGetStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -456,7 +459,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FStatusDomain::FResetTask::FResetTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FResetByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

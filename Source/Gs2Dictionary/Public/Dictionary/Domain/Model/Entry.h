@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Dictionary/Gs2Dictionary.h"
 #include "Dictionary/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelsIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelMastersIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Dictionary::Domain
+{
+    class FGs2DictionaryDomain;
+    typedef TSharedPtr<FGs2DictionaryDomain> FGs2DictionaryDomainPtr;
 }
 
 namespace Gs2::Dictionary::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Dictionary::Domain::Model
         public TSharedFromThis<FEntryDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
+        const Dictionary::Domain::FGs2DictionaryDomainPtr Service;
+        const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
 
         public:
         TOptional<FString> Body;
@@ -71,7 +77,8 @@ namespace Gs2::Dictionary::Domain::Model
     public:
 
         FEntryDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> EntryName
@@ -90,7 +97,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FGetEntryByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FEntryDomain> Self,
+                const TSharedPtr<FEntryDomain>& Self,
                 const Request::FGetEntryByUserIdRequestPtr Request
             );
 
@@ -116,7 +123,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FGetEntryWithSignatureByUserIdRequestPtr Request;
         public:
             explicit FGetWithSignatureTask(
-                const TSharedPtr<FEntryDomain> Self,
+                const TSharedPtr<FEntryDomain>& Self,
                 const Request::FGetEntryWithSignatureByUserIdRequestPtr Request
             );
 

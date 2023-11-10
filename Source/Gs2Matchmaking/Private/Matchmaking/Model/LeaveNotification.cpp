@@ -60,7 +60,7 @@ namespace Gs2::Matchmaking::Model
         return MakeShared<FLeaveNotification>()
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -69,7 +69,7 @@ namespace Gs2::Matchmaking::Model
                 }() : TOptional<FString>())
             ->WithGatheringName(Data->HasField("gatheringName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("gatheringName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -78,7 +78,7 @@ namespace Gs2::Matchmaking::Model
                 }() : TOptional<FString>())
             ->WithLeaveUserId(Data->HasField("leaveUserId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("leaveUserId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

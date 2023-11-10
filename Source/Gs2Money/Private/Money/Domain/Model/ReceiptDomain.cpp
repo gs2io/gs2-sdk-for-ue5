@@ -39,13 +39,15 @@ namespace Gs2::Money::Domain::Model
 {
 
     FReceiptDomain::FReceiptDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Money::Domain::FGs2MoneyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TransactionId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -62,6 +64,7 @@ namespace Gs2::Money::Domain::Model
         const FReceiptDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FReceiptDomain::FGetByUserIdAndTransactionIdTask::FGetByUserIdAndTransactionIdTask(
-        const TSharedPtr<FReceiptDomain> Self,
+        const TSharedPtr<FReceiptDomain>& Self,
         const Request::FGetByUserIdAndTransactionIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

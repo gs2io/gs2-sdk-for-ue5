@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Schedule/Gs2Schedule.h"
 #include "Schedule/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Schedule/Domain/Iterator/DescribeEventMastersIterator.h"
 #include "Schedule/Domain/Iterator/DescribeTriggersIterator.h"
@@ -32,6 +31,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Schedule::Domain
+{
+    class FGs2ScheduleDomain;
+    typedef TSharedPtr<FGs2ScheduleDomain> FGs2ScheduleDomainPtr;
 }
 
 namespace Gs2::Schedule::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Schedule::Domain::Model
         public TSharedFromThis<FCurrentEventMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
+        const Schedule::Domain::FGs2ScheduleDomainPtr Service;
+        const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -61,7 +67,8 @@ namespace Gs2::Schedule::Domain::Model
     public:
 
         FCurrentEventMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -78,7 +85,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentEventMasterDomain> Self,
+                const TSharedPtr<FCurrentEventMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -104,7 +111,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FGetCurrentEventMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentEventMasterDomain> Self,
+                const TSharedPtr<FCurrentEventMasterDomain>& Self,
                 const Request::FGetCurrentEventMasterRequestPtr Request
             );
 
@@ -130,7 +137,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FUpdateCurrentEventMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentEventMasterDomain> Self,
+                const TSharedPtr<FCurrentEventMasterDomain>& Self,
                 const Request::FUpdateCurrentEventMasterRequestPtr Request
             );
 
@@ -156,7 +163,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FUpdateCurrentEventMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentEventMasterDomain> Self,
+                const TSharedPtr<FCurrentEventMasterDomain>& Self,
                 const Request::FUpdateCurrentEventMasterFromGitHubRequestPtr Request
             );
 

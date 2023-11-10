@@ -44,12 +44,14 @@ namespace Gs2::Quest::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Quest::Domain::FGs2QuestDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -64,6 +66,7 @@ namespace Gs2::Quest::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -73,7 +76,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FUserDomain::FCreateProgressTask::FCreateProgressTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FCreateProgressByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -126,6 +129,7 @@ namespace Gs2::Quest::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Quest::Domain::Model::FProgressDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId()
         );
@@ -141,7 +145,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FUserDomain::FStartTask::FStartTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FStartByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -263,10 +267,11 @@ namespace Gs2::Quest::Domain::Model
     }
 
     TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain> FUserDomain::Progress(
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FProgressDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );
@@ -315,10 +320,11 @@ namespace Gs2::Quest::Domain::Model
 
     TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListDomain> FUserDomain::CompletedQuestList(
         const FString QuestGroupName
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FCompletedQuestListDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             QuestGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestGroupName)

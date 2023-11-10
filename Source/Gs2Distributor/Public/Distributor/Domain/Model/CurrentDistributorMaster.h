@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Distributor/Gs2Distributor.h"
 #include "Distributor/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelMastersIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelsIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Distributor::Domain
+{
+    class FGs2DistributorDomain;
+    typedef TSharedPtr<FGs2DistributorDomain> FGs2DistributorDomainPtr;
 }
 
 namespace Gs2::Distributor::Domain::Model
@@ -47,7 +52,8 @@ namespace Gs2::Distributor::Domain::Model
         public TSharedFromThis<FCurrentDistributorMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Distributor::FGs2DistributorRestClientPtr Client;
+        const Distributor::Domain::FGs2DistributorDomainPtr Service;
+        const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -58,7 +64,8 @@ namespace Gs2::Distributor::Domain::Model
     public:
 
         FCurrentDistributorMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Distributor::Domain::FGs2DistributorDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -75,7 +82,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentDistributorMasterDomain> Self,
+                const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -101,7 +108,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FGetCurrentDistributorMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentDistributorMasterDomain> Self,
+                const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
                 const Request::FGetCurrentDistributorMasterRequestPtr Request
             );
 
@@ -127,7 +134,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FUpdateCurrentDistributorMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentDistributorMasterDomain> Self,
+                const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
                 const Request::FUpdateCurrentDistributorMasterRequestPtr Request
             );
 
@@ -153,7 +160,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FUpdateCurrentDistributorMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentDistributorMasterDomain> Self,
+                const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
                 const Request::FUpdateCurrentDistributorMasterFromGitHubRequestPtr Request
             );
 

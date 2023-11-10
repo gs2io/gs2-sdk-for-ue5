@@ -41,12 +41,14 @@ namespace Gs2::SerialKey::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -61,6 +63,7 @@ namespace Gs2::SerialKey::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -70,7 +73,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FUserDomain::FDownloadSerialCodesTask::FDownloadSerialCodesTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FDownloadSerialCodesRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -122,7 +125,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FUserDomain::FGetSerialKeyTask::FGetSerialKeyTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FGetSerialKeyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -201,7 +204,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FUserDomain::FRevertUseTask::FRevertUseTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FRevertUseByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -272,6 +275,7 @@ namespace Gs2::SerialKey::Domain::Model
         }
         auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetUserId(),
             ResultModel->GetItem()->GetCode()
@@ -333,10 +337,11 @@ namespace Gs2::SerialKey::Domain::Model
 
     TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain> FUserDomain::SerialKey(
         const FString SerialKeyCode
-    ) const
+    )
     {
         return MakeShared<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             SerialKeyCode == TEXT("") ? TOptional<FString>() : TOptional<FString>(SerialKeyCode)

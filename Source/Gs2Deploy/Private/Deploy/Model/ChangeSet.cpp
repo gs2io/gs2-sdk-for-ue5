@@ -78,7 +78,7 @@ namespace Gs2::Deploy::Model
         return MakeShared<FChangeSet>()
             ->WithResourceName(Data->HasField("resourceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resourceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -87,7 +87,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithResourceType(Data->HasField("resourceType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resourceType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -96,7 +96,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithOperation(Data->HasField("operation") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("operation", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

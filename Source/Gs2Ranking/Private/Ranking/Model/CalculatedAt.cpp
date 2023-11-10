@@ -73,7 +73,7 @@ namespace Gs2::Ranking::Model
         return MakeShared<FCalculatedAt>()
             ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("categoryName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

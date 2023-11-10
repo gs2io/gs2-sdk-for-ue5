@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::MegaField::Domain
+{
+    class FGs2MegaFieldDomain;
+    typedef TSharedPtr<FGs2MegaFieldDomain> FGs2MegaFieldDomainPtr;
+}
+
 namespace Gs2::MegaField::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::MegaField::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
+        const MegaField::Domain::FGs2MegaFieldDomainPtr Service;
+        const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -63,9 +70,10 @@ namespace Gs2::MegaField::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -76,7 +84,7 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialAccessTokenDomain> Spatial(
             const FString AreaModelName,
             const FString LayerModelName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

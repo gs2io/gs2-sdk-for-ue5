@@ -272,7 +272,7 @@ namespace Gs2::Datastore::Model
         return MakeShared<FDataObject>()
             ->WithDataObjectId(Data->HasField("dataObjectId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("dataObjectId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -281,7 +281,7 @@ namespace Gs2::Datastore::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -290,7 +290,7 @@ namespace Gs2::Datastore::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -299,7 +299,7 @@ namespace Gs2::Datastore::Model
                 }() : TOptional<FString>())
             ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("scope", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -320,7 +320,7 @@ namespace Gs2::Datastore::Model
                  }() : MakeShared<TArray<FString>>())
             ->WithStatus(Data->HasField("status") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("status", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -329,7 +329,7 @@ namespace Gs2::Datastore::Model
                 }() : TOptional<FString>())
             ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("generation", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -338,7 +338,7 @@ namespace Gs2::Datastore::Model
                 }() : TOptional<FString>())
             ->WithPreviousGeneration(Data->HasField("previousGeneration") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("previousGeneration", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

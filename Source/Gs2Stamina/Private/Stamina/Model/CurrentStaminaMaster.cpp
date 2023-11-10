@@ -97,7 +97,7 @@ namespace Gs2::Stamina::Model
         return MakeShared<FCurrentStaminaMaster>()
             ->WithNamespaceId(Data->HasField("namespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -106,7 +106,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithSettings(Data->HasField("settings") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("settings", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

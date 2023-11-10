@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Version/Gs2Version.h"
 #include "Version/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelMastersIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Version::Domain
+{
+    class FGs2VersionDomain;
+    typedef TSharedPtr<FGs2VersionDomain> FGs2VersionDomainPtr;
 }
 
 namespace Gs2::Version::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Version::Domain::Model
         public TSharedFromThis<FCurrentVersionMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Version::FGs2VersionRestClientPtr Client;
+        const Version::Domain::FGs2VersionDomainPtr Service;
+        const Gs2::Version::FGs2VersionRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -61,7 +67,8 @@ namespace Gs2::Version::Domain::Model
     public:
 
         FCurrentVersionMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Version::Domain::FGs2VersionDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -78,7 +85,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentVersionMasterDomain> Self,
+                const TSharedPtr<FCurrentVersionMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -104,7 +111,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FGetCurrentVersionMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentVersionMasterDomain> Self,
+                const TSharedPtr<FCurrentVersionMasterDomain>& Self,
                 const Request::FGetCurrentVersionMasterRequestPtr Request
             );
 
@@ -130,7 +137,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FUpdateCurrentVersionMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentVersionMasterDomain> Self,
+                const TSharedPtr<FCurrentVersionMasterDomain>& Self,
                 const Request::FUpdateCurrentVersionMasterRequestPtr Request
             );
 
@@ -156,7 +163,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FUpdateCurrentVersionMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentVersionMasterDomain> Self,
+                const TSharedPtr<FCurrentVersionMasterDomain>& Self,
                 const Request::FUpdateCurrentVersionMasterFromGitHubRequestPtr Request
             );
 

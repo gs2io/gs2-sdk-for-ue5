@@ -41,12 +41,14 @@ namespace Gs2::SerialKey::Domain::Model
 {
 
     FCampaignModelDomain::FCampaignModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CampaignModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         CampaignModelName(CampaignModelName),
@@ -61,6 +63,7 @@ namespace Gs2::SerialKey::Domain::Model
         const FCampaignModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         CampaignModelName(From.CampaignModelName),
@@ -70,7 +73,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FCampaignModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCampaignModelDomain> Self,
+        const TSharedPtr<FCampaignModelDomain>& Self,
         const Request::FGetCampaignModelRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,7 +135,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FCampaignModelDomain::FIssueTask::FIssueTask(
-        const TSharedPtr<FCampaignModelDomain> Self,
+        const TSharedPtr<FCampaignModelDomain>& Self,
         const Request::FIssueRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -186,6 +189,7 @@ namespace Gs2::SerialKey::Domain::Model
         }
         auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FIssueJobDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetCampaignModelName(),
             ResultModel->GetItem()->GetName()
@@ -244,10 +248,11 @@ namespace Gs2::SerialKey::Domain::Model
 
     TSharedPtr<Gs2::SerialKey::Domain::Model::FIssueJobDomain> FCampaignModelDomain::IssueJob(
         const FString IssueJobName
-    ) const
+    )
     {
         return MakeShared<Gs2::SerialKey::Domain::Model::FIssueJobDomain>(
             Gs2,
+            Service,
             NamespaceName,
             CampaignModelName,
             IssueJobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(IssueJobName)

@@ -312,7 +312,7 @@ namespace Gs2::Inventory::Model
         return MakeShared<FItemSet>()
             ->WithItemSetId(Data->HasField("itemSetId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("itemSetId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -321,7 +321,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -330,7 +330,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithInventoryName(Data->HasField("inventoryName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("inventoryName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -339,7 +339,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -348,7 +348,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithItemName(Data->HasField("itemName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("itemName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

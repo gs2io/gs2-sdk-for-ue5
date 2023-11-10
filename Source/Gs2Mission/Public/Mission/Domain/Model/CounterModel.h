@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Mission/Gs2Mission.h"
 #include "Mission/Domain/Iterator/DescribeCompletesIterator.h"
 #include "Mission/Domain/Iterator/DescribeCompletesByUserIdIterator.h"
 #include "Mission/Domain/Iterator/DescribeCounterModelMastersIterator.h"
@@ -37,6 +36,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Mission::Domain
+{
+    class FGs2MissionDomain;
+    typedef TSharedPtr<FGs2MissionDomain> FGs2MissionDomainPtr;
 }
 
 namespace Gs2::Mission::Domain::Model
@@ -60,7 +65,8 @@ namespace Gs2::Mission::Domain::Model
         public TSharedFromThis<FCounterModelDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Mission::FGs2MissionRestClientPtr Client;
+        const Mission::Domain::FGs2MissionDomainPtr Service;
+        const Gs2::Mission::FGs2MissionRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -72,7 +78,8 @@ namespace Gs2::Mission::Domain::Model
     public:
 
         FCounterModelDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Mission::Domain::FGs2MissionDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CounterName
             // ReSharper disable once CppMemberInitializersOrder
@@ -90,7 +97,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FGetCounterModelRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCounterModelDomain> Self,
+                const TSharedPtr<FCounterModelDomain>& Self,
                 const Request::FGetCounterModelRequestPtr Request
             );
 

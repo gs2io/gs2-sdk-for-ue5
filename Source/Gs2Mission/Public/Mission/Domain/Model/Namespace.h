@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Mission/Gs2Mission.h"
 #include "Mission/Domain/Iterator/DescribeCompletesIterator.h"
 #include "Mission/Domain/Iterator/DescribeCompletesByUserIdIterator.h"
 #include "Mission/Domain/Iterator/DescribeCounterModelMastersIterator.h"
@@ -37,6 +36,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Mission::Domain
+{
+    class FGs2MissionDomain;
+    typedef TSharedPtr<FGs2MissionDomain> FGs2MissionDomainPtr;
 }
 
 namespace Gs2::Mission::Domain::Model
@@ -60,7 +65,8 @@ namespace Gs2::Mission::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Mission::FGs2MissionRestClientPtr Client;
+        const Mission::Domain::FGs2MissionDomainPtr Service;
+        const Gs2::Mission::FGs2MissionRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -96,7 +102,8 @@ namespace Gs2::Mission::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Mission::Domain::FGs2MissionDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -113,7 +120,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -139,7 +146,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -165,7 +172,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -191,7 +198,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -217,7 +224,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FCreateMissionGroupModelMasterRequestPtr Request;
         public:
             explicit FCreateMissionGroupModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateMissionGroupModelMasterRequestPtr Request
             );
 
@@ -243,7 +250,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FCreateCounterModelMasterRequestPtr Request;
         public:
             explicit FCreateCounterModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateCounterModelMasterRequestPtr Request
             );
 
@@ -262,7 +269,7 @@ namespace Gs2::Mission::Domain::Model
         );
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain> CurrentMissionMaster(
-        ) const;
+        );
 
         Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelsIteratorPtr MissionGroupModels(
         ) const;
@@ -277,7 +284,7 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<Gs2::Mission::Domain::Model::FMissionGroupModelDomain> MissionGroupModel(
             const FString MissionGroupName
-        ) const;
+        );
 
         Gs2::Mission::Domain::Iterator::FDescribeCounterModelsIteratorPtr CounterModels(
         ) const;
@@ -292,15 +299,15 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCounterModelDomain> CounterModel(
             const FString CounterName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Mission::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Mission::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelMastersIteratorPtr MissionGroupModelMasters(
         ) const;
@@ -315,7 +322,7 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain> MissionGroupModelMaster(
             const FString MissionGroupName
-        ) const;
+        );
 
         Gs2::Mission::Domain::Iterator::FDescribeCounterModelMastersIteratorPtr CounterModelMasters(
         ) const;
@@ -330,7 +337,7 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCounterModelMasterDomain> CounterModelMaster(
             const FString CounterName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

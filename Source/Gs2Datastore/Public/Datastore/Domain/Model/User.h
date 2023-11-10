@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Datastore/Gs2Datastore.h"
 #include "Datastore/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Datastore/Domain/Iterator/DescribeDataObjectsIterator.h"
 #include "Datastore/Domain/Iterator/DescribeDataObjectsByUserIdIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Datastore::Domain
+{
+    class FGs2DatastoreDomain;
+    typedef TSharedPtr<FGs2DatastoreDomain> FGs2DatastoreDomainPtr;
 }
 
 namespace Gs2::Datastore::Domain::Model
@@ -47,7 +52,8 @@ namespace Gs2::Datastore::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Datastore::FGs2DatastoreRestClientPtr Client;
+        const Datastore::Domain::FGs2DatastoreDomainPtr Service;
+        const Gs2::Datastore::FGs2DatastoreRestClientPtr Client;
 
         public:
         TOptional<FString> UploadUrl;
@@ -79,7 +85,8 @@ namespace Gs2::Datastore::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Datastore::Domain::FGs2DatastoreDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -97,7 +104,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FPrepareUploadByUserIdRequestPtr Request;
         public:
             explicit FPrepareUploadTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FPrepareUploadByUserIdRequestPtr Request
             );
 
@@ -123,7 +130,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FPrepareDownloadByUserIdRequestPtr Request;
         public:
             explicit FPrepareDownloadTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FPrepareDownloadByUserIdRequestPtr Request
             );
 
@@ -149,7 +156,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FPrepareDownloadByGenerationAndUserIdRequestPtr Request;
         public:
             explicit FPrepareDownloadByGenerationTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FPrepareDownloadByGenerationAndUserIdRequestPtr Request
             );
 
@@ -181,7 +188,7 @@ namespace Gs2::Datastore::Domain::Model
 
         TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectDomain> DataObject(
             const FString DataObjectName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

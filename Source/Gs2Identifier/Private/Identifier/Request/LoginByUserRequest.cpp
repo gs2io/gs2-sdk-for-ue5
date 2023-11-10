@@ -80,7 +80,7 @@ namespace Gs2::Identifier::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithUserName(Data->HasField("userName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("userName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -89,7 +89,7 @@ namespace Gs2::Identifier::Request
               }() : TOptional<FString>())
             ->WithPassword(Data->HasField("password") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("password", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

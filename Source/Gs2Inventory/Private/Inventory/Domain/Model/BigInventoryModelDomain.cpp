@@ -63,12 +63,14 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FBigInventoryModelDomain::FBigInventoryModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> InventoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         InventoryName(InventoryName),
@@ -83,6 +85,7 @@ namespace Gs2::Inventory::Domain::Model
         const FBigInventoryModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         InventoryName(From.InventoryName),
@@ -92,7 +95,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FBigInventoryModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FBigInventoryModelDomain> Self,
+        const TSharedPtr<FBigInventoryModelDomain>& Self,
         const Request::FGetBigInventoryModelRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -196,10 +199,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FBigItemModelDomain> FBigInventoryModelDomain::BigItemModel(
         const FString ItemName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FBigItemModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             InventoryName,
             ItemName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ItemName)

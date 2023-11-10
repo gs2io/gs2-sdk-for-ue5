@@ -33,7 +33,7 @@ namespace Gs2::Realtime::Domain
 {
 
     FGs2RealtimeDomain::FGs2RealtimeDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -53,7 +53,7 @@ namespace Gs2::Realtime::Domain
     }
 
     FGs2RealtimeDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2RealtimeDomain> Self,
+        const TSharedPtr<FGs2RealtimeDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -99,6 +99,7 @@ namespace Gs2::Realtime::Domain
         }
         auto Domain = MakeShared<Gs2::Realtime::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -144,10 +145,11 @@ namespace Gs2::Realtime::Domain
 
     TSharedPtr<Gs2::Realtime::Domain::Model::FNamespaceDomain> FGs2RealtimeDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Realtime::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

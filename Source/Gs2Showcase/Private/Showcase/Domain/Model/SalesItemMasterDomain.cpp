@@ -50,12 +50,14 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FSalesItemMasterDomain::FSalesItemMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> SalesItemName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         SalesItemName(SalesItemName),
@@ -70,6 +72,7 @@ namespace Gs2::Showcase::Domain::Model
         const FSalesItemMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         SalesItemName(From.SalesItemName),
@@ -79,7 +82,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FSalesItemMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FSalesItemMasterDomain> Self,
+        const TSharedPtr<FSalesItemMasterDomain>& Self,
         const Request::FGetSalesItemMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -141,7 +144,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FSalesItemMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FSalesItemMasterDomain> Self,
+        const TSharedPtr<FSalesItemMasterDomain>& Self,
         const Request::FUpdateSalesItemMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -205,7 +208,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FSalesItemMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FSalesItemMasterDomain> Self,
+        const TSharedPtr<FSalesItemMasterDomain>& Self,
         const Request::FDeleteSalesItemMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

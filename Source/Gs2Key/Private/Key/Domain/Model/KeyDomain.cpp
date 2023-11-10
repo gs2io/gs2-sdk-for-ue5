@@ -35,12 +35,14 @@ namespace Gs2::Key::Domain::Model
 {
 
     FKeyDomain::FKeyDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Key::Domain::FGs2KeyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> KeyName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Key::FGs2KeyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         KeyName(KeyName),
@@ -55,6 +57,7 @@ namespace Gs2::Key::Domain::Model
         const FKeyDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         KeyName(From.KeyName),
@@ -64,7 +67,7 @@ namespace Gs2::Key::Domain::Model
     }
 
     FKeyDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FKeyDomain> Self,
+        const TSharedPtr<FKeyDomain>& Self,
         const Request::FUpdateKeyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -128,7 +131,7 @@ namespace Gs2::Key::Domain::Model
     }
 
     FKeyDomain::FGetTask::FGetTask(
-        const TSharedPtr<FKeyDomain> Self,
+        const TSharedPtr<FKeyDomain>& Self,
         const Request::FGetKeyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -190,7 +193,7 @@ namespace Gs2::Key::Domain::Model
     }
 
     FKeyDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FKeyDomain> Self,
+        const TSharedPtr<FKeyDomain>& Self,
         const Request::FDeleteKeyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -248,7 +251,7 @@ namespace Gs2::Key::Domain::Model
     }
 
     FKeyDomain::FEncryptTask::FEncryptTask(
-        const TSharedPtr<FKeyDomain> Self,
+        const TSharedPtr<FKeyDomain>& Self,
         const Request::FEncryptRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -301,7 +304,7 @@ namespace Gs2::Key::Domain::Model
     }
 
     FKeyDomain::FDecryptTask::FDecryptTask(
-        const TSharedPtr<FKeyDomain> Self,
+        const TSharedPtr<FKeyDomain>& Self,
         const Request::FDecryptRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::LoginReward::Domain
+{
+    class FGs2LoginRewardDomain;
+    typedef TSharedPtr<FGs2LoginRewardDomain> FGs2LoginRewardDomainPtr;
+}
+
 namespace Gs2::LoginReward::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::LoginReward::Domain::Model
         public TSharedFromThis<FReceiveStatusAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr Service;
+        const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -64,9 +71,10 @@ namespace Gs2::LoginReward::Domain::Model
     public:
 
         FReceiveStatusAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> BonusModelName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -83,7 +91,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FGetReceiveStatusRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FReceiveStatusAccessTokenDomain> Self,
+                const TSharedPtr<FReceiveStatusAccessTokenDomain>& Self,
                 const Request::FGetReceiveStatusRequestPtr Request
             );
 
@@ -109,7 +117,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FMarkReceivedRequestPtr Request;
         public:
             explicit FMarkReceivedTask(
-                const TSharedPtr<FReceiveStatusAccessTokenDomain> Self,
+                const TSharedPtr<FReceiveStatusAccessTokenDomain>& Self,
                 const Request::FMarkReceivedRequestPtr Request
             );
 

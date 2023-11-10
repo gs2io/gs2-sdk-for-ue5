@@ -42,13 +42,15 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FLayerModelMasterDomain::FLayerModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> AreaModelName,
         const TOptional<FString> LayerModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AreaModelName(AreaModelName),
@@ -65,6 +67,7 @@ namespace Gs2::MegaField::Domain::Model
         const FLayerModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AreaModelName(From.AreaModelName),
@@ -75,7 +78,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FLayerModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FLayerModelMasterDomain> Self,
+        const TSharedPtr<FLayerModelMasterDomain>& Self,
         const Request::FGetLayerModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -139,7 +142,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FLayerModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FLayerModelMasterDomain> Self,
+        const TSharedPtr<FLayerModelMasterDomain>& Self,
         const Request::FUpdateLayerModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -205,7 +208,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FLayerModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FLayerModelMasterDomain> Self,
+        const TSharedPtr<FLayerModelMasterDomain>& Self,
         const Request::FDeleteLayerModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

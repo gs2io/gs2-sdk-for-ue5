@@ -37,11 +37,13 @@ namespace Gs2::Identifier::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Identifier::Domain::FGs2IdentifierDomainPtr& Service,
         const TOptional<FString> UserName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Gs2->RestSession)),
         UserName(UserName),
         ParentKey("identifier:User")
@@ -52,6 +54,7 @@ namespace Gs2::Identifier::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         UserName(From.UserName),
         ParentKey(From.ParentKey)
@@ -60,7 +63,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FUserDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FUpdateUserRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -119,7 +122,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FUserDomain::FGetTask::FGetTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FGetUserRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -176,7 +179,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FUserDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FDeleteUserRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -229,7 +232,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FUserDomain::FCreateIdentifierTask::FCreateIdentifierTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FCreateIdentifierRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -281,6 +284,7 @@ namespace Gs2::Identifier::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FIdentifierDomain>(
             Self->Gs2,
+            Self->Service,
             ResultModel->GetItem()->GetUserName(),
             ResultModel->GetItem()->GetClientId()
         );
@@ -339,10 +343,11 @@ namespace Gs2::Identifier::Domain::Model
 
     TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain> FUserDomain::Identifier(
         const FString ClientId
-    ) const
+    )
     {
         return MakeShared<Gs2::Identifier::Domain::Model::FIdentifierDomain>(
             Gs2,
+            Service,
             UserName,
             ClientId == TEXT("") ? TOptional<FString>() : TOptional<FString>(ClientId)
         );
@@ -387,19 +392,21 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     TSharedPtr<Gs2::Identifier::Domain::Model::FPasswordDomain> FUserDomain::Password(
-    ) const
+    )
     {
         return MakeShared<Gs2::Identifier::Domain::Model::FPasswordDomain>(
             Gs2,
+            Service,
             UserName
         );
     }
 
     TSharedPtr<Gs2::Identifier::Domain::Model::FAttachSecurityPolicyDomain> FUserDomain::AttachSecurityPolicy(
-    ) const
+    )
     {
         return MakeShared<Gs2::Identifier::Domain::Model::FAttachSecurityPolicyDomain>(
             Gs2,
+            Service,
             UserName
         );
     }

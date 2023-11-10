@@ -95,7 +95,7 @@ namespace Gs2::Distributor::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -104,7 +104,7 @@ namespace Gs2::Distributor::Request
               }() : TOptional<FString>())
             ->WithStampSheet(Data->HasField("stampSheet") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("stampSheet", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -113,7 +113,7 @@ namespace Gs2::Distributor::Request
               }() : TOptional<FString>())
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("keyId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

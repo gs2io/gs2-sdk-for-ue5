@@ -40,12 +40,14 @@ namespace Gs2::Idle::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Idle::Domain::FGs2IdleDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Idle::FGs2IdleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -60,6 +62,7 @@ namespace Gs2::Idle::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -111,10 +114,11 @@ namespace Gs2::Idle::Domain::Model
 
     TSharedPtr<Gs2::Idle::Domain::Model::FStatusDomain> FUserDomain::Status(
         const FString CategoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Idle::Domain::Model::FStatusDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)

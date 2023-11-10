@@ -54,12 +54,14 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -74,6 +76,7 @@ namespace Gs2::Friend::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -83,7 +86,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FUserDomain::FSendRequestTask::FSendRequestTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FSendRequestByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -137,6 +140,7 @@ namespace Gs2::Friend::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetTargetUserId()
@@ -153,20 +157,22 @@ namespace Gs2::Friend::Domain::Model
     }
 
     TSharedPtr<Gs2::Friend::Domain::Model::FProfileDomain> FUserDomain::Profile(
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FProfileDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );
     }
 
     TSharedPtr<Gs2::Friend::Domain::Model::FPublicProfileDomain> FUserDomain::PublicProfile(
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FPublicProfileDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );
@@ -184,10 +190,11 @@ namespace Gs2::Friend::Domain::Model
     }
 
     TSharedPtr<Gs2::Friend::Domain::Model::FBlackListDomain> FUserDomain::BlackList(
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FBlackListDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );
@@ -241,10 +248,11 @@ namespace Gs2::Friend::Domain::Model
     TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserDomain> FUserDomain::FollowUser(
         const FString TargetUserId,
         const bool WithProfile
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FFollowUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId),
@@ -301,10 +309,11 @@ namespace Gs2::Friend::Domain::Model
 
     TSharedPtr<Gs2::Friend::Domain::Model::FFriendDomain> FUserDomain::Friend(
         const bool WithProfile
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FFriendDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             WithProfile
@@ -354,10 +363,11 @@ namespace Gs2::Friend::Domain::Model
 
     TSharedPtr<Gs2::Friend::Domain::Model::FSendFriendRequestDomain> FUserDomain::SendFriendRequest(
         const FString TargetUserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
@@ -407,10 +417,11 @@ namespace Gs2::Friend::Domain::Model
 
     TSharedPtr<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain> FUserDomain::ReceiveFriendRequest(
         const FString FromUserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             FromUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(FromUserId)

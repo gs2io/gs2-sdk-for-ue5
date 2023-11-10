@@ -31,6 +31,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Distributor::Domain
+{
+    class FGs2DistributorDomain;
+    typedef TSharedPtr<FGs2DistributorDomain> FGs2DistributorDomainPtr;
+}
+
 namespace Gs2::Distributor::Domain::Model
 {
     class FNamespaceDomain;
@@ -47,7 +53,8 @@ namespace Gs2::Distributor::Domain::Model
         public TSharedFromThis<FStampSheetResultAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Distributor::FGs2DistributorRestClientPtr Client;
+        const Distributor::Domain::FGs2DistributorDomainPtr Service;
+        const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -61,9 +68,10 @@ namespace Gs2::Distributor::Domain::Model
     public:
 
         FStampSheetResultAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Distributor::Domain::FGs2DistributorDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> TransactionId
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -80,7 +88,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FGetStampSheetResultRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FStampSheetResultAccessTokenDomain> Self,
+                const TSharedPtr<FStampSheetResultAccessTokenDomain>& Self,
                 const Request::FGetStampSheetResultRequestPtr Request
             );
 

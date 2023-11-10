@@ -39,6 +39,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Friend::Domain
+{
+    class FGs2FriendDomain;
+    typedef TSharedPtr<FGs2FriendDomain> FGs2FriendDomainPtr;
+}
+
 namespace Gs2::Friend::Domain::Model
 {
     class FNamespaceDomain;
@@ -66,7 +72,8 @@ namespace Gs2::Friend::Domain::Model
         public TSharedFromThis<FReceiveFriendRequestAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Friend::FGs2FriendRestClientPtr Client;
+        const Friend::Domain::FGs2FriendDomainPtr Service;
+        const Gs2::Friend::FGs2FriendRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -80,9 +87,10 @@ namespace Gs2::Friend::Domain::Model
     public:
 
         FReceiveFriendRequestAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Friend::Domain::FGs2FriendDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> FromUserId
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -99,7 +107,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FGetReceiveRequestRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FReceiveFriendRequestAccessTokenDomain> Self,
+                const TSharedPtr<FReceiveFriendRequestAccessTokenDomain>& Self,
                 const Request::FGetReceiveRequestRequestPtr Request
             );
 
@@ -125,7 +133,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FAcceptRequestRequestPtr Request;
         public:
             explicit FAcceptTask(
-                const TSharedPtr<FReceiveFriendRequestAccessTokenDomain> Self,
+                const TSharedPtr<FReceiveFriendRequestAccessTokenDomain>& Self,
                 const Request::FAcceptRequestRequestPtr Request
             );
 
@@ -151,7 +159,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FRejectRequestRequestPtr Request;
         public:
             explicit FRejectTask(
-                const TSharedPtr<FReceiveFriendRequestAccessTokenDomain> Self,
+                const TSharedPtr<FReceiveFriendRequestAccessTokenDomain>& Self,
                 const Request::FRejectRequestRequestPtr Request
             );
 

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Exchange/Gs2Exchange.h"
 #include "Exchange/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelMastersIterator.h"
@@ -33,6 +32,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Exchange::Domain
+{
+    class FGs2ExchangeDomain;
+    typedef TSharedPtr<FGs2ExchangeDomain> FGs2ExchangeDomainPtr;
 }
 
 namespace Gs2::Exchange::Domain::Model
@@ -54,7 +59,8 @@ namespace Gs2::Exchange::Domain::Model
         public TSharedFromThis<FExchangeDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
+        const Exchange::Domain::FGs2ExchangeDomainPtr Service;
+        const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -76,7 +82,8 @@ namespace Gs2::Exchange::Domain::Model
     public:
 
         FExchangeDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -94,7 +101,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FExchangeByUserIdRequestPtr Request;
         public:
             explicit FExchangeTask(
-                const TSharedPtr<FExchangeDomain> Self,
+                const TSharedPtr<FExchangeDomain>& Self,
                 const Request::FExchangeByUserIdRequestPtr Request
             );
 
@@ -120,7 +127,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FIncrementalExchangeByUserIdRequestPtr Request;
         public:
             explicit FIncrementalTask(
-                const TSharedPtr<FExchangeDomain> Self,
+                const TSharedPtr<FExchangeDomain>& Self,
                 const Request::FIncrementalExchangeByUserIdRequestPtr Request
             );
 
@@ -146,7 +153,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request;
         public:
             explicit FUnlockIncrementalTask(
-                const TSharedPtr<FExchangeDomain> Self,
+                const TSharedPtr<FExchangeDomain>& Self,
                 const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request
             );
 

@@ -93,7 +93,7 @@ namespace Gs2::Distributor::Result
                  }() : nullptr)
             ->WithInboxNamespaceId(Data->HasField("inboxNamespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("inboxNamespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -102,7 +102,7 @@ namespace Gs2::Distributor::Result
                 }() : TOptional<FString>())
             ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("result", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

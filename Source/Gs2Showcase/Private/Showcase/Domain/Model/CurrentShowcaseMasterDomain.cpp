@@ -50,11 +50,13 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FCurrentShowcaseMasterDomain::FCurrentShowcaseMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Showcase::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -68,6 +70,7 @@ namespace Gs2::Showcase::Domain::Model
         const FCurrentShowcaseMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -76,7 +79,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FCurrentShowcaseMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentShowcaseMasterDomain> Self,
+        const TSharedPtr<FCurrentShowcaseMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -138,7 +141,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FCurrentShowcaseMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentShowcaseMasterDomain> Self,
+        const TSharedPtr<FCurrentShowcaseMasterDomain>& Self,
         const Request::FGetCurrentShowcaseMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -198,7 +201,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FCurrentShowcaseMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentShowcaseMasterDomain> Self,
+        const TSharedPtr<FCurrentShowcaseMasterDomain>& Self,
         const Request::FUpdateCurrentShowcaseMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -260,7 +263,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FCurrentShowcaseMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentShowcaseMasterDomain> Self,
+        const TSharedPtr<FCurrentShowcaseMasterDomain>& Self,
         const Request::FUpdateCurrentShowcaseMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

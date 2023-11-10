@@ -137,7 +137,7 @@ namespace Gs2::JobQueue::Model
                 }() : TOptional<int32>())
             ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("result", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

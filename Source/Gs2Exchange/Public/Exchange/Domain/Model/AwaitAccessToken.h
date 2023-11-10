@@ -35,6 +35,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Exchange::Domain
+{
+    class FGs2ExchangeDomain;
+    typedef TSharedPtr<FGs2ExchangeDomain> FGs2ExchangeDomainPtr;
+}
+
 namespace Gs2::Exchange::Domain::Model
 {
     class FNamespaceDomain;
@@ -54,7 +60,8 @@ namespace Gs2::Exchange::Domain::Model
         public TSharedFromThis<FAwaitAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
+        const Exchange::Domain::FGs2ExchangeDomainPtr Service;
+        const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
         TOptional<int64> UnlockAt;
@@ -83,9 +90,10 @@ namespace Gs2::Exchange::Domain::Model
     public:
 
         FAwaitAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> AwaitName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -102,7 +110,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FGetAwaitRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FAwaitAccessTokenDomain> Self,
+                const TSharedPtr<FAwaitAccessTokenDomain>& Self,
                 const Request::FGetAwaitRequestPtr Request
             );
 
@@ -126,10 +134,12 @@ namespace Gs2::Exchange::Domain::Model
         {
             const TSharedPtr<FAwaitAccessTokenDomain> Self;
             const Request::FAcquireRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FAcquireTask(
-                const TSharedPtr<FAwaitAccessTokenDomain> Self,
-                const Request::FAcquireRequestPtr Request
+                const TSharedPtr<FAwaitAccessTokenDomain>& Self,
+                const Request::FAcquireRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FAcquireTask(
@@ -143,7 +153,8 @@ namespace Gs2::Exchange::Domain::Model
         friend FAcquireTask;
 
         TSharedPtr<FAsyncTask<FAcquireTask>> Acquire(
-            Request::FAcquireRequestPtr Request
+            Request::FAcquireRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         class GS2EXCHANGE_API FSkipTask final :
@@ -152,10 +163,12 @@ namespace Gs2::Exchange::Domain::Model
         {
             const TSharedPtr<FAwaitAccessTokenDomain> Self;
             const Request::FSkipRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FSkipTask(
-                const TSharedPtr<FAwaitAccessTokenDomain> Self,
-                const Request::FSkipRequestPtr Request
+                const TSharedPtr<FAwaitAccessTokenDomain>& Self,
+                const Request::FSkipRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FSkipTask(
@@ -169,7 +182,8 @@ namespace Gs2::Exchange::Domain::Model
         friend FSkipTask;
 
         TSharedPtr<FAsyncTask<FSkipTask>> Skip(
-            Request::FSkipRequestPtr Request
+            Request::FSkipRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         class GS2EXCHANGE_API FDeleteTask final :
@@ -180,7 +194,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FDeleteAwaitRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FAwaitAccessTokenDomain> Self,
+                const TSharedPtr<FAwaitAccessTokenDomain>& Self,
                 const Request::FDeleteAwaitRequestPtr Request
             );
 

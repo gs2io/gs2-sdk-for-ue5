@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Showcase/Gs2Showcase.h"
 #include "Showcase/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeSalesItemMastersIterator.h"
 #include "Showcase/Domain/Iterator/DescribeSalesItemGroupMastersIterator.h"
@@ -35,6 +34,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Showcase::Domain
+{
+    class FGs2ShowcaseDomain;
+    typedef TSharedPtr<FGs2ShowcaseDomain> FGs2ShowcaseDomainPtr;
 }
 
 namespace Gs2::Showcase::Domain::Model
@@ -62,7 +67,8 @@ namespace Gs2::Showcase::Domain::Model
         public TSharedFromThis<FRandomShowcaseDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
+        const Showcase::Domain::FGs2ShowcaseDomainPtr Service;
+        const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -75,7 +81,8 @@ namespace Gs2::Showcase::Domain::Model
     public:
 
         FRandomShowcaseDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> ShowcaseName
@@ -99,7 +106,7 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain> RandomDisplayItem(
             const FString DisplayItemName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

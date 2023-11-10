@@ -43,13 +43,15 @@ namespace Gs2::LoginReward::Domain::Model
 {
 
     FReceiveStatusAccessTokenDomain::FReceiveStatusAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> BonusModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -66,6 +68,7 @@ namespace Gs2::LoginReward::Domain::Model
         const FReceiveStatusAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -76,7 +79,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FReceiveStatusAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FReceiveStatusAccessTokenDomain> Self,
+        const TSharedPtr<FReceiveStatusAccessTokenDomain>& Self,
         const Request::FGetReceiveStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -157,7 +160,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FReceiveStatusAccessTokenDomain::FMarkReceivedTask::FMarkReceivedTask(
-        const TSharedPtr<FReceiveStatusAccessTokenDomain> Self,
+        const TSharedPtr<FReceiveStatusAccessTokenDomain>& Self,
         const Request::FMarkReceivedRequestPtr Request
     ): Self(Self), Request(Request)
     {

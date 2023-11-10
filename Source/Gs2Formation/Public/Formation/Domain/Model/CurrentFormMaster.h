@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Formation/Gs2Formation.h"
 #include "Formation/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelsIterator.h"
@@ -38,6 +37,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Formation::Domain
+{
+    class FGs2FormationDomain;
+    typedef TSharedPtr<FGs2FormationDomain> FGs2FormationDomainPtr;
 }
 
 namespace Gs2::Formation::Domain::Model
@@ -63,7 +68,8 @@ namespace Gs2::Formation::Domain::Model
         public TSharedFromThis<FCurrentFormMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Formation::FGs2FormationRestClientPtr Client;
+        const Formation::Domain::FGs2FormationDomainPtr Service;
+        const Gs2::Formation::FGs2FormationRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -74,7 +80,8 @@ namespace Gs2::Formation::Domain::Model
     public:
 
         FCurrentFormMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Formation::Domain::FGs2FormationDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -91,7 +98,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentFormMasterDomain> Self,
+                const TSharedPtr<FCurrentFormMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -117,7 +124,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FGetCurrentFormMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentFormMasterDomain> Self,
+                const TSharedPtr<FCurrentFormMasterDomain>& Self,
                 const Request::FGetCurrentFormMasterRequestPtr Request
             );
 
@@ -143,7 +150,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FUpdateCurrentFormMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentFormMasterDomain> Self,
+                const TSharedPtr<FCurrentFormMasterDomain>& Self,
                 const Request::FUpdateCurrentFormMasterRequestPtr Request
             );
 
@@ -169,7 +176,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FUpdateCurrentFormMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentFormMasterDomain> Self,
+                const TSharedPtr<FCurrentFormMasterDomain>& Self,
                 const Request::FUpdateCurrentFormMasterFromGitHubRequestPtr Request
             );
 

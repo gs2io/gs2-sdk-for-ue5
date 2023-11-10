@@ -64,13 +64,15 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FSimpleInventoryAccessTokenDomain::FSimpleInventoryAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> InventoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -87,6 +89,7 @@ namespace Gs2::Inventory::Domain::Model
         const FSimpleInventoryAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -97,7 +100,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FSimpleInventoryAccessTokenDomain::FConsumeSimpleItemsTask::FConsumeSimpleItemsTask(
-        const TSharedPtr<FSimpleInventoryAccessTokenDomain> Self,
+        const TSharedPtr<FSimpleInventoryAccessTokenDomain>& Self,
         const Request::FConsumeSimpleItemsRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -158,6 +161,7 @@ namespace Gs2::Inventory::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     Self->AccessToken,
                     Request->GetInventoryName(),
@@ -237,10 +241,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomain> FSimpleInventoryAccessTokenDomain::SimpleItem(
         const FString ItemName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             InventoryName,

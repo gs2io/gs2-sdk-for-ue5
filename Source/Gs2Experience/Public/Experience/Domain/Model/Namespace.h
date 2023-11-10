@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Experience/Gs2Experience.h"
 #include "Experience/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Experience/Domain/Iterator/DescribeExperienceModelMastersIterator.h"
 #include "Experience/Domain/Iterator/DescribeExperienceModelsIterator.h"
@@ -32,6 +31,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Experience::Domain
+{
+    class FGs2ExperienceDomain;
+    typedef TSharedPtr<FGs2ExperienceDomain> FGs2ExperienceDomainPtr;
 }
 
 namespace Gs2::Experience::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Experience::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Experience::FGs2ExperienceRestClientPtr Client;
+        const Experience::Domain::FGs2ExperienceDomainPtr Service;
+        const Gs2::Experience::FGs2ExperienceRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -86,7 +92,8 @@ namespace Gs2::Experience::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Experience::Domain::FGs2ExperienceDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -103,7 +110,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -129,7 +136,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -155,7 +162,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -181,7 +188,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -207,7 +214,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FCreateThresholdMasterRequestPtr Request;
         public:
             explicit FCreateThresholdMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateThresholdMasterRequestPtr Request
             );
 
@@ -233,7 +240,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FCreateExperienceModelMasterRequestPtr Request;
         public:
             explicit FCreateExperienceModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateExperienceModelMasterRequestPtr Request
             );
 
@@ -252,7 +259,7 @@ namespace Gs2::Experience::Domain::Model
         );
 
         TSharedPtr<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain> CurrentExperienceMaster(
-        ) const;
+        );
 
         Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIteratorPtr ExperienceModels(
         ) const;
@@ -267,15 +274,15 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<Gs2::Experience::Domain::Model::FExperienceModelDomain> ExperienceModel(
             const FString ExperienceName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Experience::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Experience::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::Experience::Domain::Iterator::FDescribeThresholdMastersIteratorPtr ThresholdMasters(
         ) const;
@@ -290,7 +297,7 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<Gs2::Experience::Domain::Model::FThresholdMasterDomain> ThresholdMaster(
             const FString ThresholdName
-        ) const;
+        );
 
         Gs2::Experience::Domain::Iterator::FDescribeExperienceModelMastersIteratorPtr ExperienceModelMasters(
         ) const;
@@ -305,7 +312,7 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<Gs2::Experience::Domain::Model::FExperienceModelMasterDomain> ExperienceModelMaster(
             const FString ExperienceName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

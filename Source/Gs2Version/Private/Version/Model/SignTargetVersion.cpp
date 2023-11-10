@@ -92,7 +92,7 @@ namespace Gs2::Version::Model
         return MakeShared<FSignTargetVersion>()
             ->WithRegion(Data->HasField("region") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("region", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -101,7 +101,7 @@ namespace Gs2::Version::Model
                 }() : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -110,7 +110,7 @@ namespace Gs2::Version::Model
                 }() : TOptional<FString>())
             ->WithVersionName(Data->HasField("versionName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("versionName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

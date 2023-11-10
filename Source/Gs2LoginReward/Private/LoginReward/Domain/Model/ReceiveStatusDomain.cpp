@@ -42,13 +42,15 @@ namespace Gs2::LoginReward::Domain::Model
 {
 
     FReceiveStatusDomain::FReceiveStatusDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> BonusModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -65,6 +67,7 @@ namespace Gs2::LoginReward::Domain::Model
         const FReceiveStatusDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -75,7 +78,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FReceiveStatusDomain::FGetTask::FGetTask(
-        const TSharedPtr<FReceiveStatusDomain> Self,
+        const TSharedPtr<FReceiveStatusDomain>& Self,
         const Request::FGetReceiveStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -156,7 +159,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FReceiveStatusDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FReceiveStatusDomain> Self,
+        const TSharedPtr<FReceiveStatusDomain>& Self,
         const Request::FDeleteReceiveStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -227,7 +230,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FReceiveStatusDomain::FMarkReceivedTask::FMarkReceivedTask(
-        const TSharedPtr<FReceiveStatusDomain> Self,
+        const TSharedPtr<FReceiveStatusDomain>& Self,
         const Request::FMarkReceivedByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -310,7 +313,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FReceiveStatusDomain::FUnmarkReceivedTask::FUnmarkReceivedTask(
-        const TSharedPtr<FReceiveStatusDomain> Self,
+        const TSharedPtr<FReceiveStatusDomain>& Self,
         const Request::FUnmarkReceivedByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

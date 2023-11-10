@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Chat/Gs2Chat.h"
 #include "Chat/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Chat/Domain/Iterator/DescribeRoomsIterator.h"
 #include "Chat/Domain/Iterator/DescribeMessagesIterator.h"
@@ -33,6 +32,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Chat::Domain
+{
+    class FGs2ChatDomain;
+    typedef TSharedPtr<FGs2ChatDomain> FGs2ChatDomainPtr;
 }
 
 namespace Gs2::Chat::Domain::Model
@@ -51,7 +56,8 @@ namespace Gs2::Chat::Domain::Model
         public TSharedFromThis<FSubscribeDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Chat::FGs2ChatRestClientPtr Client;
+        const Chat::Domain::FGs2ChatDomainPtr Service;
+        const Gs2::Chat::FGs2ChatRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -64,7 +70,8 @@ namespace Gs2::Chat::Domain::Model
     public:
 
         FSubscribeDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Chat::Domain::FGs2ChatDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> RoomName
@@ -83,7 +90,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FSubscribeByUserIdRequestPtr Request;
         public:
             explicit FSubscribeTask(
-                const TSharedPtr<FSubscribeDomain> Self,
+                const TSharedPtr<FSubscribeDomain>& Self,
                 const Request::FSubscribeByUserIdRequestPtr Request
             );
 
@@ -109,7 +116,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FGetSubscribeByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FSubscribeDomain> Self,
+                const TSharedPtr<FSubscribeDomain>& Self,
                 const Request::FGetSubscribeByUserIdRequestPtr Request
             );
 
@@ -135,7 +142,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FUpdateNotificationTypeByUserIdRequestPtr Request;
         public:
             explicit FUpdateNotificationTypeTask(
-                const TSharedPtr<FSubscribeDomain> Self,
+                const TSharedPtr<FSubscribeDomain>& Self,
                 const Request::FUpdateNotificationTypeByUserIdRequestPtr Request
             );
 
@@ -161,7 +168,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FUnsubscribeByUserIdRequestPtr Request;
         public:
             explicit FUnsubscribeTask(
-                const TSharedPtr<FSubscribeDomain> Self,
+                const TSharedPtr<FSubscribeDomain>& Self,
                 const Request::FUnsubscribeByUserIdRequestPtr Request
             );
 

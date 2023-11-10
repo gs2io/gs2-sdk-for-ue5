@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "SkillTree/Gs2SkillTree.h"
 #include "SkillTree/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelsIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelMastersIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::SkillTree::Domain
+{
+    class FGs2SkillTreeDomain;
+    typedef TSharedPtr<FGs2SkillTreeDomain> FGs2SkillTreeDomainPtr;
 }
 
 namespace Gs2::SkillTree::Domain::Model
@@ -46,7 +51,8 @@ namespace Gs2::SkillTree::Domain::Model
         public TSharedFromThis<FNodeModelDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
+        const SkillTree::Domain::FGs2SkillTreeDomainPtr Service;
+        const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -58,7 +64,8 @@ namespace Gs2::SkillTree::Domain::Model
     public:
 
         FNodeModelDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> NodeModelName
             // ReSharper disable once CppMemberInitializersOrder
@@ -76,7 +83,7 @@ namespace Gs2::SkillTree::Domain::Model
             const Request::FGetNodeModelRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNodeModelDomain> Self,
+                const TSharedPtr<FNodeModelDomain>& Self,
                 const Request::FGetNodeModelRequestPtr Request
             );
 

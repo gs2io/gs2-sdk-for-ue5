@@ -97,7 +97,7 @@ namespace Gs2::News::Result
                  }() : nullptr)
             ->WithContentHash(Data->HasField("contentHash") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("contentHash", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -106,7 +106,7 @@ namespace Gs2::News::Result
                 }() : TOptional<FString>())
             ->WithTemplateHash(Data->HasField("templateHash") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("templateHash", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

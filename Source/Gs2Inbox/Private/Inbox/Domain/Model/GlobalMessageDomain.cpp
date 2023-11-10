@@ -42,12 +42,14 @@ namespace Gs2::Inbox::Domain::Model
 {
 
     FGlobalMessageDomain::FGlobalMessageDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inbox::Domain::FGs2InboxDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> GlobalMessageName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inbox::FGs2InboxRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         GlobalMessageName(GlobalMessageName),
@@ -62,6 +64,7 @@ namespace Gs2::Inbox::Domain::Model
         const FGlobalMessageDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         GlobalMessageName(From.GlobalMessageName),
@@ -71,7 +74,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FGlobalMessageDomain::FGetTask::FGetTask(
-        const TSharedPtr<FGlobalMessageDomain> Self,
+        const TSharedPtr<FGlobalMessageDomain>& Self,
         const Request::FGetGlobalMessageRequestPtr Request
     ): Self(Self), Request(Request)
     {

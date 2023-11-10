@@ -51,6 +51,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
+}
+
 namespace Gs2::Inventory::Domain::Model
 {
     class FNamespaceDomain;
@@ -89,7 +95,8 @@ namespace Gs2::Inventory::Domain::Model
         public TSharedFromThis<FBigItemAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inventory::FGs2InventoryRestClientPtr Client;
+        const Inventory::Domain::FGs2InventoryDomainPtr Service;
+        const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -104,9 +111,10 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FBigItemAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inventory::Domain::FGs2InventoryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> InventoryName,
             const TOptional<FString> ItemName
             // ReSharper disable once CppMemberInitializersOrder
@@ -124,7 +132,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetBigItemRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FBigItemAccessTokenDomain> Self,
+                const TSharedPtr<FBigItemAccessTokenDomain>& Self,
                 const Request::FGetBigItemRequestPtr Request
             );
 
@@ -150,7 +158,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FConsumeBigItemRequestPtr Request;
         public:
             explicit FConsumeTask(
-                const TSharedPtr<FBigItemAccessTokenDomain> Self,
+                const TSharedPtr<FBigItemAccessTokenDomain>& Self,
                 const Request::FConsumeBigItemRequestPtr Request
             );
 
@@ -176,7 +184,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FVerifyBigItemRequestPtr Request;
         public:
             explicit FVerifyTask(
-                const TSharedPtr<FBigItemAccessTokenDomain> Self,
+                const TSharedPtr<FBigItemAccessTokenDomain>& Self,
                 const Request::FVerifyBigItemRequestPtr Request
             );
 

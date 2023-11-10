@@ -40,6 +40,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Formation::Domain
+{
+    class FGs2FormationDomain;
+    typedef TSharedPtr<FGs2FormationDomain> FGs2FormationDomainPtr;
+}
+
 namespace Gs2::Formation::Domain::Model
 {
     class FNamespaceDomain;
@@ -63,7 +69,8 @@ namespace Gs2::Formation::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Formation::FGs2FormationRestClientPtr Client;
+        const Formation::Domain::FGs2FormationDomainPtr Service;
+        const Gs2::Formation::FGs2FormationRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -91,9 +98,10 @@ namespace Gs2::Formation::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Formation::Domain::FGs2FormationDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -114,7 +122,7 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain> Mold(
             const FString MoldModelName
-        ) const;
+        );
 
         Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIteratorPtr PropertyForms(
             const FString PropertyFormModelName
@@ -131,7 +139,7 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomain> PropertyForm(
             const FString PropertyFormModelName,
             const FString PropertyId
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -34,6 +34,8 @@
 #include "Enhance/Domain/Model/CurrentRateMaster.h"
 #include "Enhance/Domain/Model/User.h"
 #include "Enhance/Domain/Model/UserAccessToken.h"
+#include "Enhance/Domain/SpeculativeExecutor/Transaction/StartByUserIdSpeculativeExecutor.h"
+#include "Enhance/Domain/SpeculativeExecutor/Transaction/EndByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -43,12 +45,14 @@ namespace Gs2::Enhance::Domain::Model
 {
 
     FProgressAccessTokenDomain::FProgressAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -64,6 +68,7 @@ namespace Gs2::Enhance::Domain::Model
         const FProgressAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -73,7 +78,7 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FProgressAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FProgressAccessTokenDomain> Self,
+        const TSharedPtr<FProgressAccessTokenDomain>& Self,
         const Request::FGetProgressRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -135,16 +140,17 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FProgressAccessTokenDomain::FStartTask::FStartTask(
-        const TSharedPtr<FProgressAccessTokenDomain> Self,
-        const Request::FStartRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FProgressAccessTokenDomain>& Self,
+        const Request::FStartRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FProgressAccessTokenDomain::FStartTask::FStartTask(
         const FStartTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -155,6 +161,26 @@ namespace Gs2::Enhance::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FStartByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FStartByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Start(
             Request
         );
@@ -210,22 +236,24 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FProgressAccessTokenDomain::FStartTask>> FProgressAccessTokenDomain::Start(
-        Request::FStartRequestPtr Request
+        Request::FStartRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FStartTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FStartTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FProgressAccessTokenDomain::FEndTask::FEndTask(
-        const TSharedPtr<FProgressAccessTokenDomain> Self,
-        const Request::FEndRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FProgressAccessTokenDomain>& Self,
+        const Request::FEndRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FProgressAccessTokenDomain::FEndTask::FEndTask(
         const FEndTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -236,6 +264,26 @@ namespace Gs2::Enhance::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FEndByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FEndByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->End(
             Request
         );
@@ -308,13 +356,14 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FProgressAccessTokenDomain::FEndTask>> FProgressAccessTokenDomain::End(
-        Request::FEndRequestPtr Request
+        Request::FEndRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FEndTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FEndTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FProgressAccessTokenDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FProgressAccessTokenDomain> Self,
+        const TSharedPtr<FProgressAccessTokenDomain>& Self,
         const Request::FDeleteProgressRequestPtr Request
     ): Self(Self), Request(Request)
     {

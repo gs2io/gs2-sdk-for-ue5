@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Inbox/Gs2Inbox.h"
 #include "Inbox/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inbox/Domain/Iterator/DescribeMessagesIterator.h"
 #include "Inbox/Domain/Iterator/DescribeMessagesByUserIdIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Inbox::Domain
+{
+    class FGs2InboxDomain;
+    typedef TSharedPtr<FGs2InboxDomain> FGs2InboxDomainPtr;
 }
 
 namespace Gs2::Inbox::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Inbox::Domain::Model
         public TSharedFromThis<FGlobalMessageDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inbox::FGs2InboxRestClientPtr Client;
+        const Inbox::Domain::FGs2InboxDomainPtr Service;
+        const Gs2::Inbox::FGs2InboxRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -62,7 +68,8 @@ namespace Gs2::Inbox::Domain::Model
     public:
 
         FGlobalMessageDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inbox::Domain::FGs2InboxDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> GlobalMessageName
             // ReSharper disable once CppMemberInitializersOrder
@@ -80,7 +87,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FGetGlobalMessageRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FGlobalMessageDomain> Self,
+                const TSharedPtr<FGlobalMessageDomain>& Self,
                 const Request::FGetGlobalMessageRequestPtr Request
             );
 

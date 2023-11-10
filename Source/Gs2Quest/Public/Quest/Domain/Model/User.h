@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Quest/Gs2Quest.h"
 #include "Quest/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Quest/Domain/Iterator/DescribeQuestGroupModelMastersIterator.h"
 #include "Quest/Domain/Iterator/DescribeQuestModelMastersIterator.h"
@@ -34,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Quest::Domain
+{
+    class FGs2QuestDomain;
+    typedef TSharedPtr<FGs2QuestDomain> FGs2QuestDomainPtr;
 }
 
 namespace Gs2::Quest::Domain::Model
@@ -55,7 +60,8 @@ namespace Gs2::Quest::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Quest::FGs2QuestRestClientPtr Client;
+        const Quest::Domain::FGs2QuestDomainPtr Service;
+        const Gs2::Quest::FGs2QuestRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -82,7 +88,8 @@ namespace Gs2::Quest::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Quest::Domain::FGs2QuestDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -100,7 +107,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FCreateProgressByUserIdRequestPtr Request;
         public:
             explicit FCreateProgressTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FCreateProgressByUserIdRequestPtr Request
             );
 
@@ -126,7 +133,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FStartByUserIdRequestPtr Request;
         public:
             explicit FStartTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FStartByUserIdRequestPtr Request
             );
 
@@ -156,7 +163,7 @@ namespace Gs2::Quest::Domain::Model
         );
 
         TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain> Progress(
-        ) const;
+        );
 
         Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsByUserIdIteratorPtr CompletedQuestLists(
         ) const;
@@ -171,7 +178,7 @@ namespace Gs2::Quest::Domain::Model
 
         TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListDomain> CompletedQuestList(
             const FString QuestGroupName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

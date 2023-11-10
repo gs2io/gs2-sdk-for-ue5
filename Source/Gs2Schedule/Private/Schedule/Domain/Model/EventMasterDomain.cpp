@@ -41,12 +41,14 @@ namespace Gs2::Schedule::Domain::Model
 {
 
     FEventMasterDomain::FEventMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> EventName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Schedule::FGs2ScheduleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         EventName(EventName),
@@ -61,6 +63,7 @@ namespace Gs2::Schedule::Domain::Model
         const FEventMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         EventName(From.EventName),
@@ -70,7 +73,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FEventMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FEventMasterDomain> Self,
+        const TSharedPtr<FEventMasterDomain>& Self,
         const Request::FGetEventMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,7 +135,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FEventMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FEventMasterDomain> Self,
+        const TSharedPtr<FEventMasterDomain>& Self,
         const Request::FUpdateEventMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -196,7 +199,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FEventMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FEventMasterDomain> Self,
+        const TSharedPtr<FEventMasterDomain>& Self,
         const Request::FDeleteEventMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

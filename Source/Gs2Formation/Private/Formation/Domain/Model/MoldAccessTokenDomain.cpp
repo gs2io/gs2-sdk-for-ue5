@@ -49,13 +49,15 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FMoldAccessTokenDomain::FMoldAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Formation::Domain::FGs2FormationDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> MoldModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -72,6 +74,7 @@ namespace Gs2::Formation::Domain::Model
         const FMoldAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -82,7 +85,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FMoldAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMoldAccessTokenDomain> Self,
+        const TSharedPtr<FMoldAccessTokenDomain>& Self,
         const Request::FGetMoldRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -163,7 +166,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FMoldAccessTokenDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FMoldAccessTokenDomain> Self,
+        const TSharedPtr<FMoldAccessTokenDomain>& Self,
         const Request::FDeleteMoldRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -268,10 +271,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FFormAccessTokenDomain> FMoldAccessTokenDomain::Form(
         const int32 Index
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FFormAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             MoldModelName,

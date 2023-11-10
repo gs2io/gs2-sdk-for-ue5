@@ -191,7 +191,7 @@ namespace Gs2::Gateway::Model
         return MakeShared<FFirebaseToken>()
             ->WithFirebaseTokenId(Data->HasField("firebaseTokenId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("firebaseTokenId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -200,7 +200,7 @@ namespace Gs2::Gateway::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -209,7 +209,7 @@ namespace Gs2::Gateway::Model
                 }() : TOptional<FString>())
             ->WithToken(Data->HasField("token") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("token", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Lock/Gs2Lock.h"
 #include "Lock/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Lock/Domain/Iterator/DescribeMutexesIterator.h"
 #include "Lock/Domain/Iterator/DescribeMutexesByUserIdIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Lock::Domain
+{
+    class FGs2LockDomain;
+    typedef TSharedPtr<FGs2LockDomain> FGs2LockDomainPtr;
 }
 
 namespace Gs2::Lock::Domain::Model
@@ -43,7 +48,8 @@ namespace Gs2::Lock::Domain::Model
         public TSharedFromThis<FMutexDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lock::FGs2LockRestClientPtr Client;
+        const Lock::Domain::FGs2LockDomainPtr Service;
+        const Gs2::Lock::FGs2LockRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -56,7 +62,8 @@ namespace Gs2::Lock::Domain::Model
     public:
 
         FMutexDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lock::Domain::FGs2LockDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> PropertyId
@@ -75,7 +82,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FLockByUserIdRequestPtr Request;
         public:
             explicit FLockTask(
-                const TSharedPtr<FMutexDomain> Self,
+                const TSharedPtr<FMutexDomain>& Self,
                 const Request::FLockByUserIdRequestPtr Request
             );
 
@@ -101,7 +108,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FUnlockByUserIdRequestPtr Request;
         public:
             explicit FUnlockTask(
-                const TSharedPtr<FMutexDomain> Self,
+                const TSharedPtr<FMutexDomain>& Self,
                 const Request::FUnlockByUserIdRequestPtr Request
             );
 
@@ -127,7 +134,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FGetMutexByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FMutexDomain> Self,
+                const TSharedPtr<FMutexDomain>& Self,
                 const Request::FGetMutexByUserIdRequestPtr Request
             );
 
@@ -153,7 +160,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FDeleteMutexByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FMutexDomain> Self,
+                const TSharedPtr<FMutexDomain>& Self,
                 const Request::FDeleteMutexByUserIdRequestPtr Request
             );
 

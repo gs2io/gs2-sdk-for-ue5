@@ -138,7 +138,7 @@ namespace Gs2::StateMachine::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -147,7 +147,7 @@ namespace Gs2::StateMachine::Request
               }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("userId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -156,7 +156,7 @@ namespace Gs2::StateMachine::Request
               }() : TOptional<FString>())
             ->WithStatusName(Data->HasField("statusName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("statusName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -165,7 +165,7 @@ namespace Gs2::StateMachine::Request
               }() : TOptional<FString>())
             ->WithEventName(Data->HasField("eventName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("eventName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -174,7 +174,7 @@ namespace Gs2::StateMachine::Request
               }() : TOptional<FString>())
             ->WithArgs(Data->HasField("args") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("args", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

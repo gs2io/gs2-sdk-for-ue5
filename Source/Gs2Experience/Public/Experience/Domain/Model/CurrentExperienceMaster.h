@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Experience/Gs2Experience.h"
 #include "Experience/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Experience/Domain/Iterator/DescribeExperienceModelMastersIterator.h"
 #include "Experience/Domain/Iterator/DescribeExperienceModelsIterator.h"
@@ -32,6 +31,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Experience::Domain
+{
+    class FGs2ExperienceDomain;
+    typedef TSharedPtr<FGs2ExperienceDomain> FGs2ExperienceDomainPtr;
 }
 
 namespace Gs2::Experience::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Experience::Domain::Model
         public TSharedFromThis<FCurrentExperienceMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Experience::FGs2ExperienceRestClientPtr Client;
+        const Experience::Domain::FGs2ExperienceDomainPtr Service;
+        const Gs2::Experience::FGs2ExperienceRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -61,7 +67,8 @@ namespace Gs2::Experience::Domain::Model
     public:
 
         FCurrentExperienceMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Experience::Domain::FGs2ExperienceDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -78,7 +85,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentExperienceMasterDomain> Self,
+                const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -104,7 +111,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FGetCurrentExperienceMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentExperienceMasterDomain> Self,
+                const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
                 const Request::FGetCurrentExperienceMasterRequestPtr Request
             );
 
@@ -130,7 +137,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FUpdateCurrentExperienceMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentExperienceMasterDomain> Self,
+                const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
                 const Request::FUpdateCurrentExperienceMasterRequestPtr Request
             );
 
@@ -156,7 +163,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FUpdateCurrentExperienceMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentExperienceMasterDomain> Self,
+                const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
                 const Request::FUpdateCurrentExperienceMasterFromGitHubRequestPtr Request
             );
 

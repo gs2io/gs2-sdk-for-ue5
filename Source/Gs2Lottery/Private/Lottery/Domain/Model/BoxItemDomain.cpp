@@ -47,10 +47,12 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FBoxItemDomain::FBoxItemDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Lottery::Domain::FGs2LotteryDomainPtr& Service
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         ParentKey("lottery:BoxItem")
     {
@@ -60,6 +62,7 @@ namespace Gs2::Lottery::Domain::Model
         const FBoxItemDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {

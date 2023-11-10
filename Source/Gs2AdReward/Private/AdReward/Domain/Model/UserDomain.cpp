@@ -37,12 +37,14 @@ namespace Gs2::AdReward::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const AdReward::Domain::FGs2AdRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::AdReward::FGs2AdRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -57,6 +59,7 @@ namespace Gs2::AdReward::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -66,10 +69,11 @@ namespace Gs2::AdReward::Domain::Model
     }
 
     TSharedPtr<Gs2::AdReward::Domain::Model::FPointDomain> FUserDomain::Point(
-    ) const
+    )
     {
         return MakeShared<Gs2::AdReward::Domain::Model::FPointDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );

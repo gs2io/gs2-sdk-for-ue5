@@ -41,12 +41,14 @@ namespace Gs2::Idle::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Idle::Domain::FGs2IdleDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Idle::FGs2IdleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -61,6 +63,7 @@ namespace Gs2::Idle::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -112,10 +115,11 @@ namespace Gs2::Idle::Domain::Model
 
     TSharedPtr<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain> FUserAccessTokenDomain::Status(
         const FString CategoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)

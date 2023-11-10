@@ -92,7 +92,7 @@ namespace Gs2::LoginReward::Model
         return MakeShared<FScriptSetting>()
             ->WithTriggerScriptId(Data->HasField("triggerScriptId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("triggerScriptId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -101,7 +101,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithDoneTriggerTargetType(Data->HasField("doneTriggerTargetType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("doneTriggerTargetType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -110,7 +110,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithDoneTriggerScriptId(Data->HasField("doneTriggerScriptId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("doneTriggerScriptId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -119,7 +119,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithDoneTriggerQueueNamespaceId(Data->HasField("doneTriggerQueueNamespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("doneTriggerQueueNamespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

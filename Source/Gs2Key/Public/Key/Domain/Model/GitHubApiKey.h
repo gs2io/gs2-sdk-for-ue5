@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Key/Gs2Key.h"
 #include "Key/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Key/Domain/Iterator/DescribeKeysIterator.h"
 #include "Key/Domain/Iterator/DescribeGitHubApiKeysIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Key::Domain
+{
+    class FGs2KeyDomain;
+    typedef TSharedPtr<FGs2KeyDomain> FGs2KeyDomainPtr;
 }
 
 namespace Gs2::Key::Domain::Model
@@ -41,7 +46,8 @@ namespace Gs2::Key::Domain::Model
         public TSharedFromThis<FGitHubApiKeyDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Key::FGs2KeyRestClientPtr Client;
+        const Key::Domain::FGs2KeyDomainPtr Service;
+        const Gs2::Key::FGs2KeyRestClientPtr Client;
 
         public:
         TOptional<FString> ApiKey;
@@ -58,7 +64,8 @@ namespace Gs2::Key::Domain::Model
     public:
 
         FGitHubApiKeyDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Key::Domain::FGs2KeyDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> ApiKeyName
             // ReSharper disable once CppMemberInitializersOrder
@@ -76,7 +83,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FUpdateGitHubApiKeyRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FGitHubApiKeyDomain> Self,
+                const TSharedPtr<FGitHubApiKeyDomain>& Self,
                 const Request::FUpdateGitHubApiKeyRequestPtr Request
             );
 
@@ -102,7 +109,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FGetGitHubApiKeyRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FGitHubApiKeyDomain> Self,
+                const TSharedPtr<FGitHubApiKeyDomain>& Self,
                 const Request::FGetGitHubApiKeyRequestPtr Request
             );
 
@@ -128,7 +135,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FDeleteGitHubApiKeyRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FGitHubApiKeyDomain> Self,
+                const TSharedPtr<FGitHubApiKeyDomain>& Self,
                 const Request::FDeleteGitHubApiKeyRequestPtr Request
             );
 

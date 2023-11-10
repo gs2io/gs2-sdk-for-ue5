@@ -80,7 +80,7 @@ namespace Gs2::Mission::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -89,7 +89,7 @@ namespace Gs2::Mission::Request
               }() : TOptional<FString>())
             ->WithMissionGroupName(Data->HasField("missionGroupName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("missionGroupName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

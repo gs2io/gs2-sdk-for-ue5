@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Key/Gs2Key.h"
 #include "Key/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Key/Domain/Iterator/DescribeKeysIterator.h"
 #include "Key/Domain/Iterator/DescribeGitHubApiKeysIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Key::Domain
+{
+    class FGs2KeyDomain;
+    typedef TSharedPtr<FGs2KeyDomain> FGs2KeyDomainPtr;
 }
 
 namespace Gs2::Key::Domain::Model
@@ -41,7 +46,8 @@ namespace Gs2::Key::Domain::Model
         public TSharedFromThis<FKeyDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Key::FGs2KeyRestClientPtr Client;
+        const Key::Domain::FGs2KeyDomainPtr Service;
+        const Gs2::Key::FGs2KeyRestClientPtr Client;
 
         public:
         TOptional<FString> Data;
@@ -58,7 +64,8 @@ namespace Gs2::Key::Domain::Model
     public:
 
         FKeyDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Key::Domain::FGs2KeyDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> KeyName
             // ReSharper disable once CppMemberInitializersOrder
@@ -76,7 +83,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FUpdateKeyRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FKeyDomain> Self,
+                const TSharedPtr<FKeyDomain>& Self,
                 const Request::FUpdateKeyRequestPtr Request
             );
 
@@ -102,7 +109,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FGetKeyRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FKeyDomain> Self,
+                const TSharedPtr<FKeyDomain>& Self,
                 const Request::FGetKeyRequestPtr Request
             );
 
@@ -128,7 +135,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FDeleteKeyRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FKeyDomain> Self,
+                const TSharedPtr<FKeyDomain>& Self,
                 const Request::FDeleteKeyRequestPtr Request
             );
 
@@ -154,7 +161,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FEncryptRequestPtr Request;
         public:
             explicit FEncryptTask(
-                const TSharedPtr<FKeyDomain> Self,
+                const TSharedPtr<FKeyDomain>& Self,
                 const Request::FEncryptRequestPtr Request
             );
 
@@ -180,7 +187,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FDecryptRequestPtr Request;
         public:
             explicit FDecryptTask(
-                const TSharedPtr<FKeyDomain> Self,
+                const TSharedPtr<FKeyDomain>& Self,
                 const Request::FDecryptRequestPtr Request
             );
 

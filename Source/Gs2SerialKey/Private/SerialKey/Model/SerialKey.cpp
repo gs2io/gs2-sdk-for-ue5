@@ -256,7 +256,7 @@ namespace Gs2::SerialKey::Model
         return MakeShared<FSerialKey>()
             ->WithSerialKeyId(Data->HasField("serialKeyId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("serialKeyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -265,7 +265,7 @@ namespace Gs2::SerialKey::Model
                 }() : TOptional<FString>())
             ->WithCampaignModelName(Data->HasField("campaignModelName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("campaignModelName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -274,7 +274,7 @@ namespace Gs2::SerialKey::Model
                 }() : TOptional<FString>())
             ->WithCode(Data->HasField("code") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("code", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -283,7 +283,7 @@ namespace Gs2::SerialKey::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -292,7 +292,7 @@ namespace Gs2::SerialKey::Model
                 }() : TOptional<FString>())
             ->WithStatus(Data->HasField("status") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("status", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -301,7 +301,7 @@ namespace Gs2::SerialKey::Model
                 }() : TOptional<FString>())
             ->WithUsedUserId(Data->HasField("usedUserId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("usedUserId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

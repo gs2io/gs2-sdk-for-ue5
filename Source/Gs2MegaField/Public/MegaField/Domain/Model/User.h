@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "MegaField/Gs2MegaField.h"
 #include "MegaField/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "MegaField/Domain/Iterator/DescribeAreaModelsIterator.h"
 #include "MegaField/Domain/Iterator/DescribeAreaModelMastersIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::MegaField::Domain
+{
+    class FGs2MegaFieldDomain;
+    typedef TSharedPtr<FGs2MegaFieldDomain> FGs2MegaFieldDomainPtr;
 }
 
 namespace Gs2::MegaField::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::MegaField::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
+        const MegaField::Domain::FGs2MegaFieldDomainPtr Service;
+        const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -62,7 +68,8 @@ namespace Gs2::MegaField::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -80,7 +87,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FFetchPositionFromSystemRequestPtr Request;
         public:
             explicit FFetchPositionFromSystemTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FFetchPositionFromSystemRequestPtr Request
             );
 
@@ -106,7 +113,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FNearUserIdsFromSystemRequestPtr Request;
         public:
             explicit FNearUserIdsFromSystemTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FNearUserIdsFromSystemRequestPtr Request
             );
 
@@ -127,7 +134,7 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialDomain> Spatial(
             const FString AreaModelName,
             const FString LayerModelName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

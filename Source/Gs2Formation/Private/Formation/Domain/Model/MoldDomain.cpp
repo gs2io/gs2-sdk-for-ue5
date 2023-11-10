@@ -48,13 +48,15 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FMoldDomain::FMoldDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Formation::Domain::FGs2FormationDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> MoldModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -71,6 +73,7 @@ namespace Gs2::Formation::Domain::Model
         const FMoldDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -81,7 +84,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FMoldDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMoldDomain> Self,
+        const TSharedPtr<FMoldDomain>& Self,
         const Request::FGetMoldByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -162,7 +165,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FMoldDomain::FSetCapacityTask::FSetCapacityTask(
-        const TSharedPtr<FMoldDomain> Self,
+        const TSharedPtr<FMoldDomain>& Self,
         const Request::FSetMoldCapacityByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -245,7 +248,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FMoldDomain::FAddCapacityTask::FAddCapacityTask(
-        const TSharedPtr<FMoldDomain> Self,
+        const TSharedPtr<FMoldDomain>& Self,
         const Request::FAddMoldCapacityByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -328,7 +331,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FMoldDomain::FSubCapacityTask::FSubCapacityTask(
-        const TSharedPtr<FMoldDomain> Self,
+        const TSharedPtr<FMoldDomain>& Self,
         const Request::FSubMoldCapacityByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -411,7 +414,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FMoldDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FMoldDomain> Self,
+        const TSharedPtr<FMoldDomain>& Self,
         const Request::FDeleteMoldByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -516,10 +519,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FFormDomain> FMoldDomain::Form(
         const int32 Index
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FFormDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             MoldModelName,

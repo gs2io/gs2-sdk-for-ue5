@@ -39,6 +39,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Mission::Domain
+{
+    class FGs2MissionDomain;
+    typedef TSharedPtr<FGs2MissionDomain> FGs2MissionDomainPtr;
+}
+
 namespace Gs2::Mission::Domain::Model
 {
     class FCompleteDomain;
@@ -60,7 +66,8 @@ namespace Gs2::Mission::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Mission::FGs2MissionRestClientPtr Client;
+        const Mission::Domain::FGs2MissionDomainPtr Service;
+        const Gs2::Mission::FGs2MissionRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -78,9 +85,10 @@ namespace Gs2::Mission::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Mission::Domain::FGs2MissionDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -101,7 +109,7 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain> Counter(
             const FString CounterName
-        ) const;
+        );
 
         Gs2::Mission::Domain::Iterator::FDescribeCompletesIteratorPtr Completes(
         ) const;
@@ -116,7 +124,7 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain> Complete(
             const FString MissionGroupName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

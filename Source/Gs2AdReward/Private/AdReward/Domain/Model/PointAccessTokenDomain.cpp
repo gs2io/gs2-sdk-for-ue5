@@ -38,12 +38,14 @@ namespace Gs2::AdReward::Domain::Model
 {
 
     FPointAccessTokenDomain::FPointAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const AdReward::Domain::FGs2AdRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::AdReward::FGs2AdRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -59,6 +61,7 @@ namespace Gs2::AdReward::Domain::Model
         const FPointAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -68,7 +71,7 @@ namespace Gs2::AdReward::Domain::Model
     }
 
     FPointAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FPointAccessTokenDomain> Self,
+        const TSharedPtr<FPointAccessTokenDomain>& Self,
         const Request::FGetPointRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -130,7 +133,7 @@ namespace Gs2::AdReward::Domain::Model
     }
 
     FPointAccessTokenDomain::FConsumeTask::FConsumeTask(
-        const TSharedPtr<FPointAccessTokenDomain> Self,
+        const TSharedPtr<FPointAccessTokenDomain>& Self,
         const Request::FConsumePointRequestPtr Request
     ): Self(Self), Request(Request)
     {

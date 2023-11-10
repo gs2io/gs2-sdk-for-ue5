@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "SerialKey/Gs2SerialKey.h"
 #include "SerialKey/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "SerialKey/Domain/Iterator/DescribeIssueJobsIterator.h"
 #include "SerialKey/Domain/Iterator/DescribeSerialKeysIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::SerialKey::Domain
+{
+    class FGs2SerialKeyDomain;
+    typedef TSharedPtr<FGs2SerialKeyDomain> FGs2SerialKeyDomainPtr;
 }
 
 namespace Gs2::SerialKey::Domain::Model
@@ -49,7 +54,8 @@ namespace Gs2::SerialKey::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr Service;
+        const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -85,7 +91,8 @@ namespace Gs2::SerialKey::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -102,7 +109,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -128,7 +135,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -154,7 +161,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -180,7 +187,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -206,7 +213,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FCreateCampaignModelMasterRequestPtr Request;
         public:
             explicit FCreateCampaignModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateCampaignModelMasterRequestPtr Request
             );
 
@@ -225,7 +232,7 @@ namespace Gs2::SerialKey::Domain::Model
         );
 
         TSharedPtr<Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain> CurrentCampaignMaster(
-        ) const;
+        );
 
         Gs2::SerialKey::Domain::Iterator::FDescribeCampaignModelsIteratorPtr CampaignModels(
         ) const;
@@ -240,15 +247,15 @@ namespace Gs2::SerialKey::Domain::Model
 
         TSharedPtr<Gs2::SerialKey::Domain::Model::FCampaignModelDomain> CampaignModel(
             const FString CampaignModelName
-        ) const;
+        );
 
         TSharedPtr<Gs2::SerialKey::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::SerialKey::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::SerialKey::Domain::Iterator::FDescribeCampaignModelMastersIteratorPtr CampaignModelMasters(
         ) const;
@@ -263,7 +270,7 @@ namespace Gs2::SerialKey::Domain::Model
 
         TSharedPtr<Gs2::SerialKey::Domain::Model::FCampaignModelMasterDomain> CampaignModelMaster(
             const FString CampaignModelName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

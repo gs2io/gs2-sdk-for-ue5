@@ -51,13 +51,15 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FShowcaseDomain::FShowcaseDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> ShowcaseName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -74,6 +76,7 @@ namespace Gs2::Showcase::Domain::Model
         const FShowcaseDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -84,7 +87,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FShowcaseDomain::FGetTask::FGetTask(
-        const TSharedPtr<FShowcaseDomain> Self,
+        const TSharedPtr<FShowcaseDomain>& Self,
         const Request::FGetShowcaseByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -149,10 +152,11 @@ namespace Gs2::Showcase::Domain::Model
 
     TSharedPtr<Gs2::Showcase::Domain::Model::FDisplayItemDomain> FShowcaseDomain::DisplayItem(
         const FString DisplayItemId
-    ) const
+    )
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FDisplayItemDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             ShowcaseName,

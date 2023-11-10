@@ -43,12 +43,14 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -63,6 +65,7 @@ namespace Gs2::MegaField::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -74,10 +77,11 @@ namespace Gs2::MegaField::Domain::Model
     TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialAccessTokenDomain> FUserAccessTokenDomain::Spatial(
         const FString AreaModelName,
         const FString LayerModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::MegaField::Domain::Model::FSpatialAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             AreaModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(AreaModelName),

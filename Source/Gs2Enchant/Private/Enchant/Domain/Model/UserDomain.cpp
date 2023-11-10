@@ -44,12 +44,14 @@ namespace Gs2::Enchant::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enchant::Domain::FGs2EnchantDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -64,6 +66,7 @@ namespace Gs2::Enchant::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -118,10 +121,11 @@ namespace Gs2::Enchant::Domain::Model
     TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain> FUserDomain::BalanceParameterStatus(
         const FString ParameterName,
         const FString PropertyId
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName),
@@ -175,10 +179,11 @@ namespace Gs2::Enchant::Domain::Model
     TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain> FUserDomain::RarityParameterStatus(
         const FString ParameterName,
         const FString PropertyId
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName),

@@ -39,11 +39,13 @@ namespace Gs2::Gateway::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Gateway::Domain::FGs2GatewayDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Gs2->RestSession)),
         Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Gs2->WebSocketSession)),
         NamespaceName(NamespaceName),
@@ -55,6 +57,7 @@ namespace Gs2::Gateway::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         Wsclient(From.Wsclient),
         NamespaceName(From.NamespaceName),
@@ -64,7 +67,7 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -116,7 +119,7 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -173,7 +176,7 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -232,7 +235,7 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -286,10 +289,11 @@ namespace Gs2::Gateway::Domain::Model
 
     TSharedPtr<Gs2::Gateway::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -297,10 +301,11 @@ namespace Gs2::Gateway::Domain::Model
 
     TSharedPtr<Gs2::Gateway::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

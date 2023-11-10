@@ -21,7 +21,6 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
 #include "Gateway/Gs2Gateway.h"
-#include "Gateway/Gs2Gateway.h"
 #include "Gateway/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Gateway/Domain/Iterator/DescribeWebSocketSessionsIterator.h"
 #include "Gateway/Domain/Iterator/DescribeWebSocketSessionsByUserIdIterator.h"
@@ -30,6 +29,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Gateway::Domain
+{
+    class FGs2GatewayDomain;
+    typedef TSharedPtr<FGs2GatewayDomain> FGs2GatewayDomainPtr;
 }
 
 namespace Gs2::Gateway::Domain::Model
@@ -46,8 +51,9 @@ namespace Gs2::Gateway::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Gateway::FGs2GatewayRestClientPtr Client;
-        FGs2GatewayWebSocketClientPtr Wsclient;
+        const Gateway::Domain::FGs2GatewayDomainPtr Service;
+        const Gs2::Gateway::FGs2GatewayRestClientPtr Client;
+        const FGs2GatewayWebSocketClientPtr Wsclient;
 
         public:
         TOptional<FString> Status;
@@ -78,7 +84,8 @@ namespace Gs2::Gateway::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Gateway::Domain::FGs2GatewayDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -95,7 +102,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -121,7 +128,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -147,7 +154,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -173,7 +180,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -193,11 +200,11 @@ namespace Gs2::Gateway::Domain::Model
 
         TSharedPtr<Gs2::Gateway::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Gateway::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

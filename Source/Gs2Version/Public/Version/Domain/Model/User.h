@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Version/Gs2Version.h"
 #include "Version/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelMastersIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Version::Domain
+{
+    class FGs2VersionDomain;
+    typedef TSharedPtr<FGs2VersionDomain> FGs2VersionDomainPtr;
 }
 
 namespace Gs2::Version::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Version::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Version::FGs2VersionRestClientPtr Client;
+        const Version::Domain::FGs2VersionDomainPtr Service;
+        const Gs2::Version::FGs2VersionRestClientPtr Client;
 
         public:
         TOptional<FString> Body;
@@ -77,7 +83,8 @@ namespace Gs2::Version::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Version::Domain::FGs2VersionDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -95,7 +102,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FCalculateSignatureRequestPtr Request;
         public:
             explicit FCalculateSignatureTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FCalculateSignatureRequestPtr Request
             );
 
@@ -126,10 +133,10 @@ namespace Gs2::Version::Domain::Model
 
         TSharedPtr<Gs2::Version::Domain::Model::FAcceptVersionDomain> AcceptVersion(
             const FString VersionName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Version::Domain::Model::FCheckerDomain> Checker(
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

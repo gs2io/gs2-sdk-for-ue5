@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Stamina/Gs2Stamina.h"
 #include "Stamina/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Stamina/Domain/Iterator/DescribeStaminaModelMastersIterator.h"
 #include "Stamina/Domain/Iterator/DescribeMaxStaminaTableMastersIterator.h"
@@ -34,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Stamina::Domain
+{
+    class FGs2StaminaDomain;
+    typedef TSharedPtr<FGs2StaminaDomain> FGs2StaminaDomainPtr;
 }
 
 namespace Gs2::Stamina::Domain::Model
@@ -54,7 +59,8 @@ namespace Gs2::Stamina::Domain::Model
         public TSharedFromThis<FCurrentStaminaMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Stamina::FGs2StaminaRestClientPtr Client;
+        const Stamina::Domain::FGs2StaminaDomainPtr Service;
+        const Gs2::Stamina::FGs2StaminaRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -65,7 +71,8 @@ namespace Gs2::Stamina::Domain::Model
     public:
 
         FCurrentStaminaMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Stamina::Domain::FGs2StaminaDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -82,7 +89,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentStaminaMasterDomain> Self,
+                const TSharedPtr<FCurrentStaminaMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -108,7 +115,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FGetCurrentStaminaMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentStaminaMasterDomain> Self,
+                const TSharedPtr<FCurrentStaminaMasterDomain>& Self,
                 const Request::FGetCurrentStaminaMasterRequestPtr Request
             );
 
@@ -134,7 +141,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FUpdateCurrentStaminaMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentStaminaMasterDomain> Self,
+                const TSharedPtr<FCurrentStaminaMasterDomain>& Self,
                 const Request::FUpdateCurrentStaminaMasterRequestPtr Request
             );
 
@@ -160,7 +167,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FUpdateCurrentStaminaMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentStaminaMasterDomain> Self,
+                const TSharedPtr<FCurrentStaminaMasterDomain>& Self,
                 const Request::FUpdateCurrentStaminaMasterFromGitHubRequestPtr Request
             );
 

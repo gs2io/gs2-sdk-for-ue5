@@ -41,12 +41,14 @@ namespace Gs2::Chat::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Chat::Domain::FGs2ChatDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -61,6 +63,7 @@ namespace Gs2::Chat::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -112,10 +115,11 @@ namespace Gs2::Chat::Domain::Model
     TSharedPtr<Gs2::Chat::Domain::Model::FRoomDomain> FUserDomain::Room(
         const FString RoomName,
         const TOptional<FString> Password
-    ) const
+    )
     {
         return MakeShared<Gs2::Chat::Domain::Model::FRoomDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             RoomName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RoomName),
@@ -208,10 +212,11 @@ namespace Gs2::Chat::Domain::Model
 
     TSharedPtr<Gs2::Chat::Domain::Model::FSubscribeDomain> FUserDomain::Subscribe(
         const FString RoomName
-    ) const
+    )
     {
         return MakeShared<Gs2::Chat::Domain::Model::FSubscribeDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             RoomName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RoomName)

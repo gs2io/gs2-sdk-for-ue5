@@ -35,6 +35,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Idle::Domain
+{
+    class FGs2IdleDomain;
+    typedef TSharedPtr<FGs2IdleDomain> FGs2IdleDomainPtr;
+}
+
 namespace Gs2::Idle::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::Idle::Domain::Model
         public TSharedFromThis<FStatusAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Idle::FGs2IdleRestClientPtr Client;
+        const Idle::Domain::FGs2IdleDomainPtr Service;
+        const Gs2::Idle::FGs2IdleRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -74,9 +81,10 @@ namespace Gs2::Idle::Domain::Model
     public:
 
         FStatusAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Idle::Domain::FGs2IdleDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> CategoryName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -93,7 +101,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FGetStatusRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FGetStatusRequestPtr Request
             );
 
@@ -119,7 +127,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FPredictionRequestPtr Request;
         public:
             explicit FPredictionTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FPredictionRequestPtr Request
             );
 
@@ -143,10 +151,12 @@ namespace Gs2::Idle::Domain::Model
         {
             const TSharedPtr<FStatusAccessTokenDomain> Self;
             const Request::FReceiveRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FReceiveTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
-                const Request::FReceiveRequestPtr Request
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FReceiveRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FReceiveTask(
@@ -160,7 +170,8 @@ namespace Gs2::Idle::Domain::Model
         friend FReceiveTask;
 
         TSharedPtr<FAsyncTask<FReceiveTask>> Receive(
-            Request::FReceiveRequestPtr Request
+            Request::FReceiveRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         static FString CreateCacheParentKey(

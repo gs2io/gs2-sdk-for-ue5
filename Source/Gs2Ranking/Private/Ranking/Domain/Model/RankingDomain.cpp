@@ -48,13 +48,15 @@ namespace Gs2::Ranking::Domain::Model
 {
 
     FRankingDomain::FRankingDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Ranking::Domain::FGs2RankingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> CategoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Ranking::FGs2RankingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -71,6 +73,7 @@ namespace Gs2::Ranking::Domain::Model
         const FRankingDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -81,7 +84,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FRankingDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRankingDomain> Self,
+        const TSharedPtr<FRankingDomain>& Self,
         const Request::FGetRankingByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -145,7 +148,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FRankingDomain::FPutScoreTask::FPutScoreTask(
-        const TSharedPtr<FRankingDomain> Self,
+        const TSharedPtr<FRankingDomain>& Self,
         const Request::FPutScoreByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -202,6 +205,7 @@ namespace Gs2::Ranking::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FScoreDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetCategoryName(),

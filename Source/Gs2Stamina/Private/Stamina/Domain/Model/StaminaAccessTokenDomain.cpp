@@ -44,13 +44,15 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FStaminaAccessTokenDomain::FStaminaAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Stamina::Domain::FGs2StaminaDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> StaminaName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -67,6 +69,7 @@ namespace Gs2::Stamina::Domain::Model
         const FStaminaAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -77,7 +80,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStaminaAccessTokenDomain> Self,
+        const TSharedPtr<FStaminaAccessTokenDomain>& Self,
         const Request::FGetStaminaRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -158,7 +161,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaAccessTokenDomain::FConsumeTask::FConsumeTask(
-        const TSharedPtr<FStaminaAccessTokenDomain> Self,
+        const TSharedPtr<FStaminaAccessTokenDomain>& Self,
         const Request::FConsumeStaminaRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -241,7 +244,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaAccessTokenDomain::FSetMaxValueByStatusTask::FSetMaxValueByStatusTask(
-        const TSharedPtr<FStaminaAccessTokenDomain> Self,
+        const TSharedPtr<FStaminaAccessTokenDomain>& Self,
         const Request::FSetMaxValueByStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -324,7 +327,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaAccessTokenDomain::FSetRecoverIntervalByStatusTask::FSetRecoverIntervalByStatusTask(
-        const TSharedPtr<FStaminaAccessTokenDomain> Self,
+        const TSharedPtr<FStaminaAccessTokenDomain>& Self,
         const Request::FSetRecoverIntervalByStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -407,7 +410,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaAccessTokenDomain::FSetRecoverValueByStatusTask::FSetRecoverValueByStatusTask(
-        const TSharedPtr<FStaminaAccessTokenDomain> Self,
+        const TSharedPtr<FStaminaAccessTokenDomain>& Self,
         const Request::FSetRecoverValueByStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {

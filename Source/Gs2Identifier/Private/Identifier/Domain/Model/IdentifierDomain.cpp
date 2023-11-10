@@ -37,12 +37,14 @@ namespace Gs2::Identifier::Domain::Model
 {
 
     FIdentifierDomain::FIdentifierDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Identifier::Domain::FGs2IdentifierDomainPtr& Service,
         const TOptional<FString> UserName,
         const TOptional<FString> ClientId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Gs2->RestSession)),
         UserName(UserName),
         ClientId(ClientId),
@@ -57,6 +59,7 @@ namespace Gs2::Identifier::Domain::Model
         const FIdentifierDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         UserName(From.UserName),
         ClientId(From.ClientId),
@@ -66,7 +69,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FIdentifierDomain::FGetTask::FGetTask(
-        const TSharedPtr<FIdentifierDomain> Self,
+        const TSharedPtr<FIdentifierDomain>& Self,
         const Request::FGetIdentifierRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -128,7 +131,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FIdentifierDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FIdentifierDomain> Self,
+        const TSharedPtr<FIdentifierDomain>& Self,
         const Request::FDeleteIdentifierRequestPtr Request
     ): Self(Self), Request(Request)
     {

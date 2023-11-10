@@ -45,12 +45,14 @@ namespace Gs2::Enchant::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enchant::Domain::FGs2EnchantDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -65,6 +67,7 @@ namespace Gs2::Enchant::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -119,10 +122,11 @@ namespace Gs2::Enchant::Domain::Model
     TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusAccessTokenDomain> FUserAccessTokenDomain::BalanceParameterStatus(
         const FString ParameterName,
         const FString PropertyId
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FBalanceParameterStatusAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName),
@@ -176,10 +180,11 @@ namespace Gs2::Enchant::Domain::Model
     TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterStatusAccessTokenDomain> FUserAccessTokenDomain::RarityParameterStatus(
         const FString ParameterName,
         const FString PropertyId
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FRarityParameterStatusAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName),

@@ -219,7 +219,7 @@ namespace Gs2::Experience::Model
         return MakeShared<FThresholdMaster>()
             ->WithThresholdId(Data->HasField("thresholdId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("thresholdId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -228,7 +228,7 @@ namespace Gs2::Experience::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -237,7 +237,7 @@ namespace Gs2::Experience::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -246,7 +246,7 @@ namespace Gs2::Experience::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

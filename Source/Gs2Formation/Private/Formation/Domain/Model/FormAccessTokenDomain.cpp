@@ -40,6 +40,7 @@
 #include "Formation/Domain/Model/PropertyFormAccessToken.h"
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Domain/Model/UserAccessToken.h"
+#include "Formation/Domain/SpeculativeExecutor/Transaction/AcquireActionsToFormPropertiesSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -49,14 +50,16 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FFormAccessTokenDomain::FFormAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Formation::Domain::FGs2FormationDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> MoldModelName,
         const TOptional<int32> Index
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -75,6 +78,7 @@ namespace Gs2::Formation::Domain::Model
         const FFormAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -86,7 +90,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FFormAccessTokenDomain> Self,
+        const TSharedPtr<FFormAccessTokenDomain>& Self,
         const Request::FGetFormRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -204,7 +208,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormAccessTokenDomain::FGetWithSignatureTask::FGetWithSignatureTask(
-        const TSharedPtr<FFormAccessTokenDomain> Self,
+        const TSharedPtr<FFormAccessTokenDomain>& Self,
         const Request::FGetFormWithSignatureRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -329,7 +333,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormAccessTokenDomain::FSetWithSignatureTask::FSetWithSignatureTask(
-        const TSharedPtr<FFormAccessTokenDomain> Self,
+        const TSharedPtr<FFormAccessTokenDomain>& Self,
         const Request::FSetFormWithSignatureRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -449,7 +453,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormAccessTokenDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FFormAccessTokenDomain> Self,
+        const TSharedPtr<FFormAccessTokenDomain>& Self,
         const Request::FDeleteFormRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -41,11 +41,13 @@ namespace Gs2::Distributor::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Distributor::Domain::FGs2DistributorDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("distributor:Namespace")
@@ -56,6 +58,7 @@ namespace Gs2::Distributor::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -64,7 +67,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -116,7 +119,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -173,7 +176,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -232,7 +235,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -285,7 +288,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FNamespaceDomain::FCreateDistributorModelMasterTask::FCreateDistributorModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateDistributorModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -337,6 +340,7 @@ namespace Gs2::Distributor::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -352,10 +356,11 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     TSharedPtr<Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain> FNamespaceDomain::CurrentDistributorMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -400,20 +405,22 @@ namespace Gs2::Distributor::Domain::Model
 
     TSharedPtr<Gs2::Distributor::Domain::Model::FDistributorModelDomain> FNamespaceDomain::DistributorModel(
         const FString DistributorName
-    ) const
+    )
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FDistributorModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             DistributorName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DistributorName)
         );
     }
 
     TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain> FNamespaceDomain::Distribute(
-    ) const
+    )
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FDistributeDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -458,10 +465,11 @@ namespace Gs2::Distributor::Domain::Model
 
     TSharedPtr<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain> FNamespaceDomain::DistributorModelMaster(
         const FString DistributorName
-    ) const
+    )
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             DistributorName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DistributorName)
         );
@@ -469,10 +477,11 @@ namespace Gs2::Distributor::Domain::Model
 
     TSharedPtr<Gs2::Distributor::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -480,10 +489,11 @@ namespace Gs2::Distributor::Domain::Model
 
     TSharedPtr<Gs2::Distributor::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Distributor::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

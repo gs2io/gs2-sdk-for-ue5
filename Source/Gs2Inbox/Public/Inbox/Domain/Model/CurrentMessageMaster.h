@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Inbox/Gs2Inbox.h"
 #include "Inbox/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inbox/Domain/Iterator/DescribeMessagesIterator.h"
 #include "Inbox/Domain/Iterator/DescribeMessagesByUserIdIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Inbox::Domain
+{
+    class FGs2InboxDomain;
+    typedef TSharedPtr<FGs2InboxDomain> FGs2InboxDomainPtr;
 }
 
 namespace Gs2::Inbox::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Inbox::Domain::Model
         public TSharedFromThis<FCurrentMessageMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inbox::FGs2InboxRestClientPtr Client;
+        const Inbox::Domain::FGs2InboxDomainPtr Service;
+        const Gs2::Inbox::FGs2InboxRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -61,7 +67,8 @@ namespace Gs2::Inbox::Domain::Model
     public:
 
         FCurrentMessageMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inbox::Domain::FGs2InboxDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -78,7 +85,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentMessageMasterDomain> Self,
+                const TSharedPtr<FCurrentMessageMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -104,7 +111,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FGetCurrentMessageMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentMessageMasterDomain> Self,
+                const TSharedPtr<FCurrentMessageMasterDomain>& Self,
                 const Request::FGetCurrentMessageMasterRequestPtr Request
             );
 
@@ -130,7 +137,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FUpdateCurrentMessageMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentMessageMasterDomain> Self,
+                const TSharedPtr<FCurrentMessageMasterDomain>& Self,
                 const Request::FUpdateCurrentMessageMasterRequestPtr Request
             );
 
@@ -156,7 +163,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FUpdateCurrentMessageMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentMessageMasterDomain> Self,
+                const TSharedPtr<FCurrentMessageMasterDomain>& Self,
                 const Request::FUpdateCurrentMessageMasterFromGitHubRequestPtr Request
             );
 

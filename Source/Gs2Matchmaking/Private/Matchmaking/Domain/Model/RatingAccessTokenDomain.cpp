@@ -46,13 +46,15 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FRatingAccessTokenDomain::FRatingAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> RatingName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -69,6 +71,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FRatingAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -79,7 +82,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FRatingAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRatingAccessTokenDomain> Self,
+        const TSharedPtr<FRatingAccessTokenDomain>& Self,
         const Request::FGetRatingRequestPtr Request
     ): Self(Self), Request(Request)
     {

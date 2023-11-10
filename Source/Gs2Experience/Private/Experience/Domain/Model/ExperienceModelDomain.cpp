@@ -41,12 +41,14 @@ namespace Gs2::Experience::Domain::Model
 {
 
     FExperienceModelDomain::FExperienceModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Experience::Domain::FGs2ExperienceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> ExperienceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Experience::FGs2ExperienceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ExperienceName(ExperienceName),
@@ -61,6 +63,7 @@ namespace Gs2::Experience::Domain::Model
         const FExperienceModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ExperienceName(From.ExperienceName),
@@ -70,7 +73,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FExperienceModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FExperienceModelDomain> Self,
+        const TSharedPtr<FExperienceModelDomain>& Self,
         const Request::FGetExperienceModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

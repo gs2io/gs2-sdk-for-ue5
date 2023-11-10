@@ -196,7 +196,7 @@ namespace Gs2::Limit::Model
         return MakeShared<FLimitModel>()
             ->WithLimitModelId(Data->HasField("limitModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("limitModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -205,7 +205,7 @@ namespace Gs2::Limit::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -214,7 +214,7 @@ namespace Gs2::Limit::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -223,7 +223,7 @@ namespace Gs2::Limit::Model
                 }() : TOptional<FString>())
             ->WithResetType(Data->HasField("resetType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resetType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -241,7 +241,7 @@ namespace Gs2::Limit::Model
                 }() : TOptional<int32>())
             ->WithResetDayOfWeek(Data->HasField("resetDayOfWeek") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resetDayOfWeek", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

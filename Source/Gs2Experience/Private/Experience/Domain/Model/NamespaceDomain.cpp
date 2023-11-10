@@ -41,11 +41,13 @@ namespace Gs2::Experience::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Experience::Domain::FGs2ExperienceDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Experience::FGs2ExperienceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("experience:Namespace")
@@ -56,6 +58,7 @@ namespace Gs2::Experience::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -64,7 +67,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -116,7 +119,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -173,7 +176,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -232,7 +235,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -285,7 +288,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FNamespaceDomain::FCreateThresholdMasterTask::FCreateThresholdMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateThresholdMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -337,6 +340,7 @@ namespace Gs2::Experience::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Experience::Domain::Model::FThresholdMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -352,7 +356,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FNamespaceDomain::FCreateExperienceModelMasterTask::FCreateExperienceModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateExperienceModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -404,6 +408,7 @@ namespace Gs2::Experience::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Experience::Domain::Model::FExperienceModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -419,10 +424,11 @@ namespace Gs2::Experience::Domain::Model
     }
 
     TSharedPtr<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain> FNamespaceDomain::CurrentExperienceMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -467,10 +473,11 @@ namespace Gs2::Experience::Domain::Model
 
     TSharedPtr<Gs2::Experience::Domain::Model::FExperienceModelDomain> FNamespaceDomain::ExperienceModel(
         const FString ExperienceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Experience::Domain::Model::FExperienceModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             ExperienceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ExperienceName)
         );
@@ -478,10 +485,11 @@ namespace Gs2::Experience::Domain::Model
 
     TSharedPtr<Gs2::Experience::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Experience::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -489,10 +497,11 @@ namespace Gs2::Experience::Domain::Model
 
     TSharedPtr<Gs2::Experience::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Experience::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -538,10 +547,11 @@ namespace Gs2::Experience::Domain::Model
 
     TSharedPtr<Gs2::Experience::Domain::Model::FThresholdMasterDomain> FNamespaceDomain::ThresholdMaster(
         const FString ThresholdName
-    ) const
+    )
     {
         return MakeShared<Gs2::Experience::Domain::Model::FThresholdMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             ThresholdName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ThresholdName)
         );
@@ -587,10 +597,11 @@ namespace Gs2::Experience::Domain::Model
 
     TSharedPtr<Gs2::Experience::Domain::Model::FExperienceModelMasterDomain> FNamespaceDomain::ExperienceModelMaster(
         const FString ExperienceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Experience::Domain::Model::FExperienceModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             ExperienceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ExperienceName)
         );

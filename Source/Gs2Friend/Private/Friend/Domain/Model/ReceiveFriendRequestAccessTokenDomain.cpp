@@ -53,13 +53,15 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FReceiveFriendRequestAccessTokenDomain::FReceiveFriendRequestAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> FromUserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -76,6 +78,7 @@ namespace Gs2::Friend::Domain::Model
         const FReceiveFriendRequestAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -86,7 +89,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FReceiveFriendRequestAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FReceiveFriendRequestAccessTokenDomain> Self,
+        const TSharedPtr<FReceiveFriendRequestAccessTokenDomain>& Self,
         const Request::FGetReceiveRequestRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -150,7 +153,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FReceiveFriendRequestAccessTokenDomain::FAcceptTask::FAcceptTask(
-        const TSharedPtr<FReceiveFriendRequestAccessTokenDomain> Self,
+        const TSharedPtr<FReceiveFriendRequestAccessTokenDomain>& Self,
         const Request::FAcceptRequestRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -233,6 +236,7 @@ namespace Gs2::Friend::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Self->AccessToken,
             Self->FromUserId
@@ -249,7 +253,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FReceiveFriendRequestAccessTokenDomain::FRejectTask::FRejectTask(
-        const TSharedPtr<FReceiveFriendRequestAccessTokenDomain> Self,
+        const TSharedPtr<FReceiveFriendRequestAccessTokenDomain>& Self,
         const Request::FRejectRequestRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -332,6 +336,7 @@ namespace Gs2::Friend::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Self->AccessToken,
             Self->FromUserId

@@ -42,12 +42,14 @@ namespace Gs2::Chat::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Chat::Domain::FGs2ChatDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -62,6 +64,7 @@ namespace Gs2::Chat::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -71,7 +74,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FUserAccessTokenDomain::FCreateRoomTask::FCreateRoomTask(
-        const TSharedPtr<FUserAccessTokenDomain> Self,
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
         const Request::FCreateRoomRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -125,6 +128,7 @@ namespace Gs2::Chat::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Chat::Domain::Model::FRoomAccessTokenDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Self->AccessToken,
             ResultModel->GetItem()->GetName(),
@@ -144,10 +148,11 @@ namespace Gs2::Chat::Domain::Model
     TSharedPtr<Gs2::Chat::Domain::Model::FRoomAccessTokenDomain> FUserAccessTokenDomain::Room(
         const FString RoomName,
         const TOptional<FString> Password
-    ) const
+    )
     {
         return MakeShared<Gs2::Chat::Domain::Model::FRoomAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             RoomName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RoomName),
@@ -198,10 +203,11 @@ namespace Gs2::Chat::Domain::Model
 
     TSharedPtr<Gs2::Chat::Domain::Model::FSubscribeAccessTokenDomain> FUserAccessTokenDomain::Subscribe(
         const FString RoomName
-    ) const
+    )
     {
         return MakeShared<Gs2::Chat::Domain::Model::FSubscribeAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             RoomName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RoomName)

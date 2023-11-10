@@ -34,6 +34,7 @@
 #include "Enhance/Domain/Model/CurrentRateMaster.h"
 #include "Enhance/Domain/Model/User.h"
 #include "Enhance/Domain/Model/UserAccessToken.h"
+#include "Enhance/Domain/SpeculativeExecutor/Transaction/DirectEnhanceByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -43,12 +44,14 @@ namespace Gs2::Enhance::Domain::Model
 {
 
     FEnhanceAccessTokenDomain::FEnhanceAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -64,6 +67,7 @@ namespace Gs2::Enhance::Domain::Model
         const FEnhanceAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -73,16 +77,17 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FEnhanceAccessTokenDomain::FDirectTask::FDirectTask(
-        const TSharedPtr<FEnhanceAccessTokenDomain> Self,
-        const Request::FDirectEnhanceRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FEnhanceAccessTokenDomain>& Self,
+        const Request::FDirectEnhanceRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FEnhanceAccessTokenDomain::FDirectTask::FDirectTask(
         const FDirectTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -93,6 +98,26 @@ namespace Gs2::Enhance::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FDirectEnhanceByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FDirectEnhanceByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->DirectEnhance(
             Request
         );
@@ -166,9 +191,10 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEnhanceAccessTokenDomain::FDirectTask>> FEnhanceAccessTokenDomain::Direct(
-        Request::FDirectEnhanceRequestPtr Request
+        Request::FDirectEnhanceRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FDirectTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FDirectTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FString FEnhanceAccessTokenDomain::CreateCacheParentKey(

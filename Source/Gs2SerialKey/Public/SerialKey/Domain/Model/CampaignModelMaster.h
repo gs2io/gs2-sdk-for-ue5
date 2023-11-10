@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "SerialKey/Gs2SerialKey.h"
 #include "SerialKey/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "SerialKey/Domain/Iterator/DescribeIssueJobsIterator.h"
 #include "SerialKey/Domain/Iterator/DescribeSerialKeysIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::SerialKey::Domain
+{
+    class FGs2SerialKeyDomain;
+    typedef TSharedPtr<FGs2SerialKeyDomain> FGs2SerialKeyDomainPtr;
 }
 
 namespace Gs2::SerialKey::Domain::Model
@@ -49,7 +54,8 @@ namespace Gs2::SerialKey::Domain::Model
         public TSharedFromThis<FCampaignModelMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr Service;
+        const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -61,7 +67,8 @@ namespace Gs2::SerialKey::Domain::Model
     public:
 
         FCampaignModelMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CampaignModelName
             // ReSharper disable once CppMemberInitializersOrder
@@ -79,7 +86,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FGetCampaignModelMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCampaignModelMasterDomain> Self,
+                const TSharedPtr<FCampaignModelMasterDomain>& Self,
                 const Request::FGetCampaignModelMasterRequestPtr Request
             );
 
@@ -105,7 +112,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FUpdateCampaignModelMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCampaignModelMasterDomain> Self,
+                const TSharedPtr<FCampaignModelMasterDomain>& Self,
                 const Request::FUpdateCampaignModelMasterRequestPtr Request
             );
 
@@ -131,7 +138,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FDeleteCampaignModelMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FCampaignModelMasterDomain> Self,
+                const TSharedPtr<FCampaignModelMasterDomain>& Self,
                 const Request::FDeleteCampaignModelMasterRequestPtr Request
             );
 

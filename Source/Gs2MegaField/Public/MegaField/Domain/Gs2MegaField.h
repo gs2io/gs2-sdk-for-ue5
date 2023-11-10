@@ -19,6 +19,7 @@
 #pragma once
 
 #include "Core/Domain/Gs2Core.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "MegaField/Gs2MegaField.h"
 
@@ -56,7 +57,7 @@ namespace Gs2::MegaField::Domain
         public TSharedFromThis<FGs2MegaFieldDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
+        const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
 
         public:
     private:
@@ -66,7 +67,7 @@ namespace Gs2::MegaField::Domain
     public:
 
         FGs2MegaFieldDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -82,7 +83,7 @@ namespace Gs2::MegaField::Domain
             const Request::FCreateNamespaceRequestPtr Request;
         public:
             explicit FCreateNamespaceTask(
-                const TSharedPtr<FGs2MegaFieldDomain> Self,
+                const TSharedPtr<FGs2MegaFieldDomain>& Self,
                 const Request::FCreateNamespaceRequestPtr Request
             );
 
@@ -113,7 +114,7 @@ namespace Gs2::MegaField::Domain
 
         TSharedPtr<Gs2::MegaField::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
-        ) const;
+        );
 
         void UpdateCacheFromStampSheet(
             const FString Method,
@@ -137,6 +138,9 @@ namespace Gs2::MegaField::Domain
             const FString Action,
             const FString Payload
         );
+
+        DECLARE_MULTICAST_DELEGATE_OneParam(FIssueTransactionDelegate, Gs2::Core::Domain::Model::FIssueTransactionEventPtr);
+        FIssueTransactionDelegate OnIssueTransaction;
     };
     typedef TSharedPtr<FGs2MegaFieldDomain> FGs2MegaFieldDomainPtr;
 }

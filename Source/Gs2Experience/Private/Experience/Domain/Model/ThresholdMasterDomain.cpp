@@ -41,12 +41,14 @@ namespace Gs2::Experience::Domain::Model
 {
 
     FThresholdMasterDomain::FThresholdMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Experience::Domain::FGs2ExperienceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> ThresholdName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Experience::FGs2ExperienceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ThresholdName(ThresholdName),
@@ -61,6 +63,7 @@ namespace Gs2::Experience::Domain::Model
         const FThresholdMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ThresholdName(From.ThresholdName),
@@ -70,7 +73,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FThresholdMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FThresholdMasterDomain> Self,
+        const TSharedPtr<FThresholdMasterDomain>& Self,
         const Request::FGetThresholdMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,7 +135,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FThresholdMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FThresholdMasterDomain> Self,
+        const TSharedPtr<FThresholdMasterDomain>& Self,
         const Request::FUpdateThresholdMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -196,7 +199,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FThresholdMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FThresholdMasterDomain> Self,
+        const TSharedPtr<FThresholdMasterDomain>& Self,
         const Request::FDeleteThresholdMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

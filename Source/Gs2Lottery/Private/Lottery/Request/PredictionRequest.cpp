@@ -156,7 +156,7 @@ namespace Gs2::Lottery::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -165,7 +165,7 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
             ->WithLotteryName(Data->HasField("lotteryName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("lotteryName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -174,7 +174,7 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
             ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("xGs2AccessToken", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

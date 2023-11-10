@@ -237,7 +237,7 @@ namespace Gs2::Chat::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("name", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -246,7 +246,7 @@ namespace Gs2::Chat::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -255,7 +255,7 @@ namespace Gs2::MegaField::Model
         return MakeShared<FSpatial>()
             ->WithSpatialId(Data->HasField("spatialId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("spatialId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -264,7 +264,7 @@ namespace Gs2::MegaField::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -273,7 +273,7 @@ namespace Gs2::MegaField::Model
                 }() : TOptional<FString>())
             ->WithAreaModelName(Data->HasField("areaModelName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("areaModelName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -282,7 +282,7 @@ namespace Gs2::MegaField::Model
                 }() : TOptional<FString>())
             ->WithLayerModelName(Data->HasField("layerModelName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("layerModelName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

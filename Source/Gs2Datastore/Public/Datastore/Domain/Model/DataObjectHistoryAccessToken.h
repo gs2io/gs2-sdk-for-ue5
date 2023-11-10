@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Datastore::Domain
+{
+    class FGs2DatastoreDomain;
+    typedef TSharedPtr<FGs2DatastoreDomain> FGs2DatastoreDomainPtr;
+}
+
 namespace Gs2::Datastore::Domain::Model
 {
     class FNamespaceDomain;
@@ -47,7 +53,8 @@ namespace Gs2::Datastore::Domain::Model
         public TSharedFromThis<FDataObjectHistoryAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Datastore::FGs2DatastoreRestClientPtr Client;
+        const Datastore::Domain::FGs2DatastoreDomainPtr Service;
+        const Gs2::Datastore::FGs2DatastoreRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -62,9 +69,10 @@ namespace Gs2::Datastore::Domain::Model
     public:
 
         FDataObjectHistoryAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Datastore::Domain::FGs2DatastoreDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> DataObjectName,
             const TOptional<FString> Generation
             // ReSharper disable once CppMemberInitializersOrder
@@ -82,7 +90,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FGetDataObjectHistoryRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FDataObjectHistoryAccessTokenDomain> Self,
+                const TSharedPtr<FDataObjectHistoryAccessTokenDomain>& Self,
                 const Request::FGetDataObjectHistoryRequestPtr Request
             );
 

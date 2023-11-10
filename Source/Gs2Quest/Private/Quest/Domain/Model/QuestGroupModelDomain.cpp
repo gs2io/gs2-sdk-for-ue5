@@ -44,12 +44,14 @@ namespace Gs2::Quest::Domain::Model
 {
 
     FQuestGroupModelDomain::FQuestGroupModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Quest::Domain::FGs2QuestDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> QuestGroupName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         QuestGroupName(QuestGroupName),
@@ -64,6 +66,7 @@ namespace Gs2::Quest::Domain::Model
         const FQuestGroupModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         QuestGroupName(From.QuestGroupName),
@@ -73,7 +76,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FQuestGroupModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FQuestGroupModelDomain> Self,
+        const TSharedPtr<FQuestGroupModelDomain>& Self,
         const Request::FGetQuestGroupModelRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -177,10 +180,11 @@ namespace Gs2::Quest::Domain::Model
 
     TSharedPtr<Gs2::Quest::Domain::Model::FQuestModelDomain> FQuestGroupModelDomain::QuestModel(
         const FString QuestName
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FQuestModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             QuestGroupName,
             QuestName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestName)

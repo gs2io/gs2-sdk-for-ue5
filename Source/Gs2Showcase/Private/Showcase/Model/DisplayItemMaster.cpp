@@ -129,7 +129,7 @@ namespace Gs2::Showcase::Model
         return MakeShared<FDisplayItemMaster>()
             ->WithDisplayItemId(Data->HasField("displayItemId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("displayItemId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -138,7 +138,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("type", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -147,7 +147,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithSalesItemName(Data->HasField("salesItemName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("salesItemName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -156,7 +156,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithSalesItemGroupName(Data->HasField("salesItemGroupName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("salesItemGroupName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -165,7 +165,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithSalesPeriodEventId(Data->HasField("salesPeriodEventId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("salesPeriodEventId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Enhance/Gs2Enhance.h"
 #include "Enhance/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Enhance/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Enhance/Domain/Iterator/DescribeRateModelMastersIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Enhance::Domain
+{
+    class FGs2EnhanceDomain;
+    typedef TSharedPtr<FGs2EnhanceDomain> FGs2EnhanceDomainPtr;
 }
 
 namespace Gs2::Enhance::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Enhance::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
+        const Enhance::Domain::FGs2EnhanceDomainPtr Service;
+        const Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -84,7 +90,8 @@ namespace Gs2::Enhance::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -101,7 +108,7 @@ namespace Gs2::Enhance::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -127,7 +134,7 @@ namespace Gs2::Enhance::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -153,7 +160,7 @@ namespace Gs2::Enhance::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -179,7 +186,7 @@ namespace Gs2::Enhance::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -205,7 +212,7 @@ namespace Gs2::Enhance::Domain::Model
             const Request::FCreateRateModelMasterRequestPtr Request;
         public:
             explicit FCreateRateModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateRateModelMasterRequestPtr Request
             );
 
@@ -224,7 +231,7 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         TSharedPtr<Gs2::Enhance::Domain::Model::FCurrentRateMasterDomain> CurrentRateMaster(
-        ) const;
+        );
 
         Gs2::Enhance::Domain::Iterator::FDescribeRateModelsIteratorPtr RateModels(
         ) const;
@@ -239,15 +246,15 @@ namespace Gs2::Enhance::Domain::Model
 
         TSharedPtr<Gs2::Enhance::Domain::Model::FRateModelDomain> RateModel(
             const FString RateName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Enhance::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Enhance::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::Enhance::Domain::Iterator::FDescribeRateModelMastersIteratorPtr RateModelMasters(
         ) const;
@@ -262,7 +269,7 @@ namespace Gs2::Enhance::Domain::Model
 
         TSharedPtr<Gs2::Enhance::Domain::Model::FRateModelMasterDomain> RateModelMaster(
             const FString RateName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

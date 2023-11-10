@@ -32,6 +32,9 @@
 #include "SkillTree/Domain/Model/CurrentTreeMaster.h"
 #include "SkillTree/Domain/Model/User.h"
 #include "SkillTree/Domain/Model/UserAccessToken.h"
+#include "SkillTree/Domain/SpeculativeExecutor/Transaction/ReleaseByUserIdSpeculativeExecutor.h"
+#include "SkillTree/Domain/SpeculativeExecutor/Transaction/RestrainByUserIdSpeculativeExecutor.h"
+#include "SkillTree/Domain/SpeculativeExecutor/Transaction/ResetByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -41,12 +44,14 @@ namespace Gs2::SkillTree::Domain::Model
 {
 
     FStatusAccessTokenDomain::FStatusAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SkillTree::FGs2SkillTreeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -62,6 +67,7 @@ namespace Gs2::SkillTree::Domain::Model
         const FStatusAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -71,16 +77,17 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FStatusAccessTokenDomain::FReleaseTask::FReleaseTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
-        const Request::FReleaseRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
+        const Request::FReleaseRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FStatusAccessTokenDomain::FReleaseTask::FReleaseTask(
         const FReleaseTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -91,6 +98,26 @@ namespace Gs2::SkillTree::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FReleaseByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FReleaseByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Release(
             Request
         );
@@ -163,22 +190,24 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FReleaseTask>> FStatusAccessTokenDomain::Release(
-        Request::FReleaseRequestPtr Request
+        Request::FReleaseRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FReleaseTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FReleaseTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FStatusAccessTokenDomain::FRestrainTask::FRestrainTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
-        const Request::FRestrainRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
+        const Request::FRestrainRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FStatusAccessTokenDomain::FRestrainTask::FRestrainTask(
         const FRestrainTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -189,6 +218,26 @@ namespace Gs2::SkillTree::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FRestrainByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FRestrainByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Restrain(
             Request
         );
@@ -261,13 +310,14 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FRestrainTask>> FStatusAccessTokenDomain::Restrain(
-        Request::FRestrainRequestPtr Request
+        Request::FRestrainRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FRestrainTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FRestrainTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FStatusAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FGetStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -329,16 +379,17 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FStatusAccessTokenDomain::FResetTask::FResetTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
-        const Request::FResetRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
+        const Request::FResetRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FStatusAccessTokenDomain::FResetTask::FResetTask(
         const FResetTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -349,6 +400,26 @@ namespace Gs2::SkillTree::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FResetByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FResetByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Reset(
             Request
         );
@@ -421,9 +492,10 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FResetTask>> FStatusAccessTokenDomain::Reset(
-        Request::FResetRequestPtr Request
+        Request::FResetRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FResetTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FResetTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FString FStatusAccessTokenDomain::CreateCacheParentKey(

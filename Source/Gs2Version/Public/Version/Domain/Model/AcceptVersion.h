@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Version/Gs2Version.h"
 #include "Version/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelMastersIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Version::Domain
+{
+    class FGs2VersionDomain;
+    typedef TSharedPtr<FGs2VersionDomain> FGs2VersionDomainPtr;
 }
 
 namespace Gs2::Version::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Version::Domain::Model
         public TSharedFromThis<FAcceptVersionDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Version::FGs2VersionRestClientPtr Client;
+        const Version::Domain::FGs2VersionDomainPtr Service;
+        const Gs2::Version::FGs2VersionRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -63,7 +69,8 @@ namespace Gs2::Version::Domain::Model
     public:
 
         FAcceptVersionDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Version::Domain::FGs2VersionDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> VersionName
@@ -82,7 +89,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FAcceptByUserIdRequestPtr Request;
         public:
             explicit FAcceptTask(
-                const TSharedPtr<FAcceptVersionDomain> Self,
+                const TSharedPtr<FAcceptVersionDomain>& Self,
                 const Request::FAcceptByUserIdRequestPtr Request
             );
 
@@ -108,7 +115,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FGetAcceptVersionByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FAcceptVersionDomain> Self,
+                const TSharedPtr<FAcceptVersionDomain>& Self,
                 const Request::FGetAcceptVersionByUserIdRequestPtr Request
             );
 
@@ -134,7 +141,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FDeleteAcceptVersionByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FAcceptVersionDomain> Self,
+                const TSharedPtr<FAcceptVersionDomain>& Self,
                 const Request::FDeleteAcceptVersionByUserIdRequestPtr Request
             );
 

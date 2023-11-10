@@ -34,6 +34,8 @@
 #include "LoginReward/Domain/Model/BonusAccessToken.h"
 #include "LoginReward/Domain/Model/ReceiveStatus.h"
 #include "LoginReward/Domain/Model/ReceiveStatusAccessToken.h"
+#include "LoginReward/Domain/SpeculativeExecutor/Transaction/ReceiveByUserIdSpeculativeExecutor.h"
+#include "LoginReward/Domain/SpeculativeExecutor/Transaction/MissedReceiveByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -43,12 +45,14 @@ namespace Gs2::LoginReward::Domain::Model
 {
 
     FBonusAccessTokenDomain::FBonusAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -64,6 +68,7 @@ namespace Gs2::LoginReward::Domain::Model
         const FBonusAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -73,16 +78,17 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FBonusAccessTokenDomain::FReceiveTask::FReceiveTask(
-        const TSharedPtr<FBonusAccessTokenDomain> Self,
-        const Request::FReceiveRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FBonusAccessTokenDomain>& Self,
+        const Request::FReceiveRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FBonusAccessTokenDomain::FReceiveTask::FReceiveTask(
         const FReceiveTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -93,6 +99,26 @@ namespace Gs2::LoginReward::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FReceiveByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FReceiveByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Receive(
             Request
         );
@@ -183,22 +209,24 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FBonusAccessTokenDomain::FReceiveTask>> FBonusAccessTokenDomain::Receive(
-        Request::FReceiveRequestPtr Request
+        Request::FReceiveRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FReceiveTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FReceiveTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FBonusAccessTokenDomain::FMissedReceiveTask::FMissedReceiveTask(
-        const TSharedPtr<FBonusAccessTokenDomain> Self,
-        const Request::FMissedReceiveRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FBonusAccessTokenDomain>& Self,
+        const Request::FMissedReceiveRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FBonusAccessTokenDomain::FMissedReceiveTask::FMissedReceiveTask(
         const FMissedReceiveTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -209,6 +237,26 @@ namespace Gs2::LoginReward::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FMissedReceiveByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FMissedReceiveByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->MissedReceive(
             Request
         );
@@ -299,9 +347,10 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FBonusAccessTokenDomain::FMissedReceiveTask>> FBonusAccessTokenDomain::MissedReceive(
-        Request::FMissedReceiveRequestPtr Request
+        Request::FMissedReceiveRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FMissedReceiveTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FMissedReceiveTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FString FBonusAccessTokenDomain::CreateCacheParentKey(

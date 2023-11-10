@@ -31,6 +31,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::SkillTree::Domain
+{
+    class FGs2SkillTreeDomain;
+    typedef TSharedPtr<FGs2SkillTreeDomain> FGs2SkillTreeDomainPtr;
+}
+
 namespace Gs2::SkillTree::Domain::Model
 {
     class FNamespaceDomain;
@@ -46,7 +52,8 @@ namespace Gs2::SkillTree::Domain::Model
         public TSharedFromThis<FStatusAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
+        const SkillTree::Domain::FGs2SkillTreeDomainPtr Service;
+        const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -69,9 +76,10 @@ namespace Gs2::SkillTree::Domain::Model
     public:
 
         FStatusAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -85,10 +93,12 @@ namespace Gs2::SkillTree::Domain::Model
         {
             const TSharedPtr<FStatusAccessTokenDomain> Self;
             const Request::FReleaseRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FReleaseTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
-                const Request::FReleaseRequestPtr Request
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FReleaseRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FReleaseTask(
@@ -102,7 +112,8 @@ namespace Gs2::SkillTree::Domain::Model
         friend FReleaseTask;
 
         TSharedPtr<FAsyncTask<FReleaseTask>> Release(
-            Request::FReleaseRequestPtr Request
+            Request::FReleaseRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         class GS2SKILLTREE_API FRestrainTask final :
@@ -111,10 +122,12 @@ namespace Gs2::SkillTree::Domain::Model
         {
             const TSharedPtr<FStatusAccessTokenDomain> Self;
             const Request::FRestrainRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FRestrainTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
-                const Request::FRestrainRequestPtr Request
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FRestrainRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FRestrainTask(
@@ -128,7 +141,8 @@ namespace Gs2::SkillTree::Domain::Model
         friend FRestrainTask;
 
         TSharedPtr<FAsyncTask<FRestrainTask>> Restrain(
-            Request::FRestrainRequestPtr Request
+            Request::FRestrainRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         class GS2SKILLTREE_API FGetTask final :
@@ -139,7 +153,7 @@ namespace Gs2::SkillTree::Domain::Model
             const Request::FGetStatusRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FGetStatusRequestPtr Request
             );
 
@@ -163,10 +177,12 @@ namespace Gs2::SkillTree::Domain::Model
         {
             const TSharedPtr<FStatusAccessTokenDomain> Self;
             const Request::FResetRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FResetTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
-                const Request::FResetRequestPtr Request
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FResetRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FResetTask(
@@ -180,7 +196,8 @@ namespace Gs2::SkillTree::Domain::Model
         friend FResetTask;
 
         TSharedPtr<FAsyncTask<FResetTask>> Reset(
-            Request::FResetRequestPtr Request
+            Request::FResetRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         static FString CreateCacheParentKey(

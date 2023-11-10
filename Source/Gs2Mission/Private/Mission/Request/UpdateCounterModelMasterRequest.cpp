@@ -144,7 +144,7 @@ namespace Gs2::Mission::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -153,7 +153,7 @@ namespace Gs2::Mission::Request
               }() : TOptional<FString>())
             ->WithCounterName(Data->HasField("counterName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("counterName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -162,7 +162,7 @@ namespace Gs2::Mission::Request
               }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("metadata", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -171,7 +171,7 @@ namespace Gs2::Mission::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -192,7 +192,7 @@ namespace Gs2::Mission::Request
              }() : nullptr)
             ->WithChallengePeriodEventId(Data->HasField("challengePeriodEventId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("challengePeriodEventId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

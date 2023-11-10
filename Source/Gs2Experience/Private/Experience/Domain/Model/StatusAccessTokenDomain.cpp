@@ -33,6 +33,7 @@
 #include "Experience/Domain/Model/UserAccessToken.h"
 #include "Experience/Domain/Model/Status.h"
 #include "Experience/Domain/Model/StatusAccessToken.h"
+#include "Experience/Domain/SpeculativeExecutor/Transaction/MultiplyAcquireActionsByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -42,14 +43,16 @@ namespace Gs2::Experience::Domain::Model
 {
 
     FStatusAccessTokenDomain::FStatusAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Experience::Domain::FGs2ExperienceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> ExperienceName,
         const TOptional<FString> PropertyId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Experience::FGs2ExperienceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -67,6 +70,7 @@ namespace Gs2::Experience::Domain::Model
         const FStatusAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -78,7 +82,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FGetStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -144,7 +148,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusAccessTokenDomain::FGetWithSignatureTask::FGetWithSignatureTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FGetStatusWithSignatureRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -217,7 +221,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusAccessTokenDomain::FVerifyRankTask::FVerifyRankTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FVerifyRankRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -265,7 +269,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusAccessTokenDomain::FVerifyRankCapTask::FVerifyRankCapTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FVerifyRankCapRequestPtr Request
     ): Self(Self), Request(Request)
     {

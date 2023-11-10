@@ -33,7 +33,7 @@ namespace Gs2::Script::Domain
 {
 
     FGs2ScriptDomain::FGs2ScriptDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -53,7 +53,7 @@ namespace Gs2::Script::Domain
     }
 
     FGs2ScriptDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2ScriptDomain> Self,
+        const TSharedPtr<FGs2ScriptDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -99,6 +99,7 @@ namespace Gs2::Script::Domain
         }
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -144,10 +145,11 @@ namespace Gs2::Script::Domain
 
     TSharedPtr<Gs2::Script::Domain::Model::FNamespaceDomain> FGs2ScriptDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Script::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

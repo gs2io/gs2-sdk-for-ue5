@@ -46,13 +46,15 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FCounterDomain::FCounterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> CounterName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -69,6 +71,7 @@ namespace Gs2::Mission::Domain::Model
         const FCounterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -79,7 +82,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCounterDomain::FIncreaseTask::FIncreaseTask(
-        const TSharedPtr<FCounterDomain> Self,
+        const TSharedPtr<FCounterDomain>& Self,
         const Request::FIncreaseCounterByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -149,7 +152,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCounterDomain::FDecreaseTask::FDecreaseTask(
-        const TSharedPtr<FCounterDomain> Self,
+        const TSharedPtr<FCounterDomain>& Self,
         const Request::FDecreaseCounterByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -215,7 +218,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCounterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCounterDomain> Self,
+        const TSharedPtr<FCounterDomain>& Self,
         const Request::FGetCounterByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -279,7 +282,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCounterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FCounterDomain> Self,
+        const TSharedPtr<FCounterDomain>& Self,
         const Request::FDeleteCounterByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

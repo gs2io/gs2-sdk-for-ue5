@@ -181,7 +181,7 @@ namespace Gs2::Datastore::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -190,7 +190,7 @@ namespace Gs2::Datastore::Request
               }() : TOptional<FString>())
             ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("xGs2AccessToken", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -199,7 +199,7 @@ namespace Gs2::Datastore::Request
               }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("name", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -208,7 +208,7 @@ namespace Gs2::Datastore::Request
               }() : TOptional<FString>())
             ->WithContentType(Data->HasField("contentType") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("contentType", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -217,7 +217,7 @@ namespace Gs2::Datastore::Request
               }() : TOptional<FString>())
             ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("scope", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

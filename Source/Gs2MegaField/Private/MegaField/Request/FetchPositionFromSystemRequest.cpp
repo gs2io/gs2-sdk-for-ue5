@@ -127,7 +127,7 @@ namespace Gs2::MegaField::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -136,7 +136,7 @@ namespace Gs2::MegaField::Request
               }() : TOptional<FString>())
             ->WithAreaModelName(Data->HasField("areaModelName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("areaModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -145,7 +145,7 @@ namespace Gs2::MegaField::Request
               }() : TOptional<FString>())
             ->WithLayerModelName(Data->HasField("layerModelName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("layerModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

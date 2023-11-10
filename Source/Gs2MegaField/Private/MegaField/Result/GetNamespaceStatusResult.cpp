@@ -51,7 +51,7 @@ namespace Gs2::MegaField::Result
         return MakeShared<FGetNamespaceStatusResult>()
             ->WithStatus(Data->HasField("status") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("status", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

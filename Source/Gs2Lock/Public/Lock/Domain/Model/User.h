@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Lock/Gs2Lock.h"
 #include "Lock/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Lock/Domain/Iterator/DescribeMutexesIterator.h"
 #include "Lock/Domain/Iterator/DescribeMutexesByUserIdIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Lock::Domain
+{
+    class FGs2LockDomain;
+    typedef TSharedPtr<FGs2LockDomain> FGs2LockDomainPtr;
 }
 
 namespace Gs2::Lock::Domain::Model
@@ -43,7 +48,8 @@ namespace Gs2::Lock::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lock::FGs2LockRestClientPtr Client;
+        const Lock::Domain::FGs2LockDomainPtr Service;
+        const Gs2::Lock::FGs2LockRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -60,7 +66,8 @@ namespace Gs2::Lock::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lock::Domain::FGs2LockDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -83,7 +90,7 @@ namespace Gs2::Lock::Domain::Model
 
         TSharedPtr<Gs2::Lock::Domain::Model::FMutexDomain> Mutex(
             const FString PropertyId
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

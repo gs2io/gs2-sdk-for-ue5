@@ -41,7 +41,7 @@ namespace Gs2::Enchant::Domain
 {
 
     FGs2EnchantDomain::FGs2EnchantDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -61,7 +61,7 @@ namespace Gs2::Enchant::Domain
     }
 
     FGs2EnchantDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2EnchantDomain> Self,
+        const TSharedPtr<FGs2EnchantDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -107,6 +107,7 @@ namespace Gs2::Enchant::Domain
         }
         auto Domain = MakeShared<Gs2::Enchant::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -120,7 +121,7 @@ namespace Gs2::Enchant::Domain
     }
 
     FGs2EnchantDomain::FDumpUserDataTask::FDumpUserDataTask(
-        TSharedPtr<FGs2EnchantDomain> Self,
+        const TSharedPtr<FGs2EnchantDomain>& Self,
         const Request::FDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -163,7 +164,7 @@ namespace Gs2::Enchant::Domain
     }
 
     FGs2EnchantDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
-        TSharedPtr<FGs2EnchantDomain> Self,
+        const TSharedPtr<FGs2EnchantDomain>& Self,
         const Request::FCheckDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -213,7 +214,7 @@ namespace Gs2::Enchant::Domain
     }
 
     FGs2EnchantDomain::FCleanUserDataTask::FCleanUserDataTask(
-        TSharedPtr<FGs2EnchantDomain> Self,
+        const TSharedPtr<FGs2EnchantDomain>& Self,
         const Request::FCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -256,7 +257,7 @@ namespace Gs2::Enchant::Domain
     }
 
     FGs2EnchantDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
-        TSharedPtr<FGs2EnchantDomain> Self,
+        const TSharedPtr<FGs2EnchantDomain>& Self,
         const Request::FCheckCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -299,7 +300,7 @@ namespace Gs2::Enchant::Domain
     }
 
     FGs2EnchantDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
-        TSharedPtr<FGs2EnchantDomain> Self,
+        const TSharedPtr<FGs2EnchantDomain>& Self,
         const Request::FPrepareImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -353,7 +354,7 @@ namespace Gs2::Enchant::Domain
     }
 
     FGs2EnchantDomain::FImportUserDataTask::FImportUserDataTask(
-        TSharedPtr<FGs2EnchantDomain> Self,
+        const TSharedPtr<FGs2EnchantDomain>& Self,
         const Request::FImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -396,7 +397,7 @@ namespace Gs2::Enchant::Domain
     }
 
     FGs2EnchantDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
-        TSharedPtr<FGs2EnchantDomain> Self,
+        const TSharedPtr<FGs2EnchantDomain>& Self,
         const Request::FCheckImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -478,10 +479,11 @@ namespace Gs2::Enchant::Domain
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FNamespaceDomain> FGs2EnchantDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

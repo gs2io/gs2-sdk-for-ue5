@@ -42,12 +42,14 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FAreaModelDomain::FAreaModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> AreaModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AreaModelName(AreaModelName),
@@ -62,6 +64,7 @@ namespace Gs2::MegaField::Domain::Model
         const FAreaModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AreaModelName(From.AreaModelName),
@@ -71,7 +74,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FAreaModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FAreaModelDomain> Self,
+        const TSharedPtr<FAreaModelDomain>& Self,
         const Request::FGetAreaModelRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -175,10 +178,11 @@ namespace Gs2::MegaField::Domain::Model
 
     TSharedPtr<Gs2::MegaField::Domain::Model::FLayerModelDomain> FAreaModelDomain::LayerModel(
         const FString LayerModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::MegaField::Domain::Model::FLayerModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AreaModelName,
             LayerModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LayerModelName)

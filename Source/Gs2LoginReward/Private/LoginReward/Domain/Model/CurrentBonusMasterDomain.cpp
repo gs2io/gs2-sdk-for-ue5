@@ -42,11 +42,13 @@ namespace Gs2::LoginReward::Domain::Model
 {
 
     FCurrentBonusMasterDomain::FCurrentBonusMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -60,6 +62,7 @@ namespace Gs2::LoginReward::Domain::Model
         const FCurrentBonusMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -68,7 +71,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FCurrentBonusMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentBonusMasterDomain> Self,
+        const TSharedPtr<FCurrentBonusMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -130,7 +133,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FCurrentBonusMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentBonusMasterDomain> Self,
+        const TSharedPtr<FCurrentBonusMasterDomain>& Self,
         const Request::FGetCurrentBonusMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -190,7 +193,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FCurrentBonusMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentBonusMasterDomain> Self,
+        const TSharedPtr<FCurrentBonusMasterDomain>& Self,
         const Request::FUpdateCurrentBonusMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -252,7 +255,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FCurrentBonusMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentBonusMasterDomain> Self,
+        const TSharedPtr<FCurrentBonusMasterDomain>& Self,
         const Request::FUpdateCurrentBonusMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

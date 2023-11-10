@@ -37,6 +37,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Enchant::Domain
+{
+    class FGs2EnchantDomain;
+    typedef TSharedPtr<FGs2EnchantDomain> FGs2EnchantDomainPtr;
+}
+
 namespace Gs2::Enchant::Domain::Model
 {
     class FNamespaceDomain;
@@ -56,7 +62,8 @@ namespace Gs2::Enchant::Domain::Model
         public TSharedFromThis<FRarityParameterStatusAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Enchant::FGs2EnchantRestClientPtr Client;
+        const Enchant::Domain::FGs2EnchantDomainPtr Service;
+        const Gs2::Enchant::FGs2EnchantRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -71,9 +78,10 @@ namespace Gs2::Enchant::Domain::Model
     public:
 
         FRarityParameterStatusAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Enchant::Domain::FGs2EnchantDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> ParameterName,
             const TOptional<FString> PropertyId
             // ReSharper disable once CppMemberInitializersOrder
@@ -91,7 +99,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FGetRarityParameterStatusRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FRarityParameterStatusAccessTokenDomain> Self,
+                const TSharedPtr<FRarityParameterStatusAccessTokenDomain>& Self,
                 const Request::FGetRarityParameterStatusRequestPtr Request
             );
 
@@ -117,7 +125,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FVerifyRarityParameterStatusRequestPtr Request;
         public:
             explicit FVerifyTask(
-                const TSharedPtr<FRarityParameterStatusAccessTokenDomain> Self,
+                const TSharedPtr<FRarityParameterStatusAccessTokenDomain>& Self,
                 const Request::FVerifyRarityParameterStatusRequestPtr Request
             );
 

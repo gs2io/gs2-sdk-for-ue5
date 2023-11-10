@@ -39,6 +39,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Mission::Domain
+{
+    class FGs2MissionDomain;
+    typedef TSharedPtr<FGs2MissionDomain> FGs2MissionDomainPtr;
+}
+
 namespace Gs2::Mission::Domain::Model
 {
     class FCompleteDomain;
@@ -60,7 +66,8 @@ namespace Gs2::Mission::Domain::Model
         public TSharedFromThis<FCompleteAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Mission::FGs2MissionRestClientPtr Client;
+        const Mission::Domain::FGs2MissionDomainPtr Service;
+        const Gs2::Mission::FGs2MissionRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -84,9 +91,10 @@ namespace Gs2::Mission::Domain::Model
     public:
 
         FCompleteAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Mission::Domain::FGs2MissionDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> MissionGroupName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -101,10 +109,12 @@ namespace Gs2::Mission::Domain::Model
         {
             const TSharedPtr<FCompleteAccessTokenDomain> Self;
             const Request::FCompleteRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FCompleteTask(
-                const TSharedPtr<FCompleteAccessTokenDomain> Self,
-                const Request::FCompleteRequestPtr Request
+                const TSharedPtr<FCompleteAccessTokenDomain>& Self,
+                const Request::FCompleteRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FCompleteTask(
@@ -118,7 +128,8 @@ namespace Gs2::Mission::Domain::Model
         friend FCompleteTask;
 
         TSharedPtr<FAsyncTask<FCompleteTask>> Complete(
-            Request::FCompleteRequestPtr Request
+            Request::FCompleteRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         class GS2MISSION_API FGetTask final :
@@ -129,7 +140,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FGetCompleteRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCompleteAccessTokenDomain> Self,
+                const TSharedPtr<FCompleteAccessTokenDomain>& Self,
                 const Request::FGetCompleteRequestPtr Request
             );
 

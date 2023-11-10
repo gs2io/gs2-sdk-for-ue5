@@ -40,7 +40,8 @@ namespace Gs2::Limit::Domain::Model
 {
 
     FCounterDomain::FCounterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Limit::Domain::FGs2LimitDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> LimitName,
@@ -48,6 +49,7 @@ namespace Gs2::Limit::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Limit::FGs2LimitRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -65,6 +67,7 @@ namespace Gs2::Limit::Domain::Model
         const FCounterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -76,7 +79,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCounterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCounterDomain> Self,
+        const TSharedPtr<FCounterDomain>& Self,
         const Request::FGetCounterByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -142,7 +145,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCounterDomain::FCountUpTask::FCountUpTask(
-        const TSharedPtr<FCounterDomain> Self,
+        const TSharedPtr<FCounterDomain>& Self,
         const Request::FCountUpByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -210,7 +213,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCounterDomain::FCountDownTask::FCountDownTask(
-        const TSharedPtr<FCounterDomain> Self,
+        const TSharedPtr<FCounterDomain>& Self,
         const Request::FCountDownByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -278,7 +281,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCounterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FCounterDomain> Self,
+        const TSharedPtr<FCounterDomain>& Self,
         const Request::FDeleteCounterByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -340,7 +343,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCounterDomain::FVerifyTask::FVerifyTask(
-        const TSharedPtr<FCounterDomain> Self,
+        const TSharedPtr<FCounterDomain>& Self,
         const Request::FVerifyCounterByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

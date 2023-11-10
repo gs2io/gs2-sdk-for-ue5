@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Identifier/Gs2Identifier.h"
 #include "Identifier/Domain/Iterator/DescribeUsersIterator.h"
 #include "Identifier/Domain/Iterator/DescribeSecurityPoliciesIterator.h"
 #include "Identifier/Domain/Iterator/DescribeCommonSecurityPoliciesIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Identifier::Domain
+{
+    class FGs2IdentifierDomain;
+    typedef TSharedPtr<FGs2IdentifierDomain> FGs2IdentifierDomainPtr;
 }
 
 namespace Gs2::Identifier::Domain::Model
@@ -45,7 +50,8 @@ namespace Gs2::Identifier::Domain::Model
         public TSharedFromThis<FAttachSecurityPolicyDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Identifier::FGs2IdentifierRestClientPtr Client;
+        const Identifier::Domain::FGs2IdentifierDomainPtr Service;
+        const Gs2::Identifier::FGs2IdentifierRestClientPtr Client;
 
         public:
         TOptional<FString> UserName;
@@ -56,7 +62,8 @@ namespace Gs2::Identifier::Domain::Model
     public:
 
         FAttachSecurityPolicyDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Identifier::Domain::FGs2IdentifierDomainPtr& Service,
             const TOptional<FString> UserName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -73,7 +80,7 @@ namespace Gs2::Identifier::Domain::Model
             const Request::FGetHasSecurityPolicyRequestPtr Request;
         public:
             explicit FGetHasSecurityPolicyTask(
-                const TSharedPtr<FAttachSecurityPolicyDomain> Self,
+                const TSharedPtr<FAttachSecurityPolicyDomain>& Self,
                 const Request::FGetHasSecurityPolicyRequestPtr Request
             );
 
@@ -99,7 +106,7 @@ namespace Gs2::Identifier::Domain::Model
             const Request::FAttachSecurityPolicyRequestPtr Request;
         public:
             explicit FAttachSecurityPolicyTask(
-                const TSharedPtr<FAttachSecurityPolicyDomain> Self,
+                const TSharedPtr<FAttachSecurityPolicyDomain>& Self,
                 const Request::FAttachSecurityPolicyRequestPtr Request
             );
 
@@ -125,7 +132,7 @@ namespace Gs2::Identifier::Domain::Model
             const Request::FDetachSecurityPolicyRequestPtr Request;
         public:
             explicit FDetachSecurityPolicyTask(
-                const TSharedPtr<FAttachSecurityPolicyDomain> Self,
+                const TSharedPtr<FAttachSecurityPolicyDomain>& Self,
                 const Request::FDetachSecurityPolicyRequestPtr Request
             );
 

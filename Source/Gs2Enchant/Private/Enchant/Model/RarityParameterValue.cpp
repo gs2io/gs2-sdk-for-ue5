@@ -87,7 +87,7 @@ namespace Gs2::Enchant::Model
         return MakeShared<FRarityParameterValue>()
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -96,7 +96,7 @@ namespace Gs2::Enchant::Model
                 }() : TOptional<FString>())
             ->WithResourceName(Data->HasField("resourceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resourceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

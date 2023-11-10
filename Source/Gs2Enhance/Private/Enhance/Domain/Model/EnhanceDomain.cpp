@@ -42,12 +42,14 @@ namespace Gs2::Enhance::Domain::Model
 {
 
     FEnhanceDomain::FEnhanceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -63,6 +65,7 @@ namespace Gs2::Enhance::Domain::Model
         const FEnhanceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FEnhanceDomain::FDirectTask::FDirectTask(
-        const TSharedPtr<FEnhanceDomain> Self,
+        const TSharedPtr<FEnhanceDomain>& Self,
         const Request::FDirectEnhanceByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -43,10 +43,12 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FRecoverIntervalTableDomain::FRecoverIntervalTableDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Stamina::Domain::FGs2StaminaDomainPtr& Service
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         ParentKey("stamina:RecoverIntervalTable")
     {
@@ -56,6 +58,7 @@ namespace Gs2::Stamina::Domain::Model
         const FRecoverIntervalTableDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {

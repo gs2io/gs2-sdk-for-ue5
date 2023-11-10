@@ -20,13 +20,18 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "AdReward/Gs2AdReward.h"
 #include "AdReward/Domain/Iterator/DescribeNamespacesIterator.h"
 
 namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::AdReward::Domain
+{
+    class FGs2AdRewardDomain;
+    typedef TSharedPtr<FGs2AdRewardDomain> FGs2AdRewardDomainPtr;
 }
 
 namespace Gs2::AdReward::Domain::Model
@@ -41,7 +46,8 @@ namespace Gs2::AdReward::Domain::Model
         public TSharedFromThis<FHistoryDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::AdReward::FGs2AdRewardRestClientPtr Client;
+        const AdReward::Domain::FGs2AdRewardDomainPtr Service;
+        const Gs2::AdReward::FGs2AdRewardRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -54,7 +60,8 @@ namespace Gs2::AdReward::Domain::Model
     public:
 
         FHistoryDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const AdReward::Domain::FGs2AdRewardDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> TransactionId

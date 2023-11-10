@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Inventory/Gs2Inventory.h"
 #include "Inventory/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelMastersIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelsIterator.h"
@@ -49,6 +48,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
 }
 
 namespace Gs2::Inventory::Domain::Model
@@ -89,7 +94,8 @@ namespace Gs2::Inventory::Domain::Model
         public TSharedFromThis<FSimpleInventoryDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inventory::FGs2InventoryRestClientPtr Client;
+        const Inventory::Domain::FGs2InventoryDomainPtr Service;
+        const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -107,7 +113,8 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FSimpleInventoryDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inventory::Domain::FGs2InventoryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> InventoryName
@@ -126,7 +133,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FAcquireSimpleItemsByUserIdRequestPtr Request;
         public:
             explicit FAcquireSimpleItemsTask(
-                const TSharedPtr<FSimpleInventoryDomain> Self,
+                const TSharedPtr<FSimpleInventoryDomain>& Self,
                 const Request::FAcquireSimpleItemsByUserIdRequestPtr Request
             );
 
@@ -152,7 +159,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FConsumeSimpleItemsByUserIdRequestPtr Request;
         public:
             explicit FConsumeSimpleItemsTask(
-                const TSharedPtr<FSimpleInventoryDomain> Self,
+                const TSharedPtr<FSimpleInventoryDomain>& Self,
                 const Request::FConsumeSimpleItemsByUserIdRequestPtr Request
             );
 
@@ -178,7 +185,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FDeleteSimpleItemsByUserIdRequestPtr Request;
         public:
             explicit FDeleteSimpleItemsTask(
-                const TSharedPtr<FSimpleInventoryDomain> Self,
+                const TSharedPtr<FSimpleInventoryDomain>& Self,
                 const Request::FDeleteSimpleItemsByUserIdRequestPtr Request
             );
 
@@ -209,7 +216,7 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain> SimpleItem(
             const FString ItemName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

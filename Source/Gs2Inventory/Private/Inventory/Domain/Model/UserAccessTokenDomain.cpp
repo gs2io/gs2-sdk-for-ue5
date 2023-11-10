@@ -64,12 +64,14 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -84,6 +86,7 @@ namespace Gs2::Inventory::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -135,10 +138,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomain> FUserAccessTokenDomain::Inventory(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FInventoryAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
@@ -147,10 +151,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryAccessTokenDomain> FUserAccessTokenDomain::SimpleInventory(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FSimpleInventoryAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
@@ -159,10 +164,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryAccessTokenDomain> FUserAccessTokenDomain::BigInventory(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)

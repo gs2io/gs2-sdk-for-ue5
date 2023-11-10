@@ -40,12 +40,14 @@ namespace Gs2::Limit::Domain::Model
 {
 
     FLimitModelDomain::FLimitModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Limit::Domain::FGs2LimitDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> LimitName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Limit::FGs2LimitRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         LimitName(LimitName),
@@ -60,6 +62,7 @@ namespace Gs2::Limit::Domain::Model
         const FLimitModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         LimitName(From.LimitName),
@@ -69,7 +72,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FLimitModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FLimitModelDomain> Self,
+        const TSharedPtr<FLimitModelDomain>& Self,
         const Request::FGetLimitModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

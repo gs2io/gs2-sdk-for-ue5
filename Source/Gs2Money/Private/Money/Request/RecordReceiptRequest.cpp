@@ -123,7 +123,7 @@ namespace Gs2::Money::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -132,7 +132,7 @@ namespace Gs2::Money::Request
               }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("userId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -141,7 +141,7 @@ namespace Gs2::Money::Request
               }() : TOptional<FString>())
             ->WithContentsId(Data->HasField("contentsId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("contentsId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -150,7 +150,7 @@ namespace Gs2::Money::Request
               }() : TOptional<FString>())
             ->WithReceipt(Data->HasField("receipt") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("receipt", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

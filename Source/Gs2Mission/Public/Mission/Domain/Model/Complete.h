@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Mission/Gs2Mission.h"
 #include "Mission/Domain/Iterator/DescribeCompletesIterator.h"
 #include "Mission/Domain/Iterator/DescribeCompletesByUserIdIterator.h"
 #include "Mission/Domain/Iterator/DescribeCounterModelMastersIterator.h"
@@ -37,6 +36,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Mission::Domain
+{
+    class FGs2MissionDomain;
+    typedef TSharedPtr<FGs2MissionDomain> FGs2MissionDomainPtr;
 }
 
 namespace Gs2::Mission::Domain::Model
@@ -60,7 +65,8 @@ namespace Gs2::Mission::Domain::Model
         public TSharedFromThis<FCompleteDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Mission::FGs2MissionRestClientPtr Client;
+        const Mission::Domain::FGs2MissionDomainPtr Service;
+        const Gs2::Mission::FGs2MissionRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -83,7 +89,8 @@ namespace Gs2::Mission::Domain::Model
     public:
 
         FCompleteDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Mission::Domain::FGs2MissionDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> MissionGroupName
@@ -102,7 +109,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FCompleteByUserIdRequestPtr Request;
         public:
             explicit FCompleteTask(
-                const TSharedPtr<FCompleteDomain> Self,
+                const TSharedPtr<FCompleteDomain>& Self,
                 const Request::FCompleteByUserIdRequestPtr Request
             );
 
@@ -128,7 +135,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FReceiveByUserIdRequestPtr Request;
         public:
             explicit FReceiveTask(
-                const TSharedPtr<FCompleteDomain> Self,
+                const TSharedPtr<FCompleteDomain>& Self,
                 const Request::FReceiveByUserIdRequestPtr Request
             );
 
@@ -154,7 +161,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FRevertReceiveByUserIdRequestPtr Request;
         public:
             explicit FRevertReceiveTask(
-                const TSharedPtr<FCompleteDomain> Self,
+                const TSharedPtr<FCompleteDomain>& Self,
                 const Request::FRevertReceiveByUserIdRequestPtr Request
             );
 
@@ -180,7 +187,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FGetCompleteByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCompleteDomain> Self,
+                const TSharedPtr<FCompleteDomain>& Self,
                 const Request::FGetCompleteByUserIdRequestPtr Request
             );
 
@@ -206,7 +213,7 @@ namespace Gs2::Mission::Domain::Model
             const Request::FDeleteCompleteByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FCompleteDomain> Self,
+                const TSharedPtr<FCompleteDomain>& Self,
                 const Request::FDeleteCompleteByUserIdRequestPtr Request
             );
 

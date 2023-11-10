@@ -21,5 +21,9 @@ public class Gs2Lottery : ModuleRules
 			"Gs2Distributor",
 			"Gs2JobQueue"
 		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"Gs2Core"
+		});
 	}
 }

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Schedule/Gs2Schedule.h"
 #include "Schedule/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Schedule/Domain/Iterator/DescribeEventMastersIterator.h"
 #include "Schedule/Domain/Iterator/DescribeTriggersIterator.h"
@@ -32,6 +31,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Schedule::Domain
+{
+    class FGs2ScheduleDomain;
+    typedef TSharedPtr<FGs2ScheduleDomain> FGs2ScheduleDomainPtr;
 }
 
 namespace Gs2::Schedule::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Schedule::Domain::Model
         public TSharedFromThis<FEventMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
+        const Schedule::Domain::FGs2ScheduleDomainPtr Service;
+        const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -62,7 +68,8 @@ namespace Gs2::Schedule::Domain::Model
     public:
 
         FEventMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> EventName
             // ReSharper disable once CppMemberInitializersOrder
@@ -80,7 +87,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FGetEventMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FEventMasterDomain> Self,
+                const TSharedPtr<FEventMasterDomain>& Self,
                 const Request::FGetEventMasterRequestPtr Request
             );
 
@@ -106,7 +113,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FUpdateEventMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FEventMasterDomain> Self,
+                const TSharedPtr<FEventMasterDomain>& Self,
                 const Request::FUpdateEventMasterRequestPtr Request
             );
 
@@ -132,7 +139,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FDeleteEventMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FEventMasterDomain> Self,
+                const TSharedPtr<FEventMasterDomain>& Self,
                 const Request::FDeleteEventMasterRequestPtr Request
             );
 

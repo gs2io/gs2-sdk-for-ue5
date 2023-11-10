@@ -49,7 +49,7 @@ namespace Gs2::Realtime::Model
         return MakeShared<FCreateNotification>()
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -58,7 +58,7 @@ namespace Gs2::Realtime::Model
                 }() : TOptional<FString>())
             ->WithRoomName(Data->HasField("roomName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("roomName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -21,5 +21,9 @@ public class Gs2Showcase : ModuleRules
 			"Gs2JobQueue",
 			"Gs2Distributor",
 		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"Gs2Core"
+		});
 	}
 }

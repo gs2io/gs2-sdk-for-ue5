@@ -34,6 +34,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Experience::Domain
+{
+    class FGs2ExperienceDomain;
+    typedef TSharedPtr<FGs2ExperienceDomain> FGs2ExperienceDomainPtr;
+}
+
 namespace Gs2::Experience::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::Experience::Domain::Model
         public TSharedFromThis<FStatusAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Experience::FGs2ExperienceRestClientPtr Client;
+        const Experience::Domain::FGs2ExperienceDomainPtr Service;
+        const Gs2::Experience::FGs2ExperienceRestClientPtr Client;
 
         public:
         TOptional<FString> Body;
@@ -85,9 +92,10 @@ namespace Gs2::Experience::Domain::Model
     public:
 
         FStatusAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Experience::Domain::FGs2ExperienceDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> ExperienceName,
             const TOptional<FString> PropertyId
             // ReSharper disable once CppMemberInitializersOrder
@@ -105,7 +113,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FGetStatusRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FGetStatusRequestPtr Request
             );
 
@@ -131,7 +139,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FGetStatusWithSignatureRequestPtr Request;
         public:
             explicit FGetWithSignatureTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FGetStatusWithSignatureRequestPtr Request
             );
 
@@ -157,7 +165,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FVerifyRankRequestPtr Request;
         public:
             explicit FVerifyRankTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FVerifyRankRequestPtr Request
             );
 
@@ -183,7 +191,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FVerifyRankCapRequestPtr Request;
         public:
             explicit FVerifyRankCapTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FVerifyRankCapRequestPtr Request
             );
 

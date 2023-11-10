@@ -242,7 +242,7 @@ namespace Gs2::Realtime::Model
         return MakeShared<FRoom>()
             ->WithRoomId(Data->HasField("roomId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("roomId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -251,7 +251,7 @@ namespace Gs2::Realtime::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -260,7 +260,7 @@ namespace Gs2::Realtime::Model
                 }() : TOptional<FString>())
             ->WithIpAddress(Data->HasField("ipAddress") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("ipAddress", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -278,7 +278,7 @@ namespace Gs2::Realtime::Model
                 }() : TOptional<int32>())
             ->WithEncryptionKey(Data->HasField("encryptionKey") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("encryptionKey", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

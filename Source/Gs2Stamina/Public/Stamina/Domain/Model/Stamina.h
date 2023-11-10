@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Stamina/Gs2Stamina.h"
 #include "Stamina/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Stamina/Domain/Iterator/DescribeStaminaModelMastersIterator.h"
 #include "Stamina/Domain/Iterator/DescribeMaxStaminaTableMastersIterator.h"
@@ -34,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Stamina::Domain
+{
+    class FGs2StaminaDomain;
+    typedef TSharedPtr<FGs2StaminaDomain> FGs2StaminaDomainPtr;
 }
 
 namespace Gs2::Stamina::Domain::Model
@@ -54,7 +59,8 @@ namespace Gs2::Stamina::Domain::Model
         public TSharedFromThis<FStaminaDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Stamina::FGs2StaminaRestClientPtr Client;
+        const Stamina::Domain::FGs2StaminaDomainPtr Service;
+        const Gs2::Stamina::FGs2StaminaRestClientPtr Client;
 
         public:
         TOptional<int32> OverflowValue;
@@ -72,7 +78,8 @@ namespace Gs2::Stamina::Domain::Model
     public:
 
         FStaminaDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Stamina::Domain::FGs2StaminaDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> StaminaName
@@ -91,7 +98,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FGetStaminaByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FGetStaminaByUserIdRequestPtr Request
             );
 
@@ -117,7 +124,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FUpdateStaminaByUserIdRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FUpdateStaminaByUserIdRequestPtr Request
             );
 
@@ -143,7 +150,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FConsumeStaminaByUserIdRequestPtr Request;
         public:
             explicit FConsumeTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FConsumeStaminaByUserIdRequestPtr Request
             );
 
@@ -169,7 +176,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FRecoverStaminaByUserIdRequestPtr Request;
         public:
             explicit FRecoverTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FRecoverStaminaByUserIdRequestPtr Request
             );
 
@@ -195,7 +202,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FRaiseMaxValueByUserIdRequestPtr Request;
         public:
             explicit FRaiseMaxValueTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FRaiseMaxValueByUserIdRequestPtr Request
             );
 
@@ -221,7 +228,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FDecreaseMaxValueByUserIdRequestPtr Request;
         public:
             explicit FDecreaseMaxValueTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FDecreaseMaxValueByUserIdRequestPtr Request
             );
 
@@ -247,7 +254,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FSetMaxValueByUserIdRequestPtr Request;
         public:
             explicit FSetMaxValueTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FSetMaxValueByUserIdRequestPtr Request
             );
 
@@ -273,7 +280,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FSetRecoverIntervalByUserIdRequestPtr Request;
         public:
             explicit FSetRecoverIntervalTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FSetRecoverIntervalByUserIdRequestPtr Request
             );
 
@@ -299,7 +306,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FSetRecoverValueByUserIdRequestPtr Request;
         public:
             explicit FSetRecoverValueTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FSetRecoverValueByUserIdRequestPtr Request
             );
 
@@ -325,7 +332,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FDeleteStaminaByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FStaminaDomain> Self,
+                const TSharedPtr<FStaminaDomain>& Self,
                 const Request::FDeleteStaminaByUserIdRequestPtr Request
             );
 

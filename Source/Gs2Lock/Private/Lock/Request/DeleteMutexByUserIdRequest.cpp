@@ -108,7 +108,7 @@ namespace Gs2::Lock::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -117,7 +117,7 @@ namespace Gs2::Lock::Request
               }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("userId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -126,7 +126,7 @@ namespace Gs2::Lock::Request
               }() : TOptional<FString>())
             ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("propertyId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

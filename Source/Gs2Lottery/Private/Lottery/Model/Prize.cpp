@@ -152,7 +152,7 @@ namespace Gs2::Lottery::Model
         return MakeShared<FPrize>()
             ->WithPrizeId(Data->HasField("prizeId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("prizeId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -161,7 +161,7 @@ namespace Gs2::Lottery::Model
                 }() : TOptional<FString>())
             ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("type", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -191,7 +191,7 @@ namespace Gs2::Lottery::Model
                 }() : TOptional<int32>())
             ->WithLimitFailOverPrizeId(Data->HasField("limitFailOverPrizeId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("limitFailOverPrizeId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -200,7 +200,7 @@ namespace Gs2::Lottery::Model
                 }() : TOptional<FString>())
             ->WithPrizeTableName(Data->HasField("prizeTableName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("prizeTableName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

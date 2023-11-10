@@ -17,33 +17,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Core/Gs2Object.h"
+#include "Core/Model/AcquireAction.h"
 
 namespace Gs2::Experience::Model
 {
-    class GS2EXPERIENCE_API FAcquireAction final : public Gs2Object, public TSharedFromThis<FAcquireAction>
-    {
-        TOptional<FString> ActionValue;
-        TOptional<FString> RequestValue;
-
-    public:
-        FAcquireAction();
-        FAcquireAction(
-            const FAcquireAction& From
-        );
-        virtual ~FAcquireAction() override = default;
-
-        TSharedPtr<FAcquireAction> WithAction(const TOptional<FString> Action);
-        TSharedPtr<FAcquireAction> WithRequest(const TOptional<FString> Request);
-
-        TOptional<FString> GetAction() const;
-        TOptional<FString> GetRequest() const;
-
-
-        static TSharedPtr<FAcquireAction> FromJson(const TSharedPtr<FJsonObject> Data);
-        TSharedPtr<FJsonObject> ToJson() const;
-
-        static FString TypeName;
-    };
+    typedef Gs2::Core::Model::FAcquireAction FAcquireAction;
     typedef TSharedPtr<FAcquireAction, ESPMode::ThreadSafe> FAcquireActionPtr;
 }

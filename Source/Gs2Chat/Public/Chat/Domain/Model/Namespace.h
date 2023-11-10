@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Chat/Gs2Chat.h"
 #include "Chat/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Chat/Domain/Iterator/DescribeRoomsIterator.h"
 #include "Chat/Domain/Iterator/DescribeMessagesIterator.h"
@@ -33,6 +32,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Chat::Domain
+{
+    class FGs2ChatDomain;
+    typedef TSharedPtr<FGs2ChatDomain> FGs2ChatDomainPtr;
 }
 
 namespace Gs2::Chat::Domain::Model
@@ -51,7 +56,8 @@ namespace Gs2::Chat::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Chat::FGs2ChatRestClientPtr Client;
+        const Chat::Domain::FGs2ChatDomainPtr Service;
+        const Gs2::Chat::FGs2ChatRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -82,7 +88,8 @@ namespace Gs2::Chat::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Chat::Domain::FGs2ChatDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -99,7 +106,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -125,7 +132,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -151,7 +158,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -177,7 +184,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -197,11 +204,11 @@ namespace Gs2::Chat::Domain::Model
 
         TSharedPtr<Gs2::Chat::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Chat::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -46,13 +46,15 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FGatheringAccessTokenDomain::FGatheringAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> GatheringName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -69,6 +71,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FGatheringAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -79,7 +82,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FGatheringAccessTokenDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FGatheringAccessTokenDomain> Self,
+        const TSharedPtr<FGatheringAccessTokenDomain>& Self,
         const Request::FUpdateGatheringRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -145,7 +148,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FGatheringAccessTokenDomain::FCancelMatchmakingTask::FCancelMatchmakingTask(
-        const TSharedPtr<FGatheringAccessTokenDomain> Self,
+        const TSharedPtr<FGatheringAccessTokenDomain>& Self,
         const Request::FCancelMatchmakingRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -205,7 +208,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FGatheringAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FGatheringAccessTokenDomain> Self,
+        const TSharedPtr<FGatheringAccessTokenDomain>& Self,
         const Request::FGetGatheringRequestPtr Request
     ): Self(Self), Request(Request)
     {

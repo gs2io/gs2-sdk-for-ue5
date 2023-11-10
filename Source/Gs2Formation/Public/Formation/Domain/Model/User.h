@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Formation/Gs2Formation.h"
 #include "Formation/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelsIterator.h"
@@ -38,6 +37,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Formation::Domain
+{
+    class FGs2FormationDomain;
+    typedef TSharedPtr<FGs2FormationDomain> FGs2FormationDomainPtr;
 }
 
 namespace Gs2::Formation::Domain::Model
@@ -63,7 +68,8 @@ namespace Gs2::Formation::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Formation::FGs2FormationRestClientPtr Client;
+        const Formation::Domain::FGs2FormationDomainPtr Service;
+        const Gs2::Formation::FGs2FormationRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -90,7 +96,8 @@ namespace Gs2::Formation::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Formation::Domain::FGs2FormationDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -113,7 +120,7 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FMoldDomain> Mold(
             const FString MoldModelName
-        ) const;
+        );
 
         Gs2::Formation::Domain::Iterator::FDescribePropertyFormsByUserIdIteratorPtr PropertyForms(
             const FString PropertyFormModelName
@@ -130,7 +137,7 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormDomain> PropertyForm(
             const FString PropertyFormModelName,
             const FString PropertyId
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

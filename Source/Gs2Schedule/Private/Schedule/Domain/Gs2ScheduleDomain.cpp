@@ -38,7 +38,7 @@ namespace Gs2::Schedule::Domain
 {
 
     FGs2ScheduleDomain::FGs2ScheduleDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -58,7 +58,7 @@ namespace Gs2::Schedule::Domain
     }
 
     FGs2ScheduleDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2ScheduleDomain> Self,
+        const TSharedPtr<FGs2ScheduleDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -104,6 +104,7 @@ namespace Gs2::Schedule::Domain
         }
         auto Domain = MakeShared<Gs2::Schedule::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -117,7 +118,7 @@ namespace Gs2::Schedule::Domain
     }
 
     FGs2ScheduleDomain::FDumpUserDataTask::FDumpUserDataTask(
-        TSharedPtr<FGs2ScheduleDomain> Self,
+        const TSharedPtr<FGs2ScheduleDomain>& Self,
         const Request::FDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -160,7 +161,7 @@ namespace Gs2::Schedule::Domain
     }
 
     FGs2ScheduleDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
-        TSharedPtr<FGs2ScheduleDomain> Self,
+        const TSharedPtr<FGs2ScheduleDomain>& Self,
         const Request::FCheckDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -210,7 +211,7 @@ namespace Gs2::Schedule::Domain
     }
 
     FGs2ScheduleDomain::FCleanUserDataTask::FCleanUserDataTask(
-        TSharedPtr<FGs2ScheduleDomain> Self,
+        const TSharedPtr<FGs2ScheduleDomain>& Self,
         const Request::FCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -253,7 +254,7 @@ namespace Gs2::Schedule::Domain
     }
 
     FGs2ScheduleDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
-        TSharedPtr<FGs2ScheduleDomain> Self,
+        const TSharedPtr<FGs2ScheduleDomain>& Self,
         const Request::FCheckCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -296,7 +297,7 @@ namespace Gs2::Schedule::Domain
     }
 
     FGs2ScheduleDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
-        TSharedPtr<FGs2ScheduleDomain> Self,
+        const TSharedPtr<FGs2ScheduleDomain>& Self,
         const Request::FPrepareImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -350,7 +351,7 @@ namespace Gs2::Schedule::Domain
     }
 
     FGs2ScheduleDomain::FImportUserDataTask::FImportUserDataTask(
-        TSharedPtr<FGs2ScheduleDomain> Self,
+        const TSharedPtr<FGs2ScheduleDomain>& Self,
         const Request::FImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -393,7 +394,7 @@ namespace Gs2::Schedule::Domain
     }
 
     FGs2ScheduleDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
-        TSharedPtr<FGs2ScheduleDomain> Self,
+        const TSharedPtr<FGs2ScheduleDomain>& Self,
         const Request::FCheckImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -475,10 +476,11 @@ namespace Gs2::Schedule::Domain
 
     TSharedPtr<Gs2::Schedule::Domain::Model::FNamespaceDomain> FGs2ScheduleDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Schedule::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

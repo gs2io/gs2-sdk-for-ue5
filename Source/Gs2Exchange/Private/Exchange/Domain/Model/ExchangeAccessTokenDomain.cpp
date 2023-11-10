@@ -36,6 +36,8 @@
 #include "Exchange/Domain/Model/AwaitAccessToken.h"
 #include "Exchange/Domain/Model/User.h"
 #include "Exchange/Domain/Model/UserAccessToken.h"
+#include "Exchange/Domain/SpeculativeExecutor/Transaction/ExchangeByUserIdSpeculativeExecutor.h"
+#include "Exchange/Domain/SpeculativeExecutor/Transaction/IncrementalExchangeByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -45,12 +47,14 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FExchangeAccessTokenDomain::FExchangeAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -66,6 +70,7 @@ namespace Gs2::Exchange::Domain::Model
         const FExchangeAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -75,16 +80,17 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FExchangeAccessTokenDomain::FExchangeTask::FExchangeTask(
-        const TSharedPtr<FExchangeAccessTokenDomain> Self,
-        const Request::FExchangeRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FExchangeAccessTokenDomain>& Self,
+        const Request::FExchangeRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FExchangeAccessTokenDomain::FExchangeTask::FExchangeTask(
         const FExchangeTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -95,6 +101,26 @@ namespace Gs2::Exchange::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FExchangeByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FExchangeByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Exchange(
             Request
         );
@@ -167,22 +193,24 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FExchangeAccessTokenDomain::FExchangeTask>> FExchangeAccessTokenDomain::Exchange(
-        Request::FExchangeRequestPtr Request
+        Request::FExchangeRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FExchangeTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FExchangeTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FExchangeAccessTokenDomain::FIncrementalTask::FIncrementalTask(
-        const TSharedPtr<FExchangeAccessTokenDomain> Self,
-        const Request::FIncrementalExchangeRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FExchangeAccessTokenDomain>& Self,
+        const Request::FIncrementalExchangeRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FExchangeAccessTokenDomain::FIncrementalTask::FIncrementalTask(
         const FIncrementalTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -193,6 +221,26 @@ namespace Gs2::Exchange::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FIncrementalExchangeByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FIncrementalExchangeByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->IncrementalExchange(
             Request
         );
@@ -265,9 +313,10 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FExchangeAccessTokenDomain::FIncrementalTask>> FExchangeAccessTokenDomain::Incremental(
-        Request::FIncrementalExchangeRequestPtr Request
+        Request::FIncrementalExchangeRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FIncrementalTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FIncrementalTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FString FExchangeAccessTokenDomain::CreateCacheParentKey(

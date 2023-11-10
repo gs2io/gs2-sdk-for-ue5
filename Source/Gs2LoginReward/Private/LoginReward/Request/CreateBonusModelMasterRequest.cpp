@@ -232,7 +232,7 @@ namespace Gs2::LoginReward::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -241,7 +241,7 @@ namespace Gs2::LoginReward::Request
               }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("name", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -250,7 +250,7 @@ namespace Gs2::LoginReward::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -259,7 +259,7 @@ namespace Gs2::LoginReward::Request
               }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("metadata", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -268,7 +268,7 @@ namespace Gs2::LoginReward::Request
               }() : TOptional<FString>())
             ->WithMode(Data->HasField("mode") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("mode", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -277,7 +277,7 @@ namespace Gs2::LoginReward::Request
               }() : TOptional<FString>())
             ->WithPeriodEventId(Data->HasField("periodEventId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("periodEventId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -295,7 +295,7 @@ namespace Gs2::LoginReward::Request
               }() : TOptional<int32>())
             ->WithRepeat(Data->HasField("repeat") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("repeat", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -316,7 +316,7 @@ namespace Gs2::LoginReward::Request
              }() : nullptr)
             ->WithMissedReceiveRelief(Data->HasField("missedReceiveRelief") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("missedReceiveRelief", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

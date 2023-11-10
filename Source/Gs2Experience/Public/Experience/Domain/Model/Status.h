@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Experience/Gs2Experience.h"
 #include "Experience/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Experience/Domain/Iterator/DescribeExperienceModelMastersIterator.h"
 #include "Experience/Domain/Iterator/DescribeExperienceModelsIterator.h"
@@ -32,6 +31,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Experience::Domain
+{
+    class FGs2ExperienceDomain;
+    typedef TSharedPtr<FGs2ExperienceDomain> FGs2ExperienceDomainPtr;
 }
 
 namespace Gs2::Experience::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Experience::Domain::Model
         public TSharedFromThis<FStatusDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Experience::FGs2ExperienceRestClientPtr Client;
+        const Experience::Domain::FGs2ExperienceDomainPtr Service;
+        const Gs2::Experience::FGs2ExperienceRestClientPtr Client;
 
         public:
         TOptional<FString> Body;
@@ -84,7 +90,8 @@ namespace Gs2::Experience::Domain::Model
     public:
 
         FStatusDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Experience::Domain::FGs2ExperienceDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> ExperienceName,
@@ -104,7 +111,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FGetStatusByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FGetStatusByUserIdRequestPtr Request
             );
 
@@ -130,7 +137,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FGetStatusWithSignatureByUserIdRequestPtr Request;
         public:
             explicit FGetWithSignatureTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FGetStatusWithSignatureByUserIdRequestPtr Request
             );
 
@@ -156,7 +163,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FAddExperienceByUserIdRequestPtr Request;
         public:
             explicit FAddExperienceTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FAddExperienceByUserIdRequestPtr Request
             );
 
@@ -182,7 +189,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FSubExperienceByUserIdRequestPtr Request;
         public:
             explicit FSubExperienceTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FSubExperienceByUserIdRequestPtr Request
             );
 
@@ -208,7 +215,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FSetExperienceByUserIdRequestPtr Request;
         public:
             explicit FSetExperienceTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FSetExperienceByUserIdRequestPtr Request
             );
 
@@ -234,7 +241,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FAddRankCapByUserIdRequestPtr Request;
         public:
             explicit FAddRankCapTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FAddRankCapByUserIdRequestPtr Request
             );
 
@@ -260,7 +267,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FSubRankCapByUserIdRequestPtr Request;
         public:
             explicit FSubRankCapTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FSubRankCapByUserIdRequestPtr Request
             );
 
@@ -286,7 +293,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FSetRankCapByUserIdRequestPtr Request;
         public:
             explicit FSetRankCapTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FSetRankCapByUserIdRequestPtr Request
             );
 
@@ -312,7 +319,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FDeleteStatusByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FDeleteStatusByUserIdRequestPtr Request
             );
 
@@ -338,7 +345,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FVerifyRankByUserIdRequestPtr Request;
         public:
             explicit FVerifyRankTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FVerifyRankByUserIdRequestPtr Request
             );
 
@@ -364,7 +371,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FVerifyRankCapByUserIdRequestPtr Request;
         public:
             explicit FVerifyRankCapTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FVerifyRankCapByUserIdRequestPtr Request
             );
 
@@ -390,7 +397,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request;
         public:
             explicit FMultiplyAcquireActionsTask(
-                const TSharedPtr<FStatusDomain> Self,
+                const TSharedPtr<FStatusDomain>& Self,
                 const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request
             );
 

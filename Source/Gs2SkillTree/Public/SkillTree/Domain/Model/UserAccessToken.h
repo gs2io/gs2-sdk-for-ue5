@@ -31,6 +31,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::SkillTree::Domain
+{
+    class FGs2SkillTreeDomain;
+    typedef TSharedPtr<FGs2SkillTreeDomain> FGs2SkillTreeDomainPtr;
+}
+
 namespace Gs2::SkillTree::Domain::Model
 {
     class FNamespaceDomain;
@@ -46,7 +52,8 @@ namespace Gs2::SkillTree::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
+        const SkillTree::Domain::FGs2SkillTreeDomainPtr Service;
+        const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -59,9 +66,10 @@ namespace Gs2::SkillTree::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -70,7 +78,7 @@ namespace Gs2::SkillTree::Domain::Model
         );
 
         TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain> Status(
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

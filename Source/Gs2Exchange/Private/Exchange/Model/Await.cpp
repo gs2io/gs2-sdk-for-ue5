@@ -216,7 +216,7 @@ namespace Gs2::Exchange::Model
         return MakeShared<FAwait>()
             ->WithAwaitId(Data->HasField("awaitId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("awaitId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -225,7 +225,7 @@ namespace Gs2::Exchange::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -234,7 +234,7 @@ namespace Gs2::Exchange::Model
                 }() : TOptional<FString>())
             ->WithRateName(Data->HasField("rateName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("rateName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -243,7 +243,7 @@ namespace Gs2::Exchange::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

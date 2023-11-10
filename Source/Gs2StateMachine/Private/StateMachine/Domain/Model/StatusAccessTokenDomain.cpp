@@ -39,13 +39,15 @@ namespace Gs2::StateMachine::Domain::Model
 {
 
     FStatusAccessTokenDomain::FStatusAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const StateMachine::Domain::FGs2StateMachineDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> StatusName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::StateMachine::FGs2StateMachineRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -62,6 +64,7 @@ namespace Gs2::StateMachine::Domain::Model
         const FStatusAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -72,7 +75,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FStatusAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FGetStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -136,7 +139,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FStatusAccessTokenDomain::FEmitTask::FEmitTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FEmitRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -202,7 +205,7 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     FStatusAccessTokenDomain::FExitStateMachineTask::FExitStateMachineTask(
-        const TSharedPtr<FStatusAccessTokenDomain> Self,
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FExitStateMachineRequestPtr Request
     ): Self(Self), Request(Request)
     {

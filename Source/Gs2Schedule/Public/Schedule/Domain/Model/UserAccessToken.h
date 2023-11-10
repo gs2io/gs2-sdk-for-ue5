@@ -34,6 +34,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Schedule::Domain
+{
+    class FGs2ScheduleDomain;
+    typedef TSharedPtr<FGs2ScheduleDomain> FGs2ScheduleDomainPtr;
+}
+
 namespace Gs2::Schedule::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::Schedule::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
+        const Schedule::Domain::FGs2ScheduleDomainPtr Service;
+        const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -68,9 +75,10 @@ namespace Gs2::Schedule::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -91,7 +99,7 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerAccessTokenDomain> Trigger(
             const FString TriggerName
-        ) const;
+        );
 
         Gs2::Schedule::Domain::Iterator::FDescribeEventsIteratorPtr Events(
         ) const;
@@ -106,7 +114,7 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FEventAccessTokenDomain> Event(
             const FString EventName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

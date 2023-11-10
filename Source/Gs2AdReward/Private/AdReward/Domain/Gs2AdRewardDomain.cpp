@@ -35,7 +35,7 @@ namespace Gs2::AdReward::Domain
 {
 
     FGs2AdRewardDomain::FGs2AdRewardDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -55,7 +55,7 @@ namespace Gs2::AdReward::Domain
     }
 
     FGs2AdRewardDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2AdRewardDomain> Self,
+        const TSharedPtr<FGs2AdRewardDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -101,6 +101,7 @@ namespace Gs2::AdReward::Domain
         }
         auto Domain = MakeShared<Gs2::AdReward::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -114,7 +115,7 @@ namespace Gs2::AdReward::Domain
     }
 
     FGs2AdRewardDomain::FDumpUserDataTask::FDumpUserDataTask(
-        TSharedPtr<FGs2AdRewardDomain> Self,
+        const TSharedPtr<FGs2AdRewardDomain>& Self,
         const Request::FDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -157,7 +158,7 @@ namespace Gs2::AdReward::Domain
     }
 
     FGs2AdRewardDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
-        TSharedPtr<FGs2AdRewardDomain> Self,
+        const TSharedPtr<FGs2AdRewardDomain>& Self,
         const Request::FCheckDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -207,7 +208,7 @@ namespace Gs2::AdReward::Domain
     }
 
     FGs2AdRewardDomain::FCleanUserDataTask::FCleanUserDataTask(
-        TSharedPtr<FGs2AdRewardDomain> Self,
+        const TSharedPtr<FGs2AdRewardDomain>& Self,
         const Request::FCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -250,7 +251,7 @@ namespace Gs2::AdReward::Domain
     }
 
     FGs2AdRewardDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
-        TSharedPtr<FGs2AdRewardDomain> Self,
+        const TSharedPtr<FGs2AdRewardDomain>& Self,
         const Request::FCheckCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -293,7 +294,7 @@ namespace Gs2::AdReward::Domain
     }
 
     FGs2AdRewardDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
-        TSharedPtr<FGs2AdRewardDomain> Self,
+        const TSharedPtr<FGs2AdRewardDomain>& Self,
         const Request::FPrepareImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -347,7 +348,7 @@ namespace Gs2::AdReward::Domain
     }
 
     FGs2AdRewardDomain::FImportUserDataTask::FImportUserDataTask(
-        TSharedPtr<FGs2AdRewardDomain> Self,
+        const TSharedPtr<FGs2AdRewardDomain>& Self,
         const Request::FImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -390,7 +391,7 @@ namespace Gs2::AdReward::Domain
     }
 
     FGs2AdRewardDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
-        TSharedPtr<FGs2AdRewardDomain> Self,
+        const TSharedPtr<FGs2AdRewardDomain>& Self,
         const Request::FCheckImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -472,10 +473,11 @@ namespace Gs2::AdReward::Domain
 
     TSharedPtr<Gs2::AdReward::Domain::Model::FNamespaceDomain> FGs2AdRewardDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::AdReward::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

@@ -241,7 +241,7 @@ namespace Gs2::Enchant::Model
         return MakeShared<FRarityParameterStatus>()
             ->WithRarityParameterStatusId(Data->HasField("rarityParameterStatusId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("rarityParameterStatusId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -250,7 +250,7 @@ namespace Gs2::Enchant::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -259,7 +259,7 @@ namespace Gs2::Enchant::Model
                 }() : TOptional<FString>())
             ->WithParameterName(Data->HasField("parameterName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("parameterName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -268,7 +268,7 @@ namespace Gs2::Enchant::Model
                 }() : TOptional<FString>())
             ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("propertyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

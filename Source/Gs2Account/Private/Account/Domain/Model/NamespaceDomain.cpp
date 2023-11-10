@@ -39,11 +39,13 @@ namespace Gs2::Account::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Account::Domain::FGs2AccountDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Account::FGs2AccountRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("account:Namespace")
@@ -54,6 +56,7 @@ namespace Gs2::Account::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -62,7 +65,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -114,7 +117,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -171,7 +174,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -230,7 +233,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -283,7 +286,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FNamespaceDomain::FCreateAccountTask::FCreateAccountTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateAccountRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -335,6 +338,7 @@ namespace Gs2::Account::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FAccountDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId()
         );
@@ -350,7 +354,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTakeOverByUserIdentifierTask::FDeleteTakeOverByUserIdentifierTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -397,6 +401,7 @@ namespace Gs2::Account::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetType()
@@ -413,7 +418,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FNamespaceDomain::FDoTakeOverTask::FDoTakeOverTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDoTakeOverRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -465,6 +470,7 @@ namespace Gs2::Account::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FAccountDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId()
         );
@@ -519,10 +525,11 @@ namespace Gs2::Account::Domain::Model
 
     TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain> FNamespaceDomain::Account(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Account::Domain::Model::FAccountDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -530,10 +537,11 @@ namespace Gs2::Account::Domain::Model
 
     TSharedPtr<Gs2::Account::Domain::Model::FAccountAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

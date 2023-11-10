@@ -32,6 +32,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::StateMachine::Domain
+{
+    class FGs2StateMachineDomain;
+    typedef TSharedPtr<FGs2StateMachineDomain> FGs2StateMachineDomainPtr;
+}
+
 namespace Gs2::StateMachine::Domain::Model
 {
     class FNamespaceDomain;
@@ -45,7 +51,8 @@ namespace Gs2::StateMachine::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::StateMachine::FGs2StateMachineRestClientPtr Client;
+        const StateMachine::Domain::FGs2StateMachineDomainPtr Service;
+        const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -63,9 +70,10 @@ namespace Gs2::StateMachine::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const StateMachine::Domain::FGs2StateMachineDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -87,7 +95,7 @@ namespace Gs2::StateMachine::Domain::Model
 
         TSharedPtr<Gs2::StateMachine::Domain::Model::FStatusAccessTokenDomain> Status(
             const FString StatusName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

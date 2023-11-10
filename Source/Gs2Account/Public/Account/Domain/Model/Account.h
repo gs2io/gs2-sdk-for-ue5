@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -20,7 +22,7 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Account/Gs2Account.h"
+#include "Account/Domain/Gs2Account.h"
 #include "Account/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Account/Domain/Iterator/DescribeAccountsIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
@@ -30,6 +32,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Account::Domain
+{
+    class FGs2AccountDomain;
+    typedef TSharedPtr<FGs2AccountDomain> FGs2AccountDomainPtr;
 }
 
 namespace Gs2::Account::Domain::Model
@@ -46,7 +54,8 @@ namespace Gs2::Account::Domain::Model
         public TSharedFromThis<FAccountDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Account::FGs2AccountRestClientPtr Client;
+        const Account::Domain::FGs2AccountDomainPtr Service;
+        const Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
         TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> BanStatuses;
@@ -78,7 +87,8 @@ namespace Gs2::Account::Domain::Model
     public:
 
         FAccountDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Account::Domain::FGs2AccountDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -96,7 +106,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FUpdateTimeOffsetRequestPtr Request;
         public:
             explicit FUpdateTimeOffsetTask(
-                const TSharedPtr<FAccountDomain> Self,
+                const TSharedPtr<FAccountDomain>& Self,
                 const Request::FUpdateTimeOffsetRequestPtr Request
             );
 
@@ -122,7 +132,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FUpdateBannedRequestPtr Request;
         public:
             explicit FUpdateBannedTask(
-                const TSharedPtr<FAccountDomain> Self,
+                const TSharedPtr<FAccountDomain>& Self,
                 const Request::FUpdateBannedRequestPtr Request
             );
 
@@ -148,7 +158,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FAddBanRequestPtr Request;
         public:
             explicit FAddBanTask(
-                const TSharedPtr<FAccountDomain> Self,
+                const TSharedPtr<FAccountDomain>& Self,
                 const Request::FAddBanRequestPtr Request
             );
 
@@ -174,7 +184,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FRemoveBanRequestPtr Request;
         public:
             explicit FRemoveBanTask(
-                const TSharedPtr<FAccountDomain> Self,
+                const TSharedPtr<FAccountDomain>& Self,
                 const Request::FRemoveBanRequestPtr Request
             );
 
@@ -200,7 +210,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FGetAccountRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FAccountDomain> Self,
+                const TSharedPtr<FAccountDomain>& Self,
                 const Request::FGetAccountRequestPtr Request
             );
 
@@ -226,7 +236,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FDeleteAccountRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FAccountDomain> Self,
+                const TSharedPtr<FAccountDomain>& Self,
                 const Request::FDeleteAccountRequestPtr Request
             );
 
@@ -252,7 +262,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FAuthenticationRequestPtr Request;
         public:
             explicit FAuthenticationTask(
-                const TSharedPtr<FAccountDomain> Self,
+                const TSharedPtr<FAccountDomain>& Self,
                 const Request::FAuthenticationRequestPtr Request
             );
 
@@ -270,32 +280,6 @@ namespace Gs2::Account::Domain::Model
             Request::FAuthenticationRequestPtr Request
         );
 
-        class GS2ACCOUNT_API FDeleteTakeOverTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
-            public TSharedFromThis<FDeleteTakeOverTask>
-        {
-            const TSharedPtr<FAccountDomain> Self;
-            const Request::FDeleteTakeOverByUserIdRequestPtr Request;
-        public:
-            explicit FDeleteTakeOverTask(
-                const TSharedPtr<FAccountDomain> Self,
-                const Request::FDeleteTakeOverByUserIdRequestPtr Request
-            );
-
-            FDeleteTakeOverTask(
-                const FDeleteTakeOverTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
-            ) override;
-        };
-        friend FDeleteTakeOverTask;
-
-        TSharedPtr<FAsyncTask<FDeleteTakeOverTask>> DeleteTakeOver(
-            Request::FDeleteTakeOverByUserIdRequestPtr Request
-        );
-
         class GS2ACCOUNT_API FDeleteDataOwnerTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FDataOwnerDomain>,
             public TSharedFromThis<FDeleteDataOwnerTask>
@@ -304,7 +288,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FDeleteDataOwnerByUserIdRequestPtr Request;
         public:
             explicit FDeleteDataOwnerTask(
-                const TSharedPtr<FAccountDomain> Self,
+                const TSharedPtr<FAccountDomain>& Self,
                 const Request::FDeleteDataOwnerByUserIdRequestPtr Request
             );
 
@@ -335,10 +319,10 @@ namespace Gs2::Account::Domain::Model
 
         TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain> TakeOver(
             const int32 Type
-        ) const;
+        );
 
         TSharedPtr<Gs2::Account::Domain::Model::FDataOwnerDomain> DataOwner(
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

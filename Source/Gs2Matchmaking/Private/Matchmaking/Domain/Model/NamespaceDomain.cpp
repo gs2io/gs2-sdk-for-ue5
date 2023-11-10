@@ -45,11 +45,13 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("matchmaking:Namespace")
@@ -60,6 +62,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -68,7 +71,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -120,7 +123,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -177,7 +180,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -236,7 +239,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -289,7 +292,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FNamespaceDomain::FVoteTask::FVoteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FVoteRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -345,6 +348,7 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FBallotDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetRatingName(),
@@ -364,7 +368,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FNamespaceDomain::FVoteMultipleTask::FVoteMultipleTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FVoteMultipleRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -420,6 +424,7 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FBallotDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetRatingName(),
@@ -439,7 +444,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FNamespaceDomain::FCreateRatingModelMasterTask::FCreateRatingModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateRatingModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -491,6 +496,7 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -507,10 +513,11 @@ namespace Gs2::Matchmaking::Domain::Model
 
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Matchmaking::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -518,20 +525,22 @@ namespace Gs2::Matchmaking::Domain::Model
 
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
     }
 
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain> FNamespaceDomain::CurrentRatingModelMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Matchmaking::Domain::Model::FCurrentRatingModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -576,10 +585,11 @@ namespace Gs2::Matchmaking::Domain::Model
 
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelDomain> FNamespaceDomain::RatingModel(
         const FString RatingName
-    ) const
+    )
     {
         return MakeShared<Gs2::Matchmaking::Domain::Model::FRatingModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName)
         );
@@ -588,10 +598,11 @@ namespace Gs2::Matchmaking::Domain::Model
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FVoteDomain> FNamespaceDomain::Vote(
         const FString RatingName,
         const FString GatheringName
-    ) const
+    )
     {
         return MakeShared<Gs2::Matchmaking::Domain::Model::FVoteDomain>(
             Gs2,
+            Service,
             NamespaceName,
             RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName),
             GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName)
@@ -638,10 +649,11 @@ namespace Gs2::Matchmaking::Domain::Model
 
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain> FNamespaceDomain::RatingModelMaster(
         const FString RatingName
-    ) const
+    )
     {
         return MakeShared<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName)
         );

@@ -239,7 +239,7 @@ namespace Gs2::LoginReward::Model
         return MakeShared<FReceiveStatus>()
             ->WithReceiveStatusId(Data->HasField("receiveStatusId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("receiveStatusId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -248,7 +248,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithBonusModelName(Data->HasField("bonusModelName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("bonusModelName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -257,7 +257,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

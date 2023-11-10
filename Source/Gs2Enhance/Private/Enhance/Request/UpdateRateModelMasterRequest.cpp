@@ -208,7 +208,7 @@ namespace Gs2::Enhance::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -217,7 +217,7 @@ namespace Gs2::Enhance::Request
               }() : TOptional<FString>())
             ->WithRateName(Data->HasField("rateName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("rateName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -226,7 +226,7 @@ namespace Gs2::Enhance::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -235,7 +235,7 @@ namespace Gs2::Enhance::Request
               }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("metadata", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -244,7 +244,7 @@ namespace Gs2::Enhance::Request
               }() : TOptional<FString>())
             ->WithTargetInventoryModelId(Data->HasField("targetInventoryModelId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("targetInventoryModelId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -253,7 +253,7 @@ namespace Gs2::Enhance::Request
               }() : TOptional<FString>())
             ->WithAcquireExperienceSuffix(Data->HasField("acquireExperienceSuffix") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("acquireExperienceSuffix", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -262,7 +262,7 @@ namespace Gs2::Enhance::Request
               }() : TOptional<FString>())
             ->WithMaterialInventoryModelId(Data->HasField("materialInventoryModelId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("materialInventoryModelId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -283,7 +283,7 @@ namespace Gs2::Enhance::Request
              }() : nullptr)
             ->WithExperienceModelId(Data->HasField("experienceModelId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("experienceModelId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

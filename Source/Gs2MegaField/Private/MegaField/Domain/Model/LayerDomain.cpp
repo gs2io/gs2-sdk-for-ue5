@@ -42,13 +42,15 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FLayerDomain::FLayerDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> AreaModelName,
         const TOptional<FString> LayerModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AreaModelName(AreaModelName),
@@ -64,6 +66,7 @@ namespace Gs2::MegaField::Domain::Model
         const FLayerDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AreaModelName(From.AreaModelName),

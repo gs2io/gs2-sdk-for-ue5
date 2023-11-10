@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "MegaField/Gs2MegaField.h"
 #include "MegaField/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "MegaField/Domain/Iterator/DescribeAreaModelsIterator.h"
 #include "MegaField/Domain/Iterator/DescribeAreaModelMastersIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::MegaField::Domain
+{
+    class FGs2MegaFieldDomain;
+    typedef TSharedPtr<FGs2MegaFieldDomain> FGs2MegaFieldDomainPtr;
 }
 
 namespace Gs2::MegaField::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::MegaField::Domain::Model
         public TSharedFromThis<FSpatialDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
+        const MegaField::Domain::FGs2MegaFieldDomainPtr Service;
+        const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -64,7 +70,8 @@ namespace Gs2::MegaField::Domain::Model
     public:
 
         FSpatialDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> AreaModelName,
@@ -84,7 +91,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FPutPositionByUserIdRequestPtr Request;
         public:
             explicit FPutPositionTask(
-                const TSharedPtr<FSpatialDomain> Self,
+                const TSharedPtr<FSpatialDomain>& Self,
                 const Request::FPutPositionByUserIdRequestPtr Request
             );
 
@@ -110,7 +117,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FActionByUserIdRequestPtr Request;
         public:
             explicit FActionTask(
-                const TSharedPtr<FSpatialDomain> Self,
+                const TSharedPtr<FSpatialDomain>& Self,
                 const Request::FActionByUserIdRequestPtr Request
             );
 

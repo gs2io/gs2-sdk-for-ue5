@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Datastore/Gs2Datastore.h"
 #include "Datastore/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Datastore/Domain/Iterator/DescribeDataObjectsIterator.h"
 #include "Datastore/Domain/Iterator/DescribeDataObjectsByUserIdIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Datastore::Domain
+{
+    class FGs2DatastoreDomain;
+    typedef TSharedPtr<FGs2DatastoreDomain> FGs2DatastoreDomainPtr;
 }
 
 namespace Gs2::Datastore::Domain::Model
@@ -47,7 +52,8 @@ namespace Gs2::Datastore::Domain::Model
         public TSharedFromThis<FDataObjectDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Datastore::FGs2DatastoreRestClientPtr Client;
+        const Datastore::Domain::FGs2DatastoreDomainPtr Service;
+        const Gs2::Datastore::FGs2DatastoreRestClientPtr Client;
 
         public:
         TOptional<FString> UploadUrl;
@@ -80,7 +86,8 @@ namespace Gs2::Datastore::Domain::Model
     public:
 
         FDataObjectDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Datastore::Domain::FGs2DatastoreDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> DataObjectName
@@ -99,7 +106,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FUpdateDataObjectByUserIdRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FDataObjectDomain> Self,
+                const TSharedPtr<FDataObjectDomain>& Self,
                 const Request::FUpdateDataObjectByUserIdRequestPtr Request
             );
 
@@ -125,7 +132,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FPrepareReUploadByUserIdRequestPtr Request;
         public:
             explicit FPrepareReUploadTask(
-                const TSharedPtr<FDataObjectDomain> Self,
+                const TSharedPtr<FDataObjectDomain>& Self,
                 const Request::FPrepareReUploadByUserIdRequestPtr Request
             );
 
@@ -151,7 +158,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FDoneUploadByUserIdRequestPtr Request;
         public:
             explicit FDoneUploadTask(
-                const TSharedPtr<FDataObjectDomain> Self,
+                const TSharedPtr<FDataObjectDomain>& Self,
                 const Request::FDoneUploadByUserIdRequestPtr Request
             );
 
@@ -177,7 +184,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FDeleteDataObjectByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FDataObjectDomain> Self,
+                const TSharedPtr<FDataObjectDomain>& Self,
                 const Request::FDeleteDataObjectByUserIdRequestPtr Request
             );
 
@@ -203,7 +210,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FPrepareDownloadByUserIdAndDataObjectNameRequestPtr Request;
         public:
             explicit FPrepareDownloadByUserIdAndNameTask(
-                const TSharedPtr<FDataObjectDomain> Self,
+                const TSharedPtr<FDataObjectDomain>& Self,
                 const Request::FPrepareDownloadByUserIdAndDataObjectNameRequestPtr Request
             );
 
@@ -229,7 +236,7 @@ namespace Gs2::Datastore::Domain::Model
             const Request::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequestPtr Request;
         public:
             explicit FPrepareDownloadByUserIdAndNameAndGenerationTask(
-                const TSharedPtr<FDataObjectDomain> Self,
+                const TSharedPtr<FDataObjectDomain>& Self,
                 const Request::FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequestPtr Request
             );
 
@@ -260,7 +267,7 @@ namespace Gs2::Datastore::Domain::Model
 
         TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain> DataObjectHistory(
             const FString Generation
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

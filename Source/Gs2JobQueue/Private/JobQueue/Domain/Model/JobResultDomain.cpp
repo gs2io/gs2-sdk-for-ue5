@@ -41,7 +41,8 @@ namespace Gs2::JobQueue::Domain::Model
 {
 
     FJobResultDomain::FJobResultDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> JobName,
@@ -49,6 +50,7 @@ namespace Gs2::JobQueue::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -67,6 +69,7 @@ namespace Gs2::JobQueue::Domain::Model
         const FJobResultDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -78,7 +81,7 @@ namespace Gs2::JobQueue::Domain::Model
     }
 
     FJobResultDomain::FGetTask::FGetTask(
-        const TSharedPtr<FJobResultDomain> Self,
+        const TSharedPtr<FJobResultDomain>& Self,
         const Request::FGetJobResultByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

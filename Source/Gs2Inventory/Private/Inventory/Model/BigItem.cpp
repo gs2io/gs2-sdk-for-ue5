@@ -227,7 +227,7 @@ namespace Gs2::Inventory::Model
         return MakeShared<FBigItem>()
             ->WithItemId(Data->HasField("itemId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("itemId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -236,7 +236,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -245,7 +245,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithItemName(Data->HasField("itemName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("itemName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -254,7 +254,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithCount(Data->HasField("count") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("count", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

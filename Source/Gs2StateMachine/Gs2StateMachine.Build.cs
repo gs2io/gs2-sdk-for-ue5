@@ -20,5 +20,9 @@ public class Gs2StateMachine : ModuleRules
 			"Gs2Auth",
 			"Gs2JobQueue",
 		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"Gs2Core"
+		});
 	}
 }

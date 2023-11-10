@@ -40,11 +40,13 @@ namespace Gs2::Limit::Domain::Model
 {
 
     FCurrentLimitMasterDomain::FCurrentLimitMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Limit::Domain::FGs2LimitDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Limit::FGs2LimitRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -58,6 +60,7 @@ namespace Gs2::Limit::Domain::Model
         const FCurrentLimitMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -66,7 +69,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCurrentLimitMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentLimitMasterDomain> Self,
+        const TSharedPtr<FCurrentLimitMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -128,7 +131,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCurrentLimitMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentLimitMasterDomain> Self,
+        const TSharedPtr<FCurrentLimitMasterDomain>& Self,
         const Request::FGetCurrentLimitMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -188,7 +191,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCurrentLimitMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentLimitMasterDomain> Self,
+        const TSharedPtr<FCurrentLimitMasterDomain>& Self,
         const Request::FUpdateCurrentLimitMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -250,7 +253,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCurrentLimitMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentLimitMasterDomain> Self,
+        const TSharedPtr<FCurrentLimitMasterDomain>& Self,
         const Request::FUpdateCurrentLimitMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

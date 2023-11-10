@@ -50,12 +50,14 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FSalesItemGroupMasterDomain::FSalesItemGroupMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> SalesItemGroupName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         SalesItemGroupName(SalesItemGroupName),
@@ -70,6 +72,7 @@ namespace Gs2::Showcase::Domain::Model
         const FSalesItemGroupMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         SalesItemGroupName(From.SalesItemGroupName),
@@ -79,7 +82,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FSalesItemGroupMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FSalesItemGroupMasterDomain> Self,
+        const TSharedPtr<FSalesItemGroupMasterDomain>& Self,
         const Request::FGetSalesItemGroupMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -141,7 +144,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FSalesItemGroupMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FSalesItemGroupMasterDomain> Self,
+        const TSharedPtr<FSalesItemGroupMasterDomain>& Self,
         const Request::FUpdateSalesItemGroupMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -205,7 +208,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FSalesItemGroupMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FSalesItemGroupMasterDomain> Self,
+        const TSharedPtr<FSalesItemGroupMasterDomain>& Self,
         const Request::FDeleteSalesItemGroupMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

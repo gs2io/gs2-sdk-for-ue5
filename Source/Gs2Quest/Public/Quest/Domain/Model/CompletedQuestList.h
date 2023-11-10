@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Quest/Gs2Quest.h"
 #include "Quest/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Quest/Domain/Iterator/DescribeQuestGroupModelMastersIterator.h"
 #include "Quest/Domain/Iterator/DescribeQuestModelMastersIterator.h"
@@ -34,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Quest::Domain
+{
+    class FGs2QuestDomain;
+    typedef TSharedPtr<FGs2QuestDomain> FGs2QuestDomainPtr;
 }
 
 namespace Gs2::Quest::Domain::Model
@@ -55,7 +60,8 @@ namespace Gs2::Quest::Domain::Model
         public TSharedFromThis<FCompletedQuestListDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Quest::FGs2QuestRestClientPtr Client;
+        const Quest::Domain::FGs2QuestDomainPtr Service;
+        const Gs2::Quest::FGs2QuestRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -68,7 +74,8 @@ namespace Gs2::Quest::Domain::Model
     public:
 
         FCompletedQuestListDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Quest::Domain::FGs2QuestDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> QuestGroupName
@@ -87,7 +94,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FGetCompletedQuestListByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCompletedQuestListDomain> Self,
+                const TSharedPtr<FCompletedQuestListDomain>& Self,
                 const Request::FGetCompletedQuestListByUserIdRequestPtr Request
             );
 
@@ -113,7 +120,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FDeleteCompletedQuestListByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FCompletedQuestListDomain> Self,
+                const TSharedPtr<FCompletedQuestListDomain>& Self,
                 const Request::FDeleteCompletedQuestListByUserIdRequestPtr Request
             );
 

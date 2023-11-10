@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Account/Gs2Account.h"
 #include "Account/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Account/Domain/Iterator/DescribeAccountsIterator.h"
 #include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
@@ -30,6 +29,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Account::Domain
+{
+    class FGs2AccountDomain;
+    typedef TSharedPtr<FGs2AccountDomain> FGs2AccountDomainPtr;
 }
 
 namespace Gs2::Account::Domain::Model
@@ -46,7 +51,8 @@ namespace Gs2::Account::Domain::Model
         public TSharedFromThis<FDataOwnerDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Account::FGs2AccountRestClientPtr Client;
+        const Account::Domain::FGs2AccountDomainPtr Service;
+        const Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -59,7 +65,8 @@ namespace Gs2::Account::Domain::Model
     public:
 
         FDataOwnerDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Account::Domain::FGs2AccountDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -77,7 +84,7 @@ namespace Gs2::Account::Domain::Model
             const Request::FGetDataOwnerByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FDataOwnerDomain> Self,
+                const TSharedPtr<FDataOwnerDomain>& Self,
                 const Request::FGetDataOwnerByUserIdRequestPtr Request
             );
 

@@ -19,5 +19,9 @@ public class Gs2JobQueue : ModuleRules
 			"Gs2Core",
 			"Gs2Auth",
 		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"Gs2Core"
+		});
 	}
 }

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "LoginReward/Gs2LoginReward.h"
 #include "LoginReward/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelMastersIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::LoginReward::Domain
+{
+    class FGs2LoginRewardDomain;
+    typedef TSharedPtr<FGs2LoginRewardDomain> FGs2LoginRewardDomainPtr;
 }
 
 namespace Gs2::LoginReward::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::LoginReward::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr Service;
+        const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -86,7 +92,8 @@ namespace Gs2::LoginReward::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -103,7 +110,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -129,7 +136,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -155,7 +162,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -181,7 +188,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -207,7 +214,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FCreateBonusModelMasterRequestPtr Request;
         public:
             explicit FCreateBonusModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateBonusModelMasterRequestPtr Request
             );
 
@@ -238,18 +245,18 @@ namespace Gs2::LoginReward::Domain::Model
 
         TSharedPtr<Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain> BonusModelMaster(
             const FString BonusModelName
-        ) const;
+        );
 
         TSharedPtr<Gs2::LoginReward::Domain::Model::FCurrentBonusMasterDomain> CurrentBonusMaster(
-        ) const;
+        );
 
         TSharedPtr<Gs2::LoginReward::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::LoginReward::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelsIteratorPtr BonusModels(
         ) const;
@@ -264,7 +271,7 @@ namespace Gs2::LoginReward::Domain::Model
 
         TSharedPtr<Gs2::LoginReward::Domain::Model::FBonusModelDomain> BonusModel(
             const FString BonusModelName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

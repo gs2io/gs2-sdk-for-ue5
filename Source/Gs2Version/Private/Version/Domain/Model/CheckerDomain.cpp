@@ -42,12 +42,14 @@ namespace Gs2::Version::Domain::Model
 {
 
     FCheckerDomain::FCheckerDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Version::Domain::FGs2VersionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Version::FGs2VersionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -63,6 +65,7 @@ namespace Gs2::Version::Domain::Model
         const FCheckerDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::Version::Domain::Model
     }
 
     FCheckerDomain::FCheckVersionTask::FCheckVersionTask(
-        const TSharedPtr<FCheckerDomain> Self,
+        const TSharedPtr<FCheckerDomain>& Self,
         const Request::FCheckVersionByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -51,6 +51,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
+}
+
 namespace Gs2::Inventory::Domain::Model
 {
     class FNamespaceDomain;
@@ -89,7 +95,8 @@ namespace Gs2::Inventory::Domain::Model
         public TSharedFromThis<FReferenceOfAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inventory::FGs2InventoryRestClientPtr Client;
+        const Inventory::Domain::FGs2InventoryDomainPtr Service;
+        const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -106,9 +113,10 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FReferenceOfAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inventory::Domain::FGs2InventoryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> InventoryName,
             const TOptional<FString> ItemName,
             const TOptional<FString> ItemSetName,
@@ -128,7 +136,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetReferenceOfRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FReferenceOfAccessTokenDomain> Self,
+                const TSharedPtr<FReferenceOfAccessTokenDomain>& Self,
                 const Request::FGetReferenceOfRequestPtr Request
             );
 
@@ -154,7 +162,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FVerifyReferenceOfRequestPtr Request;
         public:
             explicit FVerifyTask(
-                const TSharedPtr<FReferenceOfAccessTokenDomain> Self,
+                const TSharedPtr<FReferenceOfAccessTokenDomain>& Self,
                 const Request::FVerifyReferenceOfRequestPtr Request
             );
 
@@ -180,7 +188,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FDeleteReferenceOfRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FReferenceOfAccessTokenDomain> Self,
+                const TSharedPtr<FReferenceOfAccessTokenDomain>& Self,
                 const Request::FDeleteReferenceOfRequestPtr Request
             );
 

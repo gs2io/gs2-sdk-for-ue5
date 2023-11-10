@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Limit::Domain
+{
+    class FGs2LimitDomain;
+    typedef TSharedPtr<FGs2LimitDomain> FGs2LimitDomainPtr;
+}
+
 namespace Gs2::Limit::Domain::Model
 {
     class FNamespaceDomain;
@@ -48,7 +54,8 @@ namespace Gs2::Limit::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Limit::FGs2LimitRestClientPtr Client;
+        const Limit::Domain::FGs2LimitDomainPtr Service;
+        const Gs2::Limit::FGs2LimitRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -66,9 +73,10 @@ namespace Gs2::Limit::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Limit::Domain::FGs2LimitDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -91,7 +99,7 @@ namespace Gs2::Limit::Domain::Model
         TSharedPtr<Gs2::Limit::Domain::Model::FCounterAccessTokenDomain> Counter(
             const FString LimitName,
             const FString CounterName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

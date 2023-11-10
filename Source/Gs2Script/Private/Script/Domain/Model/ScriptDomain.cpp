@@ -34,12 +34,14 @@ namespace Gs2::Script::Domain::Model
 {
 
     FScriptDomain::FScriptDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Script::Domain::FGs2ScriptDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> ScriptName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Script::FGs2ScriptRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ScriptName(ScriptName),
@@ -54,6 +56,7 @@ namespace Gs2::Script::Domain::Model
         const FScriptDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ScriptName(From.ScriptName),
@@ -63,7 +66,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FScriptDomain::FGetTask::FGetTask(
-        const TSharedPtr<FScriptDomain> Self,
+        const TSharedPtr<FScriptDomain>& Self,
         const Request::FGetScriptRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -125,7 +128,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FScriptDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FScriptDomain> Self,
+        const TSharedPtr<FScriptDomain>& Self,
         const Request::FUpdateScriptRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -189,7 +192,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FScriptDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FScriptDomain> Self,
+        const TSharedPtr<FScriptDomain>& Self,
         const Request::FUpdateScriptFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -253,7 +256,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FScriptDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FScriptDomain> Self,
+        const TSharedPtr<FScriptDomain>& Self,
         const Request::FDeleteScriptRequestPtr Request
     ): Self(Self), Request(Request)
     {

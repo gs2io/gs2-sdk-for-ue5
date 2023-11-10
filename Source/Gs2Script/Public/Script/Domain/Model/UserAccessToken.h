@@ -30,6 +30,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Script::Domain
+{
+    class FGs2ScriptDomain;
+    typedef TSharedPtr<FGs2ScriptDomain> FGs2ScriptDomainPtr;
+}
+
 namespace Gs2::Script::Domain::Model
 {
     class FNamespaceDomain;
@@ -39,7 +45,8 @@ namespace Gs2::Script::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Script::FGs2ScriptRestClientPtr Client;
+        const Script::Domain::FGs2ScriptDomainPtr Service;
+        const Gs2::Script::FGs2ScriptRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -52,9 +59,10 @@ namespace Gs2::Script::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Script::Domain::FGs2ScriptDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 

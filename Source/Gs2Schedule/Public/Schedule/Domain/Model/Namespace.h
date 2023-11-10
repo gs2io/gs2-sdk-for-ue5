@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Schedule/Gs2Schedule.h"
 #include "Schedule/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Schedule/Domain/Iterator/DescribeEventMastersIterator.h"
 #include "Schedule/Domain/Iterator/DescribeTriggersIterator.h"
@@ -32,6 +31,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Schedule::Domain
+{
+    class FGs2ScheduleDomain;
+    typedef TSharedPtr<FGs2ScheduleDomain> FGs2ScheduleDomainPtr;
 }
 
 namespace Gs2::Schedule::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Schedule::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
+        const Schedule::Domain::FGs2ScheduleDomainPtr Service;
+        const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -86,7 +92,8 @@ namespace Gs2::Schedule::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -103,7 +110,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -129,7 +136,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -155,7 +162,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -181,7 +188,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -207,7 +214,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FCreateEventMasterRequestPtr Request;
         public:
             explicit FCreateEventMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateEventMasterRequestPtr Request
             );
 
@@ -227,14 +234,14 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain> CurrentEventMaster(
-        ) const;
+        );
 
         Gs2::Schedule::Domain::Iterator::FDescribeEventMastersIteratorPtr EventMasters(
         ) const;
@@ -249,7 +256,7 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<Gs2::Schedule::Domain::Model::FEventMasterDomain> EventMaster(
             const FString EventName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

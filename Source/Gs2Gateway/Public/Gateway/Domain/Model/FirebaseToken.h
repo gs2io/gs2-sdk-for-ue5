@@ -21,7 +21,6 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
 #include "Gateway/Gs2Gateway.h"
-#include "Gateway/Gs2Gateway.h"
 #include "Gateway/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Gateway/Domain/Iterator/DescribeWebSocketSessionsIterator.h"
 #include "Gateway/Domain/Iterator/DescribeWebSocketSessionsByUserIdIterator.h"
@@ -30,6 +29,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Gateway::Domain
+{
+    class FGs2GatewayDomain;
+    typedef TSharedPtr<FGs2GatewayDomain> FGs2GatewayDomainPtr;
 }
 
 namespace Gs2::Gateway::Domain::Model
@@ -46,8 +51,9 @@ namespace Gs2::Gateway::Domain::Model
         public TSharedFromThis<FFirebaseTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Gateway::FGs2GatewayRestClientPtr Client;
-        FGs2GatewayWebSocketClientPtr Wsclient;
+        const Gateway::Domain::FGs2GatewayDomainPtr Service;
+        const Gs2::Gateway::FGs2GatewayRestClientPtr Client;
+        const FGs2GatewayWebSocketClientPtr Wsclient;
 
         public:
         TOptional<FString> NamespaceName;
@@ -59,7 +65,8 @@ namespace Gs2::Gateway::Domain::Model
     public:
 
         FFirebaseTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Gateway::Domain::FGs2GatewayDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -77,7 +84,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FSetFirebaseTokenByUserIdRequestPtr Request;
         public:
             explicit FSetTask(
-                const TSharedPtr<FFirebaseTokenDomain> Self,
+                const TSharedPtr<FFirebaseTokenDomain>& Self,
                 const Request::FSetFirebaseTokenByUserIdRequestPtr Request
             );
 
@@ -103,7 +110,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FGetFirebaseTokenByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FFirebaseTokenDomain> Self,
+                const TSharedPtr<FFirebaseTokenDomain>& Self,
                 const Request::FGetFirebaseTokenByUserIdRequestPtr Request
             );
 
@@ -129,7 +136,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FDeleteFirebaseTokenByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FFirebaseTokenDomain> Self,
+                const TSharedPtr<FFirebaseTokenDomain>& Self,
                 const Request::FDeleteFirebaseTokenByUserIdRequestPtr Request
             );
 
@@ -155,7 +162,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FSendMobileNotificationByUserIdRequestPtr Request;
         public:
             explicit FSendMobileNotificationTask(
-                const TSharedPtr<FFirebaseTokenDomain> Self,
+                const TSharedPtr<FFirebaseTokenDomain>& Self,
                 const Request::FSendMobileNotificationByUserIdRequestPtr Request
             );
 

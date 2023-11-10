@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Experience/Gs2Experience.h"
 #include "Experience/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Experience/Domain/Iterator/DescribeExperienceModelMastersIterator.h"
 #include "Experience/Domain/Iterator/DescribeExperienceModelsIterator.h"
@@ -32,6 +31,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Experience::Domain
+{
+    class FGs2ExperienceDomain;
+    typedef TSharedPtr<FGs2ExperienceDomain> FGs2ExperienceDomainPtr;
 }
 
 namespace Gs2::Experience::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Experience::Domain::Model
         public TSharedFromThis<FExperienceModelDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Experience::FGs2ExperienceRestClientPtr Client;
+        const Experience::Domain::FGs2ExperienceDomainPtr Service;
+        const Gs2::Experience::FGs2ExperienceRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -62,7 +68,8 @@ namespace Gs2::Experience::Domain::Model
     public:
 
         FExperienceModelDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Experience::Domain::FGs2ExperienceDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> ExperienceName
             // ReSharper disable once CppMemberInitializersOrder
@@ -80,7 +87,7 @@ namespace Gs2::Experience::Domain::Model
             const Request::FGetExperienceModelRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FExperienceModelDomain> Self,
+                const TSharedPtr<FExperienceModelDomain>& Self,
                 const Request::FGetExperienceModelRequestPtr Request
             );
 

@@ -44,13 +44,15 @@ namespace Gs2::Quest::Domain::Model
 {
 
     FQuestModelMasterDomain::FQuestModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Quest::Domain::FGs2QuestDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> QuestGroupName,
         const TOptional<FString> QuestName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         QuestGroupName(QuestGroupName),
@@ -67,6 +69,7 @@ namespace Gs2::Quest::Domain::Model
         const FQuestModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         QuestGroupName(From.QuestGroupName),
@@ -77,7 +80,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FQuestModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FQuestModelMasterDomain> Self,
+        const TSharedPtr<FQuestModelMasterDomain>& Self,
         const Request::FGetQuestModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -141,7 +144,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FQuestModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FQuestModelMasterDomain> Self,
+        const TSharedPtr<FQuestModelMasterDomain>& Self,
         const Request::FUpdateQuestModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -207,7 +210,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FQuestModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FQuestModelMasterDomain> Self,
+        const TSharedPtr<FQuestModelMasterDomain>& Self,
         const Request::FDeleteQuestModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

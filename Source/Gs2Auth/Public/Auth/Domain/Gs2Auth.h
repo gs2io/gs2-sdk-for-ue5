@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -42,7 +44,7 @@ namespace Gs2::Auth::Domain
         public TSharedFromThis<FGs2AuthDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Auth::FGs2AuthRestClientPtr Client;
+        const Gs2::Auth::FGs2AuthRestClientPtr Client;
 
         public:
     private:
@@ -52,7 +54,7 @@ namespace Gs2::Auth::Domain
     public:
 
         FGs2AuthDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -61,7 +63,7 @@ namespace Gs2::Auth::Domain
         );
 
         TSharedPtr<Gs2::Auth::Domain::Model::FAccessTokenDomain> AccessToken(
-        ) const;
+        );
 
         void UpdateCacheFromStampSheet(
             const FString Method,

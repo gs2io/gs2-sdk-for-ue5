@@ -38,13 +38,15 @@ namespace Gs2::Lock::Domain::Model
 {
 
     FMutexAccessTokenDomain::FMutexAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Lock::Domain::FGs2LockDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> PropertyId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Lock::FGs2LockRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -61,6 +63,7 @@ namespace Gs2::Lock::Domain::Model
         const FMutexAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -71,7 +74,7 @@ namespace Gs2::Lock::Domain::Model
     }
 
     FMutexAccessTokenDomain::FLockTask::FLockTask(
-        const TSharedPtr<FMutexAccessTokenDomain> Self,
+        const TSharedPtr<FMutexAccessTokenDomain>& Self,
         const Request::FLockRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -137,7 +140,7 @@ namespace Gs2::Lock::Domain::Model
     }
 
     FMutexAccessTokenDomain::FUnlockTask::FUnlockTask(
-        const TSharedPtr<FMutexAccessTokenDomain> Self,
+        const TSharedPtr<FMutexAccessTokenDomain>& Self,
         const Request::FUnlockRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -197,7 +200,7 @@ namespace Gs2::Lock::Domain::Model
     }
 
     FMutexAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMutexAccessTokenDomain> Self,
+        const TSharedPtr<FMutexAccessTokenDomain>& Self,
         const Request::FGetMutexRequestPtr Request
     ): Self(Self), Request(Request)
     {

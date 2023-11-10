@@ -46,13 +46,15 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FMissionTaskModelMasterDomain::FMissionTaskModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> MissionGroupName,
         const TOptional<FString> MissionTaskName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         MissionGroupName(MissionGroupName),
@@ -69,6 +71,7 @@ namespace Gs2::Mission::Domain::Model
         const FMissionTaskModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         MissionGroupName(From.MissionGroupName),
@@ -79,7 +82,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FMissionTaskModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMissionTaskModelMasterDomain> Self,
+        const TSharedPtr<FMissionTaskModelMasterDomain>& Self,
         const Request::FGetMissionTaskModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -143,7 +146,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FMissionTaskModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FMissionTaskModelMasterDomain> Self,
+        const TSharedPtr<FMissionTaskModelMasterDomain>& Self,
         const Request::FUpdateMissionTaskModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -209,7 +212,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FMissionTaskModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FMissionTaskModelMasterDomain> Self,
+        const TSharedPtr<FMissionTaskModelMasterDomain>& Self,
         const Request::FDeleteMissionTaskModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

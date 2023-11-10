@@ -37,6 +37,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Matchmaking::Domain
+{
+    class FGs2MatchmakingDomain;
+    typedef TSharedPtr<FGs2MatchmakingDomain> FGs2MatchmakingDomainPtr;
+}
+
 namespace Gs2::Matchmaking::Domain::Model
 {
     class FNamespaceDomain;
@@ -57,7 +63,8 @@ namespace Gs2::Matchmaking::Domain::Model
         public TSharedFromThis<FBallotAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client;
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr Service;
+        const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client;
 
         public:
         TOptional<FString> Body;
@@ -84,9 +91,10 @@ namespace Gs2::Matchmaking::Domain::Model
     public:
 
         FBallotAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> RatingName,
             const TOptional<FString> GatheringName,
             const TOptional<int32> NumberOfPlayer,
@@ -106,7 +114,7 @@ namespace Gs2::Matchmaking::Domain::Model
             const Request::FGetBallotRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FBallotAccessTokenDomain> Self,
+                const TSharedPtr<FBallotAccessTokenDomain>& Self,
                 const Request::FGetBallotRequestPtr Request
             );
 

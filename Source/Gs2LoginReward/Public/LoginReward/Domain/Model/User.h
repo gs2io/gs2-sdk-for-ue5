@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "LoginReward/Gs2LoginReward.h"
 #include "LoginReward/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelMastersIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::LoginReward::Domain
+{
+    class FGs2LoginRewardDomain;
+    typedef TSharedPtr<FGs2LoginRewardDomain> FGs2LoginRewardDomainPtr;
 }
 
 namespace Gs2::LoginReward::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::LoginReward::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr Service;
+        const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -67,7 +73,8 @@ namespace Gs2::LoginReward::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -78,7 +85,7 @@ namespace Gs2::LoginReward::Domain::Model
         );
 
         TSharedPtr<Gs2::LoginReward::Domain::Model::FBonusDomain> Bonus(
-        ) const;
+        );
 
         Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesByUserIdIteratorPtr ReceiveStatuses(
         ) const;
@@ -93,7 +100,7 @@ namespace Gs2::LoginReward::Domain::Model
 
         TSharedPtr<Gs2::LoginReward::Domain::Model::FReceiveStatusDomain> ReceiveStatus(
             const FString BonusModelName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

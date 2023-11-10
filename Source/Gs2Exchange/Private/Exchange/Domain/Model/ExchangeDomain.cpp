@@ -44,12 +44,14 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FExchangeDomain::FExchangeDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -65,6 +67,7 @@ namespace Gs2::Exchange::Domain::Model
         const FExchangeDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -74,7 +77,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FExchangeDomain::FExchangeTask::FExchangeTask(
-        const TSharedPtr<FExchangeDomain> Self,
+        const TSharedPtr<FExchangeDomain>& Self,
         const Request::FExchangeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -172,7 +175,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FExchangeDomain::FIncrementalTask::FIncrementalTask(
-        const TSharedPtr<FExchangeDomain> Self,
+        const TSharedPtr<FExchangeDomain>& Self,
         const Request::FIncrementalExchangeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -270,7 +273,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FExchangeDomain::FUnlockIncrementalTask::FUnlockIncrementalTask(
-        const TSharedPtr<FExchangeDomain> Self,
+        const TSharedPtr<FExchangeDomain>& Self,
         const Request::FUnlockIncrementalExchangeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -323,6 +326,7 @@ namespace Gs2::Exchange::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );

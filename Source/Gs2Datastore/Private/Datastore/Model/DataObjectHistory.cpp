@@ -213,7 +213,7 @@ namespace Gs2::Datastore::Model
         return MakeShared<FDataObjectHistory>()
             ->WithDataObjectHistoryId(Data->HasField("dataObjectHistoryId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("dataObjectHistoryId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -222,7 +222,7 @@ namespace Gs2::Datastore::Model
                 }() : TOptional<FString>())
             ->WithDataObjectName(Data->HasField("dataObjectName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("dataObjectName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -231,7 +231,7 @@ namespace Gs2::Datastore::Model
                 }() : TOptional<FString>())
             ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("generation", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

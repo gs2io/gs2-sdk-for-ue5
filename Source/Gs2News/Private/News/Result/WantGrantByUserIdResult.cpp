@@ -97,7 +97,7 @@ namespace Gs2::News::Result
                  }() : nullptr)
             ->WithBrowserUrl(Data->HasField("browserUrl") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("browserUrl", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -106,7 +106,7 @@ namespace Gs2::News::Result
                 }() : TOptional<FString>())
             ->WithZipUrl(Data->HasField("zipUrl") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("zipUrl", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

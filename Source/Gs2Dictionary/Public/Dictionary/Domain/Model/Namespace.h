@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Dictionary/Gs2Dictionary.h"
 #include "Dictionary/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelsIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelMastersIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Dictionary::Domain
+{
+    class FGs2DictionaryDomain;
+    typedef TSharedPtr<FGs2DictionaryDomain> FGs2DictionaryDomainPtr;
 }
 
 namespace Gs2::Dictionary::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Dictionary::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
+        const Dictionary::Domain::FGs2DictionaryDomainPtr Service;
+        const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -84,7 +90,8 @@ namespace Gs2::Dictionary::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -101,7 +108,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -127,7 +134,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -153,7 +160,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -179,7 +186,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -205,7 +212,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FCreateEntryModelMasterRequestPtr Request;
         public:
             explicit FCreateEntryModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateEntryModelMasterRequestPtr Request
             );
 
@@ -224,7 +231,7 @@ namespace Gs2::Dictionary::Domain::Model
         );
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain> CurrentEntryMaster(
-        ) const;
+        );
 
         Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelsIteratorPtr EntryModels(
         ) const;
@@ -239,15 +246,15 @@ namespace Gs2::Dictionary::Domain::Model
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelDomain> EntryModel(
             const FString EntryName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::Dictionary::Domain::Iterator::FDescribeEntryModelMastersIteratorPtr EntryModelMasters(
         ) const;
@@ -262,7 +269,7 @@ namespace Gs2::Dictionary::Domain::Model
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain> EntryModelMaster(
             const FString EntryName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

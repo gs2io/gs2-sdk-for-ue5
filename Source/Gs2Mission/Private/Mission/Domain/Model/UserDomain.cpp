@@ -46,12 +46,14 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -66,6 +68,7 @@ namespace Gs2::Mission::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -117,10 +120,11 @@ namespace Gs2::Mission::Domain::Model
 
     TSharedPtr<Gs2::Mission::Domain::Model::FCounterDomain> FUserDomain::Counter(
         const FString CounterName
-    ) const
+    )
     {
         return MakeShared<Gs2::Mission::Domain::Model::FCounterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             CounterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CounterName)
@@ -170,10 +174,11 @@ namespace Gs2::Mission::Domain::Model
 
     TSharedPtr<Gs2::Mission::Domain::Model::FCompleteDomain> FUserDomain::Complete(
         const FString MissionGroupName
-    ) const
+    )
     {
         return MakeShared<Gs2::Mission::Domain::Model::FCompleteDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             MissionGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MissionGroupName)

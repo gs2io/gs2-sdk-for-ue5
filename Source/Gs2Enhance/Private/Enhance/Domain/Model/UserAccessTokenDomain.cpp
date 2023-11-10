@@ -43,12 +43,14 @@ namespace Gs2::Enhance::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -63,6 +65,7 @@ namespace Gs2::Enhance::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -72,20 +75,22 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     TSharedPtr<Gs2::Enhance::Domain::Model::FProgressAccessTokenDomain> FUserAccessTokenDomain::Progress(
-    ) const
+    )
     {
         return MakeShared<Gs2::Enhance::Domain::Model::FProgressAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
     }
 
     TSharedPtr<Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomain> FUserAccessTokenDomain::Enhance(
-    ) const
+    )
     {
         return MakeShared<Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

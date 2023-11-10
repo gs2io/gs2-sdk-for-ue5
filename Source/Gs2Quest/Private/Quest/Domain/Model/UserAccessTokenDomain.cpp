@@ -36,6 +36,7 @@
 #include "Quest/Domain/Model/QuestModel.h"
 #include "Quest/Domain/Model/User.h"
 #include "Quest/Domain/Model/UserAccessToken.h"
+#include "Quest/Domain/SpeculativeExecutor/Transaction/StartByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -45,12 +46,14 @@ namespace Gs2::Quest::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Quest::Domain::FGs2QuestDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -65,6 +68,7 @@ namespace Gs2::Quest::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -74,16 +78,17 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FUserAccessTokenDomain::FStartTask::FStartTask(
-        const TSharedPtr<FUserAccessTokenDomain> Self,
-        const Request::FStartRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
+        const Request::FStartRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FUserAccessTokenDomain::FStartTask::FStartTask(
         const FStartTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -94,6 +99,26 @@ namespace Gs2::Quest::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FStartByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FStartByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Start(
             Request
         );
@@ -149,16 +174,18 @@ namespace Gs2::Quest::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FStartTask>> FUserAccessTokenDomain::Start(
-        Request::FStartRequestPtr Request
+        Request::FStartRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FStartTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FStartTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain> FUserAccessTokenDomain::Progress(
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -207,10 +234,11 @@ namespace Gs2::Quest::Domain::Model
 
     TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListAccessTokenDomain> FUserAccessTokenDomain::CompletedQuestList(
         const FString QuestGroupName
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FCompletedQuestListAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             QuestGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestGroupName)

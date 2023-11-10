@@ -35,6 +35,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::MegaField::Domain
+{
+    class FGs2MegaFieldDomain;
+    typedef TSharedPtr<FGs2MegaFieldDomain> FGs2MegaFieldDomainPtr;
+}
+
 namespace Gs2::MegaField::Domain::Model
 {
     class FNamespaceDomain;
@@ -52,7 +58,8 @@ namespace Gs2::MegaField::Domain::Model
         public TSharedFromThis<FSpatialAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
+        const MegaField::Domain::FGs2MegaFieldDomainPtr Service;
+        const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -67,9 +74,10 @@ namespace Gs2::MegaField::Domain::Model
     public:
 
         FSpatialAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> AreaModelName,
             const TOptional<FString> LayerModelName
             // ReSharper disable once CppMemberInitializersOrder
@@ -87,7 +95,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FPutPositionRequestPtr Request;
         public:
             explicit FPutPositionTask(
-                const TSharedPtr<FSpatialAccessTokenDomain> Self,
+                const TSharedPtr<FSpatialAccessTokenDomain>& Self,
                 const Request::FPutPositionRequestPtr Request
             );
 
@@ -113,7 +121,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FFetchPositionRequestPtr Request;
         public:
             explicit FFetchPositionTask(
-                const TSharedPtr<FSpatialAccessTokenDomain> Self,
+                const TSharedPtr<FSpatialAccessTokenDomain>& Self,
                 const Request::FFetchPositionRequestPtr Request
             );
 
@@ -139,7 +147,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FNearUserIdsRequestPtr Request;
         public:
             explicit FNearUserIdsTask(
-                const TSharedPtr<FSpatialAccessTokenDomain> Self,
+                const TSharedPtr<FSpatialAccessTokenDomain>& Self,
                 const Request::FNearUserIdsRequestPtr Request
             );
 
@@ -165,7 +173,7 @@ namespace Gs2::MegaField::Domain::Model
             const Request::FActionRequestPtr Request;
         public:
             explicit FActionTask(
-                const TSharedPtr<FSpatialAccessTokenDomain> Self,
+                const TSharedPtr<FSpatialAccessTokenDomain>& Self,
                 const Request::FActionRequestPtr Request
             );
 

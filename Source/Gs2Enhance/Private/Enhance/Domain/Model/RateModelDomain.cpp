@@ -42,12 +42,14 @@ namespace Gs2::Enhance::Domain::Model
 {
 
     FRateModelDomain::FRateModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RateName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         RateName(RateName),
@@ -62,6 +64,7 @@ namespace Gs2::Enhance::Domain::Model
         const FRateModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         RateName(From.RateName),
@@ -71,7 +74,7 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FRateModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRateModelDomain> Self,
+        const TSharedPtr<FRateModelDomain>& Self,
         const Request::FGetRateModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

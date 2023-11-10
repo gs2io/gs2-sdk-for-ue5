@@ -40,12 +40,14 @@ namespace Gs2::Dictionary::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -60,6 +62,7 @@ namespace Gs2::Dictionary::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -69,7 +72,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FUserDomain::FAddEntriesTask::FAddEntriesTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FAddEntriesByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -128,6 +131,7 @@ namespace Gs2::Dictionary::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Dictionary::Domain::Model::FEntryDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItems())[i]->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetName()
@@ -160,7 +164,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FUserDomain::FResetTask::FResetTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FResetByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -224,7 +228,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FUserDomain::FVerifyEntryTask::FVerifyEntryTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FVerifyEntryByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -270,7 +274,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FUserDomain::FDeleteEntriesTask::FDeleteEntriesTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FDeleteEntriesByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -327,6 +331,7 @@ namespace Gs2::Dictionary::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Dictionary::Domain::Model::FEntryDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItems())[i]->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetName()
@@ -401,10 +406,11 @@ namespace Gs2::Dictionary::Domain::Model
 
     TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain> FUserDomain::Entry(
         const FString EntryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Dictionary::Domain::Model::FEntryDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             EntryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EntryName)

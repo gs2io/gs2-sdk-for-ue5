@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "JobQueue/Gs2JobQueue.h"
 #include "JobQueue/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "JobQueue/Domain/Iterator/DescribeJobsByUserIdIterator.h"
 #include "JobQueue/Domain/Iterator/DescribeDeadLetterJobsByUserIdIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::JobQueue::Domain
+{
+    class FGs2JobQueueDomain;
+    typedef TSharedPtr<FGs2JobQueueDomain> FGs2JobQueueDomainPtr;
 }
 
 namespace Gs2::JobQueue::Domain::Model
@@ -47,7 +52,8 @@ namespace Gs2::JobQueue::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
+        const JobQueue::Domain::FGs2JobQueueDomainPtr Service;
+        const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
 
         public:
         TOptional<bool> AutoRun;
@@ -74,7 +80,8 @@ namespace Gs2::JobQueue::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -92,7 +99,7 @@ namespace Gs2::JobQueue::Domain::Model
             const Request::FPushByUserIdRequestPtr Request;
         public:
             explicit FPushTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FPushByUserIdRequestPtr Request
             );
 
@@ -118,7 +125,7 @@ namespace Gs2::JobQueue::Domain::Model
             const Request::FRunByUserIdRequestPtr Request;
         public:
             explicit FRunTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FRunByUserIdRequestPtr Request
             );
 
@@ -149,7 +156,7 @@ namespace Gs2::JobQueue::Domain::Model
 
         TSharedPtr<Gs2::JobQueue::Domain::Model::FJobDomain> Job(
             const FString JobName
-        ) const;
+        );
 
         Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIteratorPtr DeadLetterJobs(
         ) const;
@@ -164,7 +171,7 @@ namespace Gs2::JobQueue::Domain::Model
 
         TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain> DeadLetterJob(
             const FString DeadLetterJobName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -146,7 +146,7 @@ namespace Gs2::Identifier::Model
         return MakeShared<FPassword>()
             ->WithPasswordId(Data->HasField("passwordId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("passwordId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -155,7 +155,7 @@ namespace Gs2::Identifier::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -164,7 +164,7 @@ namespace Gs2::Identifier::Model
                 }() : TOptional<FString>())
             ->WithUserName(Data->HasField("userName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

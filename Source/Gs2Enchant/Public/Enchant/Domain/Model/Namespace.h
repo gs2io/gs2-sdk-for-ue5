@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Enchant/Gs2Enchant.h"
 #include "Enchant/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Enchant/Domain/Iterator/DescribeBalanceParameterModelsIterator.h"
 #include "Enchant/Domain/Iterator/DescribeBalanceParameterModelMastersIterator.h"
@@ -35,6 +34,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Enchant::Domain
+{
+    class FGs2EnchantDomain;
+    typedef TSharedPtr<FGs2EnchantDomain> FGs2EnchantDomainPtr;
 }
 
 namespace Gs2::Enchant::Domain::Model
@@ -56,7 +61,8 @@ namespace Gs2::Enchant::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Enchant::FGs2EnchantRestClientPtr Client;
+        const Enchant::Domain::FGs2EnchantDomainPtr Service;
+        const Gs2::Enchant::FGs2EnchantRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -92,7 +98,8 @@ namespace Gs2::Enchant::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Enchant::Domain::FGs2EnchantDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -109,7 +116,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -135,7 +142,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -161,7 +168,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -187,7 +194,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -213,7 +220,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FCreateBalanceParameterModelMasterRequestPtr Request;
         public:
             explicit FCreateBalanceParameterModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateBalanceParameterModelMasterRequestPtr Request
             );
 
@@ -239,7 +246,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FCreateRarityParameterModelMasterRequestPtr Request;
         public:
             explicit FCreateRarityParameterModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateRarityParameterModelMasterRequestPtr Request
             );
 
@@ -258,7 +265,7 @@ namespace Gs2::Enchant::Domain::Model
         );
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain> CurrentParameterMaster(
-        ) const;
+        );
 
         Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterModelsIteratorPtr BalanceParameterModels(
         ) const;
@@ -273,7 +280,7 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterModelDomain> BalanceParameterModel(
             const FString ParameterName
-        ) const;
+        );
 
         Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterModelMastersIteratorPtr BalanceParameterModelMasters(
         ) const;
@@ -288,7 +295,7 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterModelMasterDomain> BalanceParameterModelMaster(
             const FString ParameterName
-        ) const;
+        );
 
         Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterModelsIteratorPtr RarityParameterModels(
         ) const;
@@ -303,7 +310,7 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterModelDomain> RarityParameterModel(
             const FString ParameterName
-        ) const;
+        );
 
         Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterModelMastersIteratorPtr RarityParameterModelMasters(
         ) const;
@@ -318,15 +325,15 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain> RarityParameterModelMaster(
             const FString ParameterName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

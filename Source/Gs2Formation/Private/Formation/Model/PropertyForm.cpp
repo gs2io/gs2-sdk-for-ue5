@@ -241,7 +241,7 @@ namespace Gs2::Formation::Model
         return MakeShared<FPropertyForm>()
             ->WithFormId(Data->HasField("formId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("formId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -250,7 +250,7 @@ namespace Gs2::Formation::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -259,7 +259,7 @@ namespace Gs2::Formation::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -268,7 +268,7 @@ namespace Gs2::Formation::Model
                 }() : TOptional<FString>())
             ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("propertyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

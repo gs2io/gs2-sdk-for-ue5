@@ -119,7 +119,7 @@ namespace Gs2::Mission::Model
         return MakeShared<FScopedValue>()
             ->WithResetType(Data->HasField("resetType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resetType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

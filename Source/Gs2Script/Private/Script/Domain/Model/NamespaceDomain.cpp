@@ -34,11 +34,13 @@ namespace Gs2::Script::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Script::Domain::FGs2ScriptDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Script::FGs2ScriptRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("script:Namespace")
@@ -49,6 +51,7 @@ namespace Gs2::Script::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -57,7 +60,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -109,7 +112,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -166,7 +169,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -225,7 +228,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -278,7 +281,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FNamespaceDomain::FCreateScriptTask::FCreateScriptTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateScriptRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -330,6 +333,7 @@ namespace Gs2::Script::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -345,7 +349,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FNamespaceDomain::FCreateScriptFromGitHubTask::FCreateScriptFromGitHubTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateScriptFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -397,6 +401,7 @@ namespace Gs2::Script::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -412,7 +417,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FNamespaceDomain::FInvokeScriptTask::FInvokeScriptTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FInvokeScriptRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -479,7 +484,7 @@ namespace Gs2::Script::Domain::Model
     }
 
     FNamespaceDomain::FDebugInvokeTask::FDebugInvokeTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDebugInvokeRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -585,10 +590,11 @@ namespace Gs2::Script::Domain::Model
 
     TSharedPtr<Gs2::Script::Domain::Model::FScriptDomain> FNamespaceDomain::Script(
         const FString ScriptName
-    ) const
+    )
     {
         return MakeShared<Gs2::Script::Domain::Model::FScriptDomain>(
             Gs2,
+            Service,
             NamespaceName,
             ScriptName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ScriptName)
         );

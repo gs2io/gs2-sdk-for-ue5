@@ -44,7 +44,8 @@ namespace Gs2::Enchant::Domain::Model
 {
 
     FRarityParameterStatusDomain::FRarityParameterStatusDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enchant::Domain::FGs2EnchantDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> ParameterName,
@@ -52,6 +53,7 @@ namespace Gs2::Enchant::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -69,6 +71,7 @@ namespace Gs2::Enchant::Domain::Model
         const FRarityParameterStatusDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -80,7 +83,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FRarityParameterStatusDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRarityParameterStatusDomain> Self,
+        const TSharedPtr<FRarityParameterStatusDomain>& Self,
         const Request::FGetRarityParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -146,7 +149,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FRarityParameterStatusDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FRarityParameterStatusDomain> Self,
+        const TSharedPtr<FRarityParameterStatusDomain>& Self,
         const Request::FDeleteRarityParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -208,7 +211,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FRarityParameterStatusDomain::FReDrawTask::FReDrawTask(
-        const TSharedPtr<FRarityParameterStatusDomain> Self,
+        const TSharedPtr<FRarityParameterStatusDomain>& Self,
         const Request::FReDrawRarityParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -276,7 +279,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FRarityParameterStatusDomain::FAddTask::FAddTask(
-        const TSharedPtr<FRarityParameterStatusDomain> Self,
+        const TSharedPtr<FRarityParameterStatusDomain>& Self,
         const Request::FAddRarityParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -344,7 +347,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FRarityParameterStatusDomain::FVerifyTask::FVerifyTask(
-        const TSharedPtr<FRarityParameterStatusDomain> Self,
+        const TSharedPtr<FRarityParameterStatusDomain>& Self,
         const Request::FVerifyRarityParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -412,7 +415,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FRarityParameterStatusDomain::FSetTask::FSetTask(
-        const TSharedPtr<FRarityParameterStatusDomain> Self,
+        const TSharedPtr<FRarityParameterStatusDomain>& Self,
         const Request::FSetRarityParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

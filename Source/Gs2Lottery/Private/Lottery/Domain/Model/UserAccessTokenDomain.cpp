@@ -48,12 +48,14 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -68,6 +70,7 @@ namespace Gs2::Lottery::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -77,10 +80,11 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryAccessTokenDomain> FUserAccessTokenDomain::Lottery(
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FLotteryAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -129,10 +133,11 @@ namespace Gs2::Lottery::Domain::Model
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FBoxItemsAccessTokenDomain> FUserAccessTokenDomain::BoxItems(
         const FString PrizeTableName
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FBoxItemsAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             PrizeTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PrizeTableName)

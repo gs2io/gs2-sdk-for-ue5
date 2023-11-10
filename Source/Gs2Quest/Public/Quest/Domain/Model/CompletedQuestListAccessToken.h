@@ -36,6 +36,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Quest::Domain
+{
+    class FGs2QuestDomain;
+    typedef TSharedPtr<FGs2QuestDomain> FGs2QuestDomainPtr;
+}
+
 namespace Gs2::Quest::Domain::Model
 {
     class FNamespaceDomain;
@@ -55,7 +61,8 @@ namespace Gs2::Quest::Domain::Model
         public TSharedFromThis<FCompletedQuestListAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Quest::FGs2QuestRestClientPtr Client;
+        const Quest::Domain::FGs2QuestDomainPtr Service;
+        const Gs2::Quest::FGs2QuestRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -69,9 +76,10 @@ namespace Gs2::Quest::Domain::Model
     public:
 
         FCompletedQuestListAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Quest::Domain::FGs2QuestDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> QuestGroupName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -88,7 +96,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FGetCompletedQuestListRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCompletedQuestListAccessTokenDomain> Self,
+                const TSharedPtr<FCompletedQuestListAccessTokenDomain>& Self,
                 const Request::FGetCompletedQuestListRequestPtr Request
             );
 

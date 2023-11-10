@@ -29,6 +29,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::AdReward::Domain
+{
+    class FGs2AdRewardDomain;
+    typedef TSharedPtr<FGs2AdRewardDomain> FGs2AdRewardDomainPtr;
+}
+
 namespace Gs2::AdReward::Domain::Model
 {
     class FNamespaceDomain;
@@ -41,7 +47,8 @@ namespace Gs2::AdReward::Domain::Model
         public TSharedFromThis<FHistoryAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::AdReward::FGs2AdRewardRestClientPtr Client;
+        const AdReward::Domain::FGs2AdRewardDomainPtr Service;
+        const Gs2::AdReward::FGs2AdRewardRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -55,9 +62,10 @@ namespace Gs2::AdReward::Domain::Model
     public:
 
         FHistoryAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const AdReward::Domain::FGs2AdRewardDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> TransactionId
             // ReSharper disable once CppMemberInitializersOrder
         );

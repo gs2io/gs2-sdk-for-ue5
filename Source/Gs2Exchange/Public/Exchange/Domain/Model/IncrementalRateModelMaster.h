@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Exchange/Gs2Exchange.h"
 #include "Exchange/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelMastersIterator.h"
@@ -33,6 +32,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Exchange::Domain
+{
+    class FGs2ExchangeDomain;
+    typedef TSharedPtr<FGs2ExchangeDomain> FGs2ExchangeDomainPtr;
 }
 
 namespace Gs2::Exchange::Domain::Model
@@ -54,7 +59,8 @@ namespace Gs2::Exchange::Domain::Model
         public TSharedFromThis<FIncrementalRateModelMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
+        const Exchange::Domain::FGs2ExchangeDomainPtr Service;
+        const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -66,7 +72,8 @@ namespace Gs2::Exchange::Domain::Model
     public:
 
         FIncrementalRateModelMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> RateName
             // ReSharper disable once CppMemberInitializersOrder
@@ -84,7 +91,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FGetIncrementalRateModelMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FIncrementalRateModelMasterDomain> Self,
+                const TSharedPtr<FIncrementalRateModelMasterDomain>& Self,
                 const Request::FGetIncrementalRateModelMasterRequestPtr Request
             );
 
@@ -110,7 +117,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FUpdateIncrementalRateModelMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FIncrementalRateModelMasterDomain> Self,
+                const TSharedPtr<FIncrementalRateModelMasterDomain>& Self,
                 const Request::FUpdateIncrementalRateModelMasterRequestPtr Request
             );
 
@@ -136,7 +143,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FDeleteIncrementalRateModelMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FIncrementalRateModelMasterDomain> Self,
+                const TSharedPtr<FIncrementalRateModelMasterDomain>& Self,
                 const Request::FDeleteIncrementalRateModelMasterRequestPtr Request
             );
 

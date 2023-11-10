@@ -134,7 +134,7 @@ namespace Gs2::LoginReward::Model
         return MakeShared<FGitHubCheckoutSetting>()
             ->WithApiKeyId(Data->HasField("apiKeyId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("apiKeyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -143,7 +143,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithRepositoryName(Data->HasField("repositoryName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("repositoryName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -152,7 +152,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithSourcePath(Data->HasField("sourcePath") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("sourcePath", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -161,7 +161,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithReferenceType(Data->HasField("referenceType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("referenceType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -170,7 +170,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithCommitHash(Data->HasField("commitHash") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("commitHash", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -179,7 +179,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithBranchName(Data->HasField("branchName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("branchName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -188,7 +188,7 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithTagName(Data->HasField("tagName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("tagName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

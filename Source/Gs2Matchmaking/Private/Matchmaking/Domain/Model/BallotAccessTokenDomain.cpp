@@ -46,9 +46,10 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FBallotAccessTokenDomain::FBallotAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> RatingName,
         const TOptional<FString> GatheringName,
         const TOptional<int32> NumberOfPlayer,
@@ -56,6 +57,7 @@ namespace Gs2::Matchmaking::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -75,6 +77,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FBallotAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -88,7 +91,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FBallotAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FBallotAccessTokenDomain> Self,
+        const TSharedPtr<FBallotAccessTokenDomain>& Self,
         const Request::FGetBallotRequestPtr Request
     ): Self(Self), Request(Request)
     {

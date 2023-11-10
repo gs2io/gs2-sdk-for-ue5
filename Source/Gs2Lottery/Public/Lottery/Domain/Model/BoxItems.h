@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Lottery/Gs2Lottery.h"
 #include "Lottery/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Lottery/Domain/Iterator/DescribeLotteryModelMastersIterator.h"
 #include "Lottery/Domain/Iterator/DescribePrizeTableMastersIterator.h"
@@ -36,6 +35,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Lottery::Domain
+{
+    class FGs2LotteryDomain;
+    typedef TSharedPtr<FGs2LotteryDomain> FGs2LotteryDomainPtr;
 }
 
 namespace Gs2::Lottery::Domain::Model
@@ -60,7 +65,8 @@ namespace Gs2::Lottery::Domain::Model
         public TSharedFromThis<FBoxItemsDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lottery::FGs2LotteryRestClientPtr Client;
+        const Lottery::Domain::FGs2LotteryDomainPtr Service;
+        const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -73,7 +79,8 @@ namespace Gs2::Lottery::Domain::Model
     public:
 
         FBoxItemsDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lottery::Domain::FGs2LotteryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> PrizeTableName
@@ -92,7 +99,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FGetBoxByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FBoxItemsDomain> Self,
+                const TSharedPtr<FBoxItemsDomain>& Self,
                 const Request::FGetBoxByUserIdRequestPtr Request
             );
 
@@ -118,7 +125,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FResetBoxByUserIdRequestPtr Request;
         public:
             explicit FResetBoxTask(
-                const TSharedPtr<FBoxItemsDomain> Self,
+                const TSharedPtr<FBoxItemsDomain>& Self,
                 const Request::FResetBoxByUserIdRequestPtr Request
             );
 

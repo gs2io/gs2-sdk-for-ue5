@@ -42,12 +42,14 @@ namespace Gs2::LoginReward::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -62,6 +64,7 @@ namespace Gs2::LoginReward::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -71,10 +74,11 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     TSharedPtr<Gs2::LoginReward::Domain::Model::FBonusDomain> FUserDomain::Bonus(
-    ) const
+    )
     {
         return MakeShared<Gs2::LoginReward::Domain::Model::FBonusDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );
@@ -123,10 +127,11 @@ namespace Gs2::LoginReward::Domain::Model
 
     TSharedPtr<Gs2::LoginReward::Domain::Model::FReceiveStatusDomain> FUserDomain::ReceiveStatus(
         const FString BonusModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::LoginReward::Domain::Model::FReceiveStatusDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             BonusModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(BonusModelName)

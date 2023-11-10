@@ -330,7 +330,7 @@ namespace Gs2::Schedule::Model
         return MakeShared<FEvent>()
             ->WithEventId(Data->HasField("eventId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("eventId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -339,7 +339,7 @@ namespace Gs2::Schedule::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -348,7 +348,7 @@ namespace Gs2::Schedule::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -357,7 +357,7 @@ namespace Gs2::Schedule::Model
                 }() : TOptional<FString>())
             ->WithScheduleType(Data->HasField("scheduleType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("scheduleType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -366,7 +366,7 @@ namespace Gs2::Schedule::Model
                 }() : TOptional<FString>())
             ->WithRepeatType(Data->HasField("repeatType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("repeatType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -411,7 +411,7 @@ namespace Gs2::Schedule::Model
                 }() : TOptional<int32>())
             ->WithRepeatBeginDayOfWeek(Data->HasField("repeatBeginDayOfWeek") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("repeatBeginDayOfWeek", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -420,7 +420,7 @@ namespace Gs2::Schedule::Model
                 }() : TOptional<FString>())
             ->WithRepeatEndDayOfWeek(Data->HasField("repeatEndDayOfWeek") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("repeatEndDayOfWeek", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -447,7 +447,7 @@ namespace Gs2::Schedule::Model
                 }() : TOptional<int32>())
             ->WithRelativeTriggerName(Data->HasField("relativeTriggerName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("relativeTriggerName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

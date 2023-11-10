@@ -38,6 +38,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Lottery::Domain
+{
+    class FGs2LotteryDomain;
+    typedef TSharedPtr<FGs2LotteryDomain> FGs2LotteryDomainPtr;
+}
+
 namespace Gs2::Lottery::Domain::Model
 {
     class FNamespaceDomain;
@@ -60,7 +66,8 @@ namespace Gs2::Lottery::Domain::Model
         public TSharedFromThis<FBoxItemsAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lottery::FGs2LotteryRestClientPtr Client;
+        const Lottery::Domain::FGs2LotteryDomainPtr Service;
+        const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -74,9 +81,10 @@ namespace Gs2::Lottery::Domain::Model
     public:
 
         FBoxItemsAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lottery::Domain::FGs2LotteryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> PrizeTableName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -93,7 +101,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FGetBoxRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FBoxItemsAccessTokenDomain> Self,
+                const TSharedPtr<FBoxItemsAccessTokenDomain>& Self,
                 const Request::FGetBoxRequestPtr Request
             );
 
@@ -119,7 +127,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FResetBoxRequestPtr Request;
         public:
             explicit FResetBoxTask(
-                const TSharedPtr<FBoxItemsAccessTokenDomain> Self,
+                const TSharedPtr<FBoxItemsAccessTokenDomain>& Self,
                 const Request::FResetBoxRequestPtr Request
             );
 

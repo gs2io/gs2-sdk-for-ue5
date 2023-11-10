@@ -20,7 +20,9 @@ public class Gs2Auth : ModuleRules
 		});
 		
 		PublicIncludePathModuleNames.AddRange(new [] {
-			"Gs2Domain"
+			"Gs2Domain",
+			"Core",
+			"Gs2Core"
 		});
 	}
 }

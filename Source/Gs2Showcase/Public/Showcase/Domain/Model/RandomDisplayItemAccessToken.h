@@ -37,6 +37,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Showcase::Domain
+{
+    class FGs2ShowcaseDomain;
+    typedef TSharedPtr<FGs2ShowcaseDomain> FGs2ShowcaseDomainPtr;
+}
+
 namespace Gs2::Showcase::Domain::Model
 {
     class FNamespaceDomain;
@@ -62,7 +68,8 @@ namespace Gs2::Showcase::Domain::Model
         public TSharedFromThis<FRandomDisplayItemAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
+        const Showcase::Domain::FGs2ShowcaseDomainPtr Service;
+        const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -87,9 +94,10 @@ namespace Gs2::Showcase::Domain::Model
     public:
 
         FRandomDisplayItemAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> ShowcaseName,
             const TOptional<FString> DisplayItemName
             // ReSharper disable once CppMemberInitializersOrder
@@ -107,7 +115,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FGetRandomDisplayItemRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FRandomDisplayItemAccessTokenDomain> Self,
+                const TSharedPtr<FRandomDisplayItemAccessTokenDomain>& Self,
                 const Request::FGetRandomDisplayItemRequestPtr Request
             );
 
@@ -131,10 +139,12 @@ namespace Gs2::Showcase::Domain::Model
         {
             const TSharedPtr<FRandomDisplayItemAccessTokenDomain> Self;
             const Request::FRandomShowcaseBuyRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FRandomShowcaseBuyTask(
-                const TSharedPtr<FRandomDisplayItemAccessTokenDomain> Self,
-                const Request::FRandomShowcaseBuyRequestPtr Request
+                const TSharedPtr<FRandomDisplayItemAccessTokenDomain>& Self,
+                const Request::FRandomShowcaseBuyRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FRandomShowcaseBuyTask(
@@ -148,7 +158,8 @@ namespace Gs2::Showcase::Domain::Model
         friend FRandomShowcaseBuyTask;
 
         TSharedPtr<FAsyncTask<FRandomShowcaseBuyTask>> RandomShowcaseBuy(
-            Request::FRandomShowcaseBuyRequestPtr Request
+            Request::FRandomShowcaseBuyRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         static FString CreateCacheParentKey(

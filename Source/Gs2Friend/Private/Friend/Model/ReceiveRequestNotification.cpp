@@ -49,7 +49,7 @@ namespace Gs2::Friend::Model
         return MakeShared<FReceiveRequestNotification>()
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -58,7 +58,7 @@ namespace Gs2::Friend::Model
                 }() : TOptional<FString>())
             ->WithFromUserId(Data->HasField("fromUserId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("fromUserId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

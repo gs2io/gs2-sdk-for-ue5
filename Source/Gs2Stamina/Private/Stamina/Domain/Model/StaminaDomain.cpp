@@ -43,13 +43,15 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FStaminaDomain::FStaminaDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Stamina::Domain::FGs2StaminaDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> StaminaName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -66,6 +68,7 @@ namespace Gs2::Stamina::Domain::Model
         const FStaminaDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -76,7 +79,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FGetStaminaByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -157,7 +160,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FUpdateStaminaByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -240,7 +243,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FConsumeTask::FConsumeTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FConsumeStaminaByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -323,7 +326,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FRecoverTask::FRecoverTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FRecoverStaminaByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -410,7 +413,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FRaiseMaxValueTask::FRaiseMaxValueTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FRaiseMaxValueByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -493,7 +496,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FDecreaseMaxValueTask::FDecreaseMaxValueTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FDecreaseMaxValueByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -576,7 +579,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FSetMaxValueTask::FSetMaxValueTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FSetMaxValueByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -659,7 +662,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FSetRecoverIntervalTask::FSetRecoverIntervalTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FSetRecoverIntervalByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -742,7 +745,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FSetRecoverValueTask::FSetRecoverValueTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FSetRecoverValueByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -825,7 +828,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FStaminaDomain> Self,
+        const TSharedPtr<FStaminaDomain>& Self,
         const Request::FDeleteStaminaByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

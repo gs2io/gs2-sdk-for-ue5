@@ -43,12 +43,14 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FRecoverValueTableMasterDomain::FRecoverValueTableMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Stamina::Domain::FGs2StaminaDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RecoverValueTableName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         RecoverValueTableName(RecoverValueTableName),
@@ -63,6 +65,7 @@ namespace Gs2::Stamina::Domain::Model
         const FRecoverValueTableMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         RecoverValueTableName(From.RecoverValueTableName),
@@ -72,7 +75,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FRecoverValueTableMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRecoverValueTableMasterDomain> Self,
+        const TSharedPtr<FRecoverValueTableMasterDomain>& Self,
         const Request::FGetRecoverValueTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -134,7 +137,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FRecoverValueTableMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FRecoverValueTableMasterDomain> Self,
+        const TSharedPtr<FRecoverValueTableMasterDomain>& Self,
         const Request::FUpdateRecoverValueTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -198,7 +201,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FRecoverValueTableMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FRecoverValueTableMasterDomain> Self,
+        const TSharedPtr<FRecoverValueTableMasterDomain>& Self,
         const Request::FDeleteRecoverValueTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

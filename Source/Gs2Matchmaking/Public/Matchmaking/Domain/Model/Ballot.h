@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Matchmaking/Gs2Matchmaking.h"
 #include "Matchmaking/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Matchmaking/Domain/Iterator/DescribeGatheringsIterator.h"
 #include "Matchmaking/Domain/Iterator/DoMatchmakingByPlayerIterator.h"
@@ -35,6 +34,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Matchmaking::Domain
+{
+    class FGs2MatchmakingDomain;
+    typedef TSharedPtr<FGs2MatchmakingDomain> FGs2MatchmakingDomainPtr;
 }
 
 namespace Gs2::Matchmaking::Domain::Model
@@ -57,7 +62,8 @@ namespace Gs2::Matchmaking::Domain::Model
         public TSharedFromThis<FBallotDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client;
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr Service;
+        const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client;
 
         public:
         TOptional<FString> Body;
@@ -83,7 +89,8 @@ namespace Gs2::Matchmaking::Domain::Model
     public:
 
         FBallotDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> RatingName,
@@ -105,7 +112,7 @@ namespace Gs2::Matchmaking::Domain::Model
             const Request::FGetBallotByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FBallotDomain> Self,
+                const TSharedPtr<FBallotDomain>& Self,
                 const Request::FGetBallotByUserIdRequestPtr Request
             );
 

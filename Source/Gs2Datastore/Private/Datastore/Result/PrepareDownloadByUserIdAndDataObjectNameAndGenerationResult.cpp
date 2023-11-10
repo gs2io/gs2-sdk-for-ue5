@@ -102,7 +102,7 @@ namespace Gs2::Datastore::Result
                  }() : nullptr)
             ->WithFileUrl(Data->HasField("fileUrl") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("fileUrl", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Inbox::Domain
+{
+    class FGs2InboxDomain;
+    typedef TSharedPtr<FGs2InboxDomain> FGs2InboxDomainPtr;
+}
+
 namespace Gs2::Inbox::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::Inbox::Domain::Model
         public TSharedFromThis<FReceivedAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inbox::FGs2InboxRestClientPtr Client;
+        const Inbox::Domain::FGs2InboxDomainPtr Service;
+        const Gs2::Inbox::FGs2InboxRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -63,9 +70,10 @@ namespace Gs2::Inbox::Domain::Model
     public:
 
         FReceivedAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inbox::Domain::FGs2InboxDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 

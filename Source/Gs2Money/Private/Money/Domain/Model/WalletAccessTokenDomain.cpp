@@ -40,13 +40,15 @@ namespace Gs2::Money::Domain::Model
 {
 
     FWalletAccessTokenDomain::FWalletAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Money::Domain::FGs2MoneyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<int32> Slot
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -63,6 +65,7 @@ namespace Gs2::Money::Domain::Model
         const FWalletAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -73,7 +76,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FWalletAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FWalletAccessTokenDomain> Self,
+        const TSharedPtr<FWalletAccessTokenDomain>& Self,
         const Request::FGetWalletRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -137,7 +140,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FWalletAccessTokenDomain::FWithdrawTask::FWithdrawTask(
-        const TSharedPtr<FWalletAccessTokenDomain> Self,
+        const TSharedPtr<FWalletAccessTokenDomain>& Self,
         const Request::FWithdrawRequestPtr Request
     ): Self(Self), Request(Request)
     {

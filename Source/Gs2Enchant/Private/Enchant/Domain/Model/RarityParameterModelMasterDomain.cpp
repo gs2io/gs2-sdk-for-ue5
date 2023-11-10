@@ -44,12 +44,14 @@ namespace Gs2::Enchant::Domain::Model
 {
 
     FRarityParameterModelMasterDomain::FRarityParameterModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enchant::Domain::FGs2EnchantDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> ParameterName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParameterName(ParameterName),
@@ -64,6 +66,7 @@ namespace Gs2::Enchant::Domain::Model
         const FRarityParameterModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParameterName(From.ParameterName),
@@ -73,7 +76,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FRarityParameterModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRarityParameterModelMasterDomain> Self,
+        const TSharedPtr<FRarityParameterModelMasterDomain>& Self,
         const Request::FGetRarityParameterModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -135,7 +138,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FRarityParameterModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FRarityParameterModelMasterDomain> Self,
+        const TSharedPtr<FRarityParameterModelMasterDomain>& Self,
         const Request::FUpdateRarityParameterModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -199,7 +202,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FRarityParameterModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FRarityParameterModelMasterDomain> Self,
+        const TSharedPtr<FRarityParameterModelMasterDomain>& Self,
         const Request::FDeleteRarityParameterModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

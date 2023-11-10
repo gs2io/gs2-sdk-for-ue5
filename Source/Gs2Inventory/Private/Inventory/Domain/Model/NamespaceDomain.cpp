@@ -63,11 +63,13 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("inventory:Namespace")
@@ -78,6 +80,7 @@ namespace Gs2::Inventory::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -86,7 +89,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -138,7 +141,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -195,7 +198,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -254,7 +257,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -307,7 +310,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FNamespaceDomain::FCreateSimpleInventoryModelMasterTask::FCreateSimpleInventoryModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateSimpleInventoryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -359,6 +362,7 @@ namespace Gs2::Inventory::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -374,7 +378,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FNamespaceDomain::FCreateBigInventoryModelMasterTask::FCreateBigInventoryModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateBigInventoryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -426,6 +430,7 @@ namespace Gs2::Inventory::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -441,7 +446,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FNamespaceDomain::FCreateInventoryModelMasterTask::FCreateInventoryModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateInventoryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -493,6 +498,7 @@ namespace Gs2::Inventory::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -508,10 +514,11 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain> FNamespaceDomain::CurrentItemModelMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -556,10 +563,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryModelDomain> FNamespaceDomain::InventoryModel(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FInventoryModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
@@ -567,10 +575,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -578,10 +587,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -627,10 +637,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain> FNamespaceDomain::SimpleInventoryModelMaster(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
@@ -676,10 +687,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain> FNamespaceDomain::SimpleInventoryModel(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
@@ -725,10 +737,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain> FNamespaceDomain::BigInventoryModelMaster(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
@@ -774,10 +787,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelDomain> FNamespaceDomain::BigInventoryModel(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );
@@ -823,10 +837,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain> FNamespaceDomain::InventoryModelMaster(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
         );

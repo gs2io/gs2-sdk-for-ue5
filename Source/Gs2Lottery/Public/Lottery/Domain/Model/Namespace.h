@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Lottery/Gs2Lottery.h"
 #include "Lottery/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Lottery/Domain/Iterator/DescribeLotteryModelMastersIterator.h"
 #include "Lottery/Domain/Iterator/DescribePrizeTableMastersIterator.h"
@@ -36,6 +35,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Lottery::Domain
+{
+    class FGs2LotteryDomain;
+    typedef TSharedPtr<FGs2LotteryDomain> FGs2LotteryDomainPtr;
 }
 
 namespace Gs2::Lottery::Domain::Model
@@ -60,7 +65,8 @@ namespace Gs2::Lottery::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lottery::FGs2LotteryRestClientPtr Client;
+        const Lottery::Domain::FGs2LotteryDomainPtr Service;
+        const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -96,7 +102,8 @@ namespace Gs2::Lottery::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lottery::Domain::FGs2LotteryDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -113,7 +120,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -139,7 +146,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -165,7 +172,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -191,7 +198,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -217,7 +224,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FCreatePrizeTableMasterRequestPtr Request;
         public:
             explicit FCreatePrizeTableMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreatePrizeTableMasterRequestPtr Request
             );
 
@@ -243,7 +250,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FCreateLotteryModelMasterRequestPtr Request;
         public:
             explicit FCreateLotteryModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateLotteryModelMasterRequestPtr Request
             );
 
@@ -263,14 +270,14 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain> CurrentLotteryMaster(
-        ) const;
+        );
 
         Gs2::Lottery::Domain::Iterator::FDescribePrizeTablesIteratorPtr PrizeTables(
         ) const;
@@ -285,7 +292,7 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeTableDomain> PrizeTable(
             const FString PrizeTableName
-        ) const;
+        );
 
         Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIteratorPtr LotteryModels(
         ) const;
@@ -300,7 +307,7 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryModelDomain> LotteryModel(
             const FString LotteryName
-        ) const;
+        );
 
         Gs2::Lottery::Domain::Iterator::FDescribePrizeTableMastersIteratorPtr PrizeTableMasters(
         ) const;
@@ -315,7 +322,7 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain> PrizeTableMaster(
             const FString PrizeTableName
-        ) const;
+        );
 
         Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelMastersIteratorPtr LotteryModelMasters(
         ) const;
@@ -330,7 +337,7 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryModelMasterDomain> LotteryModelMaster(
             const FString LotteryName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -66,9 +66,10 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FReferenceOfAccessTokenDomain::FReferenceOfAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> InventoryName,
         const TOptional<FString> ItemName,
         const TOptional<FString> ItemSetName,
@@ -76,6 +77,7 @@ namespace Gs2::Inventory::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -89,7 +91,7 @@ namespace Gs2::Inventory::Domain::Model
             InventoryName,
             ItemName,
             ItemSetName,
-            "ItemSet"
+            "ReferenceOf"
         ))
     {
     }
@@ -98,6 +100,7 @@ namespace Gs2::Inventory::Domain::Model
         const FReferenceOfAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -111,7 +114,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FReferenceOfAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FReferenceOfAccessTokenDomain> Self,
+        const TSharedPtr<FReferenceOfAccessTokenDomain>& Self,
         const Request::FGetReferenceOfRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -209,7 +212,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FReferenceOfAccessTokenDomain::FVerifyTask::FVerifyTask(
-        const TSharedPtr<FReferenceOfAccessTokenDomain> Self,
+        const TSharedPtr<FReferenceOfAccessTokenDomain>& Self,
         const Request::FVerifyReferenceOfRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -298,6 +301,7 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Self->AccessToken,
             Request->GetInventoryName(),
@@ -316,7 +320,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FReferenceOfAccessTokenDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FReferenceOfAccessTokenDomain> Self,
+        const TSharedPtr<FReferenceOfAccessTokenDomain>& Self,
         const Request::FDeleteReferenceOfRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -394,6 +398,7 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Self->AccessToken,
             Request->GetInventoryName(),

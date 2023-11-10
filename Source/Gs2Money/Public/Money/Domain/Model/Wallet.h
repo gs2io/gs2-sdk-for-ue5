@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Money/Gs2Money.h"
 #include "Money/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Money/Domain/Iterator/DescribeWalletsIterator.h"
 #include "Money/Domain/Iterator/DescribeWalletsByUserIdIterator.h"
@@ -30,6 +29,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Money::Domain
+{
+    class FGs2MoneyDomain;
+    typedef TSharedPtr<FGs2MoneyDomain> FGs2MoneyDomainPtr;
 }
 
 namespace Gs2::Money::Domain::Model
@@ -46,7 +51,8 @@ namespace Gs2::Money::Domain::Model
         public TSharedFromThis<FWalletDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Money::FGs2MoneyRestClientPtr Client;
+        const Money::Domain::FGs2MoneyDomainPtr Service;
+        const Gs2::Money::FGs2MoneyRestClientPtr Client;
 
         public:
         TOptional<float> Price;
@@ -64,7 +70,8 @@ namespace Gs2::Money::Domain::Model
     public:
 
         FWalletDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Money::Domain::FGs2MoneyDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<int32> Slot
@@ -83,7 +90,7 @@ namespace Gs2::Money::Domain::Model
             const Request::FGetWalletByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FWalletDomain> Self,
+                const TSharedPtr<FWalletDomain>& Self,
                 const Request::FGetWalletByUserIdRequestPtr Request
             );
 
@@ -109,7 +116,7 @@ namespace Gs2::Money::Domain::Model
             const Request::FDepositByUserIdRequestPtr Request;
         public:
             explicit FDepositTask(
-                const TSharedPtr<FWalletDomain> Self,
+                const TSharedPtr<FWalletDomain>& Self,
                 const Request::FDepositByUserIdRequestPtr Request
             );
 
@@ -135,7 +142,7 @@ namespace Gs2::Money::Domain::Model
             const Request::FWithdrawByUserIdRequestPtr Request;
         public:
             explicit FWithdrawTask(
-                const TSharedPtr<FWalletDomain> Self,
+                const TSharedPtr<FWalletDomain>& Self,
                 const Request::FWithdrawByUserIdRequestPtr Request
             );
 

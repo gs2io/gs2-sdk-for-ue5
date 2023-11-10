@@ -95,7 +95,7 @@ namespace Gs2::Auth::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("keyId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -104,7 +104,7 @@ namespace Gs2::Auth::Request
               }() : TOptional<FString>())
             ->WithBody(Data->HasField("body") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("body", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -113,7 +113,7 @@ namespace Gs2::Auth::Request
               }() : TOptional<FString>())
             ->WithSignature(Data->HasField("signature") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("signature", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -38,7 +38,7 @@ namespace Gs2::JobQueue::Model
         return MakeShared<FPushNotification>()
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

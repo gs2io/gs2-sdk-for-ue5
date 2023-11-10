@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Version/Gs2Version.h"
 #include "Version/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelMastersIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Version::Domain
+{
+    class FGs2VersionDomain;
+    typedef TSharedPtr<FGs2VersionDomain> FGs2VersionDomainPtr;
 }
 
 namespace Gs2::Version::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Version::Domain::Model
         public TSharedFromThis<FVersionModelDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Version::FGs2VersionRestClientPtr Client;
+        const Version::Domain::FGs2VersionDomainPtr Service;
+        const Gs2::Version::FGs2VersionRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -62,7 +68,8 @@ namespace Gs2::Version::Domain::Model
     public:
 
         FVersionModelDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Version::Domain::FGs2VersionDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> VersionName
             // ReSharper disable once CppMemberInitializersOrder
@@ -80,7 +87,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FGetVersionModelRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FVersionModelDomain> Self,
+                const TSharedPtr<FVersionModelDomain>& Self,
                 const Request::FGetVersionModelRequestPtr Request
             );
 

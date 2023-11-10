@@ -42,12 +42,14 @@ namespace Gs2::News::Domain::Model
 {
 
     FProgressDomain::FProgressDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const News::Domain::FGs2NewsDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UploadToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UploadToken(UploadToken),
@@ -62,6 +64,7 @@ namespace Gs2::News::Domain::Model
         const FProgressDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UploadToken(From.UploadToken),
@@ -71,7 +74,7 @@ namespace Gs2::News::Domain::Model
     }
 
     FProgressDomain::FGetTask::FGetTask(
-        const TSharedPtr<FProgressDomain> Self,
+        const TSharedPtr<FProgressDomain>& Self,
         const Request::FGetProgressRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -175,10 +178,11 @@ namespace Gs2::News::Domain::Model
 
     TSharedPtr<Gs2::News::Domain::Model::FOutputDomain> FProgressDomain::Output(
         const FString OutputName
-    ) const
+    )
     {
         return MakeShared<Gs2::News::Domain::Model::FOutputDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UploadToken,
             OutputName == TEXT("") ? TOptional<FString>() : TOptional<FString>(OutputName)

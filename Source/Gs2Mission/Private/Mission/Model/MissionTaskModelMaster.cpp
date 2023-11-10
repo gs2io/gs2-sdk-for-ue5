@@ -309,7 +309,7 @@ namespace Gs2::Mission::Model
         return MakeShared<FMissionTaskModelMaster>()
             ->WithMissionTaskId(Data->HasField("missionTaskId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("missionTaskId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -318,7 +318,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -327,7 +327,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -336,7 +336,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -345,7 +345,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithCounterName(Data->HasField("counterName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("counterName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -354,7 +354,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithTargetResetType(Data->HasField("targetResetType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("targetResetType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -384,7 +384,7 @@ namespace Gs2::Mission::Model
                  }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithChallengePeriodEventId(Data->HasField("challengePeriodEventId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("challengePeriodEventId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -393,7 +393,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithPremiseMissionTaskName(Data->HasField("premiseMissionTaskName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("premiseMissionTaskName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

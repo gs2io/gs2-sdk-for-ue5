@@ -51,7 +51,7 @@ namespace Gs2::Distributor::Result
         return MakeShared<FRunStampSheetResult>()
             ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("result", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

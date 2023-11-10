@@ -35,7 +35,7 @@ namespace Gs2::Deploy::Domain
 {
 
     FGs2DeployDomain::FGs2DeployDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -55,7 +55,7 @@ namespace Gs2::Deploy::Domain
     }
 
     FGs2DeployDomain::FCreateStackTask::FCreateStackTask(
-        TSharedPtr<FGs2DeployDomain> Self,
+        const TSharedPtr<FGs2DeployDomain>& Self,
         const Request::FCreateStackRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -101,6 +101,7 @@ namespace Gs2::Deploy::Domain
         }
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -114,7 +115,7 @@ namespace Gs2::Deploy::Domain
     }
 
     FGs2DeployDomain::FCreateStackFromGitHubTask::FCreateStackFromGitHubTask(
-        TSharedPtr<FGs2DeployDomain> Self,
+        const TSharedPtr<FGs2DeployDomain>& Self,
         const Request::FCreateStackFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -160,6 +161,7 @@ namespace Gs2::Deploy::Domain
         }
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -173,7 +175,7 @@ namespace Gs2::Deploy::Domain
     }
 
     FGs2DeployDomain::FValidateTask::FValidateTask(
-        TSharedPtr<FGs2DeployDomain> Self,
+        const TSharedPtr<FGs2DeployDomain>& Self,
         const Request::FValidateRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -248,10 +250,11 @@ namespace Gs2::Deploy::Domain
 
     TSharedPtr<Gs2::Deploy::Domain::Model::FStackDomain> FGs2DeployDomain::Stack(
         const FString StackName
-    ) const
+    )
     {
         return MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
             Gs2,
+            AsShared(),
             StackName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StackName)
         );
     }

@@ -42,13 +42,15 @@ namespace Gs2::JobQueue::Domain::Model
 {
 
     FJobAccessTokenDomain::FJobAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> JobName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -65,6 +67,7 @@ namespace Gs2::JobQueue::Domain::Model
         const FJobAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -76,10 +79,11 @@ namespace Gs2::JobQueue::Domain::Model
 
     TSharedPtr<Gs2::JobQueue::Domain::Model::FJobResultAccessTokenDomain> FJobAccessTokenDomain::JobResult(
         const int32 TryNumber
-    ) const
+    )
     {
         return MakeShared<Gs2::JobQueue::Domain::Model::FJobResultAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             JobName,

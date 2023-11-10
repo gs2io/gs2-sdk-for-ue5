@@ -31,6 +31,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Enhance::Domain
+{
+    class FGs2EnhanceDomain;
+    typedef TSharedPtr<FGs2EnhanceDomain> FGs2EnhanceDomainPtr;
+}
+
 namespace Gs2::Enhance::Domain::Model
 {
     class FNamespaceDomain;
@@ -48,7 +54,8 @@ namespace Gs2::Enhance::Domain::Model
         public TSharedFromThis<FEnhanceAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
+        const Enhance::Domain::FGs2EnhanceDomainPtr Service;
+        const Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -81,9 +88,10 @@ namespace Gs2::Enhance::Domain::Model
     public:
 
         FEnhanceAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -97,10 +105,12 @@ namespace Gs2::Enhance::Domain::Model
         {
             const TSharedPtr<FEnhanceAccessTokenDomain> Self;
             const Request::FDirectEnhanceRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FDirectTask(
-                const TSharedPtr<FEnhanceAccessTokenDomain> Self,
-                const Request::FDirectEnhanceRequestPtr Request
+                const TSharedPtr<FEnhanceAccessTokenDomain>& Self,
+                const Request::FDirectEnhanceRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FDirectTask(
@@ -114,7 +124,8 @@ namespace Gs2::Enhance::Domain::Model
         friend FDirectTask;
 
         TSharedPtr<FAsyncTask<FDirectTask>> Direct(
-            Request::FDirectEnhanceRequestPtr Request
+            Request::FDirectEnhanceRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         static FString CreateCacheParentKey(

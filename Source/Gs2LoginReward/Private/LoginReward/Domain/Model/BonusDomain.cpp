@@ -42,12 +42,14 @@ namespace Gs2::LoginReward::Domain::Model
 {
 
     FBonusDomain::FBonusDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::LoginReward::FGs2LoginRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -63,6 +65,7 @@ namespace Gs2::LoginReward::Domain::Model
         const FBonusDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FBonusDomain::FReceiveTask::FReceiveTask(
-        const TSharedPtr<FBonusDomain> Self,
+        const TSharedPtr<FBonusDomain>& Self,
         const Request::FReceiveByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -188,7 +191,7 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     FBonusDomain::FMissedReceiveTask::FMissedReceiveTask(
-        const TSharedPtr<FBonusDomain> Self,
+        const TSharedPtr<FBonusDomain>& Self,
         const Request::FMissedReceiveByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

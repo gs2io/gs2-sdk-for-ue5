@@ -42,7 +42,8 @@ namespace Gs2::News::Domain::Model
 {
 
     FSetCookieRequestEntryDomain::FSetCookieRequestEntryDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const News::Domain::FGs2NewsDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> Key,
@@ -50,6 +51,7 @@ namespace Gs2::News::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -67,6 +69,7 @@ namespace Gs2::News::Domain::Model
         const FSetCookieRequestEntryDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),

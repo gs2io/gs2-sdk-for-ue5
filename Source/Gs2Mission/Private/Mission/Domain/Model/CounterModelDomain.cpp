@@ -46,12 +46,14 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FCounterModelDomain::FCounterModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CounterName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         CounterName(CounterName),
@@ -66,6 +68,7 @@ namespace Gs2::Mission::Domain::Model
         const FCounterModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         CounterName(From.CounterName),
@@ -75,7 +78,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCounterModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCounterModelDomain> Self,
+        const TSharedPtr<FCounterModelDomain>& Self,
         const Request::FGetCounterModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -42,12 +42,14 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FAreaModelMasterDomain::FAreaModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> AreaModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AreaModelName(AreaModelName),
@@ -62,6 +64,7 @@ namespace Gs2::MegaField::Domain::Model
         const FAreaModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AreaModelName(From.AreaModelName),
@@ -71,7 +74,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FAreaModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FAreaModelMasterDomain> Self,
+        const TSharedPtr<FAreaModelMasterDomain>& Self,
         const Request::FGetAreaModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -133,7 +136,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FAreaModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FAreaModelMasterDomain> Self,
+        const TSharedPtr<FAreaModelMasterDomain>& Self,
         const Request::FUpdateAreaModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -197,7 +200,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FAreaModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FAreaModelMasterDomain> Self,
+        const TSharedPtr<FAreaModelMasterDomain>& Self,
         const Request::FDeleteAreaModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -255,7 +258,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FAreaModelMasterDomain::FCreateLayerModelMasterTask::FCreateLayerModelMasterTask(
-        const TSharedPtr<FAreaModelMasterDomain> Self,
+        const TSharedPtr<FAreaModelMasterDomain>& Self,
         const Request::FCreateLayerModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -309,6 +312,7 @@ namespace Gs2::MegaField::Domain::Model
         }
         auto Domain = MakeShared<Gs2::MegaField::Domain::Model::FLayerModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetAreaModelName(),
             ResultModel->GetItem()->GetName()
@@ -367,10 +371,11 @@ namespace Gs2::MegaField::Domain::Model
 
     TSharedPtr<Gs2::MegaField::Domain::Model::FLayerModelMasterDomain> FAreaModelMasterDomain::LayerModelMaster(
         const FString LayerModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::MegaField::Domain::Model::FLayerModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AreaModelName,
             LayerModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LayerModelName)

@@ -19,6 +19,7 @@
 #pragma once
 
 #include "Core/Domain/Gs2Core.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Distributor/Gs2Distributor.h"
 
@@ -59,7 +60,7 @@ namespace Gs2::Distributor::Domain
         TSharedPtr<FCriticalSection> CompletedStampSheetsMutex;
         FAutoRunStampSheetNotificationEvent AutoRunStampSheetNotificationEvent;
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Distributor::FGs2DistributorRestClientPtr Client;
+        const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
     private:
@@ -69,7 +70,7 @@ namespace Gs2::Distributor::Domain
     public:
 
         FGs2DistributorDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -85,7 +86,7 @@ namespace Gs2::Distributor::Domain
             const Request::FCreateNamespaceRequestPtr Request;
         public:
             explicit FCreateNamespaceTask(
-                const TSharedPtr<FGs2DistributorDomain> Self,
+                const TSharedPtr<FGs2DistributorDomain>& Self,
                 const Request::FCreateNamespaceRequestPtr Request
             );
 
@@ -116,7 +117,7 @@ namespace Gs2::Distributor::Domain
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
-        ) const;
+        );
 
         void UpdateCacheFromStampSheet(
             const FString Method,
@@ -163,6 +164,9 @@ namespace Gs2::Distributor::Domain
         TSharedPtr<FAsyncTask<FDispatchTask>> Dispatch(
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
+
+        DECLARE_MULTICAST_DELEGATE_OneParam(FIssueTransactionDelegate, Gs2::Core::Domain::Model::FIssueTransactionEventPtr);
+        FIssueTransactionDelegate OnIssueTransaction;
     };
     typedef TSharedPtr<FGs2DistributorDomain> FGs2DistributorDomainPtr;
 }

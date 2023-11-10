@@ -43,12 +43,14 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FStaminaModelMasterDomain::FStaminaModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Stamina::Domain::FGs2StaminaDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> StaminaName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         StaminaName(StaminaName),
@@ -63,6 +65,7 @@ namespace Gs2::Stamina::Domain::Model
         const FStaminaModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         StaminaName(From.StaminaName),
@@ -72,7 +75,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStaminaModelMasterDomain> Self,
+        const TSharedPtr<FStaminaModelMasterDomain>& Self,
         const Request::FGetStaminaModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -134,7 +137,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FStaminaModelMasterDomain> Self,
+        const TSharedPtr<FStaminaModelMasterDomain>& Self,
         const Request::FUpdateStaminaModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -198,7 +201,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FStaminaModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FStaminaModelMasterDomain> Self,
+        const TSharedPtr<FStaminaModelMasterDomain>& Self,
         const Request::FDeleteStaminaModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

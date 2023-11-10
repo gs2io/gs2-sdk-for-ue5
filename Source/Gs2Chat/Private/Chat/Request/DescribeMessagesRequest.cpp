@@ -158,7 +158,7 @@ namespace Gs2::Chat::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -167,7 +167,7 @@ namespace Gs2::Chat::Request
               }() : TOptional<FString>())
             ->WithRoomName(Data->HasField("roomName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("roomName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -176,7 +176,7 @@ namespace Gs2::Chat::Request
               }() : TOptional<FString>())
             ->WithPassword(Data->HasField("password") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("password", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -185,7 +185,7 @@ namespace Gs2::Chat::Request
               }() : TOptional<FString>())
             ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("xGs2AccessToken", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

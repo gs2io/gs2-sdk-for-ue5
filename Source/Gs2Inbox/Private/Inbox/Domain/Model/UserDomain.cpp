@@ -42,12 +42,14 @@ namespace Gs2::Inbox::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inbox::Domain::FGs2InboxDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inbox::FGs2InboxRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -62,6 +64,7 @@ namespace Gs2::Inbox::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -71,7 +74,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FUserDomain::FSendMessageTask::FSendMessageTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FSendMessageByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -125,6 +128,7 @@ namespace Gs2::Inbox::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Inbox::Domain::Model::FMessageDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetName()
@@ -141,7 +145,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FUserDomain::FReceiveGlobalMessageTask::FReceiveGlobalMessageTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FReceiveGlobalMessageByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -210,6 +214,7 @@ namespace Gs2::Inbox::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Inbox::Domain::Model::FMessageDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItem())[i]->GetUserId(),
                     (*ResultModel->GetItem())[i]->GetName()
@@ -286,10 +291,11 @@ namespace Gs2::Inbox::Domain::Model
 
     TSharedPtr<Gs2::Inbox::Domain::Model::FMessageDomain> FUserDomain::Message(
         const FString MessageName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inbox::Domain::Model::FMessageDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             MessageName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MessageName)
@@ -297,10 +303,11 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     TSharedPtr<Gs2::Inbox::Domain::Model::FReceivedDomain> FUserDomain::Received(
-    ) const
+    )
     {
         return MakeShared<Gs2::Inbox::Domain::Model::FReceivedDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );

@@ -35,6 +35,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Chat::Domain
+{
+    class FGs2ChatDomain;
+    typedef TSharedPtr<FGs2ChatDomain> FGs2ChatDomainPtr;
+}
+
 namespace Gs2::Chat::Domain::Model
 {
     class FNamespaceDomain;
@@ -51,7 +57,8 @@ namespace Gs2::Chat::Domain::Model
         public TSharedFromThis<FSubscribeAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Chat::FGs2ChatRestClientPtr Client;
+        const Chat::Domain::FGs2ChatDomainPtr Service;
+        const Gs2::Chat::FGs2ChatRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -65,9 +72,10 @@ namespace Gs2::Chat::Domain::Model
     public:
 
         FSubscribeAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Chat::Domain::FGs2ChatDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> RoomName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -84,7 +92,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FSubscribeRequestPtr Request;
         public:
             explicit FSubscribeTask(
-                const TSharedPtr<FSubscribeAccessTokenDomain> Self,
+                const TSharedPtr<FSubscribeAccessTokenDomain>& Self,
                 const Request::FSubscribeRequestPtr Request
             );
 
@@ -110,7 +118,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FGetSubscribeRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FSubscribeAccessTokenDomain> Self,
+                const TSharedPtr<FSubscribeAccessTokenDomain>& Self,
                 const Request::FGetSubscribeRequestPtr Request
             );
 
@@ -136,7 +144,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FUpdateNotificationTypeRequestPtr Request;
         public:
             explicit FUpdateNotificationTypeTask(
-                const TSharedPtr<FSubscribeAccessTokenDomain> Self,
+                const TSharedPtr<FSubscribeAccessTokenDomain>& Self,
                 const Request::FUpdateNotificationTypeRequestPtr Request
             );
 
@@ -162,7 +170,7 @@ namespace Gs2::Chat::Domain::Model
             const Request::FUnsubscribeRequestPtr Request;
         public:
             explicit FUnsubscribeTask(
-                const TSharedPtr<FSubscribeAccessTokenDomain> Self,
+                const TSharedPtr<FSubscribeAccessTokenDomain>& Self,
                 const Request::FUnsubscribeRequestPtr Request
             );
 

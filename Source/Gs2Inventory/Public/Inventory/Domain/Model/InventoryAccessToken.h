@@ -51,6 +51,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
+}
+
 namespace Gs2::Inventory::Domain::Model
 {
     class FNamespaceDomain;
@@ -89,7 +95,8 @@ namespace Gs2::Inventory::Domain::Model
         public TSharedFromThis<FInventoryAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inventory::FGs2InventoryRestClientPtr Client;
+        const Inventory::Domain::FGs2InventoryDomainPtr Service;
+        const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
         TOptional<int64> OverflowCount;
@@ -113,9 +120,10 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FInventoryAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inventory::Domain::FGs2InventoryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> InventoryName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -132,7 +140,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetInventoryRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FInventoryAccessTokenDomain> Self,
+                const TSharedPtr<FInventoryAccessTokenDomain>& Self,
                 const Request::FGetInventoryRequestPtr Request
             );
 
@@ -158,7 +166,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request;
         public:
             explicit FVerifyCurrentMaxCapacityTask(
-                const TSharedPtr<FInventoryAccessTokenDomain> Self,
+                const TSharedPtr<FInventoryAccessTokenDomain>& Self,
                 const Request::FVerifyInventoryCurrentMaxCapacityRequestPtr Request
             );
 
@@ -190,7 +198,7 @@ namespace Gs2::Inventory::Domain::Model
         TSharedPtr<Gs2::Inventory::Domain::Model::FItemSetAccessTokenDomain> ItemSet(
             const FString ItemName,
             const TOptional<FString> ItemSetName = TOptional<FString>()
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

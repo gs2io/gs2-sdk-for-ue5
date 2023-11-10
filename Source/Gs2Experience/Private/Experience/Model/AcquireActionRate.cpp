@@ -92,7 +92,7 @@ namespace Gs2::Experience::Model
         return MakeShared<FAcquireActionRate>()
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -101,7 +101,7 @@ namespace Gs2::Experience::Model
                 }() : TOptional<FString>())
             ->WithMode(Data->HasField("mode") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("mode", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

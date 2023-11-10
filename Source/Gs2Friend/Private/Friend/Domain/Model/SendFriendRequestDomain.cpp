@@ -52,13 +52,15 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FSendFriendRequestDomain::FSendFriendRequestDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TargetUserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -75,6 +77,7 @@ namespace Gs2::Friend::Domain::Model
         const FSendFriendRequestDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -85,7 +88,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FSendFriendRequestDomain::FGetTask::FGetTask(
-        const TSharedPtr<FSendFriendRequestDomain> Self,
+        const TSharedPtr<FSendFriendRequestDomain>& Self,
         const Request::FGetSendRequestByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -149,7 +152,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FSendFriendRequestDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FSendFriendRequestDomain> Self,
+        const TSharedPtr<FSendFriendRequestDomain>& Self,
         const Request::FDeleteRequestByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -198,6 +201,7 @@ namespace Gs2::Friend::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetTargetUserId()

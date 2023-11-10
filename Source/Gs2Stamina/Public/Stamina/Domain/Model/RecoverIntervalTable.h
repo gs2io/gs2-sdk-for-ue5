@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Stamina/Gs2Stamina.h"
 #include "Stamina/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Stamina/Domain/Iterator/DescribeStaminaModelMastersIterator.h"
 #include "Stamina/Domain/Iterator/DescribeMaxStaminaTableMastersIterator.h"
@@ -34,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Stamina::Domain
+{
+    class FGs2StaminaDomain;
+    typedef TSharedPtr<FGs2StaminaDomain> FGs2StaminaDomainPtr;
 }
 
 namespace Gs2::Stamina::Domain::Model
@@ -54,7 +59,8 @@ namespace Gs2::Stamina::Domain::Model
         public TSharedFromThis<FRecoverIntervalTableDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Stamina::FGs2StaminaRestClientPtr Client;
+        const Stamina::Domain::FGs2StaminaDomainPtr Service;
+        const Gs2::Stamina::FGs2StaminaRestClientPtr Client;
 
         public:
     private:
@@ -64,7 +70,8 @@ namespace Gs2::Stamina::Domain::Model
     public:
 
         FRecoverIntervalTableDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Stamina::Domain::FGs2StaminaDomainPtr& Service
             // ReSharper disable once CppMemberInitializersOrder
         );
 

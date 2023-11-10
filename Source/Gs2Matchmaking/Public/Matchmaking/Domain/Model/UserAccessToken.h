@@ -37,6 +37,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Matchmaking::Domain
+{
+    class FGs2MatchmakingDomain;
+    typedef TSharedPtr<FGs2MatchmakingDomain> FGs2MatchmakingDomainPtr;
+}
+
 namespace Gs2::Matchmaking::Domain::Model
 {
     class FNamespaceDomain;
@@ -57,7 +63,8 @@ namespace Gs2::Matchmaking::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client;
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr Service;
+        const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -80,9 +87,10 @@ namespace Gs2::Matchmaking::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -98,7 +106,7 @@ namespace Gs2::Matchmaking::Domain::Model
             const Request::FCreateGatheringRequestPtr Request;
         public:
             explicit FCreateGatheringTask(
-                const TSharedPtr<FUserAccessTokenDomain> Self,
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
                 const Request::FCreateGatheringRequestPtr Request
             );
 
@@ -122,14 +130,14 @@ namespace Gs2::Matchmaking::Domain::Model
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain> Gathering(
             const FString GatheringName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain> Ballot(
             const FString RatingName,
             const FString GatheringName,
             const int32 NumberOfPlayer,
             const FString KeyId
-        ) const;
+        );
 
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIteratorPtr Ratings(
         ) const;
@@ -144,7 +152,7 @@ namespace Gs2::Matchmaking::Domain::Model
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingAccessTokenDomain> Rating(
             const FString RatingName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -64,14 +64,16 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FSimpleItemAccessTokenDomain::FSimpleItemAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> InventoryName,
         const TOptional<FString> ItemName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -90,6 +92,7 @@ namespace Gs2::Inventory::Domain::Model
         const FSimpleItemAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -101,7 +104,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FSimpleItemAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FSimpleItemAccessTokenDomain> Self,
+        const TSharedPtr<FSimpleItemAccessTokenDomain>& Self,
         const Request::FGetSimpleItemRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -185,7 +188,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FSimpleItemAccessTokenDomain::FGetWithSignatureTask::FGetWithSignatureTask(
-        const TSharedPtr<FSimpleItemAccessTokenDomain> Self,
+        const TSharedPtr<FSimpleItemAccessTokenDomain>& Self,
         const Request::FGetSimpleItemWithSignatureRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -276,7 +279,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FSimpleItemAccessTokenDomain::FVerifyTask::FVerifyTask(
-        const TSharedPtr<FSimpleItemAccessTokenDomain> Self,
+        const TSharedPtr<FSimpleItemAccessTokenDomain>& Self,
         const Request::FVerifySimpleItemRequestPtr Request
     ): Self(Self), Request(Request)
     {

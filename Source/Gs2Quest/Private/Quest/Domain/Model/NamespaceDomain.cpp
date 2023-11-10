@@ -44,11 +44,13 @@ namespace Gs2::Quest::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Quest::Domain::FGs2QuestDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("quest:Namespace")
@@ -59,6 +61,7 @@ namespace Gs2::Quest::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -67,7 +70,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -119,7 +122,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -176,7 +179,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -235,7 +238,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -288,7 +291,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FNamespaceDomain::FCreateQuestGroupModelMasterTask::FCreateQuestGroupModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateQuestGroupModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -340,6 +343,7 @@ namespace Gs2::Quest::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -355,10 +359,11 @@ namespace Gs2::Quest::Domain::Model
     }
 
     TSharedPtr<Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain> FNamespaceDomain::CurrentQuestMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -403,10 +408,11 @@ namespace Gs2::Quest::Domain::Model
 
     TSharedPtr<Gs2::Quest::Domain::Model::FQuestGroupModelDomain> FNamespaceDomain::QuestGroupModel(
         const FString QuestGroupName
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FQuestGroupModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             QuestGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestGroupName)
         );
@@ -414,10 +420,11 @@ namespace Gs2::Quest::Domain::Model
 
     TSharedPtr<Gs2::Quest::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -425,10 +432,11 @@ namespace Gs2::Quest::Domain::Model
 
     TSharedPtr<Gs2::Quest::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -474,10 +482,11 @@ namespace Gs2::Quest::Domain::Model
 
     TSharedPtr<Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain> FNamespaceDomain::QuestGroupModelMaster(
         const FString QuestGroupName
-    ) const
+    )
     {
         return MakeShared<Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             QuestGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestGroupName)
         );

@@ -216,7 +216,7 @@ namespace Gs2::Account::Model
         return MakeShared<FTakeOver>()
             ->WithTakeOverId(Data->HasField("takeOverId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("takeOverId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -225,7 +225,7 @@ namespace Gs2::Account::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -243,7 +243,7 @@ namespace Gs2::Account::Model
                 }() : TOptional<int32>())
             ->WithUserIdentifier(Data->HasField("userIdentifier") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userIdentifier", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -252,7 +252,7 @@ namespace Gs2::Account::Model
                 }() : TOptional<FString>())
             ->WithPassword(Data->HasField("password") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("password", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

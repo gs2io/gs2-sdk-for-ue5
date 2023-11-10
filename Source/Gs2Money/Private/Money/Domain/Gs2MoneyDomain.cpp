@@ -36,7 +36,7 @@ namespace Gs2::Money::Domain
 {
 
     FGs2MoneyDomain::FGs2MoneyDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -56,7 +56,7 @@ namespace Gs2::Money::Domain
     }
 
     FGs2MoneyDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2MoneyDomain> Self,
+        const TSharedPtr<FGs2MoneyDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -102,6 +102,7 @@ namespace Gs2::Money::Domain
         }
         auto Domain = MakeShared<Gs2::Money::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -115,7 +116,7 @@ namespace Gs2::Money::Domain
     }
 
     FGs2MoneyDomain::FDumpUserDataTask::FDumpUserDataTask(
-        TSharedPtr<FGs2MoneyDomain> Self,
+        const TSharedPtr<FGs2MoneyDomain>& Self,
         const Request::FDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -158,7 +159,7 @@ namespace Gs2::Money::Domain
     }
 
     FGs2MoneyDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
-        TSharedPtr<FGs2MoneyDomain> Self,
+        const TSharedPtr<FGs2MoneyDomain>& Self,
         const Request::FCheckDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -208,7 +209,7 @@ namespace Gs2::Money::Domain
     }
 
     FGs2MoneyDomain::FCleanUserDataTask::FCleanUserDataTask(
-        TSharedPtr<FGs2MoneyDomain> Self,
+        const TSharedPtr<FGs2MoneyDomain>& Self,
         const Request::FCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -251,7 +252,7 @@ namespace Gs2::Money::Domain
     }
 
     FGs2MoneyDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
-        TSharedPtr<FGs2MoneyDomain> Self,
+        const TSharedPtr<FGs2MoneyDomain>& Self,
         const Request::FCheckCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -294,7 +295,7 @@ namespace Gs2::Money::Domain
     }
 
     FGs2MoneyDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
-        TSharedPtr<FGs2MoneyDomain> Self,
+        const TSharedPtr<FGs2MoneyDomain>& Self,
         const Request::FPrepareImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -348,7 +349,7 @@ namespace Gs2::Money::Domain
     }
 
     FGs2MoneyDomain::FImportUserDataTask::FImportUserDataTask(
-        TSharedPtr<FGs2MoneyDomain> Self,
+        const TSharedPtr<FGs2MoneyDomain>& Self,
         const Request::FImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -391,7 +392,7 @@ namespace Gs2::Money::Domain
     }
 
     FGs2MoneyDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
-        TSharedPtr<FGs2MoneyDomain> Self,
+        const TSharedPtr<FGs2MoneyDomain>& Self,
         const Request::FCheckImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -473,10 +474,11 @@ namespace Gs2::Money::Domain
 
     TSharedPtr<Gs2::Money::Domain::Model::FNamespaceDomain> FGs2MoneyDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Money::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

@@ -248,7 +248,7 @@ namespace Gs2::Inventory::Model
         return MakeShared<FInventory>()
             ->WithInventoryId(Data->HasField("inventoryId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("inventoryId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -257,7 +257,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithInventoryName(Data->HasField("inventoryName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("inventoryName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -266,7 +266,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

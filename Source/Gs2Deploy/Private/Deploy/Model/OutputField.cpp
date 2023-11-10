@@ -64,7 +64,7 @@ namespace Gs2::Deploy::Model
         return MakeShared<FOutputField>()
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -73,7 +73,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithFieldName(Data->HasField("fieldName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("fieldName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

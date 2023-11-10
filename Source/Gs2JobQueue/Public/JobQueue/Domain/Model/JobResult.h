@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "JobQueue/Gs2JobQueue.h"
 #include "JobQueue/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "JobQueue/Domain/Iterator/DescribeJobsByUserIdIterator.h"
 #include "JobQueue/Domain/Iterator/DescribeDeadLetterJobsByUserIdIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::JobQueue::Domain
+{
+    class FGs2JobQueueDomain;
+    typedef TSharedPtr<FGs2JobQueueDomain> FGs2JobQueueDomainPtr;
 }
 
 namespace Gs2::JobQueue::Domain::Model
@@ -47,7 +52,8 @@ namespace Gs2::JobQueue::Domain::Model
         public TSharedFromThis<FJobResultDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
+        const JobQueue::Domain::FGs2JobQueueDomainPtr Service;
+        const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -61,7 +67,8 @@ namespace Gs2::JobQueue::Domain::Model
     public:
 
         FJobResultDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> JobName,
@@ -81,7 +88,7 @@ namespace Gs2::JobQueue::Domain::Model
             const Request::FGetJobResultByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FJobResultDomain> Self,
+                const TSharedPtr<FJobResultDomain>& Self,
                 const Request::FGetJobResultByUserIdRequestPtr Request
             );
 

@@ -50,12 +50,14 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FRandomShowcaseMasterDomain::FRandomShowcaseMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> ShowcaseName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ShowcaseName(ShowcaseName),
@@ -70,6 +72,7 @@ namespace Gs2::Showcase::Domain::Model
         const FRandomShowcaseMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ShowcaseName(From.ShowcaseName),
@@ -79,7 +82,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FRandomShowcaseMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRandomShowcaseMasterDomain> Self,
+        const TSharedPtr<FRandomShowcaseMasterDomain>& Self,
         const Request::FGetRandomShowcaseMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -141,7 +144,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FRandomShowcaseMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FRandomShowcaseMasterDomain> Self,
+        const TSharedPtr<FRandomShowcaseMasterDomain>& Self,
         const Request::FUpdateRandomShowcaseMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -205,7 +208,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FRandomShowcaseMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FRandomShowcaseMasterDomain> Self,
+        const TSharedPtr<FRandomShowcaseMasterDomain>& Self,
         const Request::FDeleteRandomShowcaseMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

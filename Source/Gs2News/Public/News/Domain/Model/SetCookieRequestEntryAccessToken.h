@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::News::Domain
+{
+    class FGs2NewsDomain;
+    typedef TSharedPtr<FGs2NewsDomain> FGs2NewsDomainPtr;
+}
+
 namespace Gs2::News::Domain::Model
 {
     class FNamespaceDomain;
@@ -49,7 +55,8 @@ namespace Gs2::News::Domain::Model
         public TSharedFromThis<FSetCookieRequestEntryAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::News::FGs2NewsRestClientPtr Client;
+        const News::Domain::FGs2NewsDomainPtr Service;
+        const Gs2::News::FGs2NewsRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -64,9 +71,10 @@ namespace Gs2::News::Domain::Model
     public:
 
         FSetCookieRequestEntryAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const News::Domain::FGs2NewsDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> Key,
             const TOptional<FString> Value
             // ReSharper disable once CppMemberInitializersOrder

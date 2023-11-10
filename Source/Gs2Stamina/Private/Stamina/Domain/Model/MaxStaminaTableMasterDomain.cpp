@@ -43,12 +43,14 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FMaxStaminaTableMasterDomain::FMaxStaminaTableMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Stamina::Domain::FGs2StaminaDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> MaxStaminaTableName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         MaxStaminaTableName(MaxStaminaTableName),
@@ -63,6 +65,7 @@ namespace Gs2::Stamina::Domain::Model
         const FMaxStaminaTableMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         MaxStaminaTableName(From.MaxStaminaTableName),
@@ -72,7 +75,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FMaxStaminaTableMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMaxStaminaTableMasterDomain> Self,
+        const TSharedPtr<FMaxStaminaTableMasterDomain>& Self,
         const Request::FGetMaxStaminaTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -134,7 +137,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FMaxStaminaTableMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FMaxStaminaTableMasterDomain> Self,
+        const TSharedPtr<FMaxStaminaTableMasterDomain>& Self,
         const Request::FUpdateMaxStaminaTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -198,7 +201,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FMaxStaminaTableMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FMaxStaminaTableMasterDomain> Self,
+        const TSharedPtr<FMaxStaminaTableMasterDomain>& Self,
         const Request::FDeleteMaxStaminaTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

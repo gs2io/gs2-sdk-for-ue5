@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Lottery/Gs2Lottery.h"
 #include "Lottery/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Lottery/Domain/Iterator/DescribeLotteryModelMastersIterator.h"
 #include "Lottery/Domain/Iterator/DescribePrizeTableMastersIterator.h"
@@ -36,6 +35,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Lottery::Domain
+{
+    class FGs2LotteryDomain;
+    typedef TSharedPtr<FGs2LotteryDomain> FGs2LotteryDomainPtr;
 }
 
 namespace Gs2::Lottery::Domain::Model
@@ -60,7 +65,8 @@ namespace Gs2::Lottery::Domain::Model
         public TSharedFromThis<FBoxItemDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lottery::FGs2LotteryRestClientPtr Client;
+        const Lottery::Domain::FGs2LotteryDomainPtr Service;
+        const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
     private:
@@ -70,7 +76,8 @@ namespace Gs2::Lottery::Domain::Model
     public:
 
         FBoxItemDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lottery::Domain::FGs2LotteryDomainPtr& Service
             // ReSharper disable once CppMemberInitializersOrder
         );
 

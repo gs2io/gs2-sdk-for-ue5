@@ -43,12 +43,14 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Stamina::Domain::FGs2StaminaDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -63,6 +65,7 @@ namespace Gs2::Stamina::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -114,10 +117,11 @@ namespace Gs2::Stamina::Domain::Model
 
     TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaDomain> FUserDomain::Stamina(
         const FString StaminaName
-    ) const
+    )
     {
         return MakeShared<Gs2::Stamina::Domain::Model::FStaminaDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             StaminaName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StaminaName)

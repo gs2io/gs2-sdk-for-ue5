@@ -47,11 +47,13 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("lottery:Namespace")
@@ -62,6 +64,7 @@ namespace Gs2::Lottery::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -70,7 +73,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -122,7 +125,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -179,7 +182,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -238,7 +241,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -291,7 +294,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FNamespaceDomain::FCreatePrizeTableMasterTask::FCreatePrizeTableMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreatePrizeTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -343,6 +346,7 @@ namespace Gs2::Lottery::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -358,7 +362,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FNamespaceDomain::FCreateLotteryModelMasterTask::FCreateLotteryModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateLotteryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -410,6 +414,7 @@ namespace Gs2::Lottery::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Lottery::Domain::Model::FLotteryModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -426,10 +431,11 @@ namespace Gs2::Lottery::Domain::Model
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -437,20 +443,22 @@ namespace Gs2::Lottery::Domain::Model
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
     }
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain> FNamespaceDomain::CurrentLotteryMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -495,10 +503,11 @@ namespace Gs2::Lottery::Domain::Model
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeTableDomain> FNamespaceDomain::PrizeTable(
         const FString PrizeTableName
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FPrizeTableDomain>(
             Gs2,
+            Service,
             NamespaceName,
             PrizeTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PrizeTableName)
         );
@@ -544,10 +553,11 @@ namespace Gs2::Lottery::Domain::Model
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryModelDomain> FNamespaceDomain::LotteryModel(
         const FString LotteryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FLotteryModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             LotteryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LotteryName)
         );
@@ -593,10 +603,11 @@ namespace Gs2::Lottery::Domain::Model
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain> FNamespaceDomain::PrizeTableMaster(
         const FString PrizeTableName
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             PrizeTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PrizeTableName)
         );
@@ -642,10 +653,11 @@ namespace Gs2::Lottery::Domain::Model
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryModelMasterDomain> FNamespaceDomain::LotteryModelMaster(
         const FString LotteryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FLotteryModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             LotteryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LotteryName)
         );

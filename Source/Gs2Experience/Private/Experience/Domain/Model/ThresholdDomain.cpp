@@ -41,10 +41,12 @@ namespace Gs2::Experience::Domain::Model
 {
 
     FThresholdDomain::FThresholdDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Experience::Domain::FGs2ExperienceDomainPtr& Service
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Experience::FGs2ExperienceRestClient>(Gs2->RestSession)),
         ParentKey("experience:Threshold")
     {
@@ -54,6 +56,7 @@ namespace Gs2::Experience::Domain::Model
         const FThresholdDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {

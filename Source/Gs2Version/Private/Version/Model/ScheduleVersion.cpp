@@ -116,7 +116,7 @@ namespace Gs2::Version::Model
                  }() : nullptr)
             ->WithScheduleEventId(Data->HasField("scheduleEventId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("scheduleEventId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

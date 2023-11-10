@@ -41,6 +41,8 @@
 #include "Lottery/Domain/Model/BoxItemsAccessToken.h"
 #include "Lottery/Domain/Model/User.h"
 #include "Lottery/Domain/Model/UserAccessToken.h"
+#include "Lottery/Domain/SpeculativeExecutor/Transaction/DrawByUserIdSpeculativeExecutor.h"
+#include "Lottery/Domain/SpeculativeExecutor/Transaction/DrawWithRandomSeedByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -50,12 +52,14 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FLotteryAccessTokenDomain::FLotteryAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -71,6 +75,7 @@ namespace Gs2::Lottery::Domain::Model
         const FLotteryAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -80,7 +85,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FLotteryAccessTokenDomain::FPredictionTask::FPredictionTask(
-        const TSharedPtr<FLotteryAccessTokenDomain> Self,
+        const TSharedPtr<FLotteryAccessTokenDomain>& Self,
         const Request::FPredictionRequestPtr Request
     ): Self(Self), Request(Request)
     {

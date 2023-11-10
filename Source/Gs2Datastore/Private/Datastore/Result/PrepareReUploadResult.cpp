@@ -78,7 +78,7 @@ namespace Gs2::Datastore::Result
                  }() : nullptr)
             ->WithUploadUrl(Data->HasField("uploadUrl") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("uploadUrl", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

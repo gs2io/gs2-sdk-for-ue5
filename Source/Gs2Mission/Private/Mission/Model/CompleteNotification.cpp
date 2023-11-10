@@ -60,7 +60,7 @@ namespace Gs2::Mission::Model
         return MakeShared<FCompleteNotification>()
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -69,7 +69,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithGroupName(Data->HasField("groupName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("groupName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -78,7 +78,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithTaskName(Data->HasField("taskName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("taskName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

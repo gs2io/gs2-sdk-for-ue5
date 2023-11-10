@@ -31,6 +31,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::JobQueue::Domain
+{
+    class FGs2JobQueueDomain;
+    typedef TSharedPtr<FGs2JobQueueDomain> FGs2JobQueueDomainPtr;
+}
+
 namespace Gs2::JobQueue::Domain::Model
 {
     class FNamespaceDomain;
@@ -47,7 +53,8 @@ namespace Gs2::JobQueue::Domain::Model
         public TSharedFromThis<FDeadLetterJobAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
+        const JobQueue::Domain::FGs2JobQueueDomainPtr Service;
+        const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -61,9 +68,10 @@ namespace Gs2::JobQueue::Domain::Model
     public:
 
         FDeadLetterJobAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> DeadLetterJobName
             // ReSharper disable once CppMemberInitializersOrder
         );

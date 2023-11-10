@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Dictionary::Domain
+{
+    class FGs2DictionaryDomain;
+    typedef TSharedPtr<FGs2DictionaryDomain> FGs2DictionaryDomainPtr;
+}
+
 namespace Gs2::Dictionary::Domain::Model
 {
     class FNamespaceDomain;
@@ -48,7 +54,8 @@ namespace Gs2::Dictionary::Domain::Model
         public TSharedFromThis<FEntryAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
+        const Dictionary::Domain::FGs2DictionaryDomainPtr Service;
+        const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
 
         public:
         TOptional<FString> Body;
@@ -72,9 +79,10 @@ namespace Gs2::Dictionary::Domain::Model
     public:
 
         FEntryAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> EntryName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -91,7 +99,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FGetEntryRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FEntryAccessTokenDomain> Self,
+                const TSharedPtr<FEntryAccessTokenDomain>& Self,
                 const Request::FGetEntryRequestPtr Request
             );
 
@@ -117,7 +125,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FGetEntryWithSignatureRequestPtr Request;
         public:
             explicit FGetWithSignatureTask(
-                const TSharedPtr<FEntryAccessTokenDomain> Self,
+                const TSharedPtr<FEntryAccessTokenDomain>& Self,
                 const Request::FGetEntryWithSignatureRequestPtr Request
             );
 

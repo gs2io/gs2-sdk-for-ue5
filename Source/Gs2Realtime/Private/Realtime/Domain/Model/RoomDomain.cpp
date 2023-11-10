@@ -34,12 +34,14 @@ namespace Gs2::Realtime::Domain::Model
 {
 
     FRoomDomain::FRoomDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Realtime::Domain::FGs2RealtimeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RoomName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Realtime::FGs2RealtimeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         RoomName(RoomName),
@@ -54,6 +56,7 @@ namespace Gs2::Realtime::Domain::Model
         const FRoomDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         RoomName(From.RoomName),
@@ -63,7 +66,7 @@ namespace Gs2::Realtime::Domain::Model
     }
 
     FRoomDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRoomDomain> Self,
+        const TSharedPtr<FRoomDomain>& Self,
         const Request::FGetRoomRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -125,7 +128,7 @@ namespace Gs2::Realtime::Domain::Model
     }
 
     FRoomDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FRoomDomain> Self,
+        const TSharedPtr<FRoomDomain>& Self,
         const Request::FDeleteRoomRequestPtr Request
     ): Self(Self), Request(Request)
     {

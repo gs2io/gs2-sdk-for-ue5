@@ -41,13 +41,15 @@ namespace Gs2::Chat::Domain::Model
 {
 
     FSubscribeDomain::FSubscribeDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Chat::Domain::FGs2ChatDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> RoomName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -64,6 +66,7 @@ namespace Gs2::Chat::Domain::Model
         const FSubscribeDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -74,7 +77,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FSubscribeDomain::FSubscribeTask::FSubscribeTask(
-        const TSharedPtr<FSubscribeDomain> Self,
+        const TSharedPtr<FSubscribeDomain>& Self,
         const Request::FSubscribeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -140,7 +143,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FSubscribeDomain::FGetTask::FGetTask(
-        const TSharedPtr<FSubscribeDomain> Self,
+        const TSharedPtr<FSubscribeDomain>& Self,
         const Request::FGetSubscribeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -204,7 +207,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FSubscribeDomain::FUpdateNotificationTypeTask::FUpdateNotificationTypeTask(
-        const TSharedPtr<FSubscribeDomain> Self,
+        const TSharedPtr<FSubscribeDomain>& Self,
         const Request::FUpdateNotificationTypeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -270,7 +273,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FSubscribeDomain::FUnsubscribeTask::FUnsubscribeTask(
-        const TSharedPtr<FSubscribeDomain> Self,
+        const TSharedPtr<FSubscribeDomain>& Self,
         const Request::FUnsubscribeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -87,7 +87,7 @@ namespace Gs2::Realtime::Model
         return MakeShared<FNotificationSetting>()
             ->WithGatewayNamespaceId(Data->HasField("gatewayNamespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("gatewayNamespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -105,7 +105,7 @@ namespace Gs2::Realtime::Model
                 }() : TOptional<bool>())
             ->WithSound(Data->HasField("sound") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("sound", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

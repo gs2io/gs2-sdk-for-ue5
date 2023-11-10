@@ -141,7 +141,7 @@ namespace Gs2::Inventory::Model
         return MakeShared<FReferenceOf>()
             ->WithReferenceOfId(Data->HasField("referenceOfId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("referenceOfId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -150,7 +150,7 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

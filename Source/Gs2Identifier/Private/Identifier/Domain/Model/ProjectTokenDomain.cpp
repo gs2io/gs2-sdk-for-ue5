@@ -37,10 +37,12 @@ namespace Gs2::Identifier::Domain::Model
 {
 
     FProjectTokenDomain::FProjectTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Identifier::Domain::FGs2IdentifierDomainPtr& Service
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Gs2->RestSession)),
         ParentKey("identifier:ProjectToken")
     {
@@ -50,6 +52,7 @@ namespace Gs2::Identifier::Domain::Model
         const FProjectTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -57,7 +60,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FProjectTokenDomain::FLoginTask::FLoginTask(
-        const TSharedPtr<FProjectTokenDomain> Self,
+        const TSharedPtr<FProjectTokenDomain>& Self,
         const Request::FLoginRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -119,7 +122,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FProjectTokenDomain::FLoginByUserTask::FLoginByUserTask(
-        const TSharedPtr<FProjectTokenDomain> Self,
+        const TSharedPtr<FProjectTokenDomain>& Self,
         const Request::FLoginByUserRequestPtr Request
     ): Self(Self), Request(Request)
     {

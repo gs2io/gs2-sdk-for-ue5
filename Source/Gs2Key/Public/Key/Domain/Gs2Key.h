@@ -19,6 +19,7 @@
 #pragma once
 
 #include "Core/Domain/Gs2Core.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Key/Gs2Key.h"
 
@@ -47,7 +48,7 @@ namespace Gs2::Key::Domain
         public TSharedFromThis<FGs2KeyDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Key::FGs2KeyRestClientPtr Client;
+        const Gs2::Key::FGs2KeyRestClientPtr Client;
 
         public:
     private:
@@ -57,7 +58,7 @@ namespace Gs2::Key::Domain
     public:
 
         FGs2KeyDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -73,7 +74,7 @@ namespace Gs2::Key::Domain
             const Request::FCreateNamespaceRequestPtr Request;
         public:
             explicit FCreateNamespaceTask(
-                const TSharedPtr<FGs2KeyDomain> Self,
+                const TSharedPtr<FGs2KeyDomain>& Self,
                 const Request::FCreateNamespaceRequestPtr Request
             );
 
@@ -104,7 +105,7 @@ namespace Gs2::Key::Domain
 
         TSharedPtr<Gs2::Key::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
-        ) const;
+        );
 
         void UpdateCacheFromStampSheet(
             const FString Method,
@@ -128,6 +129,9 @@ namespace Gs2::Key::Domain
             const FString Action,
             const FString Payload
         );
+
+        DECLARE_MULTICAST_DELEGATE_OneParam(FIssueTransactionDelegate, Gs2::Core::Domain::Model::FIssueTransactionEventPtr);
+        FIssueTransactionDelegate OnIssueTransaction;
     };
     typedef TSharedPtr<FGs2KeyDomain> FGs2KeyDomainPtr;
 }

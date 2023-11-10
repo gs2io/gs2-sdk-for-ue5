@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Showcase/Gs2Showcase.h"
 #include "Showcase/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeSalesItemMastersIterator.h"
 #include "Showcase/Domain/Iterator/DescribeSalesItemGroupMastersIterator.h"
@@ -35,6 +34,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Showcase::Domain
+{
+    class FGs2ShowcaseDomain;
+    typedef TSharedPtr<FGs2ShowcaseDomain> FGs2ShowcaseDomainPtr;
 }
 
 namespace Gs2::Showcase::Domain::Model
@@ -62,7 +67,8 @@ namespace Gs2::Showcase::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
+        const Showcase::Domain::FGs2ShowcaseDomainPtr Service;
+        const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -98,7 +104,8 @@ namespace Gs2::Showcase::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -115,7 +122,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -141,7 +148,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -167,7 +174,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -193,7 +200,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -219,7 +226,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FCreateRandomShowcaseMasterRequestPtr Request;
         public:
             explicit FCreateRandomShowcaseMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateRandomShowcaseMasterRequestPtr Request
             );
 
@@ -245,7 +252,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FCreateSalesItemMasterRequestPtr Request;
         public:
             explicit FCreateSalesItemMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateSalesItemMasterRequestPtr Request
             );
 
@@ -271,7 +278,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FCreateSalesItemGroupMasterRequestPtr Request;
         public:
             explicit FCreateSalesItemGroupMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateSalesItemGroupMasterRequestPtr Request
             );
 
@@ -297,7 +304,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FCreateShowcaseMasterRequestPtr Request;
         public:
             explicit FCreateShowcaseMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateShowcaseMasterRequestPtr Request
             );
 
@@ -328,7 +335,7 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain> RandomShowcaseMaster(
             const FString ShowcaseName
-        ) const;
+        );
 
         Gs2::Showcase::Domain::Iterator::FDescribeSalesItemMastersIteratorPtr SalesItemMasters(
         ) const;
@@ -343,7 +350,7 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FSalesItemMasterDomain> SalesItemMaster(
             const FString SalesItemName
-        ) const;
+        );
 
         Gs2::Showcase::Domain::Iterator::FDescribeSalesItemGroupMastersIteratorPtr SalesItemGroupMasters(
         ) const;
@@ -358,18 +365,18 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain> SalesItemGroupMaster(
             const FString SalesItemGroupName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain> CurrentShowcaseMaster(
-        ) const;
+        );
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::Showcase::Domain::Iterator::FDescribeShowcaseMastersIteratorPtr ShowcaseMasters(
         ) const;
@@ -384,7 +391,7 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FShowcaseMasterDomain> ShowcaseMaster(
             const FString ShowcaseName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

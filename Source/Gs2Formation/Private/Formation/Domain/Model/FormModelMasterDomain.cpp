@@ -48,12 +48,14 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FFormModelMasterDomain::FFormModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Formation::Domain::FGs2FormationDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> FormModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         FormModelName(FormModelName),
@@ -68,6 +70,7 @@ namespace Gs2::Formation::Domain::Model
         const FFormModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         FormModelName(From.FormModelName),
@@ -77,7 +80,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FFormModelMasterDomain> Self,
+        const TSharedPtr<FFormModelMasterDomain>& Self,
         const Request::FGetFormModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -139,7 +142,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FFormModelMasterDomain> Self,
+        const TSharedPtr<FFormModelMasterDomain>& Self,
         const Request::FUpdateFormModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -203,7 +206,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FFormModelMasterDomain> Self,
+        const TSharedPtr<FFormModelMasterDomain>& Self,
         const Request::FDeleteFormModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

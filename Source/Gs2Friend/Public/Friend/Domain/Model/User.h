@@ -22,7 +22,7 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Friend/Gs2Friend.h"
+#include "Friend/Domain/Gs2Friend.h"
 #include "Friend/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Friend/Domain/Iterator/DescribeFriendsIterator.h"
 #include "Friend/Domain/Iterator/DescribeFriendsByUserIdIterator.h"
@@ -39,6 +39,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Friend::Domain
+{
+    class FGs2FriendDomain;
+    typedef TSharedPtr<FGs2FriendDomain> FGs2FriendDomainPtr;
 }
 
 namespace Gs2::Friend::Domain::Model
@@ -68,7 +74,8 @@ namespace Gs2::Friend::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Friend::FGs2FriendRestClientPtr Client;
+        const Friend::Domain::FGs2FriendDomainPtr Service;
+        const Gs2::Friend::FGs2FriendRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -85,7 +92,8 @@ namespace Gs2::Friend::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Friend::Domain::FGs2FriendDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -103,7 +111,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FSendRequestByUserIdRequestPtr Request;
         public:
             explicit FSendRequestTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FSendRequestByUserIdRequestPtr Request
             );
 
@@ -122,16 +130,16 @@ namespace Gs2::Friend::Domain::Model
         );
 
         TSharedPtr<Gs2::Friend::Domain::Model::FProfileDomain> Profile(
-        ) const;
+        );
 
         TSharedPtr<Gs2::Friend::Domain::Model::FPublicProfileDomain> PublicProfile(
-        ) const;
+        );
 
         Gs2::Friend::Domain::Iterator::FDescribeBlackListByUserIdIteratorPtr BlackLists(
         ) const;
 
         TSharedPtr<Gs2::Friend::Domain::Model::FBlackListDomain> BlackList(
-        ) const;
+        );
 
         Gs2::Friend::Domain::Iterator::FDescribeFollowsByUserIdIteratorPtr Follows(
             const TOptional<bool> WithProfile
@@ -150,7 +158,7 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserDomain> FollowUser(
             const FString TargetUserId,
             const bool WithProfile
-        ) const;
+        );
 
         Gs2::Friend::Domain::Iterator::FDescribeFriendsByUserIdIteratorPtr Friends(
             const TOptional<bool> WithProfile
@@ -168,7 +176,7 @@ namespace Gs2::Friend::Domain::Model
 
         TSharedPtr<Gs2::Friend::Domain::Model::FFriendDomain> Friend(
             const bool WithProfile
-        ) const;
+        );
 
         Gs2::Friend::Domain::Iterator::FDescribeSendRequestsByUserIdIteratorPtr SendRequests(
         ) const;
@@ -183,7 +191,7 @@ namespace Gs2::Friend::Domain::Model
 
         TSharedPtr<Gs2::Friend::Domain::Model::FSendFriendRequestDomain> SendFriendRequest(
             const FString TargetUserId
-        ) const;
+        );
 
         Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsByUserIdIteratorPtr ReceiveRequests(
         ) const;
@@ -198,7 +206,7 @@ namespace Gs2::Friend::Domain::Model
 
         TSharedPtr<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain> ReceiveFriendRequest(
             const FString FromUserId
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

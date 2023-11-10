@@ -166,7 +166,7 @@ namespace Gs2::Formation::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -175,7 +175,7 @@ namespace Gs2::Formation::Request
               }() : TOptional<FString>())
             ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("xGs2AccessToken", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -184,7 +184,7 @@ namespace Gs2::Formation::Request
               }() : TOptional<FString>())
             ->WithMoldModelName(Data->HasField("moldModelName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("moldModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -214,7 +214,7 @@ namespace Gs2::Formation::Request
              }() : nullptr)
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("keyId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -193,7 +193,7 @@ namespace Gs2::Lock::Model
         return MakeShared<FMutex>()
             ->WithMutexId(Data->HasField("mutexId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("mutexId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -202,7 +202,7 @@ namespace Gs2::Lock::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -211,7 +211,7 @@ namespace Gs2::Lock::Model
                 }() : TOptional<FString>())
             ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("propertyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -220,7 +220,7 @@ namespace Gs2::Lock::Model
                 }() : TOptional<FString>())
             ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("transactionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

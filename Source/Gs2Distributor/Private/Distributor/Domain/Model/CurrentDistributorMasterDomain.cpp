@@ -41,11 +41,13 @@ namespace Gs2::Distributor::Domain::Model
 {
 
     FCurrentDistributorMasterDomain::FCurrentDistributorMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Distributor::Domain::FGs2DistributorDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -59,6 +61,7 @@ namespace Gs2::Distributor::Domain::Model
         const FCurrentDistributorMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -67,7 +70,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FCurrentDistributorMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentDistributorMasterDomain> Self,
+        const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -129,7 +132,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FCurrentDistributorMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentDistributorMasterDomain> Self,
+        const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
         const Request::FGetCurrentDistributorMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -189,7 +192,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FCurrentDistributorMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentDistributorMasterDomain> Self,
+        const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
         const Request::FUpdateCurrentDistributorMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -251,7 +254,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FCurrentDistributorMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentDistributorMasterDomain> Self,
+        const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
         const Request::FUpdateCurrentDistributorMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

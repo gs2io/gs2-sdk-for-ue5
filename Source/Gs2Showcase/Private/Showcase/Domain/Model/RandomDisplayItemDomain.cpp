@@ -50,7 +50,8 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FRandomDisplayItemDomain::FRandomDisplayItemDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> ShowcaseName,
@@ -58,6 +59,7 @@ namespace Gs2::Showcase::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -76,6 +78,7 @@ namespace Gs2::Showcase::Domain::Model
         const FRandomDisplayItemDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -87,7 +90,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FRandomDisplayItemDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRandomDisplayItemDomain> Self,
+        const TSharedPtr<FRandomDisplayItemDomain>& Self,
         const Request::FGetRandomDisplayItemByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -153,7 +156,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FRandomDisplayItemDomain::FRandomShowcaseBuyTask::FRandomShowcaseBuyTask(
-        const TSharedPtr<FRandomDisplayItemDomain> Self,
+        const TSharedPtr<FRandomDisplayItemDomain>& Self,
         const Request::FRandomShowcaseBuyByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

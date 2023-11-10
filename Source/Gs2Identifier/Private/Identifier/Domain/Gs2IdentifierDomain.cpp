@@ -36,7 +36,7 @@ namespace Gs2::Identifier::Domain
 {
 
     FGs2IdentifierDomain::FGs2IdentifierDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -56,7 +56,7 @@ namespace Gs2::Identifier::Domain
     }
 
     FGs2IdentifierDomain::FCreateUserTask::FCreateUserTask(
-        TSharedPtr<FGs2IdentifierDomain> Self,
+        const TSharedPtr<FGs2IdentifierDomain>& Self,
         const Request::FCreateUserRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -102,6 +102,7 @@ namespace Gs2::Identifier::Domain
         }
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FUserDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -115,7 +116,7 @@ namespace Gs2::Identifier::Domain
     }
 
     FGs2IdentifierDomain::FCreateSecurityPolicyTask::FCreateSecurityPolicyTask(
-        TSharedPtr<FGs2IdentifierDomain> Self,
+        const TSharedPtr<FGs2IdentifierDomain>& Self,
         const Request::FCreateSecurityPolicyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -161,6 +162,7 @@ namespace Gs2::Identifier::Domain
         }
         auto Domain = MakeShared<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -206,10 +208,11 @@ namespace Gs2::Identifier::Domain
 
     TSharedPtr<Gs2::Identifier::Domain::Model::FUserDomain> FGs2IdentifierDomain::User(
         const FString UserName
-    ) const
+    )
     {
         return MakeShared<Gs2::Identifier::Domain::Model::FUserDomain>(
             Gs2,
+            AsShared(),
             UserName == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserName)
         );
     }
@@ -278,10 +281,11 @@ namespace Gs2::Identifier::Domain
 
     TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain> FGs2IdentifierDomain::SecurityPolicy(
         const FString SecurityPolicyName
-    ) const
+    )
     {
         return MakeShared<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>(
             Gs2,
+            AsShared(),
             SecurityPolicyName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SecurityPolicyName)
         );
     }

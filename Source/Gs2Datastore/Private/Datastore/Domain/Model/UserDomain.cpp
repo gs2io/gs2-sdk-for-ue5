@@ -39,12 +39,14 @@ namespace Gs2::Datastore::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Datastore::Domain::FGs2DatastoreDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Datastore::FGs2DatastoreRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -59,6 +61,7 @@ namespace Gs2::Datastore::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -68,7 +71,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     FUserDomain::FPrepareUploadTask::FPrepareUploadTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FPrepareUploadByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -122,6 +125,7 @@ namespace Gs2::Datastore::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetName()
@@ -142,7 +146,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     FUserDomain::FPrepareDownloadTask::FPrepareDownloadTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FPrepareDownloadByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -196,6 +200,7 @@ namespace Gs2::Datastore::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetName()
@@ -217,7 +222,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     FUserDomain::FPrepareDownloadByGenerationTask::FPrepareDownloadByGenerationTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FPrepareDownloadByGenerationAndUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -271,6 +276,7 @@ namespace Gs2::Datastore::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetName()
@@ -336,10 +342,11 @@ namespace Gs2::Datastore::Domain::Model
 
     TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectDomain> FUserDomain::DataObject(
         const FString DataObjectName
-    ) const
+    )
     {
         return MakeShared<Gs2::Datastore::Domain::Model::FDataObjectDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             DataObjectName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DataObjectName)

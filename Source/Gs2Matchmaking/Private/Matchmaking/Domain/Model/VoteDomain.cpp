@@ -45,13 +45,15 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FVoteDomain::FVoteDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RatingName,
         const TOptional<FString> GatheringName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         RatingName(RatingName),
@@ -67,6 +69,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FVoteDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         RatingName(From.RatingName),
@@ -77,7 +80,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FVoteDomain::FCommitTask::FCommitTask(
-        const TSharedPtr<FVoteDomain> Self,
+        const TSharedPtr<FVoteDomain>& Self,
         const Request::FCommitVoteRequestPtr Request
     ): Self(Self), Request(Request)
     {

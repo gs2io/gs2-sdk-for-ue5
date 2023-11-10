@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Stamina/Gs2Stamina.h"
 #include "Stamina/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Stamina/Domain/Iterator/DescribeStaminaModelMastersIterator.h"
 #include "Stamina/Domain/Iterator/DescribeMaxStaminaTableMastersIterator.h"
@@ -34,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Stamina::Domain
+{
+    class FGs2StaminaDomain;
+    typedef TSharedPtr<FGs2StaminaDomain> FGs2StaminaDomainPtr;
 }
 
 namespace Gs2::Stamina::Domain::Model
@@ -54,7 +59,8 @@ namespace Gs2::Stamina::Domain::Model
         public TSharedFromThis<FRecoverIntervalTableMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Stamina::FGs2StaminaRestClientPtr Client;
+        const Stamina::Domain::FGs2StaminaDomainPtr Service;
+        const Gs2::Stamina::FGs2StaminaRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -66,7 +72,8 @@ namespace Gs2::Stamina::Domain::Model
     public:
 
         FRecoverIntervalTableMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Stamina::Domain::FGs2StaminaDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> RecoverIntervalTableName
             // ReSharper disable once CppMemberInitializersOrder
@@ -84,7 +91,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FGetRecoverIntervalTableMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FRecoverIntervalTableMasterDomain> Self,
+                const TSharedPtr<FRecoverIntervalTableMasterDomain>& Self,
                 const Request::FGetRecoverIntervalTableMasterRequestPtr Request
             );
 
@@ -110,7 +117,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FUpdateRecoverIntervalTableMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FRecoverIntervalTableMasterDomain> Self,
+                const TSharedPtr<FRecoverIntervalTableMasterDomain>& Self,
                 const Request::FUpdateRecoverIntervalTableMasterRequestPtr Request
             );
 
@@ -136,7 +143,7 @@ namespace Gs2::Stamina::Domain::Model
             const Request::FDeleteRecoverIntervalTableMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FRecoverIntervalTableMasterDomain> Self,
+                const TSharedPtr<FRecoverIntervalTableMasterDomain>& Self,
                 const Request::FDeleteRecoverIntervalTableMasterRequestPtr Request
             );
 

@@ -96,7 +96,7 @@ namespace Gs2::Matchmaking::Model
         return MakeShared<FAttributeRange>()
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

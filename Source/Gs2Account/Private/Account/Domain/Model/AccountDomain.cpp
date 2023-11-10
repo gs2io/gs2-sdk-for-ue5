@@ -41,12 +41,14 @@ namespace Gs2::Account::Domain::Model
 {
 
     FAccountDomain::FAccountDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Account::Domain::FGs2AccountDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Account::FGs2AccountRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -61,6 +63,7 @@ namespace Gs2::Account::Domain::Model
         const FAccountDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -70,7 +73,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FAccountDomain::FUpdateTimeOffsetTask::FUpdateTimeOffsetTask(
-        const TSharedPtr<FAccountDomain> Self,
+        const TSharedPtr<FAccountDomain>& Self,
         const Request::FUpdateTimeOffsetRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -134,7 +137,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FAccountDomain::FUpdateBannedTask::FUpdateBannedTask(
-        const TSharedPtr<FAccountDomain> Self,
+        const TSharedPtr<FAccountDomain>& Self,
         const Request::FUpdateBannedRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -198,7 +201,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FAccountDomain::FAddBanTask::FAddBanTask(
-        const TSharedPtr<FAccountDomain> Self,
+        const TSharedPtr<FAccountDomain>& Self,
         const Request::FAddBanRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -262,7 +265,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FAccountDomain::FRemoveBanTask::FRemoveBanTask(
-        const TSharedPtr<FAccountDomain> Self,
+        const TSharedPtr<FAccountDomain>& Self,
         const Request::FRemoveBanRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -326,7 +329,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FAccountDomain::FGetTask::FGetTask(
-        const TSharedPtr<FAccountDomain> Self,
+        const TSharedPtr<FAccountDomain>& Self,
         const Request::FGetAccountRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -388,7 +391,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FAccountDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FAccountDomain> Self,
+        const TSharedPtr<FAccountDomain>& Self,
         const Request::FDeleteAccountRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -446,7 +449,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FAccountDomain::FAuthenticationTask::FAuthenticationTask(
-        const TSharedPtr<FAccountDomain> Self,
+        const TSharedPtr<FAccountDomain>& Self,
         const Request::FAuthenticationRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -525,7 +528,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FAccountDomain::FDeleteDataOwnerTask::FDeleteDataOwnerTask(
-        const TSharedPtr<FAccountDomain> Self,
+        const TSharedPtr<FAccountDomain>& Self,
         const Request::FDeleteDataOwnerByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -572,6 +575,7 @@ namespace Gs2::Account::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FDataOwnerDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId()
         );
@@ -629,10 +633,11 @@ namespace Gs2::Account::Domain::Model
 
     TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain> FAccountDomain::TakeOver(
         const int32 Type
-    ) const
+    )
     {
         return MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             Type
@@ -640,10 +645,11 @@ namespace Gs2::Account::Domain::Model
     }
 
     TSharedPtr<Gs2::Account::Domain::Model::FDataOwnerDomain> FAccountDomain::DataOwner(
-    ) const
+    )
     {
         return MakeShared<Gs2::Account::Domain::Model::FDataOwnerDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );

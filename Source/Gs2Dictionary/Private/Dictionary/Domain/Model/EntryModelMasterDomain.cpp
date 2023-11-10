@@ -40,12 +40,14 @@ namespace Gs2::Dictionary::Domain::Model
 {
 
     FEntryModelMasterDomain::FEntryModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> EntryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         EntryName(EntryName),
@@ -60,6 +62,7 @@ namespace Gs2::Dictionary::Domain::Model
         const FEntryModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         EntryName(From.EntryName),
@@ -69,7 +72,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FEntryModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FEntryModelMasterDomain> Self,
+        const TSharedPtr<FEntryModelMasterDomain>& Self,
         const Request::FGetEntryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -131,7 +134,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FEntryModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FEntryModelMasterDomain> Self,
+        const TSharedPtr<FEntryModelMasterDomain>& Self,
         const Request::FUpdateEntryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -195,7 +198,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FEntryModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FEntryModelMasterDomain> Self,
+        const TSharedPtr<FEntryModelMasterDomain>& Self,
         const Request::FDeleteEntryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

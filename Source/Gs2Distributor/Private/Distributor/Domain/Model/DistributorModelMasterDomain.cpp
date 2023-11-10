@@ -41,12 +41,14 @@ namespace Gs2::Distributor::Domain::Model
 {
 
     FDistributorModelMasterDomain::FDistributorModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Distributor::Domain::FGs2DistributorDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> DistributorName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         DistributorName(DistributorName),
@@ -61,6 +63,7 @@ namespace Gs2::Distributor::Domain::Model
         const FDistributorModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         DistributorName(From.DistributorName),
@@ -70,7 +73,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FDistributorModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FDistributorModelMasterDomain> Self,
+        const TSharedPtr<FDistributorModelMasterDomain>& Self,
         const Request::FGetDistributorModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,7 +135,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FDistributorModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FDistributorModelMasterDomain> Self,
+        const TSharedPtr<FDistributorModelMasterDomain>& Self,
         const Request::FUpdateDistributorModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -196,7 +199,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FDistributorModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FDistributorModelMasterDomain> Self,
+        const TSharedPtr<FDistributorModelMasterDomain>& Self,
         const Request::FDeleteDistributorModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

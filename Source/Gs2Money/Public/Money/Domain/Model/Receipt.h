@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Money/Gs2Money.h"
 #include "Money/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Money/Domain/Iterator/DescribeWalletsIterator.h"
 #include "Money/Domain/Iterator/DescribeWalletsByUserIdIterator.h"
@@ -30,6 +29,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Money::Domain
+{
+    class FGs2MoneyDomain;
+    typedef TSharedPtr<FGs2MoneyDomain> FGs2MoneyDomainPtr;
 }
 
 namespace Gs2::Money::Domain::Model
@@ -46,7 +51,8 @@ namespace Gs2::Money::Domain::Model
         public TSharedFromThis<FReceiptDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Money::FGs2MoneyRestClientPtr Client;
+        const Money::Domain::FGs2MoneyDomainPtr Service;
+        const Gs2::Money::FGs2MoneyRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -59,7 +65,8 @@ namespace Gs2::Money::Domain::Model
     public:
 
         FReceiptDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Money::Domain::FGs2MoneyDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> TransactionId
@@ -78,7 +85,7 @@ namespace Gs2::Money::Domain::Model
             const Request::FGetByUserIdAndTransactionIdRequestPtr Request;
         public:
             explicit FGetByUserIdAndTransactionIdTask(
-                const TSharedPtr<FReceiptDomain> Self,
+                const TSharedPtr<FReceiptDomain>& Self,
                 const Request::FGetByUserIdAndTransactionIdRequestPtr Request
             );
 

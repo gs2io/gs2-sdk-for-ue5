@@ -40,11 +40,13 @@ namespace Gs2::SkillTree::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SkillTree::FGs2SkillTreeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("skillTree:Namespace")
@@ -55,6 +57,7 @@ namespace Gs2::SkillTree::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -63,7 +66,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -115,7 +118,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -172,7 +175,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -231,7 +234,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -284,7 +287,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FNamespaceDomain::FCreateNodeModelMasterTask::FCreateNodeModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateNodeModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -336,6 +339,7 @@ namespace Gs2::SkillTree::Domain::Model
         }
         auto Domain = MakeShared<Gs2::SkillTree::Domain::Model::FNodeModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -351,10 +355,11 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     TSharedPtr<Gs2::SkillTree::Domain::Model::FCurrentTreeMasterDomain> FNamespaceDomain::CurrentTreeMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::SkillTree::Domain::Model::FCurrentTreeMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -399,10 +404,11 @@ namespace Gs2::SkillTree::Domain::Model
 
     TSharedPtr<Gs2::SkillTree::Domain::Model::FNodeModelDomain> FNamespaceDomain::NodeModel(
         const FString NodeModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::SkillTree::Domain::Model::FNodeModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             NodeModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NodeModelName)
         );
@@ -410,10 +416,11 @@ namespace Gs2::SkillTree::Domain::Model
 
     TSharedPtr<Gs2::SkillTree::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::SkillTree::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -421,10 +428,11 @@ namespace Gs2::SkillTree::Domain::Model
 
     TSharedPtr<Gs2::SkillTree::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::SkillTree::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -470,10 +478,11 @@ namespace Gs2::SkillTree::Domain::Model
 
     TSharedPtr<Gs2::SkillTree::Domain::Model::FNodeModelMasterDomain> FNamespaceDomain::NodeModelMaster(
         const FString NodeModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::SkillTree::Domain::Model::FNodeModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             NodeModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NodeModelName)
         );

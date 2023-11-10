@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Formation/Gs2Formation.h"
 #include "Formation/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelsIterator.h"
@@ -38,6 +37,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Formation::Domain
+{
+    class FGs2FormationDomain;
+    typedef TSharedPtr<FGs2FormationDomain> FGs2FormationDomainPtr;
 }
 
 namespace Gs2::Formation::Domain::Model
@@ -63,7 +68,8 @@ namespace Gs2::Formation::Domain::Model
         public TSharedFromThis<FMoldDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Formation::FGs2FormationRestClientPtr Client;
+        const Formation::Domain::FGs2FormationDomainPtr Service;
+        const Gs2::Formation::FGs2FormationRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -91,7 +97,8 @@ namespace Gs2::Formation::Domain::Model
     public:
 
         FMoldDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Formation::Domain::FGs2FormationDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> MoldModelName
@@ -110,7 +117,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FGetMoldByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FMoldDomain> Self,
+                const TSharedPtr<FMoldDomain>& Self,
                 const Request::FGetMoldByUserIdRequestPtr Request
             );
 
@@ -136,7 +143,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FSetMoldCapacityByUserIdRequestPtr Request;
         public:
             explicit FSetCapacityTask(
-                const TSharedPtr<FMoldDomain> Self,
+                const TSharedPtr<FMoldDomain>& Self,
                 const Request::FSetMoldCapacityByUserIdRequestPtr Request
             );
 
@@ -162,7 +169,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FAddMoldCapacityByUserIdRequestPtr Request;
         public:
             explicit FAddCapacityTask(
-                const TSharedPtr<FMoldDomain> Self,
+                const TSharedPtr<FMoldDomain>& Self,
                 const Request::FAddMoldCapacityByUserIdRequestPtr Request
             );
 
@@ -188,7 +195,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FSubMoldCapacityByUserIdRequestPtr Request;
         public:
             explicit FSubCapacityTask(
-                const TSharedPtr<FMoldDomain> Self,
+                const TSharedPtr<FMoldDomain>& Self,
                 const Request::FSubMoldCapacityByUserIdRequestPtr Request
             );
 
@@ -214,7 +221,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FDeleteMoldByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FMoldDomain> Self,
+                const TSharedPtr<FMoldDomain>& Self,
                 const Request::FDeleteMoldByUserIdRequestPtr Request
             );
 
@@ -245,7 +252,7 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FFormDomain> Form(
             const int32 Index
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

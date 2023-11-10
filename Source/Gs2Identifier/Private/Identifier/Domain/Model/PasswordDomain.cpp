@@ -37,11 +37,13 @@ namespace Gs2::Identifier::Domain::Model
 {
 
     FPasswordDomain::FPasswordDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Identifier::Domain::FGs2IdentifierDomainPtr& Service,
         const TOptional<FString> UserName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Gs2->RestSession)),
         UserName(UserName),
         ParentKey(Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -55,6 +57,7 @@ namespace Gs2::Identifier::Domain::Model
         const FPasswordDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         UserName(From.UserName),
         ParentKey(From.ParentKey)
@@ -63,7 +66,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FPasswordDomain::FCreateTask::FCreateTask(
-        const TSharedPtr<FPasswordDomain> Self,
+        const TSharedPtr<FPasswordDomain>& Self,
         const Request::FCreatePasswordRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -125,7 +128,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FPasswordDomain::FGetTask::FGetTask(
-        const TSharedPtr<FPasswordDomain> Self,
+        const TSharedPtr<FPasswordDomain>& Self,
         const Request::FGetPasswordRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -185,7 +188,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FPasswordDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FPasswordDomain> Self,
+        const TSharedPtr<FPasswordDomain>& Self,
         const Request::FDeletePasswordRequestPtr Request
     ): Self(Self), Request(Request)
     {

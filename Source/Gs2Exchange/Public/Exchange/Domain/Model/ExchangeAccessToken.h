@@ -35,6 +35,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Exchange::Domain
+{
+    class FGs2ExchangeDomain;
+    typedef TSharedPtr<FGs2ExchangeDomain> FGs2ExchangeDomainPtr;
+}
+
 namespace Gs2::Exchange::Domain::Model
 {
     class FNamespaceDomain;
@@ -54,7 +60,8 @@ namespace Gs2::Exchange::Domain::Model
         public TSharedFromThis<FExchangeAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
+        const Exchange::Domain::FGs2ExchangeDomainPtr Service;
+        const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -77,9 +84,10 @@ namespace Gs2::Exchange::Domain::Model
     public:
 
         FExchangeAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -93,10 +101,12 @@ namespace Gs2::Exchange::Domain::Model
         {
             const TSharedPtr<FExchangeAccessTokenDomain> Self;
             const Request::FExchangeRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FExchangeTask(
-                const TSharedPtr<FExchangeAccessTokenDomain> Self,
-                const Request::FExchangeRequestPtr Request
+                const TSharedPtr<FExchangeAccessTokenDomain>& Self,
+                const Request::FExchangeRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FExchangeTask(
@@ -110,7 +120,8 @@ namespace Gs2::Exchange::Domain::Model
         friend FExchangeTask;
 
         TSharedPtr<FAsyncTask<FExchangeTask>> Exchange(
-            Request::FExchangeRequestPtr Request
+            Request::FExchangeRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         class GS2EXCHANGE_API FIncrementalTask final :
@@ -119,10 +130,12 @@ namespace Gs2::Exchange::Domain::Model
         {
             const TSharedPtr<FExchangeAccessTokenDomain> Self;
             const Request::FIncrementalExchangeRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FIncrementalTask(
-                const TSharedPtr<FExchangeAccessTokenDomain> Self,
-                const Request::FIncrementalExchangeRequestPtr Request
+                const TSharedPtr<FExchangeAccessTokenDomain>& Self,
+                const Request::FIncrementalExchangeRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FIncrementalTask(
@@ -136,7 +149,8 @@ namespace Gs2::Exchange::Domain::Model
         friend FIncrementalTask;
 
         TSharedPtr<FAsyncTask<FIncrementalTask>> Incremental(
-            Request::FIncrementalExchangeRequestPtr Request
+            Request::FIncrementalExchangeRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         static FString CreateCacheParentKey(

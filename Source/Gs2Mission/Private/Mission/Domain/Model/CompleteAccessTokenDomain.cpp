@@ -38,6 +38,7 @@
 #include "Mission/Domain/Model/MissionTaskModelMaster.h"
 #include "Mission/Domain/Model/User.h"
 #include "Mission/Domain/Model/UserAccessToken.h"
+#include "Mission/Domain/SpeculativeExecutor/Transaction/CompleteByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -47,13 +48,15 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FCompleteAccessTokenDomain::FCompleteAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> MissionGroupName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -70,6 +73,7 @@ namespace Gs2::Mission::Domain::Model
         const FCompleteAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -80,16 +84,17 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCompleteAccessTokenDomain::FCompleteTask::FCompleteTask(
-        const TSharedPtr<FCompleteAccessTokenDomain> Self,
-        const Request::FCompleteRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FCompleteAccessTokenDomain>& Self,
+        const Request::FCompleteRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FCompleteAccessTokenDomain::FCompleteTask::FCompleteTask(
         const FCompleteTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -101,6 +106,26 @@ namespace Gs2::Mission::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithMissionGroupName(Self->MissionGroupName);
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FCompleteByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FCompleteByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Complete(
             Request
         );
@@ -156,13 +181,14 @@ namespace Gs2::Mission::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FCompleteAccessTokenDomain::FCompleteTask>> FCompleteAccessTokenDomain::Complete(
-        Request::FCompleteRequestPtr Request
+        Request::FCompleteRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FCompleteTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FCompleteTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FCompleteAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCompleteAccessTokenDomain> Self,
+        const TSharedPtr<FCompleteAccessTokenDomain>& Self,
         const Request::FGetCompleteRequestPtr Request
     ): Self(Self), Request(Request)
     {

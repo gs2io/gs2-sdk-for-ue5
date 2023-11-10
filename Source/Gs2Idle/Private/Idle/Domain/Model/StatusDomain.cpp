@@ -42,13 +42,15 @@ namespace Gs2::Idle::Domain::Model
 {
 
     FStatusDomain::FStatusDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Idle::Domain::FGs2IdleDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> CategoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Idle::FGs2IdleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -65,6 +67,7 @@ namespace Gs2::Idle::Domain::Model
         const FStatusDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -75,7 +78,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FStatusDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FGetStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -139,7 +142,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FStatusDomain::FPredictionTask::FPredictionTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FPredictionByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -203,7 +206,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FStatusDomain::FReceiveTask::FReceiveTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FReceiveByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -285,7 +288,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FStatusDomain::FIncreaseMaximumIdleMinutesTask::FIncreaseMaximumIdleMinutesTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FIncreaseMaximumIdleMinutesByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -351,7 +354,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FStatusDomain::FDecreaseMaximumIdleMinutesTask::FDecreaseMaximumIdleMinutesTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

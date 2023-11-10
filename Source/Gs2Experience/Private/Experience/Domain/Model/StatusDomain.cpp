@@ -41,7 +41,8 @@ namespace Gs2::Experience::Domain::Model
 {
 
     FStatusDomain::FStatusDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Experience::Domain::FGs2ExperienceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> ExperienceName,
@@ -49,6 +50,7 @@ namespace Gs2::Experience::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Experience::FGs2ExperienceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -66,6 +68,7 @@ namespace Gs2::Experience::Domain::Model
         const FStatusDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -77,7 +80,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FGetStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -143,7 +146,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FGetWithSignatureTask::FGetWithSignatureTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FGetStatusWithSignatureByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -216,7 +219,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FAddExperienceTask::FAddExperienceTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FAddExperienceByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -284,7 +287,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FSubExperienceTask::FSubExperienceTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FSubExperienceByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -352,7 +355,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FSetExperienceTask::FSetExperienceTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FSetExperienceByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -420,7 +423,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FAddRankCapTask::FAddRankCapTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FAddRankCapByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -488,7 +491,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FSubRankCapTask::FSubRankCapTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FSubRankCapByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -556,7 +559,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FSetRankCapTask::FSetRankCapTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FSetRankCapByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -624,7 +627,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FDeleteStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -686,7 +689,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FVerifyRankTask::FVerifyRankTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FVerifyRankByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -734,7 +737,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FVerifyRankCapTask::FVerifyRankCapTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FVerifyRankCapByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -782,7 +785,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FStatusDomain::FMultiplyAcquireActionsTask::FMultiplyAcquireActionsTask(
-        const TSharedPtr<FStatusDomain> Self,
+        const TSharedPtr<FStatusDomain>& Self,
         const Request::FMultiplyAcquireActionsByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

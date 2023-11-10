@@ -36,6 +36,9 @@
 #include "Exchange/Domain/Model/AwaitAccessToken.h"
 #include "Exchange/Domain/Model/User.h"
 #include "Exchange/Domain/Model/UserAccessToken.h"
+#include "Exchange/Domain/SpeculativeExecutor/Transaction/AcquireByUserIdSpeculativeExecutor.h"
+#include "Exchange/Domain/SpeculativeExecutor/Transaction/AcquireForceByUserIdSpeculativeExecutor.h"
+#include "Exchange/Domain/SpeculativeExecutor/Transaction/SkipByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -45,13 +48,15 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FAwaitAccessTokenDomain::FAwaitAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> AwaitName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -68,6 +73,7 @@ namespace Gs2::Exchange::Domain::Model
         const FAwaitAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -78,7 +84,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FAwaitAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FAwaitAccessTokenDomain> Self,
+        const TSharedPtr<FAwaitAccessTokenDomain>& Self,
         const Request::FGetAwaitRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -142,16 +148,17 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FAwaitAccessTokenDomain::FAcquireTask::FAcquireTask(
-        const TSharedPtr<FAwaitAccessTokenDomain> Self,
-        const Request::FAcquireRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FAwaitAccessTokenDomain>& Self,
+        const Request::FAcquireRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FAwaitAccessTokenDomain::FAcquireTask::FAcquireTask(
         const FAcquireTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -163,6 +170,26 @@ namespace Gs2::Exchange::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAwaitName(Self->AwaitName);
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FAcquireByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FAcquireByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Acquire(
             Request
         );
@@ -236,22 +263,24 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FAwaitAccessTokenDomain::FAcquireTask>> FAwaitAccessTokenDomain::Acquire(
-        Request::FAcquireRequestPtr Request
+        Request::FAcquireRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FAcquireTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FAcquireTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FAwaitAccessTokenDomain::FSkipTask::FSkipTask(
-        const TSharedPtr<FAwaitAccessTokenDomain> Self,
-        const Request::FSkipRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FAwaitAccessTokenDomain>& Self,
+        const Request::FSkipRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FAwaitAccessTokenDomain::FSkipTask::FSkipTask(
         const FSkipTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -263,6 +292,26 @@ namespace Gs2::Exchange::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAwaitName(Self->AwaitName);
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FSkipByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FSkipByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Skip(
             Request
         );
@@ -336,13 +385,14 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FAwaitAccessTokenDomain::FSkipTask>> FAwaitAccessTokenDomain::Skip(
-        Request::FSkipRequestPtr Request
+        Request::FSkipRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FSkipTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FSkipTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FAwaitAccessTokenDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FAwaitAccessTokenDomain> Self,
+        const TSharedPtr<FAwaitAccessTokenDomain>& Self,
         const Request::FDeleteAwaitRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Script/Gs2Script.h"
 #include "Script/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Script/Domain/Iterator/DescribeScriptsIterator.h"
 
@@ -28,6 +27,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Script::Domain
+{
+    class FGs2ScriptDomain;
+    typedef TSharedPtr<FGs2ScriptDomain> FGs2ScriptDomainPtr;
 }
 
 namespace Gs2::Script::Domain::Model
@@ -39,7 +44,8 @@ namespace Gs2::Script::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Script::FGs2ScriptRestClientPtr Client;
+        const Script::Domain::FGs2ScriptDomainPtr Service;
+        const Gs2::Script::FGs2ScriptRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -51,7 +57,8 @@ namespace Gs2::Script::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Script::Domain::FGs2ScriptDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder

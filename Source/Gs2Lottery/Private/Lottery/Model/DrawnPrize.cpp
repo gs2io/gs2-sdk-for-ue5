@@ -64,7 +64,7 @@ namespace Gs2::Lottery::Model
         return MakeShared<FDrawnPrize>()
             ->WithPrizeId(Data->HasField("prizeId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("prizeId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

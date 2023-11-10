@@ -49,7 +49,7 @@ namespace Gs2::JobQueue::Model
         return MakeShared<FRunNotification>()
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -58,7 +58,7 @@ namespace Gs2::JobQueue::Model
                 }() : TOptional<FString>())
             ->WithJobName(Data->HasField("jobName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("jobName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

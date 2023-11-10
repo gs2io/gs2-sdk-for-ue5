@@ -43,13 +43,15 @@ namespace Gs2::SerialKey::Domain::Model
 {
 
     FSerialKeyDomain::FSerialKeyDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> SerialKeyCode
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -66,6 +68,7 @@ namespace Gs2::SerialKey::Domain::Model
         const FSerialKeyDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -156,7 +159,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FSerialKeyDomain::FUseTask::FUseTask(
-        const TSharedPtr<FSerialKeyDomain> Self,
+        const TSharedPtr<FSerialKeyDomain>& Self,
         const Request::FUseByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

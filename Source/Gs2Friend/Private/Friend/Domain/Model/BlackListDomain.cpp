@@ -52,12 +52,14 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FBlackListDomain::FBlackListDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -73,6 +75,7 @@ namespace Gs2::Friend::Domain::Model
         const FBlackListDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -82,7 +85,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FBlackListDomain::FRegisterTask::FRegisterTask(
-        const TSharedPtr<FBlackListDomain> Self,
+        const TSharedPtr<FBlackListDomain>& Self,
         const Request::FRegisterBlackListByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -154,7 +157,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FBlackListDomain::FUnregisterTask::FUnregisterTask(
-        const TSharedPtr<FBlackListDomain> Self,
+        const TSharedPtr<FBlackListDomain>& Self,
         const Request::FUnregisterBlackListByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

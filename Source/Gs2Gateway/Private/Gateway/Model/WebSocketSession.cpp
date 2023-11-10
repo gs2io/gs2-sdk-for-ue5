@@ -216,7 +216,7 @@ namespace Gs2::Gateway::Model
         return MakeShared<FWebSocketSession>()
             ->WithWebSocketSessionId(Data->HasField("webSocketSessionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("webSocketSessionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -225,7 +225,7 @@ namespace Gs2::Gateway::Model
                 }() : TOptional<FString>())
             ->WithConnectionId(Data->HasField("connectionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("connectionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -234,7 +234,7 @@ namespace Gs2::Gateway::Model
                 }() : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -243,7 +243,7 @@ namespace Gs2::Gateway::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -41,13 +41,15 @@ namespace Gs2::Distributor::Domain::Model
 {
 
     FStampSheetResultDomain::FStampSheetResultDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Distributor::Domain::FGs2DistributorDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TransactionId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -64,6 +66,7 @@ namespace Gs2::Distributor::Domain::Model
         const FStampSheetResultDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -74,7 +77,7 @@ namespace Gs2::Distributor::Domain::Model
     }
 
     FStampSheetResultDomain::FGetTask::FGetTask(
-        const TSharedPtr<FStampSheetResultDomain> Self,
+        const TSharedPtr<FStampSheetResultDomain>& Self,
         const Request::FGetStampSheetResultByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

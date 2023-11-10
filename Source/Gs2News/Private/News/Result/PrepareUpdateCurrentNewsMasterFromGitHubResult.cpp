@@ -51,7 +51,7 @@ namespace Gs2::News::Result
         return MakeShared<FPrepareUpdateCurrentNewsMasterFromGitHubResult>()
             ->WithUploadToken(Data->HasField("uploadToken") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("uploadToken", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

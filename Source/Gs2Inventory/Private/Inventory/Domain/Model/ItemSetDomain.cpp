@@ -65,7 +65,8 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FItemSetDomain::FItemSetDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> InventoryName,
@@ -74,6 +75,7 @@ namespace Gs2::Inventory::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -93,6 +95,7 @@ namespace Gs2::Inventory::Domain::Model
         const FItemSetDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -105,7 +108,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemSetDomain::FGetTask::FGetTask(
-        const TSharedPtr<FItemSetDomain> Self,
+        const TSharedPtr<FItemSetDomain>& Self,
         const Request::FGetItemSetByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -302,7 +305,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemSetDomain::FGetItemWithSignatureTask::FGetItemWithSignatureTask(
-        const TSharedPtr<FItemSetDomain> Self,
+        const TSharedPtr<FItemSetDomain>& Self,
         const Request::FGetItemWithSignatureByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -492,6 +495,7 @@ namespace Gs2::Inventory::Domain::Model
         if (ResultModel->GetItems()->Num() > 0) {
             Domain = MakeShared<Gs2::Inventory::Domain::Model::FItemSetDomain>(
                 Self->Gs2,
+                Self->Service,
                 Request->GetNamespaceName(),
                 (*ResultModel->GetItems())[0]->GetUserId(),
                 (*ResultModel->GetItems())[0]->GetInventoryName(),
@@ -523,7 +527,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemSetDomain::FAcquireTask::FAcquireTask(
-        const TSharedPtr<FItemSetDomain> Self,
+        const TSharedPtr<FItemSetDomain>& Self,
         const Request::FAcquireItemSetByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -713,6 +717,7 @@ namespace Gs2::Inventory::Domain::Model
         if (ResultModel->GetItems()->Num() > 0) {
             Domain = MakeShared<Gs2::Inventory::Domain::Model::FItemSetDomain>(
                 Self->Gs2,
+                Self->Service,
                 Request->GetNamespaceName(),
                 (*ResultModel->GetItems())[0]->GetUserId(),
                 (*ResultModel->GetItems())[0]->GetInventoryName(),
@@ -740,7 +745,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemSetDomain::FConsumeTask::FConsumeTask(
-        const TSharedPtr<FItemSetDomain> Self,
+        const TSharedPtr<FItemSetDomain>& Self,
         const Request::FConsumeItemSetByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -930,6 +935,7 @@ namespace Gs2::Inventory::Domain::Model
         if (ResultModel->GetItems()->Num() > 0) {
             Domain = MakeShared<Gs2::Inventory::Domain::Model::FItemSetDomain>(
                 Self->Gs2,
+                Self->Service,
                 Request->GetNamespaceName(),
                 (*ResultModel->GetItems())[0]->GetUserId(),
                 (*ResultModel->GetItems())[0]->GetInventoryName(),
@@ -950,7 +956,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemSetDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FItemSetDomain> Self,
+        const TSharedPtr<FItemSetDomain>& Self,
         const Request::FDeleteItemSetByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -1096,6 +1102,7 @@ namespace Gs2::Inventory::Domain::Model
         if (ResultModel->GetItems()->Num() > 0) {
             Domain = MakeShared<Gs2::Inventory::Domain::Model::FItemSetDomain>(
                 Self->Gs2,
+                Self->Service,
                 Request->GetNamespaceName(),
                 (*ResultModel->GetItems())[0]->GetUserId(),
                 (*ResultModel->GetItems())[0]->GetInventoryName(),
@@ -1116,7 +1123,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemSetDomain::FVerifyTask::FVerifyTask(
-        const TSharedPtr<FItemSetDomain> Self,
+        const TSharedPtr<FItemSetDomain>& Self,
         const Request::FVerifyItemSetByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -1165,7 +1172,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FItemSetDomain::FAddReferenceOfTask::FAddReferenceOfTask(
-        const TSharedPtr<FItemSetDomain> Self,
+        const TSharedPtr<FItemSetDomain>& Self,
         const Request::FAddReferenceOfByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -1253,6 +1260,7 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetUserId(),
             Request->GetInventoryName(),
@@ -1286,10 +1294,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FReferenceOfDomain> FItemSetDomain::ReferenceOf(
         const FString ReferenceOf
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             InventoryName,

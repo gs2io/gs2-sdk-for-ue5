@@ -52,13 +52,15 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FRandomShowcaseStatusDomain::FRandomShowcaseStatusDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> ShowcaseName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -75,6 +77,7 @@ namespace Gs2::Showcase::Domain::Model
         const FRandomShowcaseStatusDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -85,7 +88,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FRandomShowcaseStatusDomain::FIncrementPurchaseCountTask::FIncrementPurchaseCountTask(
-        const TSharedPtr<FRandomShowcaseStatusDomain> Self,
+        const TSharedPtr<FRandomShowcaseStatusDomain>& Self,
         const Request::FIncrementPurchaseCountByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -141,6 +144,7 @@ namespace Gs2::Showcase::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetUserId(),
             ResultModel->GetItem()->GetShowcaseName(),
@@ -158,7 +162,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FRandomShowcaseStatusDomain::FDecrementPurchaseCountTask::FDecrementPurchaseCountTask(
-        const TSharedPtr<FRandomShowcaseStatusDomain> Self,
+        const TSharedPtr<FRandomShowcaseStatusDomain>& Self,
         const Request::FDecrementPurchaseCountByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -214,6 +218,7 @@ namespace Gs2::Showcase::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetUserId(),
             ResultModel->GetItem()->GetShowcaseName(),
@@ -231,7 +236,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FRandomShowcaseStatusDomain::FForceReDrawTask::FForceReDrawTask(
-        const TSharedPtr<FRandomShowcaseStatusDomain> Self,
+        const TSharedPtr<FRandomShowcaseStatusDomain>& Self,
         const Request::FForceReDrawByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -292,6 +297,7 @@ namespace Gs2::Showcase::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     Request->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetShowcaseName(),

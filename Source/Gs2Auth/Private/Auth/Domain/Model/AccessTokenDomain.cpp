@@ -33,10 +33,12 @@ namespace Gs2::Auth::Domain::Model
 {
 
     FAccessTokenDomain::FAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Auth::Domain::FGs2AuthDomainPtr& Service
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Auth::FGs2AuthRestClient>(Gs2->RestSession)),
         ParentKey("auth:AccessToken")
     {
@@ -46,6 +48,7 @@ namespace Gs2::Auth::Domain::Model
         const FAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         ParentKey(From.ParentKey)
     {
@@ -53,7 +56,7 @@ namespace Gs2::Auth::Domain::Model
     }
 
     FAccessTokenDomain::FLoginTask::FLoginTask(
-        const TSharedPtr<FAccessTokenDomain> Self,
+        const TSharedPtr<FAccessTokenDomain>& Self,
         const Request::FLoginRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -121,7 +124,7 @@ namespace Gs2::Auth::Domain::Model
     }
 
     FAccessTokenDomain::FLoginBySignatureTask::FLoginBySignatureTask(
-        const TSharedPtr<FAccessTokenDomain> Self,
+        const TSharedPtr<FAccessTokenDomain>& Self,
         const Request::FLoginBySignatureRequestPtr Request
     ): Self(Self), Request(Request)
     {

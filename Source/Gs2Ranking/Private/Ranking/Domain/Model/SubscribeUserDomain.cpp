@@ -48,7 +48,8 @@ namespace Gs2::Ranking::Domain::Model
 {
 
     FSubscribeUserDomain::FSubscribeUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Ranking::Domain::FGs2RankingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> CategoryName,
@@ -56,6 +57,7 @@ namespace Gs2::Ranking::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Ranking::FGs2RankingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -73,6 +75,7 @@ namespace Gs2::Ranking::Domain::Model
         const FSubscribeUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -84,7 +87,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FSubscribeUserDomain::FGetTask::FGetTask(
-        const TSharedPtr<FSubscribeUserDomain> Self,
+        const TSharedPtr<FSubscribeUserDomain>& Self,
         const Request::FGetSubscribeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -150,7 +153,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FSubscribeUserDomain::FUnsubscribeTask::FUnsubscribeTask(
-        const TSharedPtr<FSubscribeUserDomain> Self,
+        const TSharedPtr<FSubscribeUserDomain>& Self,
         const Request::FUnsubscribeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

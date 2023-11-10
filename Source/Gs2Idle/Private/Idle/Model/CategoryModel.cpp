@@ -210,7 +210,7 @@ namespace Gs2::Idle::Model
         return MakeShared<FCategoryModel>()
             ->WithCategoryModelId(Data->HasField("categoryModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("categoryModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -219,7 +219,7 @@ namespace Gs2::Idle::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -228,7 +228,7 @@ namespace Gs2::Idle::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -267,7 +267,7 @@ namespace Gs2::Idle::Model
                  }() : MakeShared<TArray<Model::FAcquireActionListPtr>>())
             ->WithIdlePeriodScheduleId(Data->HasField("idlePeriodScheduleId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("idlePeriodScheduleId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -276,7 +276,7 @@ namespace Gs2::Idle::Model
                 }() : TOptional<FString>())
             ->WithReceivePeriodScheduleId(Data->HasField("receivePeriodScheduleId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("receivePeriodScheduleId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

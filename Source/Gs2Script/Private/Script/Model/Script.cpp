@@ -205,7 +205,7 @@ namespace Gs2::Script::Model
         return MakeShared<FScript>()
             ->WithScriptId(Data->HasField("scriptId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("scriptId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -214,7 +214,7 @@ namespace Gs2::Script::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -223,7 +223,7 @@ namespace Gs2::Script::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -232,7 +232,7 @@ namespace Gs2::Script::Model
                 }() : TOptional<FString>())
             ->WithScript(Data->HasField("script") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("script", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

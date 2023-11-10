@@ -308,7 +308,7 @@ namespace Gs2::Matchmaking::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("name", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -317,7 +317,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -335,7 +335,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<bool>())
             ->WithCreateGatheringTriggerType(Data->HasField("createGatheringTriggerType") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("createGatheringTriggerType", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -344,7 +344,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
             ->WithCreateGatheringTriggerRealtimeNamespaceId(Data->HasField("createGatheringTriggerRealtimeNamespaceId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("createGatheringTriggerRealtimeNamespaceId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -353,7 +353,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
             ->WithCreateGatheringTriggerScriptId(Data->HasField("createGatheringTriggerScriptId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("createGatheringTriggerScriptId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -362,7 +362,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
             ->WithCompleteMatchmakingTriggerType(Data->HasField("completeMatchmakingTriggerType") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("completeMatchmakingTriggerType", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -371,7 +371,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
             ->WithCompleteMatchmakingTriggerRealtimeNamespaceId(Data->HasField("completeMatchmakingTriggerRealtimeNamespaceId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("completeMatchmakingTriggerRealtimeNamespaceId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -380,7 +380,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
             ->WithCompleteMatchmakingTriggerScriptId(Data->HasField("completeMatchmakingTriggerScriptId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("completeMatchmakingTriggerScriptId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

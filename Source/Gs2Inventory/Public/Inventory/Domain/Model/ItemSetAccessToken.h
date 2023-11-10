@@ -54,6 +54,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
+}
+
 namespace Gs2::Inventory::Domain::Model
 {
     class FNamespaceDomain;
@@ -86,12 +92,14 @@ namespace Gs2::Inventory::Domain::Model
     class FBigItemAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
+    class FItemSetEntry;
 
     class GS2INVENTORY_API FItemSetAccessTokenDomain:
         public TSharedFromThis<FItemSetAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inventory::FGs2InventoryRestClientPtr Client;
+        const Inventory::Domain::FGs2InventoryDomainPtr Service;
+        const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
         TOptional<FString> Body;
@@ -122,9 +130,10 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FItemSetAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inventory::Domain::FGs2InventoryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> InventoryName,
             const TOptional<FString> ItemName,
             const TOptional<FString> ItemSetName
@@ -143,7 +152,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetItemSetRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FItemSetAccessTokenDomain> Self,
+                const TSharedPtr<FItemSetAccessTokenDomain>& Self,
                 const Request::FGetItemSetRequestPtr Request
             );
 
@@ -169,7 +178,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetItemWithSignatureRequestPtr Request;
         public:
             explicit FGetItemWithSignatureTask(
-                const TSharedPtr<FItemSetAccessTokenDomain> Self,
+                const TSharedPtr<FItemSetAccessTokenDomain>& Self,
                 const Request::FGetItemWithSignatureRequestPtr Request
             );
 
@@ -195,7 +204,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FConsumeItemSetRequestPtr Request;
         public:
             explicit FConsumeTask(
-                const TSharedPtr<FItemSetAccessTokenDomain> Self,
+                const TSharedPtr<FItemSetAccessTokenDomain>& Self,
                 const Request::FConsumeItemSetRequestPtr Request
             );
 
@@ -221,7 +230,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FVerifyItemSetRequestPtr Request;
         public:
             explicit FVerifyTask(
-                const TSharedPtr<FItemSetAccessTokenDomain> Self,
+                const TSharedPtr<FItemSetAccessTokenDomain>& Self,
                 const Request::FVerifyItemSetRequestPtr Request
             );
 
@@ -247,7 +256,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FAddReferenceOfRequestPtr Request;
         public:
             explicit FAddReferenceOfTask(
-                const TSharedPtr<FItemSetAccessTokenDomain> Self,
+                const TSharedPtr<FItemSetAccessTokenDomain>& Self,
                 const Request::FAddReferenceOfRequestPtr Request
             );
 
@@ -270,7 +279,7 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain> ReferenceOf(
             const FString ReferenceOf
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

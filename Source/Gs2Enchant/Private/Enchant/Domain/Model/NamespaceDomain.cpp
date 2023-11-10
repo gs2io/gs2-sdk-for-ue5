@@ -44,11 +44,13 @@ namespace Gs2::Enchant::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enchant::Domain::FGs2EnchantDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("enchant:Namespace")
@@ -59,6 +61,7 @@ namespace Gs2::Enchant::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -67,7 +70,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -119,7 +122,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -176,7 +179,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -235,7 +238,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -288,7 +291,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FNamespaceDomain::FCreateBalanceParameterModelMasterTask::FCreateBalanceParameterModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateBalanceParameterModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -340,6 +343,7 @@ namespace Gs2::Enchant::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Enchant::Domain::Model::FBalanceParameterModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -355,7 +359,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FNamespaceDomain::FCreateRarityParameterModelMasterTask::FCreateRarityParameterModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateRarityParameterModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -407,6 +411,7 @@ namespace Gs2::Enchant::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -422,10 +427,11 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain> FNamespaceDomain::CurrentParameterMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -470,10 +476,11 @@ namespace Gs2::Enchant::Domain::Model
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterModelDomain> FNamespaceDomain::BalanceParameterModel(
         const FString ParameterName
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FBalanceParameterModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName)
         );
@@ -519,10 +526,11 @@ namespace Gs2::Enchant::Domain::Model
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterModelMasterDomain> FNamespaceDomain::BalanceParameterModelMaster(
         const FString ParameterName
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FBalanceParameterModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName)
         );
@@ -568,10 +576,11 @@ namespace Gs2::Enchant::Domain::Model
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterModelDomain> FNamespaceDomain::RarityParameterModel(
         const FString ParameterName
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FRarityParameterModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName)
         );
@@ -617,10 +626,11 @@ namespace Gs2::Enchant::Domain::Model
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain> FNamespaceDomain::RarityParameterModelMaster(
         const FString ParameterName
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             ParameterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ParameterName)
         );
@@ -628,10 +638,11 @@ namespace Gs2::Enchant::Domain::Model
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -639,10 +650,11 @@ namespace Gs2::Enchant::Domain::Model
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Enchant::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

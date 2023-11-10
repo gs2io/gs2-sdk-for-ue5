@@ -63,7 +63,8 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FSimpleItemDomain::FSimpleItemDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> InventoryName,
@@ -71,6 +72,7 @@ namespace Gs2::Inventory::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -89,6 +91,7 @@ namespace Gs2::Inventory::Domain::Model
         const FSimpleItemDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -100,7 +103,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FSimpleItemDomain::FGetTask::FGetTask(
-        const TSharedPtr<FSimpleItemDomain> Self,
+        const TSharedPtr<FSimpleItemDomain>& Self,
         const Request::FGetSimpleItemByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -184,7 +187,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FSimpleItemDomain::FGetWithSignatureTask::FGetWithSignatureTask(
-        const TSharedPtr<FSimpleItemDomain> Self,
+        const TSharedPtr<FSimpleItemDomain>& Self,
         const Request::FGetSimpleItemWithSignatureByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -275,7 +278,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FSimpleItemDomain::FVerifyTask::FVerifyTask(
-        const TSharedPtr<FSimpleItemDomain> Self,
+        const TSharedPtr<FSimpleItemDomain>& Self,
         const Request::FVerifySimpleItemByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

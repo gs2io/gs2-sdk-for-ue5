@@ -41,11 +41,13 @@ namespace Gs2::SerialKey::Domain::Model
 {
 
     FCurrentCampaignMasterDomain::FCurrentCampaignMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::SerialKey::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -59,6 +61,7 @@ namespace Gs2::SerialKey::Domain::Model
         const FCurrentCampaignMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -67,7 +70,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FCurrentCampaignMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentCampaignMasterDomain> Self,
+        const TSharedPtr<FCurrentCampaignMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -129,7 +132,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FCurrentCampaignMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentCampaignMasterDomain> Self,
+        const TSharedPtr<FCurrentCampaignMasterDomain>& Self,
         const Request::FGetCurrentCampaignMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -189,7 +192,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FCurrentCampaignMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentCampaignMasterDomain> Self,
+        const TSharedPtr<FCurrentCampaignMasterDomain>& Self,
         const Request::FUpdateCurrentCampaignMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -251,7 +254,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FCurrentCampaignMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentCampaignMasterDomain> Self,
+        const TSharedPtr<FCurrentCampaignMasterDomain>& Self,
         const Request::FUpdateCurrentCampaignMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

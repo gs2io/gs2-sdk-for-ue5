@@ -65,7 +65,7 @@ namespace Gs2::Deploy::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithTemplate(Data->HasField("template") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("template", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

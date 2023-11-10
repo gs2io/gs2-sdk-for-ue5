@@ -243,7 +243,7 @@ namespace Gs2::Deploy::Model
         return MakeShared<FResource>()
             ->WithResourceId(Data->HasField("resourceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resourceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -252,7 +252,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("type", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -261,7 +261,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -270,7 +270,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithRequest(Data->HasField("request") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("request", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -279,7 +279,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithResponse(Data->HasField("response") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("response", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -288,7 +288,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithRollbackContext(Data->HasField("rollbackContext") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("rollbackContext", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -297,7 +297,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithRollbackRequest(Data->HasField("rollbackRequest") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("rollbackRequest", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -330,7 +330,7 @@ namespace Gs2::Deploy::Model
                  }() : MakeShared<TArray<Model::FOutputFieldPtr>>())
             ->WithWorkId(Data->HasField("workId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("workId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

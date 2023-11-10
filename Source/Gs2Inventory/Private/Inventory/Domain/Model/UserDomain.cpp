@@ -63,12 +63,14 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -83,6 +85,7 @@ namespace Gs2::Inventory::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -134,10 +137,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryDomain> FUserDomain::Inventory(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FInventoryDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
@@ -146,10 +150,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryDomain> FUserDomain::SimpleInventory(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FSimpleInventoryDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
@@ -158,10 +163,11 @@ namespace Gs2::Inventory::Domain::Model
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryDomain> FUserDomain::BigInventory(
         const FString InventoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)

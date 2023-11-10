@@ -42,12 +42,14 @@ namespace Gs2::Version::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Version::Domain::FGs2VersionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Version::FGs2VersionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -62,6 +64,7 @@ namespace Gs2::Version::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -71,7 +74,7 @@ namespace Gs2::Version::Domain::Model
     }
 
     FUserDomain::FCalculateSignatureTask::FCalculateSignatureTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FCalculateSignatureRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -169,10 +172,11 @@ namespace Gs2::Version::Domain::Model
 
     TSharedPtr<Gs2::Version::Domain::Model::FAcceptVersionDomain> FUserDomain::AcceptVersion(
         const FString VersionName
-    ) const
+    )
     {
         return MakeShared<Gs2::Version::Domain::Model::FAcceptVersionDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             VersionName == TEXT("") ? TOptional<FString>() : TOptional<FString>(VersionName)
@@ -180,10 +184,11 @@ namespace Gs2::Version::Domain::Model
     }
 
     TSharedPtr<Gs2::Version::Domain::Model::FCheckerDomain> FUserDomain::Checker(
-    ) const
+    )
     {
         return MakeShared<Gs2::Version::Domain::Model::FCheckerDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Exchange/Gs2Exchange.h"
 #include "Exchange/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelMastersIterator.h"
@@ -33,6 +32,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Exchange::Domain
+{
+    class FGs2ExchangeDomain;
+    typedef TSharedPtr<FGs2ExchangeDomain> FGs2ExchangeDomainPtr;
 }
 
 namespace Gs2::Exchange::Domain::Model
@@ -54,7 +59,8 @@ namespace Gs2::Exchange::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
+        const Exchange::Domain::FGs2ExchangeDomainPtr Service;
+        const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -86,7 +92,8 @@ namespace Gs2::Exchange::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -104,7 +111,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FCreateAwaitByUserIdRequestPtr Request;
         public:
             explicit FCreateAwaitTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FCreateAwaitByUserIdRequestPtr Request
             );
 
@@ -123,7 +130,7 @@ namespace Gs2::Exchange::Domain::Model
         );
 
         TSharedPtr<Gs2::Exchange::Domain::Model::FExchangeDomain> Exchange(
-        ) const;
+        );
 
         Gs2::Exchange::Domain::Iterator::FDescribeAwaitsByUserIdIteratorPtr Awaits(
             const TOptional<FString> RateName
@@ -139,7 +146,7 @@ namespace Gs2::Exchange::Domain::Model
 
         TSharedPtr<Gs2::Exchange::Domain::Model::FAwaitDomain> Await(
             const FString AwaitName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

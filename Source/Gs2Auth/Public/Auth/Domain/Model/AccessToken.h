@@ -20,12 +20,17 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Auth/Gs2Auth.h"
 
 namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Auth::Domain
+{
+    class FGs2AuthDomain;
+    typedef TSharedPtr<FGs2AuthDomain> FGs2AuthDomainPtr;
 }
 
 namespace Gs2::Auth::Domain::Model
@@ -36,7 +41,8 @@ namespace Gs2::Auth::Domain::Model
         public TSharedFromThis<FAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Auth::FGs2AuthRestClientPtr Client;
+        const Auth::Domain::FGs2AuthDomainPtr Service;
+        const Gs2::Auth::FGs2AuthRestClientPtr Client;
 
         public:
         TOptional<FString> Token;
@@ -66,7 +72,8 @@ namespace Gs2::Auth::Domain::Model
     public:
 
         FAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Auth::Domain::FGs2AuthDomainPtr& Service
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -82,7 +89,7 @@ namespace Gs2::Auth::Domain::Model
             const Request::FLoginRequestPtr Request;
         public:
             explicit FLoginTask(
-                const TSharedPtr<FAccessTokenDomain> Self,
+                const TSharedPtr<FAccessTokenDomain>& Self,
                 const Request::FLoginRequestPtr Request
             );
 
@@ -108,7 +115,7 @@ namespace Gs2::Auth::Domain::Model
             const Request::FLoginBySignatureRequestPtr Request;
         public:
             explicit FLoginBySignatureTask(
-                const TSharedPtr<FAccessTokenDomain> Self,
+                const TSharedPtr<FAccessTokenDomain>& Self,
                 const Request::FLoginBySignatureRequestPtr Request
             );
 

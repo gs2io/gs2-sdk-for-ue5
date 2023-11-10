@@ -22,7 +22,7 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Deploy/Gs2Deploy.h"
+#include "Deploy/Domain/Gs2Deploy.h"
 #include "Deploy/Domain/Iterator/DescribeEventsIterator.h"
 #include "Deploy/Domain/Iterator/DescribeStacksIterator.h"
 #include "Deploy/Domain/Iterator/DescribeResourcesIterator.h"
@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Deploy::Domain
+{
+    class FGs2DeployDomain;
+    typedef TSharedPtr<FGs2DeployDomain> FGs2DeployDomainPtr;
 }
 
 namespace Gs2::Deploy::Domain::Model
@@ -46,7 +52,8 @@ namespace Gs2::Deploy::Domain::Model
         public TSharedFromThis<FStackDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Deploy::FGs2DeployRestClientPtr Client;
+        const Deploy::Domain::FGs2DeployDomainPtr Service;
+        const Gs2::Deploy::FGs2DeployRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -67,7 +74,8 @@ namespace Gs2::Deploy::Domain::Model
     public:
 
         FStackDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Deploy::Domain::FGs2DeployDomainPtr& Service,
             const TOptional<FString> StackName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -84,7 +92,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FGetStackStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FStackDomain> Self,
+                const TSharedPtr<FStackDomain>& Self,
                 const Request::FGetStackStatusRequestPtr Request
             );
 
@@ -110,7 +118,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FGetStackRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FStackDomain> Self,
+                const TSharedPtr<FStackDomain>& Self,
                 const Request::FGetStackRequestPtr Request
             );
 
@@ -136,7 +144,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FUpdateStackRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FStackDomain> Self,
+                const TSharedPtr<FStackDomain>& Self,
                 const Request::FUpdateStackRequestPtr Request
             );
 
@@ -162,7 +170,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FChangeSetRequestPtr Request;
         public:
             explicit FChangeSetTask(
-                const TSharedPtr<FStackDomain> Self,
+                const TSharedPtr<FStackDomain>& Self,
                 const Request::FChangeSetRequestPtr Request
             );
 
@@ -188,7 +196,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FUpdateStackFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FStackDomain> Self,
+                const TSharedPtr<FStackDomain>& Self,
                 const Request::FUpdateStackFromGitHubRequestPtr Request
             );
 
@@ -214,7 +222,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FDeleteStackRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FStackDomain> Self,
+                const TSharedPtr<FStackDomain>& Self,
                 const Request::FDeleteStackRequestPtr Request
             );
 
@@ -240,7 +248,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FForceDeleteStackRequestPtr Request;
         public:
             explicit FForceDeleteTask(
-                const TSharedPtr<FStackDomain> Self,
+                const TSharedPtr<FStackDomain>& Self,
                 const Request::FForceDeleteStackRequestPtr Request
             );
 
@@ -266,7 +274,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FDeleteStackResourcesRequestPtr Request;
         public:
             explicit FDeleteResourcesTask(
-                const TSharedPtr<FStackDomain> Self,
+                const TSharedPtr<FStackDomain>& Self,
                 const Request::FDeleteStackResourcesRequestPtr Request
             );
 
@@ -292,7 +300,7 @@ namespace Gs2::Deploy::Domain::Model
             const Request::FDeleteStackEntityRequestPtr Request;
         public:
             explicit FDeleteEntityTask(
-                const TSharedPtr<FStackDomain> Self,
+                const TSharedPtr<FStackDomain>& Self,
                 const Request::FDeleteStackEntityRequestPtr Request
             );
 
@@ -323,7 +331,7 @@ namespace Gs2::Deploy::Domain::Model
 
         TSharedPtr<Gs2::Deploy::Domain::Model::FResourceDomain> Resource(
             const FString ResourceName
-        ) const;
+        );
 
         Gs2::Deploy::Domain::Iterator::FDescribeEventsIteratorPtr Events(
         ) const;
@@ -338,7 +346,7 @@ namespace Gs2::Deploy::Domain::Model
 
         TSharedPtr<Gs2::Deploy::Domain::Model::FEventDomain> Event(
             const FString EventName
-        ) const;
+        );
 
         Gs2::Deploy::Domain::Iterator::FDescribeOutputsIteratorPtr Outputs(
         ) const;
@@ -353,7 +361,7 @@ namespace Gs2::Deploy::Domain::Model
 
         TSharedPtr<Gs2::Deploy::Domain::Model::FOutputDomain> Output(
             const FString OutputName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> StackName,

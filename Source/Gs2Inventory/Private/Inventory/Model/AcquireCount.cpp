@@ -73,7 +73,7 @@ namespace Gs2::Inventory::Model
         return MakeShared<FAcquireCount>()
             ->WithItemName(Data->HasField("itemName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("itemName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

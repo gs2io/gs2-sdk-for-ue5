@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Enchant/Gs2Enchant.h"
 #include "Enchant/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Enchant/Domain/Iterator/DescribeBalanceParameterModelsIterator.h"
 #include "Enchant/Domain/Iterator/DescribeBalanceParameterModelMastersIterator.h"
@@ -35,6 +34,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Enchant::Domain
+{
+    class FGs2EnchantDomain;
+    typedef TSharedPtr<FGs2EnchantDomain> FGs2EnchantDomainPtr;
 }
 
 namespace Gs2::Enchant::Domain::Model
@@ -56,7 +61,8 @@ namespace Gs2::Enchant::Domain::Model
         public TSharedFromThis<FRarityParameterStatusDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Enchant::FGs2EnchantRestClientPtr Client;
+        const Enchant::Domain::FGs2EnchantDomainPtr Service;
+        const Gs2::Enchant::FGs2EnchantRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -70,7 +76,8 @@ namespace Gs2::Enchant::Domain::Model
     public:
 
         FRarityParameterStatusDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Enchant::Domain::FGs2EnchantDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> ParameterName,
@@ -90,7 +97,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FGetRarityParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FRarityParameterStatusDomain> Self,
+                const TSharedPtr<FRarityParameterStatusDomain>& Self,
                 const Request::FGetRarityParameterStatusByUserIdRequestPtr Request
             );
 
@@ -116,7 +123,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FDeleteRarityParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FRarityParameterStatusDomain> Self,
+                const TSharedPtr<FRarityParameterStatusDomain>& Self,
                 const Request::FDeleteRarityParameterStatusByUserIdRequestPtr Request
             );
 
@@ -142,7 +149,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FReDrawRarityParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FReDrawTask(
-                const TSharedPtr<FRarityParameterStatusDomain> Self,
+                const TSharedPtr<FRarityParameterStatusDomain>& Self,
                 const Request::FReDrawRarityParameterStatusByUserIdRequestPtr Request
             );
 
@@ -168,7 +175,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FAddRarityParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FAddTask(
-                const TSharedPtr<FRarityParameterStatusDomain> Self,
+                const TSharedPtr<FRarityParameterStatusDomain>& Self,
                 const Request::FAddRarityParameterStatusByUserIdRequestPtr Request
             );
 
@@ -194,7 +201,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FVerifyRarityParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FVerifyTask(
-                const TSharedPtr<FRarityParameterStatusDomain> Self,
+                const TSharedPtr<FRarityParameterStatusDomain>& Self,
                 const Request::FVerifyRarityParameterStatusByUserIdRequestPtr Request
             );
 
@@ -220,7 +227,7 @@ namespace Gs2::Enchant::Domain::Model
             const Request::FSetRarityParameterStatusByUserIdRequestPtr Request;
         public:
             explicit FSetTask(
-                const TSharedPtr<FRarityParameterStatusDomain> Self,
+                const TSharedPtr<FRarityParameterStatusDomain>& Self,
                 const Request::FSetRarityParameterStatusByUserIdRequestPtr Request
             );
 

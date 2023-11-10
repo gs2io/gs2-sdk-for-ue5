@@ -41,13 +41,15 @@ namespace Gs2::Dictionary::Domain::Model
 {
 
     FEntryAccessTokenDomain::FEntryAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> EntryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -64,6 +66,7 @@ namespace Gs2::Dictionary::Domain::Model
         const FEntryAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -74,7 +77,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FEntryAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FEntryAccessTokenDomain> Self,
+        const TSharedPtr<FEntryAccessTokenDomain>& Self,
         const Request::FGetEntryRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -138,7 +141,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FEntryAccessTokenDomain::FGetWithSignatureTask::FGetWithSignatureTask(
-        const TSharedPtr<FEntryAccessTokenDomain> Self,
+        const TSharedPtr<FEntryAccessTokenDomain>& Self,
         const Request::FGetEntryWithSignatureRequestPtr Request
     ): Self(Self), Request(Request)
     {

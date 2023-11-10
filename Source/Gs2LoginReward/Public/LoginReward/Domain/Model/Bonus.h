@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "LoginReward/Gs2LoginReward.h"
 #include "LoginReward/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelMastersIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::LoginReward::Domain
+{
+    class FGs2LoginRewardDomain;
+    typedef TSharedPtr<FGs2LoginRewardDomain> FGs2LoginRewardDomainPtr;
 }
 
 namespace Gs2::LoginReward::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::LoginReward::Domain::Model
         public TSharedFromThis<FBonusDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr Service;
+        const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -72,7 +78,8 @@ namespace Gs2::LoginReward::Domain::Model
     public:
 
         FBonusDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -90,7 +97,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FReceiveByUserIdRequestPtr Request;
         public:
             explicit FReceiveTask(
-                const TSharedPtr<FBonusDomain> Self,
+                const TSharedPtr<FBonusDomain>& Self,
                 const Request::FReceiveByUserIdRequestPtr Request
             );
 
@@ -116,7 +123,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FMissedReceiveByUserIdRequestPtr Request;
         public:
             explicit FMissedReceiveTask(
-                const TSharedPtr<FBonusDomain> Self,
+                const TSharedPtr<FBonusDomain>& Self,
                 const Request::FMissedReceiveByUserIdRequestPtr Request
             );
 

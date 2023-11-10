@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Distributor/Gs2Distributor.h"
 #include "Distributor/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelMastersIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelsIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Distributor::Domain
+{
+    class FGs2DistributorDomain;
+    typedef TSharedPtr<FGs2DistributorDomain> FGs2DistributorDomainPtr;
 }
 
 namespace Gs2::Distributor::Domain::Model
@@ -47,7 +52,8 @@ namespace Gs2::Distributor::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Distributor::FGs2DistributorRestClientPtr Client;
+        const Distributor::Domain::FGs2DistributorDomainPtr Service;
+        const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -59,7 +65,8 @@ namespace Gs2::Distributor::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Distributor::Domain::FGs2DistributorDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -71,7 +78,7 @@ namespace Gs2::Distributor::Domain::Model
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FStampSheetResultDomain> StampSheetResult(
             const FString TransactionId
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

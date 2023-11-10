@@ -41,13 +41,15 @@ namespace Gs2::Schedule::Domain::Model
 {
 
     FEventDomain::FEventDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> EventName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Schedule::FGs2ScheduleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -64,6 +66,7 @@ namespace Gs2::Schedule::Domain::Model
         const FEventDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -74,7 +77,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FEventDomain::FGetTask::FGetTask(
-        const TSharedPtr<FEventDomain> Self,
+        const TSharedPtr<FEventDomain>& Self,
         const Request::FGetEventByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

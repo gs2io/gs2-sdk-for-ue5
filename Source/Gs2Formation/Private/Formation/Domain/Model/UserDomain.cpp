@@ -48,12 +48,14 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Formation::Domain::FGs2FormationDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -68,6 +70,7 @@ namespace Gs2::Formation::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -119,10 +122,11 @@ namespace Gs2::Formation::Domain::Model
 
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldDomain> FUserDomain::Mold(
         const FString MoldModelName
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FMoldDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             MoldModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MoldModelName)
@@ -175,10 +179,11 @@ namespace Gs2::Formation::Domain::Model
     TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormDomain> FUserDomain::PropertyForm(
         const FString PropertyFormModelName,
         const FString PropertyId
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FPropertyFormDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             PropertyFormModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyFormModelName),

@@ -52,13 +52,15 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FFriendDomain::FFriendDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<bool> WithProfile
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -75,6 +77,7 @@ namespace Gs2::Friend::Domain::Model
         const FFriendDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -86,10 +89,11 @@ namespace Gs2::Friend::Domain::Model
 
     TSharedPtr<Gs2::Friend::Domain::Model::FFriendUserDomain> FFriendDomain::FriendUser(
         const FString TargetUserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FFriendUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             WithProfile,

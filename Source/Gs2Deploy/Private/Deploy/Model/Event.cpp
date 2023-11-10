@@ -196,7 +196,7 @@ namespace Gs2::Deploy::Model
         return MakeShared<FEvent>()
             ->WithEventId(Data->HasField("eventId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("eventId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -205,7 +205,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -214,7 +214,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithResourceName(Data->HasField("resourceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resourceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -223,7 +223,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("type", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -232,7 +232,7 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithMessage(Data->HasField("message") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("message", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -44,7 +44,8 @@ namespace Gs2::Enchant::Domain::Model
 {
 
     FBalanceParameterStatusDomain::FBalanceParameterStatusDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enchant::Domain::FGs2EnchantDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> ParameterName,
@@ -52,6 +53,7 @@ namespace Gs2::Enchant::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enchant::FGs2EnchantRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -69,6 +71,7 @@ namespace Gs2::Enchant::Domain::Model
         const FBalanceParameterStatusDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -80,7 +83,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FBalanceParameterStatusDomain::FGetTask::FGetTask(
-        const TSharedPtr<FBalanceParameterStatusDomain> Self,
+        const TSharedPtr<FBalanceParameterStatusDomain>& Self,
         const Request::FGetBalanceParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -146,7 +149,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FBalanceParameterStatusDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FBalanceParameterStatusDomain> Self,
+        const TSharedPtr<FBalanceParameterStatusDomain>& Self,
         const Request::FDeleteBalanceParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -208,7 +211,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FBalanceParameterStatusDomain::FReDrawTask::FReDrawTask(
-        const TSharedPtr<FBalanceParameterStatusDomain> Self,
+        const TSharedPtr<FBalanceParameterStatusDomain>& Self,
         const Request::FReDrawBalanceParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -276,7 +279,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     FBalanceParameterStatusDomain::FSetTask::FSetTask(
-        const TSharedPtr<FBalanceParameterStatusDomain> Self,
+        const TSharedPtr<FBalanceParameterStatusDomain>& Self,
         const Request::FSetBalanceParameterStatusByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

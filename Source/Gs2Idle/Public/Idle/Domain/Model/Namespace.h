@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Idle/Gs2Idle.h"
 #include "Idle/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Idle/Domain/Iterator/DescribeCategoryModelMastersIterator.h"
 #include "Idle/Domain/Iterator/DescribeCategoryModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Idle::Domain
+{
+    class FGs2IdleDomain;
+    typedef TSharedPtr<FGs2IdleDomain> FGs2IdleDomainPtr;
 }
 
 namespace Gs2::Idle::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Idle::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Idle::FGs2IdleRestClientPtr Client;
+        const Idle::Domain::FGs2IdleDomainPtr Service;
+        const Gs2::Idle::FGs2IdleRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -84,7 +90,8 @@ namespace Gs2::Idle::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Idle::Domain::FGs2IdleDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -101,7 +108,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -127,7 +134,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -153,7 +160,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -179,7 +186,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -205,7 +212,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FCreateCategoryModelMasterRequestPtr Request;
         public:
             explicit FCreateCategoryModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateCategoryModelMasterRequestPtr Request
             );
 
@@ -224,7 +231,7 @@ namespace Gs2::Idle::Domain::Model
         );
 
         TSharedPtr<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain> CurrentCategoryMaster(
-        ) const;
+        );
 
         Gs2::Idle::Domain::Iterator::FDescribeCategoryModelsIteratorPtr CategoryModels(
         ) const;
@@ -239,15 +246,15 @@ namespace Gs2::Idle::Domain::Model
 
         TSharedPtr<Gs2::Idle::Domain::Model::FCategoryModelDomain> CategoryModel(
             const FString CategoryName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Idle::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Idle::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::Idle::Domain::Iterator::FDescribeCategoryModelMastersIteratorPtr CategoryModelMasters(
         ) const;
@@ -262,7 +269,7 @@ namespace Gs2::Idle::Domain::Model
 
         TSharedPtr<Gs2::Idle::Domain::Model::FCategoryModelMasterDomain> CategoryModelMaster(
             const FString CategoryName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

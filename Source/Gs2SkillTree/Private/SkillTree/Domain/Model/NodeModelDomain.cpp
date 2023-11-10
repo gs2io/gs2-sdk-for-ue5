@@ -40,12 +40,14 @@ namespace Gs2::SkillTree::Domain::Model
 {
 
     FNodeModelDomain::FNodeModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> NodeModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SkillTree::FGs2SkillTreeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         NodeModelName(NodeModelName),
@@ -60,6 +62,7 @@ namespace Gs2::SkillTree::Domain::Model
         const FNodeModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         NodeModelName(From.NodeModelName),
@@ -69,7 +72,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FNodeModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNodeModelDomain> Self,
+        const TSharedPtr<FNodeModelDomain>& Self,
         const Request::FGetNodeModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

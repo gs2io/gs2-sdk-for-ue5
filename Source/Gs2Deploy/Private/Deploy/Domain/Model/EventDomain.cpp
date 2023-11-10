@@ -36,12 +36,14 @@ namespace Gs2::Deploy::Domain::Model
 {
 
     FEventDomain::FEventDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Deploy::Domain::FGs2DeployDomainPtr& Service,
         const TOptional<FString> StackName,
         const TOptional<FString> EventName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Gs2->RestSession)),
         StackName(StackName),
         EventName(EventName),
@@ -56,6 +58,7 @@ namespace Gs2::Deploy::Domain::Model
         const FEventDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         StackName(From.StackName),
         EventName(From.EventName),
@@ -65,7 +68,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FEventDomain::FGetTask::FGetTask(
-        const TSharedPtr<FEventDomain> Self,
+        const TSharedPtr<FEventDomain>& Self,
         const Request::FGetEventRequestPtr Request
     ): Self(Self), Request(Request)
     {

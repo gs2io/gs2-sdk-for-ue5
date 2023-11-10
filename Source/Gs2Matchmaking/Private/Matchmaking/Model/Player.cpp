@@ -92,7 +92,7 @@ namespace Gs2::Matchmaking::Model
         return MakeShared<FPlayer>()
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -113,7 +113,7 @@ namespace Gs2::Matchmaking::Model
                  }() : MakeShared<TArray<Model::FAttributePtr>>())
             ->WithRoleName(Data->HasField("roleName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("roleName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

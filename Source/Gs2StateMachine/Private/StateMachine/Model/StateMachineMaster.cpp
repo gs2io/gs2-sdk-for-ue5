@@ -214,7 +214,7 @@ namespace Gs2::StateMachine::Model
         return MakeShared<FStateMachineMaster>()
             ->WithStateMachineId(Data->HasField("stateMachineId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("stateMachineId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -223,7 +223,7 @@ namespace Gs2::StateMachine::Model
                 }() : TOptional<FString>())
             ->WithMainStateMachineName(Data->HasField("mainStateMachineName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("mainStateMachineName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -232,7 +232,7 @@ namespace Gs2::StateMachine::Model
                 }() : TOptional<FString>())
             ->WithPayload(Data->HasField("payload") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("payload", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

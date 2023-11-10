@@ -21,7 +21,6 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
 #include "Gateway/Gs2Gateway.h"
-#include "Gateway/Gs2Gateway.h"
 #include "Gateway/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Gateway/Domain/Iterator/DescribeWebSocketSessionsIterator.h"
 #include "Gateway/Domain/Iterator/DescribeWebSocketSessionsByUserIdIterator.h"
@@ -30,6 +29,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Gateway::Domain
+{
+    class FGs2GatewayDomain;
+    typedef TSharedPtr<FGs2GatewayDomain> FGs2GatewayDomainPtr;
 }
 
 namespace Gs2::Gateway::Domain::Model
@@ -46,8 +51,9 @@ namespace Gs2::Gateway::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Gateway::FGs2GatewayRestClientPtr Client;
-        FGs2GatewayWebSocketClientPtr Wsclient;
+        const Gateway::Domain::FGs2GatewayDomainPtr Service;
+        const Gs2::Gateway::FGs2GatewayRestClientPtr Client;
+        const FGs2GatewayWebSocketClientPtr Wsclient;
 
         public:
         TOptional<FString> Protocol;
@@ -69,7 +75,8 @@ namespace Gs2::Gateway::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Gateway::Domain::FGs2GatewayDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -87,7 +94,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FSendNotificationRequestPtr Request;
         public:
             explicit FSendNotificationTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FSendNotificationRequestPtr Request
             );
 
@@ -113,7 +120,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FDisconnectByUserIdRequestPtr Request;
         public:
             explicit FDisconnectTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FDisconnectByUserIdRequestPtr Request
             );
 
@@ -139,7 +146,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FDisconnectAllRequestPtr Request;
         public:
             explicit FDisconnectAllTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FDisconnectAllRequestPtr Request
             );
 
@@ -169,10 +176,10 @@ namespace Gs2::Gateway::Domain::Model
         );
 
         TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain> WebSocketSession(
-        ) const;
+        );
 
         TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain> FirebaseToken(
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

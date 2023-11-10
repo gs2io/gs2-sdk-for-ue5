@@ -78,7 +78,7 @@ namespace Gs2::Matchmaking::Result
                  }() : nullptr)
             ->WithMatchmakingContextToken(Data->HasField("matchmakingContextToken") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("matchmakingContextToken", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

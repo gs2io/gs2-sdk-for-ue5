@@ -51,7 +51,7 @@ namespace Gs2::Key::Result
         return MakeShared<FEncryptResult>()
             ->WithData(Data->HasField("data") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("data", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

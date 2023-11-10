@@ -92,7 +92,7 @@ namespace Gs2::Version::Model
         return MakeShared<FTargetVersion>()
             ->WithVersionName(Data->HasField("versionName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("versionName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -101,7 +101,7 @@ namespace Gs2::Version::Model
                 }() : TOptional<FString>())
             ->WithBody(Data->HasField("body") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("body", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -110,7 +110,7 @@ namespace Gs2::Version::Model
                 }() : TOptional<FString>())
             ->WithSignature(Data->HasField("signature") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("signature", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

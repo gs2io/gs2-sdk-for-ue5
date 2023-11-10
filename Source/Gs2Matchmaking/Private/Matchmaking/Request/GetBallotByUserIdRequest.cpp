@@ -149,7 +149,7 @@ namespace Gs2::Matchmaking::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -158,7 +158,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
             ->WithRatingName(Data->HasField("ratingName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("ratingName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -167,7 +167,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
             ->WithGatheringName(Data->HasField("gatheringName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("gatheringName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -176,7 +176,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("userId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -194,7 +194,7 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<int32>())
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("keyId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

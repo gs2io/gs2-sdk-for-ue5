@@ -87,7 +87,7 @@ namespace Gs2::Account::Model
         return MakeShared<FBanStatus>()
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -96,7 +96,7 @@ namespace Gs2::Account::Model
                 }() : TOptional<FString>())
             ->WithReason(Data->HasField("reason") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("reason", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

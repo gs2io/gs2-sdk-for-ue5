@@ -46,13 +46,15 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FMissionTaskModelDomain::FMissionTaskModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> MissionGroupName,
         const TOptional<FString> MissionTaskName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         MissionGroupName(MissionGroupName),
@@ -69,6 +71,7 @@ namespace Gs2::Mission::Domain::Model
         const FMissionTaskModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         MissionGroupName(From.MissionGroupName),
@@ -79,7 +82,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FMissionTaskModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMissionTaskModelDomain> Self,
+        const TSharedPtr<FMissionTaskModelDomain>& Self,
         const Request::FGetMissionTaskModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

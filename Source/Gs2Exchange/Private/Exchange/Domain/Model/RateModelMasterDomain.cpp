@@ -44,12 +44,14 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FRateModelMasterDomain::FRateModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RateName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         RateName(RateName),
@@ -64,6 +66,7 @@ namespace Gs2::Exchange::Domain::Model
         const FRateModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         RateName(From.RateName),
@@ -73,7 +76,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FRateModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FRateModelMasterDomain> Self,
+        const TSharedPtr<FRateModelMasterDomain>& Self,
         const Request::FGetRateModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -135,7 +138,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FRateModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FRateModelMasterDomain> Self,
+        const TSharedPtr<FRateModelMasterDomain>& Self,
         const Request::FUpdateRateModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -199,7 +202,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FRateModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FRateModelMasterDomain> Self,
+        const TSharedPtr<FRateModelMasterDomain>& Self,
         const Request::FDeleteRateModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

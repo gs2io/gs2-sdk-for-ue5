@@ -40,11 +40,13 @@ namespace Gs2::Dictionary::Domain::Model
 {
 
     FCurrentEntryMasterDomain::FCurrentEntryMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Dictionary::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -58,6 +60,7 @@ namespace Gs2::Dictionary::Domain::Model
         const FCurrentEntryMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -66,7 +69,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FCurrentEntryMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentEntryMasterDomain> Self,
+        const TSharedPtr<FCurrentEntryMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -128,7 +131,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FCurrentEntryMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentEntryMasterDomain> Self,
+        const TSharedPtr<FCurrentEntryMasterDomain>& Self,
         const Request::FGetCurrentEntryMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -188,7 +191,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FCurrentEntryMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentEntryMasterDomain> Self,
+        const TSharedPtr<FCurrentEntryMasterDomain>& Self,
         const Request::FUpdateCurrentEntryMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -250,7 +253,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FCurrentEntryMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentEntryMasterDomain> Self,
+        const TSharedPtr<FCurrentEntryMasterDomain>& Self,
         const Request::FUpdateCurrentEntryMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "News/Gs2News.h"
 #include "News/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "News/Domain/Iterator/DescribeProgressesIterator.h"
 #include "News/Domain/Iterator/DescribeOutputsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::News::Domain
+{
+    class FGs2NewsDomain;
+    typedef TSharedPtr<FGs2NewsDomain> FGs2NewsDomainPtr;
 }
 
 namespace Gs2::News::Domain::Model
@@ -49,7 +54,8 @@ namespace Gs2::News::Domain::Model
         public TSharedFromThis<FProgressDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::News::FGs2NewsRestClientPtr Client;
+        const News::Domain::FGs2NewsDomainPtr Service;
+        const Gs2::News::FGs2NewsRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -66,7 +72,8 @@ namespace Gs2::News::Domain::Model
     public:
 
         FProgressDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const News::Domain::FGs2NewsDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UploadToken
             // ReSharper disable once CppMemberInitializersOrder
@@ -84,7 +91,7 @@ namespace Gs2::News::Domain::Model
             const Request::FGetProgressRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FProgressDomain> Self,
+                const TSharedPtr<FProgressDomain>& Self,
                 const Request::FGetProgressRequestPtr Request
             );
 
@@ -115,7 +122,7 @@ namespace Gs2::News::Domain::Model
 
         TSharedPtr<Gs2::News::Domain::Model::FOutputDomain> Output(
             const FString OutputName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

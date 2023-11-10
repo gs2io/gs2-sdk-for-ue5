@@ -230,7 +230,7 @@ namespace Gs2::Chat::Model
         return MakeShared<FMessage>()
             ->WithMessageId(Data->HasField("messageId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("messageId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -239,7 +239,7 @@ namespace Gs2::Chat::Model
                 }() : TOptional<FString>())
             ->WithRoomName(Data->HasField("roomName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("roomName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -248,7 +248,7 @@ namespace Gs2::Chat::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -257,7 +257,7 @@ namespace Gs2::Chat::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -275,7 +275,7 @@ namespace Gs2::Chat::Model
                 }() : TOptional<int32>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

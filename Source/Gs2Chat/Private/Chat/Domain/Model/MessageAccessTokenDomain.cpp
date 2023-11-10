@@ -42,15 +42,17 @@ namespace Gs2::Chat::Domain::Model
 {
 
     FMessageAccessTokenDomain::FMessageAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Chat::Domain::FGs2ChatDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> RoomName,
         const TOptional<FString> Password,
         const TOptional<FString> MessageName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -70,6 +72,7 @@ namespace Gs2::Chat::Domain::Model
         const FMessageAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -82,7 +85,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FMessageAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMessageAccessTokenDomain> Self,
+        const TSharedPtr<FMessageAccessTokenDomain>& Self,
         const Request::FGetMessageRequestPtr Request
     ): Self(Self), Request(Request)
     {

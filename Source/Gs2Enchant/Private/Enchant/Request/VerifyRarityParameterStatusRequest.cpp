@@ -177,7 +177,7 @@ namespace Gs2::Enchant::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -186,7 +186,7 @@ namespace Gs2::Enchant::Request
               }() : TOptional<FString>())
             ->WithParameterName(Data->HasField("parameterName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("parameterName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -195,7 +195,7 @@ namespace Gs2::Enchant::Request
               }() : TOptional<FString>())
             ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("xGs2AccessToken", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -204,7 +204,7 @@ namespace Gs2::Enchant::Request
               }() : TOptional<FString>())
             ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("propertyId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -213,7 +213,7 @@ namespace Gs2::Enchant::Request
               }() : TOptional<FString>())
             ->WithVerifyType(Data->HasField("verifyType") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("verifyType", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -222,7 +222,7 @@ namespace Gs2::Enchant::Request
               }() : TOptional<FString>())
             ->WithParameterValueName(Data->HasField("parameterValueName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("parameterValueName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -42,13 +42,15 @@ namespace Gs2::News::Domain::Model
 {
 
     FOutputDomain::FOutputDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const News::Domain::FGs2NewsDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UploadToken,
         const TOptional<FString> OutputName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UploadToken(UploadToken),
@@ -65,6 +67,7 @@ namespace Gs2::News::Domain::Model
         const FOutputDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UploadToken(From.UploadToken),
@@ -75,7 +78,7 @@ namespace Gs2::News::Domain::Model
     }
 
     FOutputDomain::FGetTask::FGetTask(
-        const TSharedPtr<FOutputDomain> Self,
+        const TSharedPtr<FOutputDomain>& Self,
         const Request::FGetOutputRequestPtr Request
     ): Self(Self), Request(Request)
     {

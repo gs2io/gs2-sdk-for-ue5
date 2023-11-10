@@ -47,12 +47,14 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FLotteryModelDomain::FLotteryModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> LotteryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         LotteryName(LotteryName),
@@ -67,6 +69,7 @@ namespace Gs2::Lottery::Domain::Model
         const FLotteryModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         LotteryName(From.LotteryName),
@@ -76,7 +79,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FLotteryModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FLotteryModelDomain> Self,
+        const TSharedPtr<FLotteryModelDomain>& Self,
         const Request::FGetLotteryModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

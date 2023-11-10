@@ -132,7 +132,7 @@ namespace Gs2::Identifier::Model
         return MakeShared<FAttachSecurityPolicy>()
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

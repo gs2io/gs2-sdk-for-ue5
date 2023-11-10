@@ -211,7 +211,7 @@ namespace Gs2::Lottery::Model
         return MakeShared<FPrizeLimit>()
             ->WithPrizeLimitId(Data->HasField("prizeLimitId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("prizeLimitId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -220,7 +220,7 @@ namespace Gs2::Lottery::Model
                 }() : TOptional<FString>())
             ->WithPrizeId(Data->HasField("prizeId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("prizeId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

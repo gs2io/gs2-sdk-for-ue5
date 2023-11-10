@@ -158,7 +158,7 @@ namespace Gs2::Ranking::Model
         return MakeShared<FSubscribeUser>()
             ->WithSubscribeUserId(Data->HasField("subscribeUserId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("subscribeUserId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -167,7 +167,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("categoryName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -176,7 +176,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -185,7 +185,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithTargetUserId(Data->HasField("targetUserId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("targetUserId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

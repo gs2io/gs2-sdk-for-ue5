@@ -31,6 +31,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Lock::Domain
+{
+    class FGs2LockDomain;
+    typedef TSharedPtr<FGs2LockDomain> FGs2LockDomainPtr;
+}
+
 namespace Gs2::Lock::Domain::Model
 {
     class FNamespaceDomain;
@@ -43,7 +49,8 @@ namespace Gs2::Lock::Domain::Model
         public TSharedFromThis<FMutexAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lock::FGs2LockRestClientPtr Client;
+        const Lock::Domain::FGs2LockDomainPtr Service;
+        const Gs2::Lock::FGs2LockRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -57,9 +64,10 @@ namespace Gs2::Lock::Domain::Model
     public:
 
         FMutexAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lock::Domain::FGs2LockDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> PropertyId
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -76,7 +84,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FLockRequestPtr Request;
         public:
             explicit FLockTask(
-                const TSharedPtr<FMutexAccessTokenDomain> Self,
+                const TSharedPtr<FMutexAccessTokenDomain>& Self,
                 const Request::FLockRequestPtr Request
             );
 
@@ -102,7 +110,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FUnlockRequestPtr Request;
         public:
             explicit FUnlockTask(
-                const TSharedPtr<FMutexAccessTokenDomain> Self,
+                const TSharedPtr<FMutexAccessTokenDomain>& Self,
                 const Request::FUnlockRequestPtr Request
             );
 
@@ -128,7 +136,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FGetMutexRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FMutexAccessTokenDomain> Self,
+                const TSharedPtr<FMutexAccessTokenDomain>& Self,
                 const Request::FGetMutexRequestPtr Request
             );
 

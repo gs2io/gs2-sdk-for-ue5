@@ -42,12 +42,14 @@ namespace Gs2::Version::Domain::Model
 {
 
     FVersionModelDomain::FVersionModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Version::Domain::FGs2VersionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> VersionName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Version::FGs2VersionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         VersionName(VersionName),
@@ -62,6 +64,7 @@ namespace Gs2::Version::Domain::Model
         const FVersionModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         VersionName(From.VersionName),
@@ -71,7 +74,7 @@ namespace Gs2::Version::Domain::Model
     }
 
     FVersionModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FVersionModelDomain> Self,
+        const TSharedPtr<FVersionModelDomain>& Self,
         const Request::FGetVersionModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

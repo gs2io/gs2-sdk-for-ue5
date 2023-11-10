@@ -170,7 +170,7 @@ namespace Gs2::Lottery::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -179,7 +179,7 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
             ->WithLotteryName(Data->HasField("lotteryName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("lotteryName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -188,7 +188,7 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -197,7 +197,7 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("metadata", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -206,7 +206,7 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
             ->WithMode(Data->HasField("mode") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("mode", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -215,7 +215,7 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
             ->WithMethod(Data->HasField("method") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("method", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -224,7 +224,7 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
             ->WithPrizeTableName(Data->HasField("prizeTableName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("prizeTableName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -233,7 +233,7 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
             ->WithChoicePrizeTableScriptId(Data->HasField("choicePrizeTableScriptId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("choicePrizeTableScriptId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

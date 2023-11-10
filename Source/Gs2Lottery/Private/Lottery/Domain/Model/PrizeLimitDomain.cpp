@@ -47,13 +47,15 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FPrizeLimitDomain::FPrizeLimitDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> PrizeTableName,
         const TOptional<FString> PrizeId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         PrizeTableName(PrizeTableName),
@@ -70,6 +72,7 @@ namespace Gs2::Lottery::Domain::Model
         const FPrizeLimitDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         PrizeTableName(From.PrizeTableName),
@@ -80,7 +83,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FPrizeLimitDomain::FGetTask::FGetTask(
-        const TSharedPtr<FPrizeLimitDomain> Self,
+        const TSharedPtr<FPrizeLimitDomain>& Self,
         const Request::FGetPrizeLimitRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -144,7 +147,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FPrizeLimitDomain::FResetTask::FResetTask(
-        const TSharedPtr<FPrizeLimitDomain> Self,
+        const TSharedPtr<FPrizeLimitDomain>& Self,
         const Request::FResetPrizeLimitRequestPtr Request
     ): Self(Self), Request(Request)
     {

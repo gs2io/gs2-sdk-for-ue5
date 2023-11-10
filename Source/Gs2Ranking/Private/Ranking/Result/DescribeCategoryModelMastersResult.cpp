@@ -82,7 +82,7 @@ namespace Gs2::Ranking::Result
                  }() : nullptr)
             ->WithNextPageToken(Data->HasField("nextPageToken") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("nextPageToken", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

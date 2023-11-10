@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Realtime/Gs2Realtime.h"
 #include "Realtime/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Realtime/Domain/Iterator/DescribeRoomsIterator.h"
 
@@ -28,6 +27,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Realtime::Domain
+{
+    class FGs2RealtimeDomain;
+    typedef TSharedPtr<FGs2RealtimeDomain> FGs2RealtimeDomainPtr;
 }
 
 namespace Gs2::Realtime::Domain::Model
@@ -39,7 +44,8 @@ namespace Gs2::Realtime::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Realtime::FGs2RealtimeRestClientPtr Client;
+        const Realtime::Domain::FGs2RealtimeDomainPtr Service;
+        const Gs2::Realtime::FGs2RealtimeRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -65,7 +71,8 @@ namespace Gs2::Realtime::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Realtime::Domain::FGs2RealtimeDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -82,7 +89,7 @@ namespace Gs2::Realtime::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -108,7 +115,7 @@ namespace Gs2::Realtime::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -134,7 +141,7 @@ namespace Gs2::Realtime::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -160,7 +167,7 @@ namespace Gs2::Realtime::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -186,7 +193,7 @@ namespace Gs2::Realtime::Domain::Model
             const Request::FWantRoomRequestPtr Request;
         public:
             explicit FWantRoomTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FWantRoomRequestPtr Request
             );
 
@@ -217,7 +224,7 @@ namespace Gs2::Realtime::Domain::Model
 
         TSharedPtr<Gs2::Realtime::Domain::Model::FRoomDomain> Room(
             const FString RoomName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

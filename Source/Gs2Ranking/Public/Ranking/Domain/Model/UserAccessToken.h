@@ -40,6 +40,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Ranking::Domain
+{
+    class FGs2RankingDomain;
+    typedef TSharedPtr<FGs2RankingDomain> FGs2RankingDomainPtr;
+}
+
 namespace Gs2::Ranking::Domain::Model
 {
     class FNamespaceDomain;
@@ -61,7 +67,8 @@ namespace Gs2::Ranking::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Ranking::FGs2RankingRestClientPtr Client;
+        const Ranking::Domain::FGs2RankingDomainPtr Service;
+        const Gs2::Ranking::FGs2RankingRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -84,9 +91,10 @@ namespace Gs2::Ranking::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Ranking::Domain::FGs2RankingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -102,7 +110,7 @@ namespace Gs2::Ranking::Domain::Model
             const Request::FSubscribeRequestPtr Request;
         public:
             explicit FSubscribeTask(
-                const TSharedPtr<FUserAccessTokenDomain> Self,
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
                 const Request::FSubscribeRequestPtr Request
             );
 
@@ -135,7 +143,7 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain> SubscribeUser(
             const FString CategoryName,
             const FString TargetUserId
-        ) const;
+        );
 
         Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr Rankings(
             const FString CategoryName,
@@ -152,7 +160,7 @@ namespace Gs2::Ranking::Domain::Model
 
         TSharedPtr<Gs2::Ranking::Domain::Model::FRankingAccessTokenDomain> Ranking(
             const FString CategoryName
-        ) const;
+        );
 
         Gs2::Ranking::Domain::Iterator::FDescribeScoresIteratorPtr Scores(
             const FString CategoryName,
@@ -171,7 +179,7 @@ namespace Gs2::Ranking::Domain::Model
             const FString CategoryName,
             const FString ScorerUserId,
             const FString UniqueId
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

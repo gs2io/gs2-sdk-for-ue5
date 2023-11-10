@@ -37,11 +37,13 @@ namespace Gs2::Identifier::Domain::Model
 {
 
     FSecurityPolicyDomain::FSecurityPolicyDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Identifier::Domain::FGs2IdentifierDomainPtr& Service,
         const TOptional<FString> SecurityPolicyName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Gs2->RestSession)),
         SecurityPolicyName(SecurityPolicyName),
         ParentKey("identifier:SecurityPolicy")
@@ -52,6 +54,7 @@ namespace Gs2::Identifier::Domain::Model
         const FSecurityPolicyDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         SecurityPolicyName(From.SecurityPolicyName),
         ParentKey(From.ParentKey)
@@ -60,7 +63,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FSecurityPolicyDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FSecurityPolicyDomain> Self,
+        const TSharedPtr<FSecurityPolicyDomain>& Self,
         const Request::FUpdateSecurityPolicyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -119,7 +122,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FSecurityPolicyDomain::FGetTask::FGetTask(
-        const TSharedPtr<FSecurityPolicyDomain> Self,
+        const TSharedPtr<FSecurityPolicyDomain>& Self,
         const Request::FGetSecurityPolicyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -176,7 +179,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FSecurityPolicyDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FSecurityPolicyDomain> Self,
+        const TSharedPtr<FSecurityPolicyDomain>& Self,
         const Request::FDeleteSecurityPolicyRequestPtr Request
     ): Self(Self), Request(Request)
     {

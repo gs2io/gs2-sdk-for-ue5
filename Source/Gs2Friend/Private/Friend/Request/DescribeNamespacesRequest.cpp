@@ -89,7 +89,7 @@ namespace Gs2::Friend::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithPageToken(Data->HasField("pageToken") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("pageToken", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

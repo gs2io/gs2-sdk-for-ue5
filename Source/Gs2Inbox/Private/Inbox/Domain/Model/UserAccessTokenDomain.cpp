@@ -43,12 +43,14 @@ namespace Gs2::Inbox::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inbox::Domain::FGs2InboxDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inbox::FGs2InboxRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -63,6 +65,7 @@ namespace Gs2::Inbox::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -72,7 +75,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FUserAccessTokenDomain::FReceiveGlobalMessageTask::FReceiveGlobalMessageTask(
-        const TSharedPtr<FUserAccessTokenDomain> Self,
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
         const Request::FReceiveGlobalMessageRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -141,6 +144,7 @@ namespace Gs2::Inbox::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     Self->AccessToken,
                     (*ResultModel->GetItem())[i]->GetName()
@@ -217,10 +221,11 @@ namespace Gs2::Inbox::Domain::Model
 
     TSharedPtr<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain> FUserAccessTokenDomain::Message(
         const FString MessageName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             MessageName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MessageName)
@@ -228,10 +233,11 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     TSharedPtr<Gs2::Inbox::Domain::Model::FReceivedAccessTokenDomain> FUserAccessTokenDomain::Received(
-    ) const
+    )
     {
         return MakeShared<Gs2::Inbox::Domain::Model::FReceivedAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

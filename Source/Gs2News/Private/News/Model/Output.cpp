@@ -179,7 +179,7 @@ namespace Gs2::News::Model
         return MakeShared<FOutput>()
             ->WithOutputId(Data->HasField("outputId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("outputId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -188,7 +188,7 @@ namespace Gs2::News::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -197,7 +197,7 @@ namespace Gs2::News::Model
                 }() : TOptional<FString>())
             ->WithText(Data->HasField("text") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("text", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

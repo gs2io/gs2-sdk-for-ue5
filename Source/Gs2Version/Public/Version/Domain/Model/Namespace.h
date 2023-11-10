@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Version/Gs2Version.h"
 #include "Version/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelMastersIterator.h"
 #include "Version/Domain/Iterator/DescribeVersionModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Version::Domain
+{
+    class FGs2VersionDomain;
+    typedef TSharedPtr<FGs2VersionDomain> FGs2VersionDomainPtr;
 }
 
 namespace Gs2::Version::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Version::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Version::FGs2VersionRestClientPtr Client;
+        const Version::Domain::FGs2VersionDomainPtr Service;
+        const Gs2::Version::FGs2VersionRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -86,7 +92,8 @@ namespace Gs2::Version::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Version::Domain::FGs2VersionDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -103,7 +110,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -129,7 +136,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -155,7 +162,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -181,7 +188,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -207,7 +214,7 @@ namespace Gs2::Version::Domain::Model
             const Request::FCreateVersionModelMasterRequestPtr Request;
         public:
             explicit FCreateVersionModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateVersionModelMasterRequestPtr Request
             );
 
@@ -226,7 +233,7 @@ namespace Gs2::Version::Domain::Model
         );
 
         TSharedPtr<Gs2::Version::Domain::Model::FCurrentVersionMasterDomain> CurrentVersionMaster(
-        ) const;
+        );
 
         Gs2::Version::Domain::Iterator::FDescribeVersionModelsIteratorPtr VersionModels(
         ) const;
@@ -241,15 +248,15 @@ namespace Gs2::Version::Domain::Model
 
         TSharedPtr<Gs2::Version::Domain::Model::FVersionModelDomain> VersionModel(
             const FString VersionName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Version::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Version::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::Version::Domain::Iterator::FDescribeVersionModelMastersIteratorPtr VersionModelMasters(
         ) const;
@@ -264,7 +271,7 @@ namespace Gs2::Version::Domain::Model
 
         TSharedPtr<Gs2::Version::Domain::Model::FVersionModelMasterDomain> VersionModelMaster(
             const FString VersionName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

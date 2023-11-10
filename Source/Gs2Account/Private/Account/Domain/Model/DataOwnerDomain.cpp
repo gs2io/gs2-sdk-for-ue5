@@ -39,12 +39,14 @@ namespace Gs2::Account::Domain::Model
 {
 
     FDataOwnerDomain::FDataOwnerDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Account::Domain::FGs2AccountDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Account::FGs2AccountRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -60,6 +62,7 @@ namespace Gs2::Account::Domain::Model
         const FDataOwnerDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -69,7 +72,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FDataOwnerDomain::FGetTask::FGetTask(
-        const TSharedPtr<FDataOwnerDomain> Self,
+        const TSharedPtr<FDataOwnerDomain>& Self,
         const Request::FGetDataOwnerByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

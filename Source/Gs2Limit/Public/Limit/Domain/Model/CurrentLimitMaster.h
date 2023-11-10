@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Limit/Gs2Limit.h"
 #include "Limit/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Limit/Domain/Iterator/DescribeCountersIterator.h"
 #include "Limit/Domain/Iterator/DescribeCountersByUserIdIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Limit::Domain
+{
+    class FGs2LimitDomain;
+    typedef TSharedPtr<FGs2LimitDomain> FGs2LimitDomainPtr;
 }
 
 namespace Gs2::Limit::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Limit::Domain::Model
         public TSharedFromThis<FCurrentLimitMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Limit::FGs2LimitRestClientPtr Client;
+        const Limit::Domain::FGs2LimitDomainPtr Service;
+        const Gs2::Limit::FGs2LimitRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -59,7 +65,8 @@ namespace Gs2::Limit::Domain::Model
     public:
 
         FCurrentLimitMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Limit::Domain::FGs2LimitDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -76,7 +83,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentLimitMasterDomain> Self,
+                const TSharedPtr<FCurrentLimitMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -102,7 +109,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FGetCurrentLimitMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentLimitMasterDomain> Self,
+                const TSharedPtr<FCurrentLimitMasterDomain>& Self,
                 const Request::FGetCurrentLimitMasterRequestPtr Request
             );
 
@@ -128,7 +135,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FUpdateCurrentLimitMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentLimitMasterDomain> Self,
+                const TSharedPtr<FCurrentLimitMasterDomain>& Self,
                 const Request::FUpdateCurrentLimitMasterRequestPtr Request
             );
 
@@ -154,7 +161,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FUpdateCurrentLimitMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentLimitMasterDomain> Self,
+                const TSharedPtr<FCurrentLimitMasterDomain>& Self,
                 const Request::FUpdateCurrentLimitMasterFromGitHubRequestPtr Request
             );
 

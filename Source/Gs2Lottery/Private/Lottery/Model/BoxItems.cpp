@@ -147,7 +147,7 @@ namespace Gs2::Lottery::Model
         return MakeShared<FBoxItems>()
             ->WithBoxId(Data->HasField("boxId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("boxId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -156,7 +156,7 @@ namespace Gs2::Lottery::Model
                 }() : TOptional<FString>())
             ->WithPrizeTableName(Data->HasField("prizeTableName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("prizeTableName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -165,7 +165,7 @@ namespace Gs2::Lottery::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

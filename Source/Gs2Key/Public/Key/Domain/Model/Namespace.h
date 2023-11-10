@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Key/Gs2Key.h"
 #include "Key/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Key/Domain/Iterator/DescribeKeysIterator.h"
 #include "Key/Domain/Iterator/DescribeGitHubApiKeysIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Key::Domain
+{
+    class FGs2KeyDomain;
+    typedef TSharedPtr<FGs2KeyDomain> FGs2KeyDomainPtr;
 }
 
 namespace Gs2::Key::Domain::Model
@@ -41,7 +46,8 @@ namespace Gs2::Key::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Key::FGs2KeyRestClientPtr Client;
+        const Key::Domain::FGs2KeyDomainPtr Service;
+        const Gs2::Key::FGs2KeyRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -62,7 +68,8 @@ namespace Gs2::Key::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Key::Domain::FGs2KeyDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -79,7 +86,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -105,7 +112,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -131,7 +138,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -157,7 +164,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -183,7 +190,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FCreateKeyRequestPtr Request;
         public:
             explicit FCreateKeyTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateKeyRequestPtr Request
             );
 
@@ -209,7 +216,7 @@ namespace Gs2::Key::Domain::Model
             const Request::FCreateGitHubApiKeyRequestPtr Request;
         public:
             explicit FCreateGitHubApiKeyTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateGitHubApiKeyRequestPtr Request
             );
 
@@ -240,7 +247,7 @@ namespace Gs2::Key::Domain::Model
 
         TSharedPtr<Gs2::Key::Domain::Model::FKeyDomain> Key(
             const FString KeyName
-        ) const;
+        );
 
         Gs2::Key::Domain::Iterator::FDescribeGitHubApiKeysIteratorPtr GitHubApiKeys(
         ) const;
@@ -255,7 +262,7 @@ namespace Gs2::Key::Domain::Model
 
         TSharedPtr<Gs2::Key::Domain::Model::FGitHubApiKeyDomain> GitHubApiKey(
             const FString ApiKeyName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Lottery/Gs2Lottery.h"
 #include "Lottery/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Lottery/Domain/Iterator/DescribeLotteryModelMastersIterator.h"
 #include "Lottery/Domain/Iterator/DescribePrizeTableMastersIterator.h"
@@ -36,6 +35,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Lottery::Domain
+{
+    class FGs2LotteryDomain;
+    typedef TSharedPtr<FGs2LotteryDomain> FGs2LotteryDomainPtr;
 }
 
 namespace Gs2::Lottery::Domain::Model
@@ -60,7 +65,8 @@ namespace Gs2::Lottery::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lottery::FGs2LotteryRestClientPtr Client;
+        const Lottery::Domain::FGs2LotteryDomainPtr Service;
+        const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -87,7 +93,8 @@ namespace Gs2::Lottery::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lottery::Domain::FGs2LotteryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -98,7 +105,7 @@ namespace Gs2::Lottery::Domain::Model
         );
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryDomain> Lottery(
-        ) const;
+        );
 
         Gs2::Lottery::Domain::Iterator::FDescribeBoxesByUserIdIteratorPtr Boxes(
         ) const;
@@ -113,7 +120,7 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FBoxItemsDomain> BoxItems(
             const FString PrizeTableName
-        ) const;
+        );
 
         Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIteratorPtr Probabilities(
             const FString LotteryName

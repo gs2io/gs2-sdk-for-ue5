@@ -54,6 +54,7 @@ namespace Gs2::Core::Net::WebSocket
         
         Model::FGs2CredentialPtr CredentialValue;
         Model::ERegion Region;
+        FString OwnerIdValue;
 
         TSharedPtr<FCriticalSection> Mutex;
         FGs2SessionTaskId LoginTaskId;
@@ -64,14 +65,14 @@ namespace Gs2::Core::Net::WebSocket
         bool Disposed;
 
         explicit FGs2WebSocketSession(
-            const Model::FGs2CredentialPtr Credential
+            const Model::FGs2CredentialPtr& Credential
         );
         FGs2WebSocketSession(
             const FGs2WebSocketSession& From
         );
     
         FGs2WebSocketSession(
-            const Model::FGs2CredentialPtr Credential,
+            const Model::FGs2CredentialPtr& Credential,
             const Model::ERegion Region
         );
 
@@ -100,6 +101,7 @@ namespace Gs2::Core::Net::WebSocket
         
         virtual FString RegionName() const override;
         virtual Model::FGs2CredentialPtr Credential() const override;
+        virtual FString OwnerId() const override;
     };
 	typedef TSharedPtr<FGs2WebSocketSession, ESPMode::ThreadSafe> FGs2WebSocketSessionPtr;
 }

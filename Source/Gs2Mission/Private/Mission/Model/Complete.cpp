@@ -253,7 +253,7 @@ namespace Gs2::Mission::Model
         return MakeShared<FComplete>()
             ->WithCompleteId(Data->HasField("completeId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("completeId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -262,7 +262,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -271,7 +271,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithMissionGroupName(Data->HasField("missionGroupName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("missionGroupName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

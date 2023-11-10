@@ -41,13 +41,15 @@ namespace Gs2::Schedule::Domain::Model
 {
 
     FTriggerDomain::FTriggerDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TriggerName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Schedule::FGs2ScheduleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -64,6 +66,7 @@ namespace Gs2::Schedule::Domain::Model
         const FTriggerDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -74,7 +77,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FTriggerDomain::FGetTask::FGetTask(
-        const TSharedPtr<FTriggerDomain> Self,
+        const TSharedPtr<FTriggerDomain>& Self,
         const Request::FGetTriggerByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -138,7 +141,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FTriggerDomain::FTriggerTask::FTriggerTask(
-        const TSharedPtr<FTriggerDomain> Self,
+        const TSharedPtr<FTriggerDomain>& Self,
         const Request::FTriggerByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -208,7 +211,7 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     FTriggerDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FTriggerDomain> Self,
+        const TSharedPtr<FTriggerDomain>& Self,
         const Request::FDeleteTriggerByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

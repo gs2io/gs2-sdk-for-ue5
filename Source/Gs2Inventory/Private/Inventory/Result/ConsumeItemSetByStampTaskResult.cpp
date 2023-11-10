@@ -136,7 +136,7 @@ namespace Gs2::Inventory::Result
                  }() : nullptr)
             ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("newContextStack", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

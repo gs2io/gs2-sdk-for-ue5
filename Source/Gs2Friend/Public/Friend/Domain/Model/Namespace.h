@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Friend/Gs2Friend.h"
 #include "Friend/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Friend/Domain/Iterator/DescribeFriendsIterator.h"
 #include "Friend/Domain/Iterator/DescribeFriendsByUserIdIterator.h"
@@ -37,6 +36,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Friend::Domain
+{
+    class FGs2FriendDomain;
+    typedef TSharedPtr<FGs2FriendDomain> FGs2FriendDomainPtr;
 }
 
 namespace Gs2::Friend::Domain::Model
@@ -66,7 +71,8 @@ namespace Gs2::Friend::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Friend::FGs2FriendRestClientPtr Client;
+        const Friend::Domain::FGs2FriendDomainPtr Service;
+        const Gs2::Friend::FGs2FriendRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -97,7 +103,8 @@ namespace Gs2::Friend::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Friend::Domain::FGs2FriendDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -114,7 +121,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -140,7 +147,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -166,7 +173,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -192,7 +199,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -212,11 +219,11 @@ namespace Gs2::Friend::Domain::Model
 
         TSharedPtr<Gs2::Friend::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Friend::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

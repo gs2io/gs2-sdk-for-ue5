@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Showcase/Gs2Showcase.h"
 #include "Showcase/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Showcase/Domain/Iterator/DescribeSalesItemMastersIterator.h"
 #include "Showcase/Domain/Iterator/DescribeSalesItemGroupMastersIterator.h"
@@ -35,6 +34,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Showcase::Domain
+{
+    class FGs2ShowcaseDomain;
+    typedef TSharedPtr<FGs2ShowcaseDomain> FGs2ShowcaseDomainPtr;
 }
 
 namespace Gs2::Showcase::Domain::Model
@@ -62,7 +67,8 @@ namespace Gs2::Showcase::Domain::Model
         public TSharedFromThis<FSalesItemMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
+        const Showcase::Domain::FGs2ShowcaseDomainPtr Service;
+        const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -74,7 +80,8 @@ namespace Gs2::Showcase::Domain::Model
     public:
 
         FSalesItemMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> SalesItemName
             // ReSharper disable once CppMemberInitializersOrder
@@ -92,7 +99,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FGetSalesItemMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FSalesItemMasterDomain> Self,
+                const TSharedPtr<FSalesItemMasterDomain>& Self,
                 const Request::FGetSalesItemMasterRequestPtr Request
             );
 
@@ -118,7 +125,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FUpdateSalesItemMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FSalesItemMasterDomain> Self,
+                const TSharedPtr<FSalesItemMasterDomain>& Self,
                 const Request::FUpdateSalesItemMasterRequestPtr Request
             );
 
@@ -144,7 +151,7 @@ namespace Gs2::Showcase::Domain::Model
             const Request::FDeleteSalesItemMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FSalesItemMasterDomain> Self,
+                const TSharedPtr<FSalesItemMasterDomain>& Self,
                 const Request::FDeleteSalesItemMasterRequestPtr Request
             );
 

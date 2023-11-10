@@ -80,7 +80,7 @@ namespace Gs2::Realtime::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -89,7 +89,7 @@ namespace Gs2::Realtime::Request
               }() : TOptional<FString>())
             ->WithRoomName(Data->HasField("roomName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("roomName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -40,12 +40,14 @@ namespace Gs2::Gateway::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Gateway::Domain::FGs2GatewayDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Gs2->RestSession)),
         Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Gs2->WebSocketSession)),
         NamespaceName(NamespaceName),
@@ -61,6 +63,7 @@ namespace Gs2::Gateway::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         Wsclient(From.Wsclient),
         NamespaceName(From.NamespaceName),
@@ -112,20 +115,22 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomain> FUserAccessTokenDomain::WebSocketSession(
-    ) const
+    )
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
     }
 
     TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain> FUserAccessTokenDomain::FirebaseToken(
-    ) const
+    )
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );

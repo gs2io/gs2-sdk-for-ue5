@@ -42,12 +42,14 @@ namespace Gs2::Idle::Domain::Model
 {
 
     FCategoryModelDomain::FCategoryModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Idle::Domain::FGs2IdleDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CategoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Idle::FGs2IdleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         CategoryName(CategoryName),
@@ -62,6 +64,7 @@ namespace Gs2::Idle::Domain::Model
         const FCategoryModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         CategoryName(From.CategoryName),
@@ -71,7 +74,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FCategoryModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCategoryModelDomain> Self,
+        const TSharedPtr<FCategoryModelDomain>& Self,
         const Request::FGetCategoryModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

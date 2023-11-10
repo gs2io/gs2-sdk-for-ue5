@@ -47,12 +47,14 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -67,6 +69,7 @@ namespace Gs2::Mission::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -118,10 +121,11 @@ namespace Gs2::Mission::Domain::Model
 
     TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain> FUserAccessTokenDomain::Counter(
         const FString CounterName
-    ) const
+    )
     {
         return MakeShared<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             CounterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CounterName)
@@ -171,10 +175,11 @@ namespace Gs2::Mission::Domain::Model
 
     TSharedPtr<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain> FUserAccessTokenDomain::Complete(
         const FString MissionGroupName
-    ) const
+    )
     {
         return MakeShared<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             MissionGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MissionGroupName)

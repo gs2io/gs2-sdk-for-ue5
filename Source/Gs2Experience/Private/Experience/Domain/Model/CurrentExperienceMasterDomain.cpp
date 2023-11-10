@@ -41,11 +41,13 @@ namespace Gs2::Experience::Domain::Model
 {
 
     FCurrentExperienceMasterDomain::FCurrentExperienceMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Experience::Domain::FGs2ExperienceDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Experience::FGs2ExperienceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Experience::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -59,6 +61,7 @@ namespace Gs2::Experience::Domain::Model
         const FCurrentExperienceMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -67,7 +70,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FCurrentExperienceMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentExperienceMasterDomain> Self,
+        const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -129,7 +132,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FCurrentExperienceMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentExperienceMasterDomain> Self,
+        const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
         const Request::FGetCurrentExperienceMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -189,7 +192,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FCurrentExperienceMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentExperienceMasterDomain> Self,
+        const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
         const Request::FUpdateCurrentExperienceMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -251,7 +254,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     FCurrentExperienceMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentExperienceMasterDomain> Self,
+        const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
         const Request::FUpdateCurrentExperienceMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

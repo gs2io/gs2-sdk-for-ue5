@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Inbox/Gs2Inbox.h"
 #include "Inbox/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inbox/Domain/Iterator/DescribeMessagesIterator.h"
 #include "Inbox/Domain/Iterator/DescribeMessagesByUserIdIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Inbox::Domain
+{
+    class FGs2InboxDomain;
+    typedef TSharedPtr<FGs2InboxDomain> FGs2InboxDomainPtr;
 }
 
 namespace Gs2::Inbox::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Inbox::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inbox::FGs2InboxRestClientPtr Client;
+        const Inbox::Domain::FGs2InboxDomainPtr Service;
+        const Gs2::Inbox::FGs2InboxRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -86,7 +92,8 @@ namespace Gs2::Inbox::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inbox::Domain::FGs2InboxDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -103,7 +110,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -129,7 +136,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -155,7 +162,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -181,7 +188,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -207,7 +214,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FCreateGlobalMessageMasterRequestPtr Request;
         public:
             explicit FCreateGlobalMessageMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateGlobalMessageMasterRequestPtr Request
             );
 
@@ -227,14 +234,14 @@ namespace Gs2::Inbox::Domain::Model
 
         TSharedPtr<Gs2::Inbox::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Inbox::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         TSharedPtr<Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain> CurrentMessageMaster(
-        ) const;
+        );
 
         Gs2::Inbox::Domain::Iterator::FDescribeGlobalMessagesIteratorPtr GlobalMessages(
         ) const;
@@ -249,7 +256,7 @@ namespace Gs2::Inbox::Domain::Model
 
         TSharedPtr<Gs2::Inbox::Domain::Model::FGlobalMessageDomain> GlobalMessage(
             const FString GlobalMessageName
-        ) const;
+        );
 
         Gs2::Inbox::Domain::Iterator::FDescribeGlobalMessageMastersIteratorPtr GlobalMessageMasters(
         ) const;
@@ -264,7 +271,7 @@ namespace Gs2::Inbox::Domain::Model
 
         TSharedPtr<Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain> GlobalMessageMaster(
             const FString GlobalMessageName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

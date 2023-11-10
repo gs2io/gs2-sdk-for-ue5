@@ -31,6 +31,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Enhance::Domain
+{
+    class FGs2EnhanceDomain;
+    typedef TSharedPtr<FGs2EnhanceDomain> FGs2EnhanceDomainPtr;
+}
+
 namespace Gs2::Enhance::Domain::Model
 {
     class FNamespaceDomain;
@@ -48,7 +54,8 @@ namespace Gs2::Enhance::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
+        const Enhance::Domain::FGs2EnhanceDomainPtr Service;
+        const Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -81,9 +88,10 @@ namespace Gs2::Enhance::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -92,10 +100,10 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         TSharedPtr<Gs2::Enhance::Domain::Model::FProgressAccessTokenDomain> Progress(
-        ) const;
+        );
 
         TSharedPtr<Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomain> Enhance(
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

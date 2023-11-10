@@ -44,12 +44,14 @@ namespace Gs2::JobQueue::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -64,6 +66,7 @@ namespace Gs2::JobQueue::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -73,7 +76,7 @@ namespace Gs2::JobQueue::Domain::Model
     }
 
     FUserAccessTokenDomain::FRunTask::FRunTask(
-        const TSharedPtr<FUserAccessTokenDomain> Self,
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
         const Request::FRunRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -126,6 +129,7 @@ namespace Gs2::JobQueue::Domain::Model
             );
             auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>(
                 Self->Gs2,
+                Self->Service,
                 Request->GetNamespaceName(),
                 Self->AccessToken,
                 ResultModel->GetItem()->GetName()
@@ -151,10 +155,11 @@ namespace Gs2::JobQueue::Domain::Model
 
     TSharedPtr<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain> FUserAccessTokenDomain::Job(
         const FString JobName
-    ) const
+    )
     {
         return MakeShared<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             JobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(JobName)
@@ -163,10 +168,11 @@ namespace Gs2::JobQueue::Domain::Model
 
     TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobAccessTokenDomain> FUserAccessTokenDomain::DeadLetterJob(
         const FString DeadLetterJobName
-    ) const
+    )
     {
         return MakeShared<Gs2::JobQueue::Domain::Model::FDeadLetterJobAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             DeadLetterJobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DeadLetterJobName)

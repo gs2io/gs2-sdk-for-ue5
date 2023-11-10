@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Idle/Gs2Idle.h"
 #include "Idle/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Idle/Domain/Iterator/DescribeCategoryModelMastersIterator.h"
 #include "Idle/Domain/Iterator/DescribeCategoryModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Idle::Domain
+{
+    class FGs2IdleDomain;
+    typedef TSharedPtr<FGs2IdleDomain> FGs2IdleDomainPtr;
 }
 
 namespace Gs2::Idle::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Idle::Domain::Model
         public TSharedFromThis<FCategoryModelDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Idle::FGs2IdleRestClientPtr Client;
+        const Idle::Domain::FGs2IdleDomainPtr Service;
+        const Gs2::Idle::FGs2IdleRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -60,7 +66,8 @@ namespace Gs2::Idle::Domain::Model
     public:
 
         FCategoryModelDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Idle::Domain::FGs2IdleDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CategoryName
             // ReSharper disable once CppMemberInitializersOrder
@@ -78,7 +85,7 @@ namespace Gs2::Idle::Domain::Model
             const Request::FGetCategoryModelRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCategoryModelDomain> Self,
+                const TSharedPtr<FCategoryModelDomain>& Self,
                 const Request::FGetCategoryModelRequestPtr Request
             );
 

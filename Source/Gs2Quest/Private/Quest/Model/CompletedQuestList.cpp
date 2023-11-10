@@ -216,7 +216,7 @@ namespace Gs2::Quest::Model
         return MakeShared<FCompletedQuestList>()
             ->WithCompletedQuestListId(Data->HasField("completedQuestListId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("completedQuestListId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -225,7 +225,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -234,7 +234,7 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithQuestGroupName(Data->HasField("questGroupName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("questGroupName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

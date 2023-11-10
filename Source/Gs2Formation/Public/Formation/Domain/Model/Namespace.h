@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Formation/Gs2Formation.h"
 #include "Formation/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelsIterator.h"
@@ -38,6 +37,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Formation::Domain
+{
+    class FGs2FormationDomain;
+    typedef TSharedPtr<FGs2FormationDomain> FGs2FormationDomainPtr;
 }
 
 namespace Gs2::Formation::Domain::Model
@@ -63,7 +68,8 @@ namespace Gs2::Formation::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Formation::FGs2FormationRestClientPtr Client;
+        const Formation::Domain::FGs2FormationDomainPtr Service;
+        const Gs2::Formation::FGs2FormationRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -99,7 +105,8 @@ namespace Gs2::Formation::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Formation::Domain::FGs2FormationDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -116,7 +123,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -142,7 +149,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -168,7 +175,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -194,7 +201,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -220,7 +227,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FCreatePropertyFormModelMasterRequestPtr Request;
         public:
             explicit FCreatePropertyFormModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreatePropertyFormModelMasterRequestPtr Request
             );
 
@@ -246,7 +253,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FCreateFormModelMasterRequestPtr Request;
         public:
             explicit FCreateFormModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateFormModelMasterRequestPtr Request
             );
 
@@ -272,7 +279,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FCreateMoldModelMasterRequestPtr Request;
         public:
             explicit FCreateMoldModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateMoldModelMasterRequestPtr Request
             );
 
@@ -291,7 +298,7 @@ namespace Gs2::Formation::Domain::Model
         );
 
         TSharedPtr<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain> CurrentFormMaster(
-        ) const;
+        );
 
         Gs2::Formation::Domain::Iterator::FDescribeMoldModelsIteratorPtr MoldModels(
         ) const;
@@ -306,7 +313,7 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FMoldModelDomain> MoldModel(
             const FString MoldModelName
-        ) const;
+        );
 
         Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelsIteratorPtr PropertyFormModels(
         ) const;
@@ -321,15 +328,15 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelDomain> PropertyFormModel(
             const FString PropertyFormModelName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Formation::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Formation::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelMastersIteratorPtr PropertyFormModelMasters(
         ) const;
@@ -344,7 +351,7 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain> PropertyFormModelMaster(
             const FString PropertyFormModelName
-        ) const;
+        );
 
         Gs2::Formation::Domain::Iterator::FDescribeFormModelMastersIteratorPtr FormModelMasters(
         ) const;
@@ -359,7 +366,7 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FFormModelMasterDomain> FormModelMaster(
             const FString FormModelName
-        ) const;
+        );
 
         Gs2::Formation::Domain::Iterator::FDescribeMoldModelMastersIteratorPtr MoldModelMasters(
         ) const;
@@ -374,7 +381,7 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FMoldModelMasterDomain> MoldModelMaster(
             const FString MoldModelName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

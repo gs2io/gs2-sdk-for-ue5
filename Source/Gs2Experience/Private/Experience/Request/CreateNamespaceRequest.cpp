@@ -205,7 +205,7 @@ namespace Gs2::Experience::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("name", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -214,7 +214,7 @@ namespace Gs2::Experience::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -231,7 +231,7 @@ namespace Gs2::Experience::Request
              }() : nullptr)
             ->WithRankCapScriptId(Data->HasField("rankCapScriptId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("rankCapScriptId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -264,7 +264,7 @@ namespace Gs2::Experience::Request
              }() : nullptr)
             ->WithOverflowExperienceScript(Data->HasField("overflowExperienceScript") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("overflowExperienceScript", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

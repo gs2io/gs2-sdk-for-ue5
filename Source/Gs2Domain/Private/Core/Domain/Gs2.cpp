@@ -404,6 +404,57 @@ namespace Gs2::Core::Domain
         Stamina = MakeShared<Stamina::Domain::FGs2StaminaDomain>(SharedThis(this));
         StateMachine = MakeShared<StateMachine::Domain::FGs2StateMachineDomain>(SharedThis(this));
         Version = MakeShared<Version::Domain::FGs2VersionDomain>(SharedThis(this));
+        
+        const auto IssueTransactionAction = [this](Gs2::Core::Domain::Model::FIssueTransactionEventPtr e)
+        {
+            TransactionExecute(
+                e->GetAccessToken(),
+                e->GetConsumeActions(),
+                e->GetAcquireActions(),
+                e->GetRate()
+            );
+        };
+        Account->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        AdReward->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Chat->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Datastore->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Deploy->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Dictionary->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Distributor->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Enchant->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Enhance->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Exchange->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Experience->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Formation->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Friend->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Gateway->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Identifier->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Idle->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Inbox->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Inventory->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        JobQueue->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Key->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Limit->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        LoginReward->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Lock->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Lottery->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Matchmaking->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        MegaField->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Mission->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Money->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        News->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Quest->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Ranking->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Realtime->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Schedule->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Script->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        SerialKey->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Showcase->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        SkillTree->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Stamina->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        StateMachine->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Version->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        
     }
 
     void FGs2::UpdateCacheFromStampSheet(const FString Action, const FString Request, const FString Result) const
@@ -1047,5 +1098,27 @@ namespace Gs2::Core::Domain
     TSharedPtr<FAsyncTask<FGs2::FDisconnectTask>> FGs2::Disconnect()
     {
         return Gs2::Core::Util::New<FAsyncTask<FDisconnectTask>>(SharedThis(this));
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2::TransactionExecute(const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>>& ConsumeActions,
+        const TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>>& AcquireAction,
+        TBigInt<1024, false> Rate
+    )
+    {
+        const auto Future = MakeShared<SpeculativeExecutor::FSpeculativeExecutor>(
+            ConsumeActions,
+            AcquireAction,
+            Rate
+        )->Execute(
+            AsShared(),
+            AccessToken
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        return nullptr;
     }
 }

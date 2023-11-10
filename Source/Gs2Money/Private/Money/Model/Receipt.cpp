@@ -336,7 +336,7 @@ namespace Gs2::Money::Model
         return MakeShared<FReceipt>()
             ->WithReceiptId(Data->HasField("receiptId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("receiptId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -345,7 +345,7 @@ namespace Gs2::Money::Model
                 }() : TOptional<FString>())
             ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("transactionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -354,7 +354,7 @@ namespace Gs2::Money::Model
                 }() : TOptional<FString>())
             ->WithPurchaseToken(Data->HasField("purchaseToken") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("purchaseToken", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -363,7 +363,7 @@ namespace Gs2::Money::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -372,7 +372,7 @@ namespace Gs2::Money::Model
                 }() : TOptional<FString>())
             ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("type", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -426,7 +426,7 @@ namespace Gs2::Money::Model
                 }() : TOptional<int32>())
             ->WithContentsId(Data->HasField("contentsId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("contentsId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -32,5 +32,6 @@ namespace Gs2::Core::Net
 
         virtual Model::FGs2CredentialPtr Credential() const = 0;
         virtual FString RegionName() const = 0;
+        virtual FString OwnerId() const = 0;
     };
 }

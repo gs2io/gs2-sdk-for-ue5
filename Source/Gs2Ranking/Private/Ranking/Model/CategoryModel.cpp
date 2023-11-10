@@ -381,7 +381,7 @@ namespace Gs2::Ranking::Model
         return MakeShared<FCategoryModel>()
             ->WithCategoryModelId(Data->HasField("categoryModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("categoryModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -390,7 +390,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -399,7 +399,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -426,7 +426,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<int64>())
             ->WithOrderDirection(Data->HasField("orderDirection") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("orderDirection", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -435,7 +435,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("scope", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -501,7 +501,7 @@ namespace Gs2::Ranking::Model
                  }() : MakeShared<TArray<Model::FScopePtr>>())
             ->WithEntryPeriodEventId(Data->HasField("entryPeriodEventId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("entryPeriodEventId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -510,7 +510,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithAccessPeriodEventId(Data->HasField("accessPeriodEventId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("accessPeriodEventId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -531,7 +531,7 @@ namespace Gs2::Ranking::Model
                  }() : MakeShared<TArray<FString>>())
             ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("generation", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

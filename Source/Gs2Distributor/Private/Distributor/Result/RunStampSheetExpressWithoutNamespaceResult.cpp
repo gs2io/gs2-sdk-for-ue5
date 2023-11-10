@@ -82,7 +82,7 @@ namespace Gs2::Distributor::Result
                  }() : nullptr)
             ->WithSheetResult(Data->HasField("sheetResult") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("sheetResult", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

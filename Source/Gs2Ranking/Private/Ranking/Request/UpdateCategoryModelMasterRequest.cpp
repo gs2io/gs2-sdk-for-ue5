@@ -391,7 +391,7 @@ namespace Gs2::Ranking::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -400,7 +400,7 @@ namespace Gs2::Ranking::Request
               }() : TOptional<FString>())
             ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("categoryName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -409,7 +409,7 @@ namespace Gs2::Ranking::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -418,7 +418,7 @@ namespace Gs2::Ranking::Request
               }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("metadata", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -445,7 +445,7 @@ namespace Gs2::Ranking::Request
               }() : TOptional<int64>())
             ->WithOrderDirection(Data->HasField("orderDirection") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("orderDirection", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -454,7 +454,7 @@ namespace Gs2::Ranking::Request
               }() : TOptional<FString>())
             ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("scope", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -520,7 +520,7 @@ namespace Gs2::Ranking::Request
              }() : nullptr)
             ->WithEntryPeriodEventId(Data->HasField("entryPeriodEventId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("entryPeriodEventId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -529,7 +529,7 @@ namespace Gs2::Ranking::Request
               }() : TOptional<FString>())
             ->WithAccessPeriodEventId(Data->HasField("accessPeriodEventId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("accessPeriodEventId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -550,7 +550,7 @@ namespace Gs2::Ranking::Request
              }() : nullptr)
             ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("generation", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

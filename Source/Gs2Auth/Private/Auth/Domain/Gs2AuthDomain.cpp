@@ -32,7 +32,7 @@ namespace Gs2::Auth::Domain
 {
 
     FGs2AuthDomain::FGs2AuthDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -52,10 +52,11 @@ namespace Gs2::Auth::Domain
     }
 
     TSharedPtr<Gs2::Auth::Domain::Model::FAccessTokenDomain> FGs2AuthDomain::AccessToken(
-    ) const
+    )
     {
         return MakeShared<Gs2::Auth::Domain::Model::FAccessTokenDomain>(
-            Gs2
+            Gs2,
+            AsShared()
         );
     }
 

@@ -39,13 +39,15 @@ namespace Gs2::Money::Domain::Model
 {
 
     FWalletDomain::FWalletDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Money::Domain::FGs2MoneyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<int32> Slot
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -62,6 +64,7 @@ namespace Gs2::Money::Domain::Model
         const FWalletDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FWalletDomain::FGetTask::FGetTask(
-        const TSharedPtr<FWalletDomain> Self,
+        const TSharedPtr<FWalletDomain>& Self,
         const Request::FGetWalletByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -136,7 +139,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FWalletDomain::FDepositTask::FDepositTask(
-        const TSharedPtr<FWalletDomain> Self,
+        const TSharedPtr<FWalletDomain>& Self,
         const Request::FDepositByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -202,7 +205,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FWalletDomain::FWithdrawTask::FWithdrawTask(
-        const TSharedPtr<FWalletDomain> Self,
+        const TSharedPtr<FWalletDomain>& Self,
         const Request::FWithdrawByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

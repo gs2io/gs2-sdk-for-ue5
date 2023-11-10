@@ -43,12 +43,14 @@ namespace Gs2::JobQueue::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -63,6 +65,7 @@ namespace Gs2::JobQueue::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::JobQueue::Domain::Model
     }
 
     FUserDomain::FPushTask::FPushTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FPushByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -131,6 +134,7 @@ namespace Gs2::JobQueue::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::JobQueue::Domain::Model::FJobDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItems())[i]->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetName()
@@ -158,7 +162,13 @@ namespace Gs2::JobQueue::Domain::Model
                 *Self->NamespaceName
             );
         }
-        Self->AutoRun = ResultModel->GetAutoRun();
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetAutoRun().IsSet())
+            {
+                Self->AutoRun = ResultModel->GetAutoRun();
+            }
+        }
         *Result = Domain;
         return nullptr;
     }
@@ -170,7 +180,7 @@ namespace Gs2::JobQueue::Domain::Model
     }
 
     FUserDomain::FRunTask::FRunTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FRunByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -223,6 +233,7 @@ namespace Gs2::JobQueue::Domain::Model
                 );
             auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobDomain>(
                 Self->Gs2,
+                Self->Service,
                 Request->GetNamespaceName(),
                 ResultModel->GetItem()->GetUserId(),
                 ResultModel->GetItem()->GetName()
@@ -288,10 +299,11 @@ namespace Gs2::JobQueue::Domain::Model
 
     TSharedPtr<Gs2::JobQueue::Domain::Model::FJobDomain> FUserDomain::Job(
         const FString JobName
-    ) const
+    )
     {
         return MakeShared<Gs2::JobQueue::Domain::Model::FJobDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             JobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(JobName)
@@ -341,10 +353,11 @@ namespace Gs2::JobQueue::Domain::Model
 
     TSharedPtr<Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain> FUserDomain::DeadLetterJob(
         const FString DeadLetterJobName
-    ) const
+    )
     {
         return MakeShared<Gs2::JobQueue::Domain::Model::FDeadLetterJobDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             DeadLetterJobName == TEXT("") ? TOptional<FString>() : TOptional<FString>(DeadLetterJobName)

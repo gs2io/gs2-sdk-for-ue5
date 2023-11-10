@@ -51,6 +51,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
+}
+
 namespace Gs2::Inventory::Domain::Model
 {
     class FNamespaceDomain;
@@ -89,7 +95,8 @@ namespace Gs2::Inventory::Domain::Model
         public TSharedFromThis<FSimpleItemAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inventory::FGs2InventoryRestClientPtr Client;
+        const Inventory::Domain::FGs2InventoryDomainPtr Service;
+        const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
         TOptional<FString> Body;
@@ -114,9 +121,10 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FSimpleItemAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inventory::Domain::FGs2InventoryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> InventoryName,
             const TOptional<FString> ItemName
             // ReSharper disable once CppMemberInitializersOrder
@@ -134,7 +142,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetSimpleItemRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FSimpleItemAccessTokenDomain> Self,
+                const TSharedPtr<FSimpleItemAccessTokenDomain>& Self,
                 const Request::FGetSimpleItemRequestPtr Request
             );
 
@@ -160,7 +168,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetSimpleItemWithSignatureRequestPtr Request;
         public:
             explicit FGetWithSignatureTask(
-                const TSharedPtr<FSimpleItemAccessTokenDomain> Self,
+                const TSharedPtr<FSimpleItemAccessTokenDomain>& Self,
                 const Request::FGetSimpleItemWithSignatureRequestPtr Request
             );
 
@@ -186,7 +194,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FVerifySimpleItemRequestPtr Request;
         public:
             explicit FVerifyTask(
-                const TSharedPtr<FSimpleItemAccessTokenDomain> Self,
+                const TSharedPtr<FSimpleItemAccessTokenDomain>& Self,
                 const Request::FVerifySimpleItemRequestPtr Request
             );
 

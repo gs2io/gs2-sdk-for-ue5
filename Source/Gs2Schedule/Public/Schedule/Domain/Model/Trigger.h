@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Schedule/Gs2Schedule.h"
 #include "Schedule/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Schedule/Domain/Iterator/DescribeEventMastersIterator.h"
 #include "Schedule/Domain/Iterator/DescribeTriggersIterator.h"
@@ -32,6 +31,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Schedule::Domain
+{
+    class FGs2ScheduleDomain;
+    typedef TSharedPtr<FGs2ScheduleDomain> FGs2ScheduleDomainPtr;
 }
 
 namespace Gs2::Schedule::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Schedule::Domain::Model
         public TSharedFromThis<FTriggerDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
+        const Schedule::Domain::FGs2ScheduleDomainPtr Service;
+        const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -63,7 +69,8 @@ namespace Gs2::Schedule::Domain::Model
     public:
 
         FTriggerDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> TriggerName
@@ -82,7 +89,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FGetTriggerByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FTriggerDomain> Self,
+                const TSharedPtr<FTriggerDomain>& Self,
                 const Request::FGetTriggerByUserIdRequestPtr Request
             );
 
@@ -108,7 +115,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FTriggerByUserIdRequestPtr Request;
         public:
             explicit FTriggerTask(
-                const TSharedPtr<FTriggerDomain> Self,
+                const TSharedPtr<FTriggerDomain>& Self,
                 const Request::FTriggerByUserIdRequestPtr Request
             );
 
@@ -134,7 +141,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FDeleteTriggerByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FTriggerDomain> Self,
+                const TSharedPtr<FTriggerDomain>& Self,
                 const Request::FDeleteTriggerByUserIdRequestPtr Request
             );
 

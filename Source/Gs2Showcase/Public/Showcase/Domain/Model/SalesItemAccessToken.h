@@ -37,6 +37,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Showcase::Domain
+{
+    class FGs2ShowcaseDomain;
+    typedef TSharedPtr<FGs2ShowcaseDomain> FGs2ShowcaseDomainPtr;
+}
+
 namespace Gs2::Showcase::Domain::Model
 {
     class FNamespaceDomain;
@@ -62,7 +68,8 @@ namespace Gs2::Showcase::Domain::Model
         public TSharedFromThis<FSalesItemAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
+        const Showcase::Domain::FGs2ShowcaseDomainPtr Service;
+        const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -77,9 +84,10 @@ namespace Gs2::Showcase::Domain::Model
     public:
 
         FSalesItemAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> ShowcaseName,
             const TOptional<FString> DisplayItemId
             // ReSharper disable once CppMemberInitializersOrder

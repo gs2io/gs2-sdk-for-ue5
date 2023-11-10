@@ -21,5 +21,9 @@ public class Gs2SkillTree : ModuleRules
 			"Gs2JobQueue",
 			"Gs2Distributor",
 		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"Gs2Core"
+		});
 	}
 }

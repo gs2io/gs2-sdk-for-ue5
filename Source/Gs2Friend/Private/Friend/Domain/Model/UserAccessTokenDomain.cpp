@@ -55,12 +55,14 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -75,6 +77,7 @@ namespace Gs2::Friend::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -84,7 +87,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FUserAccessTokenDomain::FSendRequestTask::FSendRequestTask(
-        const TSharedPtr<FUserAccessTokenDomain> Self,
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
         const Request::FSendRequestRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -138,6 +141,7 @@ namespace Gs2::Friend::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Self->AccessToken,
             ResultModel->GetItem()->GetTargetUserId()
@@ -154,20 +158,22 @@ namespace Gs2::Friend::Domain::Model
     }
 
     TSharedPtr<Gs2::Friend::Domain::Model::FProfileAccessTokenDomain> FUserAccessTokenDomain::Profile(
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FProfileAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
     }
 
     TSharedPtr<Gs2::Friend::Domain::Model::FPublicProfileAccessTokenDomain> FUserAccessTokenDomain::PublicProfile(
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FPublicProfileAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -185,10 +191,11 @@ namespace Gs2::Friend::Domain::Model
     }
 
     TSharedPtr<Gs2::Friend::Domain::Model::FBlackListAccessTokenDomain> FUserAccessTokenDomain::BlackList(
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FBlackListAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -242,10 +249,11 @@ namespace Gs2::Friend::Domain::Model
     TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain> FUserAccessTokenDomain::FollowUser(
         const FString TargetUserId,
         const bool WithProfile
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId),
@@ -302,10 +310,11 @@ namespace Gs2::Friend::Domain::Model
 
     TSharedPtr<Gs2::Friend::Domain::Model::FFriendAccessTokenDomain> FUserAccessTokenDomain::Friend(
         const bool WithProfile
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FFriendAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             WithProfile
@@ -355,10 +364,11 @@ namespace Gs2::Friend::Domain::Model
 
     TSharedPtr<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain> FUserAccessTokenDomain::SendFriendRequest(
         const FString TargetUserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
@@ -408,10 +418,11 @@ namespace Gs2::Friend::Domain::Model
 
     TSharedPtr<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain> FUserAccessTokenDomain::ReceiveFriendRequest(
         const FString FromUserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             FromUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(FromUserId)

@@ -36,6 +36,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Quest::Domain
+{
+    class FGs2QuestDomain;
+    typedef TSharedPtr<FGs2QuestDomain> FGs2QuestDomainPtr;
+}
+
 namespace Gs2::Quest::Domain::Model
 {
     class FNamespaceDomain;
@@ -55,7 +61,8 @@ namespace Gs2::Quest::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Quest::FGs2QuestRestClientPtr Client;
+        const Quest::Domain::FGs2QuestDomainPtr Service;
+        const Gs2::Quest::FGs2QuestRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -83,9 +90,10 @@ namespace Gs2::Quest::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Quest::Domain::FGs2QuestDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -99,10 +107,12 @@ namespace Gs2::Quest::Domain::Model
         {
             const TSharedPtr<FUserAccessTokenDomain> Self;
             const Request::FStartRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FStartTask(
-                const TSharedPtr<FUserAccessTokenDomain> Self,
-                const Request::FStartRequestPtr Request
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
+                const Request::FStartRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FStartTask(
@@ -116,11 +126,12 @@ namespace Gs2::Quest::Domain::Model
         friend FStartTask;
 
         TSharedPtr<FAsyncTask<FStartTask>> Start(
-            Request::FStartRequestPtr Request
+            Request::FStartRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain> Progress(
-        ) const;
+        );
 
         Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIteratorPtr CompletedQuestLists(
         ) const;
@@ -135,7 +146,7 @@ namespace Gs2::Quest::Domain::Model
 
         TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListAccessTokenDomain> CompletedQuestList(
             const FString QuestGroupName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

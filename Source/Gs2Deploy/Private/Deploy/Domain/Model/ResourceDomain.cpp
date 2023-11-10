@@ -36,12 +36,14 @@ namespace Gs2::Deploy::Domain::Model
 {
 
     FResourceDomain::FResourceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Deploy::Domain::FGs2DeployDomainPtr& Service,
         const TOptional<FString> StackName,
         const TOptional<FString> ResourceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Gs2->RestSession)),
         StackName(StackName),
         ResourceName(ResourceName),
@@ -56,6 +58,7 @@ namespace Gs2::Deploy::Domain::Model
         const FResourceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         StackName(From.StackName),
         ResourceName(From.ResourceName),
@@ -65,7 +68,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FResourceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FResourceDomain> Self,
+        const TSharedPtr<FResourceDomain>& Self,
         const Request::FGetResourceRequestPtr Request
     ): Self(Self), Request(Request)
     {

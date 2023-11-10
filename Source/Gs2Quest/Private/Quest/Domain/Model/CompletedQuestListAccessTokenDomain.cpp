@@ -45,13 +45,15 @@ namespace Gs2::Quest::Domain::Model
 {
 
     FCompletedQuestListAccessTokenDomain::FCompletedQuestListAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Quest::Domain::FGs2QuestDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> QuestGroupName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -68,6 +70,7 @@ namespace Gs2::Quest::Domain::Model
         const FCompletedQuestListAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -78,7 +81,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FCompletedQuestListAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCompletedQuestListAccessTokenDomain> Self,
+        const TSharedPtr<FCompletedQuestListAccessTokenDomain>& Self,
         const Request::FGetCompletedQuestListRequestPtr Request
     ): Self(Self), Request(Request)
     {

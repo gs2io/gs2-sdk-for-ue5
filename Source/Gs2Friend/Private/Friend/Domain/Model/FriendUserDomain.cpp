@@ -52,7 +52,8 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FFriendUserDomain::FFriendUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<bool> WithProfile,
@@ -60,6 +61,7 @@ namespace Gs2::Friend::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -78,6 +80,7 @@ namespace Gs2::Friend::Domain::Model
         const FFriendUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -89,7 +92,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FFriendUserDomain::FGetTask::FGetTask(
-        const TSharedPtr<FFriendUserDomain> Self,
+        const TSharedPtr<FFriendUserDomain>& Self,
         const Request::FGetFriendByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -155,7 +158,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FFriendUserDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FFriendUserDomain> Self,
+        const TSharedPtr<FFriendUserDomain>& Self,
         const Request::FDeleteFriendByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

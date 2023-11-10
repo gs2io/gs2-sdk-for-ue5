@@ -39,6 +39,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Friend::Domain
+{
+    class FGs2FriendDomain;
+    typedef TSharedPtr<FGs2FriendDomain> FGs2FriendDomainPtr;
+}
+
 namespace Gs2::Friend::Domain::Model
 {
     class FNamespaceDomain;
@@ -66,7 +72,8 @@ namespace Gs2::Friend::Domain::Model
         public TSharedFromThis<FFollowUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Friend::FGs2FriendRestClientPtr Client;
+        const Friend::Domain::FGs2FriendDomainPtr Service;
+        const Gs2::Friend::FGs2FriendRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -81,9 +88,10 @@ namespace Gs2::Friend::Domain::Model
     public:
 
         FFollowUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Friend::Domain::FGs2FriendDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> TargetUserId,
             const TOptional<bool> WithProfile
             // ReSharper disable once CppMemberInitializersOrder
@@ -101,7 +109,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FGetFollowRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FFollowUserAccessTokenDomain> Self,
+                const TSharedPtr<FFollowUserAccessTokenDomain>& Self,
                 const Request::FGetFollowRequestPtr Request
             );
 
@@ -127,7 +135,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FFollowRequestPtr Request;
         public:
             explicit FFollowTask(
-                const TSharedPtr<FFollowUserAccessTokenDomain> Self,
+                const TSharedPtr<FFollowUserAccessTokenDomain>& Self,
                 const Request::FFollowRequestPtr Request
             );
 
@@ -153,7 +161,7 @@ namespace Gs2::Friend::Domain::Model
             const Request::FUnfollowRequestPtr Request;
         public:
             explicit FUnfollowTask(
-                const TSharedPtr<FFollowUserAccessTokenDomain> Self,
+                const TSharedPtr<FFollowUserAccessTokenDomain>& Self,
                 const Request::FUnfollowRequestPtr Request
             );
 

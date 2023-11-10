@@ -17,6 +17,11 @@ public class Gs2Key : ModuleRules
 			"Json",
 			"JsonUtilities",
 			"Gs2Core",
+			"Gs2Auth",
+		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"Gs2Core"
 		});
 	}
 }

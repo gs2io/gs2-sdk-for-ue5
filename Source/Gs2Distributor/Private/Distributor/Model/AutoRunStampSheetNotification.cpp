@@ -49,7 +49,7 @@ namespace Gs2::Distributor::Model
         return MakeShared<FAutoRunStampSheetNotification>()
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -58,7 +58,7 @@ namespace Gs2::Distributor::Model
                 }() : TOptional<FString>())
             ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("transactionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

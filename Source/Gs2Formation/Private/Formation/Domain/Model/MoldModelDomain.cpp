@@ -48,12 +48,14 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FMoldModelDomain::FMoldModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Formation::Domain::FGs2FormationDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> MoldModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         MoldModelName(MoldModelName),
@@ -68,6 +70,7 @@ namespace Gs2::Formation::Domain::Model
         const FMoldModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         MoldModelName(From.MoldModelName),
@@ -77,7 +80,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FMoldModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMoldModelDomain> Self,
+        const TSharedPtr<FMoldModelDomain>& Self,
         const Request::FGetMoldModelRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -139,10 +142,11 @@ namespace Gs2::Formation::Domain::Model
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FFormModelDomain> FMoldModelDomain::FormModel(
-    ) const
+    )
     {
         return MakeShared<Gs2::Formation::Domain::Model::FFormModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             MoldModelName
         );

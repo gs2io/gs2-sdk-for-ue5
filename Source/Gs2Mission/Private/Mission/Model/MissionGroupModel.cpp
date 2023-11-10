@@ -224,7 +224,7 @@ namespace Gs2::Mission::Model
         return MakeShared<FMissionGroupModel>()
             ->WithMissionGroupId(Data->HasField("missionGroupId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("missionGroupId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -233,7 +233,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -242,7 +242,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -263,7 +263,7 @@ namespace Gs2::Mission::Model
                  }() : MakeShared<TArray<Model::FMissionTaskModelPtr>>())
             ->WithResetType(Data->HasField("resetType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resetType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -281,7 +281,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<int32>())
             ->WithResetDayOfWeek(Data->HasField("resetDayOfWeek") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("resetDayOfWeek", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -299,7 +299,7 @@ namespace Gs2::Mission::Model
                 }() : TOptional<int32>())
             ->WithCompleteNotificationNamespaceId(Data->HasField("completeNotificationNamespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("completeNotificationNamespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

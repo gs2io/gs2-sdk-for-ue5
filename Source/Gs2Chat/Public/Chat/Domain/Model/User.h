@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Chat/Gs2Chat.h"
 #include "Chat/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Chat/Domain/Iterator/DescribeRoomsIterator.h"
 #include "Chat/Domain/Iterator/DescribeMessagesIterator.h"
@@ -33,6 +32,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Chat::Domain
+{
+    class FGs2ChatDomain;
+    typedef TSharedPtr<FGs2ChatDomain> FGs2ChatDomainPtr;
 }
 
 namespace Gs2::Chat::Domain::Model
@@ -51,7 +56,8 @@ namespace Gs2::Chat::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Chat::FGs2ChatRestClientPtr Client;
+        const Chat::Domain::FGs2ChatDomainPtr Service;
+        const Gs2::Chat::FGs2ChatRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -68,7 +74,8 @@ namespace Gs2::Chat::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Chat::Domain::FGs2ChatDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -92,7 +99,7 @@ namespace Gs2::Chat::Domain::Model
         TSharedPtr<Gs2::Chat::Domain::Model::FRoomDomain> Room(
             const FString RoomName,
             const TOptional<FString> Password = TOptional<FString>()
-        ) const;
+        );
 
         Gs2::Chat::Domain::Iterator::FDescribeSubscribesByUserIdIteratorPtr Subscribes(
         ) const;
@@ -119,7 +126,7 @@ namespace Gs2::Chat::Domain::Model
 
         TSharedPtr<Gs2::Chat::Domain::Model::FSubscribeDomain> Subscribe(
             const FString RoomName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -42,7 +42,8 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FSpatialDomain::FSpatialDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> AreaModelName,
@@ -50,6 +51,7 @@ namespace Gs2::MegaField::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -67,6 +69,7 @@ namespace Gs2::MegaField::Domain::Model
         const FSpatialDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -78,7 +81,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FSpatialDomain::FPutPositionTask::FPutPositionTask(
-        const TSharedPtr<FSpatialDomain> Self,
+        const TSharedPtr<FSpatialDomain>& Self,
         const Request::FPutPositionByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -146,7 +149,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FSpatialDomain::FActionTask::FActionTask(
-        const TSharedPtr<FSpatialDomain> Self,
+        const TSharedPtr<FSpatialDomain>& Self,
         const Request::FActionByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -208,6 +211,7 @@ namespace Gs2::MegaField::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::MegaField::Domain::Model::FSpatialDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItems())[i]->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetAreaModelName(),

@@ -42,11 +42,13 @@ namespace Gs2::Version::Domain::Model
 {
 
     FCurrentVersionMasterDomain::FCurrentVersionMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Version::Domain::FGs2VersionDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Version::FGs2VersionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Version::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -60,6 +62,7 @@ namespace Gs2::Version::Domain::Model
         const FCurrentVersionMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -68,7 +71,7 @@ namespace Gs2::Version::Domain::Model
     }
 
     FCurrentVersionMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentVersionMasterDomain> Self,
+        const TSharedPtr<FCurrentVersionMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -130,7 +133,7 @@ namespace Gs2::Version::Domain::Model
     }
 
     FCurrentVersionMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentVersionMasterDomain> Self,
+        const TSharedPtr<FCurrentVersionMasterDomain>& Self,
         const Request::FGetCurrentVersionMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -190,7 +193,7 @@ namespace Gs2::Version::Domain::Model
     }
 
     FCurrentVersionMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentVersionMasterDomain> Self,
+        const TSharedPtr<FCurrentVersionMasterDomain>& Self,
         const Request::FUpdateCurrentVersionMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -252,7 +255,7 @@ namespace Gs2::Version::Domain::Model
     }
 
     FCurrentVersionMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentVersionMasterDomain> Self,
+        const TSharedPtr<FCurrentVersionMasterDomain>& Self,
         const Request::FUpdateCurrentVersionMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

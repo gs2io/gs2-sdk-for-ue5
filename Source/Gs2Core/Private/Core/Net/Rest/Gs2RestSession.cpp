@@ -26,24 +26,23 @@ namespace Gs2::Core::Net::Rest
 {
     FGs2RestSession::FGs2RestSession(
         const Model::FGs2CredentialPtr Credential
-    ): Region(Model::ERegion::ApNorthEast1)
+    ): CredentialValue(Credential), Region(Model::ERegion::ApNorthEast1), OwnerIdValue("")
     {
-        this->CredentialValue = Credential;
+        
     }
 
     FGs2RestSession::FGs2RestSession(
         const FGs2RestSession& From
-    ): CredentialValue(From.CredentialValue), Region(From.Region)
+    ): CredentialValue(From.CredentialValue), Region(From.Region), OwnerIdValue("")
     {
     }
 
     FGs2RestSession::FGs2RestSession(
         const Model::FGs2CredentialPtr Credential,
         const Model::ERegion Region
-    )
+    ): CredentialValue(Credential), Region(Region), OwnerIdValue("")
     {
-        this->CredentialValue = Credential;
-        this->Region = Region;
+        
     }
 
     TSharedPtr<FAsyncTask<Task::FRestOpenTask>> FGs2RestSession::Open()
@@ -59,6 +58,16 @@ namespace Gs2::Core::Net::Rest
     TSharedPtr<FAsyncTask<Task::FRestCloseTask>> FGs2RestSession::Close()
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::FRestCloseTask>>(SharedThis(this));
+    }
+
+    FString FGs2RestSession::OwnerId() const
+    {
+        return OwnerIdValue;
+    }
+
+    void FGs2RestSession::SetOwnerId(FString OwnerId)
+    {
+        OwnerIdValue = OwnerId;
     }
 
     Model::FGs2CredentialPtr FGs2RestSession::Credential() const

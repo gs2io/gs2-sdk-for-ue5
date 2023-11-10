@@ -32,6 +32,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::StateMachine::Domain
+{
+    class FGs2StateMachineDomain;
+    typedef TSharedPtr<FGs2StateMachineDomain> FGs2StateMachineDomainPtr;
+}
+
 namespace Gs2::StateMachine::Domain::Model
 {
     class FNamespaceDomain;
@@ -45,7 +51,8 @@ namespace Gs2::StateMachine::Domain::Model
         public TSharedFromThis<FStatusAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::StateMachine::FGs2StateMachineRestClientPtr Client;
+        const StateMachine::Domain::FGs2StateMachineDomainPtr Service;
+        const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -59,9 +66,10 @@ namespace Gs2::StateMachine::Domain::Model
     public:
 
         FStatusAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const StateMachine::Domain::FGs2StateMachineDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> StatusName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -78,7 +86,7 @@ namespace Gs2::StateMachine::Domain::Model
             const Request::FGetStatusRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FGetStatusRequestPtr Request
             );
 
@@ -104,7 +112,7 @@ namespace Gs2::StateMachine::Domain::Model
             const Request::FEmitRequestPtr Request;
         public:
             explicit FEmitTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FEmitRequestPtr Request
             );
 
@@ -130,7 +138,7 @@ namespace Gs2::StateMachine::Domain::Model
             const Request::FExitStateMachineRequestPtr Request;
         public:
             explicit FExitStateMachineTask(
-                const TSharedPtr<FStatusAccessTokenDomain> Self,
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
                 const Request::FExitStateMachineRequestPtr Request
             );
 

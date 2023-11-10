@@ -41,7 +41,8 @@ namespace Gs2::Chat::Domain::Model
 {
 
     FMessageDomain::FMessageDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Chat::Domain::FGs2ChatDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> RoomName,
@@ -50,6 +51,7 @@ namespace Gs2::Chat::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Chat::FGs2ChatRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -69,6 +71,7 @@ namespace Gs2::Chat::Domain::Model
         const FMessageDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -81,7 +84,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FMessageDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMessageDomain> Self,
+        const TSharedPtr<FMessageDomain>& Self,
         const Request::FGetMessageByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -148,7 +151,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     FMessageDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FMessageDomain> Self,
+        const TSharedPtr<FMessageDomain>& Self,
         const Request::FDeleteMessageRequestPtr Request
     ): Self(Self), Request(Request)
     {

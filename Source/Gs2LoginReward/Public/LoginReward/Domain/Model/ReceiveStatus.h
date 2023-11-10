@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "LoginReward/Gs2LoginReward.h"
 #include "LoginReward/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelMastersIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::LoginReward::Domain
+{
+    class FGs2LoginRewardDomain;
+    typedef TSharedPtr<FGs2LoginRewardDomain> FGs2LoginRewardDomainPtr;
 }
 
 namespace Gs2::LoginReward::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::LoginReward::Domain::Model
         public TSharedFromThis<FReceiveStatusDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr Service;
+        const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -63,7 +69,8 @@ namespace Gs2::LoginReward::Domain::Model
     public:
 
         FReceiveStatusDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> BonusModelName
@@ -82,7 +89,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FGetReceiveStatusByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FReceiveStatusDomain> Self,
+                const TSharedPtr<FReceiveStatusDomain>& Self,
                 const Request::FGetReceiveStatusByUserIdRequestPtr Request
             );
 
@@ -108,7 +115,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FDeleteReceiveStatusByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FReceiveStatusDomain> Self,
+                const TSharedPtr<FReceiveStatusDomain>& Self,
                 const Request::FDeleteReceiveStatusByUserIdRequestPtr Request
             );
 
@@ -134,7 +141,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FMarkReceivedByUserIdRequestPtr Request;
         public:
             explicit FMarkReceivedTask(
-                const TSharedPtr<FReceiveStatusDomain> Self,
+                const TSharedPtr<FReceiveStatusDomain>& Self,
                 const Request::FMarkReceivedByUserIdRequestPtr Request
             );
 
@@ -160,7 +167,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FUnmarkReceivedByUserIdRequestPtr Request;
         public:
             explicit FUnmarkReceivedTask(
-                const TSharedPtr<FReceiveStatusDomain> Self,
+                const TSharedPtr<FReceiveStatusDomain>& Self,
                 const Request::FUnmarkReceivedByUserIdRequestPtr Request
             );
 

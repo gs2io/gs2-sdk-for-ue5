@@ -40,11 +40,13 @@ namespace Gs2::Idle::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Idle::Domain::FGs2IdleDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Idle::FGs2IdleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("idle:Namespace")
@@ -55,6 +57,7 @@ namespace Gs2::Idle::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -63,7 +66,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -115,7 +118,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -172,7 +175,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -231,7 +234,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -284,7 +287,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FNamespaceDomain::FCreateCategoryModelMasterTask::FCreateCategoryModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateCategoryModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -336,6 +339,7 @@ namespace Gs2::Idle::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Idle::Domain::Model::FCategoryModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -351,10 +355,11 @@ namespace Gs2::Idle::Domain::Model
     }
 
     TSharedPtr<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain> FNamespaceDomain::CurrentCategoryMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Idle::Domain::Model::FCurrentCategoryMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -399,10 +404,11 @@ namespace Gs2::Idle::Domain::Model
 
     TSharedPtr<Gs2::Idle::Domain::Model::FCategoryModelDomain> FNamespaceDomain::CategoryModel(
         const FString CategoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Idle::Domain::Model::FCategoryModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
         );
@@ -410,10 +416,11 @@ namespace Gs2::Idle::Domain::Model
 
     TSharedPtr<Gs2::Idle::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Idle::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -421,10 +428,11 @@ namespace Gs2::Idle::Domain::Model
 
     TSharedPtr<Gs2::Idle::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Idle::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -470,10 +478,11 @@ namespace Gs2::Idle::Domain::Model
 
     TSharedPtr<Gs2::Idle::Domain::Model::FCategoryModelMasterDomain> FNamespaceDomain::CategoryModelMaster(
         const FString CategoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Idle::Domain::Model::FCategoryModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
         );

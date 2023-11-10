@@ -39,7 +39,7 @@ namespace Gs2::SerialKey::Domain
 {
 
     FGs2SerialKeyDomain::FGs2SerialKeyDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -59,7 +59,7 @@ namespace Gs2::SerialKey::Domain
     }
 
     FGs2SerialKeyDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2SerialKeyDomain> Self,
+        const TSharedPtr<FGs2SerialKeyDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -105,6 +105,7 @@ namespace Gs2::SerialKey::Domain
         }
         auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -118,7 +119,7 @@ namespace Gs2::SerialKey::Domain
     }
 
     FGs2SerialKeyDomain::FDumpUserDataTask::FDumpUserDataTask(
-        TSharedPtr<FGs2SerialKeyDomain> Self,
+        const TSharedPtr<FGs2SerialKeyDomain>& Self,
         const Request::FDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -161,7 +162,7 @@ namespace Gs2::SerialKey::Domain
     }
 
     FGs2SerialKeyDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
-        TSharedPtr<FGs2SerialKeyDomain> Self,
+        const TSharedPtr<FGs2SerialKeyDomain>& Self,
         const Request::FCheckDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -211,7 +212,7 @@ namespace Gs2::SerialKey::Domain
     }
 
     FGs2SerialKeyDomain::FCleanUserDataTask::FCleanUserDataTask(
-        TSharedPtr<FGs2SerialKeyDomain> Self,
+        const TSharedPtr<FGs2SerialKeyDomain>& Self,
         const Request::FCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -254,7 +255,7 @@ namespace Gs2::SerialKey::Domain
     }
 
     FGs2SerialKeyDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
-        TSharedPtr<FGs2SerialKeyDomain> Self,
+        const TSharedPtr<FGs2SerialKeyDomain>& Self,
         const Request::FCheckCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -297,7 +298,7 @@ namespace Gs2::SerialKey::Domain
     }
 
     FGs2SerialKeyDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
-        TSharedPtr<FGs2SerialKeyDomain> Self,
+        const TSharedPtr<FGs2SerialKeyDomain>& Self,
         const Request::FPrepareImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -351,7 +352,7 @@ namespace Gs2::SerialKey::Domain
     }
 
     FGs2SerialKeyDomain::FImportUserDataTask::FImportUserDataTask(
-        TSharedPtr<FGs2SerialKeyDomain> Self,
+        const TSharedPtr<FGs2SerialKeyDomain>& Self,
         const Request::FImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -394,7 +395,7 @@ namespace Gs2::SerialKey::Domain
     }
 
     FGs2SerialKeyDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
-        TSharedPtr<FGs2SerialKeyDomain> Self,
+        const TSharedPtr<FGs2SerialKeyDomain>& Self,
         const Request::FCheckImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -476,10 +477,11 @@ namespace Gs2::SerialKey::Domain
 
     TSharedPtr<Gs2::SerialKey::Domain::Model::FNamespaceDomain> FGs2SerialKeyDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::SerialKey::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

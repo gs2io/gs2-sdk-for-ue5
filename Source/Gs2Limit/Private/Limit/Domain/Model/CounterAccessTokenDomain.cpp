@@ -41,14 +41,16 @@ namespace Gs2::Limit::Domain::Model
 {
 
     FCounterAccessTokenDomain::FCounterAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Limit::Domain::FGs2LimitDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> LimitName,
         const TOptional<FString> CounterName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Limit::FGs2LimitRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -66,6 +68,7 @@ namespace Gs2::Limit::Domain::Model
         const FCounterAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -77,7 +80,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCounterAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCounterAccessTokenDomain> Self,
+        const TSharedPtr<FCounterAccessTokenDomain>& Self,
         const Request::FGetCounterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -143,7 +146,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCounterAccessTokenDomain::FCountUpTask::FCountUpTask(
-        const TSharedPtr<FCounterAccessTokenDomain> Self,
+        const TSharedPtr<FCounterAccessTokenDomain>& Self,
         const Request::FCountUpRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -211,7 +214,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     FCounterAccessTokenDomain::FVerifyTask::FVerifyTask(
-        const TSharedPtr<FCounterAccessTokenDomain> Self,
+        const TSharedPtr<FCounterAccessTokenDomain>& Self,
         const Request::FVerifyCounterRequestPtr Request
     ): Self(Self), Request(Request)
     {

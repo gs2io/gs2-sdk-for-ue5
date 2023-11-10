@@ -99,7 +99,7 @@ namespace Gs2::Script::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithScript(Data->HasField("script") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("script", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -108,7 +108,7 @@ namespace Gs2::Script::Request
               }() : TOptional<FString>())
             ->WithArgs(Data->HasField("args") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("args", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

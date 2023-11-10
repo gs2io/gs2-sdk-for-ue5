@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Inventory/Gs2Inventory.h"
 #include "Inventory/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelMastersIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelsIterator.h"
@@ -49,6 +48,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
 }
 
 namespace Gs2::Inventory::Domain::Model
@@ -89,7 +94,8 @@ namespace Gs2::Inventory::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inventory::FGs2InventoryRestClientPtr Client;
+        const Inventory::Domain::FGs2InventoryDomainPtr Service;
+        const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -125,7 +131,8 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inventory::Domain::FGs2InventoryDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -142,7 +149,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -168,7 +175,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -194,7 +201,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -220,7 +227,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -246,7 +253,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FCreateSimpleInventoryModelMasterRequestPtr Request;
         public:
             explicit FCreateSimpleInventoryModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateSimpleInventoryModelMasterRequestPtr Request
             );
 
@@ -272,7 +279,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FCreateBigInventoryModelMasterRequestPtr Request;
         public:
             explicit FCreateBigInventoryModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateBigInventoryModelMasterRequestPtr Request
             );
 
@@ -298,7 +305,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FCreateInventoryModelMasterRequestPtr Request;
         public:
             explicit FCreateInventoryModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateInventoryModelMasterRequestPtr Request
             );
 
@@ -317,7 +324,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain> CurrentItemModelMaster(
-        ) const;
+        );
 
         Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIteratorPtr InventoryModels(
         ) const;
@@ -332,15 +339,15 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryModelDomain> InventoryModel(
             const FString InventoryName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelMastersIteratorPtr SimpleInventoryModelMasters(
         ) const;
@@ -355,7 +362,7 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelMasterDomain> SimpleInventoryModelMaster(
             const FString InventoryName
-        ) const;
+        );
 
         Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelsIteratorPtr SimpleInventoryModels(
         ) const;
@@ -370,7 +377,7 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomain> SimpleInventoryModel(
             const FString InventoryName
-        ) const;
+        );
 
         Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIteratorPtr BigInventoryModelMasters(
         ) const;
@@ -385,7 +392,7 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain> BigInventoryModelMaster(
             const FString InventoryName
-        ) const;
+        );
 
         Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelsIteratorPtr BigInventoryModels(
         ) const;
@@ -400,7 +407,7 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelDomain> BigInventoryModel(
             const FString InventoryName
-        ) const;
+        );
 
         Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelMastersIteratorPtr InventoryModelMasters(
         ) const;
@@ -415,7 +422,7 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain> InventoryModelMaster(
             const FString InventoryName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -243,7 +243,7 @@ namespace Gs2::Ranking::Model
         return MakeShared<FScore>()
             ->WithScoreId(Data->HasField("scoreId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("scoreId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -252,7 +252,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithCategoryName(Data->HasField("categoryName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("categoryName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -261,7 +261,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -270,7 +270,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithUniqueId(Data->HasField("uniqueId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("uniqueId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -279,7 +279,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithScorerUserId(Data->HasField("scorerUserId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("scorerUserId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -297,7 +297,7 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<int64>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

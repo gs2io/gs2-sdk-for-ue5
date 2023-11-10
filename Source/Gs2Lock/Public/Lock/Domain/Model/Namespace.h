@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Lock/Gs2Lock.h"
 #include "Lock/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Lock/Domain/Iterator/DescribeMutexesIterator.h"
 #include "Lock/Domain/Iterator/DescribeMutexesByUserIdIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Lock::Domain
+{
+    class FGs2LockDomain;
+    typedef TSharedPtr<FGs2LockDomain> FGs2LockDomainPtr;
 }
 
 namespace Gs2::Lock::Domain::Model
@@ -43,7 +48,8 @@ namespace Gs2::Lock::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lock::FGs2LockRestClientPtr Client;
+        const Lock::Domain::FGs2LockDomainPtr Service;
+        const Gs2::Lock::FGs2LockRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -59,7 +65,8 @@ namespace Gs2::Lock::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lock::Domain::FGs2LockDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -76,7 +83,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -102,7 +109,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -128,7 +135,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -154,7 +161,7 @@ namespace Gs2::Lock::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -174,11 +181,11 @@ namespace Gs2::Lock::Domain::Model
 
         TSharedPtr<Gs2::Lock::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Lock::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

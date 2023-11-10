@@ -101,7 +101,7 @@ namespace Gs2::Matchmaking::Model
         return MakeShared<FCapacityOfRole>()
             ->WithRoleName(Data->HasField("roleName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("roleName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

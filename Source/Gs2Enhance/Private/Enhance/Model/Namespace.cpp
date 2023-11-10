@@ -273,7 +273,7 @@ namespace Gs2::Enhance::Model
         return MakeShared<FNamespace>()
             ->WithNamespaceId(Data->HasField("namespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -282,7 +282,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -291,7 +291,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -351,7 +351,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<int64>())
             ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("queueNamespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -360,7 +360,7 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("keyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Ranking/Gs2Ranking.h"
 #include "Ranking/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Ranking/Domain/Iterator/DescribeCategoryModelsIterator.h"
 #include "Ranking/Domain/Iterator/DescribeCategoryModelMastersIterator.h"
@@ -36,6 +35,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Ranking::Domain
+{
+    class FGs2RankingDomain;
+    typedef TSharedPtr<FGs2RankingDomain> FGs2RankingDomainPtr;
 }
 
 namespace Gs2::Ranking::Domain::Model
@@ -59,7 +64,8 @@ namespace Gs2::Ranking::Domain::Model
         public TSharedFromThis<FCategoryModelDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Ranking::FGs2RankingRestClientPtr Client;
+        const Ranking::Domain::FGs2RankingDomainPtr Service;
+        const Gs2::Ranking::FGs2RankingRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -71,7 +77,8 @@ namespace Gs2::Ranking::Domain::Model
     public:
 
         FCategoryModelDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Ranking::Domain::FGs2RankingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CategoryName
             // ReSharper disable once CppMemberInitializersOrder
@@ -89,7 +96,7 @@ namespace Gs2::Ranking::Domain::Model
             const Request::FGetCategoryModelRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCategoryModelDomain> Self,
+                const TSharedPtr<FCategoryModelDomain>& Self,
                 const Request::FGetCategoryModelRequestPtr Request
             );
 

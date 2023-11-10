@@ -39,13 +39,15 @@ namespace Gs2::Account::Domain::Model
 {
 
     FTakeOverDomain::FTakeOverDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Account::Domain::FGs2AccountDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<int32> Type
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Account::FGs2AccountRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -62,6 +64,7 @@ namespace Gs2::Account::Domain::Model
         const FTakeOverDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FTakeOverDomain::FCreateTask::FCreateTask(
-        const TSharedPtr<FTakeOverDomain> Self,
+        const TSharedPtr<FTakeOverDomain>& Self,
         const Request::FCreateTakeOverByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -138,7 +141,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FTakeOverDomain::FGetTask::FGetTask(
-        const TSharedPtr<FTakeOverDomain> Self,
+        const TSharedPtr<FTakeOverDomain>& Self,
         const Request::FGetTakeOverByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -202,7 +205,7 @@ namespace Gs2::Account::Domain::Model
     }
 
     FTakeOverDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FTakeOverDomain> Self,
+        const TSharedPtr<FTakeOverDomain>& Self,
         const Request::FUpdateTakeOverByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

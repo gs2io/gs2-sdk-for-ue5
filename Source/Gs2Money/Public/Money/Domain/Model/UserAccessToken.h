@@ -32,6 +32,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Money::Domain
+{
+    class FGs2MoneyDomain;
+    typedef TSharedPtr<FGs2MoneyDomain> FGs2MoneyDomainPtr;
+}
+
 namespace Gs2::Money::Domain::Model
 {
     class FNamespaceDomain;
@@ -46,7 +52,8 @@ namespace Gs2::Money::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Money::FGs2MoneyRestClientPtr Client;
+        const Money::Domain::FGs2MoneyDomainPtr Service;
+        const Gs2::Money::FGs2MoneyRestClientPtr Client;
 
         public:
         TOptional<float> Price;
@@ -69,9 +76,10 @@ namespace Gs2::Money::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Money::Domain::FGs2MoneyDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -92,11 +100,11 @@ namespace Gs2::Money::Domain::Model
 
         TSharedPtr<Gs2::Money::Domain::Model::FWalletAccessTokenDomain> Wallet(
             const int32 Slot
-        ) const;
+        );
 
         TSharedPtr<Gs2::Money::Domain::Model::FReceiptAccessTokenDomain> Receipt(
             const FString TransactionId
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

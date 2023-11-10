@@ -31,6 +31,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Lock::Domain
+{
+    class FGs2LockDomain;
+    typedef TSharedPtr<FGs2LockDomain> FGs2LockDomainPtr;
+}
+
 namespace Gs2::Lock::Domain::Model
 {
     class FNamespaceDomain;
@@ -43,7 +49,8 @@ namespace Gs2::Lock::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lock::FGs2LockRestClientPtr Client;
+        const Lock::Domain::FGs2LockDomainPtr Service;
+        const Gs2::Lock::FGs2LockRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -61,9 +68,10 @@ namespace Gs2::Lock::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lock::Domain::FGs2LockDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -84,7 +92,7 @@ namespace Gs2::Lock::Domain::Model
 
         TSharedPtr<Gs2::Lock::Domain::Model::FMutexAccessTokenDomain> Mutex(
             const FString PropertyId
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

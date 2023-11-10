@@ -37,11 +37,13 @@ namespace Gs2::Identifier::Domain::Model
 {
 
     FAttachSecurityPolicyDomain::FAttachSecurityPolicyDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Identifier::Domain::FGs2IdentifierDomainPtr& Service,
         const TOptional<FString> UserName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Identifier::FGs2IdentifierRestClient>(Gs2->RestSession)),
         UserName(UserName),
         ParentKey(Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -55,6 +57,7 @@ namespace Gs2::Identifier::Domain::Model
         const FAttachSecurityPolicyDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         UserName(From.UserName),
         ParentKey(From.ParentKey)
@@ -63,7 +66,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FAttachSecurityPolicyDomain::FGetHasSecurityPolicyTask::FGetHasSecurityPolicyTask(
-        const TSharedPtr<FAttachSecurityPolicyDomain> Self,
+        const TSharedPtr<FAttachSecurityPolicyDomain>& Self,
         const Request::FGetHasSecurityPolicyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -102,6 +105,7 @@ namespace Gs2::Identifier::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>(
                     Self->Gs2,
+                    Self->Service,
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
@@ -128,7 +132,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FAttachSecurityPolicyDomain::FAttachSecurityPolicyTask::FAttachSecurityPolicyTask(
-        const TSharedPtr<FAttachSecurityPolicyDomain> Self,
+        const TSharedPtr<FAttachSecurityPolicyDomain>& Self,
         const Request::FAttachSecurityPolicyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -167,6 +171,7 @@ namespace Gs2::Identifier::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>(
                     Self->Gs2,
+                    Self->Service,
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
@@ -193,7 +198,7 @@ namespace Gs2::Identifier::Domain::Model
     }
 
     FAttachSecurityPolicyDomain::FDetachSecurityPolicyTask::FDetachSecurityPolicyTask(
-        const TSharedPtr<FAttachSecurityPolicyDomain> Self,
+        const TSharedPtr<FAttachSecurityPolicyDomain>& Self,
         const Request::FDetachSecurityPolicyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -232,6 +237,7 @@ namespace Gs2::Identifier::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>(
                     Self->Gs2,
+                    Self->Service,
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );

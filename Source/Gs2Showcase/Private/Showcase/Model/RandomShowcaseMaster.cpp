@@ -302,7 +302,7 @@ namespace Gs2::Showcase::Model
         return MakeShared<FRandomShowcaseMaster>()
             ->WithShowcaseId(Data->HasField("showcaseId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("showcaseId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -311,7 +311,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -320,7 +320,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -329,7 +329,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -377,7 +377,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<int32>())
             ->WithSalesPeriodEventId(Data->HasField("salesPeriodEventId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("salesPeriodEventId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

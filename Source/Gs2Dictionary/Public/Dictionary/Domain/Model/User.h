@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Dictionary/Gs2Dictionary.h"
 #include "Dictionary/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelsIterator.h"
 #include "Dictionary/Domain/Iterator/DescribeEntryModelMastersIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Dictionary::Domain
+{
+    class FGs2DictionaryDomain;
+    typedef TSharedPtr<FGs2DictionaryDomain> FGs2DictionaryDomainPtr;
 }
 
 namespace Gs2::Dictionary::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Dictionary::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
+        const Dictionary::Domain::FGs2DictionaryDomainPtr Service;
+        const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -65,7 +71,8 @@ namespace Gs2::Dictionary::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -83,7 +90,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FAddEntriesByUserIdRequestPtr Request;
         public:
             explicit FAddEntriesTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FAddEntriesByUserIdRequestPtr Request
             );
 
@@ -109,7 +116,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FResetByUserIdRequestPtr Request;
         public:
             explicit FResetTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FResetByUserIdRequestPtr Request
             );
 
@@ -135,7 +142,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FVerifyEntryByUserIdRequestPtr Request;
         public:
             explicit FVerifyEntryTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FVerifyEntryByUserIdRequestPtr Request
             );
 
@@ -161,7 +168,7 @@ namespace Gs2::Dictionary::Domain::Model
             const Request::FDeleteEntriesByUserIdRequestPtr Request;
         public:
             explicit FDeleteEntriesTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FDeleteEntriesByUserIdRequestPtr Request
             );
 
@@ -192,7 +199,7 @@ namespace Gs2::Dictionary::Domain::Model
 
         TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain> Entry(
             const FString EntryName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

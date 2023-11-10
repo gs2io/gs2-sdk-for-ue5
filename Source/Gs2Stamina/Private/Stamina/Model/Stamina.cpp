@@ -363,7 +363,7 @@ namespace Gs2::Stamina::Model
         return MakeShared<FStamina>()
             ->WithStaminaId(Data->HasField("staminaId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("staminaId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -372,7 +372,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithStaminaName(Data->HasField("staminaName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("staminaName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -381,7 +381,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

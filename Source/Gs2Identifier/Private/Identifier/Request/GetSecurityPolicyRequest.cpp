@@ -65,7 +65,7 @@ namespace Gs2::Identifier::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithSecurityPolicyName(Data->HasField("securityPolicyName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("securityPolicyName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

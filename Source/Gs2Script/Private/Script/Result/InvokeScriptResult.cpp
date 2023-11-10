@@ -185,7 +185,7 @@ namespace Gs2::Script::Result
                 }() : TOptional<int32>())
             ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("result", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -194,7 +194,7 @@ namespace Gs2::Script::Result
                 }() : TOptional<FString>())
             ->WithTransaction(Data->HasField("transaction") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("transaction", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

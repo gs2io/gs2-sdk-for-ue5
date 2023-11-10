@@ -225,7 +225,7 @@ namespace Gs2::Money::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -234,7 +234,7 @@ namespace Gs2::Money::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -243,7 +243,7 @@ namespace Gs2::Money::Request
               }() : TOptional<FString>())
             ->WithPriority(Data->HasField("priority") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("priority", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -252,7 +252,7 @@ namespace Gs2::Money::Request
               }() : TOptional<FString>())
             ->WithAppleKey(Data->HasField("appleKey") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("appleKey", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -261,7 +261,7 @@ namespace Gs2::Money::Request
               }() : TOptional<FString>())
             ->WithGoogleKey(Data->HasField("googleKey") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("googleKey", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

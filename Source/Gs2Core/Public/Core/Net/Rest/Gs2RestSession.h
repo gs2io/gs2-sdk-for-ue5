@@ -35,6 +35,7 @@ namespace Gs2::Core::Net::Rest
     {
         Model::FGs2CredentialPtr CredentialValue;
         Model::ERegion Region;
+        FString OwnerIdValue;
 
     public:
         explicit FGs2RestSession(
@@ -53,6 +54,8 @@ namespace Gs2::Core::Net::Rest
         TSharedPtr<FAsyncTask<Task::FRestReOpenTask>> ReOpen();
         TSharedPtr<FAsyncTask<Task::FRestCloseTask>> Close();
         
+        virtual FString OwnerId() const override;
+        virtual void SetOwnerId(FString OwnerId);
         virtual FString RegionName() const override;
         virtual Model::FGs2CredentialPtr Credential() const override;
     };

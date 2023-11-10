@@ -46,12 +46,14 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FMissionGroupModelMasterDomain::FMissionGroupModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> MissionGroupName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         MissionGroupName(MissionGroupName),
@@ -66,6 +68,7 @@ namespace Gs2::Mission::Domain::Model
         const FMissionGroupModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         MissionGroupName(From.MissionGroupName),
@@ -75,7 +78,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FMissionGroupModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMissionGroupModelMasterDomain> Self,
+        const TSharedPtr<FMissionGroupModelMasterDomain>& Self,
         const Request::FGetMissionGroupModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -137,7 +140,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FMissionGroupModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FMissionGroupModelMasterDomain> Self,
+        const TSharedPtr<FMissionGroupModelMasterDomain>& Self,
         const Request::FUpdateMissionGroupModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -201,7 +204,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FMissionGroupModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FMissionGroupModelMasterDomain> Self,
+        const TSharedPtr<FMissionGroupModelMasterDomain>& Self,
         const Request::FDeleteMissionGroupModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -259,7 +262,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FMissionGroupModelMasterDomain::FCreateMissionTaskModelMasterTask::FCreateMissionTaskModelMasterTask(
-        const TSharedPtr<FMissionGroupModelMasterDomain> Self,
+        const TSharedPtr<FMissionGroupModelMasterDomain>& Self,
         const Request::FCreateMissionTaskModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -313,6 +316,7 @@ namespace Gs2::Mission::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetMissionGroupName(),
             ResultModel->GetItem()->GetName()
@@ -371,10 +375,11 @@ namespace Gs2::Mission::Domain::Model
 
     TSharedPtr<Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain> FMissionGroupModelMasterDomain::MissionTaskModelMaster(
         const FString MissionTaskName
-    ) const
+    )
     {
         return MakeShared<Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             MissionGroupName,
             MissionTaskName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MissionTaskName)

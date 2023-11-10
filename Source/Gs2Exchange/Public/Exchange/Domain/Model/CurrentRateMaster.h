@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Exchange/Gs2Exchange.h"
 #include "Exchange/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelMastersIterator.h"
@@ -33,6 +32,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Exchange::Domain
+{
+    class FGs2ExchangeDomain;
+    typedef TSharedPtr<FGs2ExchangeDomain> FGs2ExchangeDomainPtr;
 }
 
 namespace Gs2::Exchange::Domain::Model
@@ -54,7 +59,8 @@ namespace Gs2::Exchange::Domain::Model
         public TSharedFromThis<FCurrentRateMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
+        const Exchange::Domain::FGs2ExchangeDomainPtr Service;
+        const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -65,7 +71,8 @@ namespace Gs2::Exchange::Domain::Model
     public:
 
         FCurrentRateMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -82,7 +89,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentRateMasterDomain> Self,
+                const TSharedPtr<FCurrentRateMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -108,7 +115,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FGetCurrentRateMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentRateMasterDomain> Self,
+                const TSharedPtr<FCurrentRateMasterDomain>& Self,
                 const Request::FGetCurrentRateMasterRequestPtr Request
             );
 
@@ -134,7 +141,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FUpdateCurrentRateMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentRateMasterDomain> Self,
+                const TSharedPtr<FCurrentRateMasterDomain>& Self,
                 const Request::FUpdateCurrentRateMasterRequestPtr Request
             );
 
@@ -160,7 +167,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FUpdateCurrentRateMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentRateMasterDomain> Self,
+                const TSharedPtr<FCurrentRateMasterDomain>& Self,
                 const Request::FUpdateCurrentRateMasterFromGitHubRequestPtr Request
             );
 

@@ -42,12 +42,14 @@ namespace Gs2::Enhance::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -62,6 +64,7 @@ namespace Gs2::Enhance::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -71,20 +74,22 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     TSharedPtr<Gs2::Enhance::Domain::Model::FProgressDomain> FUserDomain::Progress(
-    ) const
+    )
     {
         return MakeShared<Gs2::Enhance::Domain::Model::FProgressDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );
     }
 
     TSharedPtr<Gs2::Enhance::Domain::Model::FEnhanceDomain> FUserDomain::Enhance(
-    ) const
+    )
     {
         return MakeShared<Gs2::Enhance::Domain::Model::FEnhanceDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );

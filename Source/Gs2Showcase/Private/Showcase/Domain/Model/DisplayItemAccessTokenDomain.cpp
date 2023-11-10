@@ -44,6 +44,7 @@
 #include "Showcase/Domain/Model/RandomShowcaseStatusAccessToken.h"
 #include "Showcase/Domain/Model/RandomDisplayItem.h"
 #include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
+#include "Showcase/Domain/SpeculativeExecutor/Transaction/BuyByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -53,14 +54,16 @@ namespace Gs2::Showcase::Domain::Model
 {
 
     FDisplayItemAccessTokenDomain::FDisplayItemAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> ShowcaseName,
         const TOptional<FString> DisplayItemId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -79,6 +82,7 @@ namespace Gs2::Showcase::Domain::Model
         const FDisplayItemAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -90,16 +94,17 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     FDisplayItemAccessTokenDomain::FBuyTask::FBuyTask(
-        const TSharedPtr<FDisplayItemAccessTokenDomain> Self,
-        const Request::FBuyRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FDisplayItemAccessTokenDomain>& Self,
+        const Request::FBuyRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FDisplayItemAccessTokenDomain::FBuyTask::FBuyTask(
         const FBuyTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -112,6 +117,26 @@ namespace Gs2::Showcase::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithShowcaseName(Self->ShowcaseName)
             ->WithDisplayItemId(Self->DisplayItemId);
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FBuyByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FBuyByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->Buy(
             Request
         );
@@ -164,9 +189,10 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FDisplayItemAccessTokenDomain::FBuyTask>> FDisplayItemAccessTokenDomain::Buy(
-        Request::FBuyRequestPtr Request
+        Request::FBuyRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FBuyTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FBuyTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FString FDisplayItemAccessTokenDomain::CreateCacheParentKey(

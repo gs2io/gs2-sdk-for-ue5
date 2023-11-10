@@ -73,7 +73,7 @@ namespace Gs2::Showcase::Model
         return MakeShared<FPurchaseCount>()
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

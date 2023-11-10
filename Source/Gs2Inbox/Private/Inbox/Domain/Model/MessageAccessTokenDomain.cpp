@@ -34,6 +34,7 @@
 #include "Inbox/Domain/Model/GlobalMessage.h"
 #include "Inbox/Domain/Model/Received.h"
 #include "Inbox/Domain/Model/ReceivedAccessToken.h"
+#include "Inbox/Domain/SpeculativeExecutor/Transaction/ReadMessageByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Model/AutoStampSheetDomain.h"
@@ -43,13 +44,15 @@ namespace Gs2::Inbox::Domain::Model
 {
 
     FMessageAccessTokenDomain::FMessageAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inbox::Domain::FGs2InboxDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> MessageName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inbox::FGs2InboxRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -66,6 +69,7 @@ namespace Gs2::Inbox::Domain::Model
         const FMessageAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -76,7 +80,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FMessageAccessTokenDomain::FGetTask::FGetTask(
-        const TSharedPtr<FMessageAccessTokenDomain> Self,
+        const TSharedPtr<FMessageAccessTokenDomain>& Self,
         const Request::FGetMessageRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -140,7 +144,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FMessageAccessTokenDomain::FOpenTask::FOpenTask(
-        const TSharedPtr<FMessageAccessTokenDomain> Self,
+        const TSharedPtr<FMessageAccessTokenDomain>& Self,
         const Request::FOpenMessageRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -204,16 +208,17 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FMessageAccessTokenDomain::FReadTask::FReadTask(
-        const TSharedPtr<FMessageAccessTokenDomain> Self,
-        const Request::FReadMessageRequestPtr Request
-    ): Self(Self), Request(Request)
+        const TSharedPtr<FMessageAccessTokenDomain>& Self,
+        const Request::FReadMessageRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
     {
 
     }
 
     FMessageAccessTokenDomain::FReadTask::FReadTask(
         const FReadTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
     {
     }
 
@@ -225,6 +230,26 @@ namespace Gs2::Inbox::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithMessageName(Self->MessageName);
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FReadMessageByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FReadMessageByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
         const auto Future = Self->Client->ReadMessage(
             Request
         );
@@ -298,13 +323,14 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FMessageAccessTokenDomain::FReadTask>> FMessageAccessTokenDomain::Read(
-        Request::FReadMessageRequestPtr Request
+        Request::FReadMessageRequestPtr Request,
+        bool SpeculativeExecute
     ) {
-        return Gs2::Core::Util::New<FAsyncTask<FReadTask>>(this->AsShared(), Request);
+        return Gs2::Core::Util::New<FAsyncTask<FReadTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FMessageAccessTokenDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FMessageAccessTokenDomain> Self,
+        const TSharedPtr<FMessageAccessTokenDomain>& Self,
         const Request::FDeleteMessageRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -32,6 +32,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Gateway::Domain
+{
+    class FGs2GatewayDomain;
+    typedef TSharedPtr<FGs2GatewayDomain> FGs2GatewayDomainPtr;
+}
+
 namespace Gs2::Gateway::Domain::Model
 {
     class FNamespaceDomain;
@@ -46,8 +52,9 @@ namespace Gs2::Gateway::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Gateway::FGs2GatewayRestClientPtr Client;
-        FGs2GatewayWebSocketClientPtr Wsclient;
+        const Gateway::Domain::FGs2GatewayDomainPtr Service;
+        const Gs2::Gateway::FGs2GatewayRestClientPtr Client;
+        const FGs2GatewayWebSocketClientPtr Wsclient;
 
         public:
         TOptional<FString> Protocol;
@@ -70,9 +77,10 @@ namespace Gs2::Gateway::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Gateway::Domain::FGs2GatewayDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -92,10 +100,10 @@ namespace Gs2::Gateway::Domain::Model
         );
 
         TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomain> WebSocketSession(
-        ) const;
+        );
 
         TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain> FirebaseToken(
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -42,12 +42,14 @@ namespace Gs2::Schedule::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Schedule::FGs2ScheduleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -62,6 +64,7 @@ namespace Gs2::Schedule::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -113,10 +116,11 @@ namespace Gs2::Schedule::Domain::Model
 
     TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerAccessTokenDomain> FUserAccessTokenDomain::Trigger(
         const FString TriggerName
-    ) const
+    )
     {
         return MakeShared<Gs2::Schedule::Domain::Model::FTriggerAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             TriggerName == TEXT("") ? TOptional<FString>() : TOptional<FString>(TriggerName)
@@ -166,10 +170,11 @@ namespace Gs2::Schedule::Domain::Model
 
     TSharedPtr<Gs2::Schedule::Domain::Model::FEventAccessTokenDomain> FUserAccessTokenDomain::Event(
         const FString EventName
-    ) const
+    )
     {
         return MakeShared<Gs2::Schedule::Domain::Model::FEventAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             EventName == TEXT("") ? TOptional<FString>() : TOptional<FString>(EventName)

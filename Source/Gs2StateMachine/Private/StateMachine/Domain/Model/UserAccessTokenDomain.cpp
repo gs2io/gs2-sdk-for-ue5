@@ -39,12 +39,14 @@ namespace Gs2::StateMachine::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const StateMachine::Domain::FGs2StateMachineDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::StateMachine::FGs2StateMachineRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -59,6 +61,7 @@ namespace Gs2::StateMachine::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -112,10 +115,11 @@ namespace Gs2::StateMachine::Domain::Model
 
     TSharedPtr<Gs2::StateMachine::Domain::Model::FStatusAccessTokenDomain> FUserAccessTokenDomain::Status(
         const FString StatusName
-    ) const
+    )
     {
         return MakeShared<Gs2::StateMachine::Domain::Model::FStatusAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             StatusName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StatusName)

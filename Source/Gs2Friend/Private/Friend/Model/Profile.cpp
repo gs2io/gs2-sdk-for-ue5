@@ -219,7 +219,7 @@ namespace Gs2::Friend::Model
         return MakeShared<FProfile>()
             ->WithProfileId(Data->HasField("profileId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("profileId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -228,7 +228,7 @@ namespace Gs2::Friend::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -237,7 +237,7 @@ namespace Gs2::Friend::Model
                 }() : TOptional<FString>())
             ->WithPublicProfile(Data->HasField("publicProfile") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("publicProfile", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -246,7 +246,7 @@ namespace Gs2::Friend::Model
                 }() : TOptional<FString>())
             ->WithFollowerProfile(Data->HasField("followerProfile") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("followerProfile", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -255,7 +255,7 @@ namespace Gs2::Friend::Model
                 }() : TOptional<FString>())
             ->WithFriendProfile(Data->HasField("friendProfile") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("friendProfile", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

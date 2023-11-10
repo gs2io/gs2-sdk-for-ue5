@@ -228,7 +228,7 @@ namespace Gs2::Account::Model
         return MakeShared<FAccount>()
             ->WithAccountId(Data->HasField("accountId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("accountId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -237,7 +237,7 @@ namespace Gs2::Account::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -246,7 +246,7 @@ namespace Gs2::Account::Model
                 }() : TOptional<FString>())
             ->WithPassword(Data->HasField("password") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("password", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

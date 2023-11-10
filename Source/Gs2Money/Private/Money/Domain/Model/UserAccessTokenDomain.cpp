@@ -40,12 +40,14 @@ namespace Gs2::Money::Domain::Model
 {
 
     FUserAccessTokenDomain::FUserAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Money::Domain::FGs2MoneyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -60,6 +62,7 @@ namespace Gs2::Money::Domain::Model
         const FUserAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -111,10 +114,11 @@ namespace Gs2::Money::Domain::Model
 
     TSharedPtr<Gs2::Money::Domain::Model::FWalletAccessTokenDomain> FUserAccessTokenDomain::Wallet(
         const int32 Slot
-    ) const
+    )
     {
         return MakeShared<Gs2::Money::Domain::Model::FWalletAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             Slot
@@ -123,10 +127,11 @@ namespace Gs2::Money::Domain::Model
 
     TSharedPtr<Gs2::Money::Domain::Model::FReceiptAccessTokenDomain> FUserAccessTokenDomain::Receipt(
         const FString TransactionId
-    ) const
+    )
     {
         return MakeShared<Gs2::Money::Domain::Model::FReceiptAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)

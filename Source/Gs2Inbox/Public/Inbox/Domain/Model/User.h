@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Inbox/Gs2Inbox.h"
 #include "Inbox/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inbox/Domain/Iterator/DescribeMessagesIterator.h"
 #include "Inbox/Domain/Iterator/DescribeMessagesByUserIdIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Inbox::Domain
+{
+    class FGs2InboxDomain;
+    typedef TSharedPtr<FGs2InboxDomain> FGs2InboxDomainPtr;
 }
 
 namespace Gs2::Inbox::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::Inbox::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inbox::FGs2InboxRestClientPtr Client;
+        const Inbox::Domain::FGs2InboxDomainPtr Service;
+        const Gs2::Inbox::FGs2InboxRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -67,7 +73,8 @@ namespace Gs2::Inbox::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inbox::Domain::FGs2InboxDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -85,7 +92,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FSendMessageByUserIdRequestPtr Request;
         public:
             explicit FSendMessageTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FSendMessageByUserIdRequestPtr Request
             );
 
@@ -111,7 +118,7 @@ namespace Gs2::Inbox::Domain::Model
             const Request::FReceiveGlobalMessageByUserIdRequestPtr Request;
         public:
             explicit FReceiveGlobalMessageTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FReceiveGlobalMessageByUserIdRequestPtr Request
             );
 
@@ -143,10 +150,10 @@ namespace Gs2::Inbox::Domain::Model
 
         TSharedPtr<Gs2::Inbox::Domain::Model::FMessageDomain> Message(
             const FString MessageName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Inbox::Domain::Model::FReceivedDomain> Received(
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

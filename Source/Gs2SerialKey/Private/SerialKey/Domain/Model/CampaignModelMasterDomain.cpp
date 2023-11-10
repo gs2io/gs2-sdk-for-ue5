@@ -41,12 +41,14 @@ namespace Gs2::SerialKey::Domain::Model
 {
 
     FCampaignModelMasterDomain::FCampaignModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CampaignModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SerialKey::FGs2SerialKeyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         CampaignModelName(CampaignModelName),
@@ -61,6 +63,7 @@ namespace Gs2::SerialKey::Domain::Model
         const FCampaignModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         CampaignModelName(From.CampaignModelName),
@@ -70,7 +73,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FCampaignModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCampaignModelMasterDomain> Self,
+        const TSharedPtr<FCampaignModelMasterDomain>& Self,
         const Request::FGetCampaignModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,7 +135,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FCampaignModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCampaignModelMasterDomain> Self,
+        const TSharedPtr<FCampaignModelMasterDomain>& Self,
         const Request::FUpdateCampaignModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -196,7 +199,7 @@ namespace Gs2::SerialKey::Domain::Model
     }
 
     FCampaignModelMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FCampaignModelMasterDomain> Self,
+        const TSharedPtr<FCampaignModelMasterDomain>& Self,
         const Request::FDeleteCampaignModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

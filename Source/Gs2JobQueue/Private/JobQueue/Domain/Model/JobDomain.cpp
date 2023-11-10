@@ -41,13 +41,15 @@ namespace Gs2::JobQueue::Domain::Model
 {
 
     FJobDomain::FJobDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> JobName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -64,6 +66,7 @@ namespace Gs2::JobQueue::Domain::Model
         const FJobDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -74,7 +77,7 @@ namespace Gs2::JobQueue::Domain::Model
     }
 
     FJobDomain::FGetTask::FGetTask(
-        const TSharedPtr<FJobDomain> Self,
+        const TSharedPtr<FJobDomain>& Self,
         const Request::FGetJobByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -138,7 +141,7 @@ namespace Gs2::JobQueue::Domain::Model
     }
 
     FJobDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FJobDomain> Self,
+        const TSharedPtr<FJobDomain>& Self,
         const Request::FDeleteJobByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -199,10 +202,11 @@ namespace Gs2::JobQueue::Domain::Model
 
     TSharedPtr<Gs2::JobQueue::Domain::Model::FJobResultDomain> FJobDomain::JobResult(
         const int32 TryNumber
-    ) const
+    )
     {
         return MakeShared<Gs2::JobQueue::Domain::Model::FJobResultDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             JobName,

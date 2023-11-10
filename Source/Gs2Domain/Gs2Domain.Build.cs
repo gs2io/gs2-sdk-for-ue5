@@ -59,5 +59,8 @@ public class Gs2Domain : ModuleRules
 			"Gs2StateMachine",
 			"Gs2Version",
 		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core"
+		});
 	}
 }

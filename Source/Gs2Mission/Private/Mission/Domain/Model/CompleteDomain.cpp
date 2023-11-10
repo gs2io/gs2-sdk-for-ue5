@@ -46,13 +46,15 @@ namespace Gs2::Mission::Domain::Model
 {
 
     FCompleteDomain::FCompleteDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Mission::Domain::FGs2MissionDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> MissionGroupName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Mission::FGs2MissionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -69,6 +71,7 @@ namespace Gs2::Mission::Domain::Model
         const FCompleteDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -79,7 +82,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCompleteDomain::FCompleteTask::FCompleteTask(
-        const TSharedPtr<FCompleteDomain> Self,
+        const TSharedPtr<FCompleteDomain>& Self,
         const Request::FCompleteByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -161,7 +164,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCompleteDomain::FReceiveTask::FReceiveTask(
-        const TSharedPtr<FCompleteDomain> Self,
+        const TSharedPtr<FCompleteDomain>& Self,
         const Request::FReceiveByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -227,7 +230,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCompleteDomain::FRevertReceiveTask::FRevertReceiveTask(
-        const TSharedPtr<FCompleteDomain> Self,
+        const TSharedPtr<FCompleteDomain>& Self,
         const Request::FRevertReceiveByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -293,7 +296,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCompleteDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCompleteDomain> Self,
+        const TSharedPtr<FCompleteDomain>& Self,
         const Request::FGetCompleteByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -357,7 +360,7 @@ namespace Gs2::Mission::Domain::Model
     }
 
     FCompleteDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FCompleteDomain> Self,
+        const TSharedPtr<FCompleteDomain>& Self,
         const Request::FDeleteCompleteByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

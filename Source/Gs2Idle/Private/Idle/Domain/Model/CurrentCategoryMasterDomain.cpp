@@ -40,11 +40,13 @@ namespace Gs2::Idle::Domain::Model
 {
 
     FCurrentCategoryMasterDomain::FCurrentCategoryMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Idle::Domain::FGs2IdleDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Idle::FGs2IdleRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Idle::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -58,6 +60,7 @@ namespace Gs2::Idle::Domain::Model
         const FCurrentCategoryMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -66,7 +69,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FCurrentCategoryMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentCategoryMasterDomain> Self,
+        const TSharedPtr<FCurrentCategoryMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -128,7 +131,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FCurrentCategoryMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentCategoryMasterDomain> Self,
+        const TSharedPtr<FCurrentCategoryMasterDomain>& Self,
         const Request::FGetCurrentCategoryMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -188,7 +191,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FCurrentCategoryMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentCategoryMasterDomain> Self,
+        const TSharedPtr<FCurrentCategoryMasterDomain>& Self,
         const Request::FUpdateCurrentCategoryMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -250,7 +253,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     FCurrentCategoryMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentCategoryMasterDomain> Self,
+        const TSharedPtr<FCurrentCategoryMasterDomain>& Self,
         const Request::FUpdateCurrentCategoryMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

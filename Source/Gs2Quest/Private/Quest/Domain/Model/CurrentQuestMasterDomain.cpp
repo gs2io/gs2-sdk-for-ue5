@@ -44,11 +44,13 @@ namespace Gs2::Quest::Domain::Model
 {
 
     FCurrentQuestMasterDomain::FCurrentQuestMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Quest::Domain::FGs2QuestDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Quest::FGs2QuestRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Quest::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -62,6 +64,7 @@ namespace Gs2::Quest::Domain::Model
         const FCurrentQuestMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -70,7 +73,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FCurrentQuestMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentQuestMasterDomain> Self,
+        const TSharedPtr<FCurrentQuestMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,7 +135,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FCurrentQuestMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentQuestMasterDomain> Self,
+        const TSharedPtr<FCurrentQuestMasterDomain>& Self,
         const Request::FGetCurrentQuestMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -192,7 +195,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FCurrentQuestMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentQuestMasterDomain> Self,
+        const TSharedPtr<FCurrentQuestMasterDomain>& Self,
         const Request::FUpdateCurrentQuestMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -254,7 +257,7 @@ namespace Gs2::Quest::Domain::Model
     }
 
     FCurrentQuestMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentQuestMasterDomain> Self,
+        const TSharedPtr<FCurrentQuestMasterDomain>& Self,
         const Request::FUpdateCurrentQuestMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

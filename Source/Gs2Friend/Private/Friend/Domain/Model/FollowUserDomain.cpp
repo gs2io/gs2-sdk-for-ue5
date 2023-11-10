@@ -52,7 +52,8 @@ namespace Gs2::Friend::Domain::Model
 {
 
     FFollowUserDomain::FFollowUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TargetUserId,
@@ -60,6 +61,7 @@ namespace Gs2::Friend::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -77,6 +79,7 @@ namespace Gs2::Friend::Domain::Model
         const FFollowUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -88,7 +91,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FFollowUserDomain::FGetTask::FGetTask(
-        const TSharedPtr<FFollowUserDomain> Self,
+        const TSharedPtr<FFollowUserDomain>& Self,
         const Request::FGetFollowByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -153,7 +156,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FFollowUserDomain::FFollowTask::FFollowTask(
-        const TSharedPtr<FFollowUserDomain> Self,
+        const TSharedPtr<FFollowUserDomain>& Self,
         const Request::FFollowByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -219,7 +222,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     FFollowUserDomain::FUnfollowTask::FUnfollowTask(
-        const TSharedPtr<FFollowUserDomain> Self,
+        const TSharedPtr<FFollowUserDomain>& Self,
         const Request::FUnfollowByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

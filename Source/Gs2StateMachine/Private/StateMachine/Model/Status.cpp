@@ -281,7 +281,7 @@ namespace Gs2::StateMachine::Model
         return MakeShared<FStatus>()
             ->WithStatusId(Data->HasField("statusId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("statusId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -290,7 +290,7 @@ namespace Gs2::StateMachine::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -299,7 +299,7 @@ namespace Gs2::StateMachine::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -341,7 +341,7 @@ namespace Gs2::StateMachine::Model
                  }() : MakeShared<TArray<Model::FVariablePtr>>())
             ->WithStatus(Data->HasField("status") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("status", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -350,7 +350,7 @@ namespace Gs2::StateMachine::Model
                 }() : TOptional<FString>())
             ->WithLastError(Data->HasField("lastError") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("lastError", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

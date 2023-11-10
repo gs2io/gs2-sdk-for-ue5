@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::SerialKey::Domain
+{
+    class FGs2SerialKeyDomain;
+    typedef TSharedPtr<FGs2SerialKeyDomain> FGs2SerialKeyDomainPtr;
+}
+
 namespace Gs2::SerialKey::Domain::Model
 {
     class FNamespaceDomain;
@@ -49,7 +55,8 @@ namespace Gs2::SerialKey::Domain::Model
         public TSharedFromThis<FSerialKeyAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr Service;
+        const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
 
         public:
         TOptional<FString> Url;
@@ -68,9 +75,10 @@ namespace Gs2::SerialKey::Domain::Model
     public:
 
         FSerialKeyAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> SerialKeyCode
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -87,7 +95,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FUseRequestPtr Request;
         public:
             explicit FUseTask(
-                const TSharedPtr<FSerialKeyAccessTokenDomain> Self,
+                const TSharedPtr<FSerialKeyAccessTokenDomain>& Self,
                 const Request::FUseRequestPtr Request
             );
 

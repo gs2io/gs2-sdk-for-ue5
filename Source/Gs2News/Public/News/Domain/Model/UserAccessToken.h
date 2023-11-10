@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::News::Domain
+{
+    class FGs2NewsDomain;
+    typedef TSharedPtr<FGs2NewsDomain> FGs2NewsDomainPtr;
+}
+
 namespace Gs2::News::Domain::Model
 {
     class FNamespaceDomain;
@@ -49,7 +55,8 @@ namespace Gs2::News::Domain::Model
         public TSharedFromThis<FUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::News::FGs2NewsRestClientPtr Client;
+        const News::Domain::FGs2NewsDomainPtr Service;
+        const Gs2::News::FGs2NewsRestClientPtr Client;
 
         public:
         TOptional<FString> ContentHash;
@@ -72,9 +79,10 @@ namespace Gs2::News::Domain::Model
     public:
 
         FUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const News::Domain::FGs2NewsDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -94,7 +102,7 @@ namespace Gs2::News::Domain::Model
         );
 
         TSharedPtr<Gs2::News::Domain::Model::FNewsAccessTokenDomain> News(
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

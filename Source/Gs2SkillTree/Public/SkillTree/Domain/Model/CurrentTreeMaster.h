@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "SkillTree/Gs2SkillTree.h"
 #include "SkillTree/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelsIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelMastersIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::SkillTree::Domain
+{
+    class FGs2SkillTreeDomain;
+    typedef TSharedPtr<FGs2SkillTreeDomain> FGs2SkillTreeDomainPtr;
 }
 
 namespace Gs2::SkillTree::Domain::Model
@@ -46,7 +51,8 @@ namespace Gs2::SkillTree::Domain::Model
         public TSharedFromThis<FCurrentTreeMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
+        const SkillTree::Domain::FGs2SkillTreeDomainPtr Service;
+        const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -57,7 +63,8 @@ namespace Gs2::SkillTree::Domain::Model
     public:
 
         FCurrentTreeMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -74,7 +81,7 @@ namespace Gs2::SkillTree::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentTreeMasterDomain> Self,
+                const TSharedPtr<FCurrentTreeMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -100,7 +107,7 @@ namespace Gs2::SkillTree::Domain::Model
             const Request::FGetCurrentTreeMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentTreeMasterDomain> Self,
+                const TSharedPtr<FCurrentTreeMasterDomain>& Self,
                 const Request::FGetCurrentTreeMasterRequestPtr Request
             );
 
@@ -126,7 +133,7 @@ namespace Gs2::SkillTree::Domain::Model
             const Request::FUpdateCurrentTreeMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentTreeMasterDomain> Self,
+                const TSharedPtr<FCurrentTreeMasterDomain>& Self,
                 const Request::FUpdateCurrentTreeMasterRequestPtr Request
             );
 
@@ -152,7 +159,7 @@ namespace Gs2::SkillTree::Domain::Model
             const Request::FUpdateCurrentTreeMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentTreeMasterDomain> Self,
+                const TSharedPtr<FCurrentTreeMasterDomain>& Self,
                 const Request::FUpdateCurrentTreeMasterFromGitHubRequestPtr Request
             );
 

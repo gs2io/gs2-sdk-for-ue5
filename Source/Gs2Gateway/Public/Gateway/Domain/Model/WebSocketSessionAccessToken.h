@@ -32,6 +32,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Gateway::Domain
+{
+    class FGs2GatewayDomain;
+    typedef TSharedPtr<FGs2GatewayDomain> FGs2GatewayDomainPtr;
+}
+
 namespace Gs2::Gateway::Domain::Model
 {
     class FNamespaceDomain;
@@ -46,8 +52,9 @@ namespace Gs2::Gateway::Domain::Model
         public TSharedFromThis<FWebSocketSessionAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Gateway::FGs2GatewayRestClientPtr Client;
-        FGs2GatewayWebSocketClientPtr Wsclient;
+        const Gateway::Domain::FGs2GatewayDomainPtr Service;
+        const Gs2::Gateway::FGs2GatewayRestClientPtr Client;
+        const FGs2GatewayWebSocketClientPtr Wsclient;
 
         public:
         TOptional<FString> Protocol;
@@ -66,9 +73,10 @@ namespace Gs2::Gateway::Domain::Model
     public:
 
         FWebSocketSessionAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Gateway::Domain::FGs2GatewayDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -84,7 +92,7 @@ namespace Gs2::Gateway::Domain::Model
             const Request::FSetUserIdRequestPtr Request;
         public:
             explicit FSetUserIdTask(
-                const TSharedPtr<FWebSocketSessionAccessTokenDomain> Self,
+                const TSharedPtr<FWebSocketSessionAccessTokenDomain>& Self,
                 const Request::FSetUserIdRequestPtr Request
             );
 

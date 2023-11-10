@@ -45,12 +45,14 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -65,6 +67,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -74,7 +77,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FUserDomain::FCreateGatheringTask::FCreateGatheringTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FCreateGatheringByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -128,6 +131,7 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FGatheringDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Request->GetUserId(),
             ResultModel->GetItem()->GetName()
@@ -144,7 +148,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FUserDomain::FDeleteGatheringTask::FDeleteGatheringTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FDeleteGatheringRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -191,6 +195,7 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Matchmaking::Domain::Model::FGatheringDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             Self->UserId,
             ResultModel->GetItem()->GetName()
@@ -207,7 +212,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FUserDomain::FPutResultTask::FPutResultTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FPutResultRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -265,6 +270,7 @@ namespace Gs2::Matchmaking::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Matchmaking::Domain::Model::FRatingDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     (*ResultModel->GetItems())[i]->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetName()
@@ -348,10 +354,11 @@ namespace Gs2::Matchmaking::Domain::Model
 
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringDomain> FUserDomain::Gathering(
         const FString GatheringName
-    ) const
+    )
     {
         return MakeShared<Gs2::Matchmaking::Domain::Model::FGatheringDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             GatheringName == TEXT("") ? TOptional<FString>() : TOptional<FString>(GatheringName)
@@ -363,10 +370,11 @@ namespace Gs2::Matchmaking::Domain::Model
         const FString GatheringName,
         const int32 NumberOfPlayer,
         const FString KeyId
-    ) const
+    )
     {
         return MakeShared<Gs2::Matchmaking::Domain::Model::FBallotDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName),
@@ -419,10 +427,11 @@ namespace Gs2::Matchmaking::Domain::Model
 
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingDomain> FUserDomain::Rating(
         const FString RatingName
-    ) const
+    )
     {
         return MakeShared<Gs2::Matchmaking::Domain::Model::FRatingDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             RatingName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RatingName)

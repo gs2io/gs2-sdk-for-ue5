@@ -36,12 +36,14 @@ namespace Gs2::Deploy::Domain::Model
 {
 
     FOutputDomain::FOutputDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Deploy::Domain::FGs2DeployDomainPtr& Service,
         const TOptional<FString> StackName,
         const TOptional<FString> OutputName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Deploy::FGs2DeployRestClient>(Gs2->RestSession)),
         StackName(StackName),
         OutputName(OutputName),
@@ -56,6 +58,7 @@ namespace Gs2::Deploy::Domain::Model
         const FOutputDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         StackName(From.StackName),
         OutputName(From.OutputName),
@@ -65,7 +68,7 @@ namespace Gs2::Deploy::Domain::Model
     }
 
     FOutputDomain::FGetTask::FGetTask(
-        const TSharedPtr<FOutputDomain> Self,
+        const TSharedPtr<FOutputDomain>& Self,
         const Request::FGetOutputRequestPtr Request
     ): Self(Self), Request(Request)
     {

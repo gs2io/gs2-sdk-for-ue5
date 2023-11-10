@@ -19,6 +19,7 @@
 #pragma once
 
 #include "Core/Domain/Gs2Core.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Lottery/Gs2Lottery.h"
 
@@ -68,7 +69,7 @@ namespace Gs2::Lottery::Domain
     {
         FDrawnResultEvent DrawnResultEvent;
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lottery::FGs2LotteryRestClientPtr Client;
+        const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
         TOptional<FString> Url;
@@ -93,7 +94,7 @@ namespace Gs2::Lottery::Domain
     public:
 
         FGs2LotteryDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -109,7 +110,7 @@ namespace Gs2::Lottery::Domain
             const Request::FCreateNamespaceRequestPtr Request;
         public:
             explicit FCreateNamespaceTask(
-                const TSharedPtr<FGs2LotteryDomain> Self,
+                const TSharedPtr<FGs2LotteryDomain>& Self,
                 const Request::FCreateNamespaceRequestPtr Request
             );
 
@@ -135,7 +136,7 @@ namespace Gs2::Lottery::Domain
             const Request::FDumpUserDataByUserIdRequestPtr Request;
         public:
             explicit FDumpUserDataTask(
-                const TSharedPtr<FGs2LotteryDomain> Self,
+                const TSharedPtr<FGs2LotteryDomain>& Self,
                 const Request::FDumpUserDataByUserIdRequestPtr Request
             );
 
@@ -161,7 +162,7 @@ namespace Gs2::Lottery::Domain
             const Request::FCheckDumpUserDataByUserIdRequestPtr Request;
         public:
             explicit FCheckDumpUserDataTask(
-                const TSharedPtr<FGs2LotteryDomain> Self,
+                const TSharedPtr<FGs2LotteryDomain>& Self,
                 const Request::FCheckDumpUserDataByUserIdRequestPtr Request
             );
 
@@ -187,7 +188,7 @@ namespace Gs2::Lottery::Domain
             const Request::FCleanUserDataByUserIdRequestPtr Request;
         public:
             explicit FCleanUserDataTask(
-                const TSharedPtr<FGs2LotteryDomain> Self,
+                const TSharedPtr<FGs2LotteryDomain>& Self,
                 const Request::FCleanUserDataByUserIdRequestPtr Request
             );
 
@@ -213,7 +214,7 @@ namespace Gs2::Lottery::Domain
             const Request::FCheckCleanUserDataByUserIdRequestPtr Request;
         public:
             explicit FCheckCleanUserDataTask(
-                const TSharedPtr<FGs2LotteryDomain> Self,
+                const TSharedPtr<FGs2LotteryDomain>& Self,
                 const Request::FCheckCleanUserDataByUserIdRequestPtr Request
             );
 
@@ -239,7 +240,7 @@ namespace Gs2::Lottery::Domain
             const Request::FPrepareImportUserDataByUserIdRequestPtr Request;
         public:
             explicit FPrepareImportUserDataTask(
-                const TSharedPtr<FGs2LotteryDomain> Self,
+                const TSharedPtr<FGs2LotteryDomain>& Self,
                 const Request::FPrepareImportUserDataByUserIdRequestPtr Request
             );
 
@@ -265,7 +266,7 @@ namespace Gs2::Lottery::Domain
             const Request::FImportUserDataByUserIdRequestPtr Request;
         public:
             explicit FImportUserDataTask(
-                const TSharedPtr<FGs2LotteryDomain> Self,
+                const TSharedPtr<FGs2LotteryDomain>& Self,
                 const Request::FImportUserDataByUserIdRequestPtr Request
             );
 
@@ -291,7 +292,7 @@ namespace Gs2::Lottery::Domain
             const Request::FCheckImportUserDataByUserIdRequestPtr Request;
         public:
             explicit FCheckImportUserDataTask(
-                const TSharedPtr<FGs2LotteryDomain> Self,
+                const TSharedPtr<FGs2LotteryDomain>& Self,
                 const Request::FCheckImportUserDataByUserIdRequestPtr Request
             );
 
@@ -322,7 +323,7 @@ namespace Gs2::Lottery::Domain
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
-        ) const;
+        );
 
         void UpdateCacheFromStampSheet(
             const FString Method,
@@ -347,6 +348,9 @@ namespace Gs2::Lottery::Domain
             const FString Action,
             const FString Payload
         );
+
+        DECLARE_MULTICAST_DELEGATE_OneParam(FIssueTransactionDelegate, Gs2::Core::Domain::Model::FIssueTransactionEventPtr);
+        FIssueTransactionDelegate OnIssueTransaction;
     };
     typedef TSharedPtr<FGs2LotteryDomain> FGs2LotteryDomainPtr;
 }

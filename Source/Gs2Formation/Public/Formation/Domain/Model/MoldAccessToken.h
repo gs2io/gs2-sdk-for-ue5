@@ -40,6 +40,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Formation::Domain
+{
+    class FGs2FormationDomain;
+    typedef TSharedPtr<FGs2FormationDomain> FGs2FormationDomainPtr;
+}
+
 namespace Gs2::Formation::Domain::Model
 {
     class FNamespaceDomain;
@@ -63,7 +69,8 @@ namespace Gs2::Formation::Domain::Model
         public TSharedFromThis<FMoldAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Formation::FGs2FormationRestClientPtr Client;
+        const Formation::Domain::FGs2FormationDomainPtr Service;
+        const Gs2::Formation::FGs2FormationRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -92,9 +99,10 @@ namespace Gs2::Formation::Domain::Model
     public:
 
         FMoldAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Formation::Domain::FGs2FormationDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> MoldModelName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -111,7 +119,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FGetMoldRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FMoldAccessTokenDomain> Self,
+                const TSharedPtr<FMoldAccessTokenDomain>& Self,
                 const Request::FGetMoldRequestPtr Request
             );
 
@@ -137,7 +145,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FDeleteMoldRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FMoldAccessTokenDomain> Self,
+                const TSharedPtr<FMoldAccessTokenDomain>& Self,
                 const Request::FDeleteMoldRequestPtr Request
             );
 
@@ -168,7 +176,7 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<Gs2::Formation::Domain::Model::FFormAccessTokenDomain> Form(
             const int32 Index
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -236,7 +236,7 @@ namespace Gs2::Realtime::Model
         return MakeShared<FNamespace>()
             ->WithNamespaceId(Data->HasField("namespaceId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("namespaceId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -245,7 +245,7 @@ namespace Gs2::Realtime::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -254,7 +254,7 @@ namespace Gs2::Realtime::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -263,7 +263,7 @@ namespace Gs2::Realtime::Model
                 }() : TOptional<FString>())
             ->WithServerType(Data->HasField("serverType") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("serverType", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -272,7 +272,7 @@ namespace Gs2::Realtime::Model
                 }() : TOptional<FString>())
             ->WithServerSpec(Data->HasField("serverSpec") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("serverSpec", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

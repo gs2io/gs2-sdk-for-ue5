@@ -40,13 +40,15 @@ namespace Gs2::Datastore::Domain::Model
 {
 
     FDataObjectAccessTokenDomain::FDataObjectAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Datastore::Domain::FGs2DatastoreDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> DataObjectName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Datastore::FGs2DatastoreRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -63,6 +65,7 @@ namespace Gs2::Datastore::Domain::Model
         const FDataObjectAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
@@ -73,7 +76,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     FDataObjectAccessTokenDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FDataObjectAccessTokenDomain> Self,
+        const TSharedPtr<FDataObjectAccessTokenDomain>& Self,
         const Request::FUpdateDataObjectRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -139,7 +142,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     FDataObjectAccessTokenDomain::FPrepareReUploadTask::FPrepareReUploadTask(
-        const TSharedPtr<FDataObjectAccessTokenDomain> Self,
+        const TSharedPtr<FDataObjectAccessTokenDomain>& Self,
         const Request::FPrepareReUploadRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -209,7 +212,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     FDataObjectAccessTokenDomain::FDoneUploadTask::FDoneUploadTask(
-        const TSharedPtr<FDataObjectAccessTokenDomain> Self,
+        const TSharedPtr<FDataObjectAccessTokenDomain>& Self,
         const Request::FDoneUploadRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -284,7 +287,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     FDataObjectAccessTokenDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FDataObjectAccessTokenDomain> Self,
+        const TSharedPtr<FDataObjectAccessTokenDomain>& Self,
         const Request::FDeleteDataObjectRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -350,7 +353,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     FDataObjectAccessTokenDomain::FPrepareDownloadOwnDataTask::FPrepareDownloadOwnDataTask(
-        const TSharedPtr<FDataObjectAccessTokenDomain> Self,
+        const TSharedPtr<FDataObjectAccessTokenDomain>& Self,
         const Request::FPrepareDownloadOwnDataRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -421,7 +424,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     FDataObjectAccessTokenDomain::FPrepareDownloadOwnDataByGenerationTask::FPrepareDownloadOwnDataByGenerationTask(
-        const TSharedPtr<FDataObjectAccessTokenDomain> Self,
+        const TSharedPtr<FDataObjectAccessTokenDomain>& Self,
         const Request::FPrepareDownloadOwnDataByGenerationRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -537,10 +540,11 @@ namespace Gs2::Datastore::Domain::Model
 
     TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectHistoryAccessTokenDomain> FDataObjectAccessTokenDomain::DataObjectHistory(
         const FString Generation
-    ) const
+    )
     {
         return MakeShared<Gs2::Datastore::Domain::Model::FDataObjectHistoryAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken,
             DataObjectName,

@@ -255,7 +255,7 @@ namespace Gs2::Version::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -264,7 +264,7 @@ namespace Gs2::Version::Request
               }() : TOptional<FString>())
             ->WithVersionName(Data->HasField("versionName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("versionName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -273,7 +273,7 @@ namespace Gs2::Version::Request
               }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("description", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -282,7 +282,7 @@ namespace Gs2::Version::Request
               }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("metadata", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -291,7 +291,7 @@ namespace Gs2::Version::Request
               }() : TOptional<FString>())
             ->WithScope(Data->HasField("scope") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("scope", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -300,7 +300,7 @@ namespace Gs2::Version::Request
               }() : TOptional<FString>())
             ->WithType(Data->HasField("type") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("type", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -354,7 +354,7 @@ namespace Gs2::Version::Request
               }() : TOptional<bool>())
             ->WithSignatureKeyId(Data->HasField("signatureKeyId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("signatureKeyId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

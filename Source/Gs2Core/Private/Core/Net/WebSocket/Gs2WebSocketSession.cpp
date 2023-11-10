@@ -27,11 +27,13 @@
 namespace Gs2::Core::Net::WebSocket
 {
     FGs2WebSocketSession::FGs2WebSocketSession(
-        const Model::FGs2CredentialPtr Credential
+        const Model::FGs2CredentialPtr& Credential
     ):
         CredentialValue(Credential),
         Region(Model::ERegion::ApNorthEast1),
+        OwnerIdValue(""),
         Mutex(MakeShared<FCriticalSection>()),
+        LoginTaskId(),
         Disposed(false)
     {
         this->InflightRequests = TMap<FGs2SessionTaskId, TSharedPtr<Task::FWebSocketSessionRequest>>();
@@ -46,6 +48,7 @@ namespace Gs2::Core::Net::WebSocket
         Results(From.Results),
         CredentialValue(From.CredentialValue),
         Region(From.Region),
+        OwnerIdValue(""),
         Mutex(From.Mutex),
         LoginTaskId(From.LoginTaskId),
         NotificationEvent(From.NotificationEvent),
@@ -56,12 +59,14 @@ namespace Gs2::Core::Net::WebSocket
     }
 
     FGs2WebSocketSession::FGs2WebSocketSession(
-        const Model::FGs2CredentialPtr Credential,
+        const Model::FGs2CredentialPtr& Credential,
         const Model::ERegion Region
     ):
         CredentialValue(Credential),
         Region(Region),
+        OwnerIdValue(""),
         Mutex(MakeShared<FCriticalSection>()),
+        LoginTaskId(),
         Disposed(false)
     {
         this->InflightRequests = TMap<FGs2SessionTaskId, TSharedPtr<Task::FWebSocketSessionRequest>>();
@@ -128,6 +133,7 @@ namespace Gs2::Core::Net::WebSocket
                             {
                                 const auto Token = Response->Body()->GetStringField("access_token");
                                 Credential()->UpdateProjectToken(Token);
+                                OwnerIdValue = Response->Body()->GetStringField("owner_id");
                             }
                         }
                         Processing = false;
@@ -236,6 +242,11 @@ namespace Gs2::Core::Net::WebSocket
     Model::FGs2CredentialPtr FGs2WebSocketSession::Credential() const
     {
         return CredentialValue;
+    }
+
+    FString FGs2WebSocketSession::OwnerId() const
+    {
+        return OwnerIdValue;
     }
 
     FString FGs2WebSocketSession::RegionName() const

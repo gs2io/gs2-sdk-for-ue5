@@ -42,11 +42,13 @@ namespace Gs2::MegaField::Domain::Model
 {
 
     FCurrentFieldMasterDomain::FCurrentFieldMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const MegaField::Domain::FGs2MegaFieldDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::MegaField::FGs2MegaFieldRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::MegaField::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -60,6 +62,7 @@ namespace Gs2::MegaField::Domain::Model
         const FCurrentFieldMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -68,7 +71,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FCurrentFieldMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentFieldMasterDomain> Self,
+        const TSharedPtr<FCurrentFieldMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -130,7 +133,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FCurrentFieldMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentFieldMasterDomain> Self,
+        const TSharedPtr<FCurrentFieldMasterDomain>& Self,
         const Request::FGetCurrentFieldMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -190,7 +193,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FCurrentFieldMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentFieldMasterDomain> Self,
+        const TSharedPtr<FCurrentFieldMasterDomain>& Self,
         const Request::FUpdateCurrentFieldMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -252,7 +255,7 @@ namespace Gs2::MegaField::Domain::Model
     }
 
     FCurrentFieldMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentFieldMasterDomain> Self,
+        const TSharedPtr<FCurrentFieldMasterDomain>& Self,
         const Request::FUpdateCurrentFieldMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

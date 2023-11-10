@@ -44,6 +44,7 @@
 #include "Lock/Domain/Gs2Lock.h"
 #include "Lottery/Domain/Gs2Lottery.h"
 #include "Matchmaking/Domain/Gs2Matchmaking.h"
+#include "Math/BigInt.h"
 #include "MegaField/Domain/Gs2MegaField.h"
 #include "Mission/Domain/Gs2Mission.h"
 #include "Money/Domain/Gs2Money.h"
@@ -56,6 +57,7 @@
 #include "SerialKey/Domain/Gs2SerialKey.h"
 #include "Showcase/Domain/Gs2Showcase.h"
 #include "SkillTree/Domain/Gs2SkillTree.h"
+#include "SpeculativeExecutor/SpeculativeExecutor.h"
 #include "Stamina/Domain/Gs2Stamina.h"
 #include "StateMachine/Domain/Gs2StateMachine.h"
 #include "Version/Domain/Gs2Version.h"
@@ -197,6 +199,13 @@ namespace Gs2::Core::Domain
         friend FDisconnectTask;
 
         TSharedPtr<FAsyncTask<FDisconnectTask>> Disconnect();
+
+        Gs2::Core::Model::FGs2ErrorPtr TransactionExecute(
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>>& ConsumeActions,
+            const TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>>& AcquireAction,
+            TBigInt<1024, false> Rate
+        );
     };
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }

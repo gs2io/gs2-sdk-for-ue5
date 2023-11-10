@@ -48,12 +48,14 @@ namespace Gs2::Ranking::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Ranking::Domain::FGs2RankingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Ranking::FGs2RankingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -68,6 +70,7 @@ namespace Gs2::Ranking::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -77,7 +80,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FUserDomain::FSubscribeTask::FSubscribeTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FSubscribeByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,6 +135,7 @@ namespace Gs2::Ranking::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetCategoryName(),
@@ -164,10 +168,11 @@ namespace Gs2::Ranking::Domain::Model
     TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserDomain> FUserDomain::SubscribeUser(
         const FString CategoryName,
         const FString TargetUserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),
@@ -268,10 +273,11 @@ namespace Gs2::Ranking::Domain::Model
 
     TSharedPtr<Gs2::Ranking::Domain::Model::FRankingDomain> FUserDomain::Ranking(
         const FString CategoryName
-    ) const
+    )
     {
         return MakeShared<Gs2::Ranking::Domain::Model::FRankingDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
@@ -327,10 +333,11 @@ namespace Gs2::Ranking::Domain::Model
         const FString CategoryName,
         const FString ScorerUserId,
         const FString UniqueId
-    ) const
+    )
     {
         return MakeShared<Gs2::Ranking::Domain::Model::FScoreDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),

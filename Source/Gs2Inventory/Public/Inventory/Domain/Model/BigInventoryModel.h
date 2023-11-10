@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Inventory/Gs2Inventory.h"
 #include "Inventory/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelMastersIterator.h"
 #include "Inventory/Domain/Iterator/DescribeInventoryModelsIterator.h"
@@ -49,6 +48,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Inventory::Domain
+{
+    class FGs2InventoryDomain;
+    typedef TSharedPtr<FGs2InventoryDomain> FGs2InventoryDomainPtr;
 }
 
 namespace Gs2::Inventory::Domain::Model
@@ -89,7 +94,8 @@ namespace Gs2::Inventory::Domain::Model
         public TSharedFromThis<FBigInventoryModelDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Inventory::FGs2InventoryRestClientPtr Client;
+        const Inventory::Domain::FGs2InventoryDomainPtr Service;
+        const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -101,7 +107,8 @@ namespace Gs2::Inventory::Domain::Model
     public:
 
         FBigInventoryModelDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Inventory::Domain::FGs2InventoryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> InventoryName
             // ReSharper disable once CppMemberInitializersOrder
@@ -119,7 +126,7 @@ namespace Gs2::Inventory::Domain::Model
             const Request::FGetBigInventoryModelRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FBigInventoryModelDomain> Self,
+                const TSharedPtr<FBigInventoryModelDomain>& Self,
                 const Request::FGetBigInventoryModelRequestPtr Request
             );
 
@@ -150,7 +157,7 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FBigItemModelDomain> BigItemModel(
             const FString ItemName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "StateMachine/Gs2StateMachine.h"
 #include "StateMachine/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "StateMachine/Domain/Iterator/DescribeStateMachineMastersIterator.h"
 #include "StateMachine/Domain/Iterator/DescribeStatusesIterator.h"
@@ -30,6 +29,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::StateMachine::Domain
+{
+    class FGs2StateMachineDomain;
+    typedef TSharedPtr<FGs2StateMachineDomain> FGs2StateMachineDomainPtr;
 }
 
 namespace Gs2::StateMachine::Domain::Model
@@ -45,7 +50,8 @@ namespace Gs2::StateMachine::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::StateMachine::FGs2StateMachineRestClientPtr Client;
+        const StateMachine::Domain::FGs2StateMachineDomainPtr Service;
+        const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client;
 
         public:
         TOptional<FString> NextPageToken;
@@ -62,7 +68,8 @@ namespace Gs2::StateMachine::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const StateMachine::Domain::FGs2StateMachineDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -80,7 +87,7 @@ namespace Gs2::StateMachine::Domain::Model
             const Request::FStartStateMachineByUserIdRequestPtr Request;
         public:
             explicit FStartStateMachineTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FStartStateMachineByUserIdRequestPtr Request
             );
 
@@ -112,7 +119,7 @@ namespace Gs2::StateMachine::Domain::Model
 
         TSharedPtr<Gs2::StateMachine::Domain::Model::FStatusDomain> Status(
             const FString StatusName
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

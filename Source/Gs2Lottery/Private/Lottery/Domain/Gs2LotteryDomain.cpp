@@ -43,7 +43,7 @@ namespace Gs2::Lottery::Domain
 {
 
     FGs2LotteryDomain::FGs2LotteryDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -63,7 +63,7 @@ namespace Gs2::Lottery::Domain
     }
 
     FGs2LotteryDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2LotteryDomain> Self,
+        const TSharedPtr<FGs2LotteryDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -109,6 +109,7 @@ namespace Gs2::Lottery::Domain
         }
         auto Domain = MakeShared<Gs2::Lottery::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -122,7 +123,7 @@ namespace Gs2::Lottery::Domain
     }
 
     FGs2LotteryDomain::FDumpUserDataTask::FDumpUserDataTask(
-        TSharedPtr<FGs2LotteryDomain> Self,
+        const TSharedPtr<FGs2LotteryDomain>& Self,
         const Request::FDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -165,7 +166,7 @@ namespace Gs2::Lottery::Domain
     }
 
     FGs2LotteryDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
-        TSharedPtr<FGs2LotteryDomain> Self,
+        const TSharedPtr<FGs2LotteryDomain>& Self,
         const Request::FCheckDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -215,7 +216,7 @@ namespace Gs2::Lottery::Domain
     }
 
     FGs2LotteryDomain::FCleanUserDataTask::FCleanUserDataTask(
-        TSharedPtr<FGs2LotteryDomain> Self,
+        const TSharedPtr<FGs2LotteryDomain>& Self,
         const Request::FCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -258,7 +259,7 @@ namespace Gs2::Lottery::Domain
     }
 
     FGs2LotteryDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
-        TSharedPtr<FGs2LotteryDomain> Self,
+        const TSharedPtr<FGs2LotteryDomain>& Self,
         const Request::FCheckCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -301,7 +302,7 @@ namespace Gs2::Lottery::Domain
     }
 
     FGs2LotteryDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
-        TSharedPtr<FGs2LotteryDomain> Self,
+        const TSharedPtr<FGs2LotteryDomain>& Self,
         const Request::FPrepareImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -355,7 +356,7 @@ namespace Gs2::Lottery::Domain
     }
 
     FGs2LotteryDomain::FImportUserDataTask::FImportUserDataTask(
-        TSharedPtr<FGs2LotteryDomain> Self,
+        const TSharedPtr<FGs2LotteryDomain>& Self,
         const Request::FImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -398,7 +399,7 @@ namespace Gs2::Lottery::Domain
     }
 
     FGs2LotteryDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
-        TSharedPtr<FGs2LotteryDomain> Self,
+        const TSharedPtr<FGs2LotteryDomain>& Self,
         const Request::FCheckImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -480,10 +481,11 @@ namespace Gs2::Lottery::Domain
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FNamespaceDomain> FGs2LotteryDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }

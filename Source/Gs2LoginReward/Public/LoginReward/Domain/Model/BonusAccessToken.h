@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::LoginReward::Domain
+{
+    class FGs2LoginRewardDomain;
+    typedef TSharedPtr<FGs2LoginRewardDomain> FGs2LoginRewardDomainPtr;
+}
+
 namespace Gs2::LoginReward::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::LoginReward::Domain::Model
         public TSharedFromThis<FBonusAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr Service;
+        const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -73,9 +80,10 @@ namespace Gs2::LoginReward::Domain::Model
     public:
 
         FBonusAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -89,10 +97,12 @@ namespace Gs2::LoginReward::Domain::Model
         {
             const TSharedPtr<FBonusAccessTokenDomain> Self;
             const Request::FReceiveRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FReceiveTask(
-                const TSharedPtr<FBonusAccessTokenDomain> Self,
-                const Request::FReceiveRequestPtr Request
+                const TSharedPtr<FBonusAccessTokenDomain>& Self,
+                const Request::FReceiveRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FReceiveTask(
@@ -106,7 +116,8 @@ namespace Gs2::LoginReward::Domain::Model
         friend FReceiveTask;
 
         TSharedPtr<FAsyncTask<FReceiveTask>> Receive(
-            Request::FReceiveRequestPtr Request
+            Request::FReceiveRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         class GS2LOGINREWARD_API FMissedReceiveTask final :
@@ -115,10 +126,12 @@ namespace Gs2::LoginReward::Domain::Model
         {
             const TSharedPtr<FBonusAccessTokenDomain> Self;
             const Request::FMissedReceiveRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FMissedReceiveTask(
-                const TSharedPtr<FBonusAccessTokenDomain> Self,
-                const Request::FMissedReceiveRequestPtr Request
+                const TSharedPtr<FBonusAccessTokenDomain>& Self,
+                const Request::FMissedReceiveRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FMissedReceiveTask(
@@ -132,7 +145,8 @@ namespace Gs2::LoginReward::Domain::Model
         friend FMissedReceiveTask;
 
         TSharedPtr<FAsyncTask<FMissedReceiveTask>> MissedReceive(
-            Request::FMissedReceiveRequestPtr Request
+            Request::FMissedReceiveRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         static FString CreateCacheParentKey(

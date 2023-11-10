@@ -42,12 +42,14 @@ namespace Gs2::Enhance::Domain::Model
 {
 
     FProgressDomain::FProgressDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Enhance::Domain::FGs2EnhanceDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Enhance::FGs2EnhanceRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -63,6 +65,7 @@ namespace Gs2::Enhance::Domain::Model
         const FProgressDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FProgressDomain::FCreateTask::FCreateTask(
-        const TSharedPtr<FProgressDomain> Self,
+        const TSharedPtr<FProgressDomain>& Self,
         const Request::FCreateProgressByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -136,7 +139,7 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FProgressDomain::FGetTask::FGetTask(
-        const TSharedPtr<FProgressDomain> Self,
+        const TSharedPtr<FProgressDomain>& Self,
         const Request::FGetProgressByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -198,7 +201,7 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FProgressDomain::FStartTask::FStartTask(
-        const TSharedPtr<FProgressDomain> Self,
+        const TSharedPtr<FProgressDomain>& Self,
         const Request::FStartByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -279,7 +282,7 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FProgressDomain::FEndTask::FEndTask(
-        const TSharedPtr<FProgressDomain> Self,
+        const TSharedPtr<FProgressDomain>& Self,
         const Request::FEndByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -377,7 +380,7 @@ namespace Gs2::Enhance::Domain::Model
     }
 
     FProgressDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FProgressDomain> Self,
+        const TSharedPtr<FProgressDomain>& Self,
         const Request::FDeleteProgressByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

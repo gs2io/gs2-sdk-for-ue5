@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Limit/Gs2Limit.h"
 #include "Limit/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Limit/Domain/Iterator/DescribeCountersIterator.h"
 #include "Limit/Domain/Iterator/DescribeCountersByUserIdIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Limit::Domain
+{
+    class FGs2LimitDomain;
+    typedef TSharedPtr<FGs2LimitDomain> FGs2LimitDomainPtr;
 }
 
 namespace Gs2::Limit::Domain::Model
@@ -48,7 +53,8 @@ namespace Gs2::Limit::Domain::Model
         public TSharedFromThis<FLimitModelMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Limit::FGs2LimitRestClientPtr Client;
+        const Limit::Domain::FGs2LimitDomainPtr Service;
+        const Gs2::Limit::FGs2LimitRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -60,7 +66,8 @@ namespace Gs2::Limit::Domain::Model
     public:
 
         FLimitModelMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Limit::Domain::FGs2LimitDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> LimitName
             // ReSharper disable once CppMemberInitializersOrder
@@ -78,7 +85,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FGetLimitModelMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FLimitModelMasterDomain> Self,
+                const TSharedPtr<FLimitModelMasterDomain>& Self,
                 const Request::FGetLimitModelMasterRequestPtr Request
             );
 
@@ -104,7 +111,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FUpdateLimitModelMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FLimitModelMasterDomain> Self,
+                const TSharedPtr<FLimitModelMasterDomain>& Self,
                 const Request::FUpdateLimitModelMasterRequestPtr Request
             );
 
@@ -130,7 +137,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FDeleteLimitModelMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FLimitModelMasterDomain> Self,
+                const TSharedPtr<FLimitModelMasterDomain>& Self,
                 const Request::FDeleteLimitModelMasterRequestPtr Request
             );
 

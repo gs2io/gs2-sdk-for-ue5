@@ -19,6 +19,7 @@
 #pragma once
 
 #include "Core/Domain/Gs2Core.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Identifier/Gs2Identifier.h"
 
@@ -52,7 +53,7 @@ namespace Gs2::Identifier::Domain
         public TSharedFromThis<FGs2IdentifierDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Identifier::FGs2IdentifierRestClientPtr Client;
+        const Gs2::Identifier::FGs2IdentifierRestClientPtr Client;
 
         public:
     private:
@@ -62,7 +63,7 @@ namespace Gs2::Identifier::Domain
     public:
 
         FGs2IdentifierDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -78,7 +79,7 @@ namespace Gs2::Identifier::Domain
             const Request::FCreateUserRequestPtr Request;
         public:
             explicit FCreateUserTask(
-                const TSharedPtr<FGs2IdentifierDomain> Self,
+                const TSharedPtr<FGs2IdentifierDomain>& Self,
                 const Request::FCreateUserRequestPtr Request
             );
 
@@ -104,7 +105,7 @@ namespace Gs2::Identifier::Domain
             const Request::FCreateSecurityPolicyRequestPtr Request;
         public:
             explicit FCreateSecurityPolicyTask(
-                const TSharedPtr<FGs2IdentifierDomain> Self,
+                const TSharedPtr<FGs2IdentifierDomain>& Self,
                 const Request::FCreateSecurityPolicyRequestPtr Request
             );
 
@@ -135,7 +136,7 @@ namespace Gs2::Identifier::Domain
 
         TSharedPtr<Gs2::Identifier::Domain::Model::FUserDomain> User(
             const FString UserName
-        ) const;
+        );
 
         Gs2::Identifier::Domain::Iterator::FDescribeSecurityPoliciesIteratorPtr SecurityPolicies(
         ) const;
@@ -161,7 +162,7 @@ namespace Gs2::Identifier::Domain
 
         TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain> SecurityPolicy(
             const FString SecurityPolicyName
-        ) const;
+        );
 
         void UpdateCacheFromStampSheet(
             const FString Method,
@@ -185,6 +186,9 @@ namespace Gs2::Identifier::Domain
             const FString Action,
             const FString Payload
         );
+
+        DECLARE_MULTICAST_DELEGATE_OneParam(FIssueTransactionDelegate, Gs2::Core::Domain::Model::FIssueTransactionEventPtr);
+        FIssueTransactionDelegate OnIssueTransaction;
     };
     typedef TSharedPtr<FGs2IdentifierDomain> FGs2IdentifierDomainPtr;
 }

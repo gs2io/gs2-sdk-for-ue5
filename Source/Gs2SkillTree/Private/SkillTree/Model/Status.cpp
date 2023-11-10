@@ -191,7 +191,7 @@ namespace Gs2::SkillTree::Model
         return MakeShared<FStatus>()
             ->WithStatusId(Data->HasField("statusId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("statusId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -200,7 +200,7 @@ namespace Gs2::SkillTree::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

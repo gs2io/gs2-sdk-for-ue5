@@ -38,6 +38,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Ranking::Domain
+{
+    class FGs2RankingDomain;
+    typedef TSharedPtr<FGs2RankingDomain> FGs2RankingDomainPtr;
+}
+
 namespace Gs2::Ranking::Domain::Model
 {
     class FNamespaceDomain;
@@ -59,7 +65,8 @@ namespace Gs2::Ranking::Domain::Model
         public TSharedFromThis<FSubscribeAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Ranking::FGs2RankingRestClientPtr Client;
+        const Ranking::Domain::FGs2RankingDomainPtr Service;
+        const Gs2::Ranking::FGs2RankingRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -73,9 +80,10 @@ namespace Gs2::Ranking::Domain::Model
     public:
 
         FSubscribeAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Ranking::Domain::FGs2RankingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> CategoryName
             // ReSharper disable once CppMemberInitializersOrder
         );

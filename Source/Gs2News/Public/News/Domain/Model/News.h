@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "News/Gs2News.h"
 #include "News/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "News/Domain/Iterator/DescribeProgressesIterator.h"
 #include "News/Domain/Iterator/DescribeOutputsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::News::Domain
+{
+    class FGs2NewsDomain;
+    typedef TSharedPtr<FGs2NewsDomain> FGs2NewsDomainPtr;
 }
 
 namespace Gs2::News::Domain::Model
@@ -49,7 +54,8 @@ namespace Gs2::News::Domain::Model
         public TSharedFromThis<FNewsDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::News::FGs2NewsRestClientPtr Client;
+        const News::Domain::FGs2NewsDomainPtr Service;
+        const Gs2::News::FGs2NewsRestClientPtr Client;
 
         public:
         TOptional<FString> BrowserUrl;
@@ -71,7 +77,8 @@ namespace Gs2::News::Domain::Model
     public:
 
         FNewsDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const News::Domain::FGs2NewsDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -89,7 +96,7 @@ namespace Gs2::News::Domain::Model
             const Request::FWantGrantByUserIdRequestPtr Request;
         public:
             explicit FWantGrantTask(
-                const TSharedPtr<FNewsDomain> Self,
+                const TSharedPtr<FNewsDomain>& Self,
                 const Request::FWantGrantByUserIdRequestPtr Request
             );
 

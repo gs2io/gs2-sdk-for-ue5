@@ -19,5 +19,9 @@ public class Gs2Lock : ModuleRules
 			"Gs2Core",
 			"Gs2Auth",
 		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"Gs2Core"
+		});
 	}
 }

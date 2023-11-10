@@ -223,7 +223,7 @@ namespace Gs2::News::Model
         return MakeShared<FProgress>()
             ->WithProgressId(Data->HasField("progressId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("progressId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -232,7 +232,7 @@ namespace Gs2::News::Model
                 }() : TOptional<FString>())
             ->WithUploadToken(Data->HasField("uploadToken") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("uploadToken", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

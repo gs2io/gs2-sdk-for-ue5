@@ -19,6 +19,7 @@
 #pragma once
 
 #include "Core/Domain/Gs2Core.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Chat/Gs2Chat.h"
 
@@ -60,7 +61,7 @@ namespace Gs2::Chat::Domain
     {
         FPostNotificationEvent PostNotificationEvent;
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Chat::FGs2ChatRestClientPtr Client;
+        const Gs2::Chat::FGs2ChatRestClientPtr Client;
 
         public:
         TOptional<FString> Url;
@@ -85,7 +86,7 @@ namespace Gs2::Chat::Domain
     public:
 
         FGs2ChatDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -101,7 +102,7 @@ namespace Gs2::Chat::Domain
             const Request::FCreateNamespaceRequestPtr Request;
         public:
             explicit FCreateNamespaceTask(
-                const TSharedPtr<FGs2ChatDomain> Self,
+                const TSharedPtr<FGs2ChatDomain>& Self,
                 const Request::FCreateNamespaceRequestPtr Request
             );
 
@@ -127,7 +128,7 @@ namespace Gs2::Chat::Domain
             const Request::FDumpUserDataByUserIdRequestPtr Request;
         public:
             explicit FDumpUserDataTask(
-                const TSharedPtr<FGs2ChatDomain> Self,
+                const TSharedPtr<FGs2ChatDomain>& Self,
                 const Request::FDumpUserDataByUserIdRequestPtr Request
             );
 
@@ -153,7 +154,7 @@ namespace Gs2::Chat::Domain
             const Request::FCheckDumpUserDataByUserIdRequestPtr Request;
         public:
             explicit FCheckDumpUserDataTask(
-                const TSharedPtr<FGs2ChatDomain> Self,
+                const TSharedPtr<FGs2ChatDomain>& Self,
                 const Request::FCheckDumpUserDataByUserIdRequestPtr Request
             );
 
@@ -179,7 +180,7 @@ namespace Gs2::Chat::Domain
             const Request::FCleanUserDataByUserIdRequestPtr Request;
         public:
             explicit FCleanUserDataTask(
-                const TSharedPtr<FGs2ChatDomain> Self,
+                const TSharedPtr<FGs2ChatDomain>& Self,
                 const Request::FCleanUserDataByUserIdRequestPtr Request
             );
 
@@ -205,7 +206,7 @@ namespace Gs2::Chat::Domain
             const Request::FCheckCleanUserDataByUserIdRequestPtr Request;
         public:
             explicit FCheckCleanUserDataTask(
-                const TSharedPtr<FGs2ChatDomain> Self,
+                const TSharedPtr<FGs2ChatDomain>& Self,
                 const Request::FCheckCleanUserDataByUserIdRequestPtr Request
             );
 
@@ -231,7 +232,7 @@ namespace Gs2::Chat::Domain
             const Request::FPrepareImportUserDataByUserIdRequestPtr Request;
         public:
             explicit FPrepareImportUserDataTask(
-                const TSharedPtr<FGs2ChatDomain> Self,
+                const TSharedPtr<FGs2ChatDomain>& Self,
                 const Request::FPrepareImportUserDataByUserIdRequestPtr Request
             );
 
@@ -257,7 +258,7 @@ namespace Gs2::Chat::Domain
             const Request::FImportUserDataByUserIdRequestPtr Request;
         public:
             explicit FImportUserDataTask(
-                const TSharedPtr<FGs2ChatDomain> Self,
+                const TSharedPtr<FGs2ChatDomain>& Self,
                 const Request::FImportUserDataByUserIdRequestPtr Request
             );
 
@@ -283,7 +284,7 @@ namespace Gs2::Chat::Domain
             const Request::FCheckImportUserDataByUserIdRequestPtr Request;
         public:
             explicit FCheckImportUserDataTask(
-                const TSharedPtr<FGs2ChatDomain> Self,
+                const TSharedPtr<FGs2ChatDomain>& Self,
                 const Request::FCheckImportUserDataByUserIdRequestPtr Request
             );
 
@@ -314,7 +315,7 @@ namespace Gs2::Chat::Domain
 
         TSharedPtr<Gs2::Chat::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
-        ) const;
+        );
 
         void UpdateCacheFromStampSheet(
             const FString Method,
@@ -339,6 +340,9 @@ namespace Gs2::Chat::Domain
             const FString Action,
             const FString Payload
         );
+
+        DECLARE_MULTICAST_DELEGATE_OneParam(FIssueTransactionDelegate, Gs2::Core::Domain::Model::FIssueTransactionEventPtr);
+        FIssueTransactionDelegate OnIssueTransaction;
     };
     typedef TSharedPtr<FGs2ChatDomain> FGs2ChatDomainPtr;
 }

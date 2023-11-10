@@ -191,7 +191,7 @@ namespace Gs2::Inbox::Model
         return MakeShared<FReceived>()
             ->WithReceivedId(Data->HasField("receivedId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("receivedId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -200,7 +200,7 @@ namespace Gs2::Inbox::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

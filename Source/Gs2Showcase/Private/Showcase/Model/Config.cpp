@@ -64,7 +64,7 @@ namespace Gs2::Showcase::Model
         return MakeShared<FConfig>()
             ->WithKey(Data->HasField("key") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("key", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -73,7 +73,7 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithValue(Data->HasField("value") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("value", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

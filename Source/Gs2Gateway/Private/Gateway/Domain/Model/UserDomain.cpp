@@ -39,12 +39,14 @@ namespace Gs2::Gateway::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Gateway::Domain::FGs2GatewayDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Gateway::FGs2GatewayRestClient>(Gs2->RestSession)),
         Wsclient(MakeShared<Gs2::Gateway::FGs2GatewayWebSocketClient>(Gs2->WebSocketSession)),
         NamespaceName(NamespaceName),
@@ -60,6 +62,7 @@ namespace Gs2::Gateway::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         Wsclient(From.Wsclient),
         NamespaceName(From.NamespaceName),
@@ -70,7 +73,7 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     FUserDomain::FSendNotificationTask::FSendNotificationTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FSendNotificationRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -123,7 +126,7 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     FUserDomain::FDisconnectTask::FDisconnectTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FDisconnectByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -181,6 +184,7 @@ namespace Gs2::Gateway::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain>(
                     Self->Gs2,
+                    Self->Service,
                     (*ResultModel->GetItems())[i]->GetNamespaceName(),
                     (*ResultModel->GetItems())[i]->GetUserId()
                 )
@@ -211,7 +215,7 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     FUserDomain::FDisconnectAllTask::FDisconnectAllTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FDisconnectAllRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -297,20 +301,22 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain> FUserDomain::WebSocketSession(
-    ) const
+    )
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );
     }
 
     TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain> FUserDomain::FirebaseToken(
-    ) const
+    )
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId
         );

@@ -42,11 +42,13 @@ namespace Gs2::Inbox::Domain::Model
 {
 
     FCurrentMessageMasterDomain::FCurrentMessageMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inbox::Domain::FGs2InboxDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inbox::FGs2InboxRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Inbox::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -60,6 +62,7 @@ namespace Gs2::Inbox::Domain::Model
         const FCurrentMessageMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -68,7 +71,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FCurrentMessageMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentMessageMasterDomain> Self,
+        const TSharedPtr<FCurrentMessageMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -130,7 +133,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FCurrentMessageMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentMessageMasterDomain> Self,
+        const TSharedPtr<FCurrentMessageMasterDomain>& Self,
         const Request::FGetCurrentMessageMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -190,7 +193,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FCurrentMessageMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentMessageMasterDomain> Self,
+        const TSharedPtr<FCurrentMessageMasterDomain>& Self,
         const Request::FUpdateCurrentMessageMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -252,7 +255,7 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     FCurrentMessageMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentMessageMasterDomain> Self,
+        const TSharedPtr<FCurrentMessageMasterDomain>& Self,
         const Request::FUpdateCurrentMessageMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

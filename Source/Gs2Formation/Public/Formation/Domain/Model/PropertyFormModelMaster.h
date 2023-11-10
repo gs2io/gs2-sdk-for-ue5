@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Formation/Gs2Formation.h"
 #include "Formation/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Formation/Domain/Iterator/DescribeFormModelMastersIterator.h"
 #include "Formation/Domain/Iterator/DescribeMoldModelsIterator.h"
@@ -38,6 +37,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Formation::Domain
+{
+    class FGs2FormationDomain;
+    typedef TSharedPtr<FGs2FormationDomain> FGs2FormationDomainPtr;
 }
 
 namespace Gs2::Formation::Domain::Model
@@ -63,7 +68,8 @@ namespace Gs2::Formation::Domain::Model
         public TSharedFromThis<FPropertyFormModelMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Formation::FGs2FormationRestClientPtr Client;
+        const Formation::Domain::FGs2FormationDomainPtr Service;
+        const Gs2::Formation::FGs2FormationRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -75,7 +81,8 @@ namespace Gs2::Formation::Domain::Model
     public:
 
         FPropertyFormModelMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Formation::Domain::FGs2FormationDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> PropertyFormModelName
             // ReSharper disable once CppMemberInitializersOrder
@@ -93,7 +100,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FGetPropertyFormModelMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FPropertyFormModelMasterDomain> Self,
+                const TSharedPtr<FPropertyFormModelMasterDomain>& Self,
                 const Request::FGetPropertyFormModelMasterRequestPtr Request
             );
 
@@ -119,7 +126,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FUpdatePropertyFormModelMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FPropertyFormModelMasterDomain> Self,
+                const TSharedPtr<FPropertyFormModelMasterDomain>& Self,
                 const Request::FUpdatePropertyFormModelMasterRequestPtr Request
             );
 
@@ -145,7 +152,7 @@ namespace Gs2::Formation::Domain::Model
             const Request::FDeletePropertyFormModelMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FPropertyFormModelMasterDomain> Self,
+                const TSharedPtr<FPropertyFormModelMasterDomain>& Self,
                 const Request::FDeletePropertyFormModelMasterRequestPtr Request
             );
 

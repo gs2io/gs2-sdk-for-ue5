@@ -45,13 +45,15 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FGatheringDomain::FGatheringDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> GatheringName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -68,6 +70,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FGatheringDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -78,7 +81,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FGatheringDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FGatheringDomain> Self,
+        const TSharedPtr<FGatheringDomain>& Self,
         const Request::FUpdateGatheringByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -144,7 +147,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FGatheringDomain::FGetTask::FGetTask(
-        const TSharedPtr<FGatheringDomain> Self,
+        const TSharedPtr<FGatheringDomain>& Self,
         const Request::FGetGatheringRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -207,7 +210,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FGatheringDomain::FCancelMatchmakingTask::FCancelMatchmakingTask(
-        const TSharedPtr<FGatheringDomain> Self,
+        const TSharedPtr<FGatheringDomain>& Self,
         const Request::FCancelMatchmakingByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

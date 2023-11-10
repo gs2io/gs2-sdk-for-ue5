@@ -78,7 +78,7 @@ namespace Gs2::Identifier::Result
                  }() : nullptr)
             ->WithClientSecret(Data->HasField("clientSecret") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("clientSecret", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

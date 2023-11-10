@@ -44,11 +44,13 @@ namespace Gs2::Exchange::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Exchange::FGs2ExchangeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("exchange:Namespace")
@@ -59,6 +61,7 @@ namespace Gs2::Exchange::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -67,7 +70,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -119,7 +122,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -176,7 +179,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -235,7 +238,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -288,7 +291,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FNamespaceDomain::FCreateRateModelMasterTask::FCreateRateModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateRateModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -340,6 +343,7 @@ namespace Gs2::Exchange::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Exchange::Domain::Model::FRateModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -355,7 +359,7 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     FNamespaceDomain::FCreateIncrementalRateModelMasterTask::FCreateIncrementalRateModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateIncrementalRateModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -407,6 +411,7 @@ namespace Gs2::Exchange::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -461,20 +466,22 @@ namespace Gs2::Exchange::Domain::Model
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FRateModelMasterDomain> FNamespaceDomain::RateModelMaster(
         const FString RateName
-    ) const
+    )
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FRateModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
         );
     }
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain> FNamespaceDomain::CurrentRateMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -519,10 +526,11 @@ namespace Gs2::Exchange::Domain::Model
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FRateModelDomain> FNamespaceDomain::RateModel(
         const FString RateName
-    ) const
+    )
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FRateModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
         );
@@ -530,10 +538,11 @@ namespace Gs2::Exchange::Domain::Model
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -541,10 +550,11 @@ namespace Gs2::Exchange::Domain::Model
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -590,10 +600,11 @@ namespace Gs2::Exchange::Domain::Model
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain> FNamespaceDomain::IncrementalRateModel(
         const FString RateName
-    ) const
+    )
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FIncrementalRateModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
         );
@@ -639,10 +650,11 @@ namespace Gs2::Exchange::Domain::Model
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain> FNamespaceDomain::IncrementalRateModelMaster(
         const FString RateName
-    ) const
+    )
     {
         return MakeShared<Gs2::Exchange::Domain::Model::FIncrementalRateModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
         );

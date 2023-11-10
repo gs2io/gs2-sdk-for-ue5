@@ -80,7 +80,7 @@ namespace Gs2::Deploy::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithStackName(Data->HasField("stackName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("stackName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -89,7 +89,7 @@ namespace Gs2::Deploy::Request
               }() : TOptional<FString>())
             ->WithEventName(Data->HasField("eventName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("eventName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

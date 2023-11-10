@@ -140,7 +140,7 @@ namespace Gs2::Inventory::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -149,7 +149,7 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
             ->WithInventoryName(Data->HasField("inventoryName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("inventoryName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -158,7 +158,7 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("userId", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -167,7 +167,7 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
             ->WithItemName(Data->HasField("itemName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("itemName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -176,7 +176,7 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
             ->WithItemSetName(Data->HasField("itemSetName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("itemSetName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -185,7 +185,7 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
             ->WithReferenceOf(Data->HasField("referenceOf") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("referenceOf", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

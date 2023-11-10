@@ -45,11 +45,13 @@ namespace Gs2::Matchmaking::Domain::Model
 {
 
     FCurrentRatingModelMasterDomain::FCurrentRatingModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Matchmaking::FGs2MatchmakingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Matchmaking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -63,6 +65,7 @@ namespace Gs2::Matchmaking::Domain::Model
         const FCurrentRatingModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -71,7 +74,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FCurrentRatingModelMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentRatingModelMasterDomain> Self,
+        const TSharedPtr<FCurrentRatingModelMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -133,7 +136,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FCurrentRatingModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentRatingModelMasterDomain> Self,
+        const TSharedPtr<FCurrentRatingModelMasterDomain>& Self,
         const Request::FGetCurrentRatingModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -193,7 +196,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FCurrentRatingModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentRatingModelMasterDomain> Self,
+        const TSharedPtr<FCurrentRatingModelMasterDomain>& Self,
         const Request::FUpdateCurrentRatingModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -255,7 +258,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     FCurrentRatingModelMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentRatingModelMasterDomain> Self,
+        const TSharedPtr<FCurrentRatingModelMasterDomain>& Self,
         const Request::FUpdateCurrentRatingModelMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

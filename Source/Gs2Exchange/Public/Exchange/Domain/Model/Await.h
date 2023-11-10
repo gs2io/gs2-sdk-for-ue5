@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Exchange/Gs2Exchange.h"
 #include "Exchange/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Exchange/Domain/Iterator/DescribeRateModelMastersIterator.h"
@@ -33,6 +32,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Exchange::Domain
+{
+    class FGs2ExchangeDomain;
+    typedef TSharedPtr<FGs2ExchangeDomain> FGs2ExchangeDomainPtr;
 }
 
 namespace Gs2::Exchange::Domain::Model
@@ -54,7 +59,8 @@ namespace Gs2::Exchange::Domain::Model
         public TSharedFromThis<FAwaitDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
+        const Exchange::Domain::FGs2ExchangeDomainPtr Service;
+        const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
         TOptional<int64> UnlockAt;
@@ -82,7 +88,8 @@ namespace Gs2::Exchange::Domain::Model
     public:
 
         FAwaitDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Exchange::Domain::FGs2ExchangeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> AwaitName
@@ -101,7 +108,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FGetAwaitByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FAwaitDomain> Self,
+                const TSharedPtr<FAwaitDomain>& Self,
                 const Request::FGetAwaitByUserIdRequestPtr Request
             );
 
@@ -127,7 +134,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FAcquireByUserIdRequestPtr Request;
         public:
             explicit FAcquireTask(
-                const TSharedPtr<FAwaitDomain> Self,
+                const TSharedPtr<FAwaitDomain>& Self,
                 const Request::FAcquireByUserIdRequestPtr Request
             );
 
@@ -153,7 +160,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FAcquireForceByUserIdRequestPtr Request;
         public:
             explicit FAcquireForceTask(
-                const TSharedPtr<FAwaitDomain> Self,
+                const TSharedPtr<FAwaitDomain>& Self,
                 const Request::FAcquireForceByUserIdRequestPtr Request
             );
 
@@ -179,7 +186,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FSkipByUserIdRequestPtr Request;
         public:
             explicit FSkipTask(
-                const TSharedPtr<FAwaitDomain> Self,
+                const TSharedPtr<FAwaitDomain>& Self,
                 const Request::FSkipByUserIdRequestPtr Request
             );
 
@@ -205,7 +212,7 @@ namespace Gs2::Exchange::Domain::Model
             const Request::FDeleteAwaitByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FAwaitDomain> Self,
+                const TSharedPtr<FAwaitDomain>& Self,
                 const Request::FDeleteAwaitByUserIdRequestPtr Request
             );
 

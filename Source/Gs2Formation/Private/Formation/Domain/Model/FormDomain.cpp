@@ -48,7 +48,8 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FFormDomain::FFormDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Formation::Domain::FGs2FormationDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> MoldModelName,
@@ -56,6 +57,7 @@ namespace Gs2::Formation::Domain::Model
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -74,6 +76,7 @@ namespace Gs2::Formation::Domain::Model
         const FFormDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -85,7 +88,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormDomain::FGetTask::FGetTask(
-        const TSharedPtr<FFormDomain> Self,
+        const TSharedPtr<FFormDomain>& Self,
         const Request::FGetFormByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -203,7 +206,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormDomain::FGetWithSignatureTask::FGetWithSignatureTask(
-        const TSharedPtr<FFormDomain> Self,
+        const TSharedPtr<FFormDomain>& Self,
         const Request::FGetFormWithSignatureByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -328,7 +331,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormDomain::FSetTask::FSetTask(
-        const TSharedPtr<FFormDomain> Self,
+        const TSharedPtr<FFormDomain>& Self,
         const Request::FSetFormByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -448,7 +451,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormDomain::FAcquireActionsToPropertiesTask::FAcquireActionsToPropertiesTask(
-        const TSharedPtr<FFormDomain> Self,
+        const TSharedPtr<FFormDomain>& Self,
         const Request::FAcquireActionsToFormPropertiesRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -568,7 +571,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FFormDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FFormDomain> Self,
+        const TSharedPtr<FFormDomain>& Self,
         const Request::FDeleteFormByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

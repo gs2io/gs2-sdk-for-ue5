@@ -110,7 +110,7 @@ namespace Gs2::AdReward::Model
         return MakeShared<FHistory>()
             ->WithProvider(Data->HasField("provider") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("provider", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -119,7 +119,7 @@ namespace Gs2::AdReward::Model
                 }() : TOptional<FString>())
             ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("transactionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

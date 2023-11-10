@@ -124,7 +124,7 @@ namespace Gs2::Identifier::Model
         return MakeShared<FIdentifier>()
             ->WithClientId(Data->HasField("clientId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("clientId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -133,7 +133,7 @@ namespace Gs2::Identifier::Model
                 }() : TOptional<FString>())
             ->WithUserName(Data->HasField("userName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -142,7 +142,7 @@ namespace Gs2::Identifier::Model
                 }() : TOptional<FString>())
             ->WithClientSecret(Data->HasField("clientSecret") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("clientSecret", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

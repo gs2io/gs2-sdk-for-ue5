@@ -233,7 +233,7 @@ namespace Gs2::Stamina::Model
         return MakeShared<FRecoverValueTableMaster>()
             ->WithRecoverValueTableId(Data->HasField("recoverValueTableId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("recoverValueTableId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -242,7 +242,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -251,7 +251,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -260,7 +260,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithDescription(Data->HasField("description") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("description", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -269,7 +269,7 @@ namespace Gs2::Stamina::Model
                 }() : TOptional<FString>())
             ->WithExperienceModelId(Data->HasField("experienceModelId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("experienceModelId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

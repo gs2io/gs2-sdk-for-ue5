@@ -73,7 +73,7 @@ namespace Gs2::Enhance::Model
         return MakeShared<FMaterial>()
             ->WithMaterialItemSetId(Data->HasField("materialItemSetId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("materialItemSetId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

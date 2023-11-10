@@ -46,11 +46,13 @@ namespace Gs2::Ranking::Domain::Model
 {
 
     FCurrentRankingMasterDomain::FCurrentRankingMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Ranking::Domain::FGs2RankingDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Ranking::FGs2RankingRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Ranking::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -64,6 +66,7 @@ namespace Gs2::Ranking::Domain::Model
         const FCurrentRankingMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -72,7 +75,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FCurrentRankingMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentRankingMasterDomain> Self,
+        const TSharedPtr<FCurrentRankingMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -134,7 +137,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FCurrentRankingMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentRankingMasterDomain> Self,
+        const TSharedPtr<FCurrentRankingMasterDomain>& Self,
         const Request::FGetCurrentRankingMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -194,7 +197,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FCurrentRankingMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentRankingMasterDomain> Self,
+        const TSharedPtr<FCurrentRankingMasterDomain>& Self,
         const Request::FUpdateCurrentRankingMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -256,7 +259,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     FCurrentRankingMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentRankingMasterDomain> Self,
+        const TSharedPtr<FCurrentRankingMasterDomain>& Self,
         const Request::FUpdateCurrentRankingMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

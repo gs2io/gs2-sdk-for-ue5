@@ -80,7 +80,7 @@ namespace Gs2::SkillTree::Request
             ->WithContextStack(Data->HasField("contextStack") ? TOptional<FString>(Data->GetStringField("contextStack")) : TOptional<FString>())
             ->WithNamespaceName(Data->HasField("namespaceName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -89,7 +89,7 @@ namespace Gs2::SkillTree::Request
               }() : TOptional<FString>())
             ->WithNodeModelName(Data->HasField("nodeModelName") ? [Data]() -> TOptional<FString>
               {
-                  FString v;
+                  FString v("");
                     if (Data->TryGetStringField("nodeModelName", v))
                   {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

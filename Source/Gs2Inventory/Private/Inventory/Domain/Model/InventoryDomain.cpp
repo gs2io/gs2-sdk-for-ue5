@@ -63,13 +63,15 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FInventoryDomain::FInventoryDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> InventoryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -86,6 +88,7 @@ namespace Gs2::Inventory::Domain::Model
         const FInventoryDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -96,7 +99,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FInventoryDomain::FGetTask::FGetTask(
-        const TSharedPtr<FInventoryDomain> Self,
+        const TSharedPtr<FInventoryDomain>& Self,
         const Request::FGetInventoryByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -160,7 +163,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FInventoryDomain::FAddCapacityTask::FAddCapacityTask(
-        const TSharedPtr<FInventoryDomain> Self,
+        const TSharedPtr<FInventoryDomain>& Self,
         const Request::FAddCapacityByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -226,7 +229,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FInventoryDomain::FSetCapacityTask::FSetCapacityTask(
-        const TSharedPtr<FInventoryDomain> Self,
+        const TSharedPtr<FInventoryDomain>& Self,
         const Request::FSetCapacityByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -292,7 +295,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FInventoryDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FInventoryDomain> Self,
+        const TSharedPtr<FInventoryDomain>& Self,
         const Request::FDeleteInventoryByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -352,7 +355,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FInventoryDomain::FVerifyCurrentMaxCapacityTask::FVerifyCurrentMaxCapacityTask(
-        const TSharedPtr<FInventoryDomain> Self,
+        const TSharedPtr<FInventoryDomain>& Self,
         const Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -445,10 +448,11 @@ namespace Gs2::Inventory::Domain::Model
     TSharedPtr<Gs2::Inventory::Domain::Model::FItemSetDomain> FInventoryDomain::ItemSet(
         const FString ItemName,
         const TOptional<FString> ItemSetName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FItemSetDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             InventoryName,

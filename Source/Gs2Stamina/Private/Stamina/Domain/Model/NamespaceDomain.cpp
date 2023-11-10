@@ -43,11 +43,13 @@ namespace Gs2::Stamina::Domain::Model
 {
 
     FNamespaceDomain::FNamespaceDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Stamina::Domain::FGs2StaminaDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Stamina::FGs2StaminaRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey("stamina:Namespace")
@@ -58,6 +60,7 @@ namespace Gs2::Stamina::Domain::Model
         const FNamespaceDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -66,7 +69,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FNamespaceDomain::FGetStatusTask::FGetStatusTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceStatusRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -118,7 +121,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FNamespaceDomain::FGetTask::FGetTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FGetNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -175,7 +178,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FNamespaceDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FUpdateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -234,7 +237,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FNamespaceDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FDeleteNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -287,7 +290,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FNamespaceDomain::FCreateRecoverIntervalTableMasterTask::FCreateRecoverIntervalTableMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateRecoverIntervalTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -339,6 +342,7 @@ namespace Gs2::Stamina::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -354,7 +358,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FNamespaceDomain::FCreateMaxStaminaTableMasterTask::FCreateMaxStaminaTableMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateMaxStaminaTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -406,6 +410,7 @@ namespace Gs2::Stamina::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -421,7 +426,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FNamespaceDomain::FCreateRecoverValueTableMasterTask::FCreateRecoverValueTableMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateRecoverValueTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -473,6 +478,7 @@ namespace Gs2::Stamina::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -488,7 +494,7 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     FNamespaceDomain::FCreateStaminaModelMasterTask::FCreateStaminaModelMasterTask(
-        const TSharedPtr<FNamespaceDomain> Self,
+        const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateStaminaModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -540,6 +546,7 @@ namespace Gs2::Stamina::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetName()
         );
@@ -555,10 +562,11 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     TSharedPtr<Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain> FNamespaceDomain::CurrentStaminaMaster(
-    ) const
+    )
     {
         return MakeShared<Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain>(
             Gs2,
+            Service,
             NamespaceName
         );
     }
@@ -603,10 +611,11 @@ namespace Gs2::Stamina::Domain::Model
 
     TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaModelDomain> FNamespaceDomain::StaminaModel(
         const FString StaminaName
-    ) const
+    )
     {
         return MakeShared<Gs2::Stamina::Domain::Model::FStaminaModelDomain>(
             Gs2,
+            Service,
             NamespaceName,
             StaminaName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StaminaName)
         );
@@ -614,10 +623,11 @@ namespace Gs2::Stamina::Domain::Model
 
     TSharedPtr<Gs2::Stamina::Domain::Model::FUserDomain> FNamespaceDomain::User(
         const FString UserId
-    ) const
+    )
     {
         return MakeShared<Gs2::Stamina::Domain::Model::FUserDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
         );
@@ -625,10 +635,11 @@ namespace Gs2::Stamina::Domain::Model
 
     TSharedPtr<Gs2::Stamina::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
         Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ) const
+    )
     {
         return MakeShared<Gs2::Stamina::Domain::Model::FUserAccessTokenDomain>(
             Gs2,
+            Service,
             NamespaceName,
             AccessToken
         );
@@ -674,10 +685,11 @@ namespace Gs2::Stamina::Domain::Model
 
     TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain> FNamespaceDomain::RecoverIntervalTableMaster(
         const FString RecoverIntervalTableName
-    ) const
+    )
     {
         return MakeShared<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             RecoverIntervalTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RecoverIntervalTableName)
         );
@@ -723,10 +735,11 @@ namespace Gs2::Stamina::Domain::Model
 
     TSharedPtr<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain> FNamespaceDomain::MaxStaminaTableMaster(
         const FString MaxStaminaTableName
-    ) const
+    )
     {
         return MakeShared<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             MaxStaminaTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MaxStaminaTableName)
         );
@@ -772,10 +785,11 @@ namespace Gs2::Stamina::Domain::Model
 
     TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain> FNamespaceDomain::RecoverValueTableMaster(
         const FString RecoverValueTableName
-    ) const
+    )
     {
         return MakeShared<Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             RecoverValueTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RecoverValueTableName)
         );
@@ -821,10 +835,11 @@ namespace Gs2::Stamina::Domain::Model
 
     TSharedPtr<Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain> FNamespaceDomain::StaminaModelMaster(
         const FString StaminaName
-    ) const
+    )
     {
         return MakeShared<Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain>(
             Gs2,
+            Service,
             NamespaceName,
             StaminaName == TEXT("") ? TOptional<FString>() : TOptional<FString>(StaminaName)
         );

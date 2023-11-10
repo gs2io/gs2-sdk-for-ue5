@@ -42,12 +42,14 @@ namespace Gs2::News::Domain::Model
 {
 
     FNewsDomain::FNewsDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const News::Domain::FGs2NewsDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -63,6 +65,7 @@ namespace Gs2::News::Domain::Model
         const FNewsDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -72,7 +75,7 @@ namespace Gs2::News::Domain::Model
     }
 
     FNewsDomain::FWantGrantTask::FWantGrantTask(
-        const TSharedPtr<FNewsDomain> Self,
+        const TSharedPtr<FNewsDomain>& Self,
         const Request::FWantGrantByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -132,6 +135,7 @@ namespace Gs2::News::Domain::Model
             Domain->Add(
                 MakeShared<Gs2::News::Domain::Model::FSetCookieRequestEntryDomain>(
                     Self->Gs2,
+                    Self->Service,
                     Request->GetNamespaceName(),
                     Request->GetUserId(),
                     (*ResultModel->GetItems())[i]->GetKey(),

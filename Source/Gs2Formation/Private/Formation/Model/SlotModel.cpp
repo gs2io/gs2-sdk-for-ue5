@@ -78,7 +78,7 @@ namespace Gs2::Formation::Model
         return MakeShared<FSlotModel>()
             ->WithName(Data->HasField("name") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("name", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -87,7 +87,7 @@ namespace Gs2::Formation::Model
                 }() : TOptional<FString>())
             ->WithPropertyRegex(Data->HasField("propertyRegex") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("propertyRegex", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -96,7 +96,7 @@ namespace Gs2::Formation::Model
                 }() : TOptional<FString>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("metadata", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "SerialKey/Gs2SerialKey.h"
 #include "SerialKey/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "SerialKey/Domain/Iterator/DescribeIssueJobsIterator.h"
 #include "SerialKey/Domain/Iterator/DescribeSerialKeysIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::SerialKey::Domain
+{
+    class FGs2SerialKeyDomain;
+    typedef TSharedPtr<FGs2SerialKeyDomain> FGs2SerialKeyDomainPtr;
 }
 
 namespace Gs2::SerialKey::Domain::Model
@@ -49,7 +54,8 @@ namespace Gs2::SerialKey::Domain::Model
         public TSharedFromThis<FUserDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
+        const SerialKey::Domain::FGs2SerialKeyDomainPtr Service;
+        const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
 
         public:
         TOptional<FString> Url;
@@ -71,7 +77,8 @@ namespace Gs2::SerialKey::Domain::Model
     public:
 
         FUserDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -89,7 +96,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FDownloadSerialCodesRequestPtr Request;
         public:
             explicit FDownloadSerialCodesTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FDownloadSerialCodesRequestPtr Request
             );
 
@@ -115,7 +122,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FGetSerialKeyRequestPtr Request;
         public:
             explicit FGetSerialKeyTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FGetSerialKeyRequestPtr Request
             );
 
@@ -141,7 +148,7 @@ namespace Gs2::SerialKey::Domain::Model
             const Request::FRevertUseByUserIdRequestPtr Request;
         public:
             explicit FRevertUseTask(
-                const TSharedPtr<FUserDomain> Self,
+                const TSharedPtr<FUserDomain>& Self,
                 const Request::FRevertUseByUserIdRequestPtr Request
             );
 
@@ -174,7 +181,7 @@ namespace Gs2::SerialKey::Domain::Model
 
         TSharedPtr<Gs2::SerialKey::Domain::Model::FSerialKeyDomain> SerialKey(
             const FString SerialKeyCode
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

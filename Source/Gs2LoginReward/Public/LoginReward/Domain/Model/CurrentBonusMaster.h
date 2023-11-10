@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "LoginReward/Gs2LoginReward.h"
 #include "LoginReward/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelMastersIterator.h"
 #include "LoginReward/Domain/Iterator/DescribeBonusModelsIterator.h"
@@ -31,6 +30,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::LoginReward::Domain
+{
+    class FGs2LoginRewardDomain;
+    typedef TSharedPtr<FGs2LoginRewardDomain> FGs2LoginRewardDomainPtr;
 }
 
 namespace Gs2::LoginReward::Domain::Model
@@ -50,7 +55,8 @@ namespace Gs2::LoginReward::Domain::Model
         public TSharedFromThis<FCurrentBonusMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
+        const LoginReward::Domain::FGs2LoginRewardDomainPtr Service;
+        const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -61,7 +67,8 @@ namespace Gs2::LoginReward::Domain::Model
     public:
 
         FCurrentBonusMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const LoginReward::Domain::FGs2LoginRewardDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -78,7 +85,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FExportMasterRequestPtr Request;
         public:
             explicit FExportMasterTask(
-                const TSharedPtr<FCurrentBonusMasterDomain> Self,
+                const TSharedPtr<FCurrentBonusMasterDomain>& Self,
                 const Request::FExportMasterRequestPtr Request
             );
 
@@ -104,7 +111,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FGetCurrentBonusMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCurrentBonusMasterDomain> Self,
+                const TSharedPtr<FCurrentBonusMasterDomain>& Self,
                 const Request::FGetCurrentBonusMasterRequestPtr Request
             );
 
@@ -130,7 +137,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FUpdateCurrentBonusMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FCurrentBonusMasterDomain> Self,
+                const TSharedPtr<FCurrentBonusMasterDomain>& Self,
                 const Request::FUpdateCurrentBonusMasterRequestPtr Request
             );
 
@@ -156,7 +163,7 @@ namespace Gs2::LoginReward::Domain::Model
             const Request::FUpdateCurrentBonusMasterFromGitHubRequestPtr Request;
         public:
             explicit FUpdateFromGitHubTask(
-                const TSharedPtr<FCurrentBonusMasterDomain> Self,
+                const TSharedPtr<FCurrentBonusMasterDomain>& Self,
                 const Request::FUpdateCurrentBonusMasterFromGitHubRequestPtr Request
             );
 

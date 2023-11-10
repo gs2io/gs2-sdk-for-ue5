@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Distributor/Gs2Distributor.h"
 #include "Distributor/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelMastersIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelsIterator.h"
@@ -29,6 +28,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Distributor::Domain
+{
+    class FGs2DistributorDomain;
+    typedef TSharedPtr<FGs2DistributorDomain> FGs2DistributorDomainPtr;
 }
 
 namespace Gs2::Distributor::Domain::Model
@@ -47,7 +52,8 @@ namespace Gs2::Distributor::Domain::Model
         public TSharedFromThis<FNamespaceDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Distributor::FGs2DistributorRestClientPtr Client;
+        const Distributor::Domain::FGs2DistributorDomainPtr Service;
+        const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
         TOptional<FString> Status;
@@ -88,7 +94,8 @@ namespace Gs2::Distributor::Domain::Model
     public:
 
         FNamespaceDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Distributor::Domain::FGs2DistributorDomainPtr& Service,
             const TOptional<FString> NamespaceName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -105,7 +112,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FGetNamespaceStatusRequestPtr Request;
         public:
             explicit FGetStatusTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceStatusRequestPtr Request
             );
 
@@ -131,7 +138,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FGetNamespaceRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FGetNamespaceRequestPtr Request
             );
 
@@ -157,7 +164,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FUpdateNamespaceRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FUpdateNamespaceRequestPtr Request
             );
 
@@ -183,7 +190,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FDeleteNamespaceRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FDeleteNamespaceRequestPtr Request
             );
 
@@ -209,7 +216,7 @@ namespace Gs2::Distributor::Domain::Model
             const Request::FCreateDistributorModelMasterRequestPtr Request;
         public:
             explicit FCreateDistributorModelMasterTask(
-                const TSharedPtr<FNamespaceDomain> Self,
+                const TSharedPtr<FNamespaceDomain>& Self,
                 const Request::FCreateDistributorModelMasterRequestPtr Request
             );
 
@@ -228,7 +235,7 @@ namespace Gs2::Distributor::Domain::Model
         );
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain> CurrentDistributorMaster(
-        ) const;
+        );
 
         Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelsIteratorPtr DistributorModels(
         ) const;
@@ -243,10 +250,10 @@ namespace Gs2::Distributor::Domain::Model
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FDistributorModelDomain> DistributorModel(
             const FString DistributorName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FDistributeDomain> Distribute(
-        ) const;
+        );
 
         Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelMastersIteratorPtr DistributorModelMasters(
         ) const;
@@ -261,15 +268,15 @@ namespace Gs2::Distributor::Domain::Model
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain> DistributorModelMaster(
             const FString DistributorName
-        ) const;
+        );
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FUserDomain> User(
             const FString UserId
-        ) const;
+        );
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FUserAccessTokenDomain> AccessToken(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        ) const;
+        );
 
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,

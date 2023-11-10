@@ -193,7 +193,7 @@ namespace Gs2::Chat::Model
         return MakeShared<FSubscribe>()
             ->WithSubscribeId(Data->HasField("subscribeId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("subscribeId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -202,7 +202,7 @@ namespace Gs2::Chat::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -211,7 +211,7 @@ namespace Gs2::Chat::Model
                 }() : TOptional<FString>())
             ->WithRoomName(Data->HasField("roomName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("roomName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

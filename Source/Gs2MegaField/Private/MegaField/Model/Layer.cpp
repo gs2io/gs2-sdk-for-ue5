@@ -202,7 +202,7 @@ namespace Gs2::MegaField::Model
         return MakeShared<FLayer>()
             ->WithLayerId(Data->HasField("layerId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("layerId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -211,7 +211,7 @@ namespace Gs2::MegaField::Model
                 }() : TOptional<FString>())
             ->WithAreaModelName(Data->HasField("areaModelName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("areaModelName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -220,7 +220,7 @@ namespace Gs2::MegaField::Model
                 }() : TOptional<FString>())
             ->WithLayerModelName(Data->HasField("layerModelName") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("layerModelName", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

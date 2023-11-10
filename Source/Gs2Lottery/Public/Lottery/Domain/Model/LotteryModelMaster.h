@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Lottery/Gs2Lottery.h"
 #include "Lottery/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Lottery/Domain/Iterator/DescribeLotteryModelMastersIterator.h"
 #include "Lottery/Domain/Iterator/DescribePrizeTableMastersIterator.h"
@@ -36,6 +35,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Lottery::Domain
+{
+    class FGs2LotteryDomain;
+    typedef TSharedPtr<FGs2LotteryDomain> FGs2LotteryDomainPtr;
 }
 
 namespace Gs2::Lottery::Domain::Model
@@ -60,7 +65,8 @@ namespace Gs2::Lottery::Domain::Model
         public TSharedFromThis<FLotteryModelMasterDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Lottery::FGs2LotteryRestClientPtr Client;
+        const Lottery::Domain::FGs2LotteryDomainPtr Service;
+        const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -72,7 +78,8 @@ namespace Gs2::Lottery::Domain::Model
     public:
 
         FLotteryModelMasterDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Lottery::Domain::FGs2LotteryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> LotteryName
             // ReSharper disable once CppMemberInitializersOrder
@@ -90,7 +97,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FGetLotteryModelMasterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FLotteryModelMasterDomain> Self,
+                const TSharedPtr<FLotteryModelMasterDomain>& Self,
                 const Request::FGetLotteryModelMasterRequestPtr Request
             );
 
@@ -116,7 +123,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FUpdateLotteryModelMasterRequestPtr Request;
         public:
             explicit FUpdateTask(
-                const TSharedPtr<FLotteryModelMasterDomain> Self,
+                const TSharedPtr<FLotteryModelMasterDomain>& Self,
                 const Request::FUpdateLotteryModelMasterRequestPtr Request
             );
 
@@ -142,7 +149,7 @@ namespace Gs2::Lottery::Domain::Model
             const Request::FDeleteLotteryModelMasterRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FLotteryModelMasterDomain> Self,
+                const TSharedPtr<FLotteryModelMasterDomain>& Self,
                 const Request::FDeleteLotteryModelMasterRequestPtr Request
             );
 

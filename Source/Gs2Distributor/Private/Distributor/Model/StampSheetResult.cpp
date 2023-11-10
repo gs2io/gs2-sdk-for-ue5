@@ -249,7 +249,7 @@ namespace Gs2::Distributor::Model
         return MakeShared<FStampSheetResult>()
             ->WithStampSheetResultId(Data->HasField("stampSheetResultId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("stampSheetResultId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -258,7 +258,7 @@ namespace Gs2::Distributor::Model
                 }() : TOptional<FString>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -267,7 +267,7 @@ namespace Gs2::Distributor::Model
                 }() : TOptional<FString>())
             ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("transactionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -308,7 +308,7 @@ namespace Gs2::Distributor::Model
                  }() : MakeShared<TArray<FString>>())
             ->WithSheetResult(Data->HasField("sheetResult") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("sheetResult", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -317,7 +317,7 @@ namespace Gs2::Distributor::Model
                 }() : TOptional<FString>())
             ->WithNextTransactionId(Data->HasField("nextTransactionId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("nextTransactionId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

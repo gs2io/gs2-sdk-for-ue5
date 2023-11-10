@@ -34,6 +34,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Schedule::Domain
+{
+    class FGs2ScheduleDomain;
+    typedef TSharedPtr<FGs2ScheduleDomain> FGs2ScheduleDomainPtr;
+}
+
 namespace Gs2::Schedule::Domain::Model
 {
     class FNamespaceDomain;
@@ -50,7 +56,8 @@ namespace Gs2::Schedule::Domain::Model
         public TSharedFromThis<FTriggerAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
+        const Schedule::Domain::FGs2ScheduleDomainPtr Service;
+        const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -64,9 +71,10 @@ namespace Gs2::Schedule::Domain::Model
     public:
 
         FTriggerAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> TriggerName
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -83,7 +91,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FGetTriggerRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FTriggerAccessTokenDomain> Self,
+                const TSharedPtr<FTriggerAccessTokenDomain>& Self,
                 const Request::FGetTriggerRequestPtr Request
             );
 
@@ -109,7 +117,7 @@ namespace Gs2::Schedule::Domain::Model
             const Request::FDeleteTriggerRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FTriggerAccessTokenDomain> Self,
+                const TSharedPtr<FTriggerAccessTokenDomain>& Self,
                 const Request::FDeleteTriggerRequestPtr Request
             );
 

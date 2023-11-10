@@ -40,11 +40,13 @@ namespace Gs2::SkillTree::Domain::Model
 {
 
     FCurrentTreeMasterDomain::FCurrentTreeMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::SkillTree::FGs2SkillTreeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::SkillTree::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -58,6 +60,7 @@ namespace Gs2::SkillTree::Domain::Model
         const FCurrentTreeMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -66,7 +69,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FCurrentTreeMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentTreeMasterDomain> Self,
+        const TSharedPtr<FCurrentTreeMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -128,7 +131,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FCurrentTreeMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentTreeMasterDomain> Self,
+        const TSharedPtr<FCurrentTreeMasterDomain>& Self,
         const Request::FGetCurrentTreeMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -188,7 +191,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FCurrentTreeMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentTreeMasterDomain> Self,
+        const TSharedPtr<FCurrentTreeMasterDomain>& Self,
         const Request::FUpdateCurrentTreeMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -250,7 +253,7 @@ namespace Gs2::SkillTree::Domain::Model
     }
 
     FCurrentTreeMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentTreeMasterDomain> Self,
+        const TSharedPtr<FCurrentTreeMasterDomain>& Self,
         const Request::FUpdateCurrentTreeMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

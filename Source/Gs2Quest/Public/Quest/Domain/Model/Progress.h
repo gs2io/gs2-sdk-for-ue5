@@ -20,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Quest/Gs2Quest.h"
 #include "Quest/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Quest/Domain/Iterator/DescribeQuestGroupModelMastersIterator.h"
 #include "Quest/Domain/Iterator/DescribeQuestModelMastersIterator.h"
@@ -34,6 +33,12 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Quest::Domain
+{
+    class FGs2QuestDomain;
+    typedef TSharedPtr<FGs2QuestDomain> FGs2QuestDomainPtr;
 }
 
 namespace Gs2::Quest::Domain::Model
@@ -55,7 +60,8 @@ namespace Gs2::Quest::Domain::Model
         public TSharedFromThis<FProgressDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Quest::FGs2QuestRestClientPtr Client;
+        const Quest::Domain::FGs2QuestDomainPtr Service;
+        const Gs2::Quest::FGs2QuestRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -77,7 +83,8 @@ namespace Gs2::Quest::Domain::Model
     public:
 
         FProgressDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Quest::Domain::FGs2QuestDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -95,7 +102,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FGetProgressByUserIdRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FProgressDomain> Self,
+                const TSharedPtr<FProgressDomain>& Self,
                 const Request::FGetProgressByUserIdRequestPtr Request
             );
 
@@ -121,7 +128,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FEndByUserIdRequestPtr Request;
         public:
             explicit FEndTask(
-                const TSharedPtr<FProgressDomain> Self,
+                const TSharedPtr<FProgressDomain>& Self,
                 const Request::FEndByUserIdRequestPtr Request
             );
 
@@ -147,7 +154,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FDeleteProgressByUserIdRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FProgressDomain> Self,
+                const TSharedPtr<FProgressDomain>& Self,
                 const Request::FDeleteProgressByUserIdRequestPtr Request
             );
 

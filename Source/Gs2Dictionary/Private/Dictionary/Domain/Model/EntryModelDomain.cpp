@@ -40,12 +40,14 @@ namespace Gs2::Dictionary::Domain::Model
 {
 
     FEntryModelDomain::FEntryModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> EntryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Dictionary::FGs2DictionaryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         EntryName(EntryName),
@@ -60,6 +62,7 @@ namespace Gs2::Dictionary::Domain::Model
         const FEntryModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         EntryName(From.EntryName),
@@ -69,7 +72,7 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FEntryModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FEntryModelDomain> Self,
+        const TSharedPtr<FEntryModelDomain>& Self,
         const Request::FGetEntryModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

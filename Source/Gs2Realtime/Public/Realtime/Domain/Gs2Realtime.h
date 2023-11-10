@@ -19,6 +19,7 @@
 #pragma once
 
 #include "Core/Domain/Gs2Core.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Realtime/Gs2Realtime.h"
 
@@ -48,7 +49,7 @@ namespace Gs2::Realtime::Domain
     {
         FCreateNotificationEvent CreateNotificationEvent;
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Realtime::FGs2RealtimeRestClientPtr Client;
+        const Gs2::Realtime::FGs2RealtimeRestClientPtr Client;
 
         public:
         TOptional<int64> Timestamp;
@@ -63,7 +64,7 @@ namespace Gs2::Realtime::Domain
     public:
 
         FGs2RealtimeDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -79,7 +80,7 @@ namespace Gs2::Realtime::Domain
             const Request::FCreateNamespaceRequestPtr Request;
         public:
             explicit FCreateNamespaceTask(
-                const TSharedPtr<FGs2RealtimeDomain> Self,
+                const TSharedPtr<FGs2RealtimeDomain>& Self,
                 const Request::FCreateNamespaceRequestPtr Request
             );
 
@@ -110,7 +111,7 @@ namespace Gs2::Realtime::Domain
 
         TSharedPtr<Gs2::Realtime::Domain::Model::FNamespaceDomain> Namespace(
             const FString NamespaceName
-        ) const;
+        );
 
         void UpdateCacheFromStampSheet(
             const FString Method,
@@ -135,6 +136,9 @@ namespace Gs2::Realtime::Domain
             const FString Action,
             const FString Payload
         );
+
+        DECLARE_MULTICAST_DELEGATE_OneParam(FIssueTransactionDelegate, Gs2::Core::Domain::Model::FIssueTransactionEventPtr);
+        FIssueTransactionDelegate OnIssueTransaction;
     };
     typedef TSharedPtr<FGs2RealtimeDomain> FGs2RealtimeDomainPtr;
 }

@@ -87,7 +87,7 @@ namespace Gs2::JobQueue::Model
         return MakeShared<FJobEntry>()
             ->WithScriptId(Data->HasField("scriptId") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("scriptId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -96,7 +96,7 @@ namespace Gs2::JobQueue::Model
                 }() : TOptional<FString>())
             ->WithArgs(Data->HasField("args") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("args", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

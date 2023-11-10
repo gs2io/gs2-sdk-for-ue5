@@ -17,33 +17,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Core/Gs2Object.h"
+#include "Core/Model/ConsumeAction.h"
 
 namespace Gs2::Showcase::Model
 {
-    class GS2SHOWCASE_API FConsumeAction final : public Gs2Object, public TSharedFromThis<FConsumeAction>
-    {
-        TOptional<FString> ActionValue;
-        TOptional<FString> RequestValue;
-
-    public:
-        FConsumeAction();
-        FConsumeAction(
-            const FConsumeAction& From
-        );
-        virtual ~FConsumeAction() override = default;
-
-        TSharedPtr<FConsumeAction> WithAction(const TOptional<FString> Action);
-        TSharedPtr<FConsumeAction> WithRequest(const TOptional<FString> Request);
-
-        TOptional<FString> GetAction() const;
-        TOptional<FString> GetRequest() const;
-
-
-        static TSharedPtr<FConsumeAction> FromJson(const TSharedPtr<FJsonObject> Data);
-        TSharedPtr<FJsonObject> ToJson() const;
-
-        static FString TypeName;
-    };
+    typedef Gs2::Core::Model::FConsumeAction FConsumeAction;
     typedef TSharedPtr<FConsumeAction, ESPMode::ThreadSafe> FConsumeActionPtr;
 }

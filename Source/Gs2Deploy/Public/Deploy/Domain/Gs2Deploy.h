@@ -19,6 +19,7 @@
 #pragma once
 
 #include "Core/Domain/Gs2Core.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
 #include "JobQueue/Gs2JobQueue.h"
 #include "Deploy/Gs2Deploy.h"
 
@@ -49,7 +50,7 @@ namespace Gs2::Deploy::Domain
         public TSharedFromThis<FGs2DeployDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Deploy::FGs2DeployRestClientPtr Client;
+        const Gs2::Deploy::FGs2DeployRestClientPtr Client;
 
         public:
     private:
@@ -59,7 +60,7 @@ namespace Gs2::Deploy::Domain
     public:
 
         FGs2DeployDomain(
-            const Core::Domain::FGs2Ptr Gs2
+            const Core::Domain::FGs2Ptr& Gs2
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -75,7 +76,7 @@ namespace Gs2::Deploy::Domain
             const Request::FCreateStackRequestPtr Request;
         public:
             explicit FCreateStackTask(
-                const TSharedPtr<FGs2DeployDomain> Self,
+                const TSharedPtr<FGs2DeployDomain>& Self,
                 const Request::FCreateStackRequestPtr Request
             );
 
@@ -101,7 +102,7 @@ namespace Gs2::Deploy::Domain
             const Request::FCreateStackFromGitHubRequestPtr Request;
         public:
             explicit FCreateStackFromGitHubTask(
-                const TSharedPtr<FGs2DeployDomain> Self,
+                const TSharedPtr<FGs2DeployDomain>& Self,
                 const Request::FCreateStackFromGitHubRequestPtr Request
             );
 
@@ -127,7 +128,7 @@ namespace Gs2::Deploy::Domain
             const Request::FValidateRequestPtr Request;
         public:
             explicit FValidateTask(
-                const TSharedPtr<FGs2DeployDomain> Self,
+                const TSharedPtr<FGs2DeployDomain>& Self,
                 const Request::FValidateRequestPtr Request
             );
 
@@ -158,7 +159,7 @@ namespace Gs2::Deploy::Domain
 
         TSharedPtr<Gs2::Deploy::Domain::Model::FStackDomain> Stack(
             const FString StackName
-        ) const;
+        );
 
         void UpdateCacheFromStampSheet(
             const FString Method,
@@ -182,6 +183,9 @@ namespace Gs2::Deploy::Domain
             const FString Action,
             const FString Payload
         );
+
+        DECLARE_MULTICAST_DELEGATE_OneParam(FIssueTransactionDelegate, Gs2::Core::Domain::Model::FIssueTransactionEventPtr);
+        FIssueTransactionDelegate OnIssueTransaction;
     };
     typedef TSharedPtr<FGs2DeployDomain> FGs2DeployDomainPtr;
 }

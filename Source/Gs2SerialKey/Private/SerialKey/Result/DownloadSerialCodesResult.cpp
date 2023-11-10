@@ -51,7 +51,7 @@ namespace Gs2::SerialKey::Result
         return MakeShared<FDownloadSerialCodesResult>()
             ->WithUrl(Data->HasField("url") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("url", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

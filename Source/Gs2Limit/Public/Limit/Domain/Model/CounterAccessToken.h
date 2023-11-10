@@ -33,6 +33,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Limit::Domain
+{
+    class FGs2LimitDomain;
+    typedef TSharedPtr<FGs2LimitDomain> FGs2LimitDomainPtr;
+}
+
 namespace Gs2::Limit::Domain::Model
 {
     class FNamespaceDomain;
@@ -48,7 +54,8 @@ namespace Gs2::Limit::Domain::Model
         public TSharedFromThis<FCounterAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Limit::FGs2LimitRestClientPtr Client;
+        const Limit::Domain::FGs2LimitDomainPtr Service;
+        const Gs2::Limit::FGs2LimitRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -63,9 +70,10 @@ namespace Gs2::Limit::Domain::Model
     public:
 
         FCounterAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Limit::Domain::FGs2LimitDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> LimitName,
             const TOptional<FString> CounterName
             // ReSharper disable once CppMemberInitializersOrder
@@ -83,7 +91,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FGetCounterRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FCounterAccessTokenDomain> Self,
+                const TSharedPtr<FCounterAccessTokenDomain>& Self,
                 const Request::FGetCounterRequestPtr Request
             );
 
@@ -109,7 +117,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FCountUpRequestPtr Request;
         public:
             explicit FCountUpTask(
-                const TSharedPtr<FCounterAccessTokenDomain> Self,
+                const TSharedPtr<FCounterAccessTokenDomain>& Self,
                 const Request::FCountUpRequestPtr Request
             );
 
@@ -135,7 +143,7 @@ namespace Gs2::Limit::Domain::Model
             const Request::FVerifyCounterRequestPtr Request;
         public:
             explicit FVerifyTask(
-                const TSharedPtr<FCounterAccessTokenDomain> Self,
+                const TSharedPtr<FCounterAccessTokenDomain>& Self,
                 const Request::FVerifyCounterRequestPtr Request
             );
 

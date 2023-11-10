@@ -37,12 +37,14 @@ namespace Gs2::AdReward::Domain::Model
 {
 
     FPointDomain::FPointDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const AdReward::Domain::FGs2AdRewardDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::AdReward::FGs2AdRewardRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -58,6 +60,7 @@ namespace Gs2::AdReward::Domain::Model
         const FPointDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -67,7 +70,7 @@ namespace Gs2::AdReward::Domain::Model
     }
 
     FPointDomain::FGetTask::FGetTask(
-        const TSharedPtr<FPointDomain> Self,
+        const TSharedPtr<FPointDomain>& Self,
         const Request::FGetPointByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -129,7 +132,7 @@ namespace Gs2::AdReward::Domain::Model
     }
 
     FPointDomain::FAcquireTask::FAcquireTask(
-        const TSharedPtr<FPointDomain> Self,
+        const TSharedPtr<FPointDomain>& Self,
         const Request::FAcquirePointByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -193,7 +196,7 @@ namespace Gs2::AdReward::Domain::Model
     }
 
     FPointDomain::FConsumeTask::FConsumeTask(
-        const TSharedPtr<FPointDomain> Self,
+        const TSharedPtr<FPointDomain>& Self,
         const Request::FConsumePointByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -257,7 +260,7 @@ namespace Gs2::AdReward::Domain::Model
     }
 
     FPointDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FPointDomain> Self,
+        const TSharedPtr<FPointDomain>& Self,
         const Request::FDeletePointByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {

@@ -35,12 +35,14 @@ namespace Gs2::Key::Domain::Model
 {
 
     FGitHubApiKeyDomain::FGitHubApiKeyDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Key::Domain::FGs2KeyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> ApiKeyName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Key::FGs2KeyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ApiKeyName(ApiKeyName),
@@ -55,6 +57,7 @@ namespace Gs2::Key::Domain::Model
         const FGitHubApiKeyDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ApiKeyName(From.ApiKeyName),
@@ -64,7 +67,7 @@ namespace Gs2::Key::Domain::Model
     }
 
     FGitHubApiKeyDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FGitHubApiKeyDomain> Self,
+        const TSharedPtr<FGitHubApiKeyDomain>& Self,
         const Request::FUpdateGitHubApiKeyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -128,7 +131,7 @@ namespace Gs2::Key::Domain::Model
     }
 
     FGitHubApiKeyDomain::FGetTask::FGetTask(
-        const TSharedPtr<FGitHubApiKeyDomain> Self,
+        const TSharedPtr<FGitHubApiKeyDomain>& Self,
         const Request::FGetGitHubApiKeyRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -190,7 +193,7 @@ namespace Gs2::Key::Domain::Model
     }
 
     FGitHubApiKeyDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FGitHubApiKeyDomain> Self,
+        const TSharedPtr<FGitHubApiKeyDomain>& Self,
         const Request::FDeleteGitHubApiKeyRequestPtr Request
     ): Self(Self), Request(Request)
     {

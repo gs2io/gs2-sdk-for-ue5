@@ -47,12 +47,14 @@ namespace Gs2::Lottery::Domain::Model
 {
 
     FPrizeTableMasterDomain::FPrizeTableMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> PrizeTableName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         PrizeTableName(PrizeTableName),
@@ -67,6 +69,7 @@ namespace Gs2::Lottery::Domain::Model
         const FPrizeTableMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         PrizeTableName(From.PrizeTableName),
@@ -76,7 +79,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FPrizeTableMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FPrizeTableMasterDomain> Self,
+        const TSharedPtr<FPrizeTableMasterDomain>& Self,
         const Request::FGetPrizeTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -138,7 +141,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FPrizeTableMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FPrizeTableMasterDomain> Self,
+        const TSharedPtr<FPrizeTableMasterDomain>& Self,
         const Request::FUpdatePrizeTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -202,7 +205,7 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     FPrizeTableMasterDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FPrizeTableMasterDomain> Self,
+        const TSharedPtr<FPrizeTableMasterDomain>& Self,
         const Request::FDeletePrizeTableMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {

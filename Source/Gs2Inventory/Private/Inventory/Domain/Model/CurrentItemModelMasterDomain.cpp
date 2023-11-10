@@ -63,11 +63,13 @@ namespace Gs2::Inventory::Domain::Model
 {
 
     FCurrentItemModelMasterDomain::FCurrentItemModelMasterDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Inventory::Domain::FGs2InventoryDomainPtr& Service,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Inventory::FGs2InventoryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         ParentKey(Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
@@ -81,6 +83,7 @@ namespace Gs2::Inventory::Domain::Model
         const FCurrentItemModelMasterDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         ParentKey(From.ParentKey)
@@ -89,7 +92,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FCurrentItemModelMasterDomain::FExportMasterTask::FExportMasterTask(
-        const TSharedPtr<FCurrentItemModelMasterDomain> Self,
+        const TSharedPtr<FCurrentItemModelMasterDomain>& Self,
         const Request::FExportMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -151,7 +154,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FCurrentItemModelMasterDomain::FGetTask::FGetTask(
-        const TSharedPtr<FCurrentItemModelMasterDomain> Self,
+        const TSharedPtr<FCurrentItemModelMasterDomain>& Self,
         const Request::FGetCurrentItemModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -211,7 +214,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FCurrentItemModelMasterDomain::FUpdateTask::FUpdateTask(
-        const TSharedPtr<FCurrentItemModelMasterDomain> Self,
+        const TSharedPtr<FCurrentItemModelMasterDomain>& Self,
         const Request::FUpdateCurrentItemModelMasterRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -273,7 +276,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     FCurrentItemModelMasterDomain::FUpdateFromGitHubTask::FUpdateFromGitHubTask(
-        const TSharedPtr<FCurrentItemModelMasterDomain> Self,
+        const TSharedPtr<FCurrentItemModelMasterDomain>& Self,
         const Request::FUpdateCurrentItemModelMasterFromGitHubRequestPtr Request
     ): Self(Self), Request(Request)
     {

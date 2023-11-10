@@ -39,12 +39,14 @@ namespace Gs2::Money::Domain::Model
 {
 
     FUserDomain::FUserDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Money::Domain::FGs2MoneyDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Money::FGs2MoneyRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -59,6 +61,7 @@ namespace Gs2::Money::Domain::Model
         const FUserDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
@@ -68,7 +71,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FUserDomain::FRecordReceiptTask::FRecordReceiptTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FRecordReceiptRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -122,6 +125,7 @@ namespace Gs2::Money::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetTransactionId()
@@ -138,7 +142,7 @@ namespace Gs2::Money::Domain::Model
     }
 
     FUserDomain::FRevertRecordReceiptTask::FRevertRecordReceiptTask(
-        const TSharedPtr<FUserDomain> Self,
+        const TSharedPtr<FUserDomain>& Self,
         const Request::FRevertRecordReceiptRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -192,6 +196,7 @@ namespace Gs2::Money::Domain::Model
         }
         auto Domain = MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
             Self->Gs2,
+            Self->Service,
             Request->GetNamespaceName(),
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetTransactionId()
@@ -250,10 +255,11 @@ namespace Gs2::Money::Domain::Model
 
     TSharedPtr<Gs2::Money::Domain::Model::FWalletDomain> FUserDomain::Wallet(
         const int32 Slot
-    ) const
+    )
     {
         return MakeShared<Gs2::Money::Domain::Model::FWalletDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             Slot
@@ -309,10 +315,11 @@ namespace Gs2::Money::Domain::Model
 
     TSharedPtr<Gs2::Money::Domain::Model::FReceiptDomain> FUserDomain::Receipt(
         const FString TransactionId
-    ) const
+    )
     {
         return MakeShared<Gs2::Money::Domain::Model::FReceiptDomain>(
             Gs2,
+            Service,
             NamespaceName,
             UserId,
             TransactionId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TransactionId)

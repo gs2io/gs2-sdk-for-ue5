@@ -66,7 +66,7 @@ namespace Gs2::Gateway::Result
         return MakeShared<FPrepareImportUserDataByUserIdResult>()
             ->WithUploadToken(Data->HasField("uploadToken") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("uploadToken", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
@@ -75,7 +75,7 @@ namespace Gs2::Gateway::Result
                 }() : TOptional<FString>())
             ->WithUploadUrl(Data->HasField("uploadUrl") ? [Data]() -> TOptional<FString>
                 {
-                    FString v;
+                    FString v("");
                     if (Data->TryGetStringField("uploadUrl", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));

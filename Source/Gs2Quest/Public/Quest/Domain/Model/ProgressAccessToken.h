@@ -36,6 +36,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Quest::Domain
+{
+    class FGs2QuestDomain;
+    typedef TSharedPtr<FGs2QuestDomain> FGs2QuestDomainPtr;
+}
+
 namespace Gs2::Quest::Domain::Model
 {
     class FNamespaceDomain;
@@ -55,7 +61,8 @@ namespace Gs2::Quest::Domain::Model
         public TSharedFromThis<FProgressAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Quest::FGs2QuestRestClientPtr Client;
+        const Quest::Domain::FGs2QuestDomainPtr Service;
+        const Gs2::Quest::FGs2QuestRestClientPtr Client;
 
         public:
         TOptional<FString> TransactionId;
@@ -78,9 +85,10 @@ namespace Gs2::Quest::Domain::Model
     public:
 
         FProgressAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Quest::Domain::FGs2QuestDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -96,7 +104,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FGetProgressRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FProgressAccessTokenDomain> Self,
+                const TSharedPtr<FProgressAccessTokenDomain>& Self,
                 const Request::FGetProgressRequestPtr Request
             );
 
@@ -120,10 +128,12 @@ namespace Gs2::Quest::Domain::Model
         {
             const TSharedPtr<FProgressAccessTokenDomain> Self;
             const Request::FEndRequestPtr Request;
+            bool SpeculativeExecute;
         public:
             explicit FEndTask(
-                const TSharedPtr<FProgressAccessTokenDomain> Self,
-                const Request::FEndRequestPtr Request
+                const TSharedPtr<FProgressAccessTokenDomain>& Self,
+                const Request::FEndRequestPtr Request,
+                bool SpeculativeExecute
             );
 
             FEndTask(
@@ -137,7 +147,8 @@ namespace Gs2::Quest::Domain::Model
         friend FEndTask;
 
         TSharedPtr<FAsyncTask<FEndTask>> End(
-            Request::FEndRequestPtr Request
+            Request::FEndRequestPtr Request,
+            bool SpeculativeExecute = true
         );
 
         class GS2QUEST_API FDeleteTask final :
@@ -148,7 +159,7 @@ namespace Gs2::Quest::Domain::Model
             const Request::FDeleteProgressRequestPtr Request;
         public:
             explicit FDeleteTask(
-                const TSharedPtr<FProgressAccessTokenDomain> Self,
+                const TSharedPtr<FProgressAccessTokenDomain>& Self,
                 const Request::FDeleteProgressRequestPtr Request
             );
 

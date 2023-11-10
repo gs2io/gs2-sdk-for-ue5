@@ -48,12 +48,14 @@ namespace Gs2::Formation::Domain::Model
 {
 
     FPropertyFormModelDomain::FPropertyFormModelDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Formation::Domain::FGs2FormationDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> PropertyFormModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Formation::FGs2FormationRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         PropertyFormModelName(PropertyFormModelName),
@@ -68,6 +70,7 @@ namespace Gs2::Formation::Domain::Model
         const FPropertyFormModelDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         PropertyFormModelName(From.PropertyFormModelName),
@@ -77,7 +80,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     FPropertyFormModelDomain::FGetTask::FGetTask(
-        const TSharedPtr<FPropertyFormModelDomain> Self,
+        const TSharedPtr<FPropertyFormModelDomain>& Self,
         const Request::FGetPropertyFormModelRequestPtr Request
     ): Self(Self), Request(Request)
     {

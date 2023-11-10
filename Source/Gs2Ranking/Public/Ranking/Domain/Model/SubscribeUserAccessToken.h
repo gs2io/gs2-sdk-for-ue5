@@ -38,6 +38,12 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Ranking::Domain
+{
+    class FGs2RankingDomain;
+    typedef TSharedPtr<FGs2RankingDomain> FGs2RankingDomainPtr;
+}
+
 namespace Gs2::Ranking::Domain::Model
 {
     class FNamespaceDomain;
@@ -59,7 +65,8 @@ namespace Gs2::Ranking::Domain::Model
         public TSharedFromThis<FSubscribeUserAccessTokenDomain>
     {
         const Core::Domain::FGs2Ptr Gs2;
-        Gs2::Ranking::FGs2RankingRestClientPtr Client;
+        const Ranking::Domain::FGs2RankingDomainPtr Service;
+        const Gs2::Ranking::FGs2RankingRestClientPtr Client;
 
         public:
         TOptional<FString> NamespaceName;
@@ -74,9 +81,10 @@ namespace Gs2::Ranking::Domain::Model
     public:
 
         FSubscribeUserAccessTokenDomain(
-            const Core::Domain::FGs2Ptr Gs2,
+            const Core::Domain::FGs2Ptr& Gs2,
+            const Ranking::Domain::FGs2RankingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const TOptional<FString> CategoryName,
             const TOptional<FString> TargetUserId
             // ReSharper disable once CppMemberInitializersOrder
@@ -94,7 +102,7 @@ namespace Gs2::Ranking::Domain::Model
             const Request::FGetSubscribeRequestPtr Request;
         public:
             explicit FGetTask(
-                const TSharedPtr<FSubscribeUserAccessTokenDomain> Self,
+                const TSharedPtr<FSubscribeUserAccessTokenDomain>& Self,
                 const Request::FGetSubscribeRequestPtr Request
             );
 
@@ -120,7 +128,7 @@ namespace Gs2::Ranking::Domain::Model
             const Request::FUnsubscribeRequestPtr Request;
         public:
             explicit FUnsubscribeTask(
-                const TSharedPtr<FSubscribeUserAccessTokenDomain> Self,
+                const TSharedPtr<FSubscribeUserAccessTokenDomain>& Self,
                 const Request::FUnsubscribeRequestPtr Request
             );
 

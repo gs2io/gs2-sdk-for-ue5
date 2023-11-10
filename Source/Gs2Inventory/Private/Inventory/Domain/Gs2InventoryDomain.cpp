@@ -55,7 +55,7 @@ namespace Gs2::Inventory::Domain
 {
 
     FGs2InventoryDomain::FGs2InventoryDomain(
-        const Core::Domain::FGs2Ptr Gs2
+        const Core::Domain::FGs2Ptr& Gs2
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -75,7 +75,7 @@ namespace Gs2::Inventory::Domain
     }
 
     FGs2InventoryDomain::FCreateNamespaceTask::FCreateNamespaceTask(
-        TSharedPtr<FGs2InventoryDomain> Self,
+        const TSharedPtr<FGs2InventoryDomain>& Self,
         const Request::FCreateNamespaceRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -121,6 +121,7 @@ namespace Gs2::Inventory::Domain
         }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
+            Self,
             ResultModel->GetItem()->GetName()
         );
         *Result = Domain;
@@ -134,7 +135,7 @@ namespace Gs2::Inventory::Domain
     }
 
     FGs2InventoryDomain::FDumpUserDataTask::FDumpUserDataTask(
-        TSharedPtr<FGs2InventoryDomain> Self,
+        const TSharedPtr<FGs2InventoryDomain>& Self,
         const Request::FDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -177,7 +178,7 @@ namespace Gs2::Inventory::Domain
     }
 
     FGs2InventoryDomain::FCheckDumpUserDataTask::FCheckDumpUserDataTask(
-        TSharedPtr<FGs2InventoryDomain> Self,
+        const TSharedPtr<FGs2InventoryDomain>& Self,
         const Request::FCheckDumpUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -227,7 +228,7 @@ namespace Gs2::Inventory::Domain
     }
 
     FGs2InventoryDomain::FCleanUserDataTask::FCleanUserDataTask(
-        TSharedPtr<FGs2InventoryDomain> Self,
+        const TSharedPtr<FGs2InventoryDomain>& Self,
         const Request::FCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -270,7 +271,7 @@ namespace Gs2::Inventory::Domain
     }
 
     FGs2InventoryDomain::FCheckCleanUserDataTask::FCheckCleanUserDataTask(
-        TSharedPtr<FGs2InventoryDomain> Self,
+        const TSharedPtr<FGs2InventoryDomain>& Self,
         const Request::FCheckCleanUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -313,7 +314,7 @@ namespace Gs2::Inventory::Domain
     }
 
     FGs2InventoryDomain::FPrepareImportUserDataTask::FPrepareImportUserDataTask(
-        TSharedPtr<FGs2InventoryDomain> Self,
+        const TSharedPtr<FGs2InventoryDomain>& Self,
         const Request::FPrepareImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -367,7 +368,7 @@ namespace Gs2::Inventory::Domain
     }
 
     FGs2InventoryDomain::FImportUserDataTask::FImportUserDataTask(
-        TSharedPtr<FGs2InventoryDomain> Self,
+        const TSharedPtr<FGs2InventoryDomain>& Self,
         const Request::FImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -410,7 +411,7 @@ namespace Gs2::Inventory::Domain
     }
 
     FGs2InventoryDomain::FCheckImportUserDataTask::FCheckImportUserDataTask(
-        TSharedPtr<FGs2InventoryDomain> Self,
+        const TSharedPtr<FGs2InventoryDomain>& Self,
         const Request::FCheckImportUserDataByUserIdRequestPtr Request
     ): Self(Self), Request(Request)
     {
@@ -492,10 +493,11 @@ namespace Gs2::Inventory::Domain
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FNamespaceDomain> FGs2InventoryDomain::Namespace(
         const FString NamespaceName
-    ) const
+    )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FNamespaceDomain>(
             Gs2,
+            AsShared(),
             NamespaceName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NamespaceName)
         );
     }
