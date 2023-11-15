@@ -23,7 +23,7 @@ namespace Gs2::Dictionary::Model
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         EntryScriptValue(nullptr),
-        DuplicateEntryScriptValue(nullptr),
+        DuplicateEntryScriptValue(TOptional<FString>()),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -79,7 +79,7 @@ namespace Gs2::Dictionary::Model
     }
 
     TSharedPtr<FNamespace> FNamespace::WithDuplicateEntryScript(
-        const TSharedPtr<FScriptSetting> DuplicateEntryScript
+        const TOptional<FString> DuplicateEntryScript
     )
     {
         this->DuplicateEntryScriptValue = DuplicateEntryScript;
@@ -133,7 +133,7 @@ namespace Gs2::Dictionary::Model
     {
         return EntryScriptValue;
     }
-    TSharedPtr<FScriptSetting> FNamespace::GetDuplicateEntryScript() const
+    TOptional<FString> FNamespace::GetDuplicateEntryScript() const
     {
         return DuplicateEntryScriptValue;
     }
@@ -255,14 +255,15 @@ namespace Gs2::Dictionary::Model
                     }
                     return Model::FScriptSetting::FromJson(Data->GetObjectField("entryScript"));
                  }() : nullptr)
-            ->WithDuplicateEntryScript(Data->HasField("duplicateEntryScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithDuplicateEntryScript(Data->HasField("duplicateEntryScript") ? [Data]() -> TOptional<FString>
                 {
-                    if (Data->HasTypedField<EJson::Null>("duplicateEntryScript"))
+                    FString v("");
+                    if (Data->TryGetStringField("duplicateEntryScript", v))
                     {
-                        return nullptr;
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("duplicateEntryScript"));
-                 }() : nullptr)
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -319,9 +320,9 @@ namespace Gs2::Dictionary::Model
         {
             JsonRootObject->SetObjectField("entryScript", EntryScriptValue->ToJson());
         }
-        if (DuplicateEntryScriptValue != nullptr && DuplicateEntryScriptValue.IsValid())
+        if (DuplicateEntryScriptValue.IsSet())
         {
-            JsonRootObject->SetObjectField("duplicateEntryScript", DuplicateEntryScriptValue->ToJson());
+            JsonRootObject->SetStringField("duplicateEntryScript", DuplicateEntryScriptValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

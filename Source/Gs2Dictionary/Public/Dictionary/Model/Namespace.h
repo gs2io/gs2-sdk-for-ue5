@@ -29,7 +29,7 @@ namespace Gs2::Dictionary::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FScriptSetting> EntryScriptValue;
-        TSharedPtr<FScriptSetting> DuplicateEntryScriptValue;
+        TOptional<FString> DuplicateEntryScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -46,7 +46,7 @@ namespace Gs2::Dictionary::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithEntryScript(const TSharedPtr<FScriptSetting> EntryScript);
-        TSharedPtr<FNamespace> WithDuplicateEntryScript(const TSharedPtr<FScriptSetting> DuplicateEntryScript);
+        TSharedPtr<FNamespace> WithDuplicateEntryScript(const TOptional<FString> DuplicateEntryScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -56,7 +56,7 @@ namespace Gs2::Dictionary::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FScriptSetting> GetEntryScript() const;
-        TSharedPtr<FScriptSetting> GetDuplicateEntryScript() const;
+        TOptional<FString> GetDuplicateEntryScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

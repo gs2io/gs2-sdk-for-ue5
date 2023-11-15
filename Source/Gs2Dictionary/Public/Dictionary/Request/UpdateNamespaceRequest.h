@@ -30,7 +30,7 @@ namespace Gs2::Dictionary::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FScriptSetting> EntryScriptValue;
-        TSharedPtr<Model::FScriptSetting> DuplicateEntryScriptValue;
+        TOptional<FString> DuplicateEntryScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -45,14 +45,14 @@ namespace Gs2::Dictionary::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithEntryScript(const TSharedPtr<Model::FScriptSetting> EntryScript);
-        TSharedPtr<FUpdateNamespaceRequest> WithDuplicateEntryScript(const TSharedPtr<Model::FScriptSetting> DuplicateEntryScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithDuplicateEntryScript(const TOptional<FString> DuplicateEntryScript);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FScriptSetting> GetEntryScript() const;
-        TSharedPtr<Model::FScriptSetting> GetDuplicateEntryScript() const;
+        TOptional<FString> GetDuplicateEntryScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

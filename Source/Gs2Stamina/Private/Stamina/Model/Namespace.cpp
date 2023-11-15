@@ -22,7 +22,7 @@ namespace Gs2::Stamina::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
-        OverflowTriggerScriptValue(nullptr),
+        OverflowTriggerScriptValue(TOptional<FString>()),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -69,7 +69,7 @@ namespace Gs2::Stamina::Model
     }
 
     TSharedPtr<FNamespace> FNamespace::WithOverflowTriggerScript(
-        const TSharedPtr<FScriptSetting> OverflowTriggerScript
+        const TOptional<FString> OverflowTriggerScript
     )
     {
         this->OverflowTriggerScriptValue = OverflowTriggerScript;
@@ -119,7 +119,7 @@ namespace Gs2::Stamina::Model
     {
         return DescriptionValue;
     }
-    TSharedPtr<FScriptSetting> FNamespace::GetOverflowTriggerScript() const
+    TOptional<FString> FNamespace::GetOverflowTriggerScript() const
     {
         return OverflowTriggerScriptValue;
     }
@@ -233,14 +233,15 @@ namespace Gs2::Stamina::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithOverflowTriggerScript(Data->HasField("overflowTriggerScript") ? [Data]() -> Model::FScriptSettingPtr
+            ->WithOverflowTriggerScript(Data->HasField("overflowTriggerScript") ? [Data]() -> TOptional<FString>
                 {
-                    if (Data->HasTypedField<EJson::Null>("overflowTriggerScript"))
+                    FString v("");
+                    if (Data->TryGetStringField("overflowTriggerScript", v))
                     {
-                        return nullptr;
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
-                    return Model::FScriptSetting::FromJson(Data->GetObjectField("overflowTriggerScript"));
-                 }() : nullptr)
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -293,9 +294,9 @@ namespace Gs2::Stamina::Model
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
         }
-        if (OverflowTriggerScriptValue != nullptr && OverflowTriggerScriptValue.IsValid())
+        if (OverflowTriggerScriptValue.IsSet())
         {
-            JsonRootObject->SetObjectField("overflowTriggerScript", OverflowTriggerScriptValue->ToJson());
+            JsonRootObject->SetStringField("overflowTriggerScript", OverflowTriggerScriptValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

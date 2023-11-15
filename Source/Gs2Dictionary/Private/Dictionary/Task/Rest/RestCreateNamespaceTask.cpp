@@ -90,9 +90,9 @@ namespace Gs2::Dictionary::Task::Rest
             {
                 JsonRootObject->SetObjectField("entryScript", this->Request->GetEntryScript()->ToJson());
             }
-            if (this->Request->GetDuplicateEntryScript() != nullptr && this->Request->GetDuplicateEntryScript().IsValid())
+            if (this->Request->GetDuplicateEntryScript().IsSet())
             {
-                JsonRootObject->SetObjectField("duplicateEntryScript", this->Request->GetDuplicateEntryScript()->ToJson());
+                JsonRootObject->SetStringField("duplicateEntryScript", this->Request->GetDuplicateEntryScript().GetValue());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {

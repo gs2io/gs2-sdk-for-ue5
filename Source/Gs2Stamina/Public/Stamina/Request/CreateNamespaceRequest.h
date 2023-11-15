@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
 namespace Gs2::Stamina::Request
@@ -29,7 +28,7 @@ namespace Gs2::Stamina::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
-        TSharedPtr<Model::FScriptSetting> OverflowTriggerScriptValue;
+        TOptional<FString> OverflowTriggerScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -43,13 +42,13 @@ namespace Gs2::Stamina::Request
         TSharedPtr<FCreateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
-        TSharedPtr<FCreateNamespaceRequest> WithOverflowTriggerScript(const TSharedPtr<Model::FScriptSetting> OverflowTriggerScript);
+        TSharedPtr<FCreateNamespaceRequest> WithOverflowTriggerScript(const TOptional<FString> OverflowTriggerScript);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
-        TSharedPtr<Model::FScriptSetting> GetOverflowTriggerScript() const;
+        TOptional<FString> GetOverflowTriggerScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

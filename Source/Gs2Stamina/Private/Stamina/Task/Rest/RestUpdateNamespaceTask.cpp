@@ -88,9 +88,9 @@ namespace Gs2::Stamina::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
-            if (this->Request->GetOverflowTriggerScript() != nullptr && this->Request->GetOverflowTriggerScript().IsValid())
+            if (this->Request->GetOverflowTriggerScript().IsSet())
             {
-                JsonRootObject->SetObjectField("overflowTriggerScript", this->Request->GetOverflowTriggerScript()->ToJson());
+                JsonRootObject->SetStringField("overflowTriggerScript", this->Request->GetOverflowTriggerScript().GetValue());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
