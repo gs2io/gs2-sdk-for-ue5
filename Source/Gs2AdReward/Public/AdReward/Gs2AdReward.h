@@ -19,7 +19,6 @@
 // Model
 #include "Model/Namespace.h"
 #include "Model/Point.h"
-#include "Model/History.h"
 #include "Model/AdMob.h"
 #include "Model/UnityAd.h"
 #include "Model/NotificationSetting.h"
