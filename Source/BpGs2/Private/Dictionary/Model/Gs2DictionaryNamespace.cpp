@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Dictionary/Model/Gs2DictionaryNamespace.h"
-#include "BpGs2/Public/Dictionary/Model/Gs2DictionaryEntryModel.h"
+#include "Dictionary/Model/Gs2DictionaryNamespace.h"
+#include "Dictionary/Model/Gs2DictionaryEntryModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Dictionary/Model/Gs2DictionaryEntryModel.h"
 #include "Dictionary/Model/Gs2DictionaryUser.h"

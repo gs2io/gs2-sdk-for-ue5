@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/LoginReward/Model/Gs2LoginRewardConfig.h"
+#include "LoginReward/Model/Gs2LoginRewardConfig.h"

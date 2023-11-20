@@ -40,7 +40,7 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
     class GS2LIMIT_API FAcquireActionSpeculativeExecutorIndex
     {
     public:
-        class GS2LIMIT_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

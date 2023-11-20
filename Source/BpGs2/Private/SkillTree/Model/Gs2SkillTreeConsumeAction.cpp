@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/SkillTree/Model/Gs2SkillTreeConsumeAction.h"
+#include "SkillTree/Model/Gs2SkillTreeConsumeAction.h"

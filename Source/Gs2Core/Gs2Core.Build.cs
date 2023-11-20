@@ -7,6 +7,7 @@ public class Gs2Core : ModuleRules
 	public Gs2Core(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		bLegacyPublicIncludePaths = true;
 
 		PrivateDependencyModuleNames.AddRange(new []
 		{

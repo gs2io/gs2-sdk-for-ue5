@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Datastore/Model/Gs2DatastoreUser.h"
-#include "BpGs2/Public/Datastore/Model/Gs2DatastoreDataObject.h"
+#include "Datastore/Model/Gs2DatastoreUser.h"
+#include "Datastore/Model/Gs2DatastoreDataObject.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Datastore/Model/Gs2DatastoreDataObject.h"
 #include "Core/BpGs2Constant.h"

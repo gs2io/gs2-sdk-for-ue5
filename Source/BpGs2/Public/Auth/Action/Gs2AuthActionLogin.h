@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Auth/Model/Gs2AuthAccessToken.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Auth/Model/Gs2AuthAccessToken.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2AuthActionLogin.generated.h"
 

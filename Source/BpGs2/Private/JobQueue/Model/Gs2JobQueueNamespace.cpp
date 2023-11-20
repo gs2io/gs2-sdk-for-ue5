@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/JobQueue/Model/Gs2JobQueueNamespace.h"
+#include "JobQueue/Model/Gs2JobQueueNamespace.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "JobQueue/Model/Gs2JobQueueUser.h"
 #include "Core/BpGs2Constant.h"

@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Experience/Model/Gs2ExperienceNamespace.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Experience/Model/Gs2ExperienceNamespace.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ExperienceListOfExperienceModel.generated.h"
 

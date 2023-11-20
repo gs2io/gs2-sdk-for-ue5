@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Experience/Public/Experience/Domain/Gs2Experience.h"
+#include "Experience/Domain/Gs2Experience.h"
 #include "Util/Profile.h"
 #include "Experience/Domain/Model/Gs2ExperienceEzNamespaceDomain.h"
 

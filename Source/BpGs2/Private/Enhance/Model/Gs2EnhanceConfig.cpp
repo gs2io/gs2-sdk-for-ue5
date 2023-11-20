@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceConfig.h"
+#include "Enhance/Model/Gs2EnhanceConfig.h"

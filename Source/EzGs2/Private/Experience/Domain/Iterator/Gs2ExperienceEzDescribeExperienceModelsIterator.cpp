@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Experience/Domain/Iterator/Gs2ExperienceEzDescribeExperienceModelsIterator.h"
+#include "Experience/Domain/Iterator/Gs2ExperienceEzDescribeExperienceModelsIterator.h"
 
 namespace Gs2::UE5::Experience::Domain::Iterator
 {

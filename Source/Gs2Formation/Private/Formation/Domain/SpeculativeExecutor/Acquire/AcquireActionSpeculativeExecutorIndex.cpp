@@ -27,7 +27,7 @@
 #include "Formation/Domain/SpeculativeExecutor/Acquire/SetMoldCapacityByUserIdSpeculativeExecutor.h"
 #include "Formation/Domain/SpeculativeExecutor/Acquire/AcquireActionsToFormPropertiesSpeculativeExecutor.h"
 #include "Formation/Domain/SpeculativeExecutor/Acquire/AcquireActionsToPropertyFormPropertiesSpeculativeExecutor.h"
-
+#include "Core/Util/Gs2Future.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Formation::Domain::SpeculativeExecutor

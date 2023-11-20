@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Friend/Model/Gs2FriendEzProfile.h"
+#include "Friend/Model/Gs2FriendEzProfile.h"
 
 namespace Gs2::UE5::Friend::Model
 {

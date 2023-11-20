@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriendUser.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriendUser.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Friend/Model/Gs2FriendFriendUser.h"
+#include "Friend/Model/Gs2FriendFriendUser.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendActionDeleteFriend.generated.h"
 

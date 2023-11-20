@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/SkillTree/Model/Gs2SkillTreeStatus.h"
+#include "SkillTree/Model/Gs2SkillTreeStatus.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

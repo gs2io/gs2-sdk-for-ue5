@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Idle/Model/Gs2IdleUser.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Idle/Model/Gs2IdleUser.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2IdleListOfStatus.generated.h"
 

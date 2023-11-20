@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2SerialKey/Public/SerialKey/Domain/Gs2SerialKey.h"
+#include "SerialKey/Domain/Gs2SerialKey.h"
 #include "Util/Profile.h"
 #include "SerialKey/Domain/Model/Gs2SerialKeyEzNamespaceDomain.h"
 

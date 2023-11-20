@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Friend/Public/Friend/Domain/Gs2Friend.h"
+#include "Friend/Domain/Gs2Friend.h"
 #include "Util/Profile.h"
 #include "Friend/Domain/Model/Gs2FriendEzNamespaceDomain.h"
 

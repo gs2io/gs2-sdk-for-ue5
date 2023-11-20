@@ -16,7 +16,7 @@
  * deny overwrite
  */
 
-#include "EzGs2/Public/Friend/Model/Gs2FriendEzFriendRequest.h"
+#include "Friend/Model/Gs2FriendEzFriendRequest.h"
 
 namespace Gs2::UE5::Friend::Model
 {

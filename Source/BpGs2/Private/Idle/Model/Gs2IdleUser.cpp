@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Idle/Model/Gs2IdleUser.h"
-#include "BpGs2/Public/Idle/Model/Gs2IdleStatus.h"
+#include "Idle/Model/Gs2IdleUser.h"
+#include "Idle/Model/Gs2IdleStatus.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Idle/Model/Gs2IdleStatus.h"
 #include "Core/BpGs2Constant.h"

@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Model/Gs2Error.h"
-#include "Gs2Core/Gs2Core.h"
+#include "../../Gs2Core/Gs2Core.h"
 
 namespace Gs2::Core::Util
 {

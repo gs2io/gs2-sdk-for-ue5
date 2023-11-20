@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Key/Model/Gs2KeyKey.h"
+#include "Key/Model/Gs2KeyKey.h"

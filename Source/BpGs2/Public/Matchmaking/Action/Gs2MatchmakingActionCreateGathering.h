@@ -17,13 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingGathering.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingPlayer.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingAttributeRange.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingCapacityOfRole.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingTimeSpan.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingUser.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Matchmaking/Model/Gs2MatchmakingGathering.h"
+#include "Matchmaking/Model/Gs2MatchmakingPlayer.h"
+#include "Matchmaking/Model/Gs2MatchmakingAttributeRange.h"
+#include "Matchmaking/Model/Gs2MatchmakingCapacityOfRole.h"
+#include "Matchmaking/Model/Gs2MatchmakingTimeSpan.h"
+#include "Matchmaking/Model/Gs2MatchmakingUser.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MatchmakingActionCreateGathering.generated.h"
 

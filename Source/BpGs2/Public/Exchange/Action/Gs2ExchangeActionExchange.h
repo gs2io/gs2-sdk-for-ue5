@@ -19,10 +19,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeRateModel.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeConfig.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeExchange.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Exchange/Model/Gs2ExchangeRateModel.h"
+#include "Exchange/Model/Gs2ExchangeConfig.h"
+#include "Exchange/Model/Gs2ExchangeExchange.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ExchangeActionExchange.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExchangeExchangeSuccessDelegate, FGs2ExchangeOwnExchange, Exchange, const FGs2Error, Error);

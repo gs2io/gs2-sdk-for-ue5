@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Quest/Public/Quest/Domain/Gs2Quest.h"
+#include "Quest/Domain/Gs2Quest.h"
 #include "Util/Profile.h"
 #include "Quest/Domain/Model/Gs2QuestEzNamespaceDomain.h"
 #include "Quest/Domain/Model/Gs2QuestEzQuestModelDomain.h"

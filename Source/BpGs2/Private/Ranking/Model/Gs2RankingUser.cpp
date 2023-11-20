@@ -16,10 +16,10 @@
  * deny overwrite
  */
 
-#include "BpGs2/Public/Ranking/Model/Gs2RankingUser.h"
-#include "BpGs2/Public/Ranking/Model/Gs2RankingSubscribeUser.h"
-#include "BpGs2/Public/Ranking/Model/Gs2RankingRanking.h"
-#include "BpGs2/Public/Ranking/Model/Gs2RankingScore.h"
+#include "Ranking/Model/Gs2RankingUser.h"
+#include "Ranking/Model/Gs2RankingSubscribeUser.h"
+#include "Ranking/Model/Gs2RankingRanking.h"
+#include "Ranking/Model/Gs2RankingScore.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Ranking/Model/Gs2RankingSubscribeUser.h"
 #include "Ranking/Model/Gs2RankingRanking.h"

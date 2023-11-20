@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Inventory/Public/Inventory/Domain/Gs2Inventory.h"
+#include "Inventory/Domain/Gs2Inventory.h"
 #include "Util/Profile.h"
 #include "Inventory/Domain/Model/Gs2InventoryEzNamespaceDomain.h"
 #include "Inventory/Domain/Model/Gs2InventoryEzItemModelDomain.h"

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Matchmaking/Model/Gs2MatchmakingEzAttributeRange.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzAttributeRange.h"
 
 namespace Gs2::UE5::Matchmaking::Model
 {

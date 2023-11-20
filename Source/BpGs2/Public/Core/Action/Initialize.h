@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Core/Model/Gs2Client.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
-#include "BpGs2/Public/Core/Model/Gs2Region.h"
+#include "Core/Model/Gs2Client.h"
+#include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2Region.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Initialize.generated.h"
 

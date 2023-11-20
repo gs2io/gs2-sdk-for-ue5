@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Auth/Model/Gs2AuthEzAccessToken.h"
+#include "Auth/Model/Gs2AuthEzAccessToken.h"
 
 namespace Gs2::UE5::Auth::Model
 {

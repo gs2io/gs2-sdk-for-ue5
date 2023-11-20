@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Dictionary/Model/Gs2DictionaryEntry.h"
-#include "BpGs2/Public/Dictionary/Model/Gs2DictionaryEntry.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Dictionary/Model/Gs2DictionaryEntry.h"
+#include "Dictionary/Model/Gs2DictionaryEntry.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2DictionaryActionGetEntryWithSignature.generated.h"
 

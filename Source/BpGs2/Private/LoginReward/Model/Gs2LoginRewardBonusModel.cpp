@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/LoginReward/Model/Gs2LoginRewardBonusModel.h"
+#include "LoginReward/Model/Gs2LoginRewardBonusModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

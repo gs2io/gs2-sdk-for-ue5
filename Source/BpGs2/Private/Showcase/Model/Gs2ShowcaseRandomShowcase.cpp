@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseRandomShowcase.h"
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"
+#include "Showcase/Model/Gs2ShowcaseRandomShowcase.h"
+#include "Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"
 #include "Core/BpGs2Constant.h"

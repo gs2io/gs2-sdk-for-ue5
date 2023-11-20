@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Chat/Model/Gs2ChatNotificationType.h"
+#include "Chat/Model/Gs2ChatNotificationType.h"

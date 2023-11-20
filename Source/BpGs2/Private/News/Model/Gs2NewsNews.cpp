@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/News/Model/Gs2NewsNews.h"
+#include "News/Model/Gs2NewsNews.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

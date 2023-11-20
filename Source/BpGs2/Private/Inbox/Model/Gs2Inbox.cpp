@@ -15,7 +15,7 @@
  */
 
 #include "Inbox/Model/Gs2Inbox.h"
-#include "BpGs2/Public/Inbox/Model/Gs2InboxNamespace.h"
+#include "Inbox/Model/Gs2InboxNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Inbox UGs2InboxFunctionLibrary::Service(

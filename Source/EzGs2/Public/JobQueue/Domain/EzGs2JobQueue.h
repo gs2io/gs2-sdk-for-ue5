@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2JobQueue/Public/JobQueue/Domain/Gs2JobQueue.h"
+#include "JobQueue/Domain/Gs2JobQueue.h"
 #include "Util/Profile.h"
 #include "JobQueue/Domain/Model/Gs2JobQueueEzNamespaceDomain.h"
 

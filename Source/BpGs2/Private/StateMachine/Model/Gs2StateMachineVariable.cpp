@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/StateMachine/Model/Gs2StateMachineVariable.h"
+#include "StateMachine/Model/Gs2StateMachineVariable.h"

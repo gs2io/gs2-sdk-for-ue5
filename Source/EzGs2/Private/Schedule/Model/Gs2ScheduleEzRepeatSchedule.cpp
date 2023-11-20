@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Schedule/Model/Gs2ScheduleEzRepeatSchedule.h"
+#include "Schedule/Model/Gs2ScheduleEzRepeatSchedule.h"
 
 namespace Gs2::UE5::Schedule::Model
 {

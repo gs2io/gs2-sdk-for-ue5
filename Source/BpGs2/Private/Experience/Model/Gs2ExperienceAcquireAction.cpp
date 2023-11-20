@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Experience/Model/Gs2ExperienceAcquireAction.h"
+#include "Experience/Model/Gs2ExperienceAcquireAction.h"

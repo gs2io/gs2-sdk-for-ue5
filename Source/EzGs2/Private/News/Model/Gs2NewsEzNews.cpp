@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/News/Model/Gs2NewsEzNews.h"
+#include "News/Model/Gs2NewsEzNews.h"
 
 namespace Gs2::UE5::News::Model
 {

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Lottery/Domain/Iterator/Gs2LotteryEzDescribeLotteryModelsIterator.h"
+#include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeLotteryModelsIterator.h"
 
 namespace Gs2::UE5::Lottery::Domain::Iterator
 {

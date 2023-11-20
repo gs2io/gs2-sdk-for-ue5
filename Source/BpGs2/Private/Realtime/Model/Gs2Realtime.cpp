@@ -15,7 +15,7 @@
  */
 
 #include "Realtime/Model/Gs2Realtime.h"
-#include "BpGs2/Public/Realtime/Model/Gs2RealtimeNamespace.h"
+#include "Realtime/Model/Gs2RealtimeNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Realtime UGs2RealtimeFunctionLibrary::Service(

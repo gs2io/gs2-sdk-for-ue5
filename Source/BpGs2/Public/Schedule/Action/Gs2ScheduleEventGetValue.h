@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Schedule/Model/Gs2ScheduleEvent.h"
-#include "BpGs2/Public/Schedule/Model/Gs2ScheduleEvent.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Schedule/Model/Gs2ScheduleEvent.h"
+#include "Schedule/Model/Gs2ScheduleEvent.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ScheduleEventGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ScheduleEventGetValueSuccessDelegate, FGs2ScheduleEventValue, Value, const FGs2Error, Error);

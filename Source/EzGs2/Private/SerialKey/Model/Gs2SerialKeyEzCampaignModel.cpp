@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/SerialKey/Model/Gs2SerialKeyEzCampaignModel.h"
+#include "SerialKey/Model/Gs2SerialKeyEzCampaignModel.h"
 
 namespace Gs2::UE5::SerialKey::Model
 {

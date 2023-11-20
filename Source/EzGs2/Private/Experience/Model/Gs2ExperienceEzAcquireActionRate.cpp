@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Experience/Model/Gs2ExperienceEzAcquireActionRate.h"
+#include "Experience/Model/Gs2ExperienceEzAcquireActionRate.h"
 
 namespace Gs2::UE5::Experience::Model
 {

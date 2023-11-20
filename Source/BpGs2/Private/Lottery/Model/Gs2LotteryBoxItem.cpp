@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryBoxItem.h"
+#include "Lottery/Model/Gs2LotteryBoxItem.h"

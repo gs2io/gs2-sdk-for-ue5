@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Enchant/Model/Gs2EnchantEzBalanceParameterModel.h"
+#include "Enchant/Model/Gs2EnchantEzBalanceParameterModel.h"
 
 namespace Gs2::UE5::Enchant::Model
 {

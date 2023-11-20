@@ -7,7 +7,7 @@ public class Gs2Formation : ModuleRules
 	public Gs2Formation(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
+		
 		PrivateDependencyModuleNames.AddRange(new [] {
 			"Core",
 			"CoreUObject",
@@ -23,7 +23,7 @@ public class Gs2Formation : ModuleRules
 		});
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core",
-			"Gs2Core"
+			"Gs2Core",
 		});
 	}
 }

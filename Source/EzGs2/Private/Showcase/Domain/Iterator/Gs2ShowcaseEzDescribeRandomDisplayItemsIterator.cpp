@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Showcase/Domain/Iterator/Gs2ShowcaseEzDescribeRandomDisplayItemsIterator.h"
+#include "Showcase/Domain/Iterator/Gs2ShowcaseEzDescribeRandomDisplayItemsIterator.h"
 
 namespace Gs2::UE5::Showcase::Domain::Iterator
 {

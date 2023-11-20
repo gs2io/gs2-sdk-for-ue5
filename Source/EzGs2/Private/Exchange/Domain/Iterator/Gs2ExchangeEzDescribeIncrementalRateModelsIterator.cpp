@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Exchange/Domain/Iterator/Gs2ExchangeEzDescribeIncrementalRateModelsIterator.h"
+#include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeIncrementalRateModelsIterator.h"
 
 namespace Gs2::UE5::Exchange::Domain::Iterator
 {

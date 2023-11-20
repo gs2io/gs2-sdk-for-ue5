@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Inbox/Domain/Iterator/Gs2InboxEzDescribeMessagesIterator.h"
+#include "Inbox/Domain/Iterator/Gs2InboxEzDescribeMessagesIterator.h"
 
 namespace Gs2::UE5::Inbox::Domain::Iterator
 {

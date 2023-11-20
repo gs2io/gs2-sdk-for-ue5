@@ -17,10 +17,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/LoginReward/Model/Gs2LoginRewardReceiveStatus.h"
-#include "BpGs2/Public/LoginReward/Model/Gs2LoginRewardConfig.h"
-#include "BpGs2/Public/LoginReward/Model/Gs2LoginRewardBonus.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "LoginReward/Model/Gs2LoginRewardReceiveStatus.h"
+#include "LoginReward/Model/Gs2LoginRewardConfig.h"
+#include "LoginReward/Model/Gs2LoginRewardBonus.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2LoginRewardActionReceive.generated.h"
 

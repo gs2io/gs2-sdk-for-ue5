@@ -17,10 +17,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Formation/Model/Gs2FormationForm.h"
-#include "BpGs2/Public/Formation/Model/Gs2FormationSlotWithSignature.h"
-#include "BpGs2/Public/Formation/Model/Gs2FormationForm.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Formation/Model/Gs2FormationForm.h"
+#include "Formation/Model/Gs2FormationSlotWithSignature.h"
+#include "Formation/Model/Gs2FormationForm.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FormationActionSetForm.generated.h"
 

@@ -19,11 +19,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldSpatial.h"
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldMyPosition.h"
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldScope.h"
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldSpatial.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "MegaField/Model/Gs2MegaFieldSpatial.h"
+#include "MegaField/Model/Gs2MegaFieldMyPosition.h"
+#include "MegaField/Model/Gs2MegaFieldScope.h"
+#include "MegaField/Model/Gs2MegaFieldSpatial.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MegaFieldActionUpdate.generated.h"
 

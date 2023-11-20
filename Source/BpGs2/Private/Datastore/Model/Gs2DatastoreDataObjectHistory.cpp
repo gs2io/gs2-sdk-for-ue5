@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Datastore/Model/Gs2DatastoreDataObjectHistory.h"
+#include "Datastore/Model/Gs2DatastoreDataObjectHistory.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

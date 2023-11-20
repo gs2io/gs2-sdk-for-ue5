@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Limit/Public/Limit/Domain/Gs2Limit.h"
+#include "Limit/Domain/Gs2Limit.h"
 #include "Util/Profile.h"
 #include "Limit/Domain/Model/Gs2LimitEzNamespaceDomain.h"
 

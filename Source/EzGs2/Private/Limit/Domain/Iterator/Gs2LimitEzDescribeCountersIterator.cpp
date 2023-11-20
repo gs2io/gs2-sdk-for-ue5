@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Limit/Domain/Iterator/Gs2LimitEzDescribeCountersIterator.h"
+#include "Limit/Domain/Iterator/Gs2LimitEzDescribeCountersIterator.h"
 
 namespace Gs2::UE5::Limit::Domain::Iterator
 {

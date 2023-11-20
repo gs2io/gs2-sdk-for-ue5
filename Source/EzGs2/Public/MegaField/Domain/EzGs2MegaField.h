@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2MegaField/Public/MegaField/Domain/Gs2MegaField.h"
+#include "MegaField/Domain/Gs2MegaField.h"
 #include "Util/Profile.h"
 #include "MegaField/Domain/Model/Gs2MegaFieldEzNamespaceDomain.h"
 #include "MegaField/Domain/Model/Gs2MegaFieldEzLayerModelDomain.h"

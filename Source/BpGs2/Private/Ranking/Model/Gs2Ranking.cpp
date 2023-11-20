@@ -15,9 +15,9 @@
  */
 
 #include "Ranking/Model/Gs2Ranking.h"
-#include "BpGs2/Public/Ranking/Model/Gs2RankingNamespace.h"
-#include "BpGs2/Public/Ranking/Model/Gs2RankingRanking.h"
-#include "BpGs2/Public/Ranking/Model/Gs2RankingSubscribeUser.h"
+#include "Ranking/Model/Gs2RankingNamespace.h"
+#include "Ranking/Model/Gs2RankingRanking.h"
+#include "Ranking/Model/Gs2RankingSubscribeUser.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Ranking UGs2RankingFunctionLibrary::Service(

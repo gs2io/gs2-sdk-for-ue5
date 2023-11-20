@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeUser.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeAwait.h"
+#include "Exchange/Model/Gs2ExchangeUser.h"
+#include "Exchange/Model/Gs2ExchangeAwait.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Exchange/Model/Gs2ExchangeExchange.h"
 #include "Exchange/Model/Gs2ExchangeAwait.h"

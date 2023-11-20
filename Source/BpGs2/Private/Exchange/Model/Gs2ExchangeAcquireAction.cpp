@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeAcquireAction.h"
+#include "Exchange/Model/Gs2ExchangeAcquireAction.h"

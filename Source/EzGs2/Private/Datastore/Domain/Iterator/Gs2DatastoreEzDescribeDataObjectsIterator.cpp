@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Datastore/Domain/Iterator/Gs2DatastoreEzDescribeDataObjectsIterator.h"
+#include "Datastore/Domain/Iterator/Gs2DatastoreEzDescribeDataObjectsIterator.h"
 
 namespace Gs2::UE5::Datastore::Domain::Iterator
 {

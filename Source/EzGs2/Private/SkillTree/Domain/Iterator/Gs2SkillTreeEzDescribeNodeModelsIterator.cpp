@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/SkillTree/Domain/Iterator/Gs2SkillTreeEzDescribeNodeModelsIterator.h"
+#include "SkillTree/Domain/Iterator/Gs2SkillTreeEzDescribeNodeModelsIterator.h"
 
 namespace Gs2::UE5::SkillTree::Domain::Iterator
 {

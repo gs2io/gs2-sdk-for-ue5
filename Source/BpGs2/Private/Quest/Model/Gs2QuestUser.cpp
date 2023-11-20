@@ -16,9 +16,9 @@
  * deny overwrite
  */
 
-#include "BpGs2/Public/Quest/Model/Gs2QuestUser.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestProgress.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestCompletedQuestList.h"
+#include "Quest/Model/Gs2QuestUser.h"
+#include "Quest/Model/Gs2QuestProgress.h"
+#include "Quest/Model/Gs2QuestCompletedQuestList.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Quest/Model/Gs2QuestProgress.h"
 #include "Quest/Model/Gs2QuestCompletedQuestList.h"

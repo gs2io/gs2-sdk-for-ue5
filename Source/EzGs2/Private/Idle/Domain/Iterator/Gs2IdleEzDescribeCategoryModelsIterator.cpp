@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Idle/Domain/Iterator/Gs2IdleEzDescribeCategoryModelsIterator.h"
+#include "Idle/Domain/Iterator/Gs2IdleEzDescribeCategoryModelsIterator.h"
 
 namespace Gs2::UE5::Idle::Domain::Iterator
 {

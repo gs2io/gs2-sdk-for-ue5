@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Mission/Model/Gs2MissionComplete.h"
-#include "BpGs2/Public/Mission/Model/Gs2MissionComplete.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Mission/Model/Gs2MissionComplete.h"
+#include "Mission/Model/Gs2MissionComplete.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MissionCompleteGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MissionCompleteGetValueSuccessDelegate, FGs2MissionCompleteValue, Value, const FGs2Error, Error);

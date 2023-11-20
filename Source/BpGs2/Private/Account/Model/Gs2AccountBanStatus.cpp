@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Account/Model/Gs2AccountBanStatus.h"
+#include "Account/Model/Gs2AccountBanStatus.h"

@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Mission/Model/Gs2MissionCounter.h"
+#include "Mission/Model/Gs2MissionCounter.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

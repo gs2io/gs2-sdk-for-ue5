@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Distributor/Model/Gs2DistributorEzStampSheetResult.h"
+#include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
 
 namespace Gs2::UE5::Distributor::Model
 {

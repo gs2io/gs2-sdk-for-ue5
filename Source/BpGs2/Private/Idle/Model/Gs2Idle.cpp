@@ -15,7 +15,7 @@
  */
 
 #include "Idle/Model/Gs2Idle.h"
-#include "BpGs2/Public/Idle/Model/Gs2IdleNamespace.h"
+#include "Idle/Model/Gs2IdleNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Idle UGs2IdleFunctionLibrary::Service(

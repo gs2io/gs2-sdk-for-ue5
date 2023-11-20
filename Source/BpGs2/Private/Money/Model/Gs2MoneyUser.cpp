@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Money/Model/Gs2MoneyUser.h"
-#include "BpGs2/Public/Money/Model/Gs2MoneyWallet.h"
+#include "Money/Model/Gs2MoneyUser.h"
+#include "Money/Model/Gs2MoneyWallet.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Money/Model/Gs2MoneyWallet.h"
 #include "Core/BpGs2Constant.h"

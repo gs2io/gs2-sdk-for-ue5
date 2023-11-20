@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestCompletedQuestList.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestCompletedQuestList.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Quest/Model/Gs2QuestCompletedQuestList.h"
+#include "Quest/Model/Gs2QuestCompletedQuestList.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2QuestCompletedQuestListGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2QuestCompletedQuestListGetValueSuccessDelegate, FGs2QuestCompletedQuestListValue, Value, const FGs2Error, Error);

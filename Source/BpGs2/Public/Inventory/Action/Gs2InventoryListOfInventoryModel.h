@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventoryNamespace.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Inventory/Model/Gs2InventoryNamespace.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2InventoryListOfInventoryModel.generated.h"
 

@@ -17,10 +17,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseConfig.h"
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"
+#include "Showcase/Model/Gs2ShowcaseConfig.h"
+#include "Showcase/Model/Gs2ShowcaseRandomDisplayItem.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ShowcaseActionRandomShowcaseBuy.generated.h"
 

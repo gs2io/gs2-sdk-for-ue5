@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Enchant/Model/Gs2EnchantEzRarityParameterValueModel.h"
+#include "Enchant/Model/Gs2EnchantEzRarityParameterValueModel.h"
 
 namespace Gs2::UE5::Enchant::Model
 {

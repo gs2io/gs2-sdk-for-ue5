@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/SkillTree/Model/Gs2SkillTreeNamespace.h"
-#include "BpGs2/Public/SkillTree/Model/Gs2SkillTreeNodeModel.h"
+#include "SkillTree/Model/Gs2SkillTreeNamespace.h"
+#include "SkillTree/Model/Gs2SkillTreeNodeModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "SkillTree/Model/Gs2SkillTreeNodeModel.h"
 #include "SkillTree/Model/Gs2SkillTreeUser.h"

@@ -19,9 +19,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriendRequest.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendReceiveFriendRequest.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Friend/Model/Gs2FriendFriendRequest.h"
+#include "Friend/Model/Gs2FriendReceiveFriendRequest.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendReceiveFriendRequestGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendReceiveFriendRequestGetValueSuccessDelegate, FGs2FriendFriendRequest, Value, const FGs2Error, Error);

@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Stamina/Public/Stamina/Domain/Gs2Stamina.h"
+#include "Stamina/Domain/Gs2Stamina.h"
 #include "Util/Profile.h"
 #include "Stamina/Domain/Model/Gs2StaminaEzNamespaceDomain.h"
 

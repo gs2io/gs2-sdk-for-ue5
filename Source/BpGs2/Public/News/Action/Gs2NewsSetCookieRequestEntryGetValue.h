@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/News/Model/Gs2NewsSetCookieRequestEntry.h"
-#include "BpGs2/Public/News/Model/Gs2NewsSetCookieRequestEntry.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "News/Model/Gs2NewsSetCookieRequestEntry.h"
+#include "News/Model/Gs2NewsSetCookieRequestEntry.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2NewsSetCookieRequestEntryGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2NewsSetCookieRequestEntryGetValueSuccessDelegate, FGs2NewsSetCookieRequestEntryValue, Value, const FGs2Error, Error);

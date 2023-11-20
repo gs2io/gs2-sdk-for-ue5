@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/JobQueue/Model/Gs2JobQueueJobEntry.h"
+#include "JobQueue/Model/Gs2JobQueueJobEntry.h"

@@ -67,7 +67,7 @@ namespace Gs2::Inventory::Domain::SpeculativeExecutor
         }
         Items->Sort([](const Inventory::Model::FSimpleItemPtr& V1, const Inventory::Model::FSimpleItemPtr& V2)
         {
-            return V1->GetItemName()->Compare(*V2->GetItemName());
+            return V1->GetItemName()->Compare(*V2->GetItemName()) < 0;
         });
         return nullptr;
     }

@@ -40,7 +40,7 @@ namespace Gs2::Inbox::Domain::SpeculativeExecutor
     class GS2INBOX_API FConsumeActionSpeculativeExecutorIndex
     {
     public:
-        class GS2INBOX_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

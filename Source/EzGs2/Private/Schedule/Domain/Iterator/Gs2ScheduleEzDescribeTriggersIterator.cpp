@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Schedule/Domain/Iterator/Gs2ScheduleEzDescribeTriggersIterator.h"
+#include "Schedule/Domain/Iterator/Gs2ScheduleEzDescribeTriggersIterator.h"
 
 namespace Gs2::UE5::Schedule::Domain::Iterator
 {

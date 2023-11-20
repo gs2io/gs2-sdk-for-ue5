@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Chat/Model/Gs2ChatMessage.h"
-#include "BpGs2/Public/Chat/Model/Gs2ChatRoom.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Chat/Model/Gs2ChatMessage.h"
+#include "Chat/Model/Gs2ChatRoom.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ChatActionPost.generated.h"
 

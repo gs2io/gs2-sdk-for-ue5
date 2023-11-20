@@ -15,7 +15,7 @@
  */
 
 #include "Enhance/Model/Gs2Enhance.h"
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceNamespace.h"
+#include "Enhance/Model/Gs2EnhanceNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Enhance UGs2EnhanceFunctionLibrary::Service(

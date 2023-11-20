@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Version/Model/Gs2VersionStatus.h"
+#include "Version/Model/Gs2VersionStatus.h"

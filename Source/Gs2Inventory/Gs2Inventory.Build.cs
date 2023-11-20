@@ -7,7 +7,7 @@ public class Gs2Inventory : ModuleRules
 	public Gs2Inventory(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
+		
 		PrivateDependencyModuleNames.AddRange(new [] {
 			"Core",
 			"CoreUObject",
@@ -22,7 +22,7 @@ public class Gs2Inventory : ModuleRules
 		});
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core",
-			"Gs2Core"
+			"Gs2Core",
 		});
 	}
 }

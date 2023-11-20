@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Datastore/Model/Gs2DatastoreDataObject.h"
-#include "BpGs2/Public/Datastore/Model/Gs2DatastoreDataObject.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Datastore/Model/Gs2DatastoreDataObject.h"
+#include "Datastore/Model/Gs2DatastoreDataObject.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2DatastoreActionUpdateDataObject.generated.h"
 

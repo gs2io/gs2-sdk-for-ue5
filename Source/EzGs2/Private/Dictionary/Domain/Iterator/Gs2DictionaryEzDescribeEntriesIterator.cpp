@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeEntriesIterator.h"
+#include "Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeEntriesIterator.h"
 
 namespace Gs2::UE5::Dictionary::Domain::Iterator
 {

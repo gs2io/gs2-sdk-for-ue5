@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Version/Model/Gs2VersionUser.h"
-#include "BpGs2/Public/Version/Model/Gs2VersionAcceptVersion.h"
+#include "Version/Model/Gs2VersionUser.h"
+#include "Version/Model/Gs2VersionAcceptVersion.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Version/Model/Gs2VersionAcceptVersion.h"
 #include "Version/Model/Gs2VersionChecker.h"

@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/News/Model/Gs2NewsUser.h"
-#include "BpGs2/Public/News/Model/Gs2NewsNews.h"
-#include "BpGs2/Public/News/Model/Gs2NewsSetCookieRequestEntry.h"
+#include "News/Model/Gs2NewsUser.h"
+#include "News/Model/Gs2NewsNews.h"
+#include "News/Model/Gs2NewsSetCookieRequestEntry.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "News/Model/Gs2NewsNews.h"
 #include "News/Model/Gs2NewsSetCookieRequestEntry.h"

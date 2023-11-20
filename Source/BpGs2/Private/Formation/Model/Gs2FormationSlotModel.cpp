@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Formation/Model/Gs2FormationSlotModel.h"
+#include "Formation/Model/Gs2FormationSlotModel.h"

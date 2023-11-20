@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Idle/Model/Gs2IdleCategoryModel.h"
-#include "BpGs2/Public/Idle/Model/Gs2IdleCategoryModel.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Idle/Model/Gs2IdleCategoryModel.h"
+#include "Idle/Model/Gs2IdleCategoryModel.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2IdleCategoryModelGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2IdleCategoryModelGetValueSuccessDelegate, FGs2IdleCategoryModelValue, Value, const FGs2Error, Error);

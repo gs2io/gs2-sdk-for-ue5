@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Version/Model/Gs2VersionEzAcceptVersion.h"
+#include "Version/Model/Gs2VersionEzAcceptVersion.h"
 
 namespace Gs2::UE5::Version::Model
 {

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/News/Model/Gs2NewsEzSetCookieRequestEntry.h"
+#include "News/Model/Gs2NewsEzSetCookieRequestEntry.h"
 
 namespace Gs2::UE5::News::Model
 {

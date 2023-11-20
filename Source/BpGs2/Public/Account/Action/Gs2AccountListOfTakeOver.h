@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Account/Model/Gs2AccountAccount.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Account/Model/Gs2AccountAccount.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2AccountListOfTakeOver.generated.h"
 

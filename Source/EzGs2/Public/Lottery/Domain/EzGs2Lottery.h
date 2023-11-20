@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Lottery/Public/Lottery/Domain/Gs2Lottery.h"
+#include "Lottery/Domain/Gs2Lottery.h"
 #include "Util/Profile.h"
 #include "Lottery/Domain/Model/Gs2LotteryEzNamespaceDomain.h"
 

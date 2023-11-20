@@ -19,20 +19,15 @@
 #pragma once
 
 #include "Auth/Model/AccessToken.h"
+#include "Core/Domain/Gs2.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
 #include "Core/Util/Gs2Future.h"
 #include "Math/BigInt.h"
 
-namespace Gs2::Core::Domain
-{
-	class FGs2;
-	typedef TSharedPtr<FGs2> FGs2Ptr;
-}
-
 namespace Gs2::Core::Domain::SpeculativeExecutor
 {
-	class GS2CORE_API FSpeculativeExecutor
+	class GS2DOMAIN_API FSpeculativeExecutor
 	{
 		const TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>>& ConsumeActions;
 		const TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>>& AcquireActions;
@@ -51,7 +46,7 @@ namespace Gs2::Core::Domain::SpeculativeExecutor
 			const TBigInt<1024, false>& Rate
 		);
 
-		class GS2CORE_API FCommitTask final :
+		class FCommitTask final :
 			public Util::TGs2Future<TFunction<void()>>,
 			public TSharedFromThis<FCommitTask>
 		{

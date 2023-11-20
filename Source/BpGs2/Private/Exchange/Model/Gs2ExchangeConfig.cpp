@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeConfig.h"
+#include "Exchange/Model/Gs2ExchangeConfig.h"

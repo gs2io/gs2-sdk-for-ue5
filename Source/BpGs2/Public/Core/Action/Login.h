@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/Model/Gs2Authenticator.h"
 #include "Core/Model/Gs2Client.h"

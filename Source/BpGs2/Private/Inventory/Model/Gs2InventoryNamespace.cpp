@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Inventory/Model/Gs2InventoryNamespace.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventoryInventoryModel.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventorySimpleInventoryModel.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventoryBigInventoryModel.h"
+#include "Inventory/Model/Gs2InventoryNamespace.h"
+#include "Inventory/Model/Gs2InventoryInventoryModel.h"
+#include "Inventory/Model/Gs2InventorySimpleInventoryModel.h"
+#include "Inventory/Model/Gs2InventoryBigInventoryModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Inventory/Model/Gs2InventoryInventoryModel.h"
 #include "Inventory/Model/Gs2InventoryUser.h"

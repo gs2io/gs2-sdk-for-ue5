@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Showcase/Model/Gs2ShowcaseEzSalesItemGroup.h"
+#include "Showcase/Model/Gs2ShowcaseEzSalesItemGroup.h"
 
 namespace Gs2::UE5::Showcase::Model
 {

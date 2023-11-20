@@ -15,7 +15,7 @@
  */
 
 #include "Chat/Model/Gs2Chat.h"
-#include "BpGs2/Public/Chat/Model/Gs2ChatNamespace.h"
+#include "Chat/Model/Gs2ChatNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Chat UGs2ChatFunctionLibrary::Service(

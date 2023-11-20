@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Exchange/Public/Exchange/Domain/Gs2Exchange.h"
+#include "Exchange/Domain/Gs2Exchange.h"
 #include "Util/Profile.h"
 #include "Exchange/Domain/Model/Gs2ExchangeEzNamespaceDomain.h"
 

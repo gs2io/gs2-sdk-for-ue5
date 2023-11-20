@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2News/Public/News/Domain/Gs2News.h"
+#include "News/Domain/Gs2News.h"
 #include "Util/Profile.h"
 #include "News/Domain/Model/Gs2NewsEzNamespaceDomain.h"
 #include "News/Domain/Model/Gs2NewsEzNewsDomain.h"

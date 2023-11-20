@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryLotteryModel.h"
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryLotteryModel.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Lottery/Model/Gs2LotteryLotteryModel.h"
+#include "Lottery/Model/Gs2LotteryLotteryModel.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2LotteryLotteryModelGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2LotteryLotteryModelGetValueSuccessDelegate, FGs2LotteryLotteryModelValue, Value, const FGs2Error, Error);

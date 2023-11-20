@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/LoginReward/Domain/Iterator/Gs2LoginRewardEzDescribeReceiveStatusesIterator.h"
+#include "LoginReward/Domain/Iterator/Gs2LoginRewardEzDescribeReceiveStatusesIterator.h"
 
 namespace Gs2::UE5::LoginReward::Domain::Iterator
 {

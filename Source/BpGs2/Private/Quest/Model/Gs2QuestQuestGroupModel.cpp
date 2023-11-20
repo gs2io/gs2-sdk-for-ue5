@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Quest/Model/Gs2QuestQuestGroupModel.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestQuestModel.h"
+#include "Quest/Model/Gs2QuestQuestGroupModel.h"
+#include "Quest/Model/Gs2QuestQuestModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Quest/Model/Gs2QuestQuestModel.h"
 #include "Core/BpGs2Constant.h"

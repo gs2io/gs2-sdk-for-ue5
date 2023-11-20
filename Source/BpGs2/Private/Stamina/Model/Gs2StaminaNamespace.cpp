@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaNamespace.h"
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaStaminaModel.h"
+#include "Stamina/Model/Gs2StaminaNamespace.h"
+#include "Stamina/Model/Gs2StaminaStaminaModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Stamina/Model/Gs2StaminaStaminaModel.h"
 #include "Stamina/Model/Gs2StaminaUser.h"

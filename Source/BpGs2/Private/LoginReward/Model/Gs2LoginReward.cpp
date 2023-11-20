@@ -15,7 +15,7 @@
  */
 
 #include "LoginReward/Model/Gs2LoginReward.h"
-#include "BpGs2/Public/LoginReward/Model/Gs2LoginRewardNamespace.h"
+#include "LoginReward/Model/Gs2LoginRewardNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2LoginReward UGs2LoginRewardFunctionLibrary::Service(

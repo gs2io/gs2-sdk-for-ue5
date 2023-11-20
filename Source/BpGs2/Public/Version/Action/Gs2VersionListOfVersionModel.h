@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Version/Model/Gs2VersionNamespace.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Version/Model/Gs2VersionNamespace.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2VersionListOfVersionModel.generated.h"
 

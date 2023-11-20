@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeAwait.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeAwait.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Exchange/Model/Gs2ExchangeAwait.h"
+#include "Exchange/Model/Gs2ExchangeAwait.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ExchangeActionAcquire.generated.h"
 

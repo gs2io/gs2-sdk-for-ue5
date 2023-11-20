@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Quest/Model/Gs2QuestEzConfig.h"
+#include "Quest/Model/Gs2QuestEzConfig.h"
 
 namespace Gs2::UE5::Quest::Model
 {

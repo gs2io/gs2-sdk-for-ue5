@@ -16,17 +16,21 @@ GS2は、オンライン機能をサポートし、ゲーム開発者がデー�
 
 ## Getting Started
 
-### エンジンプラグインとしてインストール
-
-ダウンロードしたソースコードを、Unreal Engineソースコード内の以下のフォルダに配置してください。
-
-`(Unreal Engineソースコード)/Engine/Plugins/Gs2Plugin`
+※ソースコードのコンパイル及びリンクが必要なため、Windows/Mac環境でMicrosoft Visual Studio 2019以降（UE5.2からは2022）のインストールが必要です。
 
 ### プロジェクトプラグインとしてインストール
 
 ダウンロードしたソースコードを、Unreal Engineプロジェクト内の以下のフォルダに配置してください。
 
 `(Unreal Engineプロジェクト)/Plugins/Gs2Plugin`
+
+### エンジンプラグインとしてインストール
+
+Unreal EngineソースコードをGithubもしくはPerforceから取得し、Engineをビルドしている環境であれば
+エンジンプラグインとしてインストールが可能です。
+ダウンロードしたソースコードを、Unreal Engineソースコード内の以下のフォルダに配置してください。
+
+`(Unreal Engineソースコード)/Engine/Plugins/Gs2Plugin`
 
 SDKを利用するには GS2 のクレデンシャルが必要です。
 [GS2のセットアップ](https://docs.gs2.io/ja/get_start/tutorial/setup_gs2/) の手順に従ってクレデンシャルを発行してください。

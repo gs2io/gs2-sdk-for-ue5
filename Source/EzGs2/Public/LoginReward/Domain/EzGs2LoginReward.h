@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2LoginReward/Public/LoginReward/Domain/Gs2LoginReward.h"
+#include "LoginReward/Domain/Gs2LoginReward.h"
 #include "Util/Profile.h"
 #include "LoginReward/Domain/Model/Gs2LoginRewardEzNamespaceDomain.h"
 

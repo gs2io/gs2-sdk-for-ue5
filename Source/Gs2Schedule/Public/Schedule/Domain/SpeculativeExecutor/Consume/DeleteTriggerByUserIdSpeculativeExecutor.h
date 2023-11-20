@@ -53,7 +53,7 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
 
         static FString Action();
 
-        class GS2SCHEDULE_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

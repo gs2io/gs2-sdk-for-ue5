@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Idle/Model/Gs2IdleEzCategoryModel.h"
+#include "Idle/Model/Gs2IdleEzCategoryModel.h"
 
 namespace Gs2::UE5::Idle::Model
 {

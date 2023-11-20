@@ -15,7 +15,7 @@
  */
 
 #include "Version/Model/Gs2Version.h"
-#include "BpGs2/Public/Version/Model/Gs2VersionNamespace.h"
+#include "Version/Model/Gs2VersionNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Version UGs2VersionFunctionLibrary::Service(

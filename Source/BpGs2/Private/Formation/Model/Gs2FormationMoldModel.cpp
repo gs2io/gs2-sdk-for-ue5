@@ -16,7 +16,7 @@
  * deny overwrite
  */
 
-#include "BpGs2/Public/Formation/Model/Gs2FormationMoldModel.h"
+#include "Formation/Model/Gs2FormationMoldModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Formation/Model/Gs2FormationFormModel.h"
 #include "Core/BpGs2Constant.h"

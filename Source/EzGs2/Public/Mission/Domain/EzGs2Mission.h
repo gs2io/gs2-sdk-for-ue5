@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Mission/Public/Mission/Domain/Gs2Mission.h"
+#include "Mission/Domain/Gs2Mission.h"
 #include "Util/Profile.h"
 #include "Mission/Domain/Model/Gs2MissionEzNamespaceDomain.h"
 #include "Mission/Domain/Model/Gs2MissionEzMissionTaskModelDomain.h"

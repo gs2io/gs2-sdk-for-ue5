@@ -15,8 +15,8 @@
  */
 
 #include "Mission/Model/Gs2Mission.h"
-#include "BpGs2/Public/Mission/Model/Gs2MissionNamespace.h"
-#include "BpGs2/Public/Mission/Model/Gs2MissionMissionTaskModel.h"
+#include "Mission/Model/Gs2MissionNamespace.h"
+#include "Mission/Model/Gs2MissionMissionTaskModel.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Mission UGs2MissionFunctionLibrary::Service(

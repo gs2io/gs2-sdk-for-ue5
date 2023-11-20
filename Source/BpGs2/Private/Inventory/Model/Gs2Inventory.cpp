@@ -15,8 +15,8 @@
  */
 
 #include "Inventory/Model/Gs2Inventory.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventoryNamespace.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventoryItemModel.h"
+#include "Inventory/Model/Gs2InventoryNamespace.h"
+#include "Inventory/Model/Gs2InventoryItemModel.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Inventory UGs2InventoryFunctionLibrary::Service(

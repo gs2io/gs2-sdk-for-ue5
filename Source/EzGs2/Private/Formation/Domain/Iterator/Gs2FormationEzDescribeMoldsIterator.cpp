@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Formation/Domain/Iterator/Gs2FormationEzDescribeMoldsIterator.h"
+#include "Formation/Domain/Iterator/Gs2FormationEzDescribeMoldsIterator.h"
 
 namespace Gs2::UE5::Formation::Domain::Iterator
 {

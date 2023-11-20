@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Distributor/Domain/Iterator/Gs2DistributorEzDescribeDistributorModelsIterator.h"
+#include "Distributor/Domain/Iterator/Gs2DistributorEzDescribeDistributorModelsIterator.h"
 
 namespace Gs2::UE5::Distributor::Domain::Iterator
 {

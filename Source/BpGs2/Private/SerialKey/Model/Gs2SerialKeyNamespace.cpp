@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/SerialKey/Model/Gs2SerialKeyNamespace.h"
-#include "BpGs2/Public/SerialKey/Model/Gs2SerialKeyCampaignModel.h"
+#include "SerialKey/Model/Gs2SerialKeyNamespace.h"
+#include "SerialKey/Model/Gs2SerialKeyCampaignModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "SerialKey/Model/Gs2SerialKeyCampaignModel.h"
 #include "SerialKey/Model/Gs2SerialKeyUser.h"

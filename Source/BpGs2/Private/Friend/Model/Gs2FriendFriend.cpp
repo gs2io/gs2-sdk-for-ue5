@@ -16,8 +16,8 @@
  * deny overwrite
  */
 
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriend.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriendUser.h"
+#include "Friend/Model/Gs2FriendFriend.h"
+#include "Friend/Model/Gs2FriendFriendUser.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Friend/Model/Gs2FriendFriendUser.h"
 #include "Core/BpGs2Constant.h"

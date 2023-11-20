@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaStaminaModel.h"
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaStaminaModel.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Stamina/Model/Gs2StaminaStaminaModel.h"
+#include "Stamina/Model/Gs2StaminaStaminaModel.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2StaminaStaminaModelGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2StaminaStaminaModelGetValueSuccessDelegate, FGs2StaminaStaminaModelValue, Value, const FGs2Error, Error);

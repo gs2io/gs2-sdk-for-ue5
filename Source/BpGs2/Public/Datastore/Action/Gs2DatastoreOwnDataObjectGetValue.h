@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Datastore/Model/Gs2DatastoreDataObject.h"
-#include "BpGs2/Public/Datastore/Model/Gs2DatastoreDataObject.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Datastore/Model/Gs2DatastoreDataObject.h"
+#include "Datastore/Model/Gs2DatastoreDataObject.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2DatastoreOwnDataObjectGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2DatastoreOwnDataObjectGetValueSuccessDelegate, FGs2DatastoreDataObjectValue, Value, const FGs2Error, Error);

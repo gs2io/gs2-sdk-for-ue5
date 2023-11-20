@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldNamespace.h"
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldAreaModel.h"
+#include "MegaField/Model/Gs2MegaFieldNamespace.h"
+#include "MegaField/Model/Gs2MegaFieldAreaModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "MegaField/Model/Gs2MegaFieldAreaModel.h"
 #include "MegaField/Model/Gs2MegaFieldUser.h"

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Account/Domain/Iterator/Gs2AccountEzDescribeTakeOversIterator.h"
+#include "Account/Domain/Iterator/Gs2AccountEzDescribeTakeOversIterator.h"
 
 namespace Gs2::UE5::Account::Domain::Iterator
 {

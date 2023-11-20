@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/SkillTree/Model/Gs2SkillTreeEzConfig.h"
+#include "SkillTree/Model/Gs2SkillTreeEzConfig.h"
 
 namespace Gs2::UE5::SkillTree::Model
 {

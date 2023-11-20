@@ -19,9 +19,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/News/Model/Gs2NewsSetCookieRequestEntry.h"
-#include "BpGs2/Public/News/Model/Gs2NewsNews.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "News/Model/Gs2NewsSetCookieRequestEntry.h"
+#include "News/Model/Gs2NewsNews.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "News/Model/Gs2NewsUser.h"
 #include "Gs2NewsActionGetContentsUrl.generated.h"

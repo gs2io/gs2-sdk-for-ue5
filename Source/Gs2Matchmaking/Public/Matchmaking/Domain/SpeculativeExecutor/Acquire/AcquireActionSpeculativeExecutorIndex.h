@@ -40,7 +40,7 @@ namespace Gs2::Matchmaking::Domain::SpeculativeExecutor
     class GS2MATCHMAKING_API FAcquireActionSpeculativeExecutorIndex
     {
     public:
-        class GS2MATCHMAKING_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Limit/Model/Gs2LimitLimitModel.h"
+#include "Limit/Model/Gs2LimitLimitModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Ranking/Model/Gs2RankingEzRanking.h"
+#include "Ranking/Model/Gs2RankingEzRanking.h"
 
 namespace Gs2::UE5::Ranking::Model
 {

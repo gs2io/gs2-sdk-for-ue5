@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestProgress.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestProgress.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Quest/Model/Gs2QuestProgress.h"
+#include "Quest/Model/Gs2QuestProgress.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2QuestActionDeleteProgress.generated.h"
 

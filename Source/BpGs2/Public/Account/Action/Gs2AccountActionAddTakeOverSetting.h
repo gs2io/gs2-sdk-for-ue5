@@ -19,9 +19,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Account/Model/Gs2AccountTakeOver.h"
-#include "BpGs2/Public/Account/Model/Gs2AccountTakeOver.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Account/Model/Gs2AccountTakeOver.h"
+#include "Account/Model/Gs2AccountTakeOver.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2AccountActionAddTakeOverSetting.generated.h"
   

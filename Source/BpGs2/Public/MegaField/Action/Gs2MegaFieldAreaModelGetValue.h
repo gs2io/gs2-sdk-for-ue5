@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldAreaModel.h"
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldAreaModel.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "MegaField/Model/Gs2MegaFieldAreaModel.h"
+#include "MegaField/Model/Gs2MegaFieldAreaModel.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MegaFieldAreaModelGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MegaFieldAreaModelGetValueSuccessDelegate, FGs2MegaFieldAreaModelValue, Value, const FGs2Error, Error);

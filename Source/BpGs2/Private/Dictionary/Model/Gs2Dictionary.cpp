@@ -15,7 +15,7 @@
  */
 
 #include "Dictionary/Model/Gs2Dictionary.h"
-#include "BpGs2/Public/Dictionary/Model/Gs2DictionaryNamespace.h"
+#include "Dictionary/Model/Gs2DictionaryNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Dictionary UGs2DictionaryFunctionLibrary::Service(

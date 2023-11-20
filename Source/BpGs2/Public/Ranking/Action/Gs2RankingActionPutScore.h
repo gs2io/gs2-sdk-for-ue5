@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Ranking/Model/Gs2RankingScore.h"
-#include "BpGs2/Public/Ranking/Model/Gs2RankingRanking.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Ranking/Model/Gs2RankingScore.h"
+#include "Ranking/Model/Gs2RankingRanking.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2RankingActionPutScore.generated.h"
 

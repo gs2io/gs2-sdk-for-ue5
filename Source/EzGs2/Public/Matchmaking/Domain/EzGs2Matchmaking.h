@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Matchmaking/Public/Matchmaking/Domain/Gs2Matchmaking.h"
+#include "Matchmaking/Domain/Gs2Matchmaking.h"
 #include "Util/Profile.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzNamespaceDomain.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzBallotDomain.h"

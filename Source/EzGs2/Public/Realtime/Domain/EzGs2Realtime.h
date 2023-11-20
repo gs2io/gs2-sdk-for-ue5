@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Realtime/Public/Realtime/Domain/Gs2Realtime.h"
+#include "Realtime/Domain/Gs2Realtime.h"
 #include "Util/Profile.h"
 #include "Realtime/Domain/Model/Gs2RealtimeEzNamespaceDomain.h"
 

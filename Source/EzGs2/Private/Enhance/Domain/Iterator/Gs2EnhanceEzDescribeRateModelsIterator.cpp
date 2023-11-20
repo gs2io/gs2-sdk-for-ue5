@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Enhance/Domain/Iterator/Gs2EnhanceEzDescribeRateModelsIterator.h"
+#include "Enhance/Domain/Iterator/Gs2EnhanceEzDescribeRateModelsIterator.h"
 
 namespace Gs2::UE5::Enhance::Domain::Iterator
 {

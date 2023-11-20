@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/AdReward/Model/Gs2AdRewardEzPoint.h"
+#include "AdReward/Model/Gs2AdRewardEzPoint.h"
 
 namespace Gs2::UE5::AdReward::Model
 {

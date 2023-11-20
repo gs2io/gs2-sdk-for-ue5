@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Inbox/Model/Gs2InboxMessage.h"
-#include "BpGs2/Public/Inbox/Model/Gs2InboxMessage.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Inbox/Model/Gs2InboxMessage.h"
+#include "Inbox/Model/Gs2InboxMessage.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2InboxMessageGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2InboxMessageGetValueSuccessDelegate, FGs2InboxMessageValue, Value, const FGs2Error, Error);

@@ -19,11 +19,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceRateModel.h"
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceMaterial.h"
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceConfig.h"
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceEnhance.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Enhance/Model/Gs2EnhanceRateModel.h"
+#include "Enhance/Model/Gs2EnhanceMaterial.h"
+#include "Enhance/Model/Gs2EnhanceConfig.h"
+#include "Enhance/Model/Gs2EnhanceEnhance.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2EnhanceActionEnhance.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2EnhanceEnhanceSuccessDelegate, FGs2EnhanceOwnEnhance, Enhance, const FGs2Error, Error);

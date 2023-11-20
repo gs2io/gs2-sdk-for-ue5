@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Realtime/Model/Gs2RealtimeEzRoom.h"
+#include "Realtime/Model/Gs2RealtimeEzRoom.h"
 
 namespace Gs2::UE5::Realtime::Model
 {

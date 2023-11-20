@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Enhance/Public/Enhance/Domain/Gs2Enhance.h"
+#include "Enhance/Domain/Gs2Enhance.h"
 #include "Util/Profile.h"
 #include "Enhance/Domain/Model/Gs2EnhanceEzNamespaceDomain.h"
 

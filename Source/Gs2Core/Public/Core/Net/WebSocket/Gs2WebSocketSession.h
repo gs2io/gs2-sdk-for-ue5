@@ -25,7 +25,7 @@
 #include "Core/Net/Gs2Session.h"
 #include "Task/WebSocketResult.h"
 #include "Task/WebSocketSessionRequest.h"
-#include "WebSockets/Public/IWebSocket.h"
+#include "IWebSocket.h"
 
 DECLARE_EVENT_OneParam(FGs2WebSocketSession, FGs2NotificationEvent, Gs2::Core::Domain::Model::FNotificationMessagePtr);
 DECLARE_EVENT(FGs2WebSocketSession, FGs2DisconnectEvent);

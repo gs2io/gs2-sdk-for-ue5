@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Enhance/Model/Gs2EnhanceEzMaterial.h"
+#include "Enhance/Model/Gs2EnhanceEzMaterial.h"
 
 namespace Gs2::UE5::Enhance::Model
 {

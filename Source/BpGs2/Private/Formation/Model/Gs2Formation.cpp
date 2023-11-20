@@ -15,7 +15,7 @@
  */
 
 #include "Formation/Model/Gs2Formation.h"
-#include "BpGs2/Public/Formation/Model/Gs2FormationNamespace.h"
+#include "Formation/Model/Gs2FormationNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Formation UGs2FormationFunctionLibrary::Service(

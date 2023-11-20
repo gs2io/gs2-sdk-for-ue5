@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceRateModel.h"
+#include "Enhance/Model/Gs2EnhanceRateModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

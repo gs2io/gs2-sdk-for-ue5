@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Experience/Model/Gs2ExperienceUser.h"
-#include "BpGs2/Public/Experience/Model/Gs2ExperienceStatus.h"
+#include "Experience/Model/Gs2ExperienceUser.h"
+#include "Experience/Model/Gs2ExperienceStatus.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Experience/Model/Gs2ExperienceStatus.h"
 #include "Core/BpGs2Constant.h"

@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryUser.h"
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryBoxItems.h"
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryProbability.h"
+#include "Lottery/Model/Gs2LotteryUser.h"
+#include "Lottery/Model/Gs2LotteryBoxItems.h"
+#include "Lottery/Model/Gs2LotteryProbability.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Lottery/Model/Gs2LotteryBoxItems.h"
 #include "Core/BpGs2Constant.h"

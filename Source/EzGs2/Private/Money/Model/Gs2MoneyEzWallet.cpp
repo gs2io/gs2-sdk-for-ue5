@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Money/Model/Gs2MoneyEzWallet.h"
+#include "Money/Model/Gs2MoneyEzWallet.h"
 
 namespace Gs2::UE5::Money::Model
 {

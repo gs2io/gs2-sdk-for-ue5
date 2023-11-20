@@ -15,7 +15,7 @@
  */
 
 #include "Money/Model/Gs2Money.h"
-#include "BpGs2/Public/Money/Model/Gs2MoneyNamespace.h"
+#include "Money/Model/Gs2MoneyNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Money UGs2MoneyFunctionLibrary::Service(

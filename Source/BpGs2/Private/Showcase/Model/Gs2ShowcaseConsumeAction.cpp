@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseConsumeAction.h"
+#include "Showcase/Model/Gs2ShowcaseConsumeAction.h"

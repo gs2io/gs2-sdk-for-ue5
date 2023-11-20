@@ -19,10 +19,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriendRequest.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendSendFriendRequest.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendUser.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Friend/Model/Gs2FriendFriendRequest.h"
+#include "Friend/Model/Gs2FriendSendFriendRequest.h"
+#include "Friend/Model/Gs2FriendUser.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendActionSendRequest.generated.h"
 

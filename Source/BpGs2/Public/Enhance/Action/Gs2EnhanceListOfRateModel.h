@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceNamespace.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Enhance/Model/Gs2EnhanceNamespace.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2EnhanceListOfRateModel.generated.h"
 

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/JobQueue/Model/Gs2JobQueueEzJobResult.h"
+#include "JobQueue/Model/Gs2JobQueueEzJobResult.h"
 
 namespace Gs2::UE5::JobQueue::Model
 {

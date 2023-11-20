@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingUser.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingGathering.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingBallot.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingRating.h"
+#include "Matchmaking/Model/Gs2MatchmakingUser.h"
+#include "Matchmaking/Model/Gs2MatchmakingGathering.h"
+#include "Matchmaking/Model/Gs2MatchmakingBallot.h"
+#include "Matchmaking/Model/Gs2MatchmakingRating.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Matchmaking/Model/Gs2MatchmakingGathering.h"
 #include "Matchmaking/Model/Gs2MatchmakingBallot.h"

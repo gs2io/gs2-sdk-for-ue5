@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseShowcase.h"
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseShowcase.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Showcase/Model/Gs2ShowcaseShowcase.h"
+#include "Showcase/Model/Gs2ShowcaseShowcase.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ShowcaseShowcaseGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ShowcaseShowcaseGetValueSuccessDelegate, FGs2ShowcaseShowcaseValue, Value, const FGs2Error, Error);

@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/LoginReward/Model/Gs2LoginRewardUser.h"
-#include "BpGs2/Public/LoginReward/Model/Gs2LoginRewardReceiveStatus.h"
+#include "LoginReward/Model/Gs2LoginRewardUser.h"
+#include "LoginReward/Model/Gs2LoginRewardReceiveStatus.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "LoginReward/Model/Gs2LoginRewardBonus.h"
 #include "LoginReward/Model/Gs2LoginRewardReceiveStatus.h"

@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/LoginReward/Model/Gs2LoginRewardUser.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "LoginReward/Model/Gs2LoginRewardUser.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2LoginRewardListOfReceiveStatus.generated.h"
 

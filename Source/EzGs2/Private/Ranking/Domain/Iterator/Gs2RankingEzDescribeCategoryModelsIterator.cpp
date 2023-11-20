@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Ranking/Domain/Iterator/Gs2RankingEzDescribeCategoryModelsIterator.h"
+#include "Ranking/Domain/Iterator/Gs2RankingEzDescribeCategoryModelsIterator.h"
 
 namespace Gs2::UE5::Ranking::Domain::Iterator
 {

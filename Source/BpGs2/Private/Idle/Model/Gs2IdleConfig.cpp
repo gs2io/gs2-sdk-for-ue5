@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Idle/Model/Gs2IdleConfig.h"
+#include "Idle/Model/Gs2IdleConfig.h"

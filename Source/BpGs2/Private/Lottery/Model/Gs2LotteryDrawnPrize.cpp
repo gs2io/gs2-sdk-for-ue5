@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryDrawnPrize.h"
+#include "Lottery/Model/Gs2LotteryDrawnPrize.h"

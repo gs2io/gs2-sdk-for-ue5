@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Enchant/Model/Gs2EnchantNamespace.h"
-#include "BpGs2/Public/Enchant/Model/Gs2EnchantBalanceParameterModel.h"
-#include "BpGs2/Public/Enchant/Model/Gs2EnchantRarityParameterModel.h"
+#include "Enchant/Model/Gs2EnchantNamespace.h"
+#include "Enchant/Model/Gs2EnchantBalanceParameterModel.h"
+#include "Enchant/Model/Gs2EnchantRarityParameterModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Enchant/Model/Gs2EnchantBalanceParameterModel.h"
 #include "Enchant/Model/Gs2EnchantRarityParameterModel.h"

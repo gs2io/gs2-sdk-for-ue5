@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Dictionary/Public/Dictionary/Domain/Gs2Dictionary.h"
+#include "Dictionary/Domain/Gs2Dictionary.h"
 #include "Util/Profile.h"
 #include "Dictionary/Domain/Model/Gs2DictionaryEzNamespaceDomain.h"
 

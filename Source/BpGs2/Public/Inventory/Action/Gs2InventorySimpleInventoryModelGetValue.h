@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventorySimpleInventoryModel.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventorySimpleInventoryModel.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Inventory/Model/Gs2InventorySimpleInventoryModel.h"
+#include "Inventory/Model/Gs2InventorySimpleInventoryModel.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2InventorySimpleInventoryModelGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2InventorySimpleInventoryModelGetValueSuccessDelegate, FGs2InventorySimpleInventoryModelValue, Value, const FGs2Error, Error);

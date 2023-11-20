@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldLayerModel.h"
+#include "MegaField/Model/Gs2MegaFieldLayerModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

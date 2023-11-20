@@ -15,8 +15,8 @@
  */
 
 #include "News/Model/Gs2News.h"
-#include "BpGs2/Public/News/Model/Gs2NewsNamespace.h"
-#include "BpGs2/Public/News/Model/Gs2NewsNews.h"
+#include "News/Model/Gs2NewsNamespace.h"
+#include "News/Model/Gs2NewsNews.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2News UGs2NewsFunctionLibrary::Service(

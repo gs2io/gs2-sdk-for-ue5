@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/SkillTree/Model/Gs2SkillTreeNodeModel.h"
-#include "BpGs2/Public/SkillTree/Model/Gs2SkillTreeNodeModel.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "SkillTree/Model/Gs2SkillTreeNodeModel.h"
+#include "SkillTree/Model/Gs2SkillTreeNodeModel.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2SkillTreeNodeModelGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SkillTreeNodeModelGetValueSuccessDelegate, FGs2SkillTreeNodeModelValue, Value, const FGs2Error, Error);

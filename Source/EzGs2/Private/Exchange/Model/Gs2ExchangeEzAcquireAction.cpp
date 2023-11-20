@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Exchange/Model/Gs2ExchangeEzAcquireAction.h"
+#include "Exchange/Model/Gs2ExchangeEzAcquireAction.h"
 
 namespace Gs2::UE5::Exchange::Model
 {

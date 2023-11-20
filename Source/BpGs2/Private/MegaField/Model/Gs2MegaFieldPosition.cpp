@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldPosition.h"
+#include "MegaField/Model/Gs2MegaFieldPosition.h"

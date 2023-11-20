@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Datastore/Public/Datastore/Domain/Gs2Datastore.h"
+#include "Datastore/Domain/Gs2Datastore.h"
 #include "Util/Profile.h"
 #include "Datastore/Domain/Model/Gs2DatastoreEzNamespaceDomain.h"
 

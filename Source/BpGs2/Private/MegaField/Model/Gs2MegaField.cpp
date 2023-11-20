@@ -15,8 +15,8 @@
  */
 
 #include "MegaField/Model/Gs2MegaField.h"
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldNamespace.h"
-#include "BpGs2/Public/MegaField/Model/Gs2MegaFieldLayerModel.h"
+#include "MegaField/Model/Gs2MegaFieldNamespace.h"
+#include "MegaField/Model/Gs2MegaFieldLayerModel.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2MegaField UGs2MegaFieldFunctionLibrary::Service(

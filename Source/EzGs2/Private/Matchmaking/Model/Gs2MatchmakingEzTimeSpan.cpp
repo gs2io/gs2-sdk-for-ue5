@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Matchmaking/Model/Gs2MatchmakingEzTimeSpan.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzTimeSpan.h"
 
 namespace Gs2::UE5::Matchmaking::Model
 {

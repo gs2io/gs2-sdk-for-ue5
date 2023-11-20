@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Quest/Domain/Iterator/Gs2QuestEzDescribeQuestModelsIterator.h"
+#include "Quest/Domain/Iterator/Gs2QuestEzDescribeQuestModelsIterator.h"
 
 namespace Gs2::UE5::Quest::Domain::Iterator
 {

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Inventory/Model/Gs2InventoryEzItemSet.h"
+#include "Inventory/Model/Gs2InventoryEzItemSet.h"
 
 namespace Gs2::UE5::Inventory::Model
 {

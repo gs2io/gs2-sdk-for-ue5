@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Mission/Model/Gs2MissionEzCounter.h"
+#include "Mission/Model/Gs2MissionEzCounter.h"
 
 namespace Gs2::UE5::Mission::Model
 {

@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Distributor/Public/Distributor/Domain/Gs2Distributor.h"
+#include "Distributor/Domain/Gs2Distributor.h"
 #include "Util/Profile.h"
 #include "Distributor/Domain/Model/Gs2DistributorEzNamespaceDomain.h"
 

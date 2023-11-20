@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Chat/Public/Chat/Domain/Gs2Chat.h"
+#include "Chat/Domain/Gs2Chat.h"
 #include "Util/Profile.h"
 #include "Chat/Domain/Model/Gs2ChatEzNamespaceDomain.h"
 

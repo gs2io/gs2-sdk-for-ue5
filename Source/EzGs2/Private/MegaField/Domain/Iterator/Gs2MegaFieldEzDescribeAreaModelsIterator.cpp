@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/MegaField/Domain/Iterator/Gs2MegaFieldEzDescribeAreaModelsIterator.h"
+#include "MegaField/Domain/Iterator/Gs2MegaFieldEzDescribeAreaModelsIterator.h"
 
 namespace Gs2::UE5::MegaField::Domain::Iterator
 {

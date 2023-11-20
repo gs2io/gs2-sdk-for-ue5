@@ -15,7 +15,7 @@
  */
 
 #include "SkillTree/Model/Gs2SkillTree.h"
-#include "BpGs2/Public/SkillTree/Model/Gs2SkillTreeNamespace.h"
+#include "SkillTree/Model/Gs2SkillTreeNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2SkillTree UGs2SkillTreeFunctionLibrary::Service(

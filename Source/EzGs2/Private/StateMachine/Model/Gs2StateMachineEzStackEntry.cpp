@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/StateMachine/Model/Gs2StateMachineEzStackEntry.h"
+#include "StateMachine/Model/Gs2StateMachineEzStackEntry.h"
 
 namespace Gs2::UE5::StateMachine::Model
 {

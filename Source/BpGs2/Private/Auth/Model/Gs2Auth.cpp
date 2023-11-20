@@ -15,7 +15,7 @@
  */
 
 #include "Auth/Model/Gs2Auth.h"
-#include "BpGs2/Public/Auth/Model/Gs2AuthAccessToken.h"
+#include "Auth/Model/Gs2AuthAccessToken.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Auth UGs2AuthFunctionLibrary::Service(

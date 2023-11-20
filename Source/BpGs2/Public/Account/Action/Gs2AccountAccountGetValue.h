@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Account/Model/Gs2AccountAccount.h"
-#include "BpGs2/Public/Account/Model/Gs2AccountAccount.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Account/Model/Gs2AccountAccount.h"
+#include "Account/Model/Gs2AccountAccount.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2AccountAccountGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2AccountAccountGetValueSuccessDelegate, FGs2AccountAccountValue, Value, const FGs2Error, Error);

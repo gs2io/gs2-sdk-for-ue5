@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Enchant/Public/Enchant/Domain/Gs2Enchant.h"
+#include "Enchant/Domain/Gs2Enchant.h"
 #include "Util/Profile.h"
 #include "Enchant/Domain/Model/Gs2EnchantEzNamespaceDomain.h"
 

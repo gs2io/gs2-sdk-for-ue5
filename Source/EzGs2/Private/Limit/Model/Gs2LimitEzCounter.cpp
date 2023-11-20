@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Limit/Model/Gs2LimitEzCounter.h"
+#include "Limit/Model/Gs2LimitEzCounter.h"
 
 namespace Gs2::UE5::Limit::Model
 {

@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Formation/Model/Gs2FormationMold.h"
-#include "BpGs2/Public/Formation/Model/Gs2FormationMold.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Formation/Model/Gs2FormationMold.h"
+#include "Formation/Model/Gs2FormationMold.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FormationMoldGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FormationMoldGetValueSuccessDelegate, FGs2FormationMoldValue, Value, const FGs2Error, Error);

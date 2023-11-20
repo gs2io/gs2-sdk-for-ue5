@@ -46,7 +46,7 @@ namespace Gs2::Lottery::Domain::SpeculativeExecutor
 
         static FString Action();
 
-        class GS2LOTTERY_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

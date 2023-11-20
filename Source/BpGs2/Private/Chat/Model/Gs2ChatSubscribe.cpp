@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Chat/Model/Gs2ChatSubscribe.h"
+#include "Chat/Model/Gs2ChatSubscribe.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Auth/Public/Auth/Domain/Gs2Auth.h"
+#include "Auth/Domain/Gs2Auth.h"
 #include "Util/Profile.h"
 #include "Auth/Domain/Model/Gs2AuthEzAccessTokenDomain.h"
 

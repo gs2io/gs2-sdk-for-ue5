@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/StateMachine/Model/Gs2StateMachineStatus.h"
-#include "BpGs2/Public/StateMachine/Model/Gs2StateMachineStatus.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "StateMachine/Model/Gs2StateMachineStatus.h"
+#include "StateMachine/Model/Gs2StateMachineStatus.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2StateMachineActionExit.generated.h"
 

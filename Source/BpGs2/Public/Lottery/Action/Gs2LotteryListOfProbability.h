@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryUser.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Lottery/Model/Gs2LotteryUser.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2LotteryListOfProbability.generated.h"
 

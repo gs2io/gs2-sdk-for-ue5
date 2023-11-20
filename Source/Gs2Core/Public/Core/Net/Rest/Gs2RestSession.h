@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Core/Model/Region.h"
-#include "Core/Net/Gs2Session.h"
+#include "../../Model/Region.h"
+#include "../../Net/Gs2Session.h"
 
 namespace Gs2::Core::Net::Rest
 {

@@ -15,7 +15,7 @@
  */
 
 #include "AdReward/Model/Gs2AdReward.h"
-#include "BpGs2/Public/AdReward/Model/Gs2AdRewardNamespace.h"
+#include "AdReward/Model/Gs2AdRewardNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2AdReward UGs2AdRewardFunctionLibrary::Service(

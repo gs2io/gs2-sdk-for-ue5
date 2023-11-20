@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Account/Model/Gs2AccountEzAccount.h"
+#include "Account/Model/Gs2AccountEzAccount.h"
 
 namespace Gs2::UE5::Account::Model
 {

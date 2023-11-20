@@ -15,7 +15,7 @@
  */
 
 #include "Limit/Model/Gs2Limit.h"
-#include "BpGs2/Public/Limit/Model/Gs2LimitNamespace.h"
+#include "Limit/Model/Gs2LimitNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Limit UGs2LimitFunctionLibrary::Service(

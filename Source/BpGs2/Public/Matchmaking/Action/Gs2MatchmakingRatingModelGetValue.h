@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingRatingModel.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingRatingModel.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Matchmaking/Model/Gs2MatchmakingRatingModel.h"
+#include "Matchmaking/Model/Gs2MatchmakingRatingModel.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MatchmakingRatingModelGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MatchmakingRatingModelGetValueSuccessDelegate, FGs2MatchmakingRatingModelValue, Value, const FGs2Error, Error);

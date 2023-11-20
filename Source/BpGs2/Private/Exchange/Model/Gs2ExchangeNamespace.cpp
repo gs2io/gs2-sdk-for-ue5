@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeNamespace.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeRateModel.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeIncrementalRateModel.h"
+#include "Exchange/Model/Gs2ExchangeNamespace.h"
+#include "Exchange/Model/Gs2ExchangeRateModel.h"
+#include "Exchange/Model/Gs2ExchangeIncrementalRateModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Exchange/Model/Gs2ExchangeRateModel.h"
 #include "Exchange/Model/Gs2ExchangeUser.h"

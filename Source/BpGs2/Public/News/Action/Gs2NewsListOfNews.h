@@ -19,8 +19,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/News/Model/Gs2NewsUser.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "News/Model/Gs2NewsUser.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "News/Model/Gs2NewsNews.h"
 #include "Gs2NewsListOfNews.generated.h"

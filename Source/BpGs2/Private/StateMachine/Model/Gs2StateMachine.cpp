@@ -15,7 +15,7 @@
  */
 
 #include "StateMachine/Model/Gs2StateMachine.h"
-#include "BpGs2/Public/StateMachine/Model/Gs2StateMachineNamespace.h"
+#include "StateMachine/Model/Gs2StateMachineNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2StateMachine UGs2StateMachineFunctionLibrary::Service(

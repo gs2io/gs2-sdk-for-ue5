@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Stamina/Domain/Iterator/Gs2StaminaEzDescribeStaminaModelsIterator.h"
+#include "Stamina/Domain/Iterator/Gs2StaminaEzDescribeStaminaModelsIterator.h"
 
 namespace Gs2::UE5::Stamina::Domain::Iterator
 {

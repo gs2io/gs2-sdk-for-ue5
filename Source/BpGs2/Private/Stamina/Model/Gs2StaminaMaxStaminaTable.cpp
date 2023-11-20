@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaMaxStaminaTable.h"
+#include "Stamina/Model/Gs2StaminaMaxStaminaTable.h"

@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeRateModel.h"
+#include "Exchange/Model/Gs2ExchangeRateModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

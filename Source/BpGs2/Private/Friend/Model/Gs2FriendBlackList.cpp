@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Friend/Model/Gs2FriendBlackList.h"
+#include "Friend/Model/Gs2FriendBlackList.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

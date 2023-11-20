@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaStamina.h"
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaStamina.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Stamina/Model/Gs2StaminaStamina.h"
+#include "Stamina/Model/Gs2StaminaStamina.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2StaminaActionConsume.generated.h"
 

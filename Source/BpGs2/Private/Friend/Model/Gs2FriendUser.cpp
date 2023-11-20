@@ -16,12 +16,12 @@
  * deny overwrite
  */
 
-#include "BpGs2/Public/Friend/Model/Gs2FriendUser.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendProfile.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendPublicProfile.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendBlackList.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendFollowUser.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriendRequest.h"
+#include "Friend/Model/Gs2FriendUser.h"
+#include "Friend/Model/Gs2FriendProfile.h"
+#include "Friend/Model/Gs2FriendPublicProfile.h"
+#include "Friend/Model/Gs2FriendBlackList.h"
+#include "Friend/Model/Gs2FriendFollowUser.h"
+#include "Friend/Model/Gs2FriendFriendRequest.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Friend/Model/Gs2FriendProfile.h"
 #include "Friend/Model/Gs2FriendPublicProfile.h"

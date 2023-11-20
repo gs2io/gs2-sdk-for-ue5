@@ -16,8 +16,8 @@
  * deny overwrite
  */
 
-#include "BpGs2/Public/Account/Model/Gs2AccountAccount.h"
-#include "BpGs2/Public/Account/Model/Gs2AccountTakeOver.h"
+#include "Account/Model/Gs2AccountAccount.h"
+#include "Account/Model/Gs2AccountTakeOver.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Account/Model/Gs2AccountTakeOver.h"
 #include "Core/BpGs2Constant.h"

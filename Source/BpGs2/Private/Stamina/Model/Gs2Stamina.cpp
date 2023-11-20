@@ -15,7 +15,7 @@
  */
 
 #include "Stamina/Model/Gs2Stamina.h"
-#include "BpGs2/Public/Stamina/Model/Gs2StaminaNamespace.h"
+#include "Stamina/Model/Gs2StaminaNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Stamina UGs2StaminaFunctionLibrary::Service(

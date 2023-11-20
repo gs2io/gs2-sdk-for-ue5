@@ -40,7 +40,7 @@ namespace Gs2::Ranking::Domain::SpeculativeExecutor
     class GS2RANKING_API FAcquireActionSpeculativeExecutorIndex
     {
     public:
-        class GS2RANKING_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

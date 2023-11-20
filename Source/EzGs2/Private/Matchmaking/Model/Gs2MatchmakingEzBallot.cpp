@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Matchmaking/Model/Gs2MatchmakingEzBallot.h"
+#include "Matchmaking/Model/Gs2MatchmakingEzBallot.h"
 
 namespace Gs2::UE5::Matchmaking::Model
 {

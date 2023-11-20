@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Money/Public/Money/Domain/Gs2Money.h"
+#include "Money/Domain/Gs2Money.h"
 #include "Util/Profile.h"
 #include "Money/Domain/Model/Gs2MoneyEzNamespaceDomain.h"
 

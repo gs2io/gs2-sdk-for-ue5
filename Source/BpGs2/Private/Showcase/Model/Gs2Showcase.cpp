@@ -15,7 +15,7 @@
  */
 
 #include "Showcase/Model/Gs2Showcase.h"
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseNamespace.h"
+#include "Showcase/Model/Gs2ShowcaseNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Showcase UGs2ShowcaseFunctionLibrary::Service(

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Enchant/Domain/Iterator/Gs2EnchantEzDescribeBalanceParameterStatusesIterator.h"
+#include "Enchant/Domain/Iterator/Gs2EnchantEzDescribeBalanceParameterStatusesIterator.h"
 
 namespace Gs2::UE5::Enchant::Domain::Iterator
 {

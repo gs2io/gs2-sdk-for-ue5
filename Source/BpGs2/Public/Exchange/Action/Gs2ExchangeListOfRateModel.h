@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeNamespace.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Exchange/Model/Gs2ExchangeNamespace.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ExchangeListOfRateModel.generated.h"
 

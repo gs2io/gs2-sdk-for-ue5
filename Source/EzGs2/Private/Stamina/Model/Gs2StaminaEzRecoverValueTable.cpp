@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Stamina/Model/Gs2StaminaEzRecoverValueTable.h"
+#include "Stamina/Model/Gs2StaminaEzRecoverValueTable.h"
 
 namespace Gs2::UE5::Stamina::Model
 {

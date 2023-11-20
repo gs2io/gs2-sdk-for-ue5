@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventoryItemSet.h"
-#include "BpGs2/Public/Inventory/Model/Gs2InventoryItemSet.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Inventory/Model/Gs2InventoryItemSet.h"
+#include "Inventory/Model/Gs2InventoryItemSet.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2InventoryActionGetItemWithSignature.generated.h"
 

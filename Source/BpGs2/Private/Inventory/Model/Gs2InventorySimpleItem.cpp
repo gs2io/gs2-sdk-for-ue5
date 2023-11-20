@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Inventory/Model/Gs2InventorySimpleItem.h"
+#include "Inventory/Model/Gs2InventorySimpleItem.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

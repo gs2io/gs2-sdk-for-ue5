@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Inventory/Model/Gs2InventoryAcquireCount.h"
+#include "Inventory/Model/Gs2InventoryAcquireCount.h"

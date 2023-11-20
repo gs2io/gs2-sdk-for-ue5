@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Exchange/Domain/Iterator/Gs2ExchangeEzDescribeAwaitsIterator.h"
+#include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeAwaitsIterator.h"
 
 namespace Gs2::UE5::Exchange::Domain::Iterator
 {

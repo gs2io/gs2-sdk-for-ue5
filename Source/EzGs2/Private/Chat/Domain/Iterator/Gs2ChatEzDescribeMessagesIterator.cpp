@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Chat/Domain/Iterator/Gs2ChatEzDescribeMessagesIterator.h"
+#include "Chat/Domain/Iterator/Gs2ChatEzDescribeMessagesIterator.h"
 
 namespace Gs2::UE5::Chat::Domain::Iterator
 {

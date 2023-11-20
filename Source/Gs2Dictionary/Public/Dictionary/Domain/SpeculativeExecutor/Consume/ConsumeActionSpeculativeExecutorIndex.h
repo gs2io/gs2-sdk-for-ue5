@@ -40,7 +40,7 @@ namespace Gs2::Dictionary::Domain::SpeculativeExecutor
     class GS2DICTIONARY_API FConsumeActionSpeculativeExecutorIndex
     {
     public:
-        class GS2DICTIONARY_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

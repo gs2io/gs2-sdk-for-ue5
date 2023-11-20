@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryNamespace.h"
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryLotteryModel.h"
+#include "Lottery/Model/Gs2LotteryNamespace.h"
+#include "Lottery/Model/Gs2LotteryLotteryModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Lottery/Model/Gs2LotteryUser.h"
 #include "Lottery/Model/Gs2LotteryLotteryModel.h"

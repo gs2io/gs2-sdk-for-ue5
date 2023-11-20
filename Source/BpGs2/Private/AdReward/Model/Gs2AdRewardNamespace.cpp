@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/AdReward/Model/Gs2AdRewardNamespace.h"
+#include "AdReward/Model/Gs2AdRewardNamespace.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "AdReward/Model/Gs2AdRewardUser.h"
 #include "Core/BpGs2Constant.h"

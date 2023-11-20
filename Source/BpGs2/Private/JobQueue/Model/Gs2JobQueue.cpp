@@ -15,7 +15,7 @@
  */
 
 #include "JobQueue/Model/Gs2JobQueue.h"
-#include "BpGs2/Public/JobQueue/Model/Gs2JobQueueNamespace.h"
+#include "JobQueue/Model/Gs2JobQueueNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2JobQueue UGs2JobQueueFunctionLibrary::Service(

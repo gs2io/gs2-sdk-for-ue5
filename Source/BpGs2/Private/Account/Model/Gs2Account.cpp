@@ -15,7 +15,7 @@
  */
 
 #include "Account/Model/Gs2Account.h"
-#include "BpGs2/Public/Account/Model/Gs2AccountNamespace.h"
+#include "Account/Model/Gs2AccountNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Account UGs2AccountFunctionLibrary::Service(

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/StateMachine/Domain/Iterator/Gs2StateMachineEzDescribeStatusesIterator.h"
+#include "StateMachine/Domain/Iterator/Gs2StateMachineEzDescribeStatusesIterator.h"
 
 namespace Gs2::UE5::StateMachine::Domain::Iterator
 {

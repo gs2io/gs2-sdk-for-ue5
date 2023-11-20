@@ -40,7 +40,7 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
     class GS2SCHEDULE_API FAcquireActionSpeculativeExecutorIndex
     {
     public:
-        class GS2SCHEDULE_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

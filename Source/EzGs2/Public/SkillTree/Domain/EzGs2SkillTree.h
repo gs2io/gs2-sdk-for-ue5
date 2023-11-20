@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2SkillTree/Public/SkillTree/Domain/Gs2SkillTree.h"
+#include "SkillTree/Domain/Gs2SkillTree.h"
 #include "Util/Profile.h"
 #include "SkillTree/Domain/Model/Gs2SkillTreeEzNamespaceDomain.h"
 

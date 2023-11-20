@@ -17,10 +17,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingBallot.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingGameResult.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingNamespace.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Matchmaking/Model/Gs2MatchmakingBallot.h"
+#include "Matchmaking/Model/Gs2MatchmakingGameResult.h"
+#include "Matchmaking/Model/Gs2MatchmakingNamespace.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MatchmakingActionVote.generated.h"
 

@@ -19,9 +19,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestConfig.h"
-#include "BpGs2/Public/Quest/Model/Gs2QuestUser.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Quest/Model/Gs2QuestConfig.h"
+#include "Quest/Model/Gs2QuestUser.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2QuestActionStart.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2QuestStartSuccessDelegate, FGs2QuestOwnUser, User, const FGs2Error, Error);

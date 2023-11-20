@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Showcase/Model/Gs2ShowcaseNamespace.h"
+#include "Showcase/Model/Gs2ShowcaseNamespace.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Showcase/Model/Gs2ShowcaseUser.h"
 #include "Core/BpGs2Constant.h"

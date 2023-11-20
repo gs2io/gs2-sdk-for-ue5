@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriendUser.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriendUser.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Friend/Model/Gs2FriendFriendUser.h"
+#include "Friend/Model/Gs2FriendFriendUser.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendFriendUserGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2FriendFriendUserGetValueSuccessDelegate, FGs2FriendFriendUserValue, Value, const FGs2Error, Error);

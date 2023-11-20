@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Friend/Model/Gs2FriendNamespace.h"
+#include "Friend/Model/Gs2FriendNamespace.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Friend/Model/Gs2FriendUser.h"
 #include "Core/BpGs2Constant.h"

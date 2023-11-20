@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Enchant/Model/Gs2EnchantBalanceParameterValue.h"
+#include "Enchant/Model/Gs2EnchantBalanceParameterValue.h"

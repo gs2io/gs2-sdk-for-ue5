@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Version/Public/Version/Domain/Gs2Version.h"
+#include "Version/Domain/Gs2Version.h"
 #include "Util/Profile.h"
 #include "Version/Domain/Model/Gs2VersionEzNamespaceDomain.h"
 

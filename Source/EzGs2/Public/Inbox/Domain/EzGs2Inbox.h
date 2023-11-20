@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Inbox/Public/Inbox/Domain/Gs2Inbox.h"
+#include "Inbox/Domain/Gs2Inbox.h"
 #include "Util/Profile.h"
 #include "Inbox/Domain/Model/Gs2InboxEzNamespaceDomain.h"
 

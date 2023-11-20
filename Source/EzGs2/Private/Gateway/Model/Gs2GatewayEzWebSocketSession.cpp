@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Gateway/Model/Gs2GatewayEzWebSocketSession.h"
+#include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
 
 namespace Gs2::UE5::Gateway::Model
 {

@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Formation/Model/Gs2FormationNamespace.h"
-#include "BpGs2/Public/Formation/Model/Gs2FormationMoldModel.h"
-#include "BpGs2/Public/Formation/Model/Gs2FormationPropertyFormModel.h"
+#include "Formation/Model/Gs2FormationNamespace.h"
+#include "Formation/Model/Gs2FormationMoldModel.h"
+#include "Formation/Model/Gs2FormationPropertyFormModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Formation/Model/Gs2FormationMoldModel.h"
 #include "Formation/Model/Gs2FormationPropertyFormModel.h"

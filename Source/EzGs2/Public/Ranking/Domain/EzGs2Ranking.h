@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Ranking/Public/Ranking/Domain/Gs2Ranking.h"
+#include "Ranking/Domain/Gs2Ranking.h"
 #include "Util/Profile.h"
 #include "Ranking/Domain/Model/Gs2RankingEzNamespaceDomain.h"
 #include "Ranking/Domain/Model/Gs2RankingEzRankingDomain.h"

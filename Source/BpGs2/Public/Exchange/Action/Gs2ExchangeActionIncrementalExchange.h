@@ -17,10 +17,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeIncrementalRateModel.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeConfig.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeExchange.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Exchange/Model/Gs2ExchangeIncrementalRateModel.h"
+#include "Exchange/Model/Gs2ExchangeConfig.h"
+#include "Exchange/Model/Gs2ExchangeExchange.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ExchangeActionIncrementalExchange.generated.h"
 

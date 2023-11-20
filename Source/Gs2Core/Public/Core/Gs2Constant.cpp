@@ -15,7 +15,7 @@
  */
 
 
-#include "Core/Gs2Constant.h"
+#include "Gs2Constant.h"
 
 DEFINE_LOG_CATEGORY(Gs2Log);
 

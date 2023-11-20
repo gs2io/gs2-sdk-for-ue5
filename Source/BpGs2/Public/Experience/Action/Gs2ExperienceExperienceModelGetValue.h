@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Experience/Model/Gs2ExperienceExperienceModel.h"
-#include "BpGs2/Public/Experience/Model/Gs2ExperienceExperienceModel.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Experience/Model/Gs2ExperienceExperienceModel.h"
+#include "Experience/Model/Gs2ExperienceExperienceModel.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ExperienceExperienceModelGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ExperienceExperienceModelGetValueSuccessDelegate, FGs2ExperienceExperienceModelValue, Value, const FGs2Error, Error);

@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Gateway/Public/Gateway/Domain/Gs2Gateway.h"
+#include "Gateway/Domain/Gs2Gateway.h"
 #include "Util/Profile.h"
 #include "Gateway/Domain/Model/Gs2GatewayEzNamespaceDomain.h"
 

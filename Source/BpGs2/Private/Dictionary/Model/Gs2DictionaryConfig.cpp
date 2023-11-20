@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Dictionary/Model/Gs2DictionaryConfig.h"
+#include "Dictionary/Model/Gs2DictionaryConfig.h"

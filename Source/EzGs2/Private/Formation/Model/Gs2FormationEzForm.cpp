@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Formation/Model/Gs2FormationEzForm.h"
+#include "Formation/Model/Gs2FormationEzForm.h"
 
 namespace Gs2::UE5::Formation::Model
 {

@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Money/Model/Gs2MoneyWallet.h"
-#include "BpGs2/Public/Money/Model/Gs2MoneyWallet.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Money/Model/Gs2MoneyWallet.h"
+#include "Money/Model/Gs2MoneyWallet.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MoneyWalletGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2MoneyWalletGetValueSuccessDelegate, FGs2MoneyWalletValue, Value, const FGs2Error, Error);

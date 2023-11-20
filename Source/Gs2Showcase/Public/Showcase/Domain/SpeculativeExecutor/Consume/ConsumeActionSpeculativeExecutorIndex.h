@@ -40,7 +40,7 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
     class GS2SHOWCASE_API FConsumeActionSpeculativeExecutorIndex
     {
     public:
-        class GS2SHOWCASE_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

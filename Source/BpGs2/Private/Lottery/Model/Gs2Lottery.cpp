@@ -15,7 +15,7 @@
  */
 
 #include "Lottery/Model/Gs2Lottery.h"
-#include "BpGs2/Public/Lottery/Model/Gs2LotteryNamespace.h"
+#include "Lottery/Model/Gs2LotteryNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Lottery UGs2LotteryFunctionLibrary::Service(

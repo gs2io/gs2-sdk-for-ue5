@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/News/Domain/Iterator/Gs2NewsEzDescribeNewsIterator.h"
+#include "News/Domain/Iterator/Gs2NewsEzDescribeNewsIterator.h"
 
 namespace Gs2::UE5::News::Domain::Iterator
 {

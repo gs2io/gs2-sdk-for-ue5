@@ -15,7 +15,7 @@
  */
 
 #include "Core/Gs2Domain.h"
-#include "EzGs2/Public/Util/Profile.h"
+#include "Util/Profile.h"
 
 namespace Gs2::UE5::Core::Domain
 {

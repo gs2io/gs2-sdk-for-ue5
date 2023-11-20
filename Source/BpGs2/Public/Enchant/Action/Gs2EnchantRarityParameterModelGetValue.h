@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Enchant/Model/Gs2EnchantRarityParameterModel.h"
-#include "BpGs2/Public/Enchant/Model/Gs2EnchantRarityParameterModel.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Enchant/Model/Gs2EnchantRarityParameterModel.h"
+#include "Enchant/Model/Gs2EnchantRarityParameterModel.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2EnchantRarityParameterModelGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2EnchantRarityParameterModelGetValueSuccessDelegate, FGs2EnchantRarityParameterModelValue, Value, const FGs2Error, Error);

@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Schedule/Model/Gs2ScheduleRepeatSchedule.h"
+#include "Schedule/Model/Gs2ScheduleRepeatSchedule.h"

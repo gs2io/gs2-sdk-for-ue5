@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/SerialKey/Model/Gs2SerialKeySerialKey.h"
+#include "SerialKey/Model/Gs2SerialKeySerialKey.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Core/BpGs2Constant.h"

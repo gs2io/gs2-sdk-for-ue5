@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2StateMachine/Public/StateMachine/Domain/Gs2StateMachine.h"
+#include "StateMachine/Domain/Gs2StateMachine.h"
 #include "Util/Profile.h"
 #include "StateMachine/Domain/Model/Gs2StateMachineEzNamespaceDomain.h"
 

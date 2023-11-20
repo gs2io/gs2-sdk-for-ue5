@@ -15,7 +15,7 @@
  */
 
 #include "Datastore/Model/Gs2Datastore.h"
-#include "BpGs2/Public/Datastore/Model/Gs2DatastoreNamespace.h"
+#include "Datastore/Model/Gs2DatastoreNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Datastore UGs2DatastoreFunctionLibrary::Service(

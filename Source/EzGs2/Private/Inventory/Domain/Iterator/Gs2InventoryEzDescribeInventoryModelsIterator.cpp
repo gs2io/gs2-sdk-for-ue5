@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Inventory/Domain/Iterator/Gs2InventoryEzDescribeInventoryModelsIterator.h"
+#include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeInventoryModelsIterator.h"
 
 namespace Gs2::UE5::Inventory::Domain::Iterator
 {

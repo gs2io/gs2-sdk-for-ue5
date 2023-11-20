@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Lottery/Model/Gs2LotteryEzDrawnPrize.h"
+#include "Lottery/Model/Gs2LotteryEzDrawnPrize.h"
 
 namespace Gs2::UE5::Lottery::Model
 {

@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2Error.h"

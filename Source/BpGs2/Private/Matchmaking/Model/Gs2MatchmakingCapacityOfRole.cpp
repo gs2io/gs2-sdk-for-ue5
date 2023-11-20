@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingCapacityOfRole.h"
+#include "Matchmaking/Model/Gs2MatchmakingCapacityOfRole.h"

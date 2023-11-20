@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Mission/Model/Gs2MissionNamespace.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Mission/Model/Gs2MissionNamespace.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MissionListOfCounterModel.generated.h"
 

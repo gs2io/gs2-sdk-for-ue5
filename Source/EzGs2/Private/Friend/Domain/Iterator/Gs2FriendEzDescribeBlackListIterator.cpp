@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Friend/Domain/Iterator/Gs2FriendEzDescribeBlackListIterator.h"
+#include "Friend/Domain/Iterator/Gs2FriendEzDescribeBlackListIterator.h"
 
 namespace Gs2::UE5::Friend::Domain::Iterator
 {

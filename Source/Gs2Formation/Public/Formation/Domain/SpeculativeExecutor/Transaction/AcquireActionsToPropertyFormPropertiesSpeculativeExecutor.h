@@ -44,7 +44,7 @@ namespace Gs2::Formation::Domain::Transaction::SpeculativeExecutor
     public:
         static FString Action();
 
-        class GS2FORMATION_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
             public TSharedFromThis<FCommitTask>
         {

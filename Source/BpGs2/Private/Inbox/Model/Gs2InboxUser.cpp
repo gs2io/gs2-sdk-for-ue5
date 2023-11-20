@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Inbox/Model/Gs2InboxUser.h"
-#include "BpGs2/Public/Inbox/Model/Gs2InboxMessage.h"
+#include "Inbox/Model/Gs2InboxUser.h"
+#include "Inbox/Model/Gs2InboxMessage.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Inbox/Model/Gs2InboxMessage.h"
 #include "Core/BpGs2Constant.h"

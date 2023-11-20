@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Chat/Model/Gs2ChatEzMessage.h"
+#include "Chat/Model/Gs2ChatEzMessage.h"
 
 namespace Gs2::UE5::Chat::Model
 {

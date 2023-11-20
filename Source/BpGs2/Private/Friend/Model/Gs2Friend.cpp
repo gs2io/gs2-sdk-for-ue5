@@ -15,7 +15,7 @@
  */
 
 #include "Friend/Model/Gs2Friend.h"
-#include "BpGs2/Public/Friend/Model/Gs2FriendNamespace.h"
+#include "Friend/Model/Gs2FriendNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Friend UGs2FriendFunctionLibrary::Service(

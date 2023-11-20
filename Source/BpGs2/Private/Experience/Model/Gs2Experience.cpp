@@ -15,7 +15,7 @@
  */
 
 #include "Experience/Model/Gs2Experience.h"
-#include "BpGs2/Public/Experience/Model/Gs2ExperienceNamespace.h"
+#include "Experience/Model/Gs2ExperienceNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Experience UGs2ExperienceFunctionLibrary::Service(

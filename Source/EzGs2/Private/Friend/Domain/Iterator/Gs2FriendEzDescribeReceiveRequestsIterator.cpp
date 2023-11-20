@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Friend/Domain/Iterator/Gs2FriendEzDescribeReceiveRequestsIterator.h"
+#include "Friend/Domain/Iterator/Gs2FriendEzDescribeReceiveRequestsIterator.h"
 
 namespace Gs2::UE5::Friend::Domain::Iterator
 {

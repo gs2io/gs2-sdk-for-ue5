@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/LoginReward/Model/Gs2LoginRewardEzReward.h"
+#include "LoginReward/Model/Gs2LoginRewardEzReward.h"
 
 namespace Gs2::UE5::LoginReward::Model
 {

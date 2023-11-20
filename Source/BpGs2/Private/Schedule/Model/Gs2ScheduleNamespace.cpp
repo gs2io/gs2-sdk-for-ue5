@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Schedule/Model/Gs2ScheduleNamespace.h"
+#include "Schedule/Model/Gs2ScheduleNamespace.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Schedule/Model/Gs2ScheduleUser.h"
 #include "Core/BpGs2Constant.h"

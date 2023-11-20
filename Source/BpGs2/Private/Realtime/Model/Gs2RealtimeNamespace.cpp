@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Realtime/Model/Gs2RealtimeNamespace.h"
-#include "BpGs2/Public/Realtime/Model/Gs2RealtimeRoom.h"
+#include "Realtime/Model/Gs2RealtimeNamespace.h"
+#include "Realtime/Model/Gs2RealtimeRoom.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Realtime/Model/Gs2RealtimeRoom.h"
 #include "Core/BpGs2Constant.h"

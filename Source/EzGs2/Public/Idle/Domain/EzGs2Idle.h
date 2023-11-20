@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Idle/Public/Idle/Domain/Gs2Idle.h"
+#include "Idle/Domain/Gs2Idle.h"
 #include "Util/Profile.h"
 #include "Idle/Domain/Model/Gs2IdleEzNamespaceDomain.h"
 

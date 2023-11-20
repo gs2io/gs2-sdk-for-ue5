@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Mission/Model/Gs2MissionConfig.h"
+#include "Mission/Model/Gs2MissionConfig.h"

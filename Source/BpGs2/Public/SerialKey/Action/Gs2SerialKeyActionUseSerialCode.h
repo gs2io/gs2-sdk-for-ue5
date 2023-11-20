@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/SerialKey/Model/Gs2SerialKeySerialKey.h"
-#include "BpGs2/Public/SerialKey/Model/Gs2SerialKeySerialKey.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "SerialKey/Model/Gs2SerialKeySerialKey.h"
+#include "SerialKey/Model/Gs2SerialKeySerialKey.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2SerialKeyActionUseSerialCode.generated.h"
 

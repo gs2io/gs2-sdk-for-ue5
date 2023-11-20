@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2AdReward/Public/AdReward/Domain/Gs2AdReward.h"
+#include "AdReward/Domain/Gs2AdReward.h"
 #include "Util/Profile.h"
 #include "AdReward/Domain/Model/Gs2AdRewardEzNamespaceDomain.h"
 

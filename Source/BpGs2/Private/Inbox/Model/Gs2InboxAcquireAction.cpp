@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Inbox/Model/Gs2InboxAcquireAction.h"
+#include "Inbox/Model/Gs2InboxAcquireAction.h"

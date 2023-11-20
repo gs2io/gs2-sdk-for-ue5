@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Showcase/Public/Showcase/Domain/Gs2Showcase.h"
+#include "Showcase/Domain/Gs2Showcase.h"
 #include "Util/Profile.h"
 #include "Showcase/Domain/Model/Gs2ShowcaseEzNamespaceDomain.h"
 

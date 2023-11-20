@@ -6,10 +6,6 @@ public class BpGs2 : ModuleRules
     {
 	    PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-	    PublicDependencyModuleNames.AddRange(new string[] {
-		    "EzGs2"
-	    });
-	    
         PrivateDependencyModuleNames.AddRange(
             new string[]
             {
@@ -22,7 +18,7 @@ public class BpGs2 : ModuleRules
 				"JsonUtilities",
             }
         );
-		PrivateDependencyModuleNames.AddRange(Gs2Plugin.GetGs2ModuleNames());
+        PrivateDependencyModuleNames.AddRange(Gs2Plugin.GetGs2ModuleNames());
 		PrivateDependencyModuleNames.AddRange(Gs2Plugin.GetEzGs2ModuleNames());
     }
 }

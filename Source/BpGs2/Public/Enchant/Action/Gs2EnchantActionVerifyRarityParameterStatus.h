@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Enchant/Model/Gs2EnchantRarityParameterStatus.h"
-#include "BpGs2/Public/Enchant/Model/Gs2EnchantRarityParameterStatus.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Enchant/Model/Gs2EnchantRarityParameterStatus.h"
+#include "Enchant/Model/Gs2EnchantRarityParameterStatus.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2EnchantActionVerifyRarityParameterStatus.generated.h"
 

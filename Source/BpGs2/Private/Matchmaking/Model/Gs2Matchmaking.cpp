@@ -15,8 +15,8 @@
  */
 
 #include "Matchmaking/Model/Gs2Matchmaking.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingNamespace.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingBallot.h"
+#include "Matchmaking/Model/Gs2MatchmakingNamespace.h"
+#include "Matchmaking/Model/Gs2MatchmakingBallot.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Matchmaking UGs2MatchmakingFunctionLibrary::Service(

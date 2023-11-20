@@ -16,17 +16,23 @@ GS2 supports online functionality and makes it easy for game developers to analy
 
 ## Getting Started
 
-### Install as an engine plugin
-
-Place the downloaded source code in the following folder in the Unreal Engine source code.
-
-`(Unreal Engine source code)/Engine/Plugins/Gs2Plugin`
+*Since source code compilation and linking is required, Microsoft Visual Studio 2019 or later (2022 from UE5.2) must be installed in Windows/Mac environment.
 
 ### Install as a project plugin
 
 Place the downloaded source code in the following folder in your Unreal Engine project.
 
 `(Unreal Engine project)/Plugins/Gs2Plugin`
+
+### Install as an engine plugin
+
+If you get the Unreal Engine source code from Github or Perforce, and if you are in an environment that builds the Engine
+You can install it as an engine plugin.
+Place the downloaded source code in the following folder in the Unreal Engine source code.
+
+`(Unreal Engine source code)/Engine/Plugins/Gs2Plugin`
+
+
 
 You will need GS2 credentials to use the SDK.
 Follow the instructions in [GS2 Setup](https://docs.gs2.io/en/get_start/tutorial/setup_gs2/) to issue the credentials.

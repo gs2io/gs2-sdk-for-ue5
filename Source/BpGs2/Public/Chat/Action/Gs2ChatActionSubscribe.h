@@ -19,9 +19,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Chat/Model/Gs2ChatSubscribe.h"
-#include "BpGs2/Public/Chat/Model/Gs2ChatSubscribe.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Chat/Model/Gs2ChatSubscribe.h"
+#include "Chat/Model/Gs2ChatSubscribe.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ChatActionSubscribe.generated.h"
   

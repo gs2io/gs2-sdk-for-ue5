@@ -17,10 +17,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingGathering.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingAttributeRange.h"
-#include "BpGs2/Public/Matchmaking/Model/Gs2MatchmakingGathering.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Matchmaking/Model/Gs2MatchmakingGathering.h"
+#include "Matchmaking/Model/Gs2MatchmakingAttributeRange.h"
+#include "Matchmaking/Model/Gs2MatchmakingGathering.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2MatchmakingActionUpdateGathering.generated.h"
 

@@ -15,7 +15,7 @@
  */
 
 #include "Schedule/Model/Gs2Schedule.h"
-#include "BpGs2/Public/Schedule/Model/Gs2ScheduleNamespace.h"
+#include "Schedule/Model/Gs2ScheduleNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Schedule UGs2ScheduleFunctionLibrary::Service(

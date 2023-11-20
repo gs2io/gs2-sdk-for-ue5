@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Schedule/Public/Schedule/Domain/Gs2Schedule.h"
+#include "Schedule/Domain/Gs2Schedule.h"
 #include "Util/Profile.h"
 #include "Schedule/Domain/Model/Gs2ScheduleEzNamespaceDomain.h"
 

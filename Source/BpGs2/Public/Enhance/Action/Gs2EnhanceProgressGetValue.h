@@ -17,9 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceProgress.h"
-#include "BpGs2/Public/Enhance/Model/Gs2EnhanceProgress.h"
-#include "BpGs2/Public/Core/Model/Gs2Error.h"
+#include "Enhance/Model/Gs2EnhanceProgress.h"
+#include "Enhance/Model/Gs2EnhanceProgress.h"
+#include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2EnhanceProgressGetValue.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2EnhanceProgressGetValueSuccessDelegate, FGs2EnhanceProgressValue, Value, const FGs2Error, Error);

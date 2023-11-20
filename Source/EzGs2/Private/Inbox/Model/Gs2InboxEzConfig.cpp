@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Inbox/Model/Gs2InboxEzConfig.h"
+#include "Inbox/Model/Gs2InboxEzConfig.h"
 
 namespace Gs2::UE5::Inbox::Model
 {

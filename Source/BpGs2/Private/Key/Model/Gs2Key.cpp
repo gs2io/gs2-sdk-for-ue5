@@ -17,7 +17,7 @@
  */
 
 #include "Key/Model/Gs2Key.h"
-#include "BpGs2/Public/Key/Model/Gs2KeyNamespace.h"
+#include "Key/Model/Gs2KeyNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Key UGs2KeyFunctionLibrary::Service(

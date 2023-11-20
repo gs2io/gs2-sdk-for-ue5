@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Version/Domain/Iterator/Gs2VersionEzDescribeAcceptVersionsIterator.h"
+#include "Version/Domain/Iterator/Gs2VersionEzDescribeAcceptVersionsIterator.h"
 
 namespace Gs2::UE5::Version::Domain::Iterator
 {

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Matchmaking/Domain/Iterator/Gs2MatchmakingEzDoMatchmakingIterator.h"
+#include "Matchmaking/Domain/Iterator/Gs2MatchmakingEzDoMatchmakingIterator.h"
 
 namespace Gs2::UE5::Matchmaking::Domain::Iterator
 {

@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Friend/Model/Gs2FriendFriendRequest.h"
+#include "Friend/Model/Gs2FriendFriendRequest.h"

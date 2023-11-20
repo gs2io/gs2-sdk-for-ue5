@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/Datastore/Model/Gs2DatastoreEzDataObject.h"
+#include "Datastore/Model/Gs2DatastoreEzDataObject.h"
 
 namespace Gs2::UE5::Datastore::Model
 {

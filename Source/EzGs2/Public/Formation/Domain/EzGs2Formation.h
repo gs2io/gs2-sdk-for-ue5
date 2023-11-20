@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gs2Formation/Public/Formation/Domain/Gs2Formation.h"
+#include "Formation/Domain/Gs2Formation.h"
 #include "Util/Profile.h"
 #include "Formation/Domain/Model/Gs2FormationEzNamespaceDomain.h"
 

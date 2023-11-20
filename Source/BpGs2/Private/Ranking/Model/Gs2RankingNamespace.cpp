@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Ranking/Model/Gs2RankingNamespace.h"
-#include "BpGs2/Public/Ranking/Model/Gs2RankingCategoryModel.h"
+#include "Ranking/Model/Gs2RankingNamespace.h"
+#include "Ranking/Model/Gs2RankingCategoryModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Ranking/Model/Gs2RankingCategoryModel.h"
 #include "Ranking/Model/Gs2RankingUser.h"

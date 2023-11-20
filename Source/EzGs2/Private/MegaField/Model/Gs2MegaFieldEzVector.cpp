@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "EzGs2/Public/MegaField/Model/Gs2MegaFieldEzVector.h"
+#include "MegaField/Model/Gs2MegaFieldEzVector.h"
 
 namespace Gs2::UE5::MegaField::Model
 {

@@ -15,7 +15,7 @@
  */
 
 #include "Enchant/Model/Gs2Enchant.h"
-#include "BpGs2/Public/Enchant/Model/Gs2EnchantNamespace.h"
+#include "Enchant/Model/Gs2EnchantNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Enchant UGs2EnchantFunctionLibrary::Service(

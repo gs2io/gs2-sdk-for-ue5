@@ -15,7 +15,7 @@
  */
 
 #include "Exchange/Model/Gs2Exchange.h"
-#include "BpGs2/Public/Exchange/Model/Gs2ExchangeNamespace.h"
+#include "Exchange/Model/Gs2ExchangeNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Exchange UGs2ExchangeFunctionLibrary::Service(

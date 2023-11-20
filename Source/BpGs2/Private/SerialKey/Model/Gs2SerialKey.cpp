@@ -15,7 +15,7 @@
  */
 
 #include "SerialKey/Model/Gs2SerialKey.h"
-#include "BpGs2/Public/SerialKey/Model/Gs2SerialKeyNamespace.h"
+#include "SerialKey/Model/Gs2SerialKeyNamespace.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2SerialKey UGs2SerialKeyFunctionLibrary::Service(

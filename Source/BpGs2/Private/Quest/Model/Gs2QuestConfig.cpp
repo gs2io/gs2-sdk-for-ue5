@@ -14,4 +14,4 @@
  * permissions and limitations under the License.
  */
 
-#include "BpGs2/Public/Quest/Model/Gs2QuestConfig.h"
+#include "Quest/Model/Gs2QuestConfig.h"
