@@ -55,14 +55,14 @@ namespace Gs2::UE5::Account::Domain::Model
             public TSharedFromThis<FAuthenticationTask>
         {
             TSharedPtr<FEzAccountDomain> Self;
-            FString KeyId;
             FString Password;
+            TOptional<FString> KeyId;
 
         public:
             explicit FAuthenticationTask(
                 TSharedPtr<FEzAccountDomain> Self,
-                FString KeyId,
-                FString Password
+                FString Password,
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -72,8 +72,8 @@ namespace Gs2::UE5::Account::Domain::Model
         friend FAuthenticationTask;
 
         TSharedPtr<FAsyncTask<FAuthenticationTask>> Authentication(
-            FString KeyId,
-            FString Password
+            FString Password,
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         Gs2::UE5::Account::Domain::Model::FEzTakeOverDomainPtr TakeOver(

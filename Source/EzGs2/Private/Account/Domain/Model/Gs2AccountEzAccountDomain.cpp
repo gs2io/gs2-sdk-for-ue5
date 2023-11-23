@@ -68,9 +68,9 @@ namespace Gs2::UE5::Account::Domain::Model
 
     FEzAccountDomain::FAuthenticationTask::FAuthenticationTask(
         TSharedPtr<FEzAccountDomain> Self,
-        FString KeyId,
-        FString Password
-    ): Self(Self), KeyId(KeyId), Password(Password)
+        FString Password,
+        TOptional<FString> KeyId
+    ): Self(Self), Password(Password), KeyId(KeyId)
     {
 
     }
@@ -112,14 +112,14 @@ namespace Gs2::UE5::Account::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzAccountDomain::FAuthenticationTask>> FEzAccountDomain::Authentication(
-        FString KeyId,
-        FString Password
+        FString Password,
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FAuthenticationTask>>(
             this->AsShared(),
-            KeyId,
-            Password
+            Password,
+            KeyId
         );
     }
 

@@ -33,8 +33,8 @@ class BPGS2_API UGs2AccountAuthenticationAsyncFunction : public UBlueprintAsyncA
     GENERATED_BODY()
 
     FGs2AccountAccount Account;
-    FString KeyId;
     FString Password;
+    FString KeyId;
 
 public:
 
@@ -50,8 +50,8 @@ public:
     static UGs2AccountAuthenticationAsyncFunction* Authentication(
         UObject* WorldContextObject,
         FGs2AccountAccount Account,
-        FString KeyId,
-        FString Password
+        FString Password,
+        FString KeyId
     );
 
     virtual void Activate() override;

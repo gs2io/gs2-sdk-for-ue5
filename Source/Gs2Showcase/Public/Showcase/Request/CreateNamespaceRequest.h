@@ -32,6 +32,8 @@ namespace Gs2::Showcase::Request
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FScriptSetting> BuyScriptValue;
+        TOptional<FString> QueueNamespaceIdValue;
+        TOptional<FString> KeyIdValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -47,6 +49,8 @@ namespace Gs2::Showcase::Request
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithBuyScript(const TSharedPtr<Model::FScriptSetting> BuyScript);
+        TSharedPtr<FCreateNamespaceRequest> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
+        TSharedPtr<FCreateNamespaceRequest> WithKeyId(const TOptional<FString> KeyId);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +58,8 @@ namespace Gs2::Showcase::Request
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FScriptSetting> GetBuyScript() const;
+        TOptional<FString> GetQueueNamespaceId() const;
+        TOptional<FString> GetKeyId() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

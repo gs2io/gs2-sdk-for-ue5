@@ -101,10 +101,10 @@ namespace Gs2::UE5::Stamina::Domain::Model
 
     FEzStaminaGameSessionDomain::FSetMaxValueTask::FSetMaxValueTask(
         TSharedPtr<FEzStaminaGameSessionDomain> Self,
-        FString KeyId,
         FString SignedStatusBody,
-        FString SignedStatusSignature
-    ): Self(Self), KeyId(KeyId), SignedStatusBody(SignedStatusBody), SignedStatusSignature(SignedStatusSignature)
+        FString SignedStatusSignature,
+        TOptional<FString> KeyId
+    ): Self(Self), SignedStatusBody(SignedStatusBody), SignedStatusSignature(SignedStatusSignature), KeyId(KeyId)
     {
 
     }
@@ -147,25 +147,25 @@ namespace Gs2::UE5::Stamina::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzStaminaGameSessionDomain::FSetMaxValueTask>> FEzStaminaGameSessionDomain::SetMaxValue(
-        FString KeyId,
         FString SignedStatusBody,
-        FString SignedStatusSignature
+        FString SignedStatusSignature,
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FSetMaxValueTask>>(
             this->AsShared(),
-            KeyId,
             SignedStatusBody,
-            SignedStatusSignature
+            SignedStatusSignature,
+            KeyId
         );
     }
 
     FEzStaminaGameSessionDomain::FSetRecoverIntervalTask::FSetRecoverIntervalTask(
         TSharedPtr<FEzStaminaGameSessionDomain> Self,
-        FString KeyId,
         FString SignedStatusBody,
-        FString SignedStatusSignature
-    ): Self(Self), KeyId(KeyId), SignedStatusBody(SignedStatusBody), SignedStatusSignature(SignedStatusSignature)
+        FString SignedStatusSignature,
+        TOptional<FString> KeyId
+    ): Self(Self), SignedStatusBody(SignedStatusBody), SignedStatusSignature(SignedStatusSignature), KeyId(KeyId)
     {
 
     }
@@ -208,25 +208,25 @@ namespace Gs2::UE5::Stamina::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzStaminaGameSessionDomain::FSetRecoverIntervalTask>> FEzStaminaGameSessionDomain::SetRecoverInterval(
-        FString KeyId,
         FString SignedStatusBody,
-        FString SignedStatusSignature
+        FString SignedStatusSignature,
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FSetRecoverIntervalTask>>(
             this->AsShared(),
-            KeyId,
             SignedStatusBody,
-            SignedStatusSignature
+            SignedStatusSignature,
+            KeyId
         );
     }
 
     FEzStaminaGameSessionDomain::FSetRecoverValueTask::FSetRecoverValueTask(
         TSharedPtr<FEzStaminaGameSessionDomain> Self,
-        FString KeyId,
         FString SignedStatusBody,
-        FString SignedStatusSignature
-    ): Self(Self), KeyId(KeyId), SignedStatusBody(SignedStatusBody), SignedStatusSignature(SignedStatusSignature)
+        FString SignedStatusSignature,
+        TOptional<FString> KeyId
+    ): Self(Self), SignedStatusBody(SignedStatusBody), SignedStatusSignature(SignedStatusSignature), KeyId(KeyId)
     {
 
     }
@@ -269,16 +269,16 @@ namespace Gs2::UE5::Stamina::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzStaminaGameSessionDomain::FSetRecoverValueTask>> FEzStaminaGameSessionDomain::SetRecoverValue(
-        FString KeyId,
         FString SignedStatusBody,
-        FString SignedStatusSignature
+        FString SignedStatusSignature,
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FSetRecoverValueTask>>(
             this->AsShared(),
-            KeyId,
             SignedStatusBody,
-            SignedStatusSignature
+            SignedStatusSignature,
+            KeyId
         );
     }
 

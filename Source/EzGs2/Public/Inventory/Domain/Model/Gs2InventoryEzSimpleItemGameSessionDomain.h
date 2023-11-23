@@ -65,12 +65,12 @@ namespace Gs2::UE5::Inventory::Domain::Model
             public TSharedFromThis<FGetSimpleItemWithSignatureTask>
         {
             TSharedPtr<FEzSimpleItemGameSessionDomain> Self;
-            FString KeyId;
+            TOptional<FString> KeyId;
 
         public:
             explicit FGetSimpleItemWithSignatureTask(
                 TSharedPtr<FEzSimpleItemGameSessionDomain> Self,
-                FString KeyId
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -80,7 +80,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         friend FGetSimpleItemWithSignatureTask;
 
         TSharedPtr<FAsyncTask<FGetSimpleItemWithSignatureTask>> GetSimpleItemWithSignature(
-            FString KeyId
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FModelTask :

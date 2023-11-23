@@ -68,7 +68,7 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     FEzFormGameSessionDomain::FGetFormWithSignatureTask::FGetFormWithSignatureTask(
         TSharedPtr<FEzFormGameSessionDomain> Self,
-        FString KeyId
+        TOptional<FString> KeyId
     ): Self(Self), KeyId(KeyId)
     {
 
@@ -110,7 +110,7 @@ namespace Gs2::UE5::Formation::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzFormGameSessionDomain::FGetFormWithSignatureTask>> FEzFormGameSessionDomain::GetFormWithSignature(
-        FString KeyId
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FGetFormWithSignatureTask>>(
@@ -122,7 +122,7 @@ namespace Gs2::UE5::Formation::Domain::Model
     FEzFormGameSessionDomain::FSetFormTask::FSetFormTask(
         TSharedPtr<FEzFormGameSessionDomain> Self,
         TArray<TSharedPtr<Gs2::UE5::Formation::Model::FEzSlotWithSignature>> Slots,
-        FString KeyId
+        TOptional<FString> KeyId
     ): Self(Self), Slots(Slots), KeyId(KeyId)
     {
 
@@ -172,7 +172,7 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     TSharedPtr<FAsyncTask<FEzFormGameSessionDomain::FSetFormTask>> FEzFormGameSessionDomain::SetForm(
         TArray<TSharedPtr<Gs2::UE5::Formation::Model::FEzSlotWithSignature>> Slots,
-        FString KeyId
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FSetFormTask>>(

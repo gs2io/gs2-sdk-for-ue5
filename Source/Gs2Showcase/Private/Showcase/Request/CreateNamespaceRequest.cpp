@@ -23,6 +23,8 @@ namespace Gs2::Showcase::Request
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
         BuyScriptValue(nullptr),
+        QueueNamespaceIdValue(TOptional<FString>()),
+        KeyIdValue(TOptional<FString>()),
         LogSettingValue(nullptr)
     {
     }
@@ -34,6 +36,8 @@ namespace Gs2::Showcase::Request
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
         BuyScriptValue(From.BuyScriptValue),
+        QueueNamespaceIdValue(From.QueueNamespaceIdValue),
+        KeyIdValue(From.KeyIdValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -78,6 +82,22 @@ namespace Gs2::Showcase::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithQueueNamespaceId(
+        const TOptional<FString> QueueNamespaceId
+    )
+    {
+        this->QueueNamespaceIdValue = QueueNamespaceId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithKeyId(
+        const TOptional<FString> KeyId
+    )
+    {
+        this->KeyIdValue = KeyId;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithLogSetting(
         const TSharedPtr<Model::FLogSetting> LogSetting
     )
@@ -117,6 +137,16 @@ namespace Gs2::Showcase::Request
             return nullptr;
         }
         return BuyScriptValue;
+    }
+
+    TOptional<FString> FCreateNamespaceRequest::GetQueueNamespaceId() const
+    {
+        return QueueNamespaceIdValue;
+    }
+
+    TOptional<FString> FCreateNamespaceRequest::GetKeyId() const
+    {
+        return KeyIdValue;
     }
 
     TSharedPtr<Model::FLogSetting> FCreateNamespaceRequest::GetLogSetting() const
@@ -169,6 +199,24 @@ namespace Gs2::Showcase::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("buyScript"));
              }() : nullptr)
+            ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("queueNamespaceId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("keyId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -201,6 +249,14 @@ namespace Gs2::Showcase::Request
         if (BuyScriptValue != nullptr && BuyScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("buyScript", BuyScriptValue->ToJson());
+        }
+        if (QueueNamespaceIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("queueNamespaceId", QueueNamespaceIdValue.GetValue());
+        }
+        if (KeyIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

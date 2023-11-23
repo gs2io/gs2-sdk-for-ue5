@@ -37,6 +37,8 @@ namespace Gs2::Mission::Request
         TSharedPtr<Model::FScriptSetting> ReceiveRewardsScriptValue;
         TSharedPtr<Model::FNotificationSetting> CompleteNotificationValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
+        TOptional<FString> QueueNamespaceIdValue;
+        TOptional<FString> KeyIdValue;
         
     public:
         
@@ -55,6 +57,8 @@ namespace Gs2::Mission::Request
         TSharedPtr<FCreateNamespaceRequest> WithReceiveRewardsScript(const TSharedPtr<Model::FScriptSetting> ReceiveRewardsScript);
         TSharedPtr<FCreateNamespaceRequest> WithCompleteNotification(const TSharedPtr<Model::FNotificationSetting> CompleteNotification);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
+        TSharedPtr<FCreateNamespaceRequest> WithKeyId(const TOptional<FString> KeyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
@@ -65,6 +69,8 @@ namespace Gs2::Mission::Request
         TSharedPtr<Model::FScriptSetting> GetReceiveRewardsScript() const;
         TSharedPtr<Model::FNotificationSetting> GetCompleteNotification() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
+        TOptional<FString> GetQueueNamespaceId() const;
+        TOptional<FString> GetKeyId() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

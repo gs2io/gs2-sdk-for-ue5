@@ -64,12 +64,12 @@ namespace Gs2::UE5::Formation::Domain::Model
             public TSharedFromThis<FGetFormWithSignatureTask>
         {
             TSharedPtr<FEzFormGameSessionDomain> Self;
-            FString KeyId;
+            TOptional<FString> KeyId;
 
         public:
             explicit FGetFormWithSignatureTask(
                 TSharedPtr<FEzFormGameSessionDomain> Self,
-                FString KeyId
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -79,7 +79,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         friend FGetFormWithSignatureTask;
 
         TSharedPtr<FAsyncTask<FGetFormWithSignatureTask>> GetFormWithSignature(
-            FString KeyId
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FSetFormTask :
@@ -88,13 +88,13 @@ namespace Gs2::UE5::Formation::Domain::Model
         {
             TSharedPtr<FEzFormGameSessionDomain> Self;
             TArray<TSharedPtr<Gs2::UE5::Formation::Model::FEzSlotWithSignature>> Slots;
-            FString KeyId;
+            TOptional<FString> KeyId;
 
         public:
             explicit FSetFormTask(
                 TSharedPtr<FEzFormGameSessionDomain> Self,
                 TArray<TSharedPtr<Gs2::UE5::Formation::Model::FEzSlotWithSignature>> Slots,
-                FString KeyId
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -105,7 +105,7 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         TSharedPtr<FAsyncTask<FSetFormTask>> SetForm(
             TArray<TSharedPtr<Gs2::UE5::Formation::Model::FEzSlotWithSignature>> Slots,
-            FString KeyId
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FDeleteFormTask :

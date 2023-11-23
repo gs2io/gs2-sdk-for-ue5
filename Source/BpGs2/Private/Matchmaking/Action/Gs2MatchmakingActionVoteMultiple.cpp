@@ -27,9 +27,9 @@ UGs2MatchmakingVoteMultipleAsyncFunction::UGs2MatchmakingVoteMultipleAsyncFuncti
 UGs2MatchmakingVoteMultipleAsyncFunction* UGs2MatchmakingVoteMultipleAsyncFunction::VoteMultiple(
     UObject* WorldContextObject,
     FGs2MatchmakingNamespace Namespace,
-    FString KeyId,
     TArray<FGs2MatchmakingSignedBallot> SignedBallots,
-    TArray<FGs2MatchmakingGameResult> GameResults
+    TArray<FGs2MatchmakingGameResult> GameResults,
+    FString KeyId
 )
 {
     UGs2MatchmakingVoteMultipleAsyncFunction* Action = NewObject<UGs2MatchmakingVoteMultipleAsyncFunction>();
@@ -53,7 +53,6 @@ void UGs2MatchmakingVoteMultipleAsyncFunction::Activate()
     }
 
     auto Future = Namespace.Value->VoteMultiple(
-        KeyId,
         [&]
         {
             TArray<Gs2::UE5::Matchmaking::Model::FEzSignedBallotPtr> r;
@@ -71,7 +70,8 @@ void UGs2MatchmakingVoteMultipleAsyncFunction::Activate()
                 r.Add(FGs2MatchmakingGameResultToEzGameResult(v));
             }
             return r;
-        }()
+        }(),
+        KeyId
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

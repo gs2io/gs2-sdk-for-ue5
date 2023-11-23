@@ -57,12 +57,12 @@ namespace Gs2::UE5::Experience::Domain::Model
             public TSharedFromThis<FGetStatusWithSignatureTask>
         {
             TSharedPtr<FEzStatusGameSessionDomain> Self;
-            FString KeyId;
+            TOptional<FString> KeyId;
 
         public:
             explicit FGetStatusWithSignatureTask(
                 TSharedPtr<FEzStatusGameSessionDomain> Self,
-                FString KeyId
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -72,7 +72,7 @@ namespace Gs2::UE5::Experience::Domain::Model
         friend FGetStatusWithSignatureTask;
 
         TSharedPtr<FAsyncTask<FGetStatusWithSignatureTask>> GetStatusWithSignature(
-            FString KeyId
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FModelTask :

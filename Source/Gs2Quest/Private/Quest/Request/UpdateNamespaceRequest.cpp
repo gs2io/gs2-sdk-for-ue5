@@ -25,7 +25,9 @@ namespace Gs2::Quest::Request
         StartQuestScriptValue(nullptr),
         CompleteQuestScriptValue(nullptr),
         FailedQuestScriptValue(nullptr),
-        LogSettingValue(nullptr)
+        LogSettingValue(nullptr),
+        QueueNamespaceIdValue(TOptional<FString>()),
+        KeyIdValue(TOptional<FString>())
     {
     }
 
@@ -38,7 +40,9 @@ namespace Gs2::Quest::Request
         StartQuestScriptValue(From.StartQuestScriptValue),
         CompleteQuestScriptValue(From.CompleteQuestScriptValue),
         FailedQuestScriptValue(From.FailedQuestScriptValue),
-        LogSettingValue(From.LogSettingValue)
+        LogSettingValue(From.LogSettingValue),
+        QueueNamespaceIdValue(From.QueueNamespaceIdValue),
+        KeyIdValue(From.KeyIdValue)
     {
     }
 
@@ -106,6 +110,22 @@ namespace Gs2::Quest::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithQueueNamespaceId(
+        const TOptional<FString> QueueNamespaceId
+    )
+    {
+        this->QueueNamespaceIdValue = QueueNamespaceId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithKeyId(
+        const TOptional<FString> KeyId
+    )
+    {
+        this->KeyIdValue = KeyId;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FUpdateNamespaceRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -164,6 +184,16 @@ namespace Gs2::Quest::Request
             return nullptr;
         }
         return LogSettingValue;
+    }
+
+    TOptional<FString> FUpdateNamespaceRequest::GetQueueNamespaceId() const
+    {
+        return QueueNamespaceIdValue;
+    }
+
+    TOptional<FString> FUpdateNamespaceRequest::GetKeyId() const
+    {
+        return KeyIdValue;
     }
 
     TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -230,7 +260,25 @@ namespace Gs2::Quest::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+             }() : nullptr)
+            ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("queueNamespaceId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("keyId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FUpdateNamespaceRequest::ToJson() const
@@ -267,6 +315,14 @@ namespace Gs2::Quest::Request
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+        }
+        if (QueueNamespaceIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("queueNamespaceId", QueueNamespaceIdValue.GetValue());
+        }
+        if (KeyIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
         }
         return JsonRootObject;
     }

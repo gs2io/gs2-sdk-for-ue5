@@ -27,9 +27,9 @@ UGs2StaminaSetRecoverValueAsyncFunction::UGs2StaminaSetRecoverValueAsyncFunction
 UGs2StaminaSetRecoverValueAsyncFunction* UGs2StaminaSetRecoverValueAsyncFunction::SetRecoverValue(
     UObject* WorldContextObject,
     FGs2StaminaOwnStamina Stamina,
-    FString KeyId,
     FString SignedStatusBody,
-    FString SignedStatusSignature
+    FString SignedStatusSignature,
+    FString KeyId
 )
 {
     UGs2StaminaSetRecoverValueAsyncFunction* Action = NewObject<UGs2StaminaSetRecoverValueAsyncFunction>();
@@ -53,9 +53,9 @@ void UGs2StaminaSetRecoverValueAsyncFunction::Activate()
     }
 
     auto Future = Stamina.Value->SetRecoverValue(
-        KeyId,
         SignedStatusBody,
-        SignedStatusSignature
+        SignedStatusSignature,
+        KeyId
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

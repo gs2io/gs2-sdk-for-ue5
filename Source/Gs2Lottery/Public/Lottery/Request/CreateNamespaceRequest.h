@@ -33,6 +33,8 @@ namespace Gs2::Lottery::Request
         TOptional<FString> LotteryTriggerScriptIdValue;
         TOptional<FString> ChoicePrizeTableScriptIdValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
+        TOptional<FString> QueueNamespaceIdValue;
+        TOptional<FString> KeyIdValue;
         
     public:
         
@@ -49,6 +51,8 @@ namespace Gs2::Lottery::Request
         TSharedPtr<FCreateNamespaceRequest> WithLotteryTriggerScriptId(const TOptional<FString> LotteryTriggerScriptId);
         TSharedPtr<FCreateNamespaceRequest> WithChoicePrizeTableScriptId(const TOptional<FString> ChoicePrizeTableScriptId);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
+        TSharedPtr<FCreateNamespaceRequest> WithKeyId(const TOptional<FString> KeyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
@@ -57,6 +61,8 @@ namespace Gs2::Lottery::Request
         TOptional<FString> GetLotteryTriggerScriptId() const;
         TOptional<FString> GetChoicePrizeTableScriptId() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
+        TOptional<FString> GetQueueNamespaceId() const;
+        TOptional<FString> GetKeyId() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

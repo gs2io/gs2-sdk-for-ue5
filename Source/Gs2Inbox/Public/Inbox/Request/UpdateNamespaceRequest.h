@@ -38,6 +38,8 @@ namespace Gs2::Inbox::Request
         TSharedPtr<Model::FScriptSetting> DeleteMessageScriptValue;
         TSharedPtr<Model::FNotificationSetting> ReceiveNotificationValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
+        TOptional<FString> QueueNamespaceIdValue;
+        TOptional<FString> KeyIdValue;
         
     public:
         
@@ -57,6 +59,8 @@ namespace Gs2::Inbox::Request
         TSharedPtr<FUpdateNamespaceRequest> WithDeleteMessageScript(const TSharedPtr<Model::FScriptSetting> DeleteMessageScript);
         TSharedPtr<FUpdateNamespaceRequest> WithReceiveNotification(const TSharedPtr<Model::FNotificationSetting> ReceiveNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
+        TSharedPtr<FUpdateNamespaceRequest> WithKeyId(const TOptional<FString> KeyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -69,6 +73,8 @@ namespace Gs2::Inbox::Request
         TSharedPtr<Model::FScriptSetting> GetDeleteMessageScript() const;
         TSharedPtr<Model::FNotificationSetting> GetReceiveNotification() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
+        TOptional<FString> GetQueueNamespaceId() const;
+        TOptional<FString> GetKeyId() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

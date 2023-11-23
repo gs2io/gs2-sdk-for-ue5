@@ -48,10 +48,10 @@ namespace Gs2::UE5::Auth::Domain::Model
 
     FEzAccessTokenDomain::FLoginTask::FLoginTask(
         TSharedPtr<FEzAccessTokenDomain> Self,
-        FString KeyId,
         FString Body,
-        FString Signature
-    ): Self(Self), KeyId(KeyId), Body(Body), Signature(Signature)
+        FString Signature,
+        TOptional<FString> KeyId
+    ): Self(Self), Body(Body), Signature(Signature), KeyId(KeyId)
     {
 
     }
@@ -94,16 +94,16 @@ namespace Gs2::UE5::Auth::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzAccessTokenDomain::FLoginTask>> FEzAccessTokenDomain::Login(
-        FString KeyId,
         FString Body,
-        FString Signature
+        FString Signature,
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FLoginTask>>(
             this->AsShared(),
-            KeyId,
             Body,
-            Signature
+            Signature,
+            KeyId
         );
     }
 

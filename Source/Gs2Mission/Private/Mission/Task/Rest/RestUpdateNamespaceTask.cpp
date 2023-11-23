@@ -112,6 +112,14 @@ namespace Gs2::Mission::Task::Rest
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
             }
+            if (this->Request->GetQueueNamespaceId().IsSet())
+            {
+                JsonRootObject->SetStringField("queueNamespaceId", this->Request->GetQueueNamespaceId().GetValue());
+            }
+            if (this->Request->GetKeyId().IsSet())
+            {
+                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

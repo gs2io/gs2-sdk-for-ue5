@@ -48,16 +48,16 @@ namespace Gs2::UE5::Auth::Domain::Model
             public TSharedFromThis<FLoginTask>
         {
             TSharedPtr<FEzAccessTokenDomain> Self;
-            FString KeyId;
             FString Body;
             FString Signature;
+            TOptional<FString> KeyId;
 
         public:
             explicit FLoginTask(
                 TSharedPtr<FEzAccessTokenDomain> Self,
-                FString KeyId,
                 FString Body,
-                FString Signature
+                FString Signature,
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -67,9 +67,9 @@ namespace Gs2::UE5::Auth::Domain::Model
         friend FLoginTask;
 
         TSharedPtr<FAsyncTask<FLoginTask>> Login(
-            FString KeyId,
             FString Body,
-            FString Signature
+            FString Signature,
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FModelTask :

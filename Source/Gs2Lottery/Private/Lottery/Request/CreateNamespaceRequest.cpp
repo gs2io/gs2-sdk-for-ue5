@@ -24,7 +24,9 @@ namespace Gs2::Lottery::Request
         TransactionSettingValue(nullptr),
         LotteryTriggerScriptIdValue(TOptional<FString>()),
         ChoicePrizeTableScriptIdValue(TOptional<FString>()),
-        LogSettingValue(nullptr)
+        LogSettingValue(nullptr),
+        QueueNamespaceIdValue(TOptional<FString>()),
+        KeyIdValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +38,9 @@ namespace Gs2::Lottery::Request
         TransactionSettingValue(From.TransactionSettingValue),
         LotteryTriggerScriptIdValue(From.LotteryTriggerScriptIdValue),
         ChoicePrizeTableScriptIdValue(From.ChoicePrizeTableScriptIdValue),
-        LogSettingValue(From.LogSettingValue)
+        LogSettingValue(From.LogSettingValue),
+        QueueNamespaceIdValue(From.QueueNamespaceIdValue),
+        KeyIdValue(From.KeyIdValue)
     {
     }
 
@@ -96,6 +100,22 @@ namespace Gs2::Lottery::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithQueueNamespaceId(
+        const TOptional<FString> QueueNamespaceId
+    )
+    {
+        this->QueueNamespaceIdValue = QueueNamespaceId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithKeyId(
+        const TOptional<FString> KeyId
+    )
+    {
+        this->KeyIdValue = KeyId;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FCreateNamespaceRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -137,6 +157,16 @@ namespace Gs2::Lottery::Request
             return nullptr;
         }
         return LogSettingValue;
+    }
+
+    TOptional<FString> FCreateNamespaceRequest::GetQueueNamespaceId() const
+    {
+        return QueueNamespaceIdValue;
+    }
+
+    TOptional<FString> FCreateNamespaceRequest::GetKeyId() const
+    {
+        return KeyIdValue;
     }
 
     TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -197,7 +227,25 @@ namespace Gs2::Lottery::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+             }() : nullptr)
+            ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("queueNamespaceId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("keyId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FCreateNamespaceRequest::ToJson() const
@@ -230,6 +278,14 @@ namespace Gs2::Lottery::Request
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField("logSetting", LogSettingValue->ToJson());
+        }
+        if (QueueNamespaceIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("queueNamespaceId", QueueNamespaceIdValue.GetValue());
+        }
+        if (KeyIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
         }
         return JsonRootObject;
     }

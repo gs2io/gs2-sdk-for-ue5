@@ -27,9 +27,9 @@ UGs2StaminaSetRecoverIntervalAsyncFunction::UGs2StaminaSetRecoverIntervalAsyncFu
 UGs2StaminaSetRecoverIntervalAsyncFunction* UGs2StaminaSetRecoverIntervalAsyncFunction::SetRecoverInterval(
     UObject* WorldContextObject,
     FGs2StaminaOwnStamina Stamina,
-    FString KeyId,
     FString SignedStatusBody,
-    FString SignedStatusSignature
+    FString SignedStatusSignature,
+    FString KeyId
 )
 {
     UGs2StaminaSetRecoverIntervalAsyncFunction* Action = NewObject<UGs2StaminaSetRecoverIntervalAsyncFunction>();
@@ -53,9 +53,9 @@ void UGs2StaminaSetRecoverIntervalAsyncFunction::Activate()
     }
 
     auto Future = Stamina.Value->SetRecoverInterval(
-        KeyId,
         SignedStatusBody,
-        SignedStatusSignature
+        SignedStatusSignature,
+        KeyId
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

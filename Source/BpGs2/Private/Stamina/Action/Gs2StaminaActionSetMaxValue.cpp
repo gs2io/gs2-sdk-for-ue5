@@ -27,9 +27,9 @@ UGs2StaminaSetMaxValueAsyncFunction::UGs2StaminaSetMaxValueAsyncFunction(
 UGs2StaminaSetMaxValueAsyncFunction* UGs2StaminaSetMaxValueAsyncFunction::SetMaxValue(
     UObject* WorldContextObject,
     FGs2StaminaOwnStamina Stamina,
-    FString KeyId,
     FString SignedStatusBody,
-    FString SignedStatusSignature
+    FString SignedStatusSignature,
+    FString KeyId
 )
 {
     UGs2StaminaSetMaxValueAsyncFunction* Action = NewObject<UGs2StaminaSetMaxValueAsyncFunction>();
@@ -53,9 +53,9 @@ void UGs2StaminaSetMaxValueAsyncFunction::Activate()
     }
 
     auto Future = Stamina.Value->SetMaxValue(
-        KeyId,
         SignedStatusBody,
-        SignedStatusSignature
+        SignedStatusSignature,
+        KeyId
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

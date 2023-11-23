@@ -58,7 +58,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     FEzSimpleItemGameSessionDomain::FGetSimpleItemWithSignatureTask::FGetSimpleItemWithSignatureTask(
         TSharedPtr<FEzSimpleItemGameSessionDomain> Self,
-        FString KeyId
+        TOptional<FString> KeyId
     ): Self(Self), KeyId(KeyId)
     {
 
@@ -100,7 +100,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzSimpleItemGameSessionDomain::FGetSimpleItemWithSignatureTask>> FEzSimpleItemGameSessionDomain::GetSimpleItemWithSignature(
-        FString KeyId
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FGetSimpleItemWithSignatureTask>>(

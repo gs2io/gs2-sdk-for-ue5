@@ -33,9 +33,9 @@ class BPGS2_API UGs2StaminaSetRecoverValueAsyncFunction : public UBlueprintAsync
     GENERATED_BODY()
 
     FGs2StaminaOwnStamina Stamina;
-    FString KeyId;
     FString SignedStatusBody;
     FString SignedStatusSignature;
+    FString KeyId;
 
 public:
 
@@ -51,9 +51,9 @@ public:
     static UGs2StaminaSetRecoverValueAsyncFunction* SetRecoverValue(
         UObject* WorldContextObject,
         FGs2StaminaOwnStamina Stamina,
-        FString KeyId,
         FString SignedStatusBody,
-        FString SignedStatusSignature
+        FString SignedStatusSignature,
+        FString KeyId
     );
 
     virtual void Activate() override;

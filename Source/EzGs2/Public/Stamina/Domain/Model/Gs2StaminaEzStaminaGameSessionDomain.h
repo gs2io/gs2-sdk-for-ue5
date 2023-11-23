@@ -76,16 +76,16 @@ namespace Gs2::UE5::Stamina::Domain::Model
             public TSharedFromThis<FSetMaxValueTask>
         {
             TSharedPtr<FEzStaminaGameSessionDomain> Self;
-            FString KeyId;
             FString SignedStatusBody;
             FString SignedStatusSignature;
+            TOptional<FString> KeyId;
 
         public:
             explicit FSetMaxValueTask(
                 TSharedPtr<FEzStaminaGameSessionDomain> Self,
-                FString KeyId,
                 FString SignedStatusBody,
-                FString SignedStatusSignature
+                FString SignedStatusSignature,
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -95,9 +95,9 @@ namespace Gs2::UE5::Stamina::Domain::Model
         friend FSetMaxValueTask;
 
         TSharedPtr<FAsyncTask<FSetMaxValueTask>> SetMaxValue(
-            FString KeyId,
             FString SignedStatusBody,
-            FString SignedStatusSignature
+            FString SignedStatusSignature,
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FSetRecoverIntervalTask :
@@ -105,16 +105,16 @@ namespace Gs2::UE5::Stamina::Domain::Model
             public TSharedFromThis<FSetRecoverIntervalTask>
         {
             TSharedPtr<FEzStaminaGameSessionDomain> Self;
-            FString KeyId;
             FString SignedStatusBody;
             FString SignedStatusSignature;
+            TOptional<FString> KeyId;
 
         public:
             explicit FSetRecoverIntervalTask(
                 TSharedPtr<FEzStaminaGameSessionDomain> Self,
-                FString KeyId,
                 FString SignedStatusBody,
-                FString SignedStatusSignature
+                FString SignedStatusSignature,
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -124,9 +124,9 @@ namespace Gs2::UE5::Stamina::Domain::Model
         friend FSetRecoverIntervalTask;
 
         TSharedPtr<FAsyncTask<FSetRecoverIntervalTask>> SetRecoverInterval(
-            FString KeyId,
             FString SignedStatusBody,
-            FString SignedStatusSignature
+            FString SignedStatusSignature,
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FSetRecoverValueTask :
@@ -134,16 +134,16 @@ namespace Gs2::UE5::Stamina::Domain::Model
             public TSharedFromThis<FSetRecoverValueTask>
         {
             TSharedPtr<FEzStaminaGameSessionDomain> Self;
-            FString KeyId;
             FString SignedStatusBody;
             FString SignedStatusSignature;
+            TOptional<FString> KeyId;
 
         public:
             explicit FSetRecoverValueTask(
                 TSharedPtr<FEzStaminaGameSessionDomain> Self,
-                FString KeyId,
                 FString SignedStatusBody,
-                FString SignedStatusSignature
+                FString SignedStatusSignature,
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -153,9 +153,9 @@ namespace Gs2::UE5::Stamina::Domain::Model
         friend FSetRecoverValueTask;
 
         TSharedPtr<FAsyncTask<FSetRecoverValueTask>> SetRecoverValue(
-            FString KeyId,
             FString SignedStatusBody,
-            FString SignedStatusSignature
+            FString SignedStatusSignature,
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FModelTask :

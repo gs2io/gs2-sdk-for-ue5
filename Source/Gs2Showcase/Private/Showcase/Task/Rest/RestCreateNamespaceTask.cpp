@@ -94,6 +94,14 @@ namespace Gs2::Showcase::Task::Rest
             {
                 JsonRootObject->SetObjectField("buyScript", this->Request->GetBuyScript()->ToJson());
             }
+            if (this->Request->GetQueueNamespaceId().IsSet())
+            {
+                JsonRootObject->SetStringField("queueNamespaceId", this->Request->GetQueueNamespaceId().GetValue());
+            }
+            if (this->Request->GetKeyId().IsSet())
+            {
+                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

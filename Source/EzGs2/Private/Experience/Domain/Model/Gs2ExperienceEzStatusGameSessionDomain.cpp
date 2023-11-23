@@ -68,7 +68,7 @@ namespace Gs2::UE5::Experience::Domain::Model
 
     FEzStatusGameSessionDomain::FGetStatusWithSignatureTask::FGetStatusWithSignatureTask(
         TSharedPtr<FEzStatusGameSessionDomain> Self,
-        FString KeyId
+        TOptional<FString> KeyId
     ): Self(Self), KeyId(KeyId)
     {
 
@@ -110,7 +110,7 @@ namespace Gs2::UE5::Experience::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzStatusGameSessionDomain::FGetStatusWithSignatureTask>> FEzStatusGameSessionDomain::GetStatusWithSignature(
-        FString KeyId
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FGetStatusWithSignatureTask>>(

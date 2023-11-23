@@ -35,6 +35,8 @@ namespace Gs2::Quest::Request
         TSharedPtr<Model::FScriptSetting> CompleteQuestScriptValue;
         TSharedPtr<Model::FScriptSetting> FailedQuestScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
+        TOptional<FString> QueueNamespaceIdValue;
+        TOptional<FString> KeyIdValue;
         
     public:
         
@@ -52,6 +54,8 @@ namespace Gs2::Quest::Request
         TSharedPtr<FCreateNamespaceRequest> WithCompleteQuestScript(const TSharedPtr<Model::FScriptSetting> CompleteQuestScript);
         TSharedPtr<FCreateNamespaceRequest> WithFailedQuestScript(const TSharedPtr<Model::FScriptSetting> FailedQuestScript);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
+        TSharedPtr<FCreateNamespaceRequest> WithKeyId(const TOptional<FString> KeyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
@@ -61,6 +65,8 @@ namespace Gs2::Quest::Request
         TSharedPtr<Model::FScriptSetting> GetCompleteQuestScript() const;
         TSharedPtr<Model::FScriptSetting> GetFailedQuestScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
+        TOptional<FString> GetQueueNamespaceId() const;
+        TOptional<FString> GetKeyId() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

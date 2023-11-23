@@ -54,7 +54,6 @@ namespace Gs2::Dictionary::Domain::SpeculativeExecutor
                     MakeShared<Gs2::Dictionary::Model::FEntry>()
                         ->WithName(EntryModelName)
                         ->WithUserId(AccessToken->GetUserId())
-                        ->WithRevision(0)
                 );
             }
         }

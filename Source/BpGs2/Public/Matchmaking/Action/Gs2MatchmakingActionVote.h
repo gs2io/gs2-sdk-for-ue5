@@ -36,8 +36,8 @@ class BPGS2_API UGs2MatchmakingVoteAsyncFunction : public UBlueprintAsyncActionB
     FGs2MatchmakingNamespace Namespace;
     FString BallotBody;
     FString BallotSignature;
-    FString KeyId;
     TArray<FGs2MatchmakingGameResult> GameResults;
+    FString KeyId;
 
 public:
 
@@ -55,8 +55,8 @@ public:
         FGs2MatchmakingNamespace Namespace,
         FString BallotBody,
         FString BallotSignature,
-        FString KeyId,
-        TArray<FGs2MatchmakingGameResult> GameResults
+        TArray<FGs2MatchmakingGameResult> GameResults,
+        FString KeyId
     );
 
     virtual void Activate() override;

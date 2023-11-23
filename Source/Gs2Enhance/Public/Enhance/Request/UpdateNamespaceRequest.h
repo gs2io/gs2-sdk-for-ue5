@@ -34,6 +34,8 @@ namespace Gs2::Enhance::Request
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FScriptSetting> EnhanceScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
+        TOptional<FString> QueueNamespaceIdValue;
+        TOptional<FString> KeyIdValue;
         
     public:
         
@@ -50,6 +52,8 @@ namespace Gs2::Enhance::Request
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithEnhanceScript(const TSharedPtr<Model::FScriptSetting> EnhanceScript);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
+        TSharedPtr<FUpdateNamespaceRequest> WithKeyId(const TOptional<FString> KeyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -59,6 +63,8 @@ namespace Gs2::Enhance::Request
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FScriptSetting> GetEnhanceScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
+        TOptional<FString> GetQueueNamespaceId() const;
+        TOptional<FString> GetKeyId() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

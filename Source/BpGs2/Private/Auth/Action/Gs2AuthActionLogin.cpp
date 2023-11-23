@@ -27,9 +27,9 @@ UGs2AuthLoginAsyncFunction::UGs2AuthLoginAsyncFunction(
 UGs2AuthLoginAsyncFunction* UGs2AuthLoginAsyncFunction::Login(
     UObject* WorldContextObject,
     FGs2AuthAccessToken AccessToken,
-    FString KeyId,
     FString Body,
-    FString Signature
+    FString Signature,
+    FString KeyId
 )
 {
     UGs2AuthLoginAsyncFunction* Action = NewObject<UGs2AuthLoginAsyncFunction>();
@@ -53,9 +53,9 @@ void UGs2AuthLoginAsyncFunction::Activate()
     }
 
     auto Future = AccessToken.Value->Login(
-        KeyId,
         Body,
-        Signature
+        Signature,
+        KeyId
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

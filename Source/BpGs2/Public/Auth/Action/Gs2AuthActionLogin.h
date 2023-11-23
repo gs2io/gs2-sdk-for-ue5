@@ -32,9 +32,9 @@ class BPGS2_API UGs2AuthLoginAsyncFunction : public UBlueprintAsyncActionBase
     GENERATED_BODY()
 
     FGs2AuthAccessToken AccessToken;
-    FString KeyId;
     FString Body;
     FString Signature;
+    FString KeyId;
 
 public:
 
@@ -50,9 +50,9 @@ public:
     static UGs2AuthLoginAsyncFunction* Login(
         UObject* WorldContextObject,
         FGs2AuthAccessToken AccessToken,
-        FString KeyId,
         FString Body,
-        FString Signature
+        FString Signature,
+        FString KeyId
     );
 
     virtual void Activate() override;
