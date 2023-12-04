@@ -36,8 +36,13 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Inventory::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -45,8 +50,9 @@ namespace Gs2::UE5::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeInventoriesIterator>(
-            Domain->Inventories(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -72,7 +78,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->Inventory(
                 InventoryName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -84,7 +91,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->SimpleInventory(
                 InventoryName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -96,7 +104,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->BigInventory(
                 InventoryName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

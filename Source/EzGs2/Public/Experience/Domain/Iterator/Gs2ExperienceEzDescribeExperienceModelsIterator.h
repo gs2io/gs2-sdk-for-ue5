@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Experience/Domain/Iterator/DescribeExperienceModelsIterator.h"
+#include "Experience/Domain/Model/Namespace.h"
 #include "Experience/Model/Gs2ExperienceEzExperienceModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Experience::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::Experience::Domain::Iterator
 	class EZGS2_API FEzDescribeExperienceModelsIterator :
         public TSharedFromThis<FEzDescribeExperienceModelsIterator>
     {
-
-		Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIteratorPtr DomainIterable;
+        Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIteratorPtr It;
+        Gs2::Experience::Domain::Model::FNamespaceDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeExperienceModelsIterator(
-            Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Experience::Domain::Model::FNamespaceDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->ExperienceModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeExperienceModelsIterator(
-            Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeExperienceModelsIterator(
+			const FEzDescribeExperienceModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::Experience::Domain::Iterator
 
 			Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Experience::Model::FEzExperienceModelPtr CurrentValue;
-
         	static Gs2::UE5::Experience::Model::FEzExperienceModelPtr ConvertCurrent(
         		Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::Experience::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Experience::Model::FEzExperienceModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::Experience::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeExperienceModelsIterator> FEzDescribeExperienceModelsIteratorPtr;

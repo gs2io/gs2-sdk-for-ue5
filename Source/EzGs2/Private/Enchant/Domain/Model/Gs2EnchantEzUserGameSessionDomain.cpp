@@ -36,8 +36,13 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Enchant::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -46,9 +51,10 @@ namespace Gs2::UE5::Enchant::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeBalanceParameterStatusesIterator>(
-            Domain->BalanceParameterStatuses(
-                ParameterName
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            ParameterName
         );
     }
 
@@ -76,7 +82,8 @@ namespace Gs2::UE5::Enchant::Domain::Model
                 ParameterName,
                 PropertyId
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -85,9 +92,10 @@ namespace Gs2::UE5::Enchant::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeRarityParameterStatusesIterator>(
-            Domain->RarityParameterStatuses(
-                ParameterName
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            ParameterName
         );
     }
 
@@ -115,7 +123,8 @@ namespace Gs2::UE5::Enchant::Domain::Model
                 ParameterName,
                 PropertyId
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

@@ -21,8 +21,11 @@ namespace Gs2::UE5::Mission::Domain
 
     FEzGs2Mission::FEzGs2Mission(
         Gs2::Mission::Domain::FGs2MissionDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::Mission::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 

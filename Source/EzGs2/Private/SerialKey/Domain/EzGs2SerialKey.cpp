@@ -21,8 +21,11 @@ namespace Gs2::UE5::SerialKey::Domain
 
     FEzGs2SerialKey::FEzGs2SerialKey(
         Gs2::SerialKey::Domain::FGs2SerialKeyDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::SerialKey::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

@@ -36,8 +36,13 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
     FEzWebSocketSessionGameSessionDomain::FEzWebSocketSessionGameSessionDomain(
         Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -53,7 +58,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FSetUserIdTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->SetUserId(
                     MakeShared<Gs2::Gateway::Request::FSetUserIdRequest>()
@@ -67,7 +72,8 @@ namespace Gs2::UE5::Gateway::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -105,7 +111,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
         TSharedPtr<Gs2::UE5::Gateway::Model::FEzWebSocketSessionPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

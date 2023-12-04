@@ -62,8 +62,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
     FEzDataObjectDomain::FEzDataObjectDomain(
         Gs2::Datastore::Domain::Model::FDataObjectDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ): Domain(Domain), ConnectionValue(Connection) {
 
     }
 
@@ -78,7 +78,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FPrepareDownloadByUserIdAndDataObjectNameTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->PrepareDownloadByUserIdAndName(
                     MakeShared<Gs2::Datastore::Request::FPrepareDownloadByUserIdAndDataObjectNameRequest>()
@@ -91,7 +91,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -124,7 +124,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
             Domain->DataObjectHistory(
                 Generation
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -139,7 +139,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<Gs2::UE5::Datastore::Model::FEzDataObjectPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();
@@ -196,7 +196,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<TArray<uint8>>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDownloadTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 FString Url("");
                 {

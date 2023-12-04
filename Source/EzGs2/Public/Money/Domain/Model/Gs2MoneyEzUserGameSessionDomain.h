@@ -21,8 +21,8 @@
 #include "Money/Model/Gs2MoneyEzWallet.h"
 #include "Gs2MoneyEzWalletGameSessionDomain.h"
 #include "Gs2MoneyEzUserGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Money::Domain::Model
 {
@@ -31,7 +31,8 @@ namespace Gs2::UE5::Money::Domain::Model
         public TSharedFromThis<FEzUserGameSessionDomain>
     {
         Gs2::Money::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<float> Price() const;
@@ -41,7 +42,8 @@ namespace Gs2::UE5::Money::Domain::Model
 
         FEzUserGameSessionDomain(
             Gs2::Money::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Money::Domain::Model::FEzWalletGameSessionDomainPtr Wallet(

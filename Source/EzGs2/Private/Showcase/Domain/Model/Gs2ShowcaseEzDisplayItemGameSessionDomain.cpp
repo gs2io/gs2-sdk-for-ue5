@@ -51,8 +51,13 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
     FEzDisplayItemGameSessionDomain::FEzDisplayItemGameSessionDomain(
         Gs2::Showcase::Domain::Model::FDisplayItemAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -69,7 +74,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FBuyTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Buy(
                     MakeShared<Gs2::Showcase::Request::FBuyRequest>()
@@ -93,7 +98,8 @@ namespace Gs2::UE5::Showcase::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzDisplayItemGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -133,7 +139,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
         TSharedPtr<Gs2::UE5::Showcase::Model::FEzDisplayItemPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

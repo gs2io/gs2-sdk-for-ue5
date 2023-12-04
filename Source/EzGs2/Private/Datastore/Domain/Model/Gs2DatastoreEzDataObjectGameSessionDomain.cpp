@@ -62,8 +62,13 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
     FEzDataObjectGameSessionDomain::FEzDataObjectGameSessionDomain(
         Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -80,7 +85,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FUpdateDataObjectTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Update(
                     MakeShared<Gs2::Datastore::Request::FUpdateDataObjectRequest>()
@@ -104,7 +109,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -145,7 +151,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FPrepareReUploadTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->PrepareReUpload(
                     MakeShared<Gs2::Datastore::Request::FPrepareReUploadRequest>()
@@ -159,7 +165,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -197,7 +204,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDoneUploadTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->DoneUpload(
                     MakeShared<Gs2::Datastore::Request::FDoneUploadRequest>()
@@ -210,7 +217,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -246,7 +254,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDeleteDataObjectTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Delete(
                     MakeShared<Gs2::Datastore::Request::FDeleteDataObjectRequest>()
@@ -259,7 +267,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -295,7 +304,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FPrepareDownloadOwnDataTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->PrepareDownloadOwnData(
                     MakeShared<Gs2::Datastore::Request::FPrepareDownloadOwnDataRequest>()
@@ -308,7 +317,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -337,8 +347,9 @@ namespace Gs2::UE5::Datastore::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Datastore::Domain::Iterator::FEzDescribeDataObjectHistoriesIterator>(
-            Domain->DataObjectHistories(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -364,7 +375,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
             Domain->DataObjectHistory(
                 Generation
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -379,7 +391,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<Gs2::UE5::Datastore::Model::FEzDataObjectPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();
@@ -438,7 +450,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FReUploadTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 FString Url("");
                 {
@@ -509,7 +521,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
                     }
                     *Result = MakeShared<Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomain>(
                         Task->GetTask().Result(),
-                        Self->ProfileValue
+                        Self->GameSession,
+                        Self->ConnectionValue
                     );
                     Task->EnsureCompletion();
                 }
@@ -549,7 +562,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<TArray<uint8>>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDownloadTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 FString Url("");
                 {

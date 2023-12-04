@@ -21,8 +21,11 @@ namespace Gs2::UE5::Realtime::Domain
 
     FEzGs2Realtime::FEzGs2Realtime(
         Gs2::Realtime::Domain::FGs2RealtimeDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::Realtime::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 

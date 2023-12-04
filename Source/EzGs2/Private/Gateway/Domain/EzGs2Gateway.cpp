@@ -21,8 +21,11 @@ namespace Gs2::UE5::Gateway::Domain
 
     FEzGs2Gateway::FEzGs2Gateway(
         Gs2::Gateway::Domain::FGs2GatewayDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::Gateway::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

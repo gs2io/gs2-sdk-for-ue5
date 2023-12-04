@@ -46,8 +46,11 @@ namespace Gs2::UE5::Quest::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Quest::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -57,7 +60,7 @@ namespace Gs2::UE5::Quest::Domain::Model
         return MakeShared<Gs2::UE5::Quest::Domain::Model::FEzProgressDomain>(
             Domain->Progress(
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -69,7 +72,7 @@ namespace Gs2::UE5::Quest::Domain::Model
             Domain->CompletedQuestList(
                 QuestGroupName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

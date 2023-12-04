@@ -51,8 +51,11 @@ namespace Gs2::UE5::SkillTree::Domain::Model
 
     FEzNamespaceDomain::FEzNamespaceDomain(
         Gs2::SkillTree::Domain::Model::FNamespaceDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -60,8 +63,8 @@ namespace Gs2::UE5::SkillTree::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::SkillTree::Domain::Iterator::FEzDescribeNodeModelsIterator>(
-            Domain->NodeModels(
-            )
+            Domain,
+            ConnectionValue
         );
     }
 
@@ -87,7 +90,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
             Domain->NodeModel(
                 NodeModelName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -99,19 +102,20 @@ namespace Gs2::UE5::SkillTree::Domain::Model
             Domain->User(
                 UserId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
     Gs2::UE5::SkillTree::Domain::Model::FEzUserGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+        Gs2::UE5::Util::FGameSessionPtr GameSession
     ) const
     {
         return MakeShared<Gs2::UE5::SkillTree::Domain::Model::FEzUserGameSessionDomain>(
             Domain->AccessToken(
-                AccessToken->ToModel()
+                GameSession->AccessToken()->ToModel()
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

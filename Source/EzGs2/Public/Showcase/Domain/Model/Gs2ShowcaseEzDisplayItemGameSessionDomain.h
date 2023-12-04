@@ -27,8 +27,8 @@
 #include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
 #include "Gs2ShowcaseEzDisplayItemGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Showcase::Domain::Model
 {
@@ -37,7 +37,8 @@ namespace Gs2::UE5::Showcase::Domain::Model
         public TSharedFromThis<FEzDisplayItemGameSessionDomain>
     {
         Gs2::Showcase::Domain::Model::FDisplayItemAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> TransactionId() const;
@@ -49,7 +50,8 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
         FEzDisplayItemGameSessionDomain(
             Gs2::Showcase::Domain::Model::FDisplayItemAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FBuyTask :

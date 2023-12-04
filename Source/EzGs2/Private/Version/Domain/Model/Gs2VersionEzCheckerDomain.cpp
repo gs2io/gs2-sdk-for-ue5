@@ -76,8 +76,11 @@ namespace Gs2::UE5::Version::Domain::Model
 
     FEzCheckerDomain::FEzCheckerDomain(
         Gs2::Version::Domain::Model::FCheckerDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 }

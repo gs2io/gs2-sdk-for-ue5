@@ -21,8 +21,11 @@ namespace Gs2::UE5::Showcase::Domain
 
     FEzGs2Showcase::FEzGs2Showcase(
         Gs2::Showcase::Domain::FGs2ShowcaseDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::Showcase::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

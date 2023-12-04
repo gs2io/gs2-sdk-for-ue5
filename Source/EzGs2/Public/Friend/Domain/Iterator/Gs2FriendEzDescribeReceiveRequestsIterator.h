@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -13,13 +12,16 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Friend/Domain/Iterator/DescribeReceiveRequestsIterator.h"
+#include "Friend/Domain/Model/UserAccessToken.h"
 #include "Friend/Model/Gs2FriendEzFriendRequest.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Friend::Domain::Iterator
 {
@@ -27,20 +29,27 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 	class EZGS2_API FEzDescribeReceiveRequestsIterator :
         public TSharedFromThis<FEzDescribeReceiveRequestsIterator>
     {
-
-		Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr DomainIterable;
+        Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr It;
+        Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeReceiveRequestsIterator(
-            Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
-
-        explicit FEzDescribeReceiveRequestsIterator(
-            Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+            Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->ReceiveRequests(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +57,6 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 
 			Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIterator::FIterator DomainIterator;
 			Gs2::UE5::Friend::Model::FEzFriendRequestPtr CurrentValue;
-
         	static Gs2::UE5::Friend::Model::FEzFriendRequestPtr ConvertCurrent(
         		Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +113,6 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Friend::Model::FEzFriendRequestPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +145,15 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeReceiveRequestsIterator> FEzDescribeReceiveRequestsIteratorPtr;

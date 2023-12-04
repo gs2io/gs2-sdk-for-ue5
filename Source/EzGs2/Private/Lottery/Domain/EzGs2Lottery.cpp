@@ -21,8 +21,11 @@ namespace Gs2::UE5::Lottery::Domain
 
     FEzGs2Lottery::FEzGs2Lottery(
         Gs2::Lottery::Domain::FGs2LotteryDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::Lottery::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

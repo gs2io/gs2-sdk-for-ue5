@@ -51,8 +51,11 @@ namespace Gs2::UE5::Distributor::Domain::Model
 
     FEzDistributeDomain::FEzDistributeDomain(
         Gs2::Distributor::Domain::Model::FDistributeDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 }

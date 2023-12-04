@@ -28,8 +28,8 @@
 #include "Mission/Model/Gs2MissionEzMissionTaskModel.h"
 #include "Mission/Model/Gs2MissionEzScopedValue.h"
 #include "Gs2MissionEzCompleteDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Mission::Domain::Model
 {
@@ -38,7 +38,7 @@ namespace Gs2::UE5::Mission::Domain::Model
         public TSharedFromThis<FEzCompleteDomain>
     {
         Gs2::Mission::Domain::Model::FCompleteDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> TransactionId() const;
@@ -49,7 +49,7 @@ namespace Gs2::UE5::Mission::Domain::Model
 
         FEzCompleteDomain(
             Gs2::Mission::Domain::Model::FCompleteDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

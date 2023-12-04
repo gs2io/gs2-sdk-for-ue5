@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Enchant/Domain/Iterator/DescribeBalanceParameterStatusesIterator.h"
+#include "Enchant/Domain/Model/UserAccessToken.h"
 #include "Enchant/Model/Gs2EnchantEzBalanceParameterStatus.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Enchant::Domain::Iterator
 {
@@ -27,20 +27,42 @@ namespace Gs2::UE5::Enchant::Domain::Iterator
 	class EZGS2_API FEzDescribeBalanceParameterStatusesIterator :
         public TSharedFromThis<FEzDescribeBalanceParameterStatusesIterator>
     {
-
-		Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesIteratorPtr DomainIterable;
+        Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesIteratorPtr It;
+        Gs2::Enchant::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        TOptional<FString> ParameterName;
 
 	public:
 
         explicit FEzDescribeBalanceParameterStatusesIterator(
-            Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Enchant::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            TOptional<FString> ParameterName = TOptional<FString>()
+        ) :
+            It(
+                Domain->BalanceParameterStatuses(
+                    ParameterName
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            ParameterName(ParameterName)
+        {
+        }
 
-        explicit FEzDescribeBalanceParameterStatusesIterator(
-            Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeBalanceParameterStatusesIterator(
+			const FEzDescribeBalanceParameterStatusesIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            ParameterName(From.ParameterName)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +70,6 @@ namespace Gs2::UE5::Enchant::Domain::Iterator
 
 			Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesIterator::FIterator DomainIterator;
 			Gs2::UE5::Enchant::Model::FEzBalanceParameterStatusPtr CurrentValue;
-
         	static Gs2::UE5::Enchant::Model::FEzBalanceParameterStatusPtr ConvertCurrent(
         		Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesIterator::FIterator& DomainIterator
         	)
@@ -105,7 +126,6 @@ namespace Gs2::UE5::Enchant::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Enchant::Model::FEzBalanceParameterStatusPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +158,15 @@ namespace Gs2::UE5::Enchant::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeBalanceParameterStatusesIterator> FEzDescribeBalanceParameterStatusesIteratorPtr;

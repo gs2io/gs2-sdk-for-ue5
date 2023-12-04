@@ -1,6 +1,5 @@
 #pragma once
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Core/Net/Rest/Gs2RestSession.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Util
 {
@@ -10,11 +9,13 @@ namespace Gs2::UE5::Util
         virtual ~IAuthenticator() = default;
 
         virtual Gs2::Core::Model::FGs2ErrorPtr Authentication(
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr RestSession,
+            const Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             const FString UserId,
             const FString Password,
-            const TSharedPtr<Gs2::UE5::Auth::Model::FEzAccessTokenPtr> Result
+            const TSharedPtr<Auth::Model::FEzAccessTokenPtr> Result
         ) = 0;
+
+        virtual bool NeedReAuthentication();
     };
     typedef TSharedPtr<IAuthenticator> IAuthenticatorPtr;
 }

@@ -46,8 +46,13 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     FEzCompleteGameSessionDomain::FEzCompleteGameSessionDomain(
         Gs2::Mission::Domain::Model::FCompleteAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -63,7 +68,7 @@ namespace Gs2::UE5::Mission::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FReceiveRewardsTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Complete(
                     MakeShared<Gs2::Mission::Request::FCompleteRequest>()
@@ -77,7 +82,8 @@ namespace Gs2::UE5::Mission::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -115,7 +121,7 @@ namespace Gs2::UE5::Mission::Domain::Model
         TSharedPtr<Gs2::UE5::Mission::Model::FEzCompletePtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Showcase/Domain/Iterator/DescribeRandomDisplayItemsIterator.h"
+#include "Showcase/Domain/Model/RandomShowcaseAccessToken.h"
 #include "Showcase/Model/Gs2ShowcaseEzRandomDisplayItem.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Showcase::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Showcase::Domain::Iterator
 	class EZGS2_API FEzDescribeRandomDisplayItemsIterator :
         public TSharedFromThis<FEzDescribeRandomDisplayItemsIterator>
     {
-
-		Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsIteratorPtr DomainIterable;
+        Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsIteratorPtr It;
+        Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeRandomDisplayItemsIterator(
-            Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->RandomDisplayItems(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeRandomDisplayItemsIterator(
-            Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeRandomDisplayItemsIterator(
+			const FEzDescribeRandomDisplayItemsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Showcase::Domain::Iterator
 
 			Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsIterator::FIterator DomainIterator;
 			Gs2::UE5::Showcase::Model::FEzRandomDisplayItemPtr CurrentValue;
-
         	static Gs2::UE5::Showcase::Model::FEzRandomDisplayItemPtr ConvertCurrent(
         		Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Showcase::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Showcase::Model::FEzRandomDisplayItemPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Showcase::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeRandomDisplayItemsIterator> FEzDescribeRandomDisplayItemsIteratorPtr;

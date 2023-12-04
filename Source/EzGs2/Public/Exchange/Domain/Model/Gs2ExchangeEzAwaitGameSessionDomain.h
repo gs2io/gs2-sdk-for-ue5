@@ -26,8 +26,8 @@
 #include "Exchange/Model/Gs2ExchangeEzConsumeAction.h"
 #include "Gs2ExchangeEzAwaitGameSessionDomain.h"
 #include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeAwaitsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Exchange::Domain::Model
 {
@@ -36,7 +36,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
         public TSharedFromThis<FEzAwaitGameSessionDomain>
     {
         Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<int64> UnlockAt() const;
@@ -48,7 +49,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
         FEzAwaitGameSessionDomain(
             Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FAcquireTask :

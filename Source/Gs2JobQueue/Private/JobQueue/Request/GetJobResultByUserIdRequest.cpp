@@ -21,7 +21,8 @@ namespace Gs2::JobQueue::Request
     FGetJobResultByUserIdRequest::FGetJobResultByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        JobNameValue(TOptional<FString>())
+        JobNameValue(TOptional<FString>()),
+        TryNumberValue(TOptional<int32>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::JobQueue::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        JobNameValue(From.JobNameValue)
+        JobNameValue(From.JobNameValue),
+        TryNumberValue(From.TryNumberValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::JobQueue::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetJobResultByUserIdRequest> FGetJobResultByUserIdRequest::WithTryNumber(
+        const TOptional<int32> TryNumber
+    )
+    {
+        this->TryNumberValue = TryNumber;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetJobResultByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -84,6 +94,20 @@ namespace Gs2::JobQueue::Request
     TOptional<FString> FGetJobResultByUserIdRequest::GetJobName() const
     {
         return JobNameValue;
+    }
+
+    TOptional<int32> FGetJobResultByUserIdRequest::GetTryNumber() const
+    {
+        return TryNumberValue;
+    }
+
+    FString FGetJobResultByUserIdRequest::GetTryNumberString() const
+    {
+        if (!TryNumberValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), TryNumberValue.GetValue());
     }
 
     TSharedPtr<FGetJobResultByUserIdRequest> FGetJobResultByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -119,7 +143,16 @@ namespace Gs2::JobQueue::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+            ->WithTryNumber(Data->HasField("tryNumber") ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField("tryNumber", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>());
     }
 
     TSharedPtr<FJsonObject> FGetJobResultByUserIdRequest::ToJson() const
@@ -140,6 +173,10 @@ namespace Gs2::JobQueue::Request
         if (JobNameValue.IsSet())
         {
             JsonRootObject->SetStringField("jobName", JobNameValue.GetValue());
+        }
+        if (TryNumberValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("tryNumber", TryNumberValue.GetValue());
         }
         return JsonRootObject;
     }

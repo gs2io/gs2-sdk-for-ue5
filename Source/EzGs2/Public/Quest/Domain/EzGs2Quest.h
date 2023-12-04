@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Quest/Domain/Gs2Quest.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Quest/Domain/Model/Gs2QuestEzNamespaceDomain.h"
 #include "Quest/Domain/Model/Gs2QuestEzQuestModelDomain.h"
 
@@ -27,13 +27,13 @@ namespace Gs2::UE5::Quest::Domain
 
     class EZGS2_API FEzGs2Quest {
         Gs2::Quest::Domain::FGs2QuestDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Quest(
             Gs2::Quest::Domain::FGs2QuestDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Quest::Domain::Model::FEzNamespaceDomainPtr Namespace(

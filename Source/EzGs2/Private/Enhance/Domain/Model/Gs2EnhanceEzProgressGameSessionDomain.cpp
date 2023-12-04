@@ -51,8 +51,13 @@ namespace Gs2::UE5::Enhance::Domain::Model
 
     FEzProgressGameSessionDomain::FEzProgressGameSessionDomain(
         Gs2::Enhance::Domain::Model::FProgressAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -72,7 +77,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FStartTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Start(
                     MakeShared<Gs2::Enhance::Request::FStartRequest>()
@@ -108,7 +113,8 @@ namespace Gs2::UE5::Enhance::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -155,7 +161,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FEndTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->End(
                     MakeShared<Gs2::Enhance::Request::FEndRequest>()
@@ -178,7 +184,8 @@ namespace Gs2::UE5::Enhance::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -216,7 +223,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDeleteProgressTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Delete(
                     MakeShared<Gs2::Enhance::Request::FDeleteProgressRequest>()
@@ -229,7 +236,8 @@ namespace Gs2::UE5::Enhance::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Enhance::Domain::Model::FEzProgressGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -265,7 +273,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         TSharedPtr<Gs2::UE5::Enhance::Model::FEzProgressPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

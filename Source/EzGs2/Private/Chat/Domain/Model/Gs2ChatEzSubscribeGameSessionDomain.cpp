@@ -36,8 +36,13 @@ namespace Gs2::UE5::Chat::Domain::Model
 
     FEzSubscribeGameSessionDomain::FEzSubscribeGameSessionDomain(
         Gs2::Chat::Domain::Model::FSubscribeAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -53,7 +58,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FSubscribeTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Subscribe(
                     MakeShared<Gs2::Chat::Request::FSubscribeRequest>()
@@ -76,7 +81,8 @@ namespace Gs2::UE5::Chat::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -115,7 +121,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FUpdateSubscribeSettingTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->UpdateNotificationType(
                     MakeShared<Gs2::Chat::Request::FUpdateNotificationTypeRequest>()
@@ -138,7 +144,8 @@ namespace Gs2::UE5::Chat::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -176,7 +183,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FUnsubscribeTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Unsubscribe(
                     MakeShared<Gs2::Chat::Request::FUnsubscribeRequest>()
@@ -189,7 +196,8 @@ namespace Gs2::UE5::Chat::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Chat::Domain::Model::FEzSubscribeGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -225,7 +233,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         TSharedPtr<Gs2::UE5::Chat::Model::FEzSubscribePtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

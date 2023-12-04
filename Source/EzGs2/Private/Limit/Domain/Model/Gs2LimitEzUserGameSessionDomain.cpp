@@ -36,8 +36,13 @@ namespace Gs2::UE5::Limit::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Limit::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -46,9 +51,10 @@ namespace Gs2::UE5::Limit::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Limit::Domain::Iterator::FEzDescribeCountersIterator>(
-            Domain->Counters(
-                LimitName
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            LimitName
         );
     }
 
@@ -76,7 +82,8 @@ namespace Gs2::UE5::Limit::Domain::Model
                 LimitName,
                 CounterName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

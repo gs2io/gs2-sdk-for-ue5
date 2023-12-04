@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "StateMachine/Domain/Gs2StateMachine.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "StateMachine/Domain/Model/Gs2StateMachineEzNamespaceDomain.h"
 
 namespace Gs2::UE5::StateMachine::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::StateMachine::Domain
 
     class EZGS2_API FEzGs2StateMachine {
         Gs2::StateMachine::Domain::FGs2StateMachineDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2StateMachine(
             Gs2::StateMachine::Domain::FGs2StateMachineDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::StateMachine::Domain::Model::FEzNamespaceDomainPtr Namespace(

@@ -27,8 +27,8 @@
 #include "Lottery/Model/Gs2LotteryEzConfig.h"
 #include "Gs2LotteryEzLotteryModelDomain.h"
 #include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeLotteryModelsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Lottery::Domain::Model
 {
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Lottery::Domain::Model
         public TSharedFromThis<FEzLotteryModelDomain>
     {
         Gs2::Lottery::Domain::Model::FLotteryModelDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -45,7 +45,7 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
         FEzLotteryModelDomain(
             Gs2::Lottery::Domain::Model::FLotteryModelDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

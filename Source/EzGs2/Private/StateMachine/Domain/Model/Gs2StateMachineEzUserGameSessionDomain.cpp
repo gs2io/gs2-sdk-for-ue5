@@ -36,8 +36,13 @@ namespace Gs2::UE5::StateMachine::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::StateMachine::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -46,9 +51,10 @@ namespace Gs2::UE5::StateMachine::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::StateMachine::Domain::Iterator::FEzDescribeStatusesIterator>(
-            Domain->Statuses(
-                Status
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            Status
         );
     }
 
@@ -74,7 +80,8 @@ namespace Gs2::UE5::StateMachine::Domain::Model
             Domain->Status(
                 StatusName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

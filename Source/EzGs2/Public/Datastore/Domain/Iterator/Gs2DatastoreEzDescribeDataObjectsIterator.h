@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Datastore/Domain/Iterator/DescribeDataObjectsIterator.h"
+#include "Datastore/Domain/Model/UserAccessToken.h"
 #include "Datastore/Model/Gs2DatastoreEzDataObject.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Datastore::Domain::Iterator
 {
@@ -27,20 +27,42 @@ namespace Gs2::UE5::Datastore::Domain::Iterator
 	class EZGS2_API FEzDescribeDataObjectsIterator :
         public TSharedFromThis<FEzDescribeDataObjectsIterator>
     {
-
-		Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIteratorPtr DomainIterable;
+        Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIteratorPtr It;
+        Gs2::Datastore::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        TOptional<FString> Status;
 
 	public:
 
         explicit FEzDescribeDataObjectsIterator(
-            Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Datastore::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            TOptional<FString> Status = TOptional<FString>()
+        ) :
+            It(
+                Domain->DataObjects(
+                    Status
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            Status(Status)
+        {
+        }
 
-        explicit FEzDescribeDataObjectsIterator(
-            Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeDataObjectsIterator(
+			const FEzDescribeDataObjectsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            Status(From.Status)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +70,6 @@ namespace Gs2::UE5::Datastore::Domain::Iterator
 
 			Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIterator::FIterator DomainIterator;
 			Gs2::UE5::Datastore::Model::FEzDataObjectPtr CurrentValue;
-
         	static Gs2::UE5::Datastore::Model::FEzDataObjectPtr ConvertCurrent(
         		Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +126,6 @@ namespace Gs2::UE5::Datastore::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Datastore::Model::FEzDataObjectPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +158,15 @@ namespace Gs2::UE5::Datastore::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeDataObjectsIterator> FEzDescribeDataObjectsIteratorPtr;

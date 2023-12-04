@@ -51,8 +51,11 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     FEzNamespaceDomain::FEzNamespaceDomain(
         Gs2::Formation::Domain::Model::FNamespaceDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -60,8 +63,8 @@ namespace Gs2::UE5::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Formation::Domain::Iterator::FEzDescribeMoldModelsIterator>(
-            Domain->MoldModels(
-            )
+            Domain,
+            ConnectionValue
         );
     }
 
@@ -87,7 +90,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             Domain->MoldModel(
                 MoldModelName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -95,8 +98,8 @@ namespace Gs2::UE5::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormModelsIterator>(
-            Domain->PropertyFormModels(
-            )
+            Domain,
+            ConnectionValue
         );
     }
 
@@ -122,7 +125,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             Domain->PropertyFormModel(
                 PropertyFormModelName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -134,19 +137,20 @@ namespace Gs2::UE5::Formation::Domain::Model
             Domain->User(
                 UserId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
     Gs2::UE5::Formation::Domain::Model::FEzUserGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+        Gs2::UE5::Util::FGameSessionPtr GameSession
     ) const
     {
         return MakeShared<Gs2::UE5::Formation::Domain::Model::FEzUserGameSessionDomain>(
             Domain->AccessToken(
-                AccessToken->ToModel()
+                GameSession->AccessToken()->ToModel()
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

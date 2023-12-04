@@ -22,8 +22,8 @@
 #include "StateMachine/Model/Gs2StateMachineEzStackEntry.h"
 #include "StateMachine/Model/Gs2StateMachineEzVariable.h"
 #include "Gs2StateMachineEzStatusDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::StateMachine::Domain::Model
 {
@@ -32,7 +32,7 @@ namespace Gs2::UE5::StateMachine::Domain::Model
         public TSharedFromThis<FEzStatusDomain>
     {
         Gs2::StateMachine::Domain::Model::FStatusDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -41,7 +41,7 @@ namespace Gs2::UE5::StateMachine::Domain::Model
 
         FEzStatusDomain(
             Gs2::StateMachine::Domain::Model::FStatusDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

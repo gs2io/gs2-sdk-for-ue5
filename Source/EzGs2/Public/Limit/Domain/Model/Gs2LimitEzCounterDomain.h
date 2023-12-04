@@ -21,8 +21,8 @@
 #include "Limit/Model/Gs2LimitEzCounter.h"
 #include "Limit/Model/Gs2LimitEzLimitModel.h"
 #include "Gs2LimitEzCounterDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Limit::Domain::Model
 {
@@ -31,7 +31,7 @@ namespace Gs2::UE5::Limit::Domain::Model
         public TSharedFromThis<FEzCounterDomain>
     {
         Gs2::Limit::Domain::Model::FCounterDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -41,7 +41,7 @@ namespace Gs2::UE5::Limit::Domain::Model
 
         FEzCounterDomain(
             Gs2::Limit::Domain::Model::FCounterDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

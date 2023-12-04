@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Friend/Domain/Iterator/DescribeFollowsIterator.h"
+#include "Friend/Domain/Model/UserAccessToken.h"
 #include "Friend/Model/Gs2FriendEzFollowUser.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Friend::Domain::Iterator
 {
@@ -27,20 +27,42 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 	class EZGS2_API FEzDescribeFollowsIterator :
         public TSharedFromThis<FEzDescribeFollowsIterator>
     {
-
-		Gs2::Friend::Domain::Iterator::FDescribeFollowsIteratorPtr DomainIterable;
+        Gs2::Friend::Domain::Iterator::FDescribeFollowsIteratorPtr It;
+        Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        bool WithProfile;
 
 	public:
 
         explicit FEzDescribeFollowsIterator(
-            Gs2::Friend::Domain::Iterator::FDescribeFollowsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            bool WithProfile
+        ) :
+            It(
+                Domain->Follows(
+                    WithProfile
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            WithProfile(WithProfile)
+        {
+        }
 
-        explicit FEzDescribeFollowsIterator(
-            Gs2::Friend::Domain::Iterator::FDescribeFollowsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeFollowsIterator(
+			const FEzDescribeFollowsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            WithProfile(From.WithProfile)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +70,6 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 
 			Gs2::Friend::Domain::Iterator::FDescribeFollowsIterator::FIterator DomainIterator;
 			Gs2::UE5::Friend::Model::FEzFollowUserPtr CurrentValue;
-
         	static Gs2::UE5::Friend::Model::FEzFollowUserPtr ConvertCurrent(
         		Gs2::Friend::Domain::Iterator::FDescribeFollowsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +126,6 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Friend::Model::FEzFollowUserPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +158,15 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeFollowsIterator> FEzDescribeFollowsIteratorPtr;

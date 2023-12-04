@@ -61,8 +61,11 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     FEzPropertyFormDomain::FEzPropertyFormDomain(
         Gs2::Formation::Domain::Model::FPropertyFormDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -77,7 +80,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TSharedPtr<Gs2::UE5::Formation::Model::FEzPropertyFormPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

@@ -24,8 +24,8 @@
 #include "Experience/Model/Gs2ExperienceEzAcquireAction.h"
 #include "Experience/Model/Gs2ExperienceEzAcquireActionRate.h"
 #include "Gs2ExperienceEzStatusDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Experience::Domain::Model
 {
@@ -34,7 +34,7 @@ namespace Gs2::UE5::Experience::Domain::Model
         public TSharedFromThis<FEzStatusDomain>
     {
         Gs2::Experience::Domain::Model::FStatusDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Body() const;
@@ -48,7 +48,7 @@ namespace Gs2::UE5::Experience::Domain::Model
 
         FEzStatusDomain(
             Gs2::Experience::Domain::Model::FStatusDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

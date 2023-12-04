@@ -41,8 +41,11 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Matchmaking::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -54,7 +57,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Domain->Gathering(
                 GatheringName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -72,7 +75,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                 NumberOfPlayer,
                 KeyId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -84,7 +87,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Domain->Rating(
                 RatingName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

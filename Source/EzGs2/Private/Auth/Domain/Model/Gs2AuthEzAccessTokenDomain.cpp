@@ -41,8 +41,11 @@ namespace Gs2::UE5::Auth::Domain::Model
 
     FEzAccessTokenDomain::FEzAccessTokenDomain(
         Gs2::Auth::Domain::Model::FAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -60,7 +63,7 @@ namespace Gs2::UE5::Auth::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Auth::Domain::Model::FEzAccessTokenDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FLoginTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->LoginBySignature(
                     MakeShared<Gs2::Auth::Request::FLoginBySignatureRequest>()
@@ -76,7 +79,7 @@ namespace Gs2::UE5::Auth::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Auth::Domain::Model::FEzAccessTokenDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -118,7 +121,7 @@ namespace Gs2::UE5::Auth::Domain::Model
         TSharedPtr<Gs2::UE5::Auth::Model::FEzAccessTokenPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

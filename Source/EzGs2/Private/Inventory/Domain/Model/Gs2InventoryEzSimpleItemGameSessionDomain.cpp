@@ -51,8 +51,13 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     FEzSimpleItemGameSessionDomain::FEzSimpleItemGameSessionDomain(
         Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -68,7 +73,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FGetSimpleItemWithSignatureTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->GetWithSignature(
                     MakeShared<Gs2::Inventory::Request::FGetSimpleItemWithSignatureRequest>()
@@ -82,7 +87,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -120,7 +126,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         TSharedPtr<Gs2::UE5::Inventory::Model::FEzSimpleItemPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

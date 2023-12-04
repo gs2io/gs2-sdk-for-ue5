@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Inventory/Domain/Iterator/DescribeBigItemsIterator.h"
+#include "Inventory/Domain/Model/BigInventoryAccessToken.h"
 #include "Inventory/Model/Gs2InventoryEzBigItem.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Inventory::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 	class EZGS2_API FEzDescribeBigItemsIterator :
         public TSharedFromThis<FEzDescribeBigItemsIterator>
     {
-
-		Gs2::Inventory::Domain::Iterator::FDescribeBigItemsIteratorPtr DomainIterable;
+        Gs2::Inventory::Domain::Iterator::FDescribeBigItemsIteratorPtr It;
+        Gs2::Inventory::Domain::Model::FBigInventoryAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeBigItemsIterator(
-            Gs2::Inventory::Domain::Iterator::FDescribeBigItemsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Inventory::Domain::Model::FBigInventoryAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->BigItems(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeBigItemsIterator(
-            Gs2::Inventory::Domain::Iterator::FDescribeBigItemsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeBigItemsIterator(
+			const FEzDescribeBigItemsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 
 			Gs2::Inventory::Domain::Iterator::FDescribeBigItemsIterator::FIterator DomainIterator;
 			Gs2::UE5::Inventory::Model::FEzBigItemPtr CurrentValue;
-
         	static Gs2::UE5::Inventory::Model::FEzBigItemPtr ConvertCurrent(
         		Gs2::Inventory::Domain::Iterator::FDescribeBigItemsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Inventory::Model::FEzBigItemPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeBigItemsIterator> FEzDescribeBigItemsIteratorPtr;

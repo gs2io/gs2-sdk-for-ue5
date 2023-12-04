@@ -61,8 +61,13 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     FEzFormGameSessionDomain::FEzFormGameSessionDomain(
         Gs2::Formation::Domain::Model::FFormAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -78,7 +83,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FGetFormWithSignatureTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->GetWithSignature(
                     MakeShared<Gs2::Formation::Request::FGetFormWithSignatureRequest>()
@@ -92,7 +97,8 @@ namespace Gs2::UE5::Formation::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -132,7 +138,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FSetFormTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->SetWithSignature(
                     MakeShared<Gs2::Formation::Request::FSetFormWithSignatureRequest>()
@@ -153,7 +159,8 @@ namespace Gs2::UE5::Formation::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -193,7 +200,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDeleteFormTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Delete(
                     MakeShared<Gs2::Formation::Request::FDeleteFormRequest>()
@@ -206,7 +213,8 @@ namespace Gs2::UE5::Formation::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -242,7 +250,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TSharedPtr<Gs2::UE5::Formation::Model::FEzFormPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

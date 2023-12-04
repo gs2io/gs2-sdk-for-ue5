@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Stamina/Domain/Iterator/DescribeStaminaModelsIterator.h"
+#include "Stamina/Domain/Model/Namespace.h"
 #include "Stamina/Model/Gs2StaminaEzStaminaModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Stamina::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::Stamina::Domain::Iterator
 	class EZGS2_API FEzDescribeStaminaModelsIterator :
         public TSharedFromThis<FEzDescribeStaminaModelsIterator>
     {
-
-		Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIteratorPtr DomainIterable;
+        Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIteratorPtr It;
+        Gs2::Stamina::Domain::Model::FNamespaceDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeStaminaModelsIterator(
-            Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Stamina::Domain::Model::FNamespaceDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->StaminaModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeStaminaModelsIterator(
-            Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeStaminaModelsIterator(
+			const FEzDescribeStaminaModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::Stamina::Domain::Iterator
 
 			Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Stamina::Model::FEzStaminaModelPtr CurrentValue;
-
         	static Gs2::UE5::Stamina::Model::FEzStaminaModelPtr ConvertCurrent(
         		Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::Stamina::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Stamina::Model::FEzStaminaModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::Stamina::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeStaminaModelsIterator> FEzDescribeStaminaModelsIteratorPtr;

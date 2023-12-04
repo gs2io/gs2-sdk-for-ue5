@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Schedule/Domain/Gs2Schedule.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Schedule/Domain/Model/Gs2ScheduleEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Schedule::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Schedule::Domain
 
     class EZGS2_API FEzGs2Schedule {
         Gs2::Schedule::Domain::FGs2ScheduleDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Schedule(
             Gs2::Schedule::Domain::FGs2ScheduleDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Schedule::Domain::Model::FEzNamespaceDomainPtr Namespace(

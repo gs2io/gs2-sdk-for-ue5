@@ -21,8 +21,11 @@ namespace Gs2::UE5::Matchmaking::Domain
 
     FEzGs2Matchmaking::FEzGs2Matchmaking(
         Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::Matchmaking::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 

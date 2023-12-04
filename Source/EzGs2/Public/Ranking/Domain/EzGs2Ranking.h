@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Ranking/Domain/Gs2Ranking.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Ranking/Domain/Model/Gs2RankingEzNamespaceDomain.h"
 #include "Ranking/Domain/Model/Gs2RankingEzRankingDomain.h"
 #include "Ranking/Domain/Model/Gs2RankingEzSubscribeUserDomain.h"
@@ -28,13 +28,13 @@ namespace Gs2::UE5::Ranking::Domain
 
     class EZGS2_API FEzGs2Ranking {
         Gs2::Ranking::Domain::FGs2RankingDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Ranking(
             Gs2::Ranking::Domain::FGs2RankingDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Ranking::Domain::Model::FEzNamespaceDomainPtr Namespace(

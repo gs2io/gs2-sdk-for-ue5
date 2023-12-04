@@ -4,9 +4,7 @@
 #include "Sample/Gs2Tutorial.h"
 
 #include "Core/Gs2Domain.h"
-#include "Util/Gs2AccountAuthenticator.h"
-#include "Util/Gs2BasicReOpener.h"
-#include "Util/Profile.h"
+#include "Util/Authentication/Gs2AccountAuthenticator.h"
 
 DEFINE_LOG_CATEGORY(GameLog);
 
@@ -23,19 +21,16 @@ public:
 		const auto ClientId = "YourClientId";
 		const auto ClientSecret = "YourClientSecret";
 		const auto AccountNamespaceName = "game-0001";
-		const auto AccountEncryptionKeyId = "grn:gs2:{region}:{ownerId}:key:account-encryption-key-namespace:key:account-encryption-key";
 		
-		// Setup general setting
-		
-		const auto Profile = MakeShared<Gs2::UE5::Util::FProfile>(
-			ClientId,
-			ClientSecret,
-			Gs2::Core::Model::ERegion::ApNorthEast1,
-			MakeShareable<Gs2::UE5::Util::IReOpener>(new Gs2::UE5::Util::FGs2BasicReOpener())
-		);
-
 		// Create GS2 client
-		const auto InitializeFuture = Profile->Initialize();
+
+		const auto InitializeFuture = Gs2::UE5::Core::FGs2Client::Create(
+			MakeShared<Gs2::Core::Model::FBasicGs2Credential>(
+				ClientId,
+				ClientSecret
+			),
+			Gs2::Core::Model::ApNorthEast1
+		);
 		InitializeFuture->StartSynchronousTask();
 		if (InitializeFuture->GetTask().IsError())
 		{
@@ -76,11 +71,12 @@ public:
 
 		// Log-in created anonymous account
 
-		const auto LoginFuture = Profile->Login(
+		const auto LoginFuture = Gs2->Login(
 			MakeShareable<Gs2::UE5::Util::IAuthenticator>(
 				new Gs2::UE5::Util::FGs2AccountAuthenticator(
-					AccountNamespaceName,
-					AccountEncryptionKeyId
+					MakeShared<Gs2::UE5::Util::FAccountSetting>(
+						AccountNamespaceName
+					)
 				)
 			),
 			*Account->GetUserId(),
@@ -109,7 +105,7 @@ public:
 
 		// Finalize GS2-SDK
 		
-		const auto FinalizeFuture = Profile->Finalize();
+		const auto FinalizeFuture = Gs2->Disconnect();
 		FinalizeFuture->StartSynchronousTask();
 		if (FinalizeFuture->GetTask().IsError())
 		{

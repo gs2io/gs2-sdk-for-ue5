@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "SerialKey/Domain/Gs2SerialKey.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "SerialKey/Domain/Model/Gs2SerialKeyEzNamespaceDomain.h"
 
 namespace Gs2::UE5::SerialKey::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::SerialKey::Domain
 
     class EZGS2_API FEzGs2SerialKey {
         Gs2::SerialKey::Domain::FGs2SerialKeyDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2SerialKey(
             Gs2::SerialKey::Domain::FGs2SerialKeyDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::SerialKey::Domain::Model::FEzNamespaceDomainPtr Namespace(

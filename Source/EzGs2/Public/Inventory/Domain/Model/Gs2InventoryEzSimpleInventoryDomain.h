@@ -35,8 +35,8 @@
 #include "Inventory/Model/Gs2InventoryEzAcquireCount.h"
 #include "Gs2InventoryEzSimpleItemDomain.h"
 #include "Gs2InventoryEzSimpleInventoryDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Inventory::Domain::Model
 {
@@ -45,7 +45,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         public TSharedFromThis<FEzSimpleInventoryDomain>
     {
         Gs2::Inventory::Domain::Model::FSimpleInventoryDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NextPageToken() const;
@@ -55,7 +55,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         FEzSimpleInventoryDomain(
             Gs2::Inventory::Domain::Model::FSimpleInventoryDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemDomainPtr SimpleItem(

@@ -32,8 +32,8 @@
 #include "Formation/Model/Gs2FormationEzAcquireAction.h"
 #include "Gs2FormationEzFormDomain.h"
 #include "Gs2FormationEzMoldDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Formation::Domain::Model
 {
@@ -42,7 +42,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         public TSharedFromThis<FEzMoldDomain>
     {
         Gs2::Formation::Domain::Model::FMoldDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> TransactionId() const;
@@ -54,7 +54,7 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         FEzMoldDomain(
             Gs2::Formation::Domain::Model::FMoldDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Formation::Domain::Model::FEzFormDomainPtr Form(

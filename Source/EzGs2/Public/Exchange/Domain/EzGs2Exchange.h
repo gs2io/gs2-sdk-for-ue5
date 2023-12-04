@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Exchange/Domain/Gs2Exchange.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Exchange/Domain/Model/Gs2ExchangeEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Exchange::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Exchange::Domain
 
     class EZGS2_API FEzGs2Exchange {
         Gs2::Exchange::Domain::FGs2ExchangeDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Exchange(
             Gs2::Exchange::Domain::FGs2ExchangeDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Exchange::Domain::Model::FEzNamespaceDomainPtr Namespace(

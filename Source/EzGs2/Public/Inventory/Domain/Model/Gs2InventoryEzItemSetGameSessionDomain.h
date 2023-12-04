@@ -38,8 +38,8 @@
 #include "Gs2InventoryEzReferenceOfGameSessionDomain.h"
 #include "Gs2InventoryEzItemSetGameSessionDomain.h"
 #include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeItemSetsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Inventory::Domain::Model
 {
@@ -48,7 +48,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
         public TSharedFromThis<FEzItemSetGameSessionDomain>
     {
         Gs2::Inventory::Domain::Model::FItemSetAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Body() const;
@@ -62,27 +63,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         FEzItemSetGameSessionDomain(
             Gs2::Inventory::Domain::Model::FItemSetAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
-        );
-
-        class FGetItemTask :
-            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::UE5::Inventory::Model::FEzItemSet>>>,
-            public TSharedFromThis<FGetItemTask>
-        {
-            TSharedPtr<FEzItemSetGameSessionDomain> Self;
-
-        public:
-            explicit FGetItemTask(
-                TSharedPtr<FEzItemSetGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Inventory::Model::FEzItemSet>>>> Result
-            ) override;
-        };
-        friend FGetItemTask;
-
-        TSharedPtr<FAsyncTask<FGetItemTask>> GetItem(
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FGetItemWithSignatureTask :
@@ -90,12 +72,12 @@ namespace Gs2::UE5::Inventory::Domain::Model
             public TSharedFromThis<FGetItemWithSignatureTask>
         {
             TSharedPtr<FEzItemSetGameSessionDomain> Self;
-            FString KeyId;
+            TOptional<FString> KeyId;
 
         public:
             explicit FGetItemWithSignatureTask(
                 TSharedPtr<FEzItemSetGameSessionDomain> Self,
-                FString KeyId
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -105,7 +87,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         friend FGetItemWithSignatureTask;
 
         TSharedPtr<FAsyncTask<FGetItemWithSignatureTask>> GetItemWithSignature(
-            FString KeyId
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FConsumeTask :

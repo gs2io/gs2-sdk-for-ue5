@@ -38,8 +38,13 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -55,7 +60,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzSendFriendRequestGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FSendRequestTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->SendRequest(
                     MakeShared<Gs2::Friend::Request::FSendRequestRequest>()
@@ -69,7 +74,8 @@ namespace Gs2::UE5::Friend::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Friend::Domain::Model::FEzSendFriendRequestGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -102,16 +108,8 @@ namespace Gs2::UE5::Friend::Domain::Model
         return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzProfileGameSessionDomain>(
             Domain->Profile(
             ),
-            ProfileValue
-        );
-    }
-
-    Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIteratorPtr FEzUserGameSessionDomain::BlackLists(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIterator>(
-            Domain->BlackLists(
-            )
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -121,18 +119,20 @@ namespace Gs2::UE5::Friend::Domain::Model
         return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzBlackListGameSessionDomain>(
             Domain->BlackList(
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
     Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFollowsIteratorPtr FEzUserGameSessionDomain::Follows(
-          const TOptional<bool> WithProfile
+          const bool WithProfile
     ) const
     {
         return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFollowsIterator>(
-            Domain->Follows(
-                WithProfile
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            WithProfile
         );
     }
 
@@ -168,18 +168,20 @@ namespace Gs2::UE5::Friend::Domain::Model
                 TargetUserId,
                 WithProfile
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
     Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFriendsIteratorPtr FEzUserGameSessionDomain::Friends(
-          const TOptional<bool> WithProfile
+          const bool WithProfile
     ) const
     {
         return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFriendsIterator>(
-            Domain->Friends(
-                WithProfile
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            WithProfile
         );
     }
 
@@ -213,7 +215,8 @@ namespace Gs2::UE5::Friend::Domain::Model
             Domain->Friend(
                 WithProfile
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -221,8 +224,9 @@ namespace Gs2::UE5::Friend::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeSendRequestsIterator>(
-            Domain->SendRequests(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -248,7 +252,8 @@ namespace Gs2::UE5::Friend::Domain::Model
             Domain->SendFriendRequest(
                 TargetUserId
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -256,8 +261,9 @@ namespace Gs2::UE5::Friend::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeReceiveRequestsIterator>(
-            Domain->ReceiveRequests(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -283,7 +289,8 @@ namespace Gs2::UE5::Friend::Domain::Model
             Domain->ReceiveFriendRequest(
                 FromUserId
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "AdReward/Domain/Gs2AdReward.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "AdReward/Domain/Model/Gs2AdRewardEzNamespaceDomain.h"
 
 namespace Gs2::UE5::AdReward::Domain
@@ -28,14 +28,14 @@ namespace Gs2::UE5::AdReward::Domain
 
     class EZGS2_API FEzGs2AdReward {
         Gs2::AdReward::Domain::FGs2AdRewardDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         FChangePointNotificationEvent ChangePointNotificationEvent;
 
         FEzGs2AdReward(
             Gs2::AdReward::Domain::FGs2AdRewardDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::AdReward::Domain::Model::FEzNamespaceDomainPtr Namespace(

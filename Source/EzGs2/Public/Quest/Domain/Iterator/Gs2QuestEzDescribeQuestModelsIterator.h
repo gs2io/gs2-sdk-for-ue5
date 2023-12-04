@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Quest/Domain/Iterator/DescribeQuestModelsIterator.h"
+#include "Quest/Domain/Model/QuestGroupModel.h"
 #include "Quest/Model/Gs2QuestEzQuestModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Quest::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 	class EZGS2_API FEzDescribeQuestModelsIterator :
         public TSharedFromThis<FEzDescribeQuestModelsIterator>
     {
-
-		Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIteratorPtr DomainIterable;
+        Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIteratorPtr It;
+        Gs2::Quest::Domain::Model::FQuestGroupModelDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeQuestModelsIterator(
-            Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Quest::Domain::Model::FQuestGroupModelDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->QuestModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeQuestModelsIterator(
-            Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeQuestModelsIterator(
+			const FEzDescribeQuestModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 
 			Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Quest::Model::FEzQuestModelPtr CurrentValue;
-
         	static Gs2::UE5::Quest::Model::FEzQuestModelPtr ConvertCurrent(
         		Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Quest::Model::FEzQuestModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeQuestModelsIterator> FEzDescribeQuestModelsIteratorPtr;

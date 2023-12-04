@@ -36,8 +36,13 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     FEzFriendGameSessionDomain::FEzFriendGameSessionDomain(
         Gs2::Friend::Domain::Model::FFriendAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -49,7 +54,8 @@ namespace Gs2::UE5::Friend::Domain::Model
             Domain->FriendUser(
                 TargetUserId
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Account/Domain/Gs2Account.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Account/Domain/Model/Gs2AccountEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Account::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Account::Domain
 
     class EZGS2_API FEzGs2Account {
         Gs2::Account::Domain::FGs2AccountDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Account(
             Gs2::Account::Domain::FGs2AccountDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Account::Domain::Model::FEzNamespaceDomainPtr Namespace(

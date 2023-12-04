@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Inventory/Domain/Iterator/DescribeSimpleItemModelsIterator.h"
+#include "Inventory/Domain/Model/SimpleInventoryModel.h"
 #include "Inventory/Model/Gs2InventoryEzSimpleItemModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Inventory::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 	class EZGS2_API FEzDescribeSimpleItemModelsIterator :
         public TSharedFromThis<FEzDescribeSimpleItemModelsIterator>
     {
-
-		Gs2::Inventory::Domain::Iterator::FDescribeSimpleItemModelsIteratorPtr DomainIterable;
+        Gs2::Inventory::Domain::Iterator::FDescribeSimpleItemModelsIteratorPtr It;
+        Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeSimpleItemModelsIterator(
-            Gs2::Inventory::Domain::Iterator::FDescribeSimpleItemModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Inventory::Domain::Model::FSimpleInventoryModelDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->SimpleItemModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeSimpleItemModelsIterator(
-            Gs2::Inventory::Domain::Iterator::FDescribeSimpleItemModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeSimpleItemModelsIterator(
+			const FEzDescribeSimpleItemModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 
 			Gs2::Inventory::Domain::Iterator::FDescribeSimpleItemModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Inventory::Model::FEzSimpleItemModelPtr CurrentValue;
-
         	static Gs2::UE5::Inventory::Model::FEzSimpleItemModelPtr ConvertCurrent(
         		Gs2::Inventory::Domain::Iterator::FDescribeSimpleItemModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Inventory::Model::FEzSimpleItemModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::Inventory::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeSimpleItemModelsIterator> FEzDescribeSimpleItemModelsIteratorPtr;

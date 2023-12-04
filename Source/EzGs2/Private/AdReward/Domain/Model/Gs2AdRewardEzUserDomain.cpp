@@ -31,8 +31,11 @@ namespace Gs2::UE5::AdReward::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::AdReward::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -42,7 +45,7 @@ namespace Gs2::UE5::AdReward::Domain::Model
         return MakeShared<Gs2::UE5::AdReward::Domain::Model::FEzPointDomain>(
             Domain->Point(
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

@@ -23,8 +23,8 @@
 #include "Account/Model/Gs2AccountEzBanStatus.h"
 #include "Gs2AccountEzTakeOverGameSessionDomain.h"
 #include "Account/Domain/Iterator/Gs2AccountEzDescribeTakeOversIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Account::Domain::Model
 {
@@ -33,7 +33,8 @@ namespace Gs2::UE5::Account::Domain::Model
         public TSharedFromThis<FEzTakeOverGameSessionDomain>
     {
         Gs2::Account::Domain::Model::FTakeOverAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -42,7 +43,8 @@ namespace Gs2::UE5::Account::Domain::Model
 
         FEzTakeOverGameSessionDomain(
             Gs2::Account::Domain::Model::FTakeOverAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FAddTakeOverSettingTask :

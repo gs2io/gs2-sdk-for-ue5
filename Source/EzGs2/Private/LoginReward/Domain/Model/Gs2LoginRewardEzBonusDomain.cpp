@@ -41,8 +41,11 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
     FEzBonusDomain::FEzBonusDomain(
         Gs2::LoginReward::Domain::Model::FBonusDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 }

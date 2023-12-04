@@ -29,8 +29,8 @@
 #include "Mission/Model/Gs2MissionEzScopedValue.h"
 #include "Gs2MissionEzCounterGameSessionDomain.h"
 #include "Mission/Domain/Iterator/Gs2MissionEzDescribeCountersIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Mission::Domain::Model
 {
@@ -39,7 +39,8 @@ namespace Gs2::UE5::Mission::Domain::Model
         public TSharedFromThis<FEzCounterGameSessionDomain>
     {
         Gs2::Mission::Domain::Model::FCounterAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -48,7 +49,8 @@ namespace Gs2::UE5::Mission::Domain::Model
 
         FEzCounterGameSessionDomain(
             Gs2::Mission::Domain::Model::FCounterAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

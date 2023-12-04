@@ -26,5 +26,4 @@ struct FGs2Client
     GENERATED_BODY()
     
     Gs2::UE5::Core::Domain::FGs2DomainPtr Value;
-    Gs2::UE5::Util::FProfilePtr Profile;
 };

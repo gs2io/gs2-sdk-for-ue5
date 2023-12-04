@@ -25,8 +25,8 @@
 #include "SkillTree/Model/Gs2SkillTreeEzConsumeAction.h"
 #include "Gs2SkillTreeEzNodeModelDomain.h"
 #include "SkillTree/Domain/Iterator/Gs2SkillTreeEzDescribeNodeModelsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::SkillTree::Domain::Model
 {
@@ -35,7 +35,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         public TSharedFromThis<FEzNodeModelDomain>
     {
         Gs2::SkillTree::Domain::Model::FNodeModelDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -43,7 +43,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
 
         FEzNodeModelDomain(
             Gs2::SkillTree::Domain::Model::FNodeModelDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

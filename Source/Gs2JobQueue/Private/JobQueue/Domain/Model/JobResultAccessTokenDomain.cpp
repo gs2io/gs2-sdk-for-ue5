@@ -102,7 +102,8 @@ namespace Gs2::JobQueue::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithJobName(Self->JobName);
+            ->WithJobName(Self->JobName)
+            ->WithTryNumber(Self->TryNumber);
         const auto Future = Self->Client->GetJobResult(
             Request
         );

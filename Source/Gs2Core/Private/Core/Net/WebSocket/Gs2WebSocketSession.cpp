@@ -30,7 +30,7 @@ namespace Gs2::Core::Net::WebSocket
         const Model::FGs2CredentialPtr& Credential
     ):
         CredentialValue(Credential),
-        Region(Model::ERegion::ApNorthEast1),
+        RegionValue(Model::ERegion::ApNorthEast1),
         OwnerIdValue(""),
         Mutex(MakeShared<FCriticalSection>()),
         LoginTaskId(),
@@ -47,7 +47,7 @@ namespace Gs2::Core::Net::WebSocket
         InflightRequests(From.InflightRequests),
         Results(From.Results),
         CredentialValue(From.CredentialValue),
-        Region(From.Region),
+        RegionValue(From.RegionValue),
         OwnerIdValue(""),
         Mutex(From.Mutex),
         LoginTaskId(From.LoginTaskId),
@@ -63,7 +63,7 @@ namespace Gs2::Core::Net::WebSocket
         const Model::ERegion Region
     ):
         CredentialValue(Credential),
-        Region(Region),
+        RegionValue(Region),
         OwnerIdValue(""),
         Mutex(MakeShared<FCriticalSection>()),
         LoginTaskId(),
@@ -239,6 +239,11 @@ namespace Gs2::Core::Net::WebSocket
         return Gs2::Core::Util::New<FAsyncTask<Task::FWebSocketCloseTask>>(SharedThis(this));
     }
 
+    Model::ERegion FGs2WebSocketSession::Region() const
+    {
+        return RegionValue;
+    }
+
     Model::FGs2CredentialPtr FGs2WebSocketSession::Credential() const
     {
         return CredentialValue;
@@ -251,7 +256,7 @@ namespace Gs2::Core::Net::WebSocket
 
     FString FGs2WebSocketSession::RegionName() const
     {
-        switch (Region)
+        switch (RegionValue)
         {
         case Model::ApNorthEast1:
             return "ap-northeast-1";

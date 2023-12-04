@@ -23,7 +23,7 @@ namespace Gs2::Core::Domain::Model
     typedef TFunction<void (FString, FString, FString)> FStampTaskEvent;
     typedef TFunction<void (FString, FString, FString)> FStampSheetEvent;
     
-    class GS2CORE_API FStampSheetConfiguration
+    class GS2CORE_API FTransactionConfiguration
     {
     public:
         TOptional<FString> NamespaceName;
@@ -31,13 +31,13 @@ namespace Gs2::Core::Domain::Model
         FStampTaskEvent StampTaskEventHandler;
         FStampSheetEvent StampSheetEventHandler;
     
-        FStampSheetConfiguration(
+        FTransactionConfiguration(
             TOptional<FString> NamespaceName,
             FStampTaskEvent StampTaskEventHandler,
             FStampSheetEvent StampSheetEventHandler
         );
-        FStampSheetConfiguration(const FStampSheetConfiguration& From);
-        ~FStampSheetConfiguration() = default;
+        FTransactionConfiguration(const FTransactionConfiguration& From);
+        ~FTransactionConfiguration() = default;
     };
-    typedef TSharedPtr<FStampSheetConfiguration> FStampSheetConfigurationPtr;
+    typedef TSharedPtr<FTransactionConfiguration> FTransactionConfigurationPtr;
 }

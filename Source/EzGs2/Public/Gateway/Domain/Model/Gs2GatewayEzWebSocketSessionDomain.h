@@ -20,8 +20,8 @@
 #include "Gateway/Domain/Model/WebSocketSession.h"
 #include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
 #include "Gs2GatewayEzWebSocketSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Gateway::Domain::Model
 {
@@ -30,7 +30,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
         public TSharedFromThis<FEzWebSocketSessionDomain>
     {
         Gs2::Gateway::Domain::Model::FWebSocketSessionDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Protocol() const;
@@ -39,7 +39,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
         FEzWebSocketSessionDomain(
             Gs2::Gateway::Domain::Model::FWebSocketSessionDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

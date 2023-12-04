@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Quest/Domain/Iterator/DescribeCompletedQuestListsIterator.h"
+#include "Quest/Domain/Model/UserAccessToken.h"
 #include "Quest/Model/Gs2QuestEzCompletedQuestList.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Quest::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 	class EZGS2_API FEzDescribeCompletedQuestListsIterator :
         public TSharedFromThis<FEzDescribeCompletedQuestListsIterator>
     {
-
-		Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIteratorPtr DomainIterable;
+        Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIteratorPtr It;
+        Gs2::Quest::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeCompletedQuestListsIterator(
-            Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Quest::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->CompletedQuestLists(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeCompletedQuestListsIterator(
-            Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeCompletedQuestListsIterator(
+			const FEzDescribeCompletedQuestListsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 
 			Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIterator::FIterator DomainIterator;
 			Gs2::UE5::Quest::Model::FEzCompletedQuestListPtr CurrentValue;
-
         	static Gs2::UE5::Quest::Model::FEzCompletedQuestListPtr ConvertCurrent(
         		Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Quest::Model::FEzCompletedQuestListPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Quest::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeCompletedQuestListsIterator> FEzDescribeCompletedQuestListsIteratorPtr;

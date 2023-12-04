@@ -62,11 +62,13 @@ namespace Gs2::UE5::Util
 
 namespace Gs2::UE5::Core::Domain
 {
+    class FGs2Domain;
+
     class EZGS2_API FGs2Domain :
         public TSharedFromThis<FGs2Domain>
     {
-        TSharedPtr<Util::FProfile> Profile;
     public:
+        Util::FGs2ConnectionPtr Connection;
         Gs2::Core::Domain::FGs2Ptr Super;
 
         Gs2::UE5::Account::Domain::FEzGs2AccountPtr Account;
@@ -107,20 +109,49 @@ namespace Gs2::UE5::Core::Domain
         Gs2::UE5::Version::Domain::FEzGs2VersionPtr Version;
         
         explicit FGs2Domain(
-            TSharedPtr<Util::FProfile> Profile
+            Util::FGs2ConnectionPtr Connection,
+            FString DistributorNamespaceName = "default"
         );
         ~FGs2Domain() = default;
         
+        class FLoginTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Util::FGameSession>,
+            public TSharedFromThis<FLoginTask>
+        {
+            TSharedPtr<FGs2Domain> Self;
+            TSharedPtr<Util::IAuthenticator> Authenticator;
+            FString UserId;
+            FString Password;
+
+        public:
+            explicit FLoginTask(
+                const TSharedPtr<FGs2Domain> Self,
+                const TSharedPtr<Util::IAuthenticator> Authenticator,
+                const FString UserId,
+                const FString Password
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Util::FGameSession>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FLoginTask>> Login(
+            const TSharedPtr<Util::IAuthenticator> Authenticator,
+            const FString UserId,
+            const FString Password
+            );
+
         class EZGS2_API FDispatchTask final :
             public Gs2::Core::Util::TGs2Future<void*>,
             public TSharedFromThis<FDispatchTask>
         {
             const TSharedPtr<FGs2Domain> Self;
-            const Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken;
+            const Gs2::UE5::Util::FGameSessionPtr GameSession;
         public:
             explicit FDispatchTask(
                 const TSharedPtr<FGs2Domain> Self,
-                const Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+                const Gs2::UE5::Util::FGameSessionPtr GameSession
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -130,8 +161,92 @@ namespace Gs2::UE5::Core::Domain
         friend FDispatchTask;
 
         TSharedPtr<FAsyncTask<FDispatchTask>> Dispatch(
-            Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+            Gs2::UE5::Util::FGameSessionPtr GameSession
+            );
+
+        class EZGS2_API FDisconnectTask final :
+            public Gs2::Core::Util::TGs2Future<void*>,
+            public TSharedFromThis<FDisconnectTask>
+        {
+            const TSharedPtr<FGs2Domain> Self;
+        public:
+            explicit FDisconnectTask(
+                const TSharedPtr<FGs2Domain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<void*>> Result
+            ) override;
+        };
+        friend FDisconnectTask;
+
+        TSharedPtr<FAsyncTask<FDisconnectTask>> Disconnect(
         );
     };
     typedef TSharedPtr<FGs2Domain> FGs2DomainPtr;
+    
+}
+
+namespace Gs2::UE5::Core
+{
+    class EZGS2_API FGs2Client
+    {
+        class EZGS2_API FCreateTask final :
+            public Gs2::Core::Util::TGs2Future<Domain::FGs2Domain>,
+            public TSharedFromThis<FCreateTask>
+        {
+            Gs2::Core::Model::FGs2CredentialPtr Credential;
+            Gs2::Core::Model::ERegion Region;
+            FString DistributorNamespaceName;
+        public:
+            explicit FCreateTask(
+                Gs2::Core::Model::FGs2CredentialPtr Credential,
+                Gs2::Core::Model::ERegion Region,
+                FString DistributorNamespaceName
+            ):
+                Credential(Credential),
+                Region(Region),
+                DistributorNamespaceName(DistributorNamespaceName)
+            {
+                
+            }
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Domain::FGs2Domain>> Result
+            ) override
+            {
+                auto Connection = MakeShared<Util::FGs2Connection>(
+                    Credential,
+                    Region
+                );
+                auto Future = Connection->Connect();
+                Future->StartSynchronousTask();
+                if (Future->GetTask().IsError())
+                {
+                    return Future->GetTask().Error();
+                }
+                *Result = MakeShared<Domain::FGs2Domain>(
+                    Connection,
+                    DistributorNamespaceName
+                );
+                return nullptr;
+            }
+        };
+        friend FCreateTask;
+
+    public:
+        
+        static TSharedPtr<FAsyncTask<FCreateTask>> Create(
+            Gs2::Core::Model::FGs2CredentialPtr Credential,
+            Gs2::Core::Model::ERegion Region,
+            FString DistributorNamespaceName = "default"
+        )
+        {
+            return Gs2::Core::Util::New<FAsyncTask<FCreateTask>>(
+                Credential,
+                Region,
+                DistributorNamespaceName
+            );
+        }
+    };
 }

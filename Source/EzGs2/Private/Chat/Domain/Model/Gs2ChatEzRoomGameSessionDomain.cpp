@@ -41,8 +41,13 @@ namespace Gs2::UE5::Chat::Domain::Model
 
     FEzRoomGameSessionDomain::FEzRoomGameSessionDomain(
         Gs2::Chat::Domain::Model::FRoomAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -57,7 +62,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDeleteRoomTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Delete(
                     MakeShared<Gs2::Chat::Request::FDeleteRoomRequest>()
@@ -70,7 +75,8 @@ namespace Gs2::UE5::Chat::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -108,7 +114,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Chat::Domain::Model::FEzMessageGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FPostTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Post(
                     MakeShared<Gs2::Chat::Request::FPostRequest>()
@@ -123,7 +129,8 @@ namespace Gs2::UE5::Chat::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Chat::Domain::Model::FEzMessageGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -156,8 +163,9 @@ namespace Gs2::UE5::Chat::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Chat::Domain::Iterator::FEzDescribeMessagesIterator>(
-            Domain->Messages(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -183,7 +191,8 @@ namespace Gs2::UE5::Chat::Domain::Model
             Domain->Message(
                 MessageName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -198,7 +207,7 @@ namespace Gs2::UE5::Chat::Domain::Model
         TSharedPtr<Gs2::UE5::Chat::Model::FEzRoomPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

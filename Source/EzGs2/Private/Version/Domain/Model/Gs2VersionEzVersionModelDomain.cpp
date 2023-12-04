@@ -31,8 +31,11 @@ namespace Gs2::UE5::Version::Domain::Model
 
     FEzVersionModelDomain::FEzVersionModelDomain(
         Gs2::Version::Domain::Model::FVersionModelDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -47,7 +50,7 @@ namespace Gs2::UE5::Version::Domain::Model
         TSharedPtr<Gs2::UE5::Version::Model::FEzVersionModelPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

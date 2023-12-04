@@ -41,8 +41,13 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Ranking::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -59,7 +64,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FSubscribeTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Subscribe(
                     MakeShared<Gs2::Ranking::Request::FSubscribeRequest>()
@@ -74,7 +79,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -108,9 +114,10 @@ namespace Gs2::UE5::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeSubscribesByCategoryNameIterator>(
-            Domain->SubscribeUsers(
-                CategoryName
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            CategoryName
         );
     }
 
@@ -138,7 +145,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
                 CategoryName,
                 TargetUserId
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -148,10 +156,11 @@ namespace Gs2::UE5::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeRankingsIterator>(
-            Domain->Rankings(
-                CategoryName,
-                AdditionalScopeName
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            CategoryName,
+            AdditionalScopeName
         );
     }
 
@@ -177,7 +186,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
             Domain->Ranking(
                 CategoryName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -187,10 +197,11 @@ namespace Gs2::UE5::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeScoresIterator>(
-            Domain->Scores(
-                CategoryName,
-                ScorerUserId
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            CategoryName,
+            ScorerUserId
         );
     }
 
@@ -220,7 +231,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
                 ScorerUserId,
                 UniqueId
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

@@ -25,8 +25,8 @@
 #include "Exchange/Model/Gs2ExchangeEzAcquireAction.h"
 #include "Exchange/Model/Gs2ExchangeEzConsumeAction.h"
 #include "Gs2ExchangeEzAwaitDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Exchange::Domain::Model
 {
@@ -35,7 +35,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         public TSharedFromThis<FEzAwaitDomain>
     {
         Gs2::Exchange::Domain::Model::FAwaitDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<int64> UnlockAt() const;
@@ -47,7 +47,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
         FEzAwaitDomain(
             Gs2::Exchange::Domain::Model::FAwaitDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

@@ -28,8 +28,8 @@
 #include "Quest/Model/Gs2QuestEzQuestGroupModel.h"
 #include "Quest/Model/Gs2QuestEzQuestModel.h"
 #include "Gs2QuestEzProgressGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Quest::Domain::Model
 {
@@ -38,7 +38,8 @@ namespace Gs2::UE5::Quest::Domain::Model
         public TSharedFromThis<FEzProgressGameSessionDomain>
     {
         Gs2::Quest::Domain::Model::FProgressAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> TransactionId() const;
@@ -48,7 +49,8 @@ namespace Gs2::UE5::Quest::Domain::Model
 
         FEzProgressGameSessionDomain(
             Gs2::Quest::Domain::Model::FProgressAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FEndTask :

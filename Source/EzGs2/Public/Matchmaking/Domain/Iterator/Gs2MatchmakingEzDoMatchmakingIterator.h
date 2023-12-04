@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Matchmaking/Domain/Iterator/DoMatchmakingIterator.h"
+#include "Matchmaking/Domain/Model/UserAccessToken.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzGathering.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Matchmaking::Domain::Iterator
 {
@@ -27,20 +27,42 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 	class EZGS2_API FEzDoMatchmakingIterator :
         public TSharedFromThis<FEzDoMatchmakingIterator>
     {
-
-		Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIteratorPtr DomainIterable;
+        Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIteratorPtr It;
+        Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        Gs2::UE5::Matchmaking::Model::FEzPlayerPtr Player;
 
 	public:
 
         explicit FEzDoMatchmakingIterator(
-            Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            Gs2::UE5::Matchmaking::Model::FEzPlayerPtr Player
+        ) :
+            It(
+                Domain->DoMatchmaking(
+                    Player->ToModel()
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            Player(Player)
+        {
+        }
 
-        explicit FEzDoMatchmakingIterator(
-            Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDoMatchmakingIterator(
+			const FEzDoMatchmakingIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            Player(From.Player)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +70,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 
 			Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FIterator DomainIterator;
 			Gs2::UE5::Matchmaking::Model::FEzGatheringPtr CurrentValue;
-
         	static Gs2::UE5::Matchmaking::Model::FEzGatheringPtr ConvertCurrent(
         		Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator::FIterator& DomainIterator
         	)
@@ -105,7 +126,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Matchmaking::Model::FEzGatheringPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +158,15 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDoMatchmakingIterator> FEzDoMatchmakingIteratorPtr;

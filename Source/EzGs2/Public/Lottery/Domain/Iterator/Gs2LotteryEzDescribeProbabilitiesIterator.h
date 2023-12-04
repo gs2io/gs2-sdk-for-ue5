@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Lottery/Domain/Iterator/DescribeProbabilitiesIterator.h"
+#include "Lottery/Domain/Model/UserAccessToken.h"
 #include "Lottery/Model/Gs2LotteryEzProbability.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Lottery::Domain::Iterator
 {
@@ -27,20 +27,42 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 	class EZGS2_API FEzDescribeProbabilitiesIterator :
         public TSharedFromThis<FEzDescribeProbabilitiesIterator>
     {
-
-		Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIteratorPtr DomainIterable;
+        Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIteratorPtr It;
+        Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        FString LotteryName;
 
 	public:
 
         explicit FEzDescribeProbabilitiesIterator(
-            Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            FString LotteryName
+        ) :
+            It(
+                Domain->Probabilities(
+                    LotteryName
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            LotteryName(LotteryName)
+        {
+        }
 
-        explicit FEzDescribeProbabilitiesIterator(
-            Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeProbabilitiesIterator(
+			const FEzDescribeProbabilitiesIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            LotteryName(From.LotteryName)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +70,6 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 
 			Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIterator::FIterator DomainIterator;
 			Gs2::UE5::Lottery::Model::FEzProbabilityPtr CurrentValue;
-
         	static Gs2::UE5::Lottery::Model::FEzProbabilityPtr ConvertCurrent(
         		Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIterator::FIterator& DomainIterator
         	)
@@ -105,7 +126,6 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Lottery::Model::FEzProbabilityPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +158,15 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeProbabilitiesIterator> FEzDescribeProbabilitiesIteratorPtr;

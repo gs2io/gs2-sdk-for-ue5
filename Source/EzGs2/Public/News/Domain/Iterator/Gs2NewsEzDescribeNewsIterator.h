@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "News/Domain/Iterator/DescribeNewsIterator.h"
+#include "News/Domain/Model/UserAccessToken.h"
 #include "News/Model/Gs2NewsEzNews.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::News::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::News::Domain::Iterator
 	class EZGS2_API FEzDescribeNewsIterator :
         public TSharedFromThis<FEzDescribeNewsIterator>
     {
-
-		Gs2::News::Domain::Iterator::FDescribeNewsIteratorPtr DomainIterable;
+        Gs2::News::Domain::Iterator::FDescribeNewsIteratorPtr It;
+        Gs2::News::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeNewsIterator(
-            Gs2::News::Domain::Iterator::FDescribeNewsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::News::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Newses(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeNewsIterator(
-            Gs2::News::Domain::Iterator::FDescribeNewsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeNewsIterator(
+			const FEzDescribeNewsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::News::Domain::Iterator
 
 			Gs2::News::Domain::Iterator::FDescribeNewsIterator::FIterator DomainIterator;
 			Gs2::UE5::News::Model::FEzNewsPtr CurrentValue;
-
         	static Gs2::UE5::News::Model::FEzNewsPtr ConvertCurrent(
         		Gs2::News::Domain::Iterator::FDescribeNewsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::News::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::News::Model::FEzNewsPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::News::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeNewsIterator> FEzDescribeNewsIteratorPtr;

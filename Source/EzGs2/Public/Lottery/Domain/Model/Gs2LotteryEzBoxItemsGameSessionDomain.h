@@ -27,8 +27,8 @@
 #include "Lottery/Model/Gs2LotteryEzConfig.h"
 #include "Gs2LotteryEzBoxItemsGameSessionDomain.h"
 #include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeBoxesIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Lottery::Domain::Model
 {
@@ -37,7 +37,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
         public TSharedFromThis<FEzBoxItemsGameSessionDomain>
     {
         Gs2::Lottery::Domain::Model::FBoxItemsAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -46,7 +47,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
         FEzBoxItemsGameSessionDomain(
             Gs2::Lottery::Domain::Model::FBoxItemsAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FResetBoxTask :

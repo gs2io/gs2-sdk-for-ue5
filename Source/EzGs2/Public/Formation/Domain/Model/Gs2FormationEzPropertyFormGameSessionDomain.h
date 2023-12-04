@@ -32,8 +32,8 @@
 #include "Formation/Model/Gs2FormationEzAcquireAction.h"
 #include "Gs2FormationEzPropertyFormGameSessionDomain.h"
 #include "Formation/Domain/Iterator/Gs2FormationEzDescribePropertyFormsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Formation::Domain::Model
 {
@@ -42,7 +42,8 @@ namespace Gs2::UE5::Formation::Domain::Model
         public TSharedFromThis<FEzPropertyFormGameSessionDomain>
     {
         Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Body() const;
@@ -56,7 +57,8 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         FEzPropertyFormGameSessionDomain(
             Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FGetPropertyFormWithSignatureTask :

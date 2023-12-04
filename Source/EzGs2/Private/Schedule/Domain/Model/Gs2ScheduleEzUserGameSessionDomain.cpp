@@ -36,8 +36,13 @@ namespace Gs2::UE5::Schedule::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Schedule::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -45,8 +50,9 @@ namespace Gs2::UE5::Schedule::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Schedule::Domain::Iterator::FEzDescribeTriggersIterator>(
-            Domain->Triggers(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -72,7 +78,8 @@ namespace Gs2::UE5::Schedule::Domain::Model
             Domain->Trigger(
                 TriggerName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -80,8 +87,9 @@ namespace Gs2::UE5::Schedule::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Schedule::Domain::Iterator::FEzDescribeEventsIterator>(
-            Domain->Events(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -107,7 +115,8 @@ namespace Gs2::UE5::Schedule::Domain::Model
             Domain->Event(
                 EventName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

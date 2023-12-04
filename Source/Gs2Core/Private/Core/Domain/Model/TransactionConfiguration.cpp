@@ -15,11 +15,11 @@
  */
 
 
-#include "Core/Domain/Model/StampSheetConfiguration.h"
+#include "Core/Domain/Model/TransactionConfiguration.h"
 
 namespace Gs2::Core::Domain::Model
 {
-    FStampSheetConfiguration::FStampSheetConfiguration(
+    FTransactionConfiguration::FTransactionConfiguration(
         const TOptional<FString> NamespaceName,
         const FStampTaskEvent StampTaskEventHandler,
         const FStampSheetEvent StampSheetEventHandler
@@ -30,8 +30,8 @@ namespace Gs2::Core::Domain::Model
     {
     }
     
-    FStampSheetConfiguration::FStampSheetConfiguration(
-        const FStampSheetConfiguration& From
+    FTransactionConfiguration::FTransactionConfiguration(
+        const FTransactionConfiguration& From
     ):
         NamespaceName(From.NamespaceName),
         StampTaskEventHandler(From.StampTaskEventHandler),

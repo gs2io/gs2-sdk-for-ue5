@@ -51,8 +51,11 @@ namespace Gs2::UE5::Account::Domain::Model
 
     FEzNamespaceDomain::FEzNamespaceDomain(
         Gs2::Account::Domain::Model::FNamespaceDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -67,7 +70,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FCreateTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->CreateAccount(
                     MakeShared<Gs2::Account::Request::FCreateAccountRequest>()
@@ -80,7 +83,7 @@ namespace Gs2::UE5::Account::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -119,7 +122,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDoTakeOverTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->DoTakeOver(
                     MakeShared<Gs2::Account::Request::FDoTakeOverRequest>()
@@ -135,7 +138,7 @@ namespace Gs2::UE5::Account::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -174,19 +177,20 @@ namespace Gs2::UE5::Account::Domain::Model
             Domain->Account(
                 UserId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
     Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+        Gs2::UE5::Util::FGameSessionPtr GameSession
     ) const
     {
         return MakeShared<Gs2::UE5::Account::Domain::Model::FEzAccountGameSessionDomain>(
             Domain->AccessToken(
-                AccessToken->ToModel()
+                GameSession->AccessToken()->ToModel()
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

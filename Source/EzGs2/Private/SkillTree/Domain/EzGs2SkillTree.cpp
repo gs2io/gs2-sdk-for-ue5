@@ -21,8 +21,11 @@ namespace Gs2::UE5::SkillTree::Domain
 
     FEzGs2SkillTree::FEzGs2SkillTree(
         Gs2::SkillTree::Domain::FGs2SkillTreeDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::SkillTree::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

@@ -15,62 +15,110 @@
  */
 
 #include "Core/Gs2Domain.h"
-#include "Util/Profile.h"
 
 namespace Gs2::UE5::Core::Domain
 {
     FGs2Domain::FGs2Domain(
-        TSharedPtr<Util::FProfile> Profile
-    ): Profile(Profile)
+        Util::FGs2ConnectionPtr Connection,
+        FString DistributorNamespaceName
+    ): Connection(Connection)
     {
         Super = MakeShared<Gs2::Core::Domain::FGs2>(
-            Profile->Gs2RestSession,
-            Profile->Gs2WebSocketSession,
-            Profile->DistributorNamespaceName
+            Connection->RestSession(),
+            Connection->WebSocketSession(),
+            DistributorNamespaceName
         );
         Super->Initialize();
 
-        Account = MakeShared<Gs2::UE5::Account::Domain::FEzGs2Account>(Super->Account, Profile);
-        Auth = MakeShared<Gs2::UE5::Auth::Domain::FEzGs2Auth>(Super->Auth, Profile);
-        Chat = MakeShared<Gs2::UE5::Chat::Domain::FEzGs2Chat>(Super->Chat, Profile);
-        Datastore = MakeShared<Gs2::UE5::Datastore::Domain::FEzGs2Datastore>(Super->Datastore, Profile);
-        Dictionary = MakeShared<Gs2::UE5::Dictionary::Domain::FEzGs2Dictionary>(Super->Dictionary, Profile);
-        Distributor = MakeShared<Gs2::UE5::Distributor::Domain::FEzGs2Distributor>(Super->Distributor, Profile);
-        Enchant = MakeShared<Gs2::UE5::Enchant::Domain::FEzGs2Enchant>(Super->Enchant, Profile);
-        Enhance = MakeShared<Gs2::UE5::Enhance::Domain::FEzGs2Enhance>(Super->Enhance, Profile);
-        Exchange = MakeShared<Gs2::UE5::Exchange::Domain::FEzGs2Exchange>(Super->Exchange, Profile);
-        Experience = MakeShared<Gs2::UE5::Experience::Domain::FEzGs2Experience>(Super->Experience, Profile);
-        Formation = MakeShared<Gs2::UE5::Formation::Domain::FEzGs2Formation>(Super->Formation, Profile);
-        Friend = MakeShared<Gs2::UE5::Friend::Domain::FEzGs2Friend>(Super->Friend, Profile);
-        Gateway = MakeShared<Gs2::UE5::Gateway::Domain::FEzGs2Gateway>(Super->Gateway, Profile);
-        Inbox = MakeShared<Gs2::UE5::Inbox::Domain::FEzGs2Inbox>(Super->Inbox, Profile);
-        Idle = MakeShared<Gs2::UE5::Idle::Domain::FEzGs2Idle>(Super->Idle, Profile);
-        Inventory = MakeShared<Gs2::UE5::Inventory::Domain::FEzGs2Inventory>(Super->Inventory, Profile);
-        JobQueue = MakeShared<Gs2::UE5::JobQueue::Domain::FEzGs2JobQueue>(Super->JobQueue, Profile);
-        Limit = MakeShared<Gs2::UE5::Limit::Domain::FEzGs2Limit>(Super->Limit, Profile);
-        LoginReward = MakeShared<Gs2::UE5::LoginReward::Domain::FEzGs2LoginReward>(Super->LoginReward, Profile);
-        Lottery = MakeShared<Gs2::UE5::Lottery::Domain::FEzGs2Lottery>(Super->Lottery, Profile);
-        Matchmaking = MakeShared<Gs2::UE5::Matchmaking::Domain::FEzGs2Matchmaking>(Super->Matchmaking, Profile);
-        MegaField = MakeShared<Gs2::UE5::MegaField::Domain::FEzGs2MegaField>(Super->MegaField, Profile);
-        Mission = MakeShared<Gs2::UE5::Mission::Domain::FEzGs2Mission>(Super->Mission, Profile);
-        Money = MakeShared<Gs2::UE5::Money::Domain::FEzGs2Money>(Super->Money, Profile);
-        News = MakeShared<Gs2::UE5::News::Domain::FEzGs2News>(Super->News, Profile);
-        Quest = MakeShared<Gs2::UE5::Quest::Domain::FEzGs2Quest>(Super->Quest, Profile);
-        Ranking = MakeShared<Gs2::UE5::Ranking::Domain::FEzGs2Ranking>(Super->Ranking, Profile);
-        Realtime = MakeShared<Gs2::UE5::Realtime::Domain::FEzGs2Realtime>(Super->Realtime, Profile);
-        Schedule = MakeShared<Gs2::UE5::Schedule::Domain::FEzGs2Schedule>(Super->Schedule, Profile);
-        SerialKey = MakeShared<Gs2::UE5::SerialKey::Domain::FEzGs2SerialKey>(Super->SerialKey, Profile);
-        Showcase = MakeShared<Gs2::UE5::Showcase::Domain::FEzGs2Showcase>(Super->Showcase, Profile);
-        SkillTree = MakeShared<Gs2::UE5::SkillTree::Domain::FEzGs2SkillTree>(Super->SkillTree, Profile);
-        Stamina = MakeShared<Gs2::UE5::Stamina::Domain::FEzGs2Stamina>(Super->Stamina, Profile);
-        StateMachine = MakeShared<Gs2::UE5::StateMachine::Domain::FEzGs2StateMachine>(Super->StateMachine, Profile);
-        Version = MakeShared<Gs2::UE5::Version::Domain::FEzGs2Version>(Super->Version, Profile);
+        Account = MakeShared<Gs2::UE5::Account::Domain::FEzGs2Account>(Super->Account, Connection);
+        Auth = MakeShared<Gs2::UE5::Auth::Domain::FEzGs2Auth>(Super->Auth, Connection);
+        Chat = MakeShared<Gs2::UE5::Chat::Domain::FEzGs2Chat>(Super->Chat, Connection);
+        Datastore = MakeShared<Gs2::UE5::Datastore::Domain::FEzGs2Datastore>(Super->Datastore, Connection);
+        Dictionary = MakeShared<Gs2::UE5::Dictionary::Domain::FEzGs2Dictionary>(Super->Dictionary, Connection);
+        Distributor = MakeShared<Gs2::UE5::Distributor::Domain::FEzGs2Distributor>(Super->Distributor, Connection);
+        Enchant = MakeShared<Gs2::UE5::Enchant::Domain::FEzGs2Enchant>(Super->Enchant, Connection);
+        Enhance = MakeShared<Gs2::UE5::Enhance::Domain::FEzGs2Enhance>(Super->Enhance, Connection);
+        Exchange = MakeShared<Gs2::UE5::Exchange::Domain::FEzGs2Exchange>(Super->Exchange, Connection);
+        Experience = MakeShared<Gs2::UE5::Experience::Domain::FEzGs2Experience>(Super->Experience, Connection);
+        Formation = MakeShared<Gs2::UE5::Formation::Domain::FEzGs2Formation>(Super->Formation, Connection);
+        Friend = MakeShared<Gs2::UE5::Friend::Domain::FEzGs2Friend>(Super->Friend, Connection);
+        Gateway = MakeShared<Gs2::UE5::Gateway::Domain::FEzGs2Gateway>(Super->Gateway, Connection);
+        Inbox = MakeShared<Gs2::UE5::Inbox::Domain::FEzGs2Inbox>(Super->Inbox, Connection);
+        Idle = MakeShared<Gs2::UE5::Idle::Domain::FEzGs2Idle>(Super->Idle, Connection);
+        Inventory = MakeShared<Gs2::UE5::Inventory::Domain::FEzGs2Inventory>(Super->Inventory, Connection);
+        JobQueue = MakeShared<Gs2::UE5::JobQueue::Domain::FEzGs2JobQueue>(Super->JobQueue, Connection);
+        Limit = MakeShared<Gs2::UE5::Limit::Domain::FEzGs2Limit>(Super->Limit, Connection);
+        LoginReward = MakeShared<Gs2::UE5::LoginReward::Domain::FEzGs2LoginReward>(Super->LoginReward, Connection);
+        Lottery = MakeShared<Gs2::UE5::Lottery::Domain::FEzGs2Lottery>(Super->Lottery, Connection);
+        Matchmaking = MakeShared<Gs2::UE5::Matchmaking::Domain::FEzGs2Matchmaking>(Super->Matchmaking, Connection);
+        MegaField = MakeShared<Gs2::UE5::MegaField::Domain::FEzGs2MegaField>(Super->MegaField, Connection);
+        Mission = MakeShared<Gs2::UE5::Mission::Domain::FEzGs2Mission>(Super->Mission, Connection);
+        Money = MakeShared<Gs2::UE5::Money::Domain::FEzGs2Money>(Super->Money, Connection);
+        News = MakeShared<Gs2::UE5::News::Domain::FEzGs2News>(Super->News, Connection);
+        Quest = MakeShared<Gs2::UE5::Quest::Domain::FEzGs2Quest>(Super->Quest, Connection);
+        Ranking = MakeShared<Gs2::UE5::Ranking::Domain::FEzGs2Ranking>(Super->Ranking, Connection);
+        Realtime = MakeShared<Gs2::UE5::Realtime::Domain::FEzGs2Realtime>(Super->Realtime, Connection);
+        Schedule = MakeShared<Gs2::UE5::Schedule::Domain::FEzGs2Schedule>(Super->Schedule, Connection);
+        SerialKey = MakeShared<Gs2::UE5::SerialKey::Domain::FEzGs2SerialKey>(Super->SerialKey, Connection);
+        Showcase = MakeShared<Gs2::UE5::Showcase::Domain::FEzGs2Showcase>(Super->Showcase, Connection);
+        SkillTree = MakeShared<Gs2::UE5::SkillTree::Domain::FEzGs2SkillTree>(Super->SkillTree, Connection);
+        Stamina = MakeShared<Gs2::UE5::Stamina::Domain::FEzGs2Stamina>(Super->Stamina, Connection);
+        StateMachine = MakeShared<Gs2::UE5::StateMachine::Domain::FEzGs2StateMachine>(Super->StateMachine, Connection);
+        Version = MakeShared<Gs2::UE5::Version::Domain::FEzGs2Version>(Super->Version, Connection);
+    }
+
+    FGs2Domain::FLoginTask::FLoginTask(
+        const TSharedPtr<FGs2Domain> Self,
+        const TSharedPtr<Util::IAuthenticator> Authenticator,
+        const FString UserId,
+        const FString Password
+    ):
+        Self(Self),
+        Authenticator(Authenticator),
+        UserId(UserId),
+        Password(Password)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2Domain::FLoginTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Util::FGameSession>> Result
+    )
+    {
+        auto GameSession = MakeShared<Gs2::UE5::Util::FGameSession>(
+            Authenticator,
+            Self->Connection,
+            UserId,
+            Password
+        );
+        auto Future = GameSession->Refresh();
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        *Result = GameSession;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2Domain::FLoginTask>> FGs2Domain::Login(
+        const TSharedPtr<Util::IAuthenticator> Authenticator,
+        const FString UserId,
+        const FString Password
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FLoginTask>>(
+            AsShared(),
+            Authenticator,
+            UserId,
+            Password
+        );
     }
 
     FGs2Domain::FDispatchTask::FDispatchTask(
         const TSharedPtr<FGs2Domain> Self,
-        const Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
-    ): Self(Self), AccessToken(AccessToken)
+        const Gs2::UE5::Util::FGameSessionPtr GameSession
+    ): Self(Self), GameSession(GameSession)
     {
     }
 
@@ -78,7 +126,7 @@ namespace Gs2::UE5::Core::Domain
         TSharedPtr<TSharedPtr<void*>> Result
     )
     {
-        const auto Future = Self->Super->Dispatch(AccessToken->ToModel());
+        const auto Future = Self->Super->Dispatch(GameSession->AccessToken()->ToModel());
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
@@ -89,9 +137,32 @@ namespace Gs2::UE5::Core::Domain
     }
 
     TSharedPtr<FAsyncTask<FGs2Domain::FDispatchTask>> FGs2Domain::Dispatch(
-        Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+        Gs2::UE5::Util::FGameSessionPtr GameSession
     )
     {
-        return Gs2::Core::Util::New<FAsyncTask<FGs2Domain::FDispatchTask>>(AsShared(), AccessToken);
+        return Gs2::Core::Util::New<FAsyncTask<FDispatchTask>>(AsShared(), GameSession);
+    }
+
+    FGs2Domain::FDisconnectTask::FDisconnectTask(
+        const TSharedPtr<FGs2Domain> Self
+    ): Self(Self)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2Domain::FDisconnectTask::Action(TSharedPtr<TSharedPtr<void*>> Result)
+    {
+        const auto Future = Self->Connection->Disconnect();
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2Domain::FDisconnectTask>> FGs2Domain::Disconnect()
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDisconnectTask>>(AsShared());
     }
 }

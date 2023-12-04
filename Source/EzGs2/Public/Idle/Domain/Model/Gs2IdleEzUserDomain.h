@@ -27,8 +27,8 @@
 #include "Gs2IdleEzUserDomain.h"
 #include "Gs2IdleEzUserDomain.h"
 #include "Gs2IdleEzUserGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Idle::Domain::Model
 {
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Idle::Domain::Model
         public TSharedFromThis<FEzUserDomain>
     {
         Gs2::Idle::Domain::Model::FUserDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NextPageToken() const;
@@ -46,7 +46,7 @@ namespace Gs2::UE5::Idle::Domain::Model
 
         FEzUserDomain(
             Gs2::Idle::Domain::Model::FUserDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Idle::Domain::Model::FEzStatusDomainPtr Status(

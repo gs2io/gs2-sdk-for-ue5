@@ -21,8 +21,11 @@ namespace Gs2::UE5::Auth::Domain
 
     FEzGs2Auth::FEzGs2Auth(
         Gs2::Auth::Domain::FGs2AuthDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -32,7 +35,7 @@ namespace Gs2::UE5::Auth::Domain
         return MakeShared<Gs2::UE5::Auth::Domain::Model::FEzAccessTokenDomain>(
             Domain->AccessToken(
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

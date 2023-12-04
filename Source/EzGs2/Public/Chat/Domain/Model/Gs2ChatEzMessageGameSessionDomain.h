@@ -24,8 +24,8 @@
 #include "Chat/Model/Gs2ChatEzNotificationType.h"
 #include "Gs2ChatEzMessageGameSessionDomain.h"
 #include "Chat/Domain/Iterator/Gs2ChatEzDescribeMessagesIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Chat::Domain::Model
 {
@@ -34,7 +34,8 @@ namespace Gs2::UE5::Chat::Domain::Model
         public TSharedFromThis<FEzMessageGameSessionDomain>
     {
         Gs2::Chat::Domain::Model::FMessageAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -45,7 +46,8 @@ namespace Gs2::UE5::Chat::Domain::Model
 
         FEzMessageGameSessionDomain(
             Gs2::Chat::Domain::Model::FMessageAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

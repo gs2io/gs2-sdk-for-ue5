@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Stamina/Domain/Gs2Stamina.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Stamina/Domain/Model/Gs2StaminaEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Stamina::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Stamina::Domain
 
     class EZGS2_API FEzGs2Stamina {
         Gs2::Stamina::Domain::FGs2StaminaDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Stamina(
             Gs2::Stamina::Domain::FGs2StaminaDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Stamina::Domain::Model::FEzNamespaceDomainPtr Namespace(

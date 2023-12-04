@@ -46,8 +46,11 @@ namespace Gs2::UE5::Experience::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Experience::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -61,7 +64,7 @@ namespace Gs2::UE5::Experience::Domain::Model
                 ExperienceName,
                 PropertyId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

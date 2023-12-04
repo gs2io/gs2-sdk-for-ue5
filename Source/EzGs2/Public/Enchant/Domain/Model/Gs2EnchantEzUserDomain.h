@@ -32,8 +32,8 @@
 #include "Gs2EnchantEzUserDomain.h"
 #include "Gs2EnchantEzUserDomain.h"
 #include "Gs2EnchantEzUserGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Enchant::Domain::Model
 {
@@ -42,7 +42,7 @@ namespace Gs2::UE5::Enchant::Domain::Model
         public TSharedFromThis<FEzUserDomain>
     {
         Gs2::Enchant::Domain::Model::FUserDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NextPageToken() const;
@@ -51,7 +51,7 @@ namespace Gs2::UE5::Enchant::Domain::Model
 
         FEzUserDomain(
             Gs2::Enchant::Domain::Model::FUserDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterStatusDomainPtr BalanceParameterStatus(

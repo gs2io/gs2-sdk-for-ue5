@@ -51,8 +51,13 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
     FEzAwaitGameSessionDomain::FEzAwaitGameSessionDomain(
         Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -67,7 +72,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FAcquireTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Acquire(
                     MakeShared<Gs2::Exchange::Request::FAcquireRequest>()
@@ -80,7 +85,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -116,7 +122,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FSkipTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Skip(
                     MakeShared<Gs2::Exchange::Request::FSkipRequest>()
@@ -129,7 +135,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -165,7 +172,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDeleteAwaitTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Delete(
                     MakeShared<Gs2::Exchange::Request::FDeleteAwaitRequest>()
@@ -178,7 +185,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -214,7 +222,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         TSharedPtr<Gs2::UE5::Exchange::Model::FEzAwaitPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

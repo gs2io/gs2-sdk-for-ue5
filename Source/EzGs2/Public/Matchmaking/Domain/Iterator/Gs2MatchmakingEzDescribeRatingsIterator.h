@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Matchmaking/Domain/Iterator/DescribeRatingsIterator.h"
+#include "Matchmaking/Domain/Model/UserAccessToken.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzRating.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Matchmaking::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 	class EZGS2_API FEzDescribeRatingsIterator :
         public TSharedFromThis<FEzDescribeRatingsIterator>
     {
-
-		Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIteratorPtr DomainIterable;
+        Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIteratorPtr It;
+        Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeRatingsIterator(
-            Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Matchmaking::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Ratings(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeRatingsIterator(
-            Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeRatingsIterator(
+			const FEzDescribeRatingsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 
 			Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIterator::FIterator DomainIterator;
 			Gs2::UE5::Matchmaking::Model::FEzRatingPtr CurrentValue;
-
         	static Gs2::UE5::Matchmaking::Model::FEzRatingPtr ConvertCurrent(
         		Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Matchmaking::Model::FEzRatingPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Matchmaking::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeRatingsIterator> FEzDescribeRatingsIteratorPtr;

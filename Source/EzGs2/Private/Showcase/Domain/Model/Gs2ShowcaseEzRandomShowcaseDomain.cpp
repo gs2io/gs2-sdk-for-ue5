@@ -36,8 +36,11 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
     FEzRandomShowcaseDomain::FEzRandomShowcaseDomain(
         Gs2::Showcase::Domain::Model::FRandomShowcaseDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -49,7 +52,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
             Domain->RandomDisplayItem(
                 DisplayItemName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

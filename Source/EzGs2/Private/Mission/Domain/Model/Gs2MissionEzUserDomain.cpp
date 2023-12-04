@@ -36,8 +36,11 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Mission::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -49,7 +52,7 @@ namespace Gs2::UE5::Mission::Domain::Model
             Domain->Counter(
                 CounterName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -61,7 +64,7 @@ namespace Gs2::UE5::Mission::Domain::Model
             Domain->Complete(
                 MissionGroupName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

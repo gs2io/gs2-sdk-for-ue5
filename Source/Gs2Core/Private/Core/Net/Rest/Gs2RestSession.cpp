@@ -26,21 +26,21 @@ namespace Gs2::Core::Net::Rest
 {
     FGs2RestSession::FGs2RestSession(
         const Model::FGs2CredentialPtr Credential
-    ): CredentialValue(Credential), Region(Model::ERegion::ApNorthEast1), OwnerIdValue("")
+    ): CredentialValue(Credential), RegionValue(Model::ERegion::ApNorthEast1), OwnerIdValue("")
     {
         
     }
 
     FGs2RestSession::FGs2RestSession(
         const FGs2RestSession& From
-    ): CredentialValue(From.CredentialValue), Region(From.Region), OwnerIdValue("")
+    ): CredentialValue(From.CredentialValue), RegionValue(From.RegionValue), OwnerIdValue("")
     {
     }
 
     FGs2RestSession::FGs2RestSession(
         const Model::FGs2CredentialPtr Credential,
         const Model::ERegion Region
-    ): CredentialValue(Credential), Region(Region), OwnerIdValue("")
+    ): CredentialValue(Credential), RegionValue(Region), OwnerIdValue("")
     {
         
     }
@@ -70,6 +70,11 @@ namespace Gs2::Core::Net::Rest
         OwnerIdValue = OwnerId;
     }
 
+    Model::ERegion FGs2RestSession::Region() const
+    {
+        return RegionValue;
+    }
+
     Model::FGs2CredentialPtr FGs2RestSession::Credential() const
     {
         return CredentialValue;
@@ -77,7 +82,7 @@ namespace Gs2::Core::Net::Rest
 
     FString FGs2RestSession::RegionName() const
     {
-        switch (Region)
+        switch (RegionValue)
         {
         case Model::ApNorthEast1:
             return "ap-northeast-1";

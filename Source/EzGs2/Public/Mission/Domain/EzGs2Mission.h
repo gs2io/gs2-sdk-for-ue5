@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Mission/Domain/Gs2Mission.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Mission/Domain/Model/Gs2MissionEzNamespaceDomain.h"
 #include "Mission/Domain/Model/Gs2MissionEzMissionTaskModelDomain.h"
 
@@ -29,14 +29,14 @@ namespace Gs2::UE5::Mission::Domain
 
     class EZGS2_API FEzGs2Mission {
         Gs2::Mission::Domain::FGs2MissionDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         FCompleteNotificationEvent CompleteNotificationEvent;
 
         FEzGs2Mission(
             Gs2::Mission::Domain::FGs2MissionDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Mission::Domain::Model::FEzNamespaceDomainPtr Namespace(

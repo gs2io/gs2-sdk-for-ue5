@@ -46,8 +46,11 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Formation::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -59,7 +62,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             Domain->Mold(
                 MoldModelName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -73,7 +76,7 @@ namespace Gs2::UE5::Formation::Domain::Model
                 PropertyFormModelName,
                 PropertyId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

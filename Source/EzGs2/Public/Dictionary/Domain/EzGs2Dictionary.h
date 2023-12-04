@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dictionary/Domain/Gs2Dictionary.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Dictionary/Domain/Model/Gs2DictionaryEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Dictionary::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Dictionary::Domain
 
     class EZGS2_API FEzGs2Dictionary {
         Gs2::Dictionary::Domain::FGs2DictionaryDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Dictionary(
             Gs2::Dictionary::Domain::FGs2DictionaryDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Dictionary::Domain::Model::FEzNamespaceDomainPtr Namespace(

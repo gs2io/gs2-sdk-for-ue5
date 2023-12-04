@@ -51,8 +51,11 @@ namespace Gs2::UE5::Enhance::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Enhance::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -62,7 +65,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         return MakeShared<Gs2::UE5::Enhance::Domain::Model::FEzProgressDomain>(
             Domain->Progress(
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

@@ -245,7 +245,7 @@ namespace Gs2::Distributor::Domain
                         AccessToken,
                         *CompletedStampSheet->GetNamespaceName(),
                         *CompletedStampSheet->GetTransactionId(),
-                        Self->Gs2->StampSheetConfiguration
+                        Self->Gs2->TransactionConfiguration
                     )->Run();
                     Future->StartSynchronousTask();
                     if (Future->GetTask().IsError())

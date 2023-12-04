@@ -16,13 +16,10 @@
 
 #include "Core/Action/Initialize.h"
 
-#include "Util/Gs2BasicReOpener.h"
-
 UInitializeAsyncFunction::UInitializeAsyncFunction(
     const FObjectInitializer& ObjectInitializer
-): Super(ObjectInitializer)
+): Super(ObjectInitializer), ClientId(""), ClientSecret(""), Region(ApNorthEast1)
 {
-    
 }
 
 UInitializeAsyncFunction* UInitializeAsyncFunction::Gs2Initialize(
@@ -42,19 +39,18 @@ UInitializeAsyncFunction* UInitializeAsyncFunction::Gs2Initialize(
 
 void UInitializeAsyncFunction::Activate()
 {
-    auto Profile = MakeShared<Gs2::UE5::Util::FProfile>(
-        ClientId,
-        ClientSecret,
-        EGs2RegionToERegion(Region),
-        MakeShareable<Gs2::UE5::Util::IReOpener>(new Gs2::UE5::Util::FGs2BasicReOpener())
+    auto Future = Gs2::UE5::Core::FGs2Client::Create(
+        MakeShared<Gs2::Core::Model::FBasicGs2Credential>(
+            ClientId,
+            ClientSecret
+        ),
+        EGs2RegionToERegion(Region)
     );
-    auto Future = Profile->Initialize();
-    Future->GetTask().OnSuccessDelegate().BindLambda([&, Profile](const auto Result)
+    Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         FGs2Client ReturnClient;
         const FGs2Error ReturnError;
         ReturnClient.Value = Result;
-        ReturnClient.Profile = Profile;
         OnSuccess.Broadcast(ReturnClient, ReturnError);
     	SetReadyToDestroy();
     });

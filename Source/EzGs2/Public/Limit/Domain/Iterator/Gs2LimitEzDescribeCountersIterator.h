@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Limit/Domain/Iterator/DescribeCountersIterator.h"
+#include "Limit/Domain/Model/UserAccessToken.h"
 #include "Limit/Model/Gs2LimitEzCounter.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Limit::Domain::Iterator
 {
@@ -27,20 +27,42 @@ namespace Gs2::UE5::Limit::Domain::Iterator
 	class EZGS2_API FEzDescribeCountersIterator :
         public TSharedFromThis<FEzDescribeCountersIterator>
     {
-
-		Gs2::Limit::Domain::Iterator::FDescribeCountersIteratorPtr DomainIterable;
+        Gs2::Limit::Domain::Iterator::FDescribeCountersIteratorPtr It;
+        Gs2::Limit::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        TOptional<FString> LimitName;
 
 	public:
 
         explicit FEzDescribeCountersIterator(
-            Gs2::Limit::Domain::Iterator::FDescribeCountersIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Limit::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            TOptional<FString> LimitName = TOptional<FString>()
+        ) :
+            It(
+                Domain->Counters(
+                    LimitName
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            LimitName(LimitName)
+        {
+        }
 
-        explicit FEzDescribeCountersIterator(
-            Gs2::Limit::Domain::Iterator::FDescribeCountersIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeCountersIterator(
+			const FEzDescribeCountersIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            LimitName(From.LimitName)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +70,6 @@ namespace Gs2::UE5::Limit::Domain::Iterator
 
 			Gs2::Limit::Domain::Iterator::FDescribeCountersIterator::FIterator DomainIterator;
 			Gs2::UE5::Limit::Model::FEzCounterPtr CurrentValue;
-
         	static Gs2::UE5::Limit::Model::FEzCounterPtr ConvertCurrent(
         		Gs2::Limit::Domain::Iterator::FDescribeCountersIterator::FIterator& DomainIterator
         	)
@@ -105,7 +126,6 @@ namespace Gs2::UE5::Limit::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Limit::Model::FEzCounterPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +158,15 @@ namespace Gs2::UE5::Limit::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeCountersIterator> FEzDescribeCountersIteratorPtr;

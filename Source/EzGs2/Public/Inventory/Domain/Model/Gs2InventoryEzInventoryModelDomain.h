@@ -37,8 +37,8 @@
 #include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeItemModelsIterator.h"
 #include "Gs2InventoryEzInventoryModelDomain.h"
 #include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeInventoryModelsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Inventory::Domain::Model
 {
@@ -47,7 +47,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         public TSharedFromThis<FEzInventoryModelDomain>
     {
         Gs2::Inventory::Domain::Model::FInventoryModelDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -55,7 +55,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         FEzInventoryModelDomain(
             Gs2::Inventory::Domain::Model::FInventoryModelDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeItemModelsIteratorPtr ItemModels(

@@ -41,8 +41,11 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Ranking::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -56,7 +59,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
                 CategoryName,
                 TargetUserId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -67,11 +70,11 @@ namespace Gs2::UE5::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeNearRankingsIterator>(
-            Domain->NearRankings(
-                CategoryName,
-                Score,
-                AdditionalScopeName
-            )
+            Domain,
+            ConnectionValue,
+            CategoryName,
+            Score,
+            AdditionalScopeName
         );
     }
 
@@ -97,7 +100,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
             Domain->Ranking(
                 CategoryName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -113,7 +116,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
                 ScorerUserId,
                 UniqueId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

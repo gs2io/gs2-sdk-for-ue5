@@ -25,8 +25,8 @@
 #include "Friend/Model/Gs2FriendEzFriendRequest.h"
 #include "Friend/Model/Gs2FriendEzPublicProfile.h"
 #include "Gs2FriendEzFollowUserDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Friend::Domain::Model
 {
@@ -35,7 +35,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         public TSharedFromThis<FEzFollowUserDomain>
     {
         Gs2::Friend::Domain::Model::FFollowUserDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -44,7 +44,7 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         FEzFollowUserDomain(
             Gs2::Friend::Domain::Model::FFollowUserDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

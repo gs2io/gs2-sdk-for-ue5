@@ -23,8 +23,8 @@
 #include "JobQueue/Model/Gs2JobQueueEzJobEntry.h"
 #include "JobQueue/Model/Gs2JobQueueEzJobResultBody.h"
 #include "Gs2JobQueueEzJobResultDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::JobQueue::Domain::Model
 {
@@ -33,7 +33,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
         public TSharedFromThis<FEzJobResultDomain>
     {
         Gs2::JobQueue::Domain::Model::FJobResultDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -43,7 +43,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
 
         FEzJobResultDomain(
             Gs2::JobQueue::Domain::Model::FJobResultDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

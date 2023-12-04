@@ -21,8 +21,11 @@ namespace Gs2::UE5::Dictionary::Domain
 
     FEzGs2Dictionary::FEzGs2Dictionary(
         Gs2::Dictionary::Domain::FGs2DictionaryDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::Dictionary::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

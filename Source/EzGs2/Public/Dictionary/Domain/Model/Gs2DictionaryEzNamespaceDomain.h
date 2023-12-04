@@ -27,8 +27,8 @@
 #include "Gs2DictionaryEzUserDomain.h"
 #include "Gs2DictionaryEzUserGameSessionDomain.h"
 #include "Gs2DictionaryEzNamespaceDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Dictionary::Domain::Model
 {
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         public TSharedFromThis<FEzNamespaceDomain>
     {
         Gs2::Dictionary::Domain::Model::FNamespaceDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Status() const;
@@ -49,7 +49,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
 
         FEzNamespaceDomain(
             Gs2::Dictionary::Domain::Model::FNamespaceDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Dictionary::Domain::Iterator::FEzDescribeEntryModelsIteratorPtr EntryModels(
@@ -68,7 +68,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         ) const;
 
         Gs2::UE5::Dictionary::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+            Gs2::UE5::Util::FGameSessionPtr GameSession
         ) const;
 
     };

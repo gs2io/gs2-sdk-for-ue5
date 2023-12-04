@@ -19,27 +19,42 @@
 #include "CoreMinimal.h"
 #include "IAuthenticator.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
+#include "Util/Configuration/AccountSetting.h"
+#include "Util/Configuration/GatewaySetting.h"
+#include "Util/Configuration/VersionSetting.h"
 
 namespace Gs2::UE5::Util
 {
+    DECLARE_EVENT(FGs2AccountAuthenticator, FGs2DetectVersionUpEvent);
+    
     class EZGS2_API FGs2AccountAuthenticator final : public IAuthenticator
     {
-        const FString AccountNamespaceName;
-        const FString KeyId;
+        FAccountSettingPtr AccountSetting;
+        FGatewaySettingPtr GatewaySetting;
+        FVersionSettingPtr VersionSetting;
 
+        bool NeedReAuthenticationValue;
+
+        FDelegateHandle OnDisconnectHandle;
+        void OnDisconnect();
     public:
-        FGs2AccountAuthenticator(
-            const FString AccountNamespaceName,
-            const FString KeyId
+        FGs2DetectVersionUpEvent OnDetectVersionUp;
+        
+        explicit FGs2AccountAuthenticator(
+            const FAccountSettingPtr& AccountSetting,
+            const FGatewaySettingPtr& GatewaySetting = nullptr,
+            const FVersionSettingPtr& VersionSetting = nullptr
         );
         virtual ~FGs2AccountAuthenticator() override = default;
         
         virtual Gs2::Core::Model::FGs2ErrorPtr Authentication(
-            const Gs2::Core::Net::Rest::FGs2RestSessionPtr RestSession,
+            const Gs2::UE5::Util::FGs2ConnectionPtr Connection,
             const FString UserId,
             const FString Password,
             const TSharedPtr<Gs2::UE5::Auth::Model::FEzAccessTokenPtr> Result
         ) override;
+
+        virtual bool NeedReAuthentication() override;
     };
     typedef TSharedPtr<FGs2AccountAuthenticator> FGs2AccountAuthenticatorPtr;
 }

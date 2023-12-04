@@ -23,8 +23,8 @@
 #include "Inbox/Model/Gs2InboxEzAcquireAction.h"
 #include "Gs2InboxEzMessageGameSessionDomain.h"
 #include "Inbox/Domain/Iterator/Gs2InboxEzDescribeMessagesIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Inbox::Domain::Model
 {
@@ -33,7 +33,8 @@ namespace Gs2::UE5::Inbox::Domain::Model
         public TSharedFromThis<FEzMessageGameSessionDomain>
     {
         Gs2::Inbox::Domain::Model::FMessageAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> TransactionId() const;
@@ -44,7 +45,8 @@ namespace Gs2::UE5::Inbox::Domain::Model
 
         FEzMessageGameSessionDomain(
             Gs2::Inbox::Domain::Model::FMessageAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FReadTask :

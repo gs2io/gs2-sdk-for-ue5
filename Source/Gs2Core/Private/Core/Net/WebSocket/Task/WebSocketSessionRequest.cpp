@@ -38,7 +38,7 @@ namespace Gs2::Core::Net::WebSocket::Task
 
     FString FWebSocketSessionRequest::Payload() const
     {
-        FString Body;
+        FString Body("");
         const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
         FJsonSerializer::Serialize(BodyValue.ToSharedRef(), Writer);
         return Body;

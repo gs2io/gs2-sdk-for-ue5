@@ -26,8 +26,8 @@
 #include "Exchange/Model/Gs2ExchangeEzConsumeAction.h"
 #include "Gs2ExchangeEzIncrementalRateModelDomain.h"
 #include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeIncrementalRateModelsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Exchange::Domain::Model
 {
@@ -36,7 +36,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         public TSharedFromThis<FEzIncrementalRateModelDomain>
     {
         Gs2::Exchange::Domain::Model::FIncrementalRateModelDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -44,7 +44,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
         FEzIncrementalRateModelDomain(
             Gs2::Exchange::Domain::Model::FIncrementalRateModelDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

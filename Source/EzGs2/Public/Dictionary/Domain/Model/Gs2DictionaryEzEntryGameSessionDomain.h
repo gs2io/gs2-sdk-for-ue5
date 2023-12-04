@@ -25,8 +25,8 @@
 #include "Dictionary/Model/Gs2DictionaryEzConfig.h"
 #include "Gs2DictionaryEzEntryGameSessionDomain.h"
 #include "Dictionary/Domain/Iterator/Gs2DictionaryEzDescribeEntriesIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Dictionary::Domain::Model
 {
@@ -35,7 +35,8 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         public TSharedFromThis<FEzEntryGameSessionDomain>
     {
         Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Body() const;
@@ -46,27 +47,8 @@ namespace Gs2::UE5::Dictionary::Domain::Model
 
         FEzEntryGameSessionDomain(
             Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
-        );
-
-        class FGetEntryTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Dictionary::Model::FEzEntry>,
-            public TSharedFromThis<FGetEntryTask>
-        {
-            TSharedPtr<FEzEntryGameSessionDomain> Self;
-
-        public:
-            explicit FGetEntryTask(
-                TSharedPtr<FEzEntryGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Dictionary::Model::FEzEntry>> Result
-            ) override;
-        };
-        friend FGetEntryTask;
-
-        TSharedPtr<FAsyncTask<FGetEntryTask>> GetEntry(
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FGetEntryWithSignatureTask :
@@ -74,12 +56,12 @@ namespace Gs2::UE5::Dictionary::Domain::Model
             public TSharedFromThis<FGetEntryWithSignatureTask>
         {
             TSharedPtr<FEzEntryGameSessionDomain> Self;
-            FString KeyId;
+            TOptional<FString> KeyId;
 
         public:
             explicit FGetEntryWithSignatureTask(
                 TSharedPtr<FEzEntryGameSessionDomain> Self,
-                FString KeyId
+                TOptional<FString> KeyId = TOptional<FString>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -89,7 +71,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         friend FGetEntryWithSignatureTask;
 
         TSharedPtr<FAsyncTask<FGetEntryWithSignatureTask>> GetEntryWithSignature(
-            FString KeyId
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class FModelTask :

@@ -24,8 +24,8 @@
 #include "JobQueue/Model/Gs2JobQueueEzJobResultBody.h"
 #include "Gs2JobQueueEzJobResultGameSessionDomain.h"
 #include "Gs2JobQueueEzJobGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::JobQueue::Domain::Model
 {
@@ -34,7 +34,8 @@ namespace Gs2::UE5::JobQueue::Domain::Model
         public TSharedFromThis<FEzJobGameSessionDomain>
     {
         Gs2::JobQueue::Domain::Model::FJobAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<bool> AutoRun() const;
@@ -46,7 +47,8 @@ namespace Gs2::UE5::JobQueue::Domain::Model
 
         FEzJobGameSessionDomain(
             Gs2::JobQueue::Domain::Model::FJobAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::JobQueue::Domain::Model::FEzJobResultGameSessionDomainPtr JobResult(

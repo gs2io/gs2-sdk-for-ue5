@@ -29,8 +29,8 @@
 #include "MegaField/Domain/Iterator/Gs2MegaFieldEzDescribeLayerModelsIterator.h"
 #include "Gs2MegaFieldEzAreaModelDomain.h"
 #include "MegaField/Domain/Iterator/Gs2MegaFieldEzDescribeAreaModelsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::MegaField::Domain::Model
 {
@@ -39,7 +39,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
         public TSharedFromThis<FEzAreaModelDomain>
     {
         Gs2::MegaField::Domain::Model::FAreaModelDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -47,7 +47,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
 
         FEzAreaModelDomain(
             Gs2::MegaField::Domain::Model::FAreaModelDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::MegaField::Domain::Iterator::FEzDescribeLayerModelsIteratorPtr LayerModels(

@@ -35,8 +35,8 @@
 #include "Inventory/Model/Gs2InventoryEzAcquireCount.h"
 #include "Gs2InventoryEzSimpleItemGameSessionDomain.h"
 #include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeSimpleItemsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Inventory::Domain::Model
 {
@@ -45,7 +45,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
         public TSharedFromThis<FEzSimpleItemGameSessionDomain>
     {
         Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Body() const;
@@ -57,7 +58,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         FEzSimpleItemGameSessionDomain(
             Gs2::Inventory::Domain::Model::FSimpleItemAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FGetSimpleItemWithSignatureTask :

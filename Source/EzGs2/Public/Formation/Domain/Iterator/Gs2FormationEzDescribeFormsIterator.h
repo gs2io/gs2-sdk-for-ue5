@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Formation/Domain/Iterator/DescribeFormsIterator.h"
+#include "Formation/Domain/Model/MoldAccessToken.h"
 #include "Formation/Model/Gs2FormationEzForm.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Formation::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 	class EZGS2_API FEzDescribeFormsIterator :
         public TSharedFromThis<FEzDescribeFormsIterator>
     {
-
-		Gs2::Formation::Domain::Iterator::FDescribeFormsIteratorPtr DomainIterable;
+        Gs2::Formation::Domain::Iterator::FDescribeFormsIteratorPtr It;
+        Gs2::Formation::Domain::Model::FMoldAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeFormsIterator(
-            Gs2::Formation::Domain::Iterator::FDescribeFormsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Formation::Domain::Model::FMoldAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Forms(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeFormsIterator(
-            Gs2::Formation::Domain::Iterator::FDescribeFormsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeFormsIterator(
+			const FEzDescribeFormsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 
 			Gs2::Formation::Domain::Iterator::FDescribeFormsIterator::FIterator DomainIterator;
 			Gs2::UE5::Formation::Model::FEzFormPtr CurrentValue;
-
         	static Gs2::UE5::Formation::Model::FEzFormPtr ConvertCurrent(
         		Gs2::Formation::Domain::Iterator::FDescribeFormsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Formation::Model::FEzFormPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeFormsIterator> FEzDescribeFormsIteratorPtr;

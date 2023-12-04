@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Matchmaking/Domain/Gs2Matchmaking.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzNamespaceDomain.h"
 #include "Matchmaking/Domain/Model/Gs2MatchmakingEzBallotDomain.h"
 
@@ -35,7 +35,7 @@ namespace Gs2::UE5::Matchmaking::Domain
 
     class EZGS2_API FEzGs2Matchmaking {
         Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         FJoinNotificationEvent JoinNotificationEvent;
@@ -45,7 +45,7 @@ namespace Gs2::UE5::Matchmaking::Domain
 
         FEzGs2Matchmaking(
             Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzNamespaceDomainPtr Namespace(

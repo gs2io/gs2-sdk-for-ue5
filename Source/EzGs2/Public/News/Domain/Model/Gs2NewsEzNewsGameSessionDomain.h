@@ -23,8 +23,8 @@
 #include "Gs2NewsEzSetCookieRequestEntryGameSessionDomain.h"
 #include "Gs2NewsEzNewsGameSessionDomain.h"
 #include "News/Domain/Iterator/Gs2NewsEzDescribeNewsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::News::Domain::Model
 {
@@ -33,7 +33,8 @@ namespace Gs2::UE5::News::Domain::Model
         public TSharedFromThis<FEzNewsGameSessionDomain>
     {
         Gs2::News::Domain::Model::FNewsAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> BrowserUrl() const;
@@ -43,7 +44,8 @@ namespace Gs2::UE5::News::Domain::Model
 
         FEzNewsGameSessionDomain(
             Gs2::News::Domain::Model::FNewsAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FGetContentsUrlTask :

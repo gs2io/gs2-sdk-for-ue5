@@ -51,8 +51,13 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Exchange::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -62,7 +67,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
         return MakeShared<Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomain>(
             Domain->Exchange(
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -71,9 +77,10 @@ namespace Gs2::UE5::Exchange::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeAwaitsIterator>(
-            Domain->Awaits(
-                RateName
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            RateName
         );
     }
 
@@ -99,7 +106,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
             Domain->Await(
                 AwaitName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

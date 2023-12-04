@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Idle/Domain/Gs2Idle.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Idle/Domain/Model/Gs2IdleEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Idle::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Idle::Domain
 
     class EZGS2_API FEzGs2Idle {
         Gs2::Idle::Domain::FGs2IdleDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Idle(
             Gs2::Idle::Domain::FGs2IdleDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Idle::Domain::Model::FEzNamespaceDomainPtr Namespace(

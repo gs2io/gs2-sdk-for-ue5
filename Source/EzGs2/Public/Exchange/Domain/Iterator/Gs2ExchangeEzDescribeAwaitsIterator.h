@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Exchange/Domain/Iterator/DescribeAwaitsIterator.h"
+#include "Exchange/Domain/Model/UserAccessToken.h"
 #include "Exchange/Model/Gs2ExchangeEzAwait.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Exchange::Domain::Iterator
 {
@@ -27,20 +27,42 @@ namespace Gs2::UE5::Exchange::Domain::Iterator
 	class EZGS2_API FEzDescribeAwaitsIterator :
         public TSharedFromThis<FEzDescribeAwaitsIterator>
     {
-
-		Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIteratorPtr DomainIterable;
+        Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIteratorPtr It;
+        Gs2::Exchange::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        TOptional<FString> RateName;
 
 	public:
 
         explicit FEzDescribeAwaitsIterator(
-            Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Exchange::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            TOptional<FString> RateName = TOptional<FString>()
+        ) :
+            It(
+                Domain->Awaits(
+                    RateName
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            RateName(RateName)
+        {
+        }
 
-        explicit FEzDescribeAwaitsIterator(
-            Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeAwaitsIterator(
+			const FEzDescribeAwaitsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            RateName(From.RateName)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +70,6 @@ namespace Gs2::UE5::Exchange::Domain::Iterator
 
 			Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIterator::FIterator DomainIterator;
 			Gs2::UE5::Exchange::Model::FEzAwaitPtr CurrentValue;
-
         	static Gs2::UE5::Exchange::Model::FEzAwaitPtr ConvertCurrent(
         		Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +126,6 @@ namespace Gs2::UE5::Exchange::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Exchange::Model::FEzAwaitPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +158,15 @@ namespace Gs2::UE5::Exchange::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeAwaitsIterator> FEzDescribeAwaitsIteratorPtr;

@@ -31,8 +31,13 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Showcase::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -44,7 +49,8 @@ namespace Gs2::UE5::Showcase::Domain::Model
             Domain->RandomShowcase(
                 ShowcaseName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -56,7 +62,8 @@ namespace Gs2::UE5::Showcase::Domain::Model
             Domain->Showcase(
                 ShowcaseName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

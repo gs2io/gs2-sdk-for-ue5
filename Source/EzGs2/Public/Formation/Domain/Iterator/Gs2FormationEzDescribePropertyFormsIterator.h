@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Formation/Domain/Iterator/DescribePropertyFormsIterator.h"
+#include "Formation/Domain/Model/UserAccessToken.h"
 #include "Formation/Model/Gs2FormationEzPropertyForm.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Formation::Domain::Iterator
 {
@@ -27,20 +27,42 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 	class EZGS2_API FEzDescribePropertyFormsIterator :
         public TSharedFromThis<FEzDescribePropertyFormsIterator>
     {
-
-		Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIteratorPtr DomainIterable;
+        Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIteratorPtr It;
+        Gs2::Formation::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        FString PropertyFormModelName;
 
 	public:
 
         explicit FEzDescribePropertyFormsIterator(
-            Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Formation::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            FString PropertyFormModelName
+        ) :
+            It(
+                Domain->PropertyForms(
+                    PropertyFormModelName
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            PropertyFormModelName(PropertyFormModelName)
+        {
+        }
 
-        explicit FEzDescribePropertyFormsIterator(
-            Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribePropertyFormsIterator(
+			const FEzDescribePropertyFormsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            PropertyFormModelName(From.PropertyFormModelName)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +70,6 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 
 			Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIterator::FIterator DomainIterator;
 			Gs2::UE5::Formation::Model::FEzPropertyFormPtr CurrentValue;
-
         	static Gs2::UE5::Formation::Model::FEzPropertyFormPtr ConvertCurrent(
         		Gs2::Formation::Domain::Iterator::FDescribePropertyFormsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +126,6 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Formation::Model::FEzPropertyFormPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +158,15 @@ namespace Gs2::UE5::Formation::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribePropertyFormsIterator> FEzDescribePropertyFormsIteratorPtr;

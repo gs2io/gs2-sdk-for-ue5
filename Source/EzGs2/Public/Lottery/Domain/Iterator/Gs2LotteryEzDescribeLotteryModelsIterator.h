@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Lottery/Domain/Iterator/DescribeLotteryModelsIterator.h"
+#include "Lottery/Domain/Model/Namespace.h"
 #include "Lottery/Model/Gs2LotteryEzLotteryModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Lottery::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 	class EZGS2_API FEzDescribeLotteryModelsIterator :
         public TSharedFromThis<FEzDescribeLotteryModelsIterator>
     {
-
-		Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIteratorPtr DomainIterable;
+        Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIteratorPtr It;
+        Gs2::Lottery::Domain::Model::FNamespaceDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeLotteryModelsIterator(
-            Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Lottery::Domain::Model::FNamespaceDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->LotteryModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeLotteryModelsIterator(
-            Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeLotteryModelsIterator(
+			const FEzDescribeLotteryModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 
 			Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Lottery::Model::FEzLotteryModelPtr CurrentValue;
-
         	static Gs2::UE5::Lottery::Model::FEzLotteryModelPtr ConvertCurrent(
         		Gs2::Lottery::Domain::Iterator::FDescribeLotteryModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Lottery::Model::FEzLotteryModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeLotteryModelsIterator> FEzDescribeLotteryModelsIteratorPtr;

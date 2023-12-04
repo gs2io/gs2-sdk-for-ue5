@@ -46,8 +46,13 @@ namespace Gs2::UE5::JobQueue::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::JobQueue::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -62,7 +67,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::JobQueue::Domain::Model::FEzJobGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FRunTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Run(
                     MakeShared<Gs2::JobQueue::Request::FRunRequest>()
@@ -75,7 +80,8 @@ namespace Gs2::UE5::JobQueue::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::JobQueue::Domain::Model::FEzJobGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -108,7 +114,8 @@ namespace Gs2::UE5::JobQueue::Domain::Model
             Domain->Job(
                 JobName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

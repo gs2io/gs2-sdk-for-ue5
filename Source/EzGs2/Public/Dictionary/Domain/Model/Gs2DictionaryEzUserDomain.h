@@ -25,8 +25,8 @@
 #include "Gs2DictionaryEzUserDomain.h"
 #include "Gs2DictionaryEzUserDomain.h"
 #include "Gs2DictionaryEzUserGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Dictionary::Domain::Model
 {
@@ -35,7 +35,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         public TSharedFromThis<FEzUserDomain>
     {
         Gs2::Dictionary::Domain::Model::FUserDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NextPageToken() const;
@@ -44,7 +44,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
 
         FEzUserDomain(
             Gs2::Dictionary::Domain::Model::FUserDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Dictionary::Domain::Model::FEzEntryDomainPtr Entry(

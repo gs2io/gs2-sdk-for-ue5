@@ -41,8 +41,13 @@ namespace Gs2::UE5::SerialKey::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::SerialKey::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -54,7 +59,8 @@ namespace Gs2::UE5::SerialKey::Domain::Model
             Domain->SerialKey(
                 SerialKeyCode
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

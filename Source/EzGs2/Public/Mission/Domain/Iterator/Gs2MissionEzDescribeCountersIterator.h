@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Mission/Domain/Iterator/DescribeCountersIterator.h"
+#include "Mission/Domain/Model/UserAccessToken.h"
 #include "Mission/Model/Gs2MissionEzCounter.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Mission::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 	class EZGS2_API FEzDescribeCountersIterator :
         public TSharedFromThis<FEzDescribeCountersIterator>
     {
-
-		Gs2::Mission::Domain::Iterator::FDescribeCountersIteratorPtr DomainIterable;
+        Gs2::Mission::Domain::Iterator::FDescribeCountersIteratorPtr It;
+        Gs2::Mission::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeCountersIterator(
-            Gs2::Mission::Domain::Iterator::FDescribeCountersIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Mission::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Counters(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeCountersIterator(
-            Gs2::Mission::Domain::Iterator::FDescribeCountersIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeCountersIterator(
+			const FEzDescribeCountersIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 
 			Gs2::Mission::Domain::Iterator::FDescribeCountersIterator::FIterator DomainIterator;
 			Gs2::UE5::Mission::Model::FEzCounterPtr CurrentValue;
-
         	static Gs2::UE5::Mission::Model::FEzCounterPtr ConvertCurrent(
         		Gs2::Mission::Domain::Iterator::FDescribeCountersIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Mission::Model::FEzCounterPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeCountersIterator> FEzDescribeCountersIteratorPtr;

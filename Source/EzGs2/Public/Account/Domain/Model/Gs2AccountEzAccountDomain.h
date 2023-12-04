@@ -25,8 +25,8 @@
 #include "Gs2AccountEzAccountDomain.h"
 #include "Gs2AccountEzAccountDomain.h"
 #include "Gs2AccountEzAccountGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Account::Domain::Model
 {
@@ -35,7 +35,7 @@ namespace Gs2::UE5::Account::Domain::Model
         public TSharedFromThis<FEzAccountDomain>
     {
         Gs2::Account::Domain::Model::FAccountDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>> BanStatuses() const;
@@ -47,7 +47,7 @@ namespace Gs2::UE5::Account::Domain::Model
 
         FEzAccountDomain(
             Gs2::Account::Domain::Model::FAccountDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FAuthenticationTask :

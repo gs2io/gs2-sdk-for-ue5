@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Inbox/Domain/Gs2Inbox.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Inbox/Domain/Model/Gs2InboxEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Inbox::Domain
@@ -28,14 +28,14 @@ namespace Gs2::UE5::Inbox::Domain
 
     class EZGS2_API FEzGs2Inbox {
         Gs2::Inbox::Domain::FGs2InboxDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         FReceiveNotificationEvent ReceiveNotificationEvent;
 
         FEzGs2Inbox(
             Gs2::Inbox::Domain::FGs2InboxDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Inbox::Domain::Model::FEzNamespaceDomainPtr Namespace(

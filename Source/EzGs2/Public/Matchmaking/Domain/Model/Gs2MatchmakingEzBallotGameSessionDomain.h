@@ -30,8 +30,8 @@
 #include "Matchmaking/Model/Gs2MatchmakingEzSignedBallot.h"
 #include "Matchmaking/Model/Gs2MatchmakingEzTimeSpan.h"
 #include "Gs2MatchmakingEzBallotGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Matchmaking::Domain::Model
 {
@@ -40,7 +40,8 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         public TSharedFromThis<FEzBallotGameSessionDomain>
     {
         Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Body() const;
@@ -54,7 +55,8 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         FEzBallotGameSessionDomain(
             Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

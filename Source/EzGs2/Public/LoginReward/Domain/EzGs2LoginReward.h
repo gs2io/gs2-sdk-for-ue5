@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "LoginReward/Domain/Gs2LoginReward.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "LoginReward/Domain/Model/Gs2LoginRewardEzNamespaceDomain.h"
 
 namespace Gs2::UE5::LoginReward::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::LoginReward::Domain
 
     class EZGS2_API FEzGs2LoginReward {
         Gs2::LoginReward::Domain::FGs2LoginRewardDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2LoginReward(
             Gs2::LoginReward::Domain::FGs2LoginRewardDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::LoginReward::Domain::Model::FEzNamespaceDomainPtr Namespace(

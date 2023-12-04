@@ -38,15 +38,20 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     FEzRankingDomain::FEzRankingDomain(
         Gs2::Ranking::Domain::Model::FRankingDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
     FEzRankingDomain::FModelTask::FModelTask(
         TSharedPtr<FEzRankingDomain> Self,
         FString ScorerUserId
-    ): Self(Self), ScorerUserId(ScorerUserId)
+    ):
+        Self(Self),
+        ScorerUserId(ScorerUserId)
     {
 
     }
@@ -55,13 +60,28 @@ namespace Gs2::UE5::Ranking::Domain::Model
         TSharedPtr<Gs2::UE5::Ranking::Model::FEzRankingPtr> Result
     )
     {
-        const auto Future = Self->Domain->Model(ScorerUserId);
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Model(ScorerUserId);
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = Gs2::UE5::Ranking::Model::FEzRanking::FromModel(Task->GetTask().Result());
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
+            Future->EnsureCompletion();
             return Future->GetTask().Error();
         }
-        *Result = Gs2::UE5::Ranking::Model::FEzRanking::FromModel(Future->GetTask().Result());
+        Future->EnsureCompletion();
         return nullptr;
     }
 
@@ -70,7 +90,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared(), ScorerUserId);
     }
-    
+
     Gs2::Core::Domain::CallbackID FEzRankingDomain::Subscribe(TFunction<void(Gs2::UE5::Ranking::Model::FEzRankingPtr)> Callback)
     {
         return Domain->Subscribe(

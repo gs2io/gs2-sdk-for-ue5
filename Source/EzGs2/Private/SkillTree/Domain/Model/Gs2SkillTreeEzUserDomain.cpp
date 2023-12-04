@@ -31,8 +31,11 @@ namespace Gs2::UE5::SkillTree::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::SkillTree::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -42,7 +45,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         return MakeShared<Gs2::UE5::SkillTree::Domain::Model::FEzStatusDomain>(
             Domain->Status(
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

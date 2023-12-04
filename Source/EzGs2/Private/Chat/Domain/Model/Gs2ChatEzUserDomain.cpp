@@ -36,8 +36,11 @@ namespace Gs2::UE5::Chat::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Chat::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -51,7 +54,7 @@ namespace Gs2::UE5::Chat::Domain::Model
                 RoomName,
                 Password
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -63,7 +66,7 @@ namespace Gs2::UE5::Chat::Domain::Model
             Domain->Subscribe(
                 RoomName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

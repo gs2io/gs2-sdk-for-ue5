@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Version/Domain/Iterator/DescribeAcceptVersionsIterator.h"
+#include "Version/Domain/Model/UserAccessToken.h"
 #include "Version/Model/Gs2VersionEzAcceptVersion.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Version::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Version::Domain::Iterator
 	class EZGS2_API FEzDescribeAcceptVersionsIterator :
         public TSharedFromThis<FEzDescribeAcceptVersionsIterator>
     {
-
-		Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIteratorPtr DomainIterable;
+        Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIteratorPtr It;
+        Gs2::Version::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeAcceptVersionsIterator(
-            Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Version::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->AcceptVersions(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeAcceptVersionsIterator(
-            Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeAcceptVersionsIterator(
+			const FEzDescribeAcceptVersionsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Version::Domain::Iterator
 
 			Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIterator::FIterator DomainIterator;
 			Gs2::UE5::Version::Model::FEzAcceptVersionPtr CurrentValue;
-
         	static Gs2::UE5::Version::Model::FEzAcceptVersionPtr ConvertCurrent(
         		Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Version::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Version::Model::FEzAcceptVersionPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Version::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeAcceptVersionsIterator> FEzDescribeAcceptVersionsIteratorPtr;

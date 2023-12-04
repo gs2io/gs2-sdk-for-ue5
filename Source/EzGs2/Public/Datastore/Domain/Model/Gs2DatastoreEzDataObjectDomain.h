@@ -24,8 +24,8 @@
 #include "Datastore/Model/Gs2DatastoreEzDataObjectHistory.h"
 #include "Gs2DatastoreEzDataObjectHistoryDomain.h"
 #include "Gs2DatastoreEzDataObjectDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Datastore::Domain::Model
 {
@@ -34,7 +34,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         public TSharedFromThis<FEzDataObjectDomain>
     {
         Gs2::Datastore::Domain::Model::FDataObjectDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> UploadUrl() const;
@@ -47,7 +47,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
         FEzDataObjectDomain(
             Gs2::Datastore::Domain::Model::FDataObjectDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FPrepareDownloadByUserIdAndDataObjectNameTask :

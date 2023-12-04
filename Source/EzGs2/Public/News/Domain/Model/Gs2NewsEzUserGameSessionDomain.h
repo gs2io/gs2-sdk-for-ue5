@@ -24,8 +24,8 @@
 #include "Gs2NewsEzNewsGameSessionDomain.h"
 #include "News/Domain/Iterator/Gs2NewsEzDescribeNewsIterator.h"
 #include "Gs2NewsEzUserGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::News::Domain::Model
 {
@@ -34,7 +34,8 @@ namespace Gs2::UE5::News::Domain::Model
         public TSharedFromThis<FEzUserGameSessionDomain>
     {
         Gs2::News::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> ContentHash() const;
@@ -44,7 +45,8 @@ namespace Gs2::UE5::News::Domain::Model
 
         FEzUserGameSessionDomain(
             Gs2::News::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::News::Domain::Iterator::FEzDescribeNewsIteratorPtr Newses(

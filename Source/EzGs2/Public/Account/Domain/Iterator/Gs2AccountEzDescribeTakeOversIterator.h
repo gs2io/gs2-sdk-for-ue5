@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Account/Domain/Iterator/DescribeTakeOversIterator.h"
+#include "Account/Domain/Model/AccountAccessToken.h"
 #include "Account/Model/Gs2AccountEzTakeOver.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Account::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Account::Domain::Iterator
 	class EZGS2_API FEzDescribeTakeOversIterator :
         public TSharedFromThis<FEzDescribeTakeOversIterator>
     {
-
-		Gs2::Account::Domain::Iterator::FDescribeTakeOversIteratorPtr DomainIterable;
+        Gs2::Account::Domain::Iterator::FDescribeTakeOversIteratorPtr It;
+        Gs2::Account::Domain::Model::FAccountAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeTakeOversIterator(
-            Gs2::Account::Domain::Iterator::FDescribeTakeOversIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Account::Domain::Model::FAccountAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->TakeOvers(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeTakeOversIterator(
-            Gs2::Account::Domain::Iterator::FDescribeTakeOversIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeTakeOversIterator(
+			const FEzDescribeTakeOversIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Account::Domain::Iterator
 
 			Gs2::Account::Domain::Iterator::FDescribeTakeOversIterator::FIterator DomainIterator;
 			Gs2::UE5::Account::Model::FEzTakeOverPtr CurrentValue;
-
         	static Gs2::UE5::Account::Model::FEzTakeOverPtr ConvertCurrent(
         		Gs2::Account::Domain::Iterator::FDescribeTakeOversIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Account::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Account::Model::FEzTakeOverPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Account::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeTakeOversIterator> FEzDescribeTakeOversIteratorPtr;

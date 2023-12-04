@@ -25,8 +25,8 @@
 #include "LoginReward/Model/Gs2LoginRewardEzConsumeAction.h"
 #include "LoginReward/Model/Gs2LoginRewardEzAcquireAction.h"
 #include "Gs2LoginRewardEzReceiveStatusDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::LoginReward::Domain::Model
 {
@@ -35,7 +35,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         public TSharedFromThis<FEzReceiveStatusDomain>
     {
         Gs2::LoginReward::Domain::Model::FReceiveStatusDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -44,7 +44,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
         FEzReceiveStatusDomain(
             Gs2::LoginReward::Domain::Model::FReceiveStatusDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

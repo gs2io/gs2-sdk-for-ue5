@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Chat/Domain/Iterator/DescribeSubscribesIterator.h"
+#include "Chat/Domain/Model/UserAccessToken.h"
 #include "Chat/Model/Gs2ChatEzSubscribe.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Chat::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 	class EZGS2_API FEzDescribeSubscribesIterator :
         public TSharedFromThis<FEzDescribeSubscribesIterator>
     {
-
-		Gs2::Chat::Domain::Iterator::FDescribeSubscribesIteratorPtr DomainIterable;
+        Gs2::Chat::Domain::Iterator::FDescribeSubscribesIteratorPtr It;
+        Gs2::Chat::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeSubscribesIterator(
-            Gs2::Chat::Domain::Iterator::FDescribeSubscribesIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Chat::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Subscribes(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeSubscribesIterator(
-            Gs2::Chat::Domain::Iterator::FDescribeSubscribesIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeSubscribesIterator(
+			const FEzDescribeSubscribesIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 
 			Gs2::Chat::Domain::Iterator::FDescribeSubscribesIterator::FIterator DomainIterator;
 			Gs2::UE5::Chat::Model::FEzSubscribePtr CurrentValue;
-
         	static Gs2::UE5::Chat::Model::FEzSubscribePtr ConvertCurrent(
         		Gs2::Chat::Domain::Iterator::FDescribeSubscribesIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Chat::Model::FEzSubscribePtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeSubscribesIterator> FEzDescribeSubscribesIteratorPtr;

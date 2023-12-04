@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking/Domain/Iterator/DescribeNearRankingsIterator.h"
+#include "Ranking/Domain/Model/User.h"
 #include "Ranking/Model/Gs2RankingEzRanking.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Ranking::Domain::Iterator
 {
@@ -27,20 +27,48 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 	class EZGS2_API FEzDescribeNearRankingsIterator :
         public TSharedFromThis<FEzDescribeNearRankingsIterator>
     {
-
-		Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIteratorPtr DomainIterable;
+        Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIteratorPtr It;
+        Gs2::Ranking::Domain::Model::FUserDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        FString CategoryName;
+        TOptional<FString> AdditionalScopeName;
+        int64 Score;
 
 	public:
 
         explicit FEzDescribeNearRankingsIterator(
-            Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Ranking::Domain::Model::FUserDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            FString CategoryName,
+            int64 Score,
+            TOptional<FString> AdditionalScopeName = TOptional<FString>()
+        ) :
+            It(
+                Domain->NearRankings(
+                    CategoryName,
+                    Score,
+                    AdditionalScopeName
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection),
+            CategoryName(CategoryName),
+            AdditionalScopeName(AdditionalScopeName),
+            Score(Score)
+        {
+        }
 
-        explicit FEzDescribeNearRankingsIterator(
-            Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeNearRankingsIterator(
+			const FEzDescribeNearRankingsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection),
+            CategoryName(From.CategoryName),
+            AdditionalScopeName(From.AdditionalScopeName),
+            Score(From.Score)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +76,6 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 
 			Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIterator::FIterator DomainIterator;
 			Gs2::UE5::Ranking::Model::FEzRankingPtr CurrentValue;
-
         	static Gs2::UE5::Ranking::Model::FEzRankingPtr ConvertCurrent(
         		Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +132,6 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Ranking::Model::FEzRankingPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +164,15 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeNearRankingsIterator> FEzDescribeNearRankingsIteratorPtr;

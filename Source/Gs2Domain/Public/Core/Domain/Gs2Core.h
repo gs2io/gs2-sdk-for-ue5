@@ -6,5 +6,5 @@
 #include "Core/Domain/Model/Gs2Iterator.h"
 #include "Core/Domain/Model/JobQueueDomain.h"
 #include "Core/Domain/Model/NotificationMessage.h"
-#include "Core/Domain/Model/StampSheetConfiguration.h"
+#include "Core/Domain/Model/TransactionConfiguration.h"
 #include "Core/Domain/CacheDatabase.h"

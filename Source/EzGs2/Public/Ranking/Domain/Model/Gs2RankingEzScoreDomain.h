@@ -23,8 +23,8 @@
 #include "Ranking/Model/Gs2RankingEzRanking.h"
 #include "Ranking/Model/Gs2RankingEzSubscribeUser.h"
 #include "Gs2RankingEzScoreDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Ranking::Domain::Model
 {
@@ -33,7 +33,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
         public TSharedFromThis<FEzScoreDomain>
     {
         Gs2::Ranking::Domain::Model::FScoreDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -44,7 +44,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
         FEzScoreDomain(
             Gs2::Ranking::Domain::Model::FScoreDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -13,13 +12,16 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Chat/Domain/Iterator/DescribeMessagesIterator.h"
+#include "Chat/Domain/Model/RoomAccessToken.h"
 #include "Chat/Model/Gs2ChatEzMessage.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Chat::Domain::Iterator
 {
@@ -27,20 +29,37 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 	class EZGS2_API FEzDescribeMessagesIterator :
         public TSharedFromThis<FEzDescribeMessagesIterator>
     {
-
-		Gs2::Chat::Domain::Iterator::FDescribeMessagesIteratorPtr DomainIterable;
+        Gs2::Chat::Domain::Iterator::FDescribeMessagesIteratorPtr It;
+        Gs2::Chat::Domain::Model::FRoomAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeMessagesIterator(
-            Gs2::Chat::Domain::Iterator::FDescribeMessagesIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Chat::Domain::Model::FRoomAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Messages(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeMessagesIterator(
-            Gs2::Chat::Domain::Iterator::FDescribeMessagesIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeMessagesIterator(
+			const FEzDescribeMessagesIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +67,6 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 
 			Gs2::Chat::Domain::Iterator::FDescribeMessagesIterator::FIterator DomainIterator;
 			Gs2::UE5::Chat::Model::FEzMessagePtr CurrentValue;
-
         	static Gs2::UE5::Chat::Model::FEzMessagePtr ConvertCurrent(
         		Gs2::Chat::Domain::Iterator::FDescribeMessagesIterator::FIterator& DomainIterator
         	)
@@ -105,7 +123,6 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Chat::Model::FEzMessagePtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +155,15 @@ namespace Gs2::UE5::Chat::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeMessagesIterator> FEzDescribeMessagesIteratorPtr;

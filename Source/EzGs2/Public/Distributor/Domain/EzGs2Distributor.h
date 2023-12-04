@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Distributor/Domain/Gs2Distributor.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Distributor/Domain/Model/Gs2DistributorEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Distributor::Domain
@@ -28,14 +28,14 @@ namespace Gs2::UE5::Distributor::Domain
 
     class EZGS2_API FEzGs2Distributor {
         Gs2::Distributor::Domain::FGs2DistributorDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         FAutoRunStampSheetNotificationEvent AutoRunStampSheetNotificationEvent;
 
         FEzGs2Distributor(
             Gs2::Distributor::Domain::FGs2DistributorDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Distributor::Domain::Model::FEzNamespaceDomainPtr Namespace(

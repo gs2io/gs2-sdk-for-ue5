@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MegaField/Domain/Iterator/DescribeLayerModelsIterator.h"
+#include "MegaField/Domain/Model/AreaModel.h"
 #include "MegaField/Model/Gs2MegaFieldEzLayerModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::MegaField::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::MegaField::Domain::Iterator
 	class EZGS2_API FEzDescribeLayerModelsIterator :
         public TSharedFromThis<FEzDescribeLayerModelsIterator>
     {
-
-		Gs2::MegaField::Domain::Iterator::FDescribeLayerModelsIteratorPtr DomainIterable;
+        Gs2::MegaField::Domain::Iterator::FDescribeLayerModelsIteratorPtr It;
+        Gs2::MegaField::Domain::Model::FAreaModelDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeLayerModelsIterator(
-            Gs2::MegaField::Domain::Iterator::FDescribeLayerModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::MegaField::Domain::Model::FAreaModelDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->LayerModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeLayerModelsIterator(
-            Gs2::MegaField::Domain::Iterator::FDescribeLayerModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeLayerModelsIterator(
+			const FEzDescribeLayerModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::MegaField::Domain::Iterator
 
 			Gs2::MegaField::Domain::Iterator::FDescribeLayerModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::MegaField::Model::FEzLayerModelPtr CurrentValue;
-
         	static Gs2::UE5::MegaField::Model::FEzLayerModelPtr ConvertCurrent(
         		Gs2::MegaField::Domain::Iterator::FDescribeLayerModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::MegaField::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::MegaField::Model::FEzLayerModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::MegaField::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeLayerModelsIterator> FEzDescribeLayerModelsIteratorPtr;

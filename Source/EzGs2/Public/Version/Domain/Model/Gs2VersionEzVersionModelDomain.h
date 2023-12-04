@@ -25,8 +25,8 @@
 #include "Version/Model/Gs2VersionEzTargetVersion.h"
 #include "Gs2VersionEzVersionModelDomain.h"
 #include "Version/Domain/Iterator/Gs2VersionEzDescribeVersionModelsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Version::Domain::Model
 {
@@ -35,7 +35,7 @@ namespace Gs2::UE5::Version::Domain::Model
         public TSharedFromThis<FEzVersionModelDomain>
     {
         Gs2::Version::Domain::Model::FVersionModelDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -43,7 +43,7 @@ namespace Gs2::UE5::Version::Domain::Model
 
         FEzVersionModelDomain(
             Gs2::Version::Domain::Model::FVersionModelDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

@@ -29,8 +29,8 @@
 #include "Gs2SkillTreeEzUserDomain.h"
 #include "Gs2SkillTreeEzUserGameSessionDomain.h"
 #include "Gs2SkillTreeEzNamespaceDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::SkillTree::Domain::Model
 {
@@ -39,7 +39,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         public TSharedFromThis<FEzNamespaceDomain>
     {
         Gs2::SkillTree::Domain::Model::FNamespaceDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Status() const;
@@ -51,7 +51,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
 
         FEzNamespaceDomain(
             Gs2::SkillTree::Domain::Model::FNamespaceDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::SkillTree::Domain::Iterator::FEzDescribeNodeModelsIteratorPtr NodeModels(
@@ -70,7 +70,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         ) const;
 
         Gs2::UE5::SkillTree::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+            Gs2::UE5::Util::FGameSessionPtr GameSession
         ) const;
 
     };

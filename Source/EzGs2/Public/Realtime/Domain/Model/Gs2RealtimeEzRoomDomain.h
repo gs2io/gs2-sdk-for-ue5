@@ -20,8 +20,8 @@
 #include "Realtime/Domain/Model/Room.h"
 #include "Realtime/Model/Gs2RealtimeEzRoom.h"
 #include "Gs2RealtimeEzRoomDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Realtime::Domain::Model
 {
@@ -30,7 +30,7 @@ namespace Gs2::UE5::Realtime::Domain::Model
         public TSharedFromThis<FEzRoomDomain>
     {
         Gs2::Realtime::Domain::Model::FRoomDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -38,7 +38,7 @@ namespace Gs2::UE5::Realtime::Domain::Model
 
         FEzRoomDomain(
             Gs2::Realtime::Domain::Model::FRoomDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

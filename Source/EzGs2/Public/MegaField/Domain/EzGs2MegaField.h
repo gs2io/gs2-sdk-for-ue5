@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "MegaField/Domain/Gs2MegaField.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "MegaField/Domain/Model/Gs2MegaFieldEzNamespaceDomain.h"
 #include "MegaField/Domain/Model/Gs2MegaFieldEzLayerModelDomain.h"
 
@@ -27,13 +27,13 @@ namespace Gs2::UE5::MegaField::Domain
 
     class EZGS2_API FEzGs2MegaField {
         Gs2::MegaField::Domain::FGs2MegaFieldDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2MegaField(
             Gs2::MegaField::Domain::FGs2MegaFieldDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::MegaField::Domain::Model::FEzNamespaceDomainPtr Namespace(

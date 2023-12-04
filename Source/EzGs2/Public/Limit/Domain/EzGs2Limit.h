@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Limit/Domain/Gs2Limit.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Limit/Domain/Model/Gs2LimitEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Limit::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Limit::Domain
 
     class EZGS2_API FEzGs2Limit {
         Gs2::Limit::Domain::FGs2LimitDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Limit(
             Gs2::Limit::Domain::FGs2LimitDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Limit::Domain::Model::FEzNamespaceDomainPtr Namespace(

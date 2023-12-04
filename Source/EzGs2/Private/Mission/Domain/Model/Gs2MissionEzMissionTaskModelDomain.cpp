@@ -36,8 +36,11 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     FEzMissionTaskModelDomain::FEzMissionTaskModelDomain(
         Gs2::Mission::Domain::Model::FMissionTaskModelDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -52,7 +55,7 @@ namespace Gs2::UE5::Mission::Domain::Model
         TSharedPtr<Gs2::UE5::Mission::Model::FEzMissionTaskModelPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

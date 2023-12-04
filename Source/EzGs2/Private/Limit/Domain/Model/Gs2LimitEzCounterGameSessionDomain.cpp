@@ -41,8 +41,13 @@ namespace Gs2::UE5::Limit::Domain::Model
 
     FEzCounterGameSessionDomain::FEzCounterGameSessionDomain(
         Gs2::Limit::Domain::Model::FCounterAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -59,7 +64,7 @@ namespace Gs2::UE5::Limit::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Limit::Domain::Model::FEzCounterGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FCountUpTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->CountUp(
                     MakeShared<Gs2::Limit::Request::FCountUpRequest>()
@@ -74,7 +79,8 @@ namespace Gs2::UE5::Limit::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Limit::Domain::Model::FEzCounterGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -114,7 +120,7 @@ namespace Gs2::UE5::Limit::Domain::Model
         TSharedPtr<Gs2::UE5::Limit::Model::FEzCounterPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

@@ -31,8 +31,8 @@
 #include "Matchmaking/Model/Gs2MatchmakingEzTimeSpan.h"
 #include "Gs2MatchmakingEzRatingModelDomain.h"
 #include "Matchmaking/Domain/Iterator/Gs2MatchmakingEzDescribeRatingModelsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Matchmaking::Domain::Model
 {
@@ -41,7 +41,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         public TSharedFromThis<FEzRatingModelDomain>
     {
         Gs2::Matchmaking::Domain::Model::FRatingModelDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -49,7 +49,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         FEzRatingModelDomain(
             Gs2::Matchmaking::Domain::Model::FRatingModelDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

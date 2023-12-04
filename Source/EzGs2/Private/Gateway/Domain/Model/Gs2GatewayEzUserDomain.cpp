@@ -41,8 +41,11 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Gateway::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -52,7 +55,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
         return MakeShared<Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionDomain>(
             Domain->WebSocketSession(
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

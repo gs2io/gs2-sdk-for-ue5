@@ -24,8 +24,8 @@
 #include "Gs2DatastoreEzUserDomain.h"
 #include "Gs2DatastoreEzUserDomain.h"
 #include "Gs2DatastoreEzUserGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Datastore::Domain::Model
 {
@@ -34,7 +34,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
         public TSharedFromThis<FEzUserDomain>
     {
         Gs2::Datastore::Domain::Model::FUserDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> UploadUrl() const;
@@ -46,7 +46,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
         FEzUserDomain(
             Gs2::Datastore::Domain::Model::FUserDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Datastore::Domain::Model::FEzDataObjectDomainPtr DataObject(

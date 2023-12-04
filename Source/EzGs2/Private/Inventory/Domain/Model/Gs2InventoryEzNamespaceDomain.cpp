@@ -51,8 +51,11 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     FEzNamespaceDomain::FEzNamespaceDomain(
         Gs2::Inventory::Domain::Model::FNamespaceDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -60,8 +63,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeInventoryModelsIterator>(
-            Domain->InventoryModels(
-            )
+            Domain,
+            ConnectionValue
         );
     }
 
@@ -87,7 +90,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->InventoryModel(
                 InventoryName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -99,19 +102,20 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->User(
                 UserId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
     Gs2::UE5::Inventory::Domain::Model::FEzUserGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+        Gs2::UE5::Util::FGameSessionPtr GameSession
     ) const
     {
         return MakeShared<Gs2::UE5::Inventory::Domain::Model::FEzUserGameSessionDomain>(
             Domain->AccessToken(
-                AccessToken->ToModel()
+                GameSession->AccessToken()->ToModel()
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -119,8 +123,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeSimpleInventoryModelsIterator>(
-            Domain->SimpleInventoryModels(
-            )
+            Domain,
+            ConnectionValue
         );
     }
 
@@ -146,7 +150,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->SimpleInventoryModel(
                 InventoryName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -154,8 +158,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeBigInventoryModelsIterator>(
-            Domain->BigInventoryModels(
-            )
+            Domain,
+            ConnectionValue
         );
     }
 
@@ -181,7 +185,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->BigInventoryModel(
                 InventoryName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

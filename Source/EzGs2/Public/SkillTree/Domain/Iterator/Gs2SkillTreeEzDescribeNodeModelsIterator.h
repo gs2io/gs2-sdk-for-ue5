@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SkillTree/Domain/Iterator/DescribeNodeModelsIterator.h"
+#include "SkillTree/Domain/Model/Namespace.h"
 #include "SkillTree/Model/Gs2SkillTreeEzNodeModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::SkillTree::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::SkillTree::Domain::Iterator
 	class EZGS2_API FEzDescribeNodeModelsIterator :
         public TSharedFromThis<FEzDescribeNodeModelsIterator>
     {
-
-		Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelsIteratorPtr DomainIterable;
+        Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelsIteratorPtr It;
+        Gs2::SkillTree::Domain::Model::FNamespaceDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeNodeModelsIterator(
-            Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::SkillTree::Domain::Model::FNamespaceDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->NodeModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeNodeModelsIterator(
-            Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeNodeModelsIterator(
+			const FEzDescribeNodeModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::SkillTree::Domain::Iterator
 
 			Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::SkillTree::Model::FEzNodeModelPtr CurrentValue;
-
         	static Gs2::UE5::SkillTree::Model::FEzNodeModelPtr ConvertCurrent(
         		Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::SkillTree::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::SkillTree::Model::FEzNodeModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::SkillTree::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeNodeModelsIterator> FEzDescribeNodeModelsIteratorPtr;

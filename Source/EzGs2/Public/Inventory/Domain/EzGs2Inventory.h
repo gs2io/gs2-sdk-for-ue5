@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Inventory/Domain/Gs2Inventory.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Inventory/Domain/Model/Gs2InventoryEzNamespaceDomain.h"
 #include "Inventory/Domain/Model/Gs2InventoryEzItemModelDomain.h"
 
@@ -27,13 +27,13 @@ namespace Gs2::UE5::Inventory::Domain
 
     class EZGS2_API FEzGs2Inventory {
         Gs2::Inventory::Domain::FGs2InventoryDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Inventory(
             Gs2::Inventory::Domain::FGs2InventoryDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Inventory::Domain::Model::FEzNamespaceDomainPtr Namespace(

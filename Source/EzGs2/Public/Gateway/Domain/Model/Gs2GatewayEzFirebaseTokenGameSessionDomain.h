@@ -20,8 +20,8 @@
 #include "Gateway/Domain/Model/FirebaseTokenAccessToken.h"
 #include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
 #include "Gs2GatewayEzFirebaseTokenGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Gateway::Domain::Model
 {
@@ -30,7 +30,8 @@ namespace Gs2::UE5::Gateway::Domain::Model
         public TSharedFromThis<FEzFirebaseTokenGameSessionDomain>
     {
         Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -38,7 +39,8 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
         FEzFirebaseTokenGameSessionDomain(
             Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
     };

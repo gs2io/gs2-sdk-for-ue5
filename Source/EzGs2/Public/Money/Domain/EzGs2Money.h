@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Money/Domain/Gs2Money.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Money/Domain/Model/Gs2MoneyEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Money::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Money::Domain
 
     class EZGS2_API FEzGs2Money {
         Gs2::Money::Domain::FGs2MoneyDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Money(
             Gs2::Money::Domain::FGs2MoneyDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Money::Domain::Model::FEzNamespaceDomainPtr Namespace(

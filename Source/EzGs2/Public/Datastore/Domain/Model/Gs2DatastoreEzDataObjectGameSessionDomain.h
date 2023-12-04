@@ -26,8 +26,8 @@
 #include "Datastore/Domain/Iterator/Gs2DatastoreEzDescribeDataObjectHistoriesIterator.h"
 #include "Gs2DatastoreEzDataObjectGameSessionDomain.h"
 #include "Datastore/Domain/Iterator/Gs2DatastoreEzDescribeDataObjectsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Datastore::Domain::Model
 {
@@ -36,7 +36,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
         public TSharedFromThis<FEzDataObjectGameSessionDomain>
     {
         Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> UploadUrl() const;
@@ -49,7 +50,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
         FEzDataObjectGameSessionDomain(
             Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FUpdateDataObjectTask :

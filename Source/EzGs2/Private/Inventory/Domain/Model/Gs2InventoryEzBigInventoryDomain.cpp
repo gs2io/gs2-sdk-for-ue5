@@ -41,8 +41,11 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     FEzBigInventoryDomain::FEzBigInventoryDomain(
         Gs2::Inventory::Domain::Model::FBigInventoryDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -54,7 +57,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->BigItem(
                 ItemName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "LoginReward/Domain/Iterator/DescribeBonusModelsIterator.h"
+#include "LoginReward/Domain/Model/Namespace.h"
 #include "LoginReward/Model/Gs2LoginRewardEzBonusModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::LoginReward::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::LoginReward::Domain::Iterator
 	class EZGS2_API FEzDescribeBonusModelsIterator :
         public TSharedFromThis<FEzDescribeBonusModelsIterator>
     {
-
-		Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelsIteratorPtr DomainIterable;
+        Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelsIteratorPtr It;
+        Gs2::LoginReward::Domain::Model::FNamespaceDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeBonusModelsIterator(
-            Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::LoginReward::Domain::Model::FNamespaceDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->BonusModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeBonusModelsIterator(
-            Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeBonusModelsIterator(
+			const FEzDescribeBonusModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::LoginReward::Domain::Iterator
 
 			Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::LoginReward::Model::FEzBonusModelPtr CurrentValue;
-
         	static Gs2::UE5::LoginReward::Model::FEzBonusModelPtr ConvertCurrent(
         		Gs2::LoginReward::Domain::Iterator::FDescribeBonusModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::LoginReward::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::LoginReward::Model::FEzBonusModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::LoginReward::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeBonusModelsIterator> FEzDescribeBonusModelsIteratorPtr;

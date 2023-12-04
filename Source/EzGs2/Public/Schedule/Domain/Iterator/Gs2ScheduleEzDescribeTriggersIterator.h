@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Schedule/Domain/Iterator/DescribeTriggersIterator.h"
+#include "Schedule/Domain/Model/UserAccessToken.h"
 #include "Schedule/Model/Gs2ScheduleEzTrigger.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Schedule::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 	class EZGS2_API FEzDescribeTriggersIterator :
         public TSharedFromThis<FEzDescribeTriggersIterator>
     {
-
-		Gs2::Schedule::Domain::Iterator::FDescribeTriggersIteratorPtr DomainIterable;
+        Gs2::Schedule::Domain::Iterator::FDescribeTriggersIteratorPtr It;
+        Gs2::Schedule::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeTriggersIterator(
-            Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Schedule::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Triggers(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeTriggersIterator(
-            Gs2::Schedule::Domain::Iterator::FDescribeTriggersIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeTriggersIterator(
+			const FEzDescribeTriggersIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 
 			Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator::FIterator DomainIterator;
 			Gs2::UE5::Schedule::Model::FEzTriggerPtr CurrentValue;
-
         	static Gs2::UE5::Schedule::Model::FEzTriggerPtr ConvertCurrent(
         		Gs2::Schedule::Domain::Iterator::FDescribeTriggersIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Schedule::Model::FEzTriggerPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeTriggersIterator> FEzDescribeTriggersIteratorPtr;

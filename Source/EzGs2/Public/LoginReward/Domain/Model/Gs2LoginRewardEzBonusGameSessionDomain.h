@@ -25,8 +25,8 @@
 #include "LoginReward/Model/Gs2LoginRewardEzConsumeAction.h"
 #include "LoginReward/Model/Gs2LoginRewardEzAcquireAction.h"
 #include "Gs2LoginRewardEzBonusGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::LoginReward::Domain::Model
 {
@@ -35,7 +35,8 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         public TSharedFromThis<FEzBonusGameSessionDomain>
     {
         Gs2::LoginReward::Domain::Model::FBonusAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> TransactionId() const;
@@ -45,7 +46,8 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
         FEzBonusGameSessionDomain(
             Gs2::LoginReward::Domain::Model::FBonusAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FReceiveTask :

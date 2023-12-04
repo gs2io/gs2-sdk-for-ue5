@@ -38,8 +38,13 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     FEzRankingGameSessionDomain::FEzRankingGameSessionDomain(
         Gs2::Ranking::Domain::Model::FRankingAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -56,21 +61,36 @@ namespace Gs2::UE5::Ranking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Ranking::Domain::Model::FEzScoreGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->Domain->PutScore(
-            MakeShared<Gs2::Ranking::Request::FPutScoreRequest>()
-                ->WithScore(Score)
-                ->WithMetadata(Metadata)
-                ->WithAccessToken(Self->Domain->AccessToken->GetToken())
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->PutScore(
+                    MakeShared<Gs2::Ranking::Request::FPutScoreRequest>()
+                        ->WithScore(Score)
+                        ->WithMetadata(Metadata)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzScoreGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
         );
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
+            Future->EnsureCompletion();
             return Future->GetTask().Error();
         }
-        *Result = MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzScoreGameSessionDomain>(
-            Future->GetTask().Result(),
-            Self->ProfileValue
-        );
+        Future->EnsureCompletion();
         return nullptr;
     }
 
@@ -98,13 +118,28 @@ namespace Gs2::UE5::Ranking::Domain::Model
         TSharedPtr<Gs2::UE5::Ranking::Model::FEzRankingPtr> Result
     )
     {
-        const auto Future = Self->Domain->Model(ScorerUserId);
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Model(ScorerUserId);
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = Gs2::UE5::Ranking::Model::FEzRanking::FromModel(Task->GetTask().Result());
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
+            Future->EnsureCompletion();
             return Future->GetTask().Error();
         }
-        *Result = Gs2::UE5::Ranking::Model::FEzRanking::FromModel(Future->GetTask().Result());
+        Future->EnsureCompletion();
         return nullptr;
     }
 

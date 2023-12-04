@@ -36,8 +36,13 @@ namespace Gs2::UE5::Inbox::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Inbox::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -52,7 +57,7 @@ namespace Gs2::UE5::Inbox::Domain::Model
         TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomain>>>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FReceiveGlobalMessageTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->ReceiveGlobalMessage(
                     MakeShared<Gs2::Inbox::Request::FReceiveGlobalMessageRequest>()
@@ -67,7 +72,8 @@ namespace Gs2::UE5::Inbox::Domain::Model
                 for (auto Value : *Task->GetTask().Result()) {
                     (**Result).Add(MakeShared<Gs2::UE5::Inbox::Domain::Model::FEzMessageGameSessionDomain>(
                         Value,
-                        Self->ProfileValue
+                        Self->GameSession,
+                        Self->ConnectionValue
                     ));
                 }
                 Task->EnsureCompletion();
@@ -98,9 +104,10 @@ namespace Gs2::UE5::Inbox::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Inbox::Domain::Iterator::FEzDescribeMessagesIterator>(
-            Domain->Messages(
-                IsRead
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            IsRead
         );
     }
 
@@ -126,7 +133,8 @@ namespace Gs2::UE5::Inbox::Domain::Model
             Domain->Message(
                 MessageName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

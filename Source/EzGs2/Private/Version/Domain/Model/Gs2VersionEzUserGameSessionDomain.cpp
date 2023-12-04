@@ -46,8 +46,13 @@ namespace Gs2::UE5::Version::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Version::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -55,8 +60,9 @@ namespace Gs2::UE5::Version::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Version::Domain::Iterator::FEzDescribeAcceptVersionsIterator>(
-            Domain->AcceptVersions(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -82,7 +88,8 @@ namespace Gs2::UE5::Version::Domain::Model
             Domain->AcceptVersion(
                 VersionName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -92,7 +99,8 @@ namespace Gs2::UE5::Version::Domain::Model
         return MakeShared<Gs2::UE5::Version::Domain::Model::FEzCheckerGameSessionDomain>(
             Domain->Checker(
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

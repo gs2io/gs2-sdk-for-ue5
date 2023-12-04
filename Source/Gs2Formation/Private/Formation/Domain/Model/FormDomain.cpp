@@ -532,7 +532,7 @@ namespace Gs2::Formation::Domain::Model
                 Self->Gs2->RestSession,
                 *ResultModel->GetStampSheet(),
                 *ResultModel->GetStampSheetEncryptionKeyId(),
-                Self->Gs2->StampSheetConfiguration
+                Self->Gs2->TransactionConfiguration
             );
             const auto Future3 = StampSheet->Run();
             Future3->StartSynchronousTask();
@@ -548,7 +548,7 @@ namespace Gs2::Formation::Domain::Model
                             Self->Gs2->RestSession,
                             *ResultModel->GetStampSheet(),
                             *ResultModel->GetStampSheetEncryptionKeyId(),
-                            Self->Gs2->StampSheetConfiguration
+                            Self->Gs2->TransactionConfiguration
                         )->Run();
                     }
                 );

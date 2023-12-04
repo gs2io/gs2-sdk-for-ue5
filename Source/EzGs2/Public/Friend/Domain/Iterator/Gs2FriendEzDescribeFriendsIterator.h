@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -13,13 +12,16 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Friend/Domain/Iterator/DescribeFriendsIterator.h"
+#include "Friend/Domain/Model/UserAccessToken.h"
 #include "Friend/Model/Gs2FriendEzFriendUser.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Friend::Domain::Iterator
 {
@@ -27,20 +29,31 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 	class EZGS2_API FEzDescribeFriendsIterator :
         public TSharedFromThis<FEzDescribeFriendsIterator>
     {
-
-		Gs2::Friend::Domain::Iterator::FDescribeFriendsIteratorPtr DomainIterable;
+        Gs2::Friend::Domain::Iterator::FDescribeFriendsIteratorPtr It;
+        Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        TOptional<bool> WithProfile;
 
 	public:
 
         explicit FEzDescribeFriendsIterator(
-            Gs2::Friend::Domain::Iterator::FDescribeFriendsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
-
-        explicit FEzDescribeFriendsIterator(
-            Gs2::Friend::Domain::Iterator::FDescribeFriendsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+            Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+			TOptional<bool> WithProfile = TOptional<bool>()
+        ) :
+            It(
+                Domain->Friends(
+                    WithProfile
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            WithProfile(WithProfile)
+        {
+        }
 
 		class EZGS2_API FIterator
 		{
@@ -138,15 +151,15 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeFriendsIterator> FEzDescribeFriendsIteratorPtr;

@@ -21,8 +21,8 @@
 #include "SerialKey/Model/Gs2SerialKeyEzCampaignModel.h"
 #include "SerialKey/Model/Gs2SerialKeyEzSerialKey.h"
 #include "Gs2SerialKeyEzSerialKeyDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::SerialKey::Domain::Model
 {
@@ -31,7 +31,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         public TSharedFromThis<FEzSerialKeyDomain>
     {
         Gs2::SerialKey::Domain::Model::FSerialKeyDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Url() const;
@@ -41,7 +41,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
 
         FEzSerialKeyDomain(
             Gs2::SerialKey::Domain::Model::FSerialKeyDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

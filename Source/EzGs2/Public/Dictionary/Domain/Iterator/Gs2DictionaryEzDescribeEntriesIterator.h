@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Dictionary/Domain/Iterator/DescribeEntriesIterator.h"
+#include "Dictionary/Domain/Model/UserAccessToken.h"
 #include "Dictionary/Model/Gs2DictionaryEzEntry.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Dictionary::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Dictionary::Domain::Iterator
 	class EZGS2_API FEzDescribeEntriesIterator :
         public TSharedFromThis<FEzDescribeEntriesIterator>
     {
-
-		Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIteratorPtr DomainIterable;
+        Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIteratorPtr It;
+        Gs2::Dictionary::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeEntriesIterator(
-            Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Dictionary::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Entries(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeEntriesIterator(
-            Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeEntriesIterator(
+			const FEzDescribeEntriesIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Dictionary::Domain::Iterator
 
 			Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIterator::FIterator DomainIterator;
 			Gs2::UE5::Dictionary::Model::FEzEntryPtr CurrentValue;
-
         	static Gs2::UE5::Dictionary::Model::FEzEntryPtr ConvertCurrent(
         		Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Dictionary::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Dictionary::Model::FEzEntryPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Dictionary::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeEntriesIterator> FEzDescribeEntriesIteratorPtr;

@@ -38,8 +38,8 @@
 #include "Gs2FriendEzReceiveFriendRequestGameSessionDomain.h"
 #include "Friend/Domain/Iterator/Gs2FriendEzDescribeReceiveRequestsIterator.h"
 #include "Gs2FriendEzUserGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Friend::Domain::Model
 {
@@ -48,7 +48,8 @@ namespace Gs2::UE5::Friend::Domain::Model
         public TSharedFromThis<FEzUserGameSessionDomain>
     {
         Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NextPageToken() const;
@@ -57,7 +58,8 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         FEzUserGameSessionDomain(
             Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FSendRequestTask :
@@ -86,18 +88,11 @@ namespace Gs2::UE5::Friend::Domain::Model
         Gs2::UE5::Friend::Domain::Model::FEzProfileGameSessionDomainPtr Profile(
         ) const;
 
-        Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIteratorPtr BlackLists(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeBlackLists(TFunction<void()> Callback);
-
-        void UnsubscribeBlackLists(Gs2::Core::Domain::CallbackID CallbackId);
-
         Gs2::UE5::Friend::Domain::Model::FEzBlackListGameSessionDomainPtr BlackList(
         ) const;
 
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFollowsIteratorPtr Follows(
-            const TOptional<bool> WithProfile = TOptional<bool>()
+            const bool WithProfile
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeFollows(
@@ -116,7 +111,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         ) const;
 
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFriendsIteratorPtr Friends(
-            const TOptional<bool> WithProfile = TOptional<bool>()
+            const bool WithProfile
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeFriends(

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Schedule/Domain/Iterator/DescribeEventsIterator.h"
+#include "Schedule/Domain/Model/UserAccessToken.h"
 #include "Schedule/Model/Gs2ScheduleEzEvent.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Schedule::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 	class EZGS2_API FEzDescribeEventsIterator :
         public TSharedFromThis<FEzDescribeEventsIterator>
     {
-
-		Gs2::Schedule::Domain::Iterator::FDescribeEventsIteratorPtr DomainIterable;
+        Gs2::Schedule::Domain::Iterator::FDescribeEventsIteratorPtr It;
+        Gs2::Schedule::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeEventsIterator(
-            Gs2::Schedule::Domain::Iterator::FDescribeEventsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Schedule::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Events(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeEventsIterator(
-            Gs2::Schedule::Domain::Iterator::FDescribeEventsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeEventsIterator(
+			const FEzDescribeEventsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 
 			Gs2::Schedule::Domain::Iterator::FDescribeEventsIterator::FIterator DomainIterator;
 			Gs2::UE5::Schedule::Model::FEzEventPtr CurrentValue;
-
         	static Gs2::UE5::Schedule::Model::FEzEventPtr ConvertCurrent(
         		Gs2::Schedule::Domain::Iterator::FDescribeEventsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Schedule::Model::FEzEventPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Schedule::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeEventsIterator> FEzDescribeEventsIteratorPtr;

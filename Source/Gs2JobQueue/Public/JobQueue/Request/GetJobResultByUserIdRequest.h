@@ -28,6 +28,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> JobNameValue;
+        TOptional<int32> TryNumberValue;
         
     public:
         
@@ -41,11 +42,14 @@ namespace Gs2::JobQueue::Request
         TSharedPtr<FGetJobResultByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetJobResultByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetJobResultByUserIdRequest> WithJobName(const TOptional<FString> JobName);
+        TSharedPtr<FGetJobResultByUserIdRequest> WithTryNumber(const TOptional<int32> TryNumber);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetJobName() const;
+        TOptional<int32> GetTryNumber() const;
+        FString GetTryNumberString() const;
 
         static TSharedPtr<FGetJobResultByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

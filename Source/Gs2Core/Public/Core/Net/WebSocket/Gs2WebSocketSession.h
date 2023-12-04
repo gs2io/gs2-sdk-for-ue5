@@ -53,7 +53,7 @@ namespace Gs2::Core::Net::WebSocket
         TMap<FGs2SessionTaskId, TSharedPtr<Task::FWebSocketResult>> Results;
         
         Model::FGs2CredentialPtr CredentialValue;
-        Model::ERegion Region;
+        Model::ERegion RegionValue;
         FString OwnerIdValue;
 
         TSharedPtr<FCriticalSection> Mutex;
@@ -99,6 +99,7 @@ namespace Gs2::Core::Net::WebSocket
         TSharedPtr<FAsyncTask<Task::FWebSocketReOpenTask>> ReOpen();
         TSharedPtr<FAsyncTask<Task::FWebSocketCloseTask>> Close();
         
+        virtual Model::ERegion Region() const override;
         virtual FString RegionName() const override;
         virtual Model::FGs2CredentialPtr Credential() const override;
         virtual FString OwnerId() const override;

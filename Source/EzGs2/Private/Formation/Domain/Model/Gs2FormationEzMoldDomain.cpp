@@ -51,8 +51,11 @@ namespace Gs2::UE5::Formation::Domain::Model
 
     FEzMoldDomain::FEzMoldDomain(
         Gs2::Formation::Domain::Model::FMoldDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -64,7 +67,7 @@ namespace Gs2::UE5::Formation::Domain::Model
             Domain->Form(
                 Index
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -79,7 +82,7 @@ namespace Gs2::UE5::Formation::Domain::Model
         TSharedPtr<Gs2::UE5::Formation::Model::FEzMoldPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

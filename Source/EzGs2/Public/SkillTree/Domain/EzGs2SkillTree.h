@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "SkillTree/Domain/Gs2SkillTree.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "SkillTree/Domain/Model/Gs2SkillTreeEzNamespaceDomain.h"
 
 namespace Gs2::UE5::SkillTree::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::SkillTree::Domain
 
     class EZGS2_API FEzGs2SkillTree {
         Gs2::SkillTree::Domain::FGs2SkillTreeDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2SkillTree(
             Gs2::SkillTree::Domain::FGs2SkillTreeDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::SkillTree::Domain::Model::FEzNamespaceDomainPtr Namespace(

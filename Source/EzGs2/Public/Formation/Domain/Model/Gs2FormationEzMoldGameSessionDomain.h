@@ -34,8 +34,8 @@
 #include "Formation/Domain/Iterator/Gs2FormationEzDescribeFormsIterator.h"
 #include "Gs2FormationEzMoldGameSessionDomain.h"
 #include "Formation/Domain/Iterator/Gs2FormationEzDescribeMoldsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Formation::Domain::Model
 {
@@ -44,7 +44,8 @@ namespace Gs2::UE5::Formation::Domain::Model
         public TSharedFromThis<FEzMoldGameSessionDomain>
     {
         Gs2::Formation::Domain::Model::FMoldAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> TransactionId() const;
@@ -56,7 +57,8 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         FEzMoldGameSessionDomain(
             Gs2::Formation::Domain::Model::FMoldAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Formation::Domain::Iterator::FEzDescribeFormsIteratorPtr Forms(

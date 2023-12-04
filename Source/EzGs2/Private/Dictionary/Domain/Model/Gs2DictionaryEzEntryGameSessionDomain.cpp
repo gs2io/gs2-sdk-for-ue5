@@ -48,63 +48,19 @@ namespace Gs2::UE5::Dictionary::Domain::Model
 
     FEzEntryGameSessionDomain::FEzEntryGameSessionDomain(
         Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
-
-    }
-
-    FEzEntryGameSessionDomain::FGetEntryTask::FGetEntryTask(
-        TSharedPtr<FEzEntryGameSessionDomain> Self
-    ): Self(Self)
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
     {
 
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzEntryGameSessionDomain::FGetEntryTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Dictionary::Model::FEzEntry>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetEntryTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Dictionary::Request::FGetEntryRequest>()
-                        ->WithEntryModelName(Self->EntryName())
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Dictionary::Model::FEzEntry::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzEntryGameSessionDomain::FGetEntryTask>> FEzEntryGameSessionDomain::GetEntry(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetEntryTask>>(
-            this->AsShared()
-        );
     }
 
     FEzEntryGameSessionDomain::FGetEntryWithSignatureTask::FGetEntryWithSignatureTask(
         TSharedPtr<FEzEntryGameSessionDomain> Self,
-        FString KeyId
+        TOptional<FString> KeyId
     ): Self(Self), KeyId(KeyId)
     {
 
@@ -114,7 +70,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FGetEntryWithSignatureTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->GetWithSignature(
                     MakeShared<Gs2::Dictionary::Request::FGetEntryWithSignatureRequest>()
@@ -129,7 +85,8 @@ namespace Gs2::UE5::Dictionary::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Dictionary::Domain::Model::FEzEntryGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -147,7 +104,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzEntryGameSessionDomain::FGetEntryWithSignatureTask>> FEzEntryGameSessionDomain::GetEntryWithSignature(
-        FString KeyId
+        TOptional<FString> KeyId
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FGetEntryWithSignatureTask>>(
@@ -167,7 +124,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         TSharedPtr<Gs2::UE5::Dictionary::Model::FEzEntryPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

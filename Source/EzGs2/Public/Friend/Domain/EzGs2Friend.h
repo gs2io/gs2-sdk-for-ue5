@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Friend/Domain/Gs2Friend.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Friend/Domain/Model/Gs2FriendEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Friend::Domain
@@ -32,7 +32,7 @@ namespace Gs2::UE5::Friend::Domain
 
     class EZGS2_API FEzGs2Friend {
         Gs2::Friend::Domain::FGs2FriendDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         FFollowNotificationEvent FollowNotificationEvent;
@@ -41,7 +41,7 @@ namespace Gs2::UE5::Friend::Domain
 
         FEzGs2Friend(
             Gs2::Friend::Domain::FGs2FriendDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Friend::Domain::Model::FEzNamespaceDomainPtr Namespace(

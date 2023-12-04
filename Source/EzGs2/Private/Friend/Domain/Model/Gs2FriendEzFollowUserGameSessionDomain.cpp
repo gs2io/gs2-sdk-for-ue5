@@ -36,8 +36,13 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     FEzFollowUserGameSessionDomain::FEzFollowUserGameSessionDomain(
         Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -52,7 +57,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FFollowTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Follow(
                     MakeShared<Gs2::Friend::Request::FFollowRequest>()
@@ -65,7 +70,8 @@ namespace Gs2::UE5::Friend::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -101,7 +107,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FUnfollowTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Unfollow(
                     MakeShared<Gs2::Friend::Request::FUnfollowRequest>()
@@ -114,7 +120,8 @@ namespace Gs2::UE5::Friend::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -150,7 +157,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         TSharedPtr<Gs2::UE5::Friend::Model::FEzFollowUserPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

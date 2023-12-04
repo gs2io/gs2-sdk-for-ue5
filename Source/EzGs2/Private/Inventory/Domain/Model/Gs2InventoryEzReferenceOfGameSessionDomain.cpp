@@ -51,8 +51,13 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     FEzReferenceOfGameSessionDomain::FEzReferenceOfGameSessionDomain(
         Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 }

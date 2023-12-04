@@ -36,8 +36,13 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Mission::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -45,8 +50,9 @@ namespace Gs2::UE5::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCountersIterator>(
-            Domain->Counters(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -72,7 +78,8 @@ namespace Gs2::UE5::Mission::Domain::Model
             Domain->Counter(
                 CounterName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -80,8 +87,9 @@ namespace Gs2::UE5::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCompletesIterator>(
-            Domain->Completes(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -107,7 +115,8 @@ namespace Gs2::UE5::Mission::Domain::Model
             Domain->Complete(
                 MissionGroupName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

@@ -26,8 +26,8 @@
 #include "Friend/Model/Gs2FriendEzPublicProfile.h"
 #include "Gs2FriendEzBlackListGameSessionDomain.h"
 #include "Friend/Domain/Iterator/Gs2FriendEzDescribeBlackListIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Friend::Domain::Model
 {
@@ -36,7 +36,8 @@ namespace Gs2::UE5::Friend::Domain::Model
         public TSharedFromThis<FEzBlackListGameSessionDomain>
     {
         Gs2::Friend::Domain::Model::FBlackListAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -44,7 +45,8 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         FEzBlackListGameSessionDomain(
             Gs2::Friend::Domain::Model::FBlackListAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FRegisterBlackListTask :

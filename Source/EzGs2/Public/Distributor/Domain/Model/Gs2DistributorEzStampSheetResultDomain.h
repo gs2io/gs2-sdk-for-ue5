@@ -24,8 +24,8 @@
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
 #include "Gs2DistributorEzStampSheetResultDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Distributor::Domain::Model
 {
@@ -34,7 +34,7 @@ namespace Gs2::UE5::Distributor::Domain::Model
         public TSharedFromThis<FEzStampSheetResultDomain>
     {
         Gs2::Distributor::Domain::Model::FStampSheetResultDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -43,7 +43,7 @@ namespace Gs2::UE5::Distributor::Domain::Model
 
         FEzStampSheetResultDomain(
             Gs2::Distributor::Domain::Model::FStampSheetResultDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

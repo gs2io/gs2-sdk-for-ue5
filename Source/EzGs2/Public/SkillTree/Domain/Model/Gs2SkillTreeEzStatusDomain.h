@@ -24,8 +24,8 @@
 #include "SkillTree/Model/Gs2SkillTreeEzAcquireAction.h"
 #include "SkillTree/Model/Gs2SkillTreeEzConsumeAction.h"
 #include "Gs2SkillTreeEzStatusDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::SkillTree::Domain::Model
 {
@@ -34,7 +34,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         public TSharedFromThis<FEzStatusDomain>
     {
         Gs2::SkillTree::Domain::Model::FStatusDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> TransactionId() const;
@@ -44,7 +44,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
 
         FEzStatusDomain(
             Gs2::SkillTree::Domain::Model::FStatusDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

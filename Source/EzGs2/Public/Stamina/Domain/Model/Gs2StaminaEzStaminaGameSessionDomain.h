@@ -25,8 +25,8 @@
 #include "Stamina/Model/Gs2StaminaEzStamina.h"
 #include "Gs2StaminaEzStaminaGameSessionDomain.h"
 #include "Stamina/Domain/Iterator/Gs2StaminaEzDescribeStaminasIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Stamina::Domain::Model
 {
@@ -35,7 +35,8 @@ namespace Gs2::UE5::Stamina::Domain::Model
         public TSharedFromThis<FEzStaminaGameSessionDomain>
     {
         Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<int32> OverflowValue() const;
@@ -45,7 +46,8 @@ namespace Gs2::UE5::Stamina::Domain::Model
 
         FEzStaminaGameSessionDomain(
             Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FConsumeTask :

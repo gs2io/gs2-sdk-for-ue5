@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Formation/Domain/Gs2Formation.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Formation/Domain/Model/Gs2FormationEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Formation::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Formation::Domain
 
     class EZGS2_API FEzGs2Formation {
         Gs2::Formation::Domain::FGs2FormationDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Formation(
             Gs2::Formation::Domain::FGs2FormationDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Formation::Domain::Model::FEzNamespaceDomainPtr Namespace(

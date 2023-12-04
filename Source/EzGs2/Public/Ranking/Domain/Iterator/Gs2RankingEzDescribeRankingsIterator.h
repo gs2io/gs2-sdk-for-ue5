@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking/Domain/Iterator/DescribeRankingsIterator.h"
+#include "Ranking/Domain/Model/UserAccessToken.h"
 #include "Ranking/Model/Gs2RankingEzRanking.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Ranking::Domain::Iterator
 {
@@ -27,20 +27,47 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 	class EZGS2_API FEzDescribeRankingsIterator :
         public TSharedFromThis<FEzDescribeRankingsIterator>
     {
-
-		Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr DomainIterable;
+        Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr It;
+        Gs2::Ranking::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        FString CategoryName;
+        TOptional<FString> AdditionalScopeName;
 
 	public:
 
         explicit FEzDescribeRankingsIterator(
-            Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Ranking::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            FString CategoryName,
+            TOptional<FString> AdditionalScopeName = TOptional<FString>()
+        ) :
+            It(
+                Domain->Rankings(
+                    CategoryName,
+                    AdditionalScopeName
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            CategoryName(CategoryName),
+            AdditionalScopeName(AdditionalScopeName)
+        {
+        }
 
-        explicit FEzDescribeRankingsIterator(
-            Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeRankingsIterator(
+			const FEzDescribeRankingsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            CategoryName(From.CategoryName),
+            AdditionalScopeName(From.AdditionalScopeName)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +75,6 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 
 			Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator::FIterator DomainIterator;
 			Gs2::UE5::Ranking::Model::FEzRankingPtr CurrentValue;
-
         	static Gs2::UE5::Ranking::Model::FEzRankingPtr ConvertCurrent(
         		Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +131,6 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Ranking::Model::FEzRankingPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +163,15 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeRankingsIterator> FEzDescribeRankingsIteratorPtr;

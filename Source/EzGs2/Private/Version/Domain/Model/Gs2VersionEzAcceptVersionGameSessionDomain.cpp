@@ -36,8 +36,13 @@ namespace Gs2::UE5::Version::Domain::Model
 
     FEzAcceptVersionGameSessionDomain::FEzAcceptVersionGameSessionDomain(
         Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -52,7 +57,7 @@ namespace Gs2::UE5::Version::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FAcceptTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Accept(
                     MakeShared<Gs2::Version::Request::FAcceptRequest>()
@@ -65,7 +70,8 @@ namespace Gs2::UE5::Version::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -101,7 +107,7 @@ namespace Gs2::UE5::Version::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDeleteTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Delete(
                     MakeShared<Gs2::Version::Request::FDeleteAcceptVersionRequest>()
@@ -114,7 +120,8 @@ namespace Gs2::UE5::Version::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Version::Domain::Model::FEzAcceptVersionGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -150,7 +157,7 @@ namespace Gs2::UE5::Version::Domain::Model
         TSharedPtr<Gs2::UE5::Version::Model::FEzAcceptVersionPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

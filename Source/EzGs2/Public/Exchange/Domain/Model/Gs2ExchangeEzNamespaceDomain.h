@@ -32,8 +32,8 @@
 #include "Gs2ExchangeEzIncrementalRateModelDomain.h"
 #include "Exchange/Domain/Iterator/Gs2ExchangeEzDescribeIncrementalRateModelsIterator.h"
 #include "Gs2ExchangeEzNamespaceDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Exchange::Domain::Model
 {
@@ -42,7 +42,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         public TSharedFromThis<FEzNamespaceDomain>
     {
         Gs2::Exchange::Domain::Model::FNamespaceDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Status() const;
@@ -54,7 +54,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
         FEzNamespaceDomain(
             Gs2::Exchange::Domain::Model::FNamespaceDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeRateModelsIteratorPtr RateModels(
@@ -69,7 +69,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
         ) const;
 
         Gs2::UE5::Exchange::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+            Gs2::UE5::Util::FGameSessionPtr GameSession
         ) const;
 
         Gs2::UE5::Exchange::Domain::Iterator::FEzDescribeIncrementalRateModelsIteratorPtr IncrementalRateModels(

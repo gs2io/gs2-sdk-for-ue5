@@ -51,8 +51,11 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Exchange::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -64,7 +67,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
             Domain->Await(
                 AwaitName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

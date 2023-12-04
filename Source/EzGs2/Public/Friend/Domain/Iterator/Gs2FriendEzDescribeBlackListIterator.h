@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,7 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Friend/Domain/Iterator/DescribeBlackListIterator.h"
+#include "Friend/Domain/Model/UserAccessToken.h"
+#include "Friend/Model/Gs2FriendEzBlackList.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Friend::Domain::Iterator
 {
@@ -26,35 +27,51 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 	class EZGS2_API FEzDescribeBlackListIterator :
         public TSharedFromThis<FEzDescribeBlackListIterator>
     {
-
-		Gs2::Friend::Domain::Iterator::FDescribeBlackListIteratorPtr DomainIterable;
+        Gs2::Friend::Domain::Iterator::FDescribeBlackListIteratorPtr It;
+        Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeBlackListIterator(
-            Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->BlackLists(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeBlackListIterator(
-            Gs2::Friend::Domain::Iterator::FDescribeBlackListIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeBlackListIterator(
+			const FEzDescribeBlackListIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
 		    friend class FEzDescribeBlackListIterator;
 
 			Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FIterator DomainIterator;
-			Gs2::Friend::Model::FBlackListEntryPtr CurrentValue;
-
-        	static Gs2::Friend::Model::FBlackListEntryPtr ConvertCurrent(
+			TOptional<FString> CurrentValue;
+        	static TOptional<FString> ConvertCurrent(
         		Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator::FIterator& DomainIterator
         	)
         	{
 				return DomainIterator.IsCurrentValid()
-    				? DomainIterator.Current()
-					: nullptr;
+    				? DomainIterator.Current()->Value
+					: TOptional<FString>();
         	}
 
 			explicit FIterator(
@@ -104,8 +121,7 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
-            Gs2::Friend::Model::FBlackListEntryPtr& Current()
+            TOptional<FString>& Current()
             {
                 return CurrentValue;
             }
@@ -137,15 +153,15 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeBlackListIterator> FEzDescribeBlackListIteratorPtr;

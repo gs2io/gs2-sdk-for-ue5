@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Chat/Domain/Gs2Chat.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Chat/Domain/Model/Gs2ChatEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Chat::Domain
@@ -28,14 +28,14 @@ namespace Gs2::UE5::Chat::Domain
 
     class EZGS2_API FEzGs2Chat {
         Gs2::Chat::Domain::FGs2ChatDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         FPostNotificationEvent PostNotificationEvent;
 
         FEzGs2Chat(
             Gs2::Chat::Domain::FGs2ChatDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Chat::Domain::Model::FEzNamespaceDomainPtr Namespace(

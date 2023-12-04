@@ -36,8 +36,8 @@
 #include "Gs2InventoryEzBigItemGameSessionDomain.h"
 #include "Inventory/Domain/Iterator/Gs2InventoryEzDescribeBigItemsIterator.h"
 #include "Gs2InventoryEzBigInventoryGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Inventory::Domain::Model
 {
@@ -46,7 +46,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
         public TSharedFromThis<FEzBigInventoryGameSessionDomain>
     {
         Gs2::Inventory::Domain::Model::FBigInventoryAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NextPageToken() const;
@@ -56,7 +57,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         FEzBigInventoryGameSessionDomain(
             Gs2::Inventory::Domain::Model::FBigInventoryAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeBigItemsIteratorPtr BigItems(

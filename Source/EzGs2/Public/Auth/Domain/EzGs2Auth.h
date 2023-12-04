@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Auth/Domain/Gs2Auth.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Auth/Domain/Model/Gs2AuthEzAccessTokenDomain.h"
 
 namespace Gs2::UE5::Auth::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Auth::Domain
 
     class EZGS2_API FEzGs2Auth {
         Gs2::Auth::Domain::FGs2AuthDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Auth(
             Gs2::Auth::Domain::FGs2AuthDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Auth::Domain::Model::FEzAccessTokenDomainPtr AccessToken(

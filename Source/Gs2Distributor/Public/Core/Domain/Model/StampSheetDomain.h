@@ -19,7 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Domain/Model/JobQueueDomain.h"
 #include "Core/Domain/CacheDatabase.h"
-#include "Core/Domain/Model/StampSheetConfiguration.h"
+#include "Core/Domain/Model/TransactionConfiguration.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 
 namespace Gs2::Core::Domain::Model
@@ -32,7 +32,7 @@ namespace Gs2::Core::Domain::Model
         Gs2::Core::Net::Rest::FGs2RestSessionPtr Session;
         FString StampSheet;
         FString StampSheetEncryptionKeyId;
-        FStampSheetConfigurationPtr StampSheetConfiguration;
+        FTransactionConfigurationPtr StampSheetConfiguration;
         
     public:
         FStampSheetDomain(
@@ -41,7 +41,7 @@ namespace Gs2::Core::Domain::Model
             const Net::Rest::FGs2RestSessionPtr Session,
             const FString StampSheet,
             const FString StampSheetEncryptionKeyId,
-            const FStampSheetConfigurationPtr StampSheetConfiguration
+            const FTransactionConfigurationPtr StampSheetConfiguration
         );
         FStampSheetDomain(const FStampSheetDomain& From);
         ~FStampSheetDomain() = default;

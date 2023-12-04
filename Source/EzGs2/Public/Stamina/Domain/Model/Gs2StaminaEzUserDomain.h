@@ -27,8 +27,8 @@
 #include "Gs2StaminaEzUserDomain.h"
 #include "Gs2StaminaEzUserDomain.h"
 #include "Gs2StaminaEzUserGameSessionDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Stamina::Domain::Model
 {
@@ -37,7 +37,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
         public TSharedFromThis<FEzUserDomain>
     {
         Gs2::Stamina::Domain::Model::FUserDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<int32> OverflowValue() const;
@@ -47,7 +47,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
 
         FEzUserDomain(
             Gs2::Stamina::Domain::Model::FUserDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Stamina::Domain::Model::FEzStaminaDomainPtr Stamina(

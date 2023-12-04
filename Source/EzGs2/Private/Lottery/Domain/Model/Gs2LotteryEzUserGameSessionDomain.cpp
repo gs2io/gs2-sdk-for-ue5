@@ -46,8 +46,13 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
     FEzUserGameSessionDomain::FEzUserGameSessionDomain(
         Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -57,7 +62,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
         return MakeShared<Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomain>(
             Domain->Lottery(
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -65,8 +71,9 @@ namespace Gs2::UE5::Lottery::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeBoxesIterator>(
-            Domain->Boxes(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -92,7 +99,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
             Domain->BoxItems(
                 PrizeTableName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -101,9 +109,10 @@ namespace Gs2::UE5::Lottery::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeProbabilitiesIterator>(
-            Domain->Probabilities(
-                LotteryName
-            )
+            Domain,
+            GameSession,
+            ConnectionValue,
+            LotteryName
         );
     }
 

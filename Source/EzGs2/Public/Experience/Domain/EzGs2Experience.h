@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Experience/Domain/Gs2Experience.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Experience/Domain/Model/Gs2ExperienceEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Experience::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Experience::Domain
 
     class EZGS2_API FEzGs2Experience {
         Gs2::Experience::Domain::FGs2ExperienceDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Experience(
             Gs2::Experience::Domain::FGs2ExperienceDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Experience::Domain::Model::FEzNamespaceDomainPtr Namespace(

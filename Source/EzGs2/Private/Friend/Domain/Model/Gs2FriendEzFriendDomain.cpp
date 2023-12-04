@@ -36,8 +36,11 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     FEzFriendDomain::FEzFriendDomain(
         Gs2::Friend::Domain::Model::FFriendDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -49,7 +52,7 @@ namespace Gs2::UE5::Friend::Domain::Model
             Domain->FriendUser(
                 TargetUserId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

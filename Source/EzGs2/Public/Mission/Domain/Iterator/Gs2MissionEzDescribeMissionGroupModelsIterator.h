@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Mission/Domain/Iterator/DescribeMissionGroupModelsIterator.h"
+#include "Mission/Domain/Model/Namespace.h"
 #include "Mission/Model/Gs2MissionEzMissionGroupModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Mission::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 	class EZGS2_API FEzDescribeMissionGroupModelsIterator :
         public TSharedFromThis<FEzDescribeMissionGroupModelsIterator>
     {
-
-		Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelsIteratorPtr DomainIterable;
+        Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelsIteratorPtr It;
+        Gs2::Mission::Domain::Model::FNamespaceDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeMissionGroupModelsIterator(
-            Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Mission::Domain::Model::FNamespaceDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->MissionGroupModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeMissionGroupModelsIterator(
-            Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeMissionGroupModelsIterator(
+			const FEzDescribeMissionGroupModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 
 			Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Mission::Model::FEzMissionGroupModelPtr CurrentValue;
-
         	static Gs2::UE5::Mission::Model::FEzMissionGroupModelPtr ConvertCurrent(
         		Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Mission::Model::FEzMissionGroupModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::Mission::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeMissionGroupModelsIterator> FEzDescribeMissionGroupModelsIteratorPtr;

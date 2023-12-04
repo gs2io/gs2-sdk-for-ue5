@@ -36,8 +36,11 @@ namespace Gs2::UE5::Limit::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Limit::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -51,7 +54,7 @@ namespace Gs2::UE5::Limit::Domain::Model
                 LimitName,
                 CounterName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

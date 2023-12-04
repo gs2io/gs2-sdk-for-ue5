@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Inbox/Domain/Iterator/DescribeMessagesIterator.h"
+#include "Inbox/Domain/Model/UserAccessToken.h"
 #include "Inbox/Model/Gs2InboxEzMessage.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Inbox::Domain::Iterator
 {
@@ -27,20 +27,42 @@ namespace Gs2::UE5::Inbox::Domain::Iterator
 	class EZGS2_API FEzDescribeMessagesIterator :
         public TSharedFromThis<FEzDescribeMessagesIterator>
     {
-
-		Gs2::Inbox::Domain::Iterator::FDescribeMessagesIteratorPtr DomainIterable;
+        Gs2::Inbox::Domain::Iterator::FDescribeMessagesIteratorPtr It;
+        Gs2::Inbox::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        TOptional<bool> IsRead;
 
 	public:
 
         explicit FEzDescribeMessagesIterator(
-            Gs2::Inbox::Domain::Iterator::FDescribeMessagesIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Inbox::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            TOptional<bool> IsRead = TOptional<bool>()
+        ) :
+            It(
+                Domain->Messages(
+                    IsRead
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection),
+            IsRead(IsRead)
+        {
+        }
 
-        explicit FEzDescribeMessagesIterator(
-            Gs2::Inbox::Domain::Iterator::FDescribeMessagesIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeMessagesIterator(
+			const FEzDescribeMessagesIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            IsRead(From.IsRead)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +70,6 @@ namespace Gs2::UE5::Inbox::Domain::Iterator
 
 			Gs2::Inbox::Domain::Iterator::FDescribeMessagesIterator::FIterator DomainIterator;
 			Gs2::UE5::Inbox::Model::FEzMessagePtr CurrentValue;
-
         	static Gs2::UE5::Inbox::Model::FEzMessagePtr ConvertCurrent(
         		Gs2::Inbox::Domain::Iterator::FDescribeMessagesIterator::FIterator& DomainIterator
         	)
@@ -105,7 +126,6 @@ namespace Gs2::UE5::Inbox::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Inbox::Model::FEzMessagePtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +158,15 @@ namespace Gs2::UE5::Inbox::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeMessagesIterator> FEzDescribeMessagesIteratorPtr;

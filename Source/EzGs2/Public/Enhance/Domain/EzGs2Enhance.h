@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Enhance/Domain/Gs2Enhance.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Enhance/Domain/Model/Gs2EnhanceEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Enhance::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Enhance::Domain
 
     class EZGS2_API FEzGs2Enhance {
         Gs2::Enhance::Domain::FGs2EnhanceDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Enhance(
             Gs2::Enhance::Domain::FGs2EnhanceDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Enhance::Domain::Model::FEzNamespaceDomainPtr Namespace(

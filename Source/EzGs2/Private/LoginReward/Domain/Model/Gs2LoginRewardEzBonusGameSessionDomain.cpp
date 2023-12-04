@@ -41,8 +41,13 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
     FEzBonusGameSessionDomain::FEzBonusGameSessionDomain(
         Gs2::LoginReward::Domain::Model::FBonusAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -59,7 +64,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FReceiveTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Receive(
                     MakeShared<Gs2::LoginReward::Request::FReceiveRequest>()
@@ -83,7 +88,8 @@ namespace Gs2::UE5::LoginReward::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -126,7 +132,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FMissedReceiveTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->MissedReceive(
                     MakeShared<Gs2::LoginReward::Request::FMissedReceiveRequest>()
@@ -151,7 +157,8 @@ namespace Gs2::UE5::LoginReward::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::LoginReward::Domain::Model::FEzBonusGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;

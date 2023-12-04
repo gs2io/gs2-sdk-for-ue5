@@ -20,8 +20,8 @@
 #include "Auth/Domain/Model/AccessToken.h"
 #include "Auth/Model/Gs2AuthEzAccessToken.h"
 #include "Gs2AuthEzAccessTokenDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Auth::Domain::Model
 {
@@ -30,7 +30,7 @@ namespace Gs2::UE5::Auth::Domain::Model
         public TSharedFromThis<FEzAccessTokenDomain>
     {
         Gs2::Auth::Domain::Model::FAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Token() const;
@@ -40,7 +40,7 @@ namespace Gs2::UE5::Auth::Domain::Model
 
         FEzAccessTokenDomain(
             Gs2::Auth::Domain::Model::FAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FLoginTask :

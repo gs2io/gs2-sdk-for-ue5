@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Showcase/Domain/Gs2Showcase.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Showcase/Domain/Model/Gs2ShowcaseEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Showcase::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Showcase::Domain
 
     class EZGS2_API FEzGs2Showcase {
         Gs2::Showcase::Domain::FGs2ShowcaseDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Showcase(
             Gs2::Showcase::Domain::FGs2ShowcaseDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Showcase::Domain::Model::FEzNamespaceDomainPtr Namespace(

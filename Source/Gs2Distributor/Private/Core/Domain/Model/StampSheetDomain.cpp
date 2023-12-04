@@ -28,7 +28,7 @@ namespace Gs2::Core::Domain::Model
         const Net::Rest::FGs2RestSessionPtr Session,
         const FString StampSheet,
         const FString StampSheetEncryptionKeyId,
-        const FStampSheetConfigurationPtr StampSheetConfiguration
+        const FTransactionConfigurationPtr StampSheetConfiguration
     ):
         Cache(Cache),
         JobQueueDomain(JobQueueDomain),
@@ -82,7 +82,7 @@ namespace Gs2::Core::Domain::Model
         TSharedPtr<TArray<FString>> StampTaskResults;
         
         const auto Client = MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Self->Session);
-        if (Self->StampSheetConfiguration->NamespaceName.IsSet())
+        if (Self->StampSheetConfiguration->NamespaceName.IsSet() && *Self->StampSheetConfiguration->NamespaceName != "")
         {
             const auto Future = Client->RunStampSheetExpress(
                 MakeShared<Gs2::Distributor::Request::FRunStampSheetExpressRequest>()

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "LoginReward/Domain/Iterator/DescribeReceiveStatusesIterator.h"
+#include "LoginReward/Domain/Model/UserAccessToken.h"
 #include "LoginReward/Model/Gs2LoginRewardEzReceiveStatus.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::LoginReward::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::LoginReward::Domain::Iterator
 	class EZGS2_API FEzDescribeReceiveStatusesIterator :
         public TSharedFromThis<FEzDescribeReceiveStatusesIterator>
     {
-
-		Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesIteratorPtr DomainIterable;
+        Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesIteratorPtr It;
+        Gs2::LoginReward::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeReceiveStatusesIterator(
-            Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::LoginReward::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->ReceiveStatuses(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeReceiveStatusesIterator(
-            Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeReceiveStatusesIterator(
+			const FEzDescribeReceiveStatusesIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::LoginReward::Domain::Iterator
 
 			Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesIterator::FIterator DomainIterator;
 			Gs2::UE5::LoginReward::Model::FEzReceiveStatusPtr CurrentValue;
-
         	static Gs2::UE5::LoginReward::Model::FEzReceiveStatusPtr ConvertCurrent(
         		Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::LoginReward::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::LoginReward::Model::FEzReceiveStatusPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::LoginReward::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeReceiveStatusesIterator> FEzDescribeReceiveStatusesIteratorPtr;

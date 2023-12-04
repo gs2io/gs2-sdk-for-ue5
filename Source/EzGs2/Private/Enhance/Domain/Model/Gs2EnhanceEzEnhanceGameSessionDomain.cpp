@@ -51,8 +51,13 @@ namespace Gs2::UE5::Enhance::Domain::Model
 
     FEzEnhanceGameSessionDomain::FEzEnhanceGameSessionDomain(
         Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -71,7 +76,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Enhance::Domain::Model::FEzEnhanceGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FEnhanceTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Direct(
                     MakeShared<Gs2::Enhance::Request::FDirectEnhanceRequest>()
@@ -103,7 +108,8 @@ namespace Gs2::UE5::Enhance::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Enhance::Domain::Model::FEzEnhanceGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;

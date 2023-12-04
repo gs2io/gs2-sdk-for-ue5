@@ -91,6 +91,9 @@ namespace Gs2::JobQueue::Task::Rest
             if (this->Request->GetContextStack().IsSet()) {
                 queryStrings.Add("contextStack=" + FGenericPlatformHttp::UrlEncode(*this->Request->GetContextStack().GetValue()));
             }
+            if (this->Request->GetTryNumber().IsSet()) {
+                queryStrings.Add("tryNumber=" + this->Request->GetTryNumberString());
+            }
             Url += "?" + FString::Join(queryStrings, TEXT("&"));
 
             request->SetURL(Url);

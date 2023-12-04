@@ -20,8 +20,8 @@
 #include "Money/Domain/Model/Wallet.h"
 #include "Money/Model/Gs2MoneyEzWallet.h"
 #include "Gs2MoneyEzWalletDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Money::Domain::Model
 {
@@ -30,7 +30,7 @@ namespace Gs2::UE5::Money::Domain::Model
         public TSharedFromThis<FEzWalletDomain>
     {
         Gs2::Money::Domain::Model::FWalletDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<float> Price() const;
@@ -40,7 +40,7 @@ namespace Gs2::UE5::Money::Domain::Model
 
         FEzWalletDomain(
             Gs2::Money::Domain::Model::FWalletDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

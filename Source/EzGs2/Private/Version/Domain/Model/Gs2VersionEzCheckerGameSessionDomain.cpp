@@ -76,8 +76,13 @@ namespace Gs2::UE5::Version::Domain::Model
 
     FEzCheckerGameSessionDomain::FEzCheckerGameSessionDomain(
         Gs2::Version::Domain::Model::FCheckerAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -93,7 +98,7 @@ namespace Gs2::UE5::Version::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Version::Domain::Model::FEzCheckerGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FCheckVersionTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->CheckVersion(
                     MakeShared<Gs2::Version::Request::FCheckVersionRequest>()
@@ -116,7 +121,8 @@ namespace Gs2::UE5::Version::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Version::Domain::Model::FEzCheckerGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;

@@ -28,8 +28,8 @@
 #include "Friend/Model/Gs2FriendEzPublicProfile.h"
 #include "Gs2FriendEzSendFriendRequestGameSessionDomain.h"
 #include "Friend/Domain/Iterator/Gs2FriendEzDescribeSendRequestsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Friend::Domain::Model
 {
@@ -38,7 +38,8 @@ namespace Gs2::UE5::Friend::Domain::Model
         public TSharedFromThis<FEzSendFriendRequestGameSessionDomain>
     {
         Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -47,27 +48,8 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         FEzSendFriendRequestGameSessionDomain(
             Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
-        );
-
-        class FGetSendRequestTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Model::FEzFriendRequest>,
-            public TSharedFromThis<FGetSendRequestTask>
-        {
-            TSharedPtr<FEzSendFriendRequestGameSessionDomain> Self;
-
-        public:
-            explicit FGetSendRequestTask(
-                TSharedPtr<FEzSendFriendRequestGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzFriendRequest>> Result
-            ) override;
-        };
-        friend FGetSendRequestTask;
-
-        TSharedPtr<FAsyncTask<FGetSendRequestTask>> GetSendRequest(
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FDeleteRequestTask :

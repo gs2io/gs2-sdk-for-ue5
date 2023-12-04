@@ -21,8 +21,11 @@ namespace Gs2::UE5::StateMachine::Domain
 
     FEzGs2StateMachine::FEzGs2StateMachine(
         Gs2::StateMachine::Domain::FGs2StateMachineDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -34,7 +37,7 @@ namespace Gs2::UE5::StateMachine::Domain
             Domain->Namespace(
                 NamespaceName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

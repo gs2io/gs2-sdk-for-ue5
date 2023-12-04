@@ -27,8 +27,10 @@ FGs2Authenticator UGs2AuthenticatorFunctionLibrary::CreateGs2Authenticator(
 		return Return;
 	}
 	Return.Value = MakeShared<Gs2::UE5::Util::FGs2AccountAuthenticator>(
-		*Namespace.Value->NamespaceName(),
-		FString::Format(TEXT("grn:gs2:{region}:{ownerId}:key:{0}:key:{1}"), {Key.NamespaceName, Key.KeyName})
+		MakeShared<Gs2::UE5::Util::FAccountSetting>(
+			*Namespace.Value->NamespaceName(),
+			FString::Format(TEXT("grn:gs2:{region}:{ownerId}:key:{0}:key:{1}"), {Key.NamespaceName, Key.KeyName})
+		)
 	);
 	return Return;
 }

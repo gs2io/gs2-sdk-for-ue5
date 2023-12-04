@@ -25,5 +25,5 @@ struct FGs2AccessToken
 {
     GENERATED_BODY()
     
-    Gs2::UE5::Auth::Model::FEzAccessTokenPtr Value = nullptr;
+    Gs2::UE5::Util::FGameSessionPtr Value = nullptr;
 };

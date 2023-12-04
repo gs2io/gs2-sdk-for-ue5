@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Distributor/Domain/Iterator/DescribeDistributorModelsIterator.h"
+#include "Distributor/Domain/Model/Namespace.h"
 #include "Distributor/Model/Gs2DistributorEzDistributorModel.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Distributor::Domain::Iterator
 {
@@ -27,20 +27,33 @@ namespace Gs2::UE5::Distributor::Domain::Iterator
 	class EZGS2_API FEzDescribeDistributorModelsIterator :
         public TSharedFromThis<FEzDescribeDistributorModelsIterator>
     {
-
-		Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelsIteratorPtr DomainIterable;
+        Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelsIteratorPtr It;
+        Gs2::Distributor::Domain::Model::FNamespaceDomainPtr Domain;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeDistributorModelsIterator(
-            Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelsIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Distributor::Domain::Model::FNamespaceDomainPtr Domain,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->DistributorModels(
+                )
+            ),
+            Domain(Domain),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeDistributorModelsIterator(
-            Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelsIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeDistributorModelsIterator(
+			const FEzDescribeDistributorModelsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +61,6 @@ namespace Gs2::UE5::Distributor::Domain::Iterator
 
 			Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelsIterator::FIterator DomainIterator;
 			Gs2::UE5::Distributor::Model::FEzDistributorModelPtr CurrentValue;
-
         	static Gs2::UE5::Distributor::Model::FEzDistributorModelPtr ConvertCurrent(
         		Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelsIterator::FIterator& DomainIterator
         	)
@@ -105,7 +117,6 @@ namespace Gs2::UE5::Distributor::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Distributor::Model::FEzDistributorModelPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +149,15 @@ namespace Gs2::UE5::Distributor::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeDistributorModelsIterator> FEzDescribeDistributorModelsIteratorPtr;

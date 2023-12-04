@@ -34,7 +34,7 @@ namespace Gs2::Core::Net::Rest
         public TSharedFromThis<FGs2RestSession>
     {
         Model::FGs2CredentialPtr CredentialValue;
-        Model::ERegion Region;
+        Model::ERegion RegionValue;
         FString OwnerIdValue;
 
     public:
@@ -56,6 +56,7 @@ namespace Gs2::Core::Net::Rest
         
         virtual FString OwnerId() const override;
         virtual void SetOwnerId(FString OwnerId);
+        virtual Model::ERegion Region() const override;
         virtual FString RegionName() const override;
         virtual Model::FGs2CredentialPtr Credential() const override;
     };

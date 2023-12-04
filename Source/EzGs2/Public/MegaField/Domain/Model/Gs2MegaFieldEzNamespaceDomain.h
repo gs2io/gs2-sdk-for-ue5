@@ -31,8 +31,8 @@
 #include "Gs2MegaFieldEzUserDomain.h"
 #include "Gs2MegaFieldEzUserGameSessionDomain.h"
 #include "Gs2MegaFieldEzNamespaceDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::MegaField::Domain::Model
 {
@@ -41,7 +41,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
         public TSharedFromThis<FEzNamespaceDomain>
     {
         Gs2::MegaField::Domain::Model::FNamespaceDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> Status() const;
@@ -50,7 +50,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
 
         FEzNamespaceDomain(
             Gs2::MegaField::Domain::Model::FNamespaceDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::MegaField::Domain::Iterator::FEzDescribeAreaModelsIteratorPtr AreaModels(
@@ -69,7 +69,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
         ) const;
 
         Gs2::UE5::MegaField::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+            Gs2::UE5::Util::FGameSessionPtr GameSession
         ) const;
 
     };

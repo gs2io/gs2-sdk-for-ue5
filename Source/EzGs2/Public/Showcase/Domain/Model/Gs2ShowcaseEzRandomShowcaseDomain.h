@@ -28,8 +28,8 @@
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
 #include "Gs2ShowcaseEzRandomDisplayItemDomain.h"
 #include "Gs2ShowcaseEzRandomShowcaseDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Showcase::Domain::Model
 {
@@ -38,7 +38,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
         public TSharedFromThis<FEzRandomShowcaseDomain>
     {
         Gs2::Showcase::Domain::Model::FRandomShowcaseDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -47,7 +47,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
         FEzRandomShowcaseDomain(
             Gs2::Showcase::Domain::Model::FRandomShowcaseDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemDomainPtr RandomDisplayItem(

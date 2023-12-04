@@ -29,8 +29,8 @@
 #include "Quest/Model/Gs2QuestEzQuestModel.h"
 #include "Gs2QuestEzQuestModelDomain.h"
 #include "Quest/Domain/Iterator/Gs2QuestEzDescribeQuestModelsIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Quest::Domain::Model
 {
@@ -39,7 +39,7 @@ namespace Gs2::UE5::Quest::Domain::Model
         public TSharedFromThis<FEzQuestModelDomain>
     {
         Gs2::Quest::Domain::Model::FQuestModelDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -48,7 +48,7 @@ namespace Gs2::UE5::Quest::Domain::Model
 
         FEzQuestModelDomain(
             Gs2::Quest::Domain::Model::FQuestModelDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FModelTask :

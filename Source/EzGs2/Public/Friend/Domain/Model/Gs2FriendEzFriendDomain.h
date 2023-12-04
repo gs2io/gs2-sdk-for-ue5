@@ -26,8 +26,8 @@
 #include "Friend/Model/Gs2FriendEzPublicProfile.h"
 #include "Gs2FriendEzFriendUserDomain.h"
 #include "Gs2FriendEzFriendDomain.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Friend::Domain::Model
 {
@@ -36,7 +36,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         public TSharedFromThis<FEzFriendDomain>
     {
         Gs2::Friend::Domain::Model::FFriendDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> NamespaceName() const;
@@ -45,7 +45,7 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         FEzFriendDomain(
             Gs2::Friend::Domain::Model::FFriendDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Friend::Domain::Model::FEzFriendUserDomainPtr FriendUser(

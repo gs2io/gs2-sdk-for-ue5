@@ -19,7 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Domain/Model/JobQueueDomain.h"
 #include "Core/Domain/CacheDatabase.h"
-#include "Core/Domain/Model/StampSheetConfiguration.h"
+#include "Core/Domain/Model/TransactionConfiguration.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 
 namespace Gs2::Core::Domain::Model
@@ -33,7 +33,7 @@ namespace Gs2::Core::Domain::Model
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         FString DistributorNamespaceName;
         FString TransactionId;
-        FStampSheetConfigurationPtr StampSheetConfiguration;
+        FTransactionConfigurationPtr StampSheetConfiguration;
         
     public:
         FAutoStampSheetDomain(
@@ -43,7 +43,7 @@ namespace Gs2::Core::Domain::Model
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
             const FString DistributorNamespaceName,
             const FString TransactionId,
-            const FStampSheetConfigurationPtr StampSheetConfiguration
+            const FTransactionConfigurationPtr StampSheetConfiguration
         );
         FAutoStampSheetDomain(
             const FAutoStampSheetDomain& From

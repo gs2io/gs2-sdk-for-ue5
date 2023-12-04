@@ -36,8 +36,13 @@ namespace Gs2::UE5::Account::Domain::Model
 
     FEzTakeOverGameSessionDomain::FEzTakeOverGameSessionDomain(
         Gs2::Account::Domain::Model::FTakeOverAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -54,7 +59,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FAddTakeOverSettingTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Create(
                     MakeShared<Gs2::Account::Request::FCreateTakeOverRequest>()
@@ -69,7 +74,8 @@ namespace Gs2::UE5::Account::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -111,7 +117,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FUpdateTakeOverSettingTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Update(
                     MakeShared<Gs2::Account::Request::FUpdateTakeOverRequest>()
@@ -126,7 +132,8 @@ namespace Gs2::UE5::Account::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -166,7 +173,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FDeleteTakeOverSettingTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Delete(
                     MakeShared<Gs2::Account::Request::FDeleteTakeOverRequest>()
@@ -179,7 +186,8 @@ namespace Gs2::UE5::Account::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -215,7 +223,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<Gs2::UE5::Account::Model::FEzTakeOverPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

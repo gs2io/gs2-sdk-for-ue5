@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -18,8 +17,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Lottery/Domain/Iterator/DescribeBoxesIterator.h"
+#include "Lottery/Domain/Model/UserAccessToken.h"
 #include "Lottery/Model/Gs2LotteryEzBoxItems.h"
+#include "Util/Net/GameSession.h"
 
 namespace Gs2::UE5::Lottery::Domain::Iterator
 {
@@ -27,20 +27,37 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 	class EZGS2_API FEzDescribeBoxesIterator :
         public TSharedFromThis<FEzDescribeBoxesIterator>
     {
-
-		Gs2::Lottery::Domain::Iterator::FDescribeBoxesIteratorPtr DomainIterable;
+        Gs2::Lottery::Domain::Iterator::FDescribeBoxesIteratorPtr It;
+        Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection;
 
 	public:
 
         explicit FEzDescribeBoxesIterator(
-            Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator& DomainIterable
-        ) : DomainIterable(DomainIterable.AsShared())
-        {}
+            Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+        ) :
+            It(
+                Domain->Boxes(
+                )
+            ),
+            Domain(Domain),
+            GameSession(GameSession),
+            Connection(Connection)
+        {
+        }
 
-        explicit FEzDescribeBoxesIterator(
-            Gs2::Lottery::Domain::Iterator::FDescribeBoxesIteratorPtr DomainIterable
-        ) : DomainIterable(DomainIterable)
-        {}
+		FEzDescribeBoxesIterator(
+			const FEzDescribeBoxesIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
 
 		class EZGS2_API FIterator
 		{
@@ -48,7 +65,6 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 
 			Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator::FIterator DomainIterator;
 			Gs2::UE5::Lottery::Model::FEzBoxItemsPtr CurrentValue;
-
         	static Gs2::UE5::Lottery::Model::FEzBoxItemsPtr ConvertCurrent(
         		Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator::FIterator& DomainIterator
         	)
@@ -105,7 +121,6 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Lottery::Model::FEzBoxItemsPtr& Current()
             {
                 return CurrentValue;
@@ -138,15 +153,15 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 
 		FIterator OneBeforeBegin()
 		{
-			return FIterator(DomainIterable->OneBeforeBegin());
+			return FIterator(It->OneBeforeBegin());
 		}
 		FIterator begin()
 		{
-			return FIterator(DomainIterable->begin());
+			return FIterator(It->begin());
 		}
 		FIterator end()
 		{
-			return FIterator(DomainIterable->end());
+			return FIterator(It->end());
 		}
     };
 	typedef TSharedPtr<FEzDescribeBoxesIterator> FEzDescribeBoxesIteratorPtr;

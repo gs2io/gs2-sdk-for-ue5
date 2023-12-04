@@ -71,7 +71,7 @@ namespace Gs2::Core::Domain
     
         const Gs2::Core::Domain::FCacheDatabasePtr Cache;
         const Gs2::Core::Domain::Model::FJobQueueDomainPtr JobQueueDomain;
-        const Gs2::Core::Domain::Model::FStampSheetConfigurationPtr StampSheetConfiguration;
+        const Gs2::Core::Domain::Model::FTransactionConfigurationPtr TransactionConfiguration;
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr RestSession;
         const Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr WebSocketSession;
         const TOptional<FString> DistributorNamespaceName;

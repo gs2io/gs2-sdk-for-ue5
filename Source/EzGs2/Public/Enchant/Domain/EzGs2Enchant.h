@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Enchant/Domain/Gs2Enchant.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Enchant/Domain/Model/Gs2EnchantEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Enchant::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Enchant::Domain
 
     class EZGS2_API FEzGs2Enchant {
         Gs2::Enchant::Domain::FGs2EnchantDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Enchant(
             Gs2::Enchant::Domain::FGs2EnchantDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Enchant::Domain::Model::FEzNamespaceDomainPtr Namespace(

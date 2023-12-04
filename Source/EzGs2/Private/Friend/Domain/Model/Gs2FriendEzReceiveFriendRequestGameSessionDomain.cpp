@@ -38,57 +38,14 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     FEzReceiveFriendRequestGameSessionDomain::FEzReceiveFriendRequestGameSessionDomain(
         Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
-
-    }
-
-    FEzReceiveFriendRequestGameSessionDomain::FGetReceiveRequestTask::FGetReceiveRequestTask(
-        TSharedPtr<FEzReceiveFriendRequestGameSessionDomain> Self
-    ): Self(Self)
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
     {
 
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzReceiveFriendRequestGameSessionDomain::FGetReceiveRequestTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Model::FEzFriendRequest>> Result
-    )
-    {
-        const auto Future = Self->ProfileValue->Run<FGetReceiveRequestTask>(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Get(
-                    MakeShared<Gs2::Friend::Request::FGetReceiveRequestRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::Friend::Model::FEzFriendRequest::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzReceiveFriendRequestGameSessionDomain::FGetReceiveRequestTask>> FEzReceiveFriendRequestGameSessionDomain::GetReceiveRequest(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FGetReceiveRequestTask>>(
-            this->AsShared()
-        );
     }
 
     FEzReceiveFriendRequestGameSessionDomain::FAcceptTask::FAcceptTask(
@@ -102,7 +59,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzReceiveFriendRequestGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FAcceptTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Accept(
                     MakeShared<Gs2::Friend::Request::FAcceptRequestRequest>()
@@ -115,7 +72,8 @@ namespace Gs2::UE5::Friend::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Friend::Domain::Model::FEzReceiveFriendRequestGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -151,7 +109,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzReceiveFriendRequestGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FRejectTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Reject(
                     MakeShared<Gs2::Friend::Request::FRejectRequestRequest>()
@@ -164,7 +122,8 @@ namespace Gs2::UE5::Friend::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Friend::Domain::Model::FEzReceiveFriendRequestGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -200,7 +159,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         TSharedPtr<Gs2::UE5::Friend::Model::FEzFriendRequestPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

@@ -36,8 +36,11 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Inventory::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -49,7 +52,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->Inventory(
                 InventoryName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

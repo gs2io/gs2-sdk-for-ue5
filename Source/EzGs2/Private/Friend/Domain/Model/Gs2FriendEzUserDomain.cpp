@@ -36,8 +36,11 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     FEzUserDomain::FEzUserDomain(
         Gs2::Friend::Domain::Model::FUserDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -47,7 +50,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzProfileDomain>(
             Domain->Profile(
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -57,7 +60,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzPublicProfileDomain>(
             Domain->PublicProfile(
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -67,7 +70,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzBlackListDomain>(
             Domain->BlackList(
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
@@ -81,7 +84,7 @@ namespace Gs2::UE5::Friend::Domain::Model
                 TargetUserId,
                 WithProfile
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

@@ -36,8 +36,11 @@ namespace Gs2::UE5::SerialKey::Domain::Model
 
     FEzCampaignModelDomain::FEzCampaignModelDomain(
         Gs2::SerialKey::Domain::Model::FCampaignModelDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -52,7 +55,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
         TSharedPtr<Gs2::UE5::SerialKey::Model::FEzCampaignModelPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

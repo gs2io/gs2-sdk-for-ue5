@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "News/Domain/Gs2News.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "News/Domain/Model/Gs2NewsEzNamespaceDomain.h"
 #include "News/Domain/Model/Gs2NewsEzNewsDomain.h"
 
@@ -27,13 +27,13 @@ namespace Gs2::UE5::News::Domain
 
     class EZGS2_API FEzGs2News {
         Gs2::News::Domain::FGs2NewsDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2News(
             Gs2::News::Domain::FGs2NewsDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::News::Domain::Model::FEzNamespaceDomainPtr Namespace(

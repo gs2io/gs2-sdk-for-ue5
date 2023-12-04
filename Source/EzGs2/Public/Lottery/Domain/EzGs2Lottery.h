@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Lottery/Domain/Gs2Lottery.h"
-#include "Util/Profile.h"
+#include "Util/Net/Gs2Connection.h"
 #include "Lottery/Domain/Model/Gs2LotteryEzNamespaceDomain.h"
 
 namespace Gs2::UE5::Lottery::Domain
@@ -26,13 +26,13 @@ namespace Gs2::UE5::Lottery::Domain
 
     class EZGS2_API FEzGs2Lottery {
         Gs2::Lottery::Domain::FGs2LotteryDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
 
         FEzGs2Lottery(
             Gs2::Lottery::Domain::FGs2LotteryDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         Gs2::UE5::Lottery::Domain::Model::FEzNamespaceDomainPtr Namespace(

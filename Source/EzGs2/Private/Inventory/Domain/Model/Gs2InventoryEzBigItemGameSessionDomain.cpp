@@ -41,8 +41,13 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     FEzBigItemGameSessionDomain::FEzBigItemGameSessionDomain(
         Gs2::Inventory::Domain::Model::FBigItemAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -58,7 +63,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Inventory::Domain::Model::FEzBigItemGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FConsumeBigItemTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Consume(
                     MakeShared<Gs2::Inventory::Request::FConsumeBigItemRequest>()
@@ -72,7 +77,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Inventory::Domain::Model::FEzBigItemGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -110,7 +116,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         TSharedPtr<Gs2::UE5::Inventory::Model::FEzBigItemPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

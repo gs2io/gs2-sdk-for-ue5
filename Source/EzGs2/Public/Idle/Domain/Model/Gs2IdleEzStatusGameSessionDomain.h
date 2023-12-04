@@ -25,8 +25,8 @@
 #include "Idle/Model/Gs2IdleEzAcquireActionList.h"
 #include "Gs2IdleEzStatusGameSessionDomain.h"
 #include "Idle/Domain/Iterator/Gs2IdleEzDescribeStatusesIterator.h"
-#include "Auth/Model/Gs2AuthEzAccessToken.h"
-#include "Util/Profile.h"
+#include "Util/Net/GameSession.h"
+#include "Util/Net/Gs2Connection.h"
 
 namespace Gs2::UE5::Idle::Domain::Model
 {
@@ -35,7 +35,8 @@ namespace Gs2::UE5::Idle::Domain::Model
         public TSharedFromThis<FEzStatusGameSessionDomain>
     {
         Gs2::Idle::Domain::Model::FStatusAccessTokenDomainPtr Domain;
-        Gs2::UE5::Util::FProfilePtr ProfileValue;
+        Gs2::UE5::Util::FGameSessionPtr GameSession;
+        Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
         TOptional<FString> TransactionId() const;
@@ -46,7 +47,8 @@ namespace Gs2::UE5::Idle::Domain::Model
 
         FEzStatusGameSessionDomain(
             Gs2::Idle::Domain::Model::FStatusAccessTokenDomainPtr Domain,
-            Gs2::UE5::Util::FProfilePtr Profile
+            Gs2::UE5::Util::FGameSessionPtr GameSession,
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
         class FPredictionTask :

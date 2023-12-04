@@ -41,8 +41,13 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
     FEzSimpleInventoryGameSessionDomain::FEzSimpleInventoryGameSessionDomain(
         Gs2::Inventory::Domain::Model::FSimpleInventoryAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -58,7 +63,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
         TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemGameSessionDomain>>>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FConsumeSimpleItemsTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->ConsumeSimpleItems(
                     MakeShared<Gs2::Inventory::Request::FConsumeSimpleItemsRequest>()
@@ -80,7 +85,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
                 for (auto Value : *Task->GetTask().Result()) {
                     (**Result).Add(MakeShared<Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemGameSessionDomain>(
                         Value,
-                        Self->ProfileValue
+                        Self->GameSession,
+                        Self->ConnectionValue
                     ));
                 }
                 Task->EnsureCompletion();
@@ -112,8 +118,9 @@ namespace Gs2::UE5::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Inventory::Domain::Iterator::FEzDescribeSimpleItemsIterator>(
-            Domain->SimpleItems(
-            )
+            Domain,
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -139,7 +146,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
             Domain->SimpleItem(
                 ItemName
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 }

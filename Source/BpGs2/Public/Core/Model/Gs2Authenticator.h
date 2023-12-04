@@ -19,7 +19,7 @@
 #include "CoreMinimal.h"
 #include "Account/Model/Gs2AccountNamespace.h"
 #include "Key/Model/Gs2KeyKey.h"
-#include "Util/Gs2AccountAuthenticator.h"
+#include "Util/Authentication/Gs2AccountAuthenticator.h"
 #include "Gs2Authenticator.generated.h"
 
 USTRUCT(BlueprintType)

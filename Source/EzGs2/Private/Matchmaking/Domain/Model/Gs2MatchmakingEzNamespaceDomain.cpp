@@ -51,8 +51,11 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
     FEzNamespaceDomain::FEzNamespaceDomain(
         Gs2::Matchmaking::Domain::Model::FNamespaceDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -71,7 +74,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FVoteTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Vote(
                     MakeShared<Gs2::Matchmaking::Request::FVoteRequest>()
@@ -97,7 +100,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -144,7 +147,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FVoteMultipleTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->VoteMultiple(
                     MakeShared<Gs2::Matchmaking::Request::FVoteMultipleRequest>()
@@ -178,7 +181,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzBallotDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -217,19 +220,20 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Domain->User(
                 UserId
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 
     Gs2::UE5::Matchmaking::Domain::Model::FEzUserGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Auth::Model::FEzAccessTokenPtr AccessToken
+        Gs2::UE5::Util::FGameSessionPtr GameSession
     ) const
     {
         return MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzUserGameSessionDomain>(
             Domain->AccessToken(
-                AccessToken->ToModel()
+                GameSession->AccessToken()->ToModel()
             ),
-            ProfileValue
+            GameSession,
+            ConnectionValue
         );
     }
 
@@ -237,8 +241,8 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeRatingModelsIterator>(
-            Domain->RatingModels(
-            )
+            Domain,
+            ConnectionValue
         );
     }
 
@@ -264,7 +268,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
             Domain->RatingModel(
                 RatingName
             ),
-            ProfileValue
+            ConnectionValue
         );
     }
 }

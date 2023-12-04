@@ -29,7 +29,7 @@ namespace Gs2::Core::Domain::Model
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const FString DistributorNamespaceName,
         const FString TransactionId,
-        const FStampSheetConfigurationPtr StampSheetConfiguration
+        const FTransactionConfigurationPtr StampSheetConfiguration
     ):
         Cache(Cache),
         JobQueueDomain(JobQueueDomain),

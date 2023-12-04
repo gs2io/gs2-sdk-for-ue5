@@ -41,8 +41,13 @@ namespace Gs2::UE5::Stamina::Domain::Model
 
     FEzStaminaGameSessionDomain::FEzStaminaGameSessionDomain(
         Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomainPtr Domain,
-        Gs2::UE5::Util::FProfilePtr Profile
-    ): Domain(Domain), ProfileValue(Profile) {
+        Gs2::UE5::Util::FGameSessionPtr GameSession,
+        Gs2::UE5::Util::FGs2ConnectionPtr Connection
+    ):
+        Domain(Domain),
+        GameSession(GameSession),
+        ConnectionValue(Connection)
+    {
 
     }
 
@@ -58,7 +63,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FConsumeTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Consume(
                     MakeShared<Gs2::Stamina::Request::FConsumeStaminaRequest>()
@@ -72,7 +77,8 @@ namespace Gs2::UE5::Stamina::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -113,7 +119,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FSetMaxValueTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->SetMaxValueByStatus(
                     MakeShared<Gs2::Stamina::Request::FSetMaxValueByStatusRequest>()
@@ -129,7 +135,8 @@ namespace Gs2::UE5::Stamina::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -174,7 +181,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FSetRecoverIntervalTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->SetRecoverIntervalByStatus(
                     MakeShared<Gs2::Stamina::Request::FSetRecoverIntervalByStatusRequest>()
@@ -190,7 +197,8 @@ namespace Gs2::UE5::Stamina::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -235,7 +243,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FSetRecoverValueTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->SetRecoverValueByStatus(
                     MakeShared<Gs2::Stamina::Request::FSetRecoverValueByStatusRequest>()
@@ -251,7 +259,8 @@ namespace Gs2::UE5::Stamina::Domain::Model
                 }
                 *Result = MakeShared<Gs2::UE5::Stamina::Domain::Model::FEzStaminaGameSessionDomain>(
                     Task->GetTask().Result(),
-                    Self->ProfileValue
+                    Self->GameSession,
+                    Self->ConnectionValue
                 );
                 Task->EnsureCompletion();
                 return nullptr;
@@ -293,7 +302,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
         TSharedPtr<Gs2::UE5::Stamina::Model::FEzStaminaPtr> Result
     )
     {
-        const auto Future = Self->ProfileValue->Run<FModelTask>(
+        const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();

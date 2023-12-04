@@ -52,7 +52,7 @@ namespace Gs2::Core::Domain
                 return false;
             })
         ),
-        StampSheetConfiguration(MakeShared<Core::Domain::Model::FStampSheetConfiguration>(
+        TransactionConfiguration(MakeShared<Core::Domain::Model::FTransactionConfiguration>(
             DistributorNamespaceName,
             [&](const FString Action, const FString Request, const FString Result)
             {
@@ -111,7 +111,7 @@ namespace Gs2::Core::Domain
         Version(nullptr),
         Disposed(false)
     {
-        if (WebSocketSession != nullptr)
+        if (WebSocketSession.IsValid())
         {
             WebSocketSession->OnNotification().AddLambda([&](Core::Domain::Model::FNotificationMessagePtr Message)
             {
@@ -308,7 +308,7 @@ namespace Gs2::Core::Domain
     ):
         Cache(From.Cache),
         JobQueueDomain(From.JobQueueDomain),
-        StampSheetConfiguration(From.StampSheetConfiguration),
+        TransactionConfiguration(From.TransactionConfiguration),
         RestSession(From.RestSession),
         WebSocketSession(From.WebSocketSession),
         DistributorNamespaceName(From.DistributorNamespaceName),
