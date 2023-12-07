@@ -322,6 +322,74 @@ namespace Gs2::Inventory::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FConsumeTask>>(this->AsShared(), Request);
     }
 
+    FBigItemDomain::FSetTask::FSetTask(
+        const TSharedPtr<FBigItemDomain>& Self,
+        const Request::FSetBigItemByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FBigItemDomain::FSetTask::FSetTask(
+        const FSetTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FBigItemDomain::FSetTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FBigItemDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithInventoryName(Self->InventoryName)
+            ->WithItemName(Self->ItemName);
+        const auto Future = Self->Client->SetBigItemByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->InventoryName,
+                    "BigItem"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetItemName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FBigItem::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FBigItemDomain::FSetTask>> FBigItemDomain::Set(
+        Request::FSetBigItemByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSetTask>>(this->AsShared(), Request);
+    }
+
     FBigItemDomain::FDeleteTask::FDeleteTask(
         const TSharedPtr<FBigItemDomain>& Self,
         const Request::FDeleteBigItemByUserIdRequestPtr Request

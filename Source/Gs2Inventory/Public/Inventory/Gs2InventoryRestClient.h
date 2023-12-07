@@ -234,6 +234,8 @@
 #include "Task/Rest/ConsumeSimpleItemsTask.h"
 #include "Request/ConsumeSimpleItemsByUserIdRequest.h"
 #include "Task/Rest/ConsumeSimpleItemsByUserIdTask.h"
+#include "Request/SetSimpleItemsByUserIdRequest.h"
+#include "Task/Rest/SetSimpleItemsByUserIdTask.h"
 #include "Request/DeleteSimpleItemsByUserIdRequest.h"
 #include "Task/Rest/DeleteSimpleItemsByUserIdTask.h"
 #include "Request/VerifySimpleItemRequest.h"
@@ -244,6 +246,8 @@
 #include "Task/Rest/AcquireSimpleItemsByStampSheetTask.h"
 #include "Request/ConsumeSimpleItemsByStampTaskRequest.h"
 #include "Task/Rest/ConsumeSimpleItemsByStampTaskTask.h"
+#include "Request/SetSimpleItemsByStampSheetRequest.h"
+#include "Task/Rest/SetSimpleItemsByStampSheetTask.h"
 #include "Request/VerifySimpleItemByStampTaskRequest.h"
 #include "Task/Rest/VerifySimpleItemByStampTaskTask.h"
 #include "Request/DescribeBigItemsRequest.h"
@@ -260,6 +264,8 @@
 #include "Task/Rest/ConsumeBigItemTask.h"
 #include "Request/ConsumeBigItemByUserIdRequest.h"
 #include "Task/Rest/ConsumeBigItemByUserIdTask.h"
+#include "Request/SetBigItemByUserIdRequest.h"
+#include "Task/Rest/SetBigItemByUserIdTask.h"
 #include "Request/DeleteBigItemByUserIdRequest.h"
 #include "Task/Rest/DeleteBigItemByUserIdTask.h"
 #include "Request/VerifyBigItemRequest.h"
@@ -270,6 +276,8 @@
 #include "Task/Rest/AcquireBigItemByStampSheetTask.h"
 #include "Request/ConsumeBigItemByStampTaskRequest.h"
 #include "Task/Rest/ConsumeBigItemByStampTaskTask.h"
+#include "Request/SetBigItemByStampSheetRequest.h"
+#include "Task/Rest/SetBigItemByStampSheetTask.h"
 #include "Request/VerifyBigItemByStampTaskRequest.h"
 #include "Task/Rest/VerifyBigItemByStampTaskTask.h"
 
@@ -716,6 +724,10 @@ namespace Gs2::Inventory
             const Request::FConsumeSimpleItemsByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSetSimpleItemsByUserIdTask>> SetSimpleItemsByUserId(
+            const Request::FSetSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteSimpleItemsByUserIdTask>> DeleteSimpleItemsByUserId(
             const Request::FDeleteSimpleItemsByUserIdRequestPtr Request
         ) const;
@@ -734,6 +746,10 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::Rest::FConsumeSimpleItemsByStampTaskTask>> ConsumeSimpleItemsByStampTask(
             const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetSimpleItemsByStampSheetTask>> SetSimpleItemsByStampSheet(
+            const Request::FSetSimpleItemsByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifySimpleItemByStampTaskTask>> VerifySimpleItemByStampTask(
@@ -768,6 +784,10 @@ namespace Gs2::Inventory
             const Request::FConsumeBigItemByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSetBigItemByUserIdTask>> SetBigItemByUserId(
+            const Request::FSetBigItemByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteBigItemByUserIdTask>> DeleteBigItemByUserId(
             const Request::FDeleteBigItemByUserIdRequestPtr Request
         ) const;
@@ -786,6 +806,10 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::Rest::FConsumeBigItemByStampTaskTask>> ConsumeBigItemByStampTask(
             const Request::FConsumeBigItemByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetBigItemByStampSheetTask>> SetBigItemByStampSheet(
+            const Request::FSetBigItemByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifyBigItemByStampTaskTask>> VerifyBigItemByStampTask(

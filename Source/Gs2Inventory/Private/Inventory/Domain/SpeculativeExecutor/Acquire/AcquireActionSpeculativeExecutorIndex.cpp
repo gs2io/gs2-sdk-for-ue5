@@ -29,7 +29,9 @@
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AddReferenceOfByUserIdSpeculativeExecutor.h"
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/DeleteReferenceOfByUserIdSpeculativeExecutor.h"
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AcquireSimpleItemsByUserIdSpeculativeExecutor.h"
+#include "Inventory/Domain/SpeculativeExecutor/Acquire/SetSimpleItemsByUserIdSpeculativeExecutor.h"
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AcquireBigItemByUserIdSpeculativeExecutor.h"
+#include "Inventory/Domain/SpeculativeExecutor/Acquire/SetBigItemByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -202,6 +204,28 @@ namespace Gs2::Inventory::Domain::SpeculativeExecutor
             }
             *Result = Future->GetTask().Result();
         }
+        if (FSetSimpleItemsByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FSetSimpleItemsByUserIdRequest::FromJson(RequestModelJson);
+            Request = FSetSimpleItemsByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FSetSimpleItemsByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
         if (FAcquireBigItemByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
@@ -212,6 +236,28 @@ namespace Gs2::Inventory::Domain::SpeculativeExecutor
             auto Request = Request::FAcquireBigItemByUserIdRequest::FromJson(RequestModelJson);
             Request = FAcquireBigItemByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FAcquireBigItemByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FSetBigItemByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FSetBigItemByUserIdRequest::FromJson(RequestModelJson);
+            Request = FSetBigItemByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FSetBigItemByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

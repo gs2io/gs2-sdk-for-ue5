@@ -290,6 +290,102 @@ namespace Gs2::Inventory::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FConsumeSimpleItemsTask>>(this->AsShared(), Request);
     }
 
+    FSimpleInventoryDomain::FSetSimpleItemsTask::FSetSimpleItemsTask(
+        const TSharedPtr<FSimpleInventoryDomain>& Self,
+        const Request::FSetSimpleItemsByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FSimpleInventoryDomain::FSetSimpleItemsTask::FSetSimpleItemsTask(
+        const FSetSimpleItemsTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSimpleInventoryDomain::FSetSimpleItemsTask::Action(
+        TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithInventoryName(Self->InventoryName);
+        const auto Future = Self->Client->SetSimpleItemsByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId,
+                        Self->InventoryName,
+                        "SimpleItem"
+                    );
+                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
+                        Item->GetItemName()
+                    );
+                    Self->Gs2->Cache->Put(
+                        Gs2::Inventory::Model::FSimpleItem::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
+        }
+        auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>();
+        for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
+        {
+            Domain->Add(
+                MakeShared<Gs2::Inventory::Domain::Model::FSimpleItemDomain>(
+                    Self->Gs2,
+                    Self->Service,
+                    Request->GetNamespaceName(),
+                    (*ResultModel->GetItems())[i]->GetUserId(),
+                    Request->GetInventoryName(),
+                    (*ResultModel->GetItems())[i]->GetItemName()
+                )
+            );
+            const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId,
+                Self->InventoryName,
+                "SimpleItem"
+            );
+            const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
+                (*ResultModel->GetItems())[i]->GetItemName()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Inventory::Model::FSimpleItem::TypeName,
+                ParentKey,
+                Key,
+                (*ResultModel->GetItems())[i],
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSimpleInventoryDomain::FSetSimpleItemsTask>> FSimpleInventoryDomain::SetSimpleItems(
+        Request::FSetSimpleItemsByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FSetSimpleItemsTask>>(this->AsShared(), Request);
+    }
+
     FSimpleInventoryDomain::FDeleteSimpleItemsTask::FDeleteSimpleItemsTask(
         const TSharedPtr<FSimpleInventoryDomain>& Self,
         const Request::FDeleteSimpleItemsByUserIdRequestPtr Request

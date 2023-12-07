@@ -43,6 +43,7 @@
 #include "Model/LogSetting.h"
 #include "Model/AcquireCount.h"
 #include "Model/ConsumeCount.h"
+#include "Model/HeldCount.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"
@@ -692,6 +693,12 @@
 #include "Task/Rest/ConsumeSimpleItemsByUserIdTask.h"
 #include "Task/WebSocket/ConsumeSimpleItemsByUserIdTask.h"
 
+// SetSimpleItemsByUserId
+#include "Request/SetSimpleItemsByUserIdRequest.h"
+#include "Result/SetSimpleItemsByUserIdResult.h"
+#include "Task/Rest/SetSimpleItemsByUserIdTask.h"
+#include "Task/WebSocket/SetSimpleItemsByUserIdTask.h"
+
 // DeleteSimpleItemsByUserId
 #include "Request/DeleteSimpleItemsByUserIdRequest.h"
 #include "Result/DeleteSimpleItemsByUserIdResult.h"
@@ -721,6 +728,12 @@
 #include "Result/ConsumeSimpleItemsByStampTaskResult.h"
 #include "Task/Rest/ConsumeSimpleItemsByStampTaskTask.h"
 #include "Task/WebSocket/ConsumeSimpleItemsByStampTaskTask.h"
+
+// SetSimpleItemsByStampSheet
+#include "Request/SetSimpleItemsByStampSheetRequest.h"
+#include "Result/SetSimpleItemsByStampSheetResult.h"
+#include "Task/Rest/SetSimpleItemsByStampSheetTask.h"
+#include "Task/WebSocket/SetSimpleItemsByStampSheetTask.h"
 
 // VerifySimpleItemByStampTask
 #include "Request/VerifySimpleItemByStampTaskRequest.h"
@@ -770,6 +783,12 @@
 #include "Task/Rest/ConsumeBigItemByUserIdTask.h"
 #include "Task/WebSocket/ConsumeBigItemByUserIdTask.h"
 
+// SetBigItemByUserId
+#include "Request/SetBigItemByUserIdRequest.h"
+#include "Result/SetBigItemByUserIdResult.h"
+#include "Task/Rest/SetBigItemByUserIdTask.h"
+#include "Task/WebSocket/SetBigItemByUserIdTask.h"
+
 // DeleteBigItemByUserId
 #include "Request/DeleteBigItemByUserIdRequest.h"
 #include "Result/DeleteBigItemByUserIdResult.h"
@@ -799,6 +818,12 @@
 #include "Result/ConsumeBigItemByStampTaskResult.h"
 #include "Task/Rest/ConsumeBigItemByStampTaskTask.h"
 #include "Task/WebSocket/ConsumeBigItemByStampTaskTask.h"
+
+// SetBigItemByStampSheet
+#include "Request/SetBigItemByStampSheetRequest.h"
+#include "Result/SetBigItemByStampSheetResult.h"
+#include "Task/Rest/SetBigItemByStampSheetTask.h"
+#include "Task/WebSocket/SetBigItemByStampSheetTask.h"
 
 // VerifyBigItemByStampTask
 #include "Request/VerifyBigItemByStampTaskRequest.h"

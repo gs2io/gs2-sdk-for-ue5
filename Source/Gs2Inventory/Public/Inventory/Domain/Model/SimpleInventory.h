@@ -177,6 +177,32 @@ namespace Gs2::Inventory::Domain::Model
             Request::FConsumeSimpleItemsByUserIdRequestPtr Request
         );
 
+        class GS2INVENTORY_API FSetSimpleItemsTask final :
+            public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>,
+            public TSharedFromThis<FSetSimpleItemsTask>
+        {
+            const TSharedPtr<FSimpleInventoryDomain> Self;
+            const Request::FSetSimpleItemsByUserIdRequestPtr Request;
+        public:
+            explicit FSetSimpleItemsTask(
+                const TSharedPtr<FSimpleInventoryDomain>& Self,
+                const Request::FSetSimpleItemsByUserIdRequestPtr Request
+            );
+
+            FSetSimpleItemsTask(
+                const FSetSimpleItemsTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<TArray<TSharedPtr<Gs2::Inventory::Domain::Model::FSimpleItemDomain>>>> Result
+            ) override;
+        };
+        friend FSetSimpleItemsTask;
+
+        TSharedPtr<FAsyncTask<FSetSimpleItemsTask>> SetSimpleItems(
+            Request::FSetSimpleItemsByUserIdRequestPtr Request
+        );
+
         class GS2INVENTORY_API FDeleteSimpleItemsTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FSimpleInventoryDomain>,
             public TSharedFromThis<FDeleteSimpleItemsTask>

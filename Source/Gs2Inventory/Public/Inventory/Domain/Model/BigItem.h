@@ -200,6 +200,32 @@ namespace Gs2::Inventory::Domain::Model
             Request::FConsumeBigItemByUserIdRequestPtr Request
         );
 
+        class GS2INVENTORY_API FSetTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FBigItemDomain>,
+            public TSharedFromThis<FSetTask>
+        {
+            const TSharedPtr<FBigItemDomain> Self;
+            const Request::FSetBigItemByUserIdRequestPtr Request;
+        public:
+            explicit FSetTask(
+                const TSharedPtr<FBigItemDomain>& Self,
+                const Request::FSetBigItemByUserIdRequestPtr Request
+            );
+
+            FSetTask(
+                const FSetTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FBigItemDomain>> Result
+            ) override;
+        };
+        friend FSetTask;
+
+        TSharedPtr<FAsyncTask<FSetTask>> Set(
+            Request::FSetBigItemByUserIdRequestPtr Request
+        );
+
         class GS2INVENTORY_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FBigItemDomain>,
             public TSharedFromThis<FDeleteTask>

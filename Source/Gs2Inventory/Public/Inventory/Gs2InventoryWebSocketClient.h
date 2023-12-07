@@ -234,6 +234,8 @@
 #include "Task/WebSocket/ConsumeSimpleItemsTask.h"
 #include "Request/ConsumeSimpleItemsByUserIdRequest.h"
 #include "Task/WebSocket/ConsumeSimpleItemsByUserIdTask.h"
+#include "Request/SetSimpleItemsByUserIdRequest.h"
+#include "Task/WebSocket/SetSimpleItemsByUserIdTask.h"
 #include "Request/DeleteSimpleItemsByUserIdRequest.h"
 #include "Task/WebSocket/DeleteSimpleItemsByUserIdTask.h"
 #include "Request/VerifySimpleItemRequest.h"
@@ -244,6 +246,8 @@
 #include "Task/WebSocket/AcquireSimpleItemsByStampSheetTask.h"
 #include "Request/ConsumeSimpleItemsByStampTaskRequest.h"
 #include "Task/WebSocket/ConsumeSimpleItemsByStampTaskTask.h"
+#include "Request/SetSimpleItemsByStampSheetRequest.h"
+#include "Task/WebSocket/SetSimpleItemsByStampSheetTask.h"
 #include "Request/VerifySimpleItemByStampTaskRequest.h"
 #include "Task/WebSocket/VerifySimpleItemByStampTaskTask.h"
 #include "Request/DescribeBigItemsRequest.h"
@@ -260,6 +264,8 @@
 #include "Task/WebSocket/ConsumeBigItemTask.h"
 #include "Request/ConsumeBigItemByUserIdRequest.h"
 #include "Task/WebSocket/ConsumeBigItemByUserIdTask.h"
+#include "Request/SetBigItemByUserIdRequest.h"
+#include "Task/WebSocket/SetBigItemByUserIdTask.h"
 #include "Request/DeleteBigItemByUserIdRequest.h"
 #include "Task/WebSocket/DeleteBigItemByUserIdTask.h"
 #include "Request/VerifyBigItemRequest.h"
@@ -270,6 +276,8 @@
 #include "Task/WebSocket/AcquireBigItemByStampSheetTask.h"
 #include "Request/ConsumeBigItemByStampTaskRequest.h"
 #include "Task/WebSocket/ConsumeBigItemByStampTaskTask.h"
+#include "Request/SetBigItemByStampSheetRequest.h"
+#include "Task/WebSocket/SetBigItemByStampSheetTask.h"
 #include "Request/VerifyBigItemByStampTaskRequest.h"
 #include "Task/WebSocket/VerifyBigItemByStampTaskTask.h"
 
@@ -716,6 +724,10 @@ namespace Gs2::Inventory
             const Request::FConsumeSimpleItemsByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetSimpleItemsByUserIdTask>> SetSimpleItemsByUserId(
+            const Request::FSetSimpleItemsByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSimpleItemsByUserIdTask>> DeleteSimpleItemsByUserId(
             const Request::FDeleteSimpleItemsByUserIdRequestPtr Request
         ) const;
@@ -734,6 +746,10 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByStampTaskTask>> ConsumeSimpleItemsByStampTask(
             const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetSimpleItemsByStampSheetTask>> SetSimpleItemsByStampSheet(
+            const Request::FSetSimpleItemsByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifySimpleItemByStampTaskTask>> VerifySimpleItemByStampTask(
@@ -768,6 +784,10 @@ namespace Gs2::Inventory
             const Request::FConsumeBigItemByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetBigItemByUserIdTask>> SetBigItemByUserId(
+            const Request::FSetBigItemByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBigItemByUserIdTask>> DeleteBigItemByUserId(
             const Request::FDeleteBigItemByUserIdRequestPtr Request
         ) const;
@@ -786,6 +806,10 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeBigItemByStampTaskTask>> ConsumeBigItemByStampTask(
             const Request::FConsumeBigItemByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetBigItemByStampSheetTask>> SetBigItemByStampSheet(
+            const Request::FSetBigItemByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBigItemByStampTaskTask>> VerifyBigItemByStampTask(

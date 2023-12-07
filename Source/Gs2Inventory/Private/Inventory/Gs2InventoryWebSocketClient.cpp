@@ -991,6 +991,15 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetSimpleItemsByUserIdTask>> FGs2InventoryWebSocketClient::SetSimpleItemsByUserId(
+        const Request::FSetSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteSimpleItemsByUserIdTask>> FGs2InventoryWebSocketClient::DeleteSimpleItemsByUserId(
         const Request::FDeleteSimpleItemsByUserIdRequestPtr Request) const
     {
@@ -1031,6 +1040,15 @@ namespace Gs2::Inventory
         const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeSimpleItemsByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetSimpleItemsByStampSheetTask>> FGs2InventoryWebSocketClient::SetSimpleItemsByStampSheet(
+        const Request::FSetSimpleItemsByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetSimpleItemsByStampSheetTask>>(
             Session,
             Request
         );
@@ -1108,6 +1126,15 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetBigItemByUserIdTask>> FGs2InventoryWebSocketClient::SetBigItemByUserId(
+        const Request::FSetBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBigItemByUserIdTask>> FGs2InventoryWebSocketClient::DeleteBigItemByUserId(
         const Request::FDeleteBigItemByUserIdRequestPtr Request) const
     {
@@ -1148,6 +1175,15 @@ namespace Gs2::Inventory
         const Request::FConsumeBigItemByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FConsumeBigItemByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetBigItemByStampSheetTask>> FGs2InventoryWebSocketClient::SetBigItemByStampSheet(
+        const Request::FSetBigItemByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetBigItemByStampSheetTask>>(
             Session,
             Request
         );

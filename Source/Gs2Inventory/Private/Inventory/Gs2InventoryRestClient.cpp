@@ -991,6 +991,15 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSetSimpleItemsByUserIdTask>> FGs2InventoryRestClient::SetSimpleItemsByUserId(
+        const Request::FSetSimpleItemsByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetSimpleItemsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteSimpleItemsByUserIdTask>> FGs2InventoryRestClient::DeleteSimpleItemsByUserId(
         const Request::FDeleteSimpleItemsByUserIdRequestPtr Request) const
     {
@@ -1031,6 +1040,15 @@ namespace Gs2::Inventory
         const Request::FConsumeSimpleItemsByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeSimpleItemsByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSetSimpleItemsByStampSheetTask>> FGs2InventoryRestClient::SetSimpleItemsByStampSheet(
+        const Request::FSetSimpleItemsByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetSimpleItemsByStampSheetTask>>(
             Session,
             Request
         );
@@ -1108,6 +1126,15 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSetBigItemByUserIdTask>> FGs2InventoryRestClient::SetBigItemByUserId(
+        const Request::FSetBigItemByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetBigItemByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteBigItemByUserIdTask>> FGs2InventoryRestClient::DeleteBigItemByUserId(
         const Request::FDeleteBigItemByUserIdRequestPtr Request) const
     {
@@ -1148,6 +1175,15 @@ namespace Gs2::Inventory
         const Request::FConsumeBigItemByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumeBigItemByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSetBigItemByStampSheetTask>> FGs2InventoryRestClient::SetBigItemByStampSheet(
+        const Request::FSetBigItemByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetBigItemByStampSheetTask>>(
             Session,
             Request
         );

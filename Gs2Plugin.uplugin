@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "2023.11.9",
+	"VersionName": "2023.12.1",
 	"FriendlyName": "GS2 Plugin",
 	"Description": "Plugin for Game Server Services",
 	"Category": "Online Service",
