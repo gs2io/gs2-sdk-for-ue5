@@ -15,7 +15,7 @@ namespace Gs2::UE5::Util
             const TSharedPtr<Auth::Model::FEzAccessTokenPtr> Result
         ) = 0;
 
-        virtual bool NeedReAuthentication();
+        virtual bool NeedReAuthentication() = 0;
     };
     typedef TSharedPtr<IAuthenticator> IAuthenticatorPtr;
 }
