@@ -23,6 +23,9 @@ namespace Gs2::StateMachine::Model
         UserIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         StateMachineVersionValue(TOptional<int64>()),
+        EnableSpeculativeExecutionValue(TOptional<FString>()),
+        StateMachineDefinitionValue(TOptional<FString>()),
+        RandomStatusValue(nullptr),
         StacksValue(nullptr),
         VariablesValue(nullptr),
         StatusValue(TOptional<FString>()),
@@ -40,6 +43,9 @@ namespace Gs2::StateMachine::Model
         UserIdValue(From.UserIdValue),
         NameValue(From.NameValue),
         StateMachineVersionValue(From.StateMachineVersionValue),
+        EnableSpeculativeExecutionValue(From.EnableSpeculativeExecutionValue),
+        StateMachineDefinitionValue(From.StateMachineDefinitionValue),
+        RandomStatusValue(From.RandomStatusValue),
         StacksValue(From.StacksValue),
         VariablesValue(From.VariablesValue),
         StatusValue(From.StatusValue),
@@ -79,6 +85,30 @@ namespace Gs2::StateMachine::Model
     )
     {
         this->StateMachineVersionValue = StateMachineVersion;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStatus> FStatus::WithEnableSpeculativeExecution(
+        const TOptional<FString> EnableSpeculativeExecution
+    )
+    {
+        this->EnableSpeculativeExecutionValue = EnableSpeculativeExecution;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStatus> FStatus::WithStateMachineDefinition(
+        const TOptional<FString> StateMachineDefinition
+    )
+    {
+        this->StateMachineDefinitionValue = StateMachineDefinition;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStatus> FStatus::WithRandomStatus(
+        const TSharedPtr<FRandomStatus> RandomStatus
+    )
+    {
+        this->RandomStatusValue = RandomStatus;
         return SharedThis(this);
     }
 
@@ -161,6 +191,18 @@ namespace Gs2::StateMachine::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), StateMachineVersionValue.GetValue());
+    }
+    TOptional<FString> FStatus::GetEnableSpeculativeExecution() const
+    {
+        return EnableSpeculativeExecutionValue;
+    }
+    TOptional<FString> FStatus::GetStateMachineDefinition() const
+    {
+        return StateMachineDefinitionValue;
+    }
+    TSharedPtr<FRandomStatus> FStatus::GetRandomStatus() const
+    {
+        return RandomStatusValue;
     }
     TSharedPtr<TArray<TSharedPtr<Model::FStackEntry>>> FStatus::GetStacks() const
     {
@@ -315,6 +357,32 @@ namespace Gs2::StateMachine::Model
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
+            ->WithEnableSpeculativeExecution(Data->HasField("enableSpeculativeExecution") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("enableSpeculativeExecution", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithStateMachineDefinition(Data->HasField("stateMachineDefinition") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("stateMachineDefinition", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithRandomStatus(Data->HasField("randomStatus") ? [Data]() -> Model::FRandomStatusPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>("randomStatus"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FRandomStatus::FromJson(Data->GetObjectField("randomStatus"));
+                 }() : nullptr)
             ->WithStacks(Data->HasField("stacks") ? [Data]() -> TSharedPtr<TArray<Model::FStackEntryPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FStackEntryPtr>>();
@@ -404,6 +472,18 @@ namespace Gs2::StateMachine::Model
         if (StateMachineVersionValue.IsSet())
         {
             JsonRootObject->SetStringField("stateMachineVersion", FString::Printf(TEXT("%lld"), StateMachineVersionValue.GetValue()));
+        }
+        if (EnableSpeculativeExecutionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("enableSpeculativeExecution", EnableSpeculativeExecutionValue.GetValue());
+        }
+        if (StateMachineDefinitionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("stateMachineDefinition", StateMachineDefinitionValue.GetValue());
+        }
+        if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
         }
         if (StacksValue != nullptr && StacksValue.IsValid())
         {

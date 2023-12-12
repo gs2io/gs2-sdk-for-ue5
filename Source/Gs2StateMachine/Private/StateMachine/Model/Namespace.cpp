@@ -22,6 +22,8 @@ namespace Gs2::StateMachine::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        SupportSpeculativeExecutionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         StartScriptValue(nullptr),
         PassScriptValue(nullptr),
         ErrorScriptValue(nullptr),
@@ -39,6 +41,8 @@ namespace Gs2::StateMachine::Model
         NamespaceIdValue(From.NamespaceIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        SupportSpeculativeExecutionValue(From.SupportSpeculativeExecutionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         StartScriptValue(From.StartScriptValue),
         PassScriptValue(From.PassScriptValue),
         ErrorScriptValue(From.ErrorScriptValue),
@@ -71,6 +75,22 @@ namespace Gs2::StateMachine::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithSupportSpeculativeExecution(
+        const TOptional<FString> SupportSpeculativeExecution
+    )
+    {
+        this->SupportSpeculativeExecutionValue = SupportSpeculativeExecution;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSetting(
+        const TSharedPtr<FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -148,6 +168,14 @@ namespace Gs2::StateMachine::Model
     TOptional<FString> FNamespace::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TOptional<FString> FNamespace::GetSupportSpeculativeExecution() const
+    {
+        return SupportSpeculativeExecutionValue;
+    }
+    TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
+    {
+        return TransactionSettingValue;
     }
     TSharedPtr<FScriptSetting> FNamespace::GetStartScript() const
     {
@@ -284,6 +312,23 @@ namespace Gs2::StateMachine::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithSupportSpeculativeExecution(Data->HasField("supportSpeculativeExecution") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("supportSpeculativeExecution", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithTransactionSetting(Data->HasField("transactionSetting") ? [Data]() -> Model::FTransactionSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>("transactionSetting"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
+                 }() : nullptr)
             ->WithStartScript(Data->HasField("startScript") ? [Data]() -> Model::FScriptSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>("startScript"))
@@ -368,6 +413,14 @@ namespace Gs2::StateMachine::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (SupportSpeculativeExecutionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("supportSpeculativeExecution", SupportSpeculativeExecutionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (StartScriptValue != nullptr && StartScriptValue.IsValid())
         {

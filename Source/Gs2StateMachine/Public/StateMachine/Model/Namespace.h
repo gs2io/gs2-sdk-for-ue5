@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "TransactionSetting.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -28,6 +29,8 @@ namespace Gs2::StateMachine::Model
         TOptional<FString> NamespaceIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
+        TOptional<FString> SupportSpeculativeExecutionValue;
+        TSharedPtr<FTransactionSetting> TransactionSettingValue;
         TSharedPtr<FScriptSetting> StartScriptValue;
         TSharedPtr<FScriptSetting> PassScriptValue;
         TSharedPtr<FScriptSetting> ErrorScriptValue;
@@ -47,6 +50,8 @@ namespace Gs2::StateMachine::Model
         TSharedPtr<FNamespace> WithNamespaceId(const TOptional<FString> NamespaceId);
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FNamespace> WithSupportSpeculativeExecution(const TOptional<FString> SupportSpeculativeExecution);
+        TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
         TSharedPtr<FNamespace> WithStartScript(const TSharedPtr<FScriptSetting> StartScript);
         TSharedPtr<FNamespace> WithPassScript(const TSharedPtr<FScriptSetting> PassScript);
         TSharedPtr<FNamespace> WithErrorScript(const TSharedPtr<FScriptSetting> ErrorScript);
@@ -59,6 +64,8 @@ namespace Gs2::StateMachine::Model
         TOptional<FString> GetNamespaceId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
+        TOptional<FString> GetSupportSpeculativeExecution() const;
+        TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<FScriptSetting> GetStartScript() const;
         TSharedPtr<FScriptSetting> GetPassScript() const;
         TSharedPtr<FScriptSetting> GetErrorScript() const;

@@ -68,6 +68,10 @@
 #include "Task/Rest/EmitTask.h"
 #include "Request/EmitByUserIdRequest.h"
 #include "Task/Rest/EmitByUserIdTask.h"
+#include "Request/ReportRequest.h"
+#include "Task/Rest/ReportTask.h"
+#include "Request/ReportByUserIdRequest.h"
+#include "Task/Rest/ReportByUserIdTask.h"
 #include "Request/DeleteStatusByUserIdRequest.h"
 #include "Task/Rest/DeleteStatusByUserIdTask.h"
 #include "Request/ExitStateMachineRequest.h"
@@ -184,6 +188,14 @@ namespace Gs2::StateMachine
 
         TSharedPtr<FAsyncTask<Task::Rest::FEmitByUserIdTask>> EmitByUserId(
             const Request::FEmitByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FReportTask>> Report(
+            const Request::FReportRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FReportByUserIdTask>> ReportByUserId(
+            const Request::FReportByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteStatusByUserIdTask>> DeleteStatusByUserId(

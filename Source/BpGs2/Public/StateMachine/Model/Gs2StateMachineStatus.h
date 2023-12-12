@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "StateMachine/Domain/Model/Gs2StateMachineEzStatusGameSessionDomain.h"
+#include "StateMachine/Model/Gs2StateMachineRandomStatus.h"
 #include "StateMachine/Model/Gs2StateMachineStackEntry.h"
 #include "StateMachine/Model/Gs2StateMachineVariable.h"
 #include "Core/BpGs2Constant.h"
@@ -41,6 +42,12 @@ struct FGs2StateMachineStatusValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString EnableSpeculativeExecution = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString StateMachineDefinition = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FGs2StateMachineRandomStatus RandomStatus = FGs2StateMachineRandomStatus();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2StateMachineStackEntry> Stacks = TArray<FGs2StateMachineStackEntry>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2StateMachineVariable> Variables = TArray<FGs2StateMachineVariable>();
@@ -63,6 +70,9 @@ inline FGs2StateMachineStatusValue EzStatusToFGs2StateMachineStatusValue(
     }
     Value.StatusId = Model->GetStatusId() ? *Model->GetStatusId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
+    Value.EnableSpeculativeExecution = Model->GetEnableSpeculativeExecution() ? *Model->GetEnableSpeculativeExecution() : "";
+    Value.StateMachineDefinition = Model->GetStateMachineDefinition() ? *Model->GetStateMachineDefinition() : "";
+    Value.RandomStatus = Model->GetRandomStatus() ? EzRandomStatusToFGs2StateMachineRandomStatus(Model->GetRandomStatus()) : FGs2StateMachineRandomStatus();
     Value.Stacks = Model->GetStacks() ? [&]
     {
         TArray<FGs2StateMachineStackEntry> r;
@@ -94,6 +104,9 @@ inline Gs2::UE5::StateMachine::Model::FEzStatusPtr FGs2StateMachineStatusValueTo
     return MakeShared<Gs2::UE5::StateMachine::Model::FEzStatus>()
         ->WithStatusId(Model.StatusId)
         ->WithName(Model.Name)
+        ->WithEnableSpeculativeExecution(Model.EnableSpeculativeExecution)
+        ->WithStateMachineDefinition(Model.StateMachineDefinition)
+        ->WithRandomStatus(FGs2StateMachineRandomStatusToEzRandomStatus(Model.RandomStatus))
         ->WithStacks([&]{
             auto r = MakeShared<TArray<Gs2::UE5::StateMachine::Model::FEzStackEntryPtr>>();
             for (auto v : Model.Stacks) {

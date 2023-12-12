@@ -35,6 +35,30 @@ namespace Gs2::UE5::StateMachine::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzStatus> FEzStatus::WithEnableSpeculativeExecution(
+        const TOptional<FString> EnableSpeculativeExecution
+    )
+    {
+        this->EnableSpeculativeExecutionValue = EnableSpeculativeExecution;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzStatus> FEzStatus::WithStateMachineDefinition(
+        const TOptional<FString> StateMachineDefinition
+    )
+    {
+        this->StateMachineDefinitionValue = StateMachineDefinition;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzStatus> FEzStatus::WithRandomStatus(
+        const TSharedPtr<Gs2::UE5::StateMachine::Model::FEzRandomStatus> RandomStatus
+    )
+    {
+        this->RandomStatusValue = RandomStatus;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzStatus> FEzStatus::WithStacks(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzStackEntry>>> Stacks
     )
@@ -82,6 +106,18 @@ namespace Gs2::UE5::StateMachine::Model
     {
         return NameValue;
     }
+    TOptional<FString> FEzStatus::GetEnableSpeculativeExecution() const
+    {
+        return EnableSpeculativeExecutionValue;
+    }
+    TOptional<FString> FEzStatus::GetStateMachineDefinition() const
+    {
+        return StateMachineDefinitionValue;
+    }
+    TSharedPtr<Gs2::UE5::StateMachine::Model::FEzRandomStatus> FEzStatus::GetRandomStatus() const
+    {
+        return RandomStatusValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzStackEntry>>> FEzStatus::GetStacks() const
     {
         return StacksValue;
@@ -117,6 +153,9 @@ namespace Gs2::UE5::StateMachine::Model
         return MakeShared<Gs2::StateMachine::Model::FStatus>()
             ->WithStatusId(StatusIdValue)
             ->WithName(NameValue)
+            ->WithEnableSpeculativeExecution(EnableSpeculativeExecutionValue)
+            ->WithStateMachineDefinition(StateMachineDefinitionValue)
+            ->WithRandomStatus(RandomStatusValue == nullptr ? nullptr : RandomStatusValue->ToModel())
             ->WithStacks([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::StateMachine::Model::FStackEntry>>>();
@@ -159,6 +198,9 @@ namespace Gs2::UE5::StateMachine::Model
         return MakeShared<FEzStatus>()
             ->WithStatusId(Model->GetStatusId())
             ->WithName(Model->GetName())
+            ->WithEnableSpeculativeExecution(Model->GetEnableSpeculativeExecution())
+            ->WithStateMachineDefinition(Model->GetStateMachineDefinition())
+            ->WithRandomStatus(Model->GetRandomStatus() != nullptr ? Gs2::UE5::StateMachine::Model::FEzRandomStatus::FromModel(Model->GetRandomStatus()) : nullptr)
             ->WithStacks([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzStackEntry>>>();

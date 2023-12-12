@@ -93,6 +93,10 @@ namespace Gs2::StateMachine::Task::Rest
             {
                 JsonRootObject->SetStringField("args", this->Request->GetArgs().GetValue());
             }
+            if (this->Request->GetEnableSpeculativeExecution().IsSet())
+            {
+                JsonRootObject->SetStringField("enableSpeculativeExecution", this->Request->GetEnableSpeculativeExecution().GetValue());
+            }
             if (this->Request->GetTtl().IsSet())
             {
                 JsonRootObject->SetNumberField("ttl", this->Request->GetTtl().GetValue());

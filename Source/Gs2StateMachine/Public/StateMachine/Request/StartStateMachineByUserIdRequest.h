@@ -28,6 +28,7 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> ArgsValue;
+        TOptional<FString> EnableSpeculativeExecutionValue;
         TOptional<int32> TtlValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -43,6 +44,7 @@ namespace Gs2::StateMachine::Request
         TSharedPtr<FStartStateMachineByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FStartStateMachineByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FStartStateMachineByUserIdRequest> WithArgs(const TOptional<FString> Args);
+        TSharedPtr<FStartStateMachineByUserIdRequest> WithEnableSpeculativeExecution(const TOptional<FString> EnableSpeculativeExecution);
         TSharedPtr<FStartStateMachineByUserIdRequest> WithTtl(const TOptional<int32> Ttl);
         TSharedPtr<FStartStateMachineByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -50,6 +52,7 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetArgs() const;
+        TOptional<FString> GetEnableSpeculativeExecution() const;
         TOptional<int32> GetTtl() const;
         FString GetTtlString() const;
         TOptional<FString> GetDuplicationAvoider() const;

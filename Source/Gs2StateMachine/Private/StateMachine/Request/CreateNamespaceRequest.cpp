@@ -21,6 +21,8 @@ namespace Gs2::StateMachine::Request
     FCreateNamespaceRequest::FCreateNamespaceRequest():
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        SupportSpeculativeExecutionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         StartScriptValue(nullptr),
         PassScriptValue(nullptr),
         ErrorScriptValue(nullptr),
@@ -34,6 +36,8 @@ namespace Gs2::StateMachine::Request
     ):
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        SupportSpeculativeExecutionValue(From.SupportSpeculativeExecutionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         StartScriptValue(From.StartScriptValue),
         PassScriptValue(From.PassScriptValue),
         ErrorScriptValue(From.ErrorScriptValue),
@@ -63,6 +67,22 @@ namespace Gs2::StateMachine::Request
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithSupportSpeculativeExecution(
+        const TOptional<FString> SupportSpeculativeExecution
+    )
+    {
+        this->SupportSpeculativeExecutionValue = SupportSpeculativeExecution;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithTransactionSetting(
+        const TSharedPtr<Model::FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -119,6 +139,20 @@ namespace Gs2::StateMachine::Request
     TOptional<FString> FCreateNamespaceRequest::GetDescription() const
     {
         return DescriptionValue;
+    }
+
+    TOptional<FString> FCreateNamespaceRequest::GetSupportSpeculativeExecution() const
+    {
+        return SupportSpeculativeExecutionValue;
+    }
+
+    TSharedPtr<Model::FTransactionSetting> FCreateNamespaceRequest::GetTransactionSetting() const
+    {
+        if (!TransactionSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingValue;
     }
 
     TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetStartScript() const
@@ -196,6 +230,23 @@ namespace Gs2::StateMachine::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithSupportSpeculativeExecution(Data->HasField("supportSpeculativeExecution") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("supportSpeculativeExecution", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+          ->WithTransactionSetting(Data->HasField("transactionSetting") ? [Data]() -> Model::FTransactionSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>("transactionSetting"))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
+             }() : nullptr)
           ->WithStartScript(Data->HasField("startScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("startScript"))
@@ -253,6 +304,14 @@ namespace Gs2::StateMachine::Request
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (SupportSpeculativeExecutionValue.IsSet())
+        {
+            JsonRootObject->SetStringField("supportSpeculativeExecution", SupportSpeculativeExecutionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (StartScriptValue != nullptr && StartScriptValue.IsValid())
         {

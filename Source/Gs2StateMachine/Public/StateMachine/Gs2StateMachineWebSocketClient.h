@@ -68,6 +68,10 @@
 #include "Task/WebSocket/EmitTask.h"
 #include "Request/EmitByUserIdRequest.h"
 #include "Task/WebSocket/EmitByUserIdTask.h"
+#include "Request/ReportRequest.h"
+#include "Task/WebSocket/ReportTask.h"
+#include "Request/ReportByUserIdRequest.h"
+#include "Task/WebSocket/ReportByUserIdTask.h"
 #include "Request/DeleteStatusByUserIdRequest.h"
 #include "Task/WebSocket/DeleteStatusByUserIdTask.h"
 #include "Request/ExitStateMachineRequest.h"
@@ -184,6 +188,14 @@ namespace Gs2::StateMachine
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FEmitByUserIdTask>> EmitByUserId(
             const Request::FEmitByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FReportTask>> Report(
+            const Request::FReportRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FReportByUserIdTask>> ReportByUserId(
+            const Request::FReportByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteStatusByUserIdTask>> DeleteStatusByUserId(

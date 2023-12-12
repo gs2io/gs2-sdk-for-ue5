@@ -22,6 +22,12 @@
 #include "Model/Status.h"
 #include "Model/StackEntry.h"
 #include "Model/Variable.h"
+#include "Model/TransactionSetting.h"
+#include "Model/Event.h"
+#include "Model/ChangeStateEvent.h"
+#include "Model/EmitEvent.h"
+#include "Model/RandomStatus.h"
+#include "Model/RandomUsed.h"
 #include "Model/LogSetting.h"
 #include "Model/ScriptSetting.h"
 
@@ -174,6 +180,18 @@
 #include "Result/EmitByUserIdResult.h"
 #include "Task/Rest/EmitByUserIdTask.h"
 #include "Task/WebSocket/EmitByUserIdTask.h"
+
+// Report
+#include "Request/ReportRequest.h"
+#include "Result/ReportResult.h"
+#include "Task/Rest/ReportTask.h"
+#include "Task/WebSocket/ReportTask.h"
+
+// ReportByUserId
+#include "Request/ReportByUserIdRequest.h"
+#include "Result/ReportByUserIdResult.h"
+#include "Task/Rest/ReportByUserIdTask.h"
+#include "Task/WebSocket/ReportByUserIdTask.h"
 
 // DeleteStatusByUserId
 #include "Request/DeleteStatusByUserIdRequest.h"

@@ -21,6 +21,11 @@
 #include "StateMachine/Model/Gs2StateMachineEzStatus.h"
 #include "StateMachine/Model/Gs2StateMachineEzStackEntry.h"
 #include "StateMachine/Model/Gs2StateMachineEzVariable.h"
+#include "StateMachine/Model/Gs2StateMachineEzChangeStateEvent.h"
+#include "StateMachine/Model/Gs2StateMachineEzEmitEvent.h"
+#include "StateMachine/Model/Gs2StateMachineEzEvent.h"
+#include "StateMachine/Model/Gs2StateMachineEzRandomStatus.h"
+#include "StateMachine/Model/Gs2StateMachineEzRandomUsed.h"
 #include "Gs2StateMachineEzStatusGameSessionDomain.h"
 #include "StateMachine/Domain/Iterator/Gs2StateMachineEzDescribeStatusesIterator.h"
 #include "Util/Net/GameSession.h"
@@ -71,6 +76,29 @@ namespace Gs2::UE5::StateMachine::Domain::Model
         TSharedPtr<FAsyncTask<FEmitTask>> Emit(
             FString EventName,
             TOptional<FString> Args = TOptional<FString>()
+        );
+
+        class FReportTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::StateMachine::Domain::Model::FEzStatusGameSessionDomain>,
+            public TSharedFromThis<FReportTask>
+        {
+            TSharedPtr<FEzStatusGameSessionDomain> Self;
+            TOptional<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzEvent>>> Events;
+
+        public:
+            explicit FReportTask(
+                TSharedPtr<FEzStatusGameSessionDomain> Self,
+                TOptional<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzEvent>>> Events = TOptional<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzEvent>>>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::StateMachine::Domain::Model::FEzStatusGameSessionDomain>> Result
+            ) override;
+        };
+        friend FReportTask;
+
+        TSharedPtr<FAsyncTask<FReportTask>> Report(
+            TOptional<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzEvent>>> Events = TOptional<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzEvent>>>()
         );
 
         class FExitTask :

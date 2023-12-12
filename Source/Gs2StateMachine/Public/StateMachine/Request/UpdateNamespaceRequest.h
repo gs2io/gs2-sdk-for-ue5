@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/TransactionSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -29,6 +30,8 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
+        TOptional<FString> SupportSpeculativeExecutionValue;
+        TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FScriptSetting> StartScriptValue;
         TSharedPtr<Model::FScriptSetting> PassScriptValue;
         TSharedPtr<Model::FScriptSetting> ErrorScriptValue;
@@ -46,6 +49,8 @@ namespace Gs2::StateMachine::Request
         TSharedPtr<FUpdateNamespaceRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
+        TSharedPtr<FUpdateNamespaceRequest> WithSupportSpeculativeExecution(const TOptional<FString> SupportSpeculativeExecution);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FUpdateNamespaceRequest> WithStartScript(const TSharedPtr<Model::FScriptSetting> StartScript);
         TSharedPtr<FUpdateNamespaceRequest> WithPassScript(const TSharedPtr<Model::FScriptSetting> PassScript);
         TSharedPtr<FUpdateNamespaceRequest> WithErrorScript(const TSharedPtr<Model::FScriptSetting> ErrorScript);
@@ -55,6 +60,8 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
+        TOptional<FString> GetSupportSpeculativeExecution() const;
+        TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FScriptSetting> GetStartScript() const;
         TSharedPtr<Model::FScriptSetting> GetPassScript() const;
         TSharedPtr<Model::FScriptSetting> GetErrorScript() const;

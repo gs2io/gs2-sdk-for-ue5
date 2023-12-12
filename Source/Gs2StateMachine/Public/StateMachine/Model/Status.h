@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "RandomStatus.h"
 #include "StackEntry.h"
 #include "Variable.h"
 
@@ -29,6 +30,9 @@ namespace Gs2::StateMachine::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> NameValue;
         TOptional<int64> StateMachineVersionValue;
+        TOptional<FString> EnableSpeculativeExecutionValue;
+        TOptional<FString> StateMachineDefinitionValue;
+        TSharedPtr<FRandomStatus> RandomStatusValue;
         TSharedPtr<TArray<TSharedPtr<FStackEntry>>> StacksValue;
         TSharedPtr<TArray<TSharedPtr<FVariable>>> VariablesValue;
         TOptional<FString> StatusValue;
@@ -48,6 +52,9 @@ namespace Gs2::StateMachine::Model
         TSharedPtr<FStatus> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FStatus> WithName(const TOptional<FString> Name);
         TSharedPtr<FStatus> WithStateMachineVersion(const TOptional<int64> StateMachineVersion);
+        TSharedPtr<FStatus> WithEnableSpeculativeExecution(const TOptional<FString> EnableSpeculativeExecution);
+        TSharedPtr<FStatus> WithStateMachineDefinition(const TOptional<FString> StateMachineDefinition);
+        TSharedPtr<FStatus> WithRandomStatus(const TSharedPtr<FRandomStatus> RandomStatus);
         TSharedPtr<FStatus> WithStacks(const TSharedPtr<TArray<TSharedPtr<FStackEntry>>> Stacks);
         TSharedPtr<FStatus> WithVariables(const TSharedPtr<TArray<TSharedPtr<FVariable>>> Variables);
         TSharedPtr<FStatus> WithStatus(const TOptional<FString> Status);
@@ -61,6 +68,9 @@ namespace Gs2::StateMachine::Model
         TOptional<FString> GetName() const;
         TOptional<int64> GetStateMachineVersion() const;
         FString GetStateMachineVersionString() const;
+        TOptional<FString> GetEnableSpeculativeExecution() const;
+        TOptional<FString> GetStateMachineDefinition() const;
+        TSharedPtr<FRandomStatus> GetRandomStatus() const;
         TSharedPtr<TArray<TSharedPtr<FStackEntry>>> GetStacks() const;
         TSharedPtr<TArray<TSharedPtr<FVariable>>> GetVariables() const;
         TOptional<FString> GetStatus() const;

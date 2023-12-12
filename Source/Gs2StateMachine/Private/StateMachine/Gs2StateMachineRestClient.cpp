@@ -244,6 +244,24 @@ namespace Gs2::StateMachine
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FReportTask>> FGs2StateMachineRestClient::Report(
+        const Request::FReportRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FReportTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FReportByUserIdTask>> FGs2StateMachineRestClient::ReportByUserId(
+        const Request::FReportByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FReportByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteStatusByUserIdTask>> FGs2StateMachineRestClient::DeleteStatusByUserId(
         const Request::FDeleteStatusByUserIdRequestPtr Request) const
     {

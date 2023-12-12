@@ -204,6 +204,72 @@ namespace Gs2::StateMachine::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FEmitTask>>(this->AsShared(), Request);
     }
 
+    FStatusAccessTokenDomain::FReportTask::FReportTask(
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
+        const Request::FReportRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusAccessTokenDomain::FReportTask::FReportTask(
+        const FReportTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusAccessTokenDomain::FReportTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::StateMachine::Domain::Model::FStatusAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithStatusName(Self->StatusName);
+        const auto Future = Self->Client->Report(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::StateMachine::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::StateMachine::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FReportTask>> FStatusAccessTokenDomain::Report(
+        Request::FReportRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FReportTask>>(this->AsShared(), Request);
+    }
+
     FStatusAccessTokenDomain::FExitStateMachineTask::FExitStateMachineTask(
         const TSharedPtr<FStatusAccessTokenDomain>& Self,
         const Request::FExitStateMachineRequestPtr Request

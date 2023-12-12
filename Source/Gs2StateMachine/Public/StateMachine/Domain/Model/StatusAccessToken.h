@@ -130,6 +130,32 @@ namespace Gs2::StateMachine::Domain::Model
             Request::FEmitRequestPtr Request
         );
 
+        class GS2STATEMACHINE_API FReportTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Domain::Model::FStatusAccessTokenDomain>,
+            public TSharedFromThis<FReportTask>
+        {
+            const TSharedPtr<FStatusAccessTokenDomain> Self;
+            const Request::FReportRequestPtr Request;
+        public:
+            explicit FReportTask(
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                const Request::FReportRequestPtr Request
+            );
+
+            FReportTask(
+                const FReportTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::StateMachine::Domain::Model::FStatusAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FReportTask;
+
+        TSharedPtr<FAsyncTask<FReportTask>> Report(
+            Request::FReportRequestPtr Request
+        );
+
         class GS2STATEMACHINE_API FExitStateMachineTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Domain::Model::FStatusAccessTokenDomain>,
             public TSharedFromThis<FExitStateMachineTask>

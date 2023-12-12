@@ -104,6 +104,69 @@ namespace Gs2::UE5::StateMachine::Domain::Model
         );
     }
 
+    FEzStatusGameSessionDomain::FReportTask::FReportTask(
+        TSharedPtr<FEzStatusGameSessionDomain> Self,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzEvent>>> Events
+    ): Self(Self), Events(Events)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzStatusGameSessionDomain::FReportTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::StateMachine::Domain::Model::FEzStatusGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Report(
+                    MakeShared<Gs2::StateMachine::Request::FReportRequest>()
+                        ->WithEvents([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::StateMachine::Model::FEvent>>>();
+                            if (!Events.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *Events) {
+                                Arr->Add(Value->ToModel());
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::StateMachine::Domain::Model::FEzStatusGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzStatusGameSessionDomain::FReportTask>> FEzStatusGameSessionDomain::Report(
+        TOptional<TArray<TSharedPtr<Gs2::UE5::StateMachine::Model::FEzEvent>>> Events
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FReportTask>>(
+            this->AsShared(),
+            Events
+        );
+    }
+
     FEzStatusGameSessionDomain::FExitTask::FExitTask(
         TSharedPtr<FEzStatusGameSessionDomain> Self
     ): Self(Self)

@@ -128,6 +128,32 @@ namespace Gs2::StateMachine::Domain::Model
             Request::FEmitByUserIdRequestPtr Request
         );
 
+        class GS2STATEMACHINE_API FReportTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Domain::Model::FStatusDomain>,
+            public TSharedFromThis<FReportTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const Request::FReportByUserIdRequestPtr Request;
+        public:
+            explicit FReportTask(
+                const TSharedPtr<FStatusDomain>& Self,
+                const Request::FReportByUserIdRequestPtr Request
+            );
+
+            FReportTask(
+                const FReportTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::StateMachine::Domain::Model::FStatusDomain>> Result
+            ) override;
+        };
+        friend FReportTask;
+
+        TSharedPtr<FAsyncTask<FReportTask>> Report(
+            Request::FReportByUserIdRequestPtr Request
+        );
+
         class GS2STATEMACHINE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FDeleteTask>

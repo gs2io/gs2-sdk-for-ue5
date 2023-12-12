@@ -86,6 +86,14 @@ namespace Gs2::StateMachine::Task::Rest
             {
                 JsonRootObject->SetStringField("description", this->Request->GetDescription().GetValue());
             }
+            if (this->Request->GetSupportSpeculativeExecution().IsSet())
+            {
+                JsonRootObject->SetStringField("supportSpeculativeExecution", this->Request->GetSupportSpeculativeExecution().GetValue());
+            }
+            if (this->Request->GetTransactionSetting() != nullptr && this->Request->GetTransactionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField("transactionSetting", this->Request->GetTransactionSetting()->ToJson());
+            }
             if (this->Request->GetStartScript() != nullptr && this->Request->GetStartScript().IsValid())
             {
                 JsonRootObject->SetObjectField("startScript", this->Request->GetStartScript()->ToJson());
