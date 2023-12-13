@@ -69,7 +69,7 @@ namespace Gs2::Inventory::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("inventory"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/stamp/item/verify");
+                .Append("/stamp/item/reference/verify");
 
             request->SetURL(Url);
 

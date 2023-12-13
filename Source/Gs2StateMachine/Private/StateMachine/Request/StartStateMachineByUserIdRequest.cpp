@@ -22,7 +22,6 @@ namespace Gs2::StateMachine::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         ArgsValue(TOptional<FString>()),
-        EnableSpeculativeExecutionValue(TOptional<FString>()),
         TtlValue(TOptional<int32>())
     {
     }
@@ -33,7 +32,6 @@ namespace Gs2::StateMachine::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         ArgsValue(From.ArgsValue),
-        EnableSpeculativeExecutionValue(From.EnableSpeculativeExecutionValue),
         TtlValue(From.TtlValue)
     {
     }
@@ -67,14 +65,6 @@ namespace Gs2::StateMachine::Request
     )
     {
         this->ArgsValue = Args;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FStartStateMachineByUserIdRequest> FStartStateMachineByUserIdRequest::WithEnableSpeculativeExecution(
-        const TOptional<FString> EnableSpeculativeExecution
-    )
-    {
-        this->EnableSpeculativeExecutionValue = EnableSpeculativeExecution;
         return SharedThis(this);
     }
 
@@ -112,11 +102,6 @@ namespace Gs2::StateMachine::Request
     TOptional<FString> FStartStateMachineByUserIdRequest::GetArgs() const
     {
         return ArgsValue;
-    }
-
-    TOptional<FString> FStartStateMachineByUserIdRequest::GetEnableSpeculativeExecution() const
-    {
-        return EnableSpeculativeExecutionValue;
     }
 
     TOptional<int32> FStartStateMachineByUserIdRequest::GetTtl() const
@@ -172,15 +157,6 @@ namespace Gs2::StateMachine::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-            ->WithEnableSpeculativeExecution(Data->HasField("enableSpeculativeExecution") ? [Data]() -> TOptional<FString>
-              {
-                  FString v("");
-                    if (Data->TryGetStringField("enableSpeculativeExecution", v))
-                  {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                  }
-                  return TOptional<FString>();
-              }() : TOptional<FString>())
             ->WithTtl(Data->HasField("ttl") ? [Data]() -> TOptional<int32>
               {
                   int32 v;
@@ -211,10 +187,6 @@ namespace Gs2::StateMachine::Request
         if (ArgsValue.IsSet())
         {
             JsonRootObject->SetStringField("args", ArgsValue.GetValue());
-        }
-        if (EnableSpeculativeExecutionValue.IsSet())
-        {
-            JsonRootObject->SetStringField("enableSpeculativeExecution", EnableSpeculativeExecutionValue.GetValue());
         }
         if (TtlValue.IsSet())
         {

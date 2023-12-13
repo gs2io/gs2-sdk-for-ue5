@@ -15,7 +15,6 @@
  */
 
 #include "Account/Model/Gs2AccountNamespace.h"
-#include "Account/Model/Gs2AccountBanStatus.h"
 #include "Account/Model/Gs2AccountAccount.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Account/Model/Gs2AccountAccount.h"
