@@ -30,6 +30,17 @@ namespace Gs2::JobQueue::Model
         return NamespaceNameValue;
     }
 
+    TSharedPtr<FRunNotification> FRunNotification::WithUserId(
+        const TOptional<FString> UserId
+    ) {
+        UserIdValue = UserId;
+        return SharedThis(this);
+    }
+    TOptional<FString> FRunNotification::GetUserId() const
+    {
+        return UserIdValue;
+    }
+
     TSharedPtr<FRunNotification> FRunNotification::WithJobName(
         const TOptional<FString> JobName
     ) {
@@ -51,6 +62,15 @@ namespace Gs2::JobQueue::Model
                 {
                     FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

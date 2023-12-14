@@ -19,10 +19,13 @@
 // Model
 #include "Model/Namespace.h"
 #include "Model/Script.h"
-#include "Model/GitHubCheckoutSetting.h"
-#include "Model/LogSetting.h"
 #include "Model/RandomStatus.h"
 #include "Model/RandomUsed.h"
+#include "Model/AcquireAction.h"
+#include "Model/ConsumeAction.h"
+#include "Model/Transaction.h"
+#include "Model/GitHubCheckoutSetting.h"
+#include "Model/LogSetting.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

@@ -22,12 +22,18 @@ namespace Gs2::Distributor::Model
 	{
 	public:
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> UserIdValue;
         TOptional<FString> TransactionIdValue;
 
         TSharedPtr<FAutoRunStampSheetNotification> WithNamespaceName(
             const TOptional<FString> NamespaceName
         );
         TOptional<FString> GetNamespaceName() const;
+
+        TSharedPtr<FAutoRunStampSheetNotification> WithUserId(
+            const TOptional<FString> UserId
+        );
+        TOptional<FString> GetUserId() const;
 
         TSharedPtr<FAutoRunStampSheetNotification> WithTransactionId(
             const TOptional<FString> TransactionId

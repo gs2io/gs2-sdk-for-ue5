@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Transaction.h"
 #include "../Model/RandomStatus.h"
 
 namespace Gs2::Script::Result
@@ -25,7 +26,7 @@ namespace Gs2::Script::Result
     {
         TOptional<int32> CodeValue;
         TOptional<FString> ResultValue;
-        TOptional<FString> TransactionValue;
+        TSharedPtr<Model::FTransaction> TransactionValue;
         TSharedPtr<Model::FRandomStatus> RandomStatusValue;
         TOptional<int32> ExecuteTimeValue;
         TOptional<int32> ChargedValue;
@@ -41,7 +42,7 @@ namespace Gs2::Script::Result
 
         TSharedPtr<FInvokeScriptResult> WithCode(const TOptional<int32> Code);
         TSharedPtr<FInvokeScriptResult> WithResult(const TOptional<FString> Result);
-        TSharedPtr<FInvokeScriptResult> WithTransaction(const TOptional<FString> Transaction);
+        TSharedPtr<FInvokeScriptResult> WithTransaction(const TSharedPtr<Model::FTransaction> Transaction);
         TSharedPtr<FInvokeScriptResult> WithRandomStatus(const TSharedPtr<Model::FRandomStatus> RandomStatus);
         TSharedPtr<FInvokeScriptResult> WithExecuteTime(const TOptional<int32> ExecuteTime);
         TSharedPtr<FInvokeScriptResult> WithCharged(const TOptional<int32> Charged);
@@ -50,7 +51,7 @@ namespace Gs2::Script::Result
         TOptional<int32> GetCode() const;
         FString GetCodeString() const;
         TOptional<FString> GetResult() const;
-        TOptional<FString> GetTransaction() const;
+        TSharedPtr<Model::FTransaction> GetTransaction() const;
         TSharedPtr<Model::FRandomStatus> GetRandomStatus() const;
         TOptional<int32> GetExecuteTime() const;
         FString GetExecuteTimeString() const;

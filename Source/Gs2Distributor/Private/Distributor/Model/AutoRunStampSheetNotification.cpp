@@ -30,6 +30,17 @@ namespace Gs2::Distributor::Model
         return NamespaceNameValue;
     }
 
+    TSharedPtr<FAutoRunStampSheetNotification> FAutoRunStampSheetNotification::WithUserId(
+        const TOptional<FString> UserId
+    ) {
+        UserIdValue = UserId;
+        return SharedThis(this);
+    }
+    TOptional<FString> FAutoRunStampSheetNotification::GetUserId() const
+    {
+        return UserIdValue;
+    }
+
     TSharedPtr<FAutoRunStampSheetNotification> FAutoRunStampSheetNotification::WithTransactionId(
         const TOptional<FString> TransactionId
     ) {
@@ -51,6 +62,15 @@ namespace Gs2::Distributor::Model
                 {
                     FString v("");
                     if (Data->TryGetStringField("namespaceName", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

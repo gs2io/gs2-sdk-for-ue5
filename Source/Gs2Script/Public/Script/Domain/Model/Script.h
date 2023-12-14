@@ -50,7 +50,6 @@ namespace Gs2::Script::Domain::Model
         public:
         TOptional<int32> Code;
         TOptional<FString> Result;
-        TOptional<FString> Transaction;
         TOptional<int32> ExecuteTime;
         TOptional<int32> Charged;
         TSharedPtr<TArray<FString>> Output;
@@ -61,10 +60,6 @@ namespace Gs2::Script::Domain::Model
         TOptional<FString> GetResult() const
         {
             return Result;
-        }
-        TOptional<FString> GetTransaction() const
-        {
-            return Transaction;
         }
         TOptional<int32> GetExecuteTime() const
         {

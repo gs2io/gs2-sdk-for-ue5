@@ -36,6 +36,8 @@ struct FGs2JobQueuePushNotification
 
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
 };
 
 inline FGs2JobQueuePushNotification EzPushNotificationToFGs2JobQueuePushNotification(
@@ -44,6 +46,7 @@ inline FGs2JobQueuePushNotification EzPushNotificationToFGs2JobQueuePushNotifica
 {
     FGs2JobQueuePushNotification Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     return Value;
 }
 
@@ -67,6 +70,8 @@ struct FGs2JobQueueRunNotification
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString NamespaceName = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString JobName = "";
 };
 
@@ -76,6 +81,7 @@ inline FGs2JobQueueRunNotification EzRunNotificationToFGs2JobQueueRunNotificatio
 {
     FGs2JobQueueRunNotification Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.JobName = Model->GetJobName() ? *Model->GetJobName() : "";
     return Value;
 }

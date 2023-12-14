@@ -459,10 +459,6 @@ namespace Gs2::Script::Domain::Model
             {
                 Self->Result = Domain->Result = ResultModel->GetResult();
             }
-            if (ResultModel->GetTransaction().IsSet())
-            {
-                Self->Transaction = Domain->Transaction = ResultModel->GetTransaction();
-            }
             if (ResultModel->GetExecuteTime().IsSet())
             {
                 Self->ExecuteTime = Domain->ExecuteTime = ResultModel->GetExecuteTime();
@@ -525,10 +521,6 @@ namespace Gs2::Script::Domain::Model
             if (ResultModel->GetResult().IsSet())
             {
                 Self->Result = Domain->Result = ResultModel->GetResult();
-            }
-            if (ResultModel->GetTransaction().IsSet())
-            {
-                Self->Transaction = Domain->Transaction = ResultModel->GetTransaction();
             }
             if (ResultModel->GetExecuteTime().IsSet())
             {

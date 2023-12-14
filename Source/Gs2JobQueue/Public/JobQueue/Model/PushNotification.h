@@ -22,11 +22,17 @@ namespace Gs2::JobQueue::Model
 	{
 	public:
         TOptional<FString> NamespaceNameValue;
+        TOptional<FString> UserIdValue;
 
         TSharedPtr<FPushNotification> WithNamespaceName(
             const TOptional<FString> NamespaceName
         );
         TOptional<FString> GetNamespaceName() const;
+
+        TSharedPtr<FPushNotification> WithUserId(
+            const TOptional<FString> UserId
+        );
+        TOptional<FString> GetUserId() const;
 
         static TSharedPtr<FPushNotification> FromJson(const TSharedPtr<FJsonObject> Data);
     };

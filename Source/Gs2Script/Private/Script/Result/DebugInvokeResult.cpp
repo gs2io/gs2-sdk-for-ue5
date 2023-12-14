@@ -21,7 +21,7 @@ namespace Gs2::Script::Result
     FDebugInvokeResult::FDebugInvokeResult():
         CodeValue(TOptional<int32>()),
         ResultValue(TOptional<FString>()),
-        TransactionValue(TOptional<FString>()),
+        TransactionValue(nullptr),
         RandomStatusValue(nullptr),
         ExecuteTimeValue(TOptional<int32>()),
         ChargedValue(TOptional<int32>()),
@@ -59,7 +59,7 @@ namespace Gs2::Script::Result
     }
 
     TSharedPtr<FDebugInvokeResult> FDebugInvokeResult::WithTransaction(
-        const TOptional<FString> Transaction
+        const TSharedPtr<Model::FTransaction> Transaction
     )
     {
         this->TransactionValue = Transaction;
@@ -117,8 +117,12 @@ namespace Gs2::Script::Result
         return ResultValue;
     }
 
-    TOptional<FString> FDebugInvokeResult::GetTransaction() const
+    TSharedPtr<Model::FTransaction> FDebugInvokeResult::GetTransaction() const
     {
+        if (!TransactionValue.IsValid())
+        {
+            return nullptr;
+        }
         return TransactionValue;
     }
 
@@ -192,15 +196,14 @@ namespace Gs2::Script::Result
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithTransaction(Data->HasField("transaction") ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField("transaction", v))
+            ->WithTransaction(Data->HasField("transaction") ? [Data]() -> Model::FTransactionPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("transaction"))
                     {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                        return nullptr;
                     }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
+                    return Model::FTransaction::FromJson(Data->GetObjectField("transaction"));
+                 }() : nullptr)
             ->WithRandomStatus(Data->HasField("randomStatus") ? [Data]() -> Model::FRandomStatusPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("randomStatus"))
@@ -252,9 +255,9 @@ namespace Gs2::Script::Result
         {
             JsonRootObject->SetStringField("result", ResultValue.GetValue());
         }
-        if (TransactionValue.IsSet())
+        if (TransactionValue != nullptr && TransactionValue.IsValid())
         {
-            JsonRootObject->SetStringField("transaction", TransactionValue.GetValue());
+            JsonRootObject->SetObjectField("transaction", TransactionValue->ToJson());
         }
         if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
         {
