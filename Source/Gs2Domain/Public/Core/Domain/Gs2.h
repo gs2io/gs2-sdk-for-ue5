@@ -153,12 +153,12 @@ namespace Gs2::Core::Domain
 
         void PushJobQueue(
             TOptional<FString> NamespaceName
-            ) const;
+        ) const;
         
         void UpdateCacheFromJobResult(
             Gs2::JobQueue::Model::FJobPtr Job,
             Gs2::JobQueue::Model::FJobResultBodyPtr Result
-            );
+        );
         
         class GS2DOMAIN_API FDispatchTask final :
             public Gs2::Core::Util::TGs2Future<void*>,
@@ -180,6 +180,28 @@ namespace Gs2::Core::Domain
 
         TSharedPtr<FAsyncTask<FDispatchTask>> Dispatch(
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        );
+        
+        class GS2DOMAIN_API FDispatchByUserIdTask final :
+            public Gs2::Core::Util::TGs2Future<void*>,
+            public TSharedFromThis<FDispatchByUserIdTask>
+        {
+            const TSharedPtr<FGs2> Self;
+            const FString UserId;
+        public:
+            explicit FDispatchByUserIdTask(
+                const TSharedPtr<FGs2> Self,
+                const FString UserId
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<void*>> Result
+            ) override;
+        };
+        friend FDispatchByUserIdTask;
+
+        TSharedPtr<FAsyncTask<FDispatchByUserIdTask>> DispatchByUserId(
+            const FString UserId
         );
         
         class GS2DOMAIN_API FDisconnectTask final :

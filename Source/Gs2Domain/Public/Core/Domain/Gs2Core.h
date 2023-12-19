@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Core/Domain/Model/AutoStampSheetDomain.h"
 #include "Core/Domain/Model/Gs2Iterator.h"
 #include "Core/Domain/Model/JobQueueDomain.h"
 #include "Core/Domain/Model/NotificationMessage.h"

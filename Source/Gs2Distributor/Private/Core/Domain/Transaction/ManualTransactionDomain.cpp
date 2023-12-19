@@ -1,0 +1,298 @@
+/*
+* Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+* Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License").
+* You may not use this file except in compliance with the License.
+* A copy of the License is located at
+*
+*  http://www.apache.org/licenses/LICENSE-2.0
+*
+* or in the "license" file accompanying this file. This file is distributed
+* on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+* express or implied. See the License for the specific language governing
+* permissions and limitations under the License.
+*/
+
+#include "../Public/Core/Domain/Transaction/ManualTransactionDomain.h"
+
+#include "Core/Domain/Gs2.h"
+#include "Distributor/Gs2DistributorRestClient.h"
+
+namespace Gs2::Core::Domain
+{
+	FTransactionDomainPtr FManualTransactionDomain::HandleResult(
+		FString Action,
+		const TSharedPtr<FJsonObject>& ResultJson
+	)
+	{
+		if (ResultJson.IsValid()) {
+			auto NextTransactions = MakeShared<TArray<FTransactionDomainPtr>>();
+			if (Action == "Gs2JobQueue:PushByUserId")
+			{
+				NextTransactions->Add(NewJobQueueDomain(
+					Gs2::JobQueue::Result::FPushByUserIdResult::FromJson(ResultJson)
+				));
+			}
+
+			if (ResultJson->HasField("autoRunStampSheet")) {
+				NextTransactions->Add(NewTransactionDomain(
+					ResultJson->HasField("autoRunStampSheet") && ResultJson->GetBoolField("autoRunStampSheet"),
+					ResultJson->HasField("transactionId") ? ResultJson->GetStringField("transactionId") : FString(""),
+					ResultJson->HasField("stampSheet") ? ResultJson->GetStringField("stampSheet") : FString(""),
+					ResultJson->HasField("stampSheetEncryptionKeyId") ? ResultJson->GetStringField("stampSheetEncryptionKeyId") : FString("")
+				));
+			}
+			if (NextTransactions->Num() > 0) {
+				return MakeShared<FTransactionDomain>(
+					Gs2,
+					NewJobQueueDomain,
+					NewTransactionDomain,
+					UserId,
+					NextTransactions
+				);
+			}
+		}
+		return nullptr;
+	}
+
+	FManualTransactionDomain::FManualTransactionDomain(
+		const FGs2Ptr& Gs2,
+		const TFunction<TSharedPtr<FTransactionDomain>(
+			const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
+		)>& NewJobQueueDomain,
+		const TFunction<TSharedPtr<FTransactionDomain>(
+			bool bAutoRun,
+			FString TransactionId,
+			FString StampSheet,
+			FString StampSheetEncryptionKeyId
+		)>& NewTransactionDomain,
+		const FString UserId,
+		const FString TransactionId,
+		const FString StampSheet,
+		const FString StampSheetEncryptionKeyId
+	):
+		FTransactionDomain(
+			Gs2,
+			NewJobQueueDomain,
+			NewTransactionDomain,
+			UserId,
+			nullptr
+		),
+		TransactionId(TransactionId),
+		StampSheet(StampSheet),
+		StampSheetEncryptionKeyId(StampSheetEncryptionKeyId)
+	{
+	        
+	}
+
+	FManualTransactionDomain::FManualTransactionDomain(
+		const FManualTransactionDomain& From
+	):
+		FTransactionDomain(
+			From.Gs2,
+			From.NewJobQueueDomain,
+			From.NewTransactionDomain,
+			From.UserId,
+			nullptr
+		),
+		TransactionId(From.TransactionId),
+		StampSheet(From.StampSheet),
+		StampSheetEncryptionKeyId(From.StampSheetEncryptionKeyId)
+	{
+	}
+
+	Gs2::Core::Model::FGs2ErrorPtr FManualTransactionDomain::WaitImpl(
+		const bool All,
+		TSharedPtr<TSharedPtr<FTransactionDomain>> Result
+	)
+	{
+        auto Client = MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(
+            Gs2->RestSession
+        );
+		TSharedPtr<FJsonObject> StampSheetJson;
+		if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(StampSheet);
+			!FJsonSerializer::Deserialize(JsonReader, StampSheetJson))
+		{
+			return nullptr;
+		}
+		auto StampSheetPayload = StampSheetJson->GetStringField("body");
+		TSharedPtr<FJsonObject> StampSheetPayloadJson;
+		if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(StampSheetPayload);
+			!FJsonSerializer::Deserialize(JsonReader, StampSheetPayloadJson))
+		{
+			return nullptr;
+		}
+        auto StampTasks = StampSheetPayloadJson->GetArrayField("tasks");
+        TOptional<FString> contextStack;
+        for (auto i = 0; i < StampTasks.Num(); i++)
+        {
+        	auto StampTask = StampTasks[i]->AsString();
+        	TSharedPtr<FJsonObject> stampTaskJson;
+        	if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(StampTask);
+				!FJsonSerializer::Deserialize(JsonReader, stampTaskJson))
+        	{
+        		return nullptr;
+        	}
+        	auto StampTaskPayload = stampTaskJson->GetStringField("body");
+        	TSharedPtr<FJsonObject> stampTaskPayloadJson;
+        	if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(StampTaskPayload);
+				!FJsonSerializer::Deserialize(JsonReader, stampTaskPayloadJson))
+        	{
+        		return nullptr;
+        	}
+        	if (!Gs2->TransactionConfiguration.IsValid() || !Gs2->TransactionConfiguration->NamespaceName.IsSet() || Gs2->TransactionConfiguration->NamespaceName->IsEmpty())
+            {
+                auto Future = Client->RunStampTaskWithoutNamespace(
+                    MakeShared<Gs2::Distributor::Request::FRunStampTaskWithoutNamespaceRequest>()
+                            ->WithContextStack(contextStack)
+                            ->WithStampTask(StampTasks[i]->AsString())
+                            ->WithKeyId(StampSheetEncryptionKeyId)
+                            );
+            	Future->StartSynchronousTask();
+            	if (Future->GetTask().IsError())
+            	{
+            		return Future->GetTask().Error();
+            	}
+            	const auto FutureResult = Future->GetTask().Result();
+                contextStack = FutureResult->GetContextStack();
+                Gs2->TransactionConfiguration->StampTaskEventHandler(
+                    stampTaskPayloadJson->GetStringField("action"),
+                    stampTaskPayloadJson->GetStringField("args"),
+                    *FutureResult->GetResult()
+                );
+            }
+            else
+            {
+                auto Future = Client->RunStampTask(
+                    MakeShared<Gs2::Distributor::Request::FRunStampTaskRequest>()
+                        ->WithContextStack(contextStack)
+                        ->WithNamespaceName(Gs2->TransactionConfiguration->NamespaceName)
+                        ->WithStampTask(StampTasks[i]->AsString())
+                        ->WithKeyId(StampSheetEncryptionKeyId)
+                        );
+            	Future->StartSynchronousTask();
+            	if (Future->GetTask().IsError())
+            	{
+                    if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+                    {
+                    	if (Gs2->TransactionConfiguration.IsValid()) {
+                    		Gs2->TransactionConfiguration->NamespaceName = TOptional<FString>();
+                    		auto Future2 = Wait(All);
+                    		Future2->StartSynchronousTask();
+                    		if (Future2->GetTask().IsError())
+                    		{
+                    			return Future2->GetTask().Error();
+                    		}
+                    		*Result = Future2->GetTask().Result();
+                    		return nullptr;
+                    	}
+                    }
+            		return Future->GetTask().Error();
+            	}
+                auto FutureResult = Future->GetTask().Result();
+                contextStack = FutureResult->GetContextStack();
+                Gs2->TransactionConfiguration->StampTaskEventHandler(
+                    stampTaskPayloadJson->GetStringField("action"),
+                    stampTaskPayloadJson->GetStringField("args"),
+                    *FutureResult->GetResult()
+                );
+            }
+        }
+
+		TOptional<FString> action;
+		TSharedPtr<FJsonObject> resultJson;
+		if (!Gs2->TransactionConfiguration.IsValid() || !Gs2->TransactionConfiguration->NamespaceName.IsSet() || Gs2->TransactionConfiguration->NamespaceName->IsEmpty())
+        {
+            auto Future = Client->RunStampSheetWithoutNamespace(
+                MakeShared<Gs2::Distributor::Request::FRunStampSheetWithoutNamespaceRequest>()
+                    ->WithContextStack(contextStack)
+                    ->WithStampSheet(StampSheet)
+                    ->WithKeyId(StampSheetEncryptionKeyId)
+                    );
+        	Future->StartSynchronousTask();
+        	if (Future->GetTask().IsError())
+        	{
+        		return Future->GetTask().Error();
+        	}
+        	const auto FutureResult = Future->GetTask().Result();
+            Gs2->TransactionConfiguration->StampSheetEventHandler(
+                StampSheetPayloadJson->GetStringField("action"),
+                StampSheetPayloadJson->GetStringField("args"),
+                *FutureResult->GetResult()
+            );
+        	action = StampSheetPayloadJson->GetStringField("action");
+        	if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(FutureResult->GetResult().IsSet() ? *FutureResult->GetResult() : "{}");
+				!FJsonSerializer::Deserialize(JsonReader, resultJson))
+        	{
+        		return nullptr;
+        	}
+        }
+        else
+        {
+            auto Future = Client->RunStampSheet(
+                MakeShared<Gs2::Distributor::Request::FRunStampSheetRequest>()
+                    ->WithContextStack(contextStack)
+                    ->WithNamespaceName(Gs2->TransactionConfiguration->NamespaceName)
+                    ->WithStampSheet(StampSheet)
+                    ->WithKeyId(StampSheetEncryptionKeyId)
+                    );
+        	Future->StartSynchronousTask();
+        	if (Future->GetTask().IsError())
+        	{
+        		if (Future->GetTask().Error()->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+        		{
+        			if (Gs2->TransactionConfiguration.IsValid()) {
+        				Gs2->TransactionConfiguration->NamespaceName = TOptional<FString>();
+        				auto Future2 = Wait(All);
+        				Future2->StartSynchronousTask();
+        				if (Future2->GetTask().IsError())
+        				{
+        					return Future2->GetTask().Error();
+        				}
+        				*Result = Future2->GetTask().Result();
+        				return nullptr;
+        			}
+        		}
+        		return Future->GetTask().Error();
+        	}
+            auto FutureResult = Future->GetTask().Result();
+            Gs2->TransactionConfiguration->StampSheetEventHandler(
+                StampSheetPayloadJson->GetStringField("action"),
+                StampSheetPayloadJson->GetStringField("args"),
+                *FutureResult->GetResult()
+            );
+        	action = StampSheetPayloadJson->GetStringField("action");
+        	if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(FutureResult->GetResult().IsSet() ? *FutureResult->GetResult() : "{}");
+				!FJsonSerializer::Deserialize(JsonReader, resultJson))
+        	{
+        		return nullptr;
+        	}
+        }
+
+        auto Transaction = HandleResult(*action, resultJson);
+        if (All && Transaction.IsValid()) {
+        	auto Future = Transaction->Wait(true);
+        	Future->StartSynchronousTask();
+        	if (Future->GetTask().IsError())
+        	{
+        		return Future->GetTask().Error();
+        	}
+        	*Result = nullptr;
+			return nullptr;
+        }
+        *Result = Transaction;
+		return nullptr;
+	}
+
+	TSharedPtr<FAsyncTask<FTransactionDomain::FWaitTask>> FManualTransactionDomain::Wait(
+		bool All
+	)
+	{
+		return Gs2::Core::Util::New<FAsyncTask<FWaitTask>>(this->AsShared(), [this, All](
+			TSharedPtr<TSharedPtr<FTransactionDomain>> Result
+		) {
+			return WaitImpl(All, Result);
+		});
+	}
+}

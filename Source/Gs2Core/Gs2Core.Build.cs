@@ -70,12 +70,6 @@ public class Gs2Core : ModuleRules
 			"Gs2StateMachine",
 			"Gs2Version",
 		});
-
-		PrivateIncludePathModuleNames.AddRange(new []
-		{
-			"Gs2Auth",
-			"Gs2Distributor",
-		});
 	}
 }
 

@@ -37,8 +37,6 @@
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Model/AutoStampSheetDomain.h"
-#include "Core/Domain/Model/StampSheetDomain.h"
 
 namespace Gs2::JobQueue::Domain::Model
 {
@@ -109,7 +107,7 @@ namespace Gs2::JobQueue::Domain::Model
         Future->EnsureCompletion();
         if (ResultModel != nullptr) {
             
-            if (ResultModel->GetItem() != nullptr)
+            if (ResultModel->GetItem().IsValid())
             {
                 const auto ParentKey = Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
@@ -122,24 +120,7 @@ namespace Gs2::JobQueue::Domain::Model
                 Self->Gs2->Cache->Delete(Gs2::JobQueue::Model::FJob::TypeName, ParentKey, Key);
             }
         }
-        if (ResultModel->GetItem() != nullptr) {
-            Self->Gs2->JobQueueDomain->OnExecutedEvent().Broadcast(
-                ResultModel->GetItem(),
-                ResultModel->GetResult()
-            );
-            auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>(
-                Self->Gs2,
-                Self->Service,
-                Request->GetNamespaceName(),
-                Self->AccessToken,
-                ResultModel->GetItem()->GetName()
-            );
-            Domain->IsLastJob = *ResultModel->GetIsLastJob();
-
-            *Result = Domain;
-        }
-        else
-        {
+        if (!ResultModel->GetItem().IsValid()) {
             Self->IsLastJob = *ResultModel->GetIsLastJob();
 
             *Result = nullptr;

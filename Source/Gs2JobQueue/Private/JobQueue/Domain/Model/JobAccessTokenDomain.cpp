@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -35,8 +37,6 @@
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Model/AutoStampSheetDomain.h"
-#include "Core/Domain/Model/StampSheetDomain.h"
 
 namespace Gs2::JobQueue::Domain::Model
 {
@@ -52,6 +52,10 @@ namespace Gs2::JobQueue::Domain::Model
         Gs2(Gs2),
         Service(Service),
         Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
+        AutoRun(TOptional<bool>()),
+        IsLastJob(TOptional<bool>()),
+        Result(nullptr),
+        NeedRetry(TOptional<bool>()),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         JobName(JobName),
@@ -69,6 +73,10 @@ namespace Gs2::JobQueue::Domain::Model
         Gs2(From.Gs2),
         Service(From.Service),
         Client(From.Client),
+        AutoRun(From.AutoRun),
+        IsLastJob(From.IsLastJob),
+        Result(From.Result),
+        NeedRetry(From.NeedRetry),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
         JobName(From.JobName),

@@ -60,6 +60,7 @@ namespace Gs2::JobQueue::Domain::Model
         public:
         TOptional<bool> AutoRun;
         TOptional<bool> IsLastJob;
+        Gs2::JobQueue::Model::FJobResultBodyPtr Result;
         TOptional<bool> NeedRetry;
         TOptional<bool> GetAutoRun() const
         {
@@ -68,6 +69,10 @@ namespace Gs2::JobQueue::Domain::Model
         TOptional<bool> GetIsLastJob() const
         {
             return IsLastJob;
+        }
+        Gs2::JobQueue::Model::FJobResultBodyPtr GetResult() const
+        {
+            return Result;
         }
         TOptional<bool> GetNeedRetry() const
         {

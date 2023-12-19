@@ -48,8 +48,6 @@
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Model/AutoStampSheetDomain.h"
-#include "Core/Domain/Model/StampSheetDomain.h"
 
 namespace Gs2::Friend::Domain::Model
 {

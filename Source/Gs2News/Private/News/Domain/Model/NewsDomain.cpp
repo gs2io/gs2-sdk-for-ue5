@@ -35,8 +35,9 @@
 #include "News/Domain/Model/SetCookieRequestEntry.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Model/AutoStampSheetDomain.h"
-#include "Core/Domain/Model/StampSheetDomain.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::News::Domain::Model
 {

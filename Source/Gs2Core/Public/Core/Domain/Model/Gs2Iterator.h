@@ -26,6 +26,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Model/Gs2Error.h"
+#include "Core/Util/Gs2Future.h"
 
 namespace Gs2::Core::Domain::Model
 {

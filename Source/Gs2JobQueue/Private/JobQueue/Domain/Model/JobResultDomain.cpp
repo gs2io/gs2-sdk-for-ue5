@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -34,8 +36,6 @@
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Model/AutoStampSheetDomain.h"
-#include "Core/Domain/Model/StampSheetDomain.h"
 
 namespace Gs2::JobQueue::Domain::Model
 {
@@ -241,6 +241,68 @@ namespace Gs2::JobQueue::Domain::Model
 
     TSharedPtr<FAsyncTask<FJobResultDomain::FModelTask>> FJobResultDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FJobResultDomain::FModelTask>>(this->AsShared());
+    }
+
+    FJobResultDomain::FModelNoCacheTask::FModelNoCacheTask(
+        const TSharedPtr<FJobResultDomain> Self
+    ):
+        Self(Self)
+    {
+    }
+
+    FJobResultDomain::FModelNoCacheTask::FModelNoCacheTask(
+        const FModelNoCacheTask& From
+    ):
+        Self(From.Self)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FJobResultDomain::FModelNoCacheTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::JobQueue::Model::FJobResult>> Result
+    )
+    {
+        TSharedPtr<Gs2::JobQueue::Model::FJobResult> Value;
+        const auto Future = Self->Get(
+            MakeShared<Gs2::JobQueue::Request::FGetJobResultByUserIdRequest>()
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+            {
+                return Future->GetTask().Error();
+            }
+
+            const auto Key = Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
+                Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::JobQueue::Model::FJobResult::TypeName,
+                Self->ParentKey,
+                Key,
+                nullptr,
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+
+            if (Future->GetTask().Error()->Detail(0)->GetComponent() != "jobResult")
+            {
+                return Future->GetTask().Error();
+            }
+        }
+        Self->Gs2->Cache->TryGet<Gs2::JobQueue::Model::FJobResult>(
+            Self->ParentKey,
+            Gs2::JobQueue::Domain::Model::FJobResultDomain::CreateCacheKey(
+                Self->TryNumber.IsSet() ? FString::FromInt(*Self->TryNumber) : TOptional<FString>()
+            ),
+            &Value
+        );
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FJobResultDomain::FModelNoCacheTask>> FJobResultDomain::ModelNoCache()
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FJobResultDomain::FModelNoCacheTask>>(this->AsShared());
     }
 
     Gs2::Core::Domain::CallbackID FJobResultDomain::Subscribe(

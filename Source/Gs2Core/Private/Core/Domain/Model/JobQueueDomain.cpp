@@ -21,68 +21,23 @@
 namespace Gs2::Core::Domain::Model
 {
     FJobQueueDomain::FJobQueueDomain(
-        TFunction<bool (FString, Gs2::Auth::Model::FAccessTokenPtr)> RunFunc
-    ): RunFunc(RunFunc)
+        FJobQueueExecutedEvent JobQueueExecutedEventHandler
+    ):
+        JobQueueExecutedEventHandler(JobQueueExecutedEventHandler)
     {
         
     }
 
     FJobQueueDomain::FJobQueueDomain(
         const FJobQueueDomain& From
-    ): RunFunc(From.RunFunc)
-    {
-    }
-
-    FJobQueueDomain::FRunTask::FRunTask(
-        const TSharedPtr<FJobQueueDomain> Self,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    ): Self(Self), AccessToken(AccessToken)
+    ):
+        JobQueueExecutedEventHandler(From.JobQueueExecutedEventHandler)
     {
         
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FJobQueueDomain::FRunTask::Action(
-        TSharedPtr<TSharedPtr<bool>> Result
-    )
-    {
-        if (Self->Mutex.TryLock())
-        {
-            FString NamespaceName;
-            if (Self->Tasks.Num() > 0)
-            {
-                NamespaceName = Self->Tasks[0];
-            }
-            if (NamespaceName.IsEmpty())
-            {
-                Self->Tasks.Remove(NamespaceName);
-            } else
-            {
-                if (Self->RunFunc(NamespaceName, AccessToken))
-                {
-                    Self->Tasks.Remove(NamespaceName);
-                }
-            }
-            *Result = MakeShared<bool>(Self->Tasks.Num() == 0);
-            return nullptr;
-        }
-        *Result = MakeShared<bool>(true);
-        return nullptr;
-    }
-
     void FJobQueueDomain::Push(FString NamespaceName)
     {
-        Tasks.Add(NamespaceName);
-    }
-
-    TSharedPtr<FAsyncTask<FJobQueueDomain::FRunTask>> FJobQueueDomain::Run(
-        Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FRunTask>>(SharedThis(this), AccessToken);
-    }
-
-    FJobQueueExecutedEvent& FJobQueueDomain::OnExecutedEvent()
-    {
-        return JobQueueExecutedEvent;
+        
     }
 }

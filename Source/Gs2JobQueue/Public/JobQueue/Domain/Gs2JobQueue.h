@@ -365,6 +365,27 @@ namespace Gs2::JobQueue::Domain
         TSharedPtr<FAsyncTask<FDispatchTask>> Dispatch(
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
+            class GS2JOBQUEUE_API FDispatchByUserIdTask final :
+                public Gs2::Core::Util::TGs2Future<void*>,
+                public TSharedFromThis<FDispatchByUserIdTask>
+            {
+                const TSharedPtr<FGs2JobQueueDomain> Self;
+                const FString UserId;
+            public:
+                explicit FDispatchByUserIdTask(
+                    const TSharedPtr<FGs2JobQueueDomain> Self,
+                    const FString UserId
+                );
+
+                virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                    TSharedPtr<TSharedPtr<void*>> Result
+                ) override;
+            };
+            friend FDispatchByUserIdTask;
+
+            TSharedPtr<FAsyncTask<FDispatchByUserIdTask>> DispatchByUserId(
+            const FString UserId
+            );
 
         DECLARE_MULTICAST_DELEGATE_OneParam(FIssueTransactionDelegate, Gs2::Core::Domain::Model::FIssueTransactionEventPtr);
         FIssueTransactionDelegate OnIssueTransaction;

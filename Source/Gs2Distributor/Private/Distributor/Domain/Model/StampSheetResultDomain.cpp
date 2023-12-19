@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -34,8 +36,7 @@
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Model/AutoStampSheetDomain.h"
-#include "Core/Domain/Model/StampSheetDomain.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Distributor::Domain::Model
 {
@@ -233,6 +234,68 @@ namespace Gs2::Distributor::Domain::Model
 
     TSharedPtr<FAsyncTask<FStampSheetResultDomain::FModelTask>> FStampSheetResultDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStampSheetResultDomain::FModelTask>>(this->AsShared());
+    }
+
+    FStampSheetResultDomain::FModelNoCacheTask::FModelNoCacheTask(
+        const TSharedPtr<FStampSheetResultDomain> Self
+    ):
+        Self(Self)
+    {
+    }
+
+    FStampSheetResultDomain::FModelNoCacheTask::FModelNoCacheTask(
+        const FModelNoCacheTask& From
+    ):
+        Self(From.Self)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStampSheetResultDomain::FModelNoCacheTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Distributor::Model::FStampSheetResult>> Result
+    )
+    {
+        TSharedPtr<Gs2::Distributor::Model::FStampSheetResult> Value;
+        const auto Future = Self->Get(
+            MakeShared<Gs2::Distributor::Request::FGetStampSheetResultByUserIdRequest>()
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+            {
+                return Future->GetTask().Error();
+            }
+
+            const auto Key = Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
+                Self->TransactionId
+            );
+            Self->Gs2->Cache->Put(
+                Gs2::Distributor::Model::FStampSheetResult::TypeName,
+                Self->ParentKey,
+                Key,
+                nullptr,
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+
+            if (Future->GetTask().Error()->Detail(0)->GetComponent() != "stampSheetResult")
+            {
+                return Future->GetTask().Error();
+            }
+        }
+        Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FStampSheetResult>(
+            Self->ParentKey,
+            Gs2::Distributor::Domain::Model::FStampSheetResultDomain::CreateCacheKey(
+                Self->TransactionId
+            ),
+            &Value
+        );
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStampSheetResultDomain::FModelNoCacheTask>> FStampSheetResultDomain::ModelNoCache()
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FStampSheetResultDomain::FModelNoCacheTask>>(this->AsShared());
     }
 
     Gs2::Core::Domain::CallbackID FStampSheetResultDomain::Subscribe(

@@ -33,7 +33,11 @@
 #include "Distributor/Domain/Model/User.h"
 #include "Distributor/Domain/Model/UserAccessToken.h"
 #include "Distributor/Domain/Model/StampSheetResult.h"
+#include "Core/Domain/Transaction/AutoTransactionAccessTokenDomain.h"
+#include "Core/Domain/Transaction/AutoTransactionDomain.h"
+#include "Core/Util/Gs2Future.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 
 namespace Gs2::Distributor::Domain
 {
@@ -238,15 +242,14 @@ namespace Gs2::Distributor::Domain
                     {
                         continue;
                     }
-                    const auto Future = MakeShared<Gs2::Core::Domain::Model::FAutoStampSheetDomain>(
-                        Self->Gs2->Cache,
-                        Self->Gs2->JobQueueDomain,
-                        Self->Gs2->RestSession,
+                    const auto Future = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                        Self->Gs2,
                         AccessToken,
-                        *CompletedStampSheet->GetNamespaceName(),
+                        true,
                         *CompletedStampSheet->GetTransactionId(),
-                        Self->Gs2->TransactionConfiguration
-                    )->Run();
+                        FString(""),
+                        FString("")
+                    )->Wait();
                     Future->StartSynchronousTask();
                     if (Future->GetTask().IsError())
                     {
@@ -273,6 +276,70 @@ namespace Gs2::Distributor::Domain
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FGs2DistributorDomain::FDispatchTask>>(this->AsShared(), AccessToken);
+    }
+
+    FGs2DistributorDomain::FDispatchByUserIdTask::FDispatchByUserIdTask(
+        const TSharedPtr<FGs2DistributorDomain> Self,
+        const FString UserId
+    ):
+        Self(Self),
+        UserId(UserId)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2DistributorDomain::FDispatchByUserIdTask::Action(
+        TSharedPtr<TSharedPtr<void*>> Result
+    )
+    {
+        if (Self->CompletedStampSheetsMutex->TryLock())
+        {
+            TArray CopiedCompletedStampSheetsTemp(*Self->CompletedStampSheets);
+            {
+                if (Self->CompletedStampSheets->Num() == 0)
+                {
+                    return nullptr;
+                }
+
+                for (auto CompletedStampSheet : CopiedCompletedStampSheetsTemp)
+                {
+                    if (!CompletedStampSheet->GetTransactionId().IsSet())
+                    {
+                        continue;
+                    }
+                    const auto Future = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                        Self->Gs2,
+                        UserId,
+                        true,
+                        *CompletedStampSheet->GetTransactionId(),
+                        FString(""),
+                        FString("")
+                    )->Wait();
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                        }
+                        else
+                        {
+                            return Future->GetTask().Error();
+                        }
+                    }
+                    Future->EnsureCompletion();
+                }
+
+                Self->CompletedStampSheets->Reset();
+            }
+            Self->CompletedStampSheetsMutex->Unlock();
+        }
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2DistributorDomain::FDispatchByUserIdTask>> FGs2DistributorDomain::DispatchByUserId(
+        const FString UserId
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FGs2DistributorDomain::FDispatchByUserIdTask>>(this->AsShared(), UserId);
     }
 }
 

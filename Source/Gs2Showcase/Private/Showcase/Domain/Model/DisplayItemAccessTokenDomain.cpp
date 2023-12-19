@@ -47,8 +47,8 @@
 #include "Showcase/Domain/SpeculativeExecutor/Transaction/BuyByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Model/AutoStampSheetDomain.h"
-#include "Core/Domain/Model/StampSheetDomain.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 
 namespace Gs2::Showcase::Domain::Model
 {
@@ -150,34 +150,20 @@ namespace Gs2::Showcase::Domain::Model
         Future->EnsureCompletion();
         if (ResultModel && ResultModel->GetStampSheet())
         {
-            const auto StampSheet = MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                Self->Gs2->Cache,
-                Self->Gs2->JobQueueDomain,
-                Self->Gs2->RestSession,
+            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                Self->Gs2,
+                Self->AccessToken,
+                false,
+                *ResultModel->GetTransactionId(),
                 *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId(),
-                Self->Gs2->TransactionConfiguration
+                *ResultModel->GetStampSheetEncryptionKeyId()
             );
-            const auto Future3 = StampSheet->Run();
+            const auto Future3 = Transaction->Wait(true);
             Future3->StartSynchronousTask();
             if (Future3->GetTask().IsError())
             {
-                return MakeShared<Core::Model::FTransactionError<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>(
-                    Future3->GetTask().Error()->GetErrors(),
-                    [&]() -> TSharedPtr<FAsyncTask<Gs2::Core::Domain::Model::FStampSheetDomain::FRunTask>>
-                    {
-                        return MakeShared<Gs2::Core::Domain::Model::FStampSheetDomain>(
-                            Self->Gs2->Cache,
-                            Self->Gs2->JobQueueDomain,
-                            Self->Gs2->RestSession,
-                            *ResultModel->GetStampSheet(),
-                            *ResultModel->GetStampSheetEncryptionKeyId(),
-                            Self->Gs2->TransactionConfiguration
-                        )->Run();
-                    }
-                );
+                return Future3->GetTask().Error();
             }
-            Future3->EnsureCompletion();
         }
         if (ResultModel != nullptr)
         {
@@ -188,12 +174,12 @@ namespace Gs2::Showcase::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FDisplayItemAccessTokenDomain::FBuyTask>> FDisplayItemAccessTokenDomain::Buy(
-        Request::FBuyRequestPtr Request,
-        bool SpeculativeExecute
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FBuyTask>>(this->AsShared(), Request, SpeculativeExecute);
-    }
+        TSharedPtr<FAsyncTask<FDisplayItemAccessTokenDomain::FBuyTask>> FDisplayItemAccessTokenDomain::Buy(
+            Request::FBuyRequestPtr Request,
+            bool SpeculativeExecute
+        ) {
+            return Gs2::Core::Util::New<FAsyncTask<FBuyTask>>(this->AsShared(), Request, SpeculativeExecute);
+        }
 
     FString FDisplayItemAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,

@@ -36,8 +36,6 @@
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Model/AutoStampSheetDomain.h"
-#include "Core/Domain/Model/StampSheetDomain.h"
 
 namespace Gs2::JobQueue::Domain::Model
 {
@@ -227,10 +225,6 @@ namespace Gs2::JobQueue::Domain::Model
             }
         }
         if (ResultModel->GetItem() != nullptr) {
-            Self->Gs2->JobQueueDomain->OnExecutedEvent().Broadcast(
-                ResultModel->GetItem(),
-                ResultModel->GetResult()
-                );
             auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobDomain>(
                 Self->Gs2,
                 Self->Service,
@@ -239,6 +233,7 @@ namespace Gs2::JobQueue::Domain::Model
                 ResultModel->GetItem()->GetName()
             );
             Domain->IsLastJob = *ResultModel->GetIsLastJob();
+            Domain->Result = ResultModel->GetResult();
 
             *Result = Domain;
         } else

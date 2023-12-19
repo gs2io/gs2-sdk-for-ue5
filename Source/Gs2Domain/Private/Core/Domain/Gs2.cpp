@@ -32,26 +32,15 @@ namespace Gs2::Core::Domain
     ):
         Cache(MakeShared<Core::Domain::FCacheDatabase>()),
         JobQueueDomain(MakeShared<Core::Domain::Model::FJobQueueDomain>(
-            [&](const FString NamespaceName, const Gs2::Auth::Model::FAccessTokenPtr AccessToken) -> bool
+            [&](
+                const Gs2::JobQueue::Model::FJobPtr& Job,
+                const Gs2::JobQueue::Model::FJobResultBodyPtr& Result
+            )
             {
-                const auto Future = JobQueue->Namespace(
-                    NamespaceName
-                )->AccessToken(
-                    AccessToken
-                )->Run(
-                    MakeShared<Gs2::JobQueue::Request::FRunRequest>()
-                );
-                Future->StartSynchronousTask();
-                if (!Future->GetTask().IsError())
-                {
-                    const auto ResultModel = Future->GetTask().Result();
-                    return ResultModel->IsLastJob.IsSet() ? *ResultModel->IsLastJob : true;
-                }
-                Future->EnsureCompletion();
-
-                return false;
-            })
-        ),
+                UE_LOG(Gs2Log, Verbose, TEXT("JobQueueResult [%s] %s"), ToCStr(*Job->GetName()), ToCStr(*Result->GetResult()));
+                UpdateCacheFromJobResult(Job, Result);
+            }
+        )),
         TransactionConfiguration(MakeShared<Core::Domain::Model::FTransactionConfiguration>(
             DistributorNamespaceName,
             [&](const FString Action, const FString Request, const FString Result)
@@ -293,14 +282,6 @@ namespace Gs2::Core::Domain
                 }
             });
         }
-            
-        this->JobQueueDomain->OnExecutedEvent().AddLambda([&](
-            const Gs2::JobQueue::Model::FJobPtr Job,
-            const Gs2::JobQueue::Model::FJobResultBodyPtr Result
-        )
-        {
-            this->UpdateCacheFromJobResult(Job, Result);
-        });
     }
 
     FGs2::FGs2(
@@ -1040,15 +1021,6 @@ namespace Gs2::Core::Domain
             Future->EnsureCompletion();
         }
         {
-            const auto Future = Self->JobQueueDomain->Run(AccessToken);
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            Future->EnsureCompletion();
-        }
-        {
             const auto Future = Self->JobQueue->Dispatch(AccessToken);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
@@ -1066,6 +1038,48 @@ namespace Gs2::Core::Domain
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FDispatchTask>>(SharedThis(this), AccessToken);
+    }
+
+    FGs2::FDispatchByUserIdTask::FDispatchByUserIdTask(
+        const TSharedPtr<FGs2> Self,
+        const FString UserId
+    ):
+        Self(Self),
+        UserId(UserId)
+    {
+        
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2::FDispatchByUserIdTask::Action(
+        TSharedPtr<TSharedPtr<void*>> Result
+    )
+    {
+        {
+            const auto Future = Self->Distributor->DispatchByUserId(UserId);
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            Future->EnsureCompletion();
+        }
+        {
+            const auto Future = Self->JobQueue->DispatchByUserId(UserId);
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            Future->EnsureCompletion();
+        }
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2::FDispatchByUserIdTask>> FGs2::DispatchByUserId(
+        const FString UserId
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDispatchByUserIdTask>>(SharedThis(this), UserId);
     }
 
     FGs2::FDisconnectTask::FDisconnectTask(const TSharedPtr<FGs2> Self): Self(Self)

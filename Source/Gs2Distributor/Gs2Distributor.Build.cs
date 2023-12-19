@@ -7,8 +7,9 @@ public class Gs2Distributor : ModuleRules
 	public Gs2Distributor(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PrivateDependencyModuleNames.AddRange(new [] {
+
+		PrivateDependencyModuleNames.AddRange(new[]
+		{
 			"Core",
 			"CoreUObject",
 			"Engine",
@@ -19,9 +20,11 @@ public class Gs2Distributor : ModuleRules
 			"Gs2Core",
 			"Gs2Auth",
 		});
+
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core",
-			"Gs2Core"
+			"Gs2Core",
+			"Gs2JobQueue",
 		});
 	}
 }

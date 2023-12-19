@@ -24,7 +24,7 @@ namespace Gs2::Core::Domain::Model
         const FStampTaskEvent StampTaskEventHandler,
         const FStampSheetEvent StampSheetEventHandler
     ):
-        NamespaceName(NamespaceName),
+        NamespaceName(NamespaceName.IsSet() ? NamespaceName : TOptional<FString>("default")),
         StampTaskEventHandler(StampTaskEventHandler),
         StampSheetEventHandler(StampSheetEventHandler)
     {

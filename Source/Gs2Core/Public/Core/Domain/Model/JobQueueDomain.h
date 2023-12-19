@@ -36,51 +36,27 @@ namespace Gs2::Core::Domain
 
 namespace Gs2::Core::Domain::Model
 {
-    DECLARE_EVENT_TwoParams(FJobQueueDomain, FJobQueueExecutedEvent, Gs2::JobQueue::Model::FJobPtr, Gs2::JobQueue::Model::FJobResultBodyPtr);
+    typedef TFunction<void (const Gs2::JobQueue::Model::FJobPtr&, const Gs2::JobQueue::Model::FJobResultBodyPtr&)> FJobQueueExecutedEvent;
 
     class GS2CORE_API FJobQueueDomain :
         public TSharedFromThis<FJobQueueDomain>
     {
         FCriticalSection Mutex;
         TArray<FString> Tasks;
-        TFunction<bool (FString, Gs2::Auth::Model::FAccessTokenPtr)> RunFunc;
-        FJobQueueExecutedEvent JobQueueExecutedEvent;
     public:
+        FJobQueueExecutedEvent JobQueueExecutedEventHandler;
+        
         explicit FJobQueueDomain(
-            TFunction<bool (FString, Gs2::Auth::Model::FAccessTokenPtr)> RunFunc
-            );
+            FJobQueueExecutedEvent JobQueueExecutedEvent
+        );
         explicit FJobQueueDomain(
             const FJobQueueDomain& From
         );
         ~FJobQueueDomain() = default;
 
-        class FRunTask final :
-            public Gs2::Core::Util::TGs2Future<bool>,
-            public TSharedFromThis<FRunTask>
-        {
-            const TSharedPtr<FJobQueueDomain> Self;
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
-        public:
-            explicit FRunTask(
-                const TSharedPtr<FJobQueueDomain> Self,
-                const Gs2::Auth::Model::FAccessTokenPtr AccessToken
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<bool>> Result
-            ) override;
-        };
-        friend FRunTask;
-
         void Push(
             FString NamespaceName
         );
-
-        TSharedPtr<FAsyncTask<FRunTask>> Run(
-            Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        );
-        
-        FJobQueueExecutedEvent& OnExecutedEvent();
     };
 
     typedef TSharedPtr<FJobQueueDomain> FJobQueueDomainPtr;
