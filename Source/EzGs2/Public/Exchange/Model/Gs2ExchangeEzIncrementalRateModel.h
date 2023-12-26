@@ -32,6 +32,7 @@ namespace Gs2::UE5::Exchange::Model
         TOptional<int64> BaseValueValue;
         TOptional<int64> CoefficientValueValue;
         TOptional<FString> ExchangeCountIdValue;
+        TOptional<int32> MaximumExchangeCountValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzAcquireAction>>> AcquireActionsValue;
 
 	public:
@@ -42,6 +43,7 @@ namespace Gs2::UE5::Exchange::Model
         TSharedPtr<FEzIncrementalRateModel> WithBaseValue(const TOptional<int64> BaseValue);
         TSharedPtr<FEzIncrementalRateModel> WithCoefficientValue(const TOptional<int64> CoefficientValue);
         TSharedPtr<FEzIncrementalRateModel> WithExchangeCountId(const TOptional<FString> ExchangeCountId);
+        TSharedPtr<FEzIncrementalRateModel> WithMaximumExchangeCount(const TOptional<int32> MaximumExchangeCount);
         TSharedPtr<FEzIncrementalRateModel> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzAcquireAction>>> AcquireActions);
 
         TOptional<FString> GetName() const;
@@ -59,6 +61,9 @@ namespace Gs2::UE5::Exchange::Model
         FString GetCoefficientValueString() const;
 
         TOptional<FString> GetExchangeCountId() const;
+
+        TOptional<int32> GetMaximumExchangeCount() const;
+        FString GetMaximumExchangeCountString() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzAcquireAction>>> GetAcquireActions() const;
 

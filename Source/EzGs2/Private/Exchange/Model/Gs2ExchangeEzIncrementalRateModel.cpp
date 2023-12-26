@@ -75,6 +75,14 @@ namespace Gs2::UE5::Exchange::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzIncrementalRateModel> FEzIncrementalRateModel::WithMaximumExchangeCount(
+        const TOptional<int32> MaximumExchangeCount
+    )
+    {
+        this->MaximumExchangeCountValue = MaximumExchangeCount;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzIncrementalRateModel> FEzIncrementalRateModel::WithAcquireActions(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzAcquireAction>>> AcquireActions
     )
@@ -128,6 +136,19 @@ namespace Gs2::UE5::Exchange::Model
     {
         return ExchangeCountIdValue;
     }
+    TOptional<int32> FEzIncrementalRateModel::GetMaximumExchangeCount() const
+    {
+        return MaximumExchangeCountValue;
+    }
+
+    FString FEzIncrementalRateModel::GetMaximumExchangeCountString() const
+    {
+        if (!MaximumExchangeCountValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), MaximumExchangeCountValue.GetValue());
+    }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzAcquireAction>>> FEzIncrementalRateModel::GetAcquireActions() const
     {
         return AcquireActionsValue;
@@ -143,6 +164,7 @@ namespace Gs2::UE5::Exchange::Model
             ->WithBaseValue(BaseValueValue)
             ->WithCoefficientValue(CoefficientValueValue)
             ->WithExchangeCountId(ExchangeCountIdValue)
+            ->WithMaximumExchangeCount(MaximumExchangeCountValue)
             ->WithAcquireActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::Exchange::Model::FAcquireAction>>>();
@@ -173,6 +195,7 @@ namespace Gs2::UE5::Exchange::Model
             ->WithBaseValue(Model->GetBaseValue())
             ->WithCoefficientValue(Model->GetCoefficientValue())
             ->WithExchangeCountId(Model->GetExchangeCountId())
+            ->WithMaximumExchangeCount(Model->GetMaximumExchangeCount())
             ->WithAcquireActions([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzAcquireAction>>>();

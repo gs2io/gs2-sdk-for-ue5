@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "2023.12.6",
+	"VersionName": "2023.12.7",
 	"FriendlyName": "GS2 Plugin",
 	"Description": "Plugin for Game Server Services",
 	"Category": "Online Service",
@@ -92,6 +92,11 @@
 		},
 		{
 			"Name": "Gs2Gateway",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "Gs2Grade",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
 		},

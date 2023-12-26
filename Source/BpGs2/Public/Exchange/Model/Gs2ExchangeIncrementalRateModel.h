@@ -51,6 +51,8 @@ struct FGs2ExchangeIncrementalRateModelValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString ExchangeCountId = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int32 MaximumExchangeCount = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2ExchangeAcquireAction> AcquireActions = TArray<FGs2ExchangeAcquireAction>();
 };
 
@@ -70,6 +72,7 @@ inline FGs2ExchangeIncrementalRateModelValue EzIncrementalRateModelToFGs2Exchang
     Value.BaseValue = Model->GetBaseValue() ? *Model->GetBaseValue() : 0;
     Value.CoefficientValue = Model->GetCoefficientValue() ? *Model->GetCoefficientValue() : 0;
     Value.ExchangeCountId = Model->GetExchangeCountId() ? *Model->GetExchangeCountId() : "";
+    Value.MaximumExchangeCount = Model->GetMaximumExchangeCount() ? *Model->GetMaximumExchangeCount() : 0;
     Value.AcquireActions = Model->GetAcquireActions() ? [&]
     {
         TArray<FGs2ExchangeAcquireAction> r;
@@ -94,6 +97,7 @@ inline Gs2::UE5::Exchange::Model::FEzIncrementalRateModelPtr FGs2ExchangeIncreme
         ->WithBaseValue(Model.BaseValue)
         ->WithCoefficientValue(Model.CoefficientValue)
         ->WithExchangeCountId(Model.ExchangeCountId)
+        ->WithMaximumExchangeCount(Model.MaximumExchangeCount)
         ->WithAcquireActions([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Exchange::Model::FEzAcquireActionPtr>>();
             for (auto v : Model.AcquireActions) {

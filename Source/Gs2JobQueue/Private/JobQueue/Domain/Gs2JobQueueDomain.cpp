@@ -33,8 +33,8 @@
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 #include "Core/Domain/Transaction/AutoJobQueueAccessTokenDomain.h"
 #include "Core/Domain/Transaction/AutoJobQueueDomain.h"
-#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::JobQueue::Domain
 {

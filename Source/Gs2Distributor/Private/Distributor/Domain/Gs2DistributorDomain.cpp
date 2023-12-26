@@ -35,9 +35,8 @@
 #include "Distributor/Domain/Model/StampSheetResult.h"
 #include "Core/Domain/Transaction/AutoTransactionAccessTokenDomain.h"
 #include "Core/Domain/Transaction/AutoTransactionDomain.h"
-#include "Core/Util/Gs2Future.h"
-#include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Distributor::Domain
 {

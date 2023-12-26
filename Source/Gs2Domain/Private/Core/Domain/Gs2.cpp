@@ -72,6 +72,7 @@ namespace Gs2::Core::Domain
         Formation(nullptr),
         Friend(nullptr),
         Gateway(nullptr),
+        Grade(nullptr),
         Identifier(nullptr),
         Idle(nullptr),
         Inbox(nullptr),
@@ -174,6 +175,10 @@ namespace Gs2::Core::Domain
                     if (Service == "Gs2Gateway")
                     {
                         Gateway->HandleNotification(Method, *Message->GetPayload());
+                    }
+                    if (Service == "Gs2Grade")
+                    {
+                        Grade->HandleNotification(Method, *Message->GetPayload());
                     }
                     if (Service == "Gs2Identifier")
                     {
@@ -307,6 +312,7 @@ namespace Gs2::Core::Domain
         Formation(From.Formation),
         Friend(From.Friend),
         Gateway(From.Gateway),
+        Grade(From.Grade),
         Identifier(From.Identifier),
         Idle(From.Idle),
         Inbox(From.Inbox),
@@ -359,6 +365,7 @@ namespace Gs2::Core::Domain
         Formation = MakeShared<Formation::Domain::FGs2FormationDomain>(SharedThis(this));
         Friend = MakeShared<Friend::Domain::FGs2FriendDomain>(SharedThis(this));
         Gateway = MakeShared<Gateway::Domain::FGs2GatewayDomain>(SharedThis(this));
+        Grade = MakeShared<Grade::Domain::FGs2GradeDomain>(SharedThis(this));
         Identifier = MakeShared<Identifier::Domain::FGs2IdentifierDomain>(SharedThis(this));
         Idle = MakeShared<Idle::Domain::FGs2IdleDomain>(SharedThis(this));
         Inbox = MakeShared<Inbox::Domain::FGs2InboxDomain>(SharedThis(this));
@@ -409,6 +416,7 @@ namespace Gs2::Core::Domain
         Formation->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Friend->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Gateway->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Grade->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Identifier->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Idle->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Inbox->OnIssueTransaction.AddLambda(IssueTransactionAction);
@@ -511,6 +519,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Gateway")
             {
                 Gateway->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2Grade")
+            {
+                Grade->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2Identifier")
             {
@@ -692,6 +704,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Gateway")
             {
                 Gateway->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2Grade")
+            {
+                Grade->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2Identifier")
             {
@@ -892,6 +908,10 @@ namespace Gs2::Core::Domain
             if (Service == "gateway")
             {
                 Gateway->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "grade")
+            {
+                Grade->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "identifier")
             {
