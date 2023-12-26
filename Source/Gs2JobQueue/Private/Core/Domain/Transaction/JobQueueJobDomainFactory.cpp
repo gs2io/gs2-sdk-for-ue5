@@ -36,7 +36,7 @@ namespace Gs2::Core::Domain
 		const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
 	)
 	{
-		auto NewJobQueueDomain = [&](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
+		auto NewJobQueueDomain = [&GS2, NewTransactionDomain, &AccessToken](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
 		{
 			return ToTransaction(
 				GS2,
@@ -45,13 +45,13 @@ namespace Gs2::Core::Domain
 				Result
 			);
 		};
-		if (Result->GetAutoRun()) {
+		if (Result->GetAutoRun().GetValue()) {
 			return MakeShared<FTransactionAccessTokenDomain>(
 				GS2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
 				AccessToken,
-				[&]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, &AccessToken, &Result]
 				{
 					auto Arr = MakeShared<TArray<FTransactionAccessTokenDomainPtr>>();
 					for (auto Item : *Result->GetItems())
@@ -81,7 +81,7 @@ namespace Gs2::Core::Domain
 				NewJobQueueDomain,
 				NewTransactionDomain,
 				AccessToken,
-				[&]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, &AccessToken, &Result]
 				{
 					auto Arr = MakeShared<TArray<FTransactionAccessTokenDomainPtr>>();
 					for (auto Item : *Result->GetItems())
@@ -115,7 +115,7 @@ namespace Gs2::Core::Domain
 		const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
 	)
 	{
-		auto NewJobQueueDomain = [&](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
+		auto NewJobQueueDomain = [&GS2, NewTransactionDomain, UserId](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
 		{
 			return ToTransaction(
 				GS2,
@@ -124,13 +124,13 @@ namespace Gs2::Core::Domain
 				Result
 			);
 		};
-		if (Result->GetAutoRun()) {
+		if (Result->GetAutoRun().GetValue()) {
 			return MakeShared<FTransactionDomain>(
 				GS2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
 				UserId,
-				[&]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, UserId, &Result]
 				{
 					auto Arr = MakeShared<TArray<FTransactionDomainPtr>>();
 					for (auto Item : *Result->GetItems())
@@ -160,7 +160,7 @@ namespace Gs2::Core::Domain
 				NewJobQueueDomain,
 				NewTransactionDomain,
 				UserId,
-				[&]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, UserId, &Result]
 				{
 					auto Arr = MakeShared<TArray<FTransactionDomainPtr>>();
 					for (auto Item : *Result->GetItems())
@@ -196,7 +196,7 @@ namespace Gs2::Core::Domain
 		FString JobName
 	)
 	{
-		auto NewJobQueueDomain = [&](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
+		auto NewJobQueueDomain = [&GS2, NewTransactionDomain, &AccessToken](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
 		{
 			return ToTransaction(
 				GS2,
@@ -211,7 +211,7 @@ namespace Gs2::Core::Domain
 				NewJobQueueDomain,
 				NewTransactionDomain,
 				AccessToken,
-				[&]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, &AccessToken, NamespaceName, JobName]
 				{
 					auto Arr = MakeShared<TArray<FTransactionAccessTokenDomainPtr>>();
 					Arr->Add(
@@ -235,7 +235,7 @@ namespace Gs2::Core::Domain
 				NewJobQueueDomain,
 				NewTransactionDomain,
 				AccessToken,
-				[&]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, &AccessToken, NamespaceName, JobName]
 				{
 					auto Arr = MakeShared<TArray<FTransactionAccessTokenDomainPtr>>();
 					Arr->Add(
@@ -268,7 +268,7 @@ namespace Gs2::Core::Domain
 		FString JobName
 	)
 	{
-		auto NewJobQueueDomain = [&](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
+		auto NewJobQueueDomain = [&GS2, NewTransactionDomain, UserId](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
 		{
 			return ToTransaction(
 				GS2,
@@ -283,7 +283,7 @@ namespace Gs2::Core::Domain
 				NewJobQueueDomain,
 				NewTransactionDomain,
 				UserId,
-				[&]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, UserId, NamespaceName, JobName]
 				{
 					auto Arr = MakeShared<TArray<FTransactionDomainPtr>>();
 					Arr->Add(
@@ -307,7 +307,7 @@ namespace Gs2::Core::Domain
 				NewJobQueueDomain,
 				NewTransactionDomain,
 				UserId,
-				[&]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, UserId, NamespaceName, JobName]
 				{
 					auto Arr = MakeShared<TArray<FTransactionDomainPtr>>();
 					Arr->Add(

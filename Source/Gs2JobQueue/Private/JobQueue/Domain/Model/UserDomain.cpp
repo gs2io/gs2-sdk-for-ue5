@@ -209,8 +209,8 @@ namespace Gs2::JobQueue::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
+        if (ResultModel != nullptr)
+        {
             if (ResultModel->GetItem() != nullptr)
             {
                 const auto ParentKey = Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -224,22 +224,35 @@ namespace Gs2::JobQueue::Domain::Model
                 Self->Gs2->Cache->Delete(Gs2::JobQueue::Model::FJob::TypeName, ParentKey, Key);
             }
         }
-        if (ResultModel->GetItem() != nullptr) {
-            auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobDomain>(
-                Self->Gs2,
-                Self->Service,
-                Request->GetNamespaceName(),
-                ResultModel->GetItem()->GetUserId(),
-                ResultModel->GetItem()->GetName()
-            );
-            Domain->IsLastJob = *ResultModel->GetIsLastJob();
-            Domain->Result = ResultModel->GetResult();
-
-            *Result = Domain;
-        } else
+        if (ResultModel != nullptr)
         {
-            Self->IsLastJob = *ResultModel->GetIsLastJob();
+            if (ResultModel->GetItem() != nullptr)
+            {
+                Self->Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
+                    ResultModel->GetItem(),
+                    ResultModel->GetResult()
+                );
+                auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobDomain>(
+                    Self->Gs2,
+                    Self->Service,
+                    Request->GetNamespaceName(),
+                    ResultModel->GetItem()->GetUserId(),
+                    ResultModel->GetItem()->GetName()
+                );
+                Domain->IsLastJob = *ResultModel->GetIsLastJob();
+                Domain->Result = ResultModel->GetResult();
 
+                *Result = Domain;
+            }
+            else
+            {
+                Self->IsLastJob = *ResultModel->GetIsLastJob();
+                
+                *Result = nullptr;
+            }
+        }
+        else
+        {
             *Result = nullptr;
         }
         return nullptr;

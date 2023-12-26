@@ -73,7 +73,7 @@ namespace Gs2::Core::Domain
 				NextActions->Add(InnerNext);
 			}
 		}
-		const auto Next = new FTransactionAccessTokenDomain(
+		const auto Next = MakeShared<FTransactionAccessTokenDomain>(
 			Gs2,
 			NewJobQueueDomain,
 			NewTransactionDomain,

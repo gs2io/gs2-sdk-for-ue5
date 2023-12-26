@@ -126,7 +126,6 @@ namespace Gs2::Core::Domain
 		TSharedPtr<TSharedPtr<FTransactionDomain>> Result
 	)
 	{
-		const auto Begin = FDateTime::Now();
 		RETRY:
 		const auto Future = Gs2->JobQueue->Namespace(
 			NamespaceName
@@ -141,7 +140,7 @@ namespace Gs2::Core::Domain
 			return Future->GetTask().Error();
 		}
 		const auto FutureResult = Future->GetTask().Result();
-		if (FutureResult->GetIsLastJob()) {
+		if (FutureResult.IsValid() && FutureResult->GetIsLastJob().GetValue()) {
 			return nullptr;
 		}
 		const auto Future2 = FutureResult->Model();

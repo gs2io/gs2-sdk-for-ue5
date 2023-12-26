@@ -140,7 +140,7 @@ namespace Gs2::Core::Domain
 			return Future->GetTask().Error();
 		}
 		const auto FutureResult = Future->GetTask().Result();
-		if (FutureResult->IsLastJob) {
+		if (FutureResult.IsValid() && FutureResult->GetIsLastJob().GetValue()) {
 			return nullptr;
 		}
 		const auto Future2 = FutureResult->Model();

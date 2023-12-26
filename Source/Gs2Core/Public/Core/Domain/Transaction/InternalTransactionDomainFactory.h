@@ -66,7 +66,7 @@ namespace Gs2::Core::Domain::Internal
 		{
 			return Gs2::Core::Domain::FTransactionDomainFactory::ToTransaction(
 				GS2,
-				[&](
+				[&GS2, UserId](
 					const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
 				)
 				{
@@ -121,7 +121,7 @@ namespace Gs2::Core::Domain::Internal
 		{
 			return Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
 				GS2,
-				[&](
+				[&GS2, UserId](
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,
@@ -185,7 +185,7 @@ namespace Gs2::Core::Domain::Internal
 		{
 			return Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
 				GS2,
-				[&](
+				[&GS2, UserId](
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,

@@ -87,7 +87,7 @@ namespace Gs2::Core::Domain
 		FString StampSheetEncryptionKeyId
 	)
 	{
-		auto NewTransactionDomain = [&](
+		auto NewTransactionDomain = [&GS2, NewJobQueueDomain, UserId](
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
