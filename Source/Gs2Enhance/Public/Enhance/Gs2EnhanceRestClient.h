@@ -58,12 +58,32 @@
 #include "Task/Rest/UpdateRateModelMasterTask.h"
 #include "Request/DeleteRateModelMasterRequest.h"
 #include "Task/Rest/DeleteRateModelMasterTask.h"
+#include "Request/DescribeUnleashRateModelsRequest.h"
+#include "Task/Rest/DescribeUnleashRateModelsTask.h"
+#include "Request/GetUnleashRateModelRequest.h"
+#include "Task/Rest/GetUnleashRateModelTask.h"
+#include "Request/DescribeUnleashRateModelMastersRequest.h"
+#include "Task/Rest/DescribeUnleashRateModelMastersTask.h"
+#include "Request/CreateUnleashRateModelMasterRequest.h"
+#include "Task/Rest/CreateUnleashRateModelMasterTask.h"
+#include "Request/GetUnleashRateModelMasterRequest.h"
+#include "Task/Rest/GetUnleashRateModelMasterTask.h"
+#include "Request/UpdateUnleashRateModelMasterRequest.h"
+#include "Task/Rest/UpdateUnleashRateModelMasterTask.h"
+#include "Request/DeleteUnleashRateModelMasterRequest.h"
+#include "Task/Rest/DeleteUnleashRateModelMasterTask.h"
 #include "Request/DirectEnhanceRequest.h"
 #include "Task/Rest/DirectEnhanceTask.h"
 #include "Request/DirectEnhanceByUserIdRequest.h"
 #include "Task/Rest/DirectEnhanceByUserIdTask.h"
 #include "Request/DirectEnhanceByStampSheetRequest.h"
 #include "Task/Rest/DirectEnhanceByStampSheetTask.h"
+#include "Request/UnleashRequest.h"
+#include "Task/Rest/UnleashTask.h"
+#include "Request/UnleashByUserIdRequest.h"
+#include "Task/Rest/UnleashByUserIdTask.h"
+#include "Request/UnleashByStampSheetRequest.h"
+#include "Task/Rest/UnleashByStampSheetTask.h"
 #include "Request/CreateProgressByUserIdRequest.h"
 #include "Task/Rest/CreateProgressByUserIdTask.h"
 #include "Request/GetProgressRequest.h"
@@ -186,6 +206,34 @@ namespace Gs2::Enhance
             const Request::FDeleteRateModelMasterRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeUnleashRateModelsTask>> DescribeUnleashRateModels(
+            const Request::FDescribeUnleashRateModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetUnleashRateModelTask>> GetUnleashRateModel(
+            const Request::FGetUnleashRateModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeUnleashRateModelMastersTask>> DescribeUnleashRateModelMasters(
+            const Request::FDescribeUnleashRateModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCreateUnleashRateModelMasterTask>> CreateUnleashRateModelMaster(
+            const Request::FCreateUnleashRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FGetUnleashRateModelMasterTask>> GetUnleashRateModelMaster(
+            const Request::FGetUnleashRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUpdateUnleashRateModelMasterTask>> UpdateUnleashRateModelMaster(
+            const Request::FUpdateUnleashRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDeleteUnleashRateModelMasterTask>> DeleteUnleashRateModelMaster(
+            const Request::FDeleteUnleashRateModelMasterRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDirectEnhanceTask>> DirectEnhance(
             const Request::FDirectEnhanceRequestPtr Request
         ) const;
@@ -196,6 +244,18 @@ namespace Gs2::Enhance
 
         TSharedPtr<FAsyncTask<Task::Rest::FDirectEnhanceByStampSheetTask>> DirectEnhanceByStampSheet(
             const Request::FDirectEnhanceByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUnleashTask>> Unleash(
+            const Request::FUnleashRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUnleashByUserIdTask>> UnleashByUserId(
+            const Request::FUnleashByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FUnleashByStampSheetTask>> UnleashByStampSheet(
+            const Request::FUnleashByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FCreateProgressByUserIdTask>> CreateProgressByUserId(

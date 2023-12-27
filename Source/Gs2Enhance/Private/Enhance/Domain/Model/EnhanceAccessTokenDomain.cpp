@@ -27,6 +27,8 @@
 #include "Enhance/Domain/Model/Namespace.h"
 #include "Enhance/Domain/Model/RateModel.h"
 #include "Enhance/Domain/Model/RateModelMaster.h"
+#include "Enhance/Domain/Model/UnleashRateModel.h"
+#include "Enhance/Domain/Model/UnleashRateModelMaster.h"
 #include "Enhance/Domain/Model/Enhance.h"
 #include "Enhance/Domain/Model/EnhanceAccessToken.h"
 #include "Enhance/Domain/Model/Progress.h"
@@ -35,6 +37,7 @@
 #include "Enhance/Domain/Model/User.h"
 #include "Enhance/Domain/Model/UserAccessToken.h"
 #include "Enhance/Domain/SpeculativeExecutor/Transaction/DirectEnhanceByUserIdSpeculativeExecutor.h"
+#include "Enhance/Domain/SpeculativeExecutor/Transaction/UnleashByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -182,6 +185,112 @@ namespace Gs2::Enhance::Domain::Model
         bool SpeculativeExecute
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FDirectTask>>(this->AsShared(), Request, SpeculativeExecute);
+    }
+
+    FEnhanceAccessTokenDomain::FUnleashTask::FUnleashTask(
+        const TSharedPtr<FEnhanceAccessTokenDomain>& Self,
+        const Request::FUnleashRequestPtr Request,
+        bool SpeculativeExecute
+    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
+    {
+
+    }
+
+    FEnhanceAccessTokenDomain::FUnleashTask::FUnleashTask(
+        const FUnleashTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEnhanceAccessTokenDomain::FUnleashTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FEnhanceAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+
+        if (SpeculativeExecute) {
+            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FUnleashByUserIdSpeculativeExecutor::Execute(
+                Self->Gs2,
+                Self->Service,
+                Self->AccessToken,
+                Request::FUnleashByUserIdRequest::FromJson(Request->ToJson())
+            );
+            SpeculativeExecuteFuture->StartSynchronousTask();
+            if (SpeculativeExecuteFuture->GetTask().IsError())
+            {
+                return SpeculativeExecuteFuture->GetTask().Error();
+            }
+            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
+            SpeculativeExecuteFuture->EnsureCompletion();
+
+            if (Commit.IsValid()) {
+                (*Commit)();
+            }
+        }
+        const auto Future = Self->Client->Unleash(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "UnleashRateModel"
+                );
+                const auto Key = Gs2::Enhance::Domain::Model::FUnleashRateModelDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Enhance::Model::FUnleashRateModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (ResultModel && ResultModel->GetStampSheet())
+        {
+            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                Self->Gs2,
+                Self->AccessToken,
+                false,
+                *ResultModel->GetTransactionId(),
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId()
+            );
+            const auto Future3 = Transaction->Wait(true);
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return Future3->GetTask().Error();
+            }
+        }
+        if (ResultModel != nullptr)
+        {
+            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
+            Self->TransactionId = ResultModel->GetTransactionId();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEnhanceAccessTokenDomain::FUnleashTask>> FEnhanceAccessTokenDomain::Unleash(
+        Request::FUnleashRequestPtr Request,
+        bool SpeculativeExecute
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FUnleashTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FString FEnhanceAccessTokenDomain::CreateCacheParentKey(

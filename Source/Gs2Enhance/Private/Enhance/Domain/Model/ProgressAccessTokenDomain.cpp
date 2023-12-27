@@ -27,6 +27,8 @@
 #include "Enhance/Domain/Model/Namespace.h"
 #include "Enhance/Domain/Model/RateModel.h"
 #include "Enhance/Domain/Model/RateModelMaster.h"
+#include "Enhance/Domain/Model/UnleashRateModel.h"
+#include "Enhance/Domain/Model/UnleashRateModelMaster.h"
 #include "Enhance/Domain/Model/Enhance.h"
 #include "Enhance/Domain/Model/EnhanceAccessToken.h"
 #include "Enhance/Domain/Model/Progress.h"

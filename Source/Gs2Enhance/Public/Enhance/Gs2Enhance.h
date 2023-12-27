@@ -20,10 +20,13 @@
 #include "Model/Namespace.h"
 #include "Model/RateModel.h"
 #include "Model/RateModelMaster.h"
+#include "Model/UnleashRateModel.h"
+#include "Model/UnleashRateModelMaster.h"
 #include "Model/Progress.h"
 #include "Model/CurrentRateMaster.h"
 #include "Model/BonusRate.h"
 #include "Model/Material.h"
+#include "Model/UnleashRateEntryModel.h"
 #include "Model/Config.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
@@ -150,6 +153,48 @@
 #include "Task/Rest/DeleteRateModelMasterTask.h"
 #include "Task/WebSocket/DeleteRateModelMasterTask.h"
 
+// DescribeUnleashRateModels
+#include "Request/DescribeUnleashRateModelsRequest.h"
+#include "Result/DescribeUnleashRateModelsResult.h"
+#include "Task/Rest/DescribeUnleashRateModelsTask.h"
+#include "Task/WebSocket/DescribeUnleashRateModelsTask.h"
+
+// GetUnleashRateModel
+#include "Request/GetUnleashRateModelRequest.h"
+#include "Result/GetUnleashRateModelResult.h"
+#include "Task/Rest/GetUnleashRateModelTask.h"
+#include "Task/WebSocket/GetUnleashRateModelTask.h"
+
+// DescribeUnleashRateModelMasters
+#include "Request/DescribeUnleashRateModelMastersRequest.h"
+#include "Result/DescribeUnleashRateModelMastersResult.h"
+#include "Task/Rest/DescribeUnleashRateModelMastersTask.h"
+#include "Task/WebSocket/DescribeUnleashRateModelMastersTask.h"
+
+// CreateUnleashRateModelMaster
+#include "Request/CreateUnleashRateModelMasterRequest.h"
+#include "Result/CreateUnleashRateModelMasterResult.h"
+#include "Task/Rest/CreateUnleashRateModelMasterTask.h"
+#include "Task/WebSocket/CreateUnleashRateModelMasterTask.h"
+
+// GetUnleashRateModelMaster
+#include "Request/GetUnleashRateModelMasterRequest.h"
+#include "Result/GetUnleashRateModelMasterResult.h"
+#include "Task/Rest/GetUnleashRateModelMasterTask.h"
+#include "Task/WebSocket/GetUnleashRateModelMasterTask.h"
+
+// UpdateUnleashRateModelMaster
+#include "Request/UpdateUnleashRateModelMasterRequest.h"
+#include "Result/UpdateUnleashRateModelMasterResult.h"
+#include "Task/Rest/UpdateUnleashRateModelMasterTask.h"
+#include "Task/WebSocket/UpdateUnleashRateModelMasterTask.h"
+
+// DeleteUnleashRateModelMaster
+#include "Request/DeleteUnleashRateModelMasterRequest.h"
+#include "Result/DeleteUnleashRateModelMasterResult.h"
+#include "Task/Rest/DeleteUnleashRateModelMasterTask.h"
+#include "Task/WebSocket/DeleteUnleashRateModelMasterTask.h"
+
 // DirectEnhance
 #include "Request/DirectEnhanceRequest.h"
 #include "Result/DirectEnhanceResult.h"
@@ -167,6 +212,24 @@
 #include "Result/DirectEnhanceByStampSheetResult.h"
 #include "Task/Rest/DirectEnhanceByStampSheetTask.h"
 #include "Task/WebSocket/DirectEnhanceByStampSheetTask.h"
+
+// Unleash
+#include "Request/UnleashRequest.h"
+#include "Result/UnleashResult.h"
+#include "Task/Rest/UnleashTask.h"
+#include "Task/WebSocket/UnleashTask.h"
+
+// UnleashByUserId
+#include "Request/UnleashByUserIdRequest.h"
+#include "Result/UnleashByUserIdResult.h"
+#include "Task/Rest/UnleashByUserIdTask.h"
+#include "Task/WebSocket/UnleashByUserIdTask.h"
+
+// UnleashByStampSheet
+#include "Request/UnleashByStampSheetRequest.h"
+#include "Result/UnleashByStampSheetResult.h"
+#include "Task/Rest/UnleashByStampSheetTask.h"
+#include "Task/WebSocket/UnleashByStampSheetTask.h"
 
 // CreateProgressByUserId
 #include "Request/CreateProgressByUserIdRequest.h"

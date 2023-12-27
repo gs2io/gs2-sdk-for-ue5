@@ -28,6 +28,8 @@
 #include "Enhance/Domain/Model/Namespace.h"
 #include "Enhance/Domain/Model/RateModel.h"
 #include "Enhance/Domain/Model/RateModelMaster.h"
+#include "Enhance/Domain/Model/UnleashRateModel.h"
+#include "Enhance/Domain/Model/UnleashRateModelMaster.h"
 #include "Enhance/Domain/Model/Enhance.h"
 #include "Enhance/Domain/Model/Progress.h"
 #include "Enhance/Domain/Model/CurrentRateMaster.h"
@@ -525,6 +527,40 @@ namespace Gs2::Enhance::Domain
                 );
             }
         }
+        if (Method == "UnleashByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Enhance::Request::FUnleashByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Enhance::Result::FUnleashByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "UnleashRateModel"
+                );
+                const auto Key = Gs2::Enhance::Domain::Model::FUnleashRateModelDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Enhance::Model::FUnleashRateModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "CreateProgressByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -636,6 +672,48 @@ namespace Gs2::Enhance::Domain
                 );
                 Gs2->Cache->Put(
                     Gs2::Enhance::Model::FRateModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "unleash_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Enhance::Request::FUnleashByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Enhance::Result::FUnleashByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "UnleashRateModel"
+                );
+                const auto Key = Gs2::Enhance::Domain::Model::FUnleashRateModelDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Enhance::Model::FUnleashRateModel::TypeName,
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),

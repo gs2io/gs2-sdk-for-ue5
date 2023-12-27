@@ -199,6 +199,69 @@ namespace Gs2::Enhance
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeUnleashRateModelsTask>> FGs2EnhanceRestClient::DescribeUnleashRateModels(
+        const Request::FDescribeUnleashRateModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeUnleashRateModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetUnleashRateModelTask>> FGs2EnhanceRestClient::GetUnleashRateModel(
+        const Request::FGetUnleashRateModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetUnleashRateModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeUnleashRateModelMastersTask>> FGs2EnhanceRestClient::DescribeUnleashRateModelMasters(
+        const Request::FDescribeUnleashRateModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeUnleashRateModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCreateUnleashRateModelMasterTask>> FGs2EnhanceRestClient::CreateUnleashRateModelMaster(
+        const Request::FCreateUnleashRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateUnleashRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FGetUnleashRateModelMasterTask>> FGs2EnhanceRestClient::GetUnleashRateModelMaster(
+        const Request::FGetUnleashRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FGetUnleashRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUpdateUnleashRateModelMasterTask>> FGs2EnhanceRestClient::UpdateUnleashRateModelMaster(
+        const Request::FUpdateUnleashRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUpdateUnleashRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDeleteUnleashRateModelMasterTask>> FGs2EnhanceRestClient::DeleteUnleashRateModelMaster(
+        const Request::FDeleteUnleashRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteUnleashRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDirectEnhanceTask>> FGs2EnhanceRestClient::DirectEnhance(
         const Request::FDirectEnhanceRequestPtr Request) const
     {
@@ -221,6 +284,33 @@ namespace Gs2::Enhance
         const Request::FDirectEnhanceByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDirectEnhanceByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUnleashTask>> FGs2EnhanceRestClient::Unleash(
+        const Request::FUnleashRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUnleashTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUnleashByUserIdTask>> FGs2EnhanceRestClient::UnleashByUserId(
+        const Request::FUnleashByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUnleashByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FUnleashByStampSheetTask>> FGs2EnhanceRestClient::UnleashByStampSheet(
+        const Request::FUnleashByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FUnleashByStampSheetTask>>(
             Session,
             Request
         );

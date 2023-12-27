@@ -199,6 +199,69 @@ namespace Gs2::Enhance
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUnleashRateModelsTask>> FGs2EnhanceWebSocketClient::DescribeUnleashRateModels(
+        const Request::FDescribeUnleashRateModelsRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeUnleashRateModelsTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetUnleashRateModelTask>> FGs2EnhanceWebSocketClient::GetUnleashRateModel(
+        const Request::FGetUnleashRateModelRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetUnleashRateModelTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUnleashRateModelMastersTask>> FGs2EnhanceWebSocketClient::DescribeUnleashRateModelMasters(
+        const Request::FDescribeUnleashRateModelMastersRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeUnleashRateModelMastersTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCreateUnleashRateModelMasterTask>> FGs2EnhanceWebSocketClient::CreateUnleashRateModelMaster(
+        const Request::FCreateUnleashRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateUnleashRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FGetUnleashRateModelMasterTask>> FGs2EnhanceWebSocketClient::GetUnleashRateModelMaster(
+        const Request::FGetUnleashRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetUnleashRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateUnleashRateModelMasterTask>> FGs2EnhanceWebSocketClient::UpdateUnleashRateModelMaster(
+        const Request::FUpdateUnleashRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUpdateUnleashRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteUnleashRateModelMasterTask>> FGs2EnhanceWebSocketClient::DeleteUnleashRateModelMaster(
+        const Request::FDeleteUnleashRateModelMasterRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteUnleashRateModelMasterTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDirectEnhanceTask>> FGs2EnhanceWebSocketClient::DirectEnhance(
         const Request::FDirectEnhanceRequestPtr Request) const
     {
@@ -221,6 +284,33 @@ namespace Gs2::Enhance
         const Request::FDirectEnhanceByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDirectEnhanceByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUnleashTask>> FGs2EnhanceWebSocketClient::Unleash(
+        const Request::FUnleashRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUnleashTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUnleashByUserIdTask>> FGs2EnhanceWebSocketClient::UnleashByUserId(
+        const Request::FUnleashByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUnleashByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FUnleashByStampSheetTask>> FGs2EnhanceWebSocketClient::UnleashByStampSheet(
+        const Request::FUnleashByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FUnleashByStampSheetTask>>(
             Session,
             Request
         );

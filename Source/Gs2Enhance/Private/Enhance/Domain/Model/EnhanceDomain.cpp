@@ -26,6 +26,8 @@
 #include "Enhance/Domain/Model/Namespace.h"
 #include "Enhance/Domain/Model/RateModel.h"
 #include "Enhance/Domain/Model/RateModelMaster.h"
+#include "Enhance/Domain/Model/UnleashRateModel.h"
+#include "Enhance/Domain/Model/UnleashRateModelMaster.h"
 #include "Enhance/Domain/Model/Enhance.h"
 #include "Enhance/Domain/Model/EnhanceAccessToken.h"
 #include "Enhance/Domain/Model/Progress.h"
@@ -157,6 +159,90 @@ namespace Gs2::Enhance::Domain::Model
         Request::FDirectEnhanceByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FDirectTask>>(this->AsShared(), Request);
+    }
+
+    FEnhanceDomain::FUnleashTask::FUnleashTask(
+        const TSharedPtr<FEnhanceDomain>& Self,
+        const Request::FUnleashByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FEnhanceDomain::FUnleashTask::FUnleashTask(
+        const FUnleashTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEnhanceDomain::FUnleashTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FEnhanceDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->UnleashByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "UnleashRateModel"
+                );
+                const auto Key = Gs2::Enhance::Domain::Model::FUnleashRateModelDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Enhance::Model::FUnleashRateModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (ResultModel && ResultModel->GetStampSheet())
+        {
+            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+                Self->Gs2,
+                *Self->UserId,
+                false,
+                *ResultModel->GetTransactionId(),
+                *ResultModel->GetStampSheet(),
+                *ResultModel->GetStampSheetEncryptionKeyId()
+            );
+            const auto Future3 = Transaction->Wait(true);
+            Future3->StartSynchronousTask();
+            if (Future3->GetTask().IsError())
+            {
+                return Future3->GetTask().Error();
+            }
+        }
+        if (ResultModel != nullptr)
+        {
+            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
+            Self->TransactionId = ResultModel->GetTransactionId();
+        }
+        *Result = Self;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEnhanceDomain::FUnleashTask>> FEnhanceDomain::Unleash(
+        Request::FUnleashByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FUnleashTask>>(this->AsShared(), Request);
     }
 
     FString FEnhanceDomain::CreateCacheParentKey(

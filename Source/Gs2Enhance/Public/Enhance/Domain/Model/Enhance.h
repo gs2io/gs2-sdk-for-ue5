@@ -23,6 +23,8 @@
 #include "Enhance/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Enhance/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Enhance/Domain/Iterator/DescribeRateModelMastersIterator.h"
+#include "Enhance/Domain/Iterator/DescribeUnleashRateModelsIterator.h"
+#include "Enhance/Domain/Iterator/DescribeUnleashRateModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -41,6 +43,8 @@ namespace Gs2::Enhance::Domain::Model
     class FNamespaceDomain;
     class FRateModelDomain;
     class FRateModelMasterDomain;
+    class FUnleashRateModelDomain;
+    class FUnleashRateModelMasterDomain;
     class FEnhanceDomain;
     class FEnhanceAccessTokenDomain;
     class FProgressDomain;
@@ -121,6 +125,32 @@ namespace Gs2::Enhance::Domain::Model
 
         TSharedPtr<FAsyncTask<FDirectTask>> Direct(
             Request::FDirectEnhanceByUserIdRequestPtr Request
+        );
+
+        class GS2ENHANCE_API FUnleashTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FEnhanceDomain>,
+            public TSharedFromThis<FUnleashTask>
+        {
+            const TSharedPtr<FEnhanceDomain> Self;
+            const Request::FUnleashByUserIdRequestPtr Request;
+        public:
+            explicit FUnleashTask(
+                const TSharedPtr<FEnhanceDomain>& Self,
+                const Request::FUnleashByUserIdRequestPtr Request
+            );
+
+            FUnleashTask(
+                const FUnleashTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FEnhanceDomain>> Result
+            ) override;
+        };
+        friend FUnleashTask;
+
+        TSharedPtr<FAsyncTask<FUnleashTask>> Unleash(
+            Request::FUnleashByUserIdRequestPtr Request
         );
 
         static FString CreateCacheParentKey(

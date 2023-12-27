@@ -23,6 +23,8 @@
 #include "Enhance/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Enhance/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Enhance/Domain/Iterator/DescribeRateModelMastersIterator.h"
+#include "Enhance/Domain/Iterator/DescribeUnleashRateModelsIterator.h"
+#include "Enhance/Domain/Iterator/DescribeUnleashRateModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -41,6 +43,8 @@ namespace Gs2::Enhance::Domain::Model
     class FNamespaceDomain;
     class FRateModelDomain;
     class FRateModelMasterDomain;
+    class FUnleashRateModelDomain;
+    class FUnleashRateModelMasterDomain;
     class FEnhanceDomain;
     class FEnhanceAccessTokenDomain;
     class FProgressDomain;
@@ -204,6 +208,32 @@ namespace Gs2::Enhance::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+        class GS2ENHANCE_API FCreateUnleashRateModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FUnleashRateModelMasterDomain>,
+            public TSharedFromThis<FCreateUnleashRateModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateUnleashRateModelMasterRequestPtr Request;
+        public:
+            explicit FCreateUnleashRateModelMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FCreateUnleashRateModelMasterRequestPtr Request
+            );
+
+            FCreateUnleashRateModelMasterTask(
+                const FCreateUnleashRateModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FUnleashRateModelMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateUnleashRateModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateUnleashRateModelMasterTask>> CreateUnleashRateModelMaster(
+            Request::FCreateUnleashRateModelMasterRequestPtr Request
+        );
+
         class GS2ENHANCE_API FCreateRateModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FRateModelMasterDomain>,
             public TSharedFromThis<FCreateRateModelMasterTask>
@@ -231,6 +261,36 @@ namespace Gs2::Enhance::Domain::Model
         );
 
         TSharedPtr<Gs2::Enhance::Domain::Model::FCurrentRateMasterDomain> CurrentRateMaster(
+        );
+
+        Gs2::Enhance::Domain::Iterator::FDescribeUnleashRateModelsIteratorPtr UnleashRateModels(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeUnleashRateModels(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeUnleashRateModels(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Enhance::Domain::Model::FUnleashRateModelDomain> UnleashRateModel(
+            const FString RateName
+        );
+
+        Gs2::Enhance::Domain::Iterator::FDescribeUnleashRateModelMastersIteratorPtr UnleashRateModelMasters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeUnleashRateModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeUnleashRateModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Enhance::Domain::Model::FUnleashRateModelMasterDomain> UnleashRateModelMaster(
+            const FString RateName
         );
 
         Gs2::Enhance::Domain::Iterator::FDescribeRateModelsIteratorPtr RateModels(

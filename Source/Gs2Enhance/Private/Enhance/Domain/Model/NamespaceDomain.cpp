@@ -26,6 +26,8 @@
 #include "Enhance/Domain/Model/Namespace.h"
 #include "Enhance/Domain/Model/RateModel.h"
 #include "Enhance/Domain/Model/RateModelMaster.h"
+#include "Enhance/Domain/Model/UnleashRateModel.h"
+#include "Enhance/Domain/Model/UnleashRateModelMaster.h"
 #include "Enhance/Domain/Model/Enhance.h"
 #include "Enhance/Domain/Model/EnhanceAccessToken.h"
 #include "Enhance/Domain/Model/Progress.h"
@@ -289,6 +291,74 @@ namespace Gs2::Enhance::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FCreateUnleashRateModelMasterTask::FCreateUnleashRateModelMasterTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FCreateUnleashRateModelMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateUnleashRateModelMasterTask::FCreateUnleashRateModelMasterTask(
+        const FCreateUnleashRateModelMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateUnleashRateModelMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Enhance::Domain::Model::FUnleashRateModelMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateUnleashRateModelMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "UnleashRateModelMaster"
+                );
+                const auto Key = Gs2::Enhance::Domain::Model::FUnleashRateModelMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Enhance::Model::FUnleashRateModelMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Enhance::Domain::Model::FUnleashRateModelMasterDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateUnleashRateModelMasterTask>> FNamespaceDomain::CreateUnleashRateModelMaster(
+        Request::FCreateUnleashRateModelMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateUnleashRateModelMasterTask>>(this->AsShared(), Request);
+    }
+
     FNamespaceDomain::FCreateRateModelMasterTask::FCreateRateModelMasterTask(
         const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateRateModelMasterRequestPtr Request
@@ -364,6 +434,106 @@ namespace Gs2::Enhance::Domain::Model
             Gs2,
             Service,
             NamespaceName
+        );
+    }
+
+    Gs2::Enhance::Domain::Iterator::FDescribeUnleashRateModelsIteratorPtr FNamespaceDomain::UnleashRateModels(
+    ) const
+    {
+        return MakeShared<Gs2::Enhance::Domain::Iterator::FDescribeUnleashRateModelsIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeUnleashRateModels(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Enhance::Model::FUnleashRateModel::TypeName,
+            Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "UnleashRateModel"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeUnleashRateModels(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Enhance::Model::FUnleashRateModel::TypeName,
+            Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "UnleashRateModel"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Enhance::Domain::Model::FUnleashRateModelDomain> FNamespaceDomain::UnleashRateModel(
+        const FString RateName
+    )
+    {
+        return MakeShared<Gs2::Enhance::Domain::Model::FUnleashRateModelDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
+        );
+    }
+
+    Gs2::Enhance::Domain::Iterator::FDescribeUnleashRateModelMastersIteratorPtr FNamespaceDomain::UnleashRateModelMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Enhance::Domain::Iterator::FDescribeUnleashRateModelMastersIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeUnleashRateModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Enhance::Model::FUnleashRateModelMaster::TypeName,
+            Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "UnleashRateModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeUnleashRateModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Enhance::Model::FUnleashRateModelMaster::TypeName,
+            Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "UnleashRateModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Enhance::Domain::Model::FUnleashRateModelMasterDomain> FNamespaceDomain::UnleashRateModelMaster(
+        const FString RateName
+    )
+    {
+        return MakeShared<Gs2::Enhance::Domain::Model::FUnleashRateModelMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            RateName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RateName)
         );
     }
 

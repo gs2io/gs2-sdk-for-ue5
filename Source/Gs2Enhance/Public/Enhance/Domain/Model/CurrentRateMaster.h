@@ -23,6 +23,8 @@
 #include "Enhance/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Enhance/Domain/Iterator/DescribeRateModelsIterator.h"
 #include "Enhance/Domain/Iterator/DescribeRateModelMastersIterator.h"
+#include "Enhance/Domain/Iterator/DescribeUnleashRateModelsIterator.h"
+#include "Enhance/Domain/Iterator/DescribeUnleashRateModelMastersIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -41,6 +43,8 @@ namespace Gs2::Enhance::Domain::Model
     class FNamespaceDomain;
     class FRateModelDomain;
     class FRateModelMasterDomain;
+    class FUnleashRateModelDomain;
+    class FUnleashRateModelMasterDomain;
     class FEnhanceDomain;
     class FEnhanceAccessTokenDomain;
     class FProgressDomain;

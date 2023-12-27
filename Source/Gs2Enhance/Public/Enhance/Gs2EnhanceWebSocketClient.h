@@ -58,12 +58,32 @@
 #include "Task/WebSocket/UpdateRateModelMasterTask.h"
 #include "Request/DeleteRateModelMasterRequest.h"
 #include "Task/WebSocket/DeleteRateModelMasterTask.h"
+#include "Request/DescribeUnleashRateModelsRequest.h"
+#include "Task/WebSocket/DescribeUnleashRateModelsTask.h"
+#include "Request/GetUnleashRateModelRequest.h"
+#include "Task/WebSocket/GetUnleashRateModelTask.h"
+#include "Request/DescribeUnleashRateModelMastersRequest.h"
+#include "Task/WebSocket/DescribeUnleashRateModelMastersTask.h"
+#include "Request/CreateUnleashRateModelMasterRequest.h"
+#include "Task/WebSocket/CreateUnleashRateModelMasterTask.h"
+#include "Request/GetUnleashRateModelMasterRequest.h"
+#include "Task/WebSocket/GetUnleashRateModelMasterTask.h"
+#include "Request/UpdateUnleashRateModelMasterRequest.h"
+#include "Task/WebSocket/UpdateUnleashRateModelMasterTask.h"
+#include "Request/DeleteUnleashRateModelMasterRequest.h"
+#include "Task/WebSocket/DeleteUnleashRateModelMasterTask.h"
 #include "Request/DirectEnhanceRequest.h"
 #include "Task/WebSocket/DirectEnhanceTask.h"
 #include "Request/DirectEnhanceByUserIdRequest.h"
 #include "Task/WebSocket/DirectEnhanceByUserIdTask.h"
 #include "Request/DirectEnhanceByStampSheetRequest.h"
 #include "Task/WebSocket/DirectEnhanceByStampSheetTask.h"
+#include "Request/UnleashRequest.h"
+#include "Task/WebSocket/UnleashTask.h"
+#include "Request/UnleashByUserIdRequest.h"
+#include "Task/WebSocket/UnleashByUserIdTask.h"
+#include "Request/UnleashByStampSheetRequest.h"
+#include "Task/WebSocket/UnleashByStampSheetTask.h"
 #include "Request/CreateProgressByUserIdRequest.h"
 #include "Task/WebSocket/CreateProgressByUserIdTask.h"
 #include "Request/GetProgressRequest.h"
@@ -186,6 +206,34 @@ namespace Gs2::Enhance
             const Request::FDeleteRateModelMasterRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUnleashRateModelsTask>> DescribeUnleashRateModels(
+            const Request::FDescribeUnleashRateModelsRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetUnleashRateModelTask>> GetUnleashRateModel(
+            const Request::FGetUnleashRateModelRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUnleashRateModelMastersTask>> DescribeUnleashRateModelMasters(
+            const Request::FDescribeUnleashRateModelMastersRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCreateUnleashRateModelMasterTask>> CreateUnleashRateModelMaster(
+            const Request::FCreateUnleashRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FGetUnleashRateModelMasterTask>> GetUnleashRateModelMaster(
+            const Request::FGetUnleashRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUpdateUnleashRateModelMasterTask>> UpdateUnleashRateModelMaster(
+            const Request::FUpdateUnleashRateModelMasterRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteUnleashRateModelMasterTask>> DeleteUnleashRateModelMaster(
+            const Request::FDeleteUnleashRateModelMasterRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDirectEnhanceTask>> DirectEnhance(
             const Request::FDirectEnhanceRequestPtr Request
         ) const;
@@ -196,6 +244,18 @@ namespace Gs2::Enhance
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDirectEnhanceByStampSheetTask>> DirectEnhanceByStampSheet(
             const Request::FDirectEnhanceByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUnleashTask>> Unleash(
+            const Request::FUnleashRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUnleashByUserIdTask>> UnleashByUserId(
+            const Request::FUnleashByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FUnleashByStampSheetTask>> UnleashByStampSheet(
+            const Request::FUnleashByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FCreateProgressByUserIdTask>> CreateProgressByUserId(

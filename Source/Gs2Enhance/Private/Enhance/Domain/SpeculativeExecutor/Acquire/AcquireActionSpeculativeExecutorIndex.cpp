@@ -24,6 +24,7 @@
 
 #include "Enhance/Domain/SpeculativeExecutor/Acquire/AcquireActionSpeculativeExecutorIndex.h"
 #include "Enhance/Domain/SpeculativeExecutor/Acquire/DirectEnhanceByUserIdSpeculativeExecutor.h"
+#include "Enhance/Domain/SpeculativeExecutor/Acquire/UnleashByUserIdSpeculativeExecutor.h"
 #include "Enhance/Domain/SpeculativeExecutor/Acquire/CreateProgressByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
@@ -75,6 +76,28 @@ namespace Gs2::Enhance::Domain::SpeculativeExecutor
             auto Request = Request::FDirectEnhanceByUserIdRequest::FromJson(RequestModelJson);
             Request = FDirectEnhanceByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDirectEnhanceByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FUnleashByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FUnleashByUserIdRequest::FromJson(RequestModelJson);
+            Request = FUnleashByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FUnleashByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,
