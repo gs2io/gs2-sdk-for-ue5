@@ -57,8 +57,13 @@ namespace Gs2::Grade::Domain::Model
         const Gs2::Grade::FGs2GradeRestClientPtr Client;
 
         public:
+        TOptional<FString> ExperienceNamespaceName;
         TOptional<FString> TransactionId;
         TOptional<bool> AutoRunStampSheet;
+        TOptional<FString> GetExperienceNamespaceName() const
+        {
+            return ExperienceNamespaceName;
+        }
         TOptional<FString> GetTransactionId() const
         {
             return TransactionId;

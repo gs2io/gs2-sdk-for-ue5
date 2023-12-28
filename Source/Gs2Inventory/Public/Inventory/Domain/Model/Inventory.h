@@ -260,6 +260,32 @@ namespace Gs2::Inventory::Domain::Model
             Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequestPtr Request
         );
 
+        class GS2INVENTORY_API FAcquireItemSetWithGradeTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FItemSetDomain>,
+            public TSharedFromThis<FAcquireItemSetWithGradeTask>
+        {
+            const TSharedPtr<FInventoryDomain> Self;
+            const Request::FAcquireItemSetWithGradeByUserIdRequestPtr Request;
+        public:
+            explicit FAcquireItemSetWithGradeTask(
+                const TSharedPtr<FInventoryDomain>& Self,
+                const Request::FAcquireItemSetWithGradeByUserIdRequestPtr Request
+            );
+
+            FAcquireItemSetWithGradeTask(
+                const FAcquireItemSetWithGradeTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FItemSetDomain>> Result
+            ) override;
+        };
+        friend FAcquireItemSetWithGradeTask;
+
+        TSharedPtr<FAsyncTask<FAcquireItemSetWithGradeTask>> AcquireItemSetWithGrade(
+            Request::FAcquireItemSetWithGradeByUserIdRequestPtr Request
+        );
+
         Gs2::Inventory::Domain::Iterator::FDescribeItemSetsByUserIdIteratorPtr ItemSets(
         ) const;
 

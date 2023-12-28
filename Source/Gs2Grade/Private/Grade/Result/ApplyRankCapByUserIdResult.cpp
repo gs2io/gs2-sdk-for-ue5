@@ -19,14 +19,18 @@
 namespace Gs2::Grade::Result
 {
     FApplyRankCapByUserIdResult::FApplyRankCapByUserIdResult():
-        ItemValue(nullptr)
+        ItemValue(nullptr),
+        ExperienceNamespaceNameValue(TOptional<FString>()),
+        ExperienceStatusValue(nullptr)
     {
     }
 
     FApplyRankCapByUserIdResult::FApplyRankCapByUserIdResult(
         const FApplyRankCapByUserIdResult& From
     ):
-        ItemValue(From.ItemValue)
+        ItemValue(From.ItemValue),
+        ExperienceNamespaceNameValue(From.ExperienceNamespaceNameValue),
+        ExperienceStatusValue(From.ExperienceStatusValue)
     {
     }
 
@@ -38,6 +42,22 @@ namespace Gs2::Grade::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FApplyRankCapByUserIdResult> FApplyRankCapByUserIdResult::WithExperienceNamespaceName(
+        const TOptional<FString> ExperienceNamespaceName
+    )
+    {
+        this->ExperienceNamespaceNameValue = ExperienceNamespaceName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FApplyRankCapByUserIdResult> FApplyRankCapByUserIdResult::WithExperienceStatus(
+        const TSharedPtr<Gs2::Experience::Model::FStatus> ExperienceStatus
+    )
+    {
+        this->ExperienceStatusValue = ExperienceStatus;
+        return SharedThis(this);
+    }
+
     TSharedPtr<Model::FStatus> FApplyRankCapByUserIdResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -45,6 +65,20 @@ namespace Gs2::Grade::Result
             return nullptr;
         }
         return ItemValue;
+    }
+
+    TOptional<FString> FApplyRankCapByUserIdResult::GetExperienceNamespaceName() const
+    {
+        return ExperienceNamespaceNameValue;
+    }
+
+    TSharedPtr<Gs2::Experience::Model::FStatus> FApplyRankCapByUserIdResult::GetExperienceStatus() const
+    {
+        if (!ExperienceStatusValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ExperienceStatusValue;
     }
 
     TSharedPtr<FApplyRankCapByUserIdResult> FApplyRankCapByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -60,6 +94,23 @@ namespace Gs2::Grade::Result
                         return nullptr;
                     }
                     return Model::FStatus::FromJson(Data->GetObjectField("item"));
+                 }() : nullptr)
+            ->WithExperienceNamespaceName(Data->HasField("experienceNamespaceName") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("experienceNamespaceName", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithExperienceStatus(Data->HasField("experienceStatus") ? [Data]() -> Gs2::Experience::Model::FStatusPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("experienceStatus"))
+                    {
+                        return nullptr;
+                    }
+                    return Gs2::Experience::Model::FStatus::FromJson(Data->GetObjectField("experienceStatus"));
                  }() : nullptr);
     }
 
@@ -69,6 +120,14 @@ namespace Gs2::Grade::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (ExperienceNamespaceNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("experienceNamespaceName", ExperienceNamespaceNameValue.GetValue());
+        }
+        if (ExperienceStatusValue != nullptr && ExperienceStatusValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("experienceStatus", ExperienceStatusValue->ToJson());
         }
         return JsonRootObject;
     }

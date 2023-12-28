@@ -202,8 +202,31 @@ namespace Gs2::Grade::Domain::Model
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (ResultModel->GetExperienceStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetExperienceStatus()->GetExperienceName(),
+                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetExperienceStatus(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
         auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+        }
 
         *Result = Domain;
         return nullptr;

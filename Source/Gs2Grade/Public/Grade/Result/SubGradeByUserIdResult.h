@@ -18,12 +18,15 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Status.h"
+#include "Gs2Experience/Public/Experience/Model/Status.h"
 
 namespace Gs2::Grade::Result
 {
     class GS2GRADE_API FSubGradeByUserIdResult final : public TSharedFromThis<FSubGradeByUserIdResult>
     {
         TSharedPtr<Model::FStatus> ItemValue;
+        TOptional<FString> ExperienceNamespaceNameValue;
+        TSharedPtr<Gs2::Experience::Model::FStatus> ExperienceStatusValue;
         
     public:
         
@@ -34,8 +37,12 @@ namespace Gs2::Grade::Result
         ~FSubGradeByUserIdResult() = default;
 
         TSharedPtr<FSubGradeByUserIdResult> WithItem(const TSharedPtr<Model::FStatus> Item);
+        TSharedPtr<FSubGradeByUserIdResult> WithExperienceNamespaceName(const TOptional<FString> ExperienceNamespaceName);
+        TSharedPtr<FSubGradeByUserIdResult> WithExperienceStatus(const TSharedPtr<Gs2::Experience::Model::FStatus> ExperienceStatus);
 
         TSharedPtr<Model::FStatus> GetItem() const;
+        TOptional<FString> GetExperienceNamespaceName() const;
+        TSharedPtr<Gs2::Experience::Model::FStatus> GetExperienceStatus() const;
 
         static TSharedPtr<FSubGradeByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

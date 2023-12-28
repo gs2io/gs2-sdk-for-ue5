@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Status.h"
+#include "Gs2Experience/Public/Experience/Model/Status.h"
 
 namespace Gs2::Grade::Result
 {
@@ -25,6 +26,8 @@ namespace Gs2::Grade::Result
     {
         TSharedPtr<Model::FStatus> ItemValue;
         TOptional<FString> NewContextStackValue;
+        TOptional<FString> ExperienceNamespaceNameValue;
+        TSharedPtr<Gs2::Experience::Model::FStatus> ExperienceStatusValue;
         
     public:
         
@@ -36,9 +39,13 @@ namespace Gs2::Grade::Result
 
         TSharedPtr<FSubGradeByStampTaskResult> WithItem(const TSharedPtr<Model::FStatus> Item);
         TSharedPtr<FSubGradeByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
+        TSharedPtr<FSubGradeByStampTaskResult> WithExperienceNamespaceName(const TOptional<FString> ExperienceNamespaceName);
+        TSharedPtr<FSubGradeByStampTaskResult> WithExperienceStatus(const TSharedPtr<Gs2::Experience::Model::FStatus> ExperienceStatus);
 
         TSharedPtr<Model::FStatus> GetItem() const;
         TOptional<FString> GetNewContextStack() const;
+        TOptional<FString> GetExperienceNamespaceName() const;
+        TSharedPtr<Gs2::Experience::Model::FStatus> GetExperienceStatus() const;
 
         static TSharedPtr<FSubGradeByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -513,6 +513,12 @@
 #include "Task/Rest/AcquireItemSetByUserIdTask.h"
 #include "Task/WebSocket/AcquireItemSetByUserIdTask.h"
 
+// AcquireItemSetWithGradeByUserId
+#include "Request/AcquireItemSetWithGradeByUserIdRequest.h"
+#include "Result/AcquireItemSetWithGradeByUserIdResult.h"
+#include "Task/Rest/AcquireItemSetWithGradeByUserIdTask.h"
+#include "Task/WebSocket/AcquireItemSetWithGradeByUserIdTask.h"
+
 // ConsumeItemSet
 #include "Request/ConsumeItemSetRequest.h"
 #include "Result/ConsumeItemSetResult.h"
@@ -548,6 +554,12 @@
 #include "Result/AcquireItemSetByStampSheetResult.h"
 #include "Task/Rest/AcquireItemSetByStampSheetTask.h"
 #include "Task/WebSocket/AcquireItemSetByStampSheetTask.h"
+
+// AcquireItemSetWithGradeByStampSheet
+#include "Request/AcquireItemSetWithGradeByStampSheetRequest.h"
+#include "Result/AcquireItemSetWithGradeByStampSheetResult.h"
+#include "Task/Rest/AcquireItemSetWithGradeByStampSheetTask.h"
+#include "Task/WebSocket/AcquireItemSetWithGradeByStampSheetTask.h"
 
 // ConsumeItemSetByStampTask
 #include "Request/ConsumeItemSetByStampTaskRequest.h"

@@ -174,6 +174,8 @@
 #include "Task/Rest/GetItemWithSignatureByUserIdTask.h"
 #include "Request/AcquireItemSetByUserIdRequest.h"
 #include "Task/Rest/AcquireItemSetByUserIdTask.h"
+#include "Request/AcquireItemSetWithGradeByUserIdRequest.h"
+#include "Task/Rest/AcquireItemSetWithGradeByUserIdTask.h"
 #include "Request/ConsumeItemSetRequest.h"
 #include "Task/Rest/ConsumeItemSetTask.h"
 #include "Request/ConsumeItemSetByUserIdRequest.h"
@@ -186,6 +188,8 @@
 #include "Task/Rest/VerifyItemSetByUserIdTask.h"
 #include "Request/AcquireItemSetByStampSheetRequest.h"
 #include "Task/Rest/AcquireItemSetByStampSheetTask.h"
+#include "Request/AcquireItemSetWithGradeByStampSheetRequest.h"
+#include "Task/Rest/AcquireItemSetWithGradeByStampSheetTask.h"
 #include "Request/ConsumeItemSetByStampTaskRequest.h"
 #include "Task/Rest/ConsumeItemSetByStampTaskTask.h"
 #include "Request/VerifyItemSetByStampTaskRequest.h"
@@ -604,6 +608,10 @@ namespace Gs2::Inventory
             const Request::FAcquireItemSetByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FAcquireItemSetWithGradeByUserIdTask>> AcquireItemSetWithGradeByUserId(
+            const Request::FAcquireItemSetWithGradeByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FConsumeItemSetTask>> ConsumeItemSet(
             const Request::FConsumeItemSetRequestPtr Request
         ) const;
@@ -626,6 +634,10 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::Rest::FAcquireItemSetByStampSheetTask>> AcquireItemSetByStampSheet(
             const Request::FAcquireItemSetByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FAcquireItemSetWithGradeByStampSheetTask>> AcquireItemSetWithGradeByStampSheet(
+            const Request::FAcquireItemSetWithGradeByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FConsumeItemSetByStampTaskTask>> ConsumeItemSetByStampTask(

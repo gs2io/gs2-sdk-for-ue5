@@ -19,6 +19,11 @@
 namespace Gs2::UE5::Grade::Domain::Model
 {
 
+    TOptional<FString> FEzUserDomain::ExperienceNamespaceName() const
+    {
+        return Domain->ExperienceNamespaceName;
+    }
+
     TOptional<FString> FEzUserDomain::TransactionId() const
     {
         return Domain->TransactionId;

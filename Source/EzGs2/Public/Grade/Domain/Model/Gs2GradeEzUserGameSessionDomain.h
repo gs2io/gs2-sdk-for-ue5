@@ -40,6 +40,7 @@ namespace Gs2::UE5::Grade::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TOptional<FString> ExperienceNamespaceName() const;
         TOptional<FString> TransactionId() const;
         TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NextPageToken() const;

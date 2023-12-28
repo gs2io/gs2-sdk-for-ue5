@@ -525,6 +525,25 @@ namespace Gs2::Grade::Domain
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (ResultModel->GetExperienceStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetExperienceStatus()->GetExperienceName(),
+                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetExperienceStatus(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
         if (Method == "ApplyRankCapByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -558,6 +577,25 @@ namespace Gs2::Grade::Domain
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetExperienceStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetExperienceStatus()->GetExperienceName(),
+                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetExperienceStatus(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
@@ -618,6 +656,25 @@ namespace Gs2::Grade::Domain
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetExperienceStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetExperienceStatus()->GetExperienceName(),
+                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetExperienceStatus(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
@@ -706,6 +763,25 @@ namespace Gs2::Grade::Domain
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
+            if (ResultModel->GetExperienceStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetExperienceStatus()->GetExperienceName(),
+                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetExperienceStatus(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
         if (Method == "apply_rank_cap_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -747,6 +823,25 @@ namespace Gs2::Grade::Domain
                     ParentKey,
                     Key,
                     ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetExperienceStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetExperienceStatus()->GetExperienceName(),
+                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Experience::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetExperienceStatus(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }

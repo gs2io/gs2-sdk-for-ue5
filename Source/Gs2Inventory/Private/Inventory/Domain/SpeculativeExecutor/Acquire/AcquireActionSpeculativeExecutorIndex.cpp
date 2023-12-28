@@ -26,6 +26,7 @@
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AddCapacityByUserIdSpeculativeExecutor.h"
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/SetCapacityByUserIdSpeculativeExecutor.h"
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AcquireItemSetByUserIdSpeculativeExecutor.h"
+#include "Inventory/Domain/SpeculativeExecutor/Acquire/AcquireItemSetWithGradeByUserIdSpeculativeExecutor.h"
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AddReferenceOfByUserIdSpeculativeExecutor.h"
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/DeleteReferenceOfByUserIdSpeculativeExecutor.h"
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AcquireSimpleItemsByUserIdSpeculativeExecutor.h"
@@ -126,6 +127,28 @@ namespace Gs2::Inventory::Domain::SpeculativeExecutor
             auto Request = Request::FAcquireItemSetByUserIdRequest::FromJson(RequestModelJson);
             Request = FAcquireItemSetByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FAcquireItemSetByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FAcquireItemSetWithGradeByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FAcquireItemSetWithGradeByUserIdRequest::FromJson(RequestModelJson);
+            Request = FAcquireItemSetWithGradeByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FAcquireItemSetWithGradeByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

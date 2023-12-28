@@ -20,7 +20,9 @@ namespace Gs2::Grade::Result
 {
     FSubGradeByStampTaskResult::FSubGradeByStampTaskResult():
         ItemValue(nullptr),
-        NewContextStackValue(TOptional<FString>())
+        NewContextStackValue(TOptional<FString>()),
+        ExperienceNamespaceNameValue(TOptional<FString>()),
+        ExperienceStatusValue(nullptr)
     {
     }
 
@@ -28,7 +30,9 @@ namespace Gs2::Grade::Result
         const FSubGradeByStampTaskResult& From
     ):
         ItemValue(From.ItemValue),
-        NewContextStackValue(From.NewContextStackValue)
+        NewContextStackValue(From.NewContextStackValue),
+        ExperienceNamespaceNameValue(From.ExperienceNamespaceNameValue),
+        ExperienceStatusValue(From.ExperienceStatusValue)
     {
     }
 
@@ -48,6 +52,22 @@ namespace Gs2::Grade::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FSubGradeByStampTaskResult> FSubGradeByStampTaskResult::WithExperienceNamespaceName(
+        const TOptional<FString> ExperienceNamespaceName
+    )
+    {
+        this->ExperienceNamespaceNameValue = ExperienceNamespaceName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSubGradeByStampTaskResult> FSubGradeByStampTaskResult::WithExperienceStatus(
+        const TSharedPtr<Gs2::Experience::Model::FStatus> ExperienceStatus
+    )
+    {
+        this->ExperienceStatusValue = ExperienceStatus;
+        return SharedThis(this);
+    }
+
     TSharedPtr<Model::FStatus> FSubGradeByStampTaskResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -60,6 +80,20 @@ namespace Gs2::Grade::Result
     TOptional<FString> FSubGradeByStampTaskResult::GetNewContextStack() const
     {
         return NewContextStackValue;
+    }
+
+    TOptional<FString> FSubGradeByStampTaskResult::GetExperienceNamespaceName() const
+    {
+        return ExperienceNamespaceNameValue;
+    }
+
+    TSharedPtr<Gs2::Experience::Model::FStatus> FSubGradeByStampTaskResult::GetExperienceStatus() const
+    {
+        if (!ExperienceStatusValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ExperienceStatusValue;
     }
 
     TSharedPtr<FSubGradeByStampTaskResult> FSubGradeByStampTaskResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -84,7 +118,24 @@ namespace Gs2::Grade::Result
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
                     return TOptional<FString>();
-                }() : TOptional<FString>());
+                }() : TOptional<FString>())
+            ->WithExperienceNamespaceName(Data->HasField("experienceNamespaceName") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("experienceNamespaceName", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithExperienceStatus(Data->HasField("experienceStatus") ? [Data]() -> Gs2::Experience::Model::FStatusPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("experienceStatus"))
+                    {
+                        return nullptr;
+                    }
+                    return Gs2::Experience::Model::FStatus::FromJson(Data->GetObjectField("experienceStatus"));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FSubGradeByStampTaskResult::ToJson() const
@@ -97,6 +148,14 @@ namespace Gs2::Grade::Result
         if (NewContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());
+        }
+        if (ExperienceNamespaceNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField("experienceNamespaceName", ExperienceNamespaceNameValue.GetValue());
+        }
+        if (ExperienceStatusValue != nullptr && ExperienceStatusValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("experienceStatus", ExperienceStatusValue->ToJson());
         }
         return JsonRootObject;
     }

@@ -174,6 +174,8 @@
 #include "Task/WebSocket/GetItemWithSignatureByUserIdTask.h"
 #include "Request/AcquireItemSetByUserIdRequest.h"
 #include "Task/WebSocket/AcquireItemSetByUserIdTask.h"
+#include "Request/AcquireItemSetWithGradeByUserIdRequest.h"
+#include "Task/WebSocket/AcquireItemSetWithGradeByUserIdTask.h"
 #include "Request/ConsumeItemSetRequest.h"
 #include "Task/WebSocket/ConsumeItemSetTask.h"
 #include "Request/ConsumeItemSetByUserIdRequest.h"
@@ -186,6 +188,8 @@
 #include "Task/WebSocket/VerifyItemSetByUserIdTask.h"
 #include "Request/AcquireItemSetByStampSheetRequest.h"
 #include "Task/WebSocket/AcquireItemSetByStampSheetTask.h"
+#include "Request/AcquireItemSetWithGradeByStampSheetRequest.h"
+#include "Task/WebSocket/AcquireItemSetWithGradeByStampSheetTask.h"
 #include "Request/ConsumeItemSetByStampTaskRequest.h"
 #include "Task/WebSocket/ConsumeItemSetByStampTaskTask.h"
 #include "Request/VerifyItemSetByStampTaskRequest.h"
@@ -604,6 +608,10 @@ namespace Gs2::Inventory
             const Request::FAcquireItemSetByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireItemSetWithGradeByUserIdTask>> AcquireItemSetWithGradeByUserId(
+            const Request::FAcquireItemSetWithGradeByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeItemSetTask>> ConsumeItemSet(
             const Request::FConsumeItemSetRequestPtr Request
         ) const;
@@ -626,6 +634,10 @@ namespace Gs2::Inventory
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireItemSetByStampSheetTask>> AcquireItemSetByStampSheet(
             const Request::FAcquireItemSetByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireItemSetWithGradeByStampSheetTask>> AcquireItemSetWithGradeByStampSheet(
+            const Request::FAcquireItemSetWithGradeByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumeItemSetByStampTaskTask>> ConsumeItemSetByStampTask(

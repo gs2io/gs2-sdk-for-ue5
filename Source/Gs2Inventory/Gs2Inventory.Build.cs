@@ -18,7 +18,8 @@ public class Gs2Inventory : ModuleRules
 			"JsonUtilities",
 			"Gs2Core",
 			"Gs2Auth",
-			"Gs2JobQueue"
+			"Gs2JobQueue",
+			"Gs2Grade"
 		});
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core",

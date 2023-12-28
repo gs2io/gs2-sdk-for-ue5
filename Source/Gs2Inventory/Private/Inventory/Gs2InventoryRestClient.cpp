@@ -721,6 +721,15 @@ namespace Gs2::Inventory
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FAcquireItemSetWithGradeByUserIdTask>> FGs2InventoryRestClient::AcquireItemSetWithGradeByUserId(
+        const Request::FAcquireItemSetWithGradeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAcquireItemSetWithGradeByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FConsumeItemSetTask>> FGs2InventoryRestClient::ConsumeItemSet(
         const Request::FConsumeItemSetRequestPtr Request) const
     {
@@ -770,6 +779,15 @@ namespace Gs2::Inventory
         const Request::FAcquireItemSetByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAcquireItemSetByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FAcquireItemSetWithGradeByStampSheetTask>> FGs2InventoryRestClient::AcquireItemSetWithGradeByStampSheet(
+        const Request::FAcquireItemSetWithGradeByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FAcquireItemSetWithGradeByStampSheetTask>>(
             Session,
             Request
         );

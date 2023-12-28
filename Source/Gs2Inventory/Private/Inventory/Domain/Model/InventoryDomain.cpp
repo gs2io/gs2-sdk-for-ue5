@@ -402,6 +402,141 @@ namespace Gs2::Inventory::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FVerifyCurrentMaxCapacityTask>>(this->AsShared(), Request);
     }
 
+    FInventoryDomain::FAcquireItemSetWithGradeTask::FAcquireItemSetWithGradeTask(
+        const TSharedPtr<FInventoryDomain>& Self,
+        const Request::FAcquireItemSetWithGradeByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FInventoryDomain::FAcquireItemSetWithGradeTask::FAcquireItemSetWithGradeTask(
+        const FAcquireItemSetWithGradeTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FInventoryDomain::FAcquireItemSetWithGradeTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FItemSetDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithInventoryName(Self->InventoryName);
+        const auto Future = Self->Client->AcquireItemSetWithGradeByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->InventoryName,
+                    "ItemSet"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetItemName(),
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "Status"
+                );
+                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetStatus()->GetGradeName(),
+                    ResultModel->GetStatus()->GetPropertyId()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Grade::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetStatus(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetItemModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->InventoryName,
+                    "ItemModel"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
+                    ResultModel->GetItemModel()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItemModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetInventory() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "Inventory"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                    ResultModel->GetInventory()->GetInventoryName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FInventory::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetInventory(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FItemSetDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetInventoryName(),
+            ResultModel->GetItem()->GetItemName(),
+            ResultModel->GetItem()->GetName()
+        );
+        if (ResultModel != nullptr)
+        {
+            Domain->OverflowCount = *ResultModel->GetOverflowCount();
+        }
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FInventoryDomain::FAcquireItemSetWithGradeTask>> FInventoryDomain::AcquireItemSetWithGrade(
+        Request::FAcquireItemSetWithGradeByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FAcquireItemSetWithGradeTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Inventory::Domain::Iterator::FDescribeItemSetsByUserIdIteratorPtr FInventoryDomain::ItemSets(
     ) const
     {

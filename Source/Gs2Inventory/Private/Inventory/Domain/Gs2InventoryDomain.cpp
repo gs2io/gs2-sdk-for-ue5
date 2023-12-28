@@ -721,6 +721,98 @@ namespace Gs2::Inventory::Domain
                 }
             }
         }
+        if (Method == "AcquireItemSetWithGradeByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FAcquireItemSetWithGradeByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FAcquireItemSetWithGradeByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetInventoryName(),
+                    "ItemSet"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetItemName(),
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetStatus()->GetGradeName(),
+                    ResultModel->GetStatus()->GetPropertyId()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Grade::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetStatus(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetItemModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetInventoryName(),
+                    "ItemModel"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
+                    ResultModel->GetItemModel()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItemModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetInventory() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Inventory"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                    ResultModel->GetInventory()->GetInventoryName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FInventory::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetInventory(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "AddReferenceOfByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -1589,6 +1681,106 @@ namespace Gs2::Inventory::Domain
                         FDateTime::FromUnixTimestamp(ExpiresAt / 1000)
                     );
                 }
+            }
+        }
+        if (Method == "acquire_item_set_with_grade_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FAcquireItemSetWithGradeByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FAcquireItemSetWithGradeByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetInventoryName(),
+                    "ItemSet"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetItemName(),
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetStatus() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetStatus()->GetGradeName(),
+                    ResultModel->GetStatus()->GetPropertyId()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Grade::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetStatus(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetItemModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetInventoryName(),
+                    "ItemModel"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
+                    ResultModel->GetItemModel()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FItemModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItemModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetInventory() != nullptr)
+            {
+                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Inventory"
+                );
+                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                    ResultModel->GetInventory()->GetInventoryName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FInventory::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetInventory(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
             }
         }
         if (Method == "add_reference_of_by_user_id") {
