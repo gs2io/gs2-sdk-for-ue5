@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "Gs2Core/Public/Core/Domain/Transaction/TransactionAccessTokenDomain.h"
+#include "Core/Domain/Transaction/TransactionAccessTokenDomain.h"
 #include "JobQueue/Model/Job.h"
 #include "JobQueue/Model/JobResultBody.h"
 

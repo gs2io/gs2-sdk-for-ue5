@@ -17,7 +17,7 @@
 #pragma once
 
 #include "Core/Domain/Transaction/TransactionDomain.h"
-#include "Gs2Core/Public/Core/Domain/Transaction/TransactionAccessTokenDomain.h"
+#include "Core/Domain/Transaction/TransactionAccessTokenDomain.h"
 
 namespace Gs2::Core::Domain
 {

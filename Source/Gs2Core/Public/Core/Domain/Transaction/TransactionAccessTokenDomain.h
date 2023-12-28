@@ -16,9 +16,9 @@
 
 #pragma once
 
-#include "Gs2JobQueue/Public/JobQueue/Result/PushByUserIdResult.h"
-#include "Gs2Auth/Public/Auth/Model/AccessToken.h"
-#include "Gs2Core/Public/Core/Util/Gs2Future.h"
+#include "JobQueue/Result/PushByUserIdResult.h"
+#include "Auth/Model/AccessToken.h"
+#include "Core/Util/Gs2Future.h"
 
 namespace Gs2::Core::Domain
 {

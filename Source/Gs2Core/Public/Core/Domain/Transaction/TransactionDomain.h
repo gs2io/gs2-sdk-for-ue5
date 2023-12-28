@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include "Gs2JobQueue/Public/JobQueue/Result/PushByUserIdResult.h"
-#include "Gs2Core/Public/Core/Util/Gs2Future.h"
+#include "JobQueue/Result/PushByUserIdResult.h"
+#include "Core/Util/Gs2Future.h"
 
 namespace Gs2::Core::Domain
 {
