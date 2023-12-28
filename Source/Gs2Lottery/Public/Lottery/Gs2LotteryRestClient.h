@@ -112,6 +112,8 @@
 #include "Task/Rest/ResetBoxTask.h"
 #include "Request/ResetBoxByUserIdRequest.h"
 #include "Task/Rest/ResetBoxByUserIdTask.h"
+#include "Request/ResetByStampSheetRequest.h"
+#include "Task/Rest/ResetByStampSheetTask.h"
 
 namespace Gs2::Lottery
 {
@@ -310,6 +312,10 @@ namespace Gs2::Lottery
 
         TSharedPtr<FAsyncTask<Task::Rest::FResetBoxByUserIdTask>> ResetBoxByUserId(
             const Request::FResetBoxByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FResetByStampSheetTask>> ResetByStampSheet(
+            const Request::FResetByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2LotteryRestClient, ESPMode::ThreadSafe> FGs2LotteryRestClientPtr;

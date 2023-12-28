@@ -112,6 +112,8 @@
 #include "Task/WebSocket/ResetBoxTask.h"
 #include "Request/ResetBoxByUserIdRequest.h"
 #include "Task/WebSocket/ResetBoxByUserIdTask.h"
+#include "Request/ResetByStampSheetRequest.h"
+#include "Task/WebSocket/ResetByStampSheetTask.h"
 
 namespace Gs2::Lottery
 {
@@ -310,6 +312,10 @@ namespace Gs2::Lottery
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FResetBoxByUserIdTask>> ResetBoxByUserId(
             const Request::FResetBoxByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FResetByStampSheetTask>> ResetByStampSheet(
+            const Request::FResetByStampSheetRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2LotteryWebSocketClient, ESPMode::ThreadSafe> FGs2LotteryWebSocketClientPtr;

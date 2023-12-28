@@ -441,4 +441,13 @@ namespace Gs2::Lottery
             Request
         );
     }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FResetByStampSheetTask>> FGs2LotteryRestClient::ResetByStampSheet(
+        const Request::FResetByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FResetByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
 }

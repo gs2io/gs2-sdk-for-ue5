@@ -317,6 +317,12 @@
 #include "Task/Rest/ResetBoxByUserIdTask.h"
 #include "Task/WebSocket/ResetBoxByUserIdTask.h"
 
+// ResetByStampSheet
+#include "Request/ResetByStampSheetRequest.h"
+#include "Result/ResetByStampSheetResult.h"
+#include "Task/Rest/ResetByStampSheetTask.h"
+#include "Task/WebSocket/ResetByStampSheetTask.h"
+
 // Client
 #include "Gs2LotteryRestClient.h"
 #include "Gs2LotteryWebSocketClient.h"

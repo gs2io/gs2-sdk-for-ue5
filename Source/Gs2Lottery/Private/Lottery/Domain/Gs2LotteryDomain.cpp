@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -521,6 +523,42 @@ namespace Gs2::Lottery::Domain
                 ResultModel->GetItems()
             );
         }
+        if (Method == "ResetBoxByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Lottery::Request::FResetBoxByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Lottery::Result::FResetBoxByUserIdResult::FromJson(ResultModelJson);
+            
+            {
+                const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "BoxItems"
+                );
+                const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                    RequestModel->GetPrizeTableName()
+                );
+                Gs2->Cache->Delete(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey,
+                    Key
+                );
+                Gs2->Cache->ClearListCache(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey
+                );
+            }
+        }
     }
 
     void FGs2LotteryDomain::UpdateCacheFromStampTask(
@@ -564,6 +602,50 @@ namespace Gs2::Lottery::Domain
                 RequestModel->GetLotteryName(),
                 ResultModel->GetItems()
             );
+        }
+        if (Method == "reset_box_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Lottery::Request::FResetBoxByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Lottery::Result::FResetBoxByUserIdResult::FromJson(ResultModelJson);
+            
+            {
+                const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "BoxItems"
+                );
+                const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                    RequestModel->GetPrizeTableName()
+                );
+                Gs2->Cache->Delete(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey,
+                    Key
+                );
+                Gs2->Cache->ClearListCache(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey
+                );
+            }
         }
     }
 

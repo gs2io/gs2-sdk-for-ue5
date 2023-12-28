@@ -24,6 +24,7 @@
 
 #include "Lottery/Domain/SpeculativeExecutor/Acquire/AcquireActionSpeculativeExecutorIndex.h"
 #include "Lottery/Domain/SpeculativeExecutor/Acquire/DrawByUserIdSpeculativeExecutor.h"
+#include "Lottery/Domain/SpeculativeExecutor/Acquire/ResetBoxByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -74,6 +75,28 @@ namespace Gs2::Lottery::Domain::SpeculativeExecutor
             auto Request = Request::FDrawByUserIdRequest::FromJson(RequestModelJson);
             Request = FDrawByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDrawByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FResetBoxByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FResetBoxByUserIdRequest::FromJson(RequestModelJson);
+            Request = FResetBoxByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FResetBoxByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,
