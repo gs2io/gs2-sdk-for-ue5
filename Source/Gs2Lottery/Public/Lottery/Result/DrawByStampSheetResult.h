@@ -18,12 +18,14 @@
 
 #include "CoreMinimal.h"
 #include "../Model/DrawnPrize.h"
+#include "../Model/BoxItems.h"
 
 namespace Gs2::Lottery::Result
 {
     class GS2LOTTERY_API FDrawByStampSheetResult final : public TSharedFromThis<FDrawByStampSheetResult>
     {
         TSharedPtr<TArray<TSharedPtr<Model::FDrawnPrize>>> ItemsValue;
+        TSharedPtr<Model::FBoxItems> BoxItemsValue;
         TOptional<FString> TransactionIdValue;
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
@@ -38,12 +40,14 @@ namespace Gs2::Lottery::Result
         ~FDrawByStampSheetResult() = default;
 
         TSharedPtr<FDrawByStampSheetResult> WithItems(const TSharedPtr<TArray<TSharedPtr<Model::FDrawnPrize>>> Items);
+        TSharedPtr<FDrawByStampSheetResult> WithBoxItems(const TSharedPtr<Model::FBoxItems> BoxItems);
         TSharedPtr<FDrawByStampSheetResult> WithTransactionId(const TOptional<FString> TransactionId);
         TSharedPtr<FDrawByStampSheetResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FDrawByStampSheetResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FDrawByStampSheetResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
 
         TSharedPtr<TArray<TSharedPtr<Model::FDrawnPrize>>> GetItems() const;
+        TSharedPtr<Model::FBoxItems> GetBoxItems() const;
         TOptional<FString> GetTransactionId() const;
         TOptional<FString> GetStampSheet() const;
         TOptional<FString> GetStampSheetEncryptionKeyId() const;

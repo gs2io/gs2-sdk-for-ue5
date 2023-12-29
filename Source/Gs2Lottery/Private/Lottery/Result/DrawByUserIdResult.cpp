@@ -20,6 +20,7 @@ namespace Gs2::Lottery::Result
 {
     FDrawByUserIdResult::FDrawByUserIdResult():
         ItemsValue(nullptr),
+        BoxItemsValue(nullptr),
         TransactionIdValue(TOptional<FString>()),
         StampSheetValue(TOptional<FString>()),
         StampSheetEncryptionKeyIdValue(TOptional<FString>()),
@@ -31,6 +32,7 @@ namespace Gs2::Lottery::Result
         const FDrawByUserIdResult& From
     ):
         ItemsValue(From.ItemsValue),
+        BoxItemsValue(From.BoxItemsValue),
         TransactionIdValue(From.TransactionIdValue),
         StampSheetValue(From.StampSheetValue),
         StampSheetEncryptionKeyIdValue(From.StampSheetEncryptionKeyIdValue),
@@ -43,6 +45,14 @@ namespace Gs2::Lottery::Result
     )
     {
         this->ItemsValue = Items;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDrawByUserIdResult> FDrawByUserIdResult::WithBoxItems(
+        const TSharedPtr<Model::FBoxItems> BoxItems
+    )
+    {
+        this->BoxItemsValue = BoxItems;
         return SharedThis(this);
     }
 
@@ -85,6 +95,15 @@ namespace Gs2::Lottery::Result
             return nullptr;
         }
         return ItemsValue;
+    }
+
+    TSharedPtr<Model::FBoxItems> FDrawByUserIdResult::GetBoxItems() const
+    {
+        if (!BoxItemsValue.IsValid())
+        {
+            return nullptr;
+        }
+        return BoxItemsValue;
     }
 
     TOptional<FString> FDrawByUserIdResult::GetTransactionId() const
@@ -133,6 +152,14 @@ namespace Gs2::Lottery::Result
                         }
                     }
                     return v;
+                 }() : nullptr)
+            ->WithBoxItems(Data->HasField("boxItems") ? [Data]() -> Model::FBoxItemsPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("boxItems"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FBoxItems::FromJson(Data->GetObjectField("boxItems"));
                  }() : nullptr)
             ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
                 {
@@ -183,6 +210,10 @@ namespace Gs2::Lottery::Result
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("items", v);
+        }
+        if (BoxItemsValue != nullptr && BoxItemsValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("boxItems", BoxItemsValue->ToJson());
         }
         if (TransactionIdValue.IsSet())
         {
