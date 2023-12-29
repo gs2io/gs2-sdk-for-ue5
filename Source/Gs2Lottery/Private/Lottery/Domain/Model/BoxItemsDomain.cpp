@@ -182,6 +182,24 @@ namespace Gs2::Lottery::Domain::Model
         Future->EnsureCompletion();
         if (ResultModel != nullptr) {
             
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "BoxItems"
+                );
+                const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPrizeTableName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
             {
                 const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
                     Self->NamespaceName,
@@ -202,7 +220,8 @@ namespace Gs2::Lottery::Domain::Model
                 );
             }
         }
-        const auto Domain = Self;
+        auto Domain = Self;
+
         *Result = Domain;
         return nullptr;
     }

@@ -53,7 +53,7 @@ void UGs2LotteryResetBoxAsyncFunction::Activate()
         FGs2LotteryOwnBoxItems ReturnBoxItems;
         ReturnBoxItems.Value = Result;
         const FGs2Error ReturnError;
-        OnError.Broadcast(ReturnBoxItems, ReturnError);
+        OnSuccess.Broadcast(ReturnBoxItems, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)

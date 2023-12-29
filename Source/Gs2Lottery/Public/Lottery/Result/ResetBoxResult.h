@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/BoxItems.h"
 
 namespace Gs2::Lottery::Result
 {
     class GS2LOTTERY_API FResetBoxResult final : public TSharedFromThis<FResetBoxResult>
     {
+        TSharedPtr<Model::FBoxItems> ItemValue;
         
     public:
         
@@ -31,7 +33,9 @@ namespace Gs2::Lottery::Result
         );
         ~FResetBoxResult() = default;
 
+        TSharedPtr<FResetBoxResult> WithItem(const TSharedPtr<Model::FBoxItems> Item);
 
+        TSharedPtr<Model::FBoxItems> GetItem() const;
 
         static TSharedPtr<FResetBoxResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

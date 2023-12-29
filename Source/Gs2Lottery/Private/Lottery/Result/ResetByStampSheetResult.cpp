@@ -18,14 +18,33 @@
 
 namespace Gs2::Lottery::Result
 {
-    FResetByStampSheetResult::FResetByStampSheetResult()
+    FResetByStampSheetResult::FResetByStampSheetResult():
+        ItemValue(nullptr)
     {
     }
 
     FResetByStampSheetResult::FResetByStampSheetResult(
         const FResetByStampSheetResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FResetByStampSheetResult> FResetByStampSheetResult::WithItem(
+        const TSharedPtr<Model::FBoxItems> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FBoxItems> FResetByStampSheetResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FResetByStampSheetResult> FResetByStampSheetResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Lottery::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FResetByStampSheetResult>();
+        return MakeShared<FResetByStampSheetResult>()
+            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FBoxItemsPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("item"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FBoxItems::FromJson(Data->GetObjectField("item"));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FResetByStampSheetResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

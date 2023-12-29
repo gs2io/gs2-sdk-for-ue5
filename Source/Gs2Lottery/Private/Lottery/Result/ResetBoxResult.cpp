@@ -18,14 +18,33 @@
 
 namespace Gs2::Lottery::Result
 {
-    FResetBoxResult::FResetBoxResult()
+    FResetBoxResult::FResetBoxResult():
+        ItemValue(nullptr)
     {
     }
 
     FResetBoxResult::FResetBoxResult(
         const FResetBoxResult& From
+    ):
+        ItemValue(From.ItemValue)
+    {
+    }
+
+    TSharedPtr<FResetBoxResult> FResetBoxResult::WithItem(
+        const TSharedPtr<Model::FBoxItems> Item
     )
     {
+        this->ItemValue = Item;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<Model::FBoxItems> FResetBoxResult::GetItem() const
+    {
+        if (!ItemValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ItemValue;
     }
 
     TSharedPtr<FResetBoxResult> FResetBoxResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -33,12 +52,24 @@ namespace Gs2::Lottery::Result
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FResetBoxResult>();
+        return MakeShared<FResetBoxResult>()
+            ->WithItem(Data->HasField("item") ? [Data]() -> Model::FBoxItemsPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("item"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FBoxItems::FromJson(Data->GetObjectField("item"));
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FResetBoxResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ItemValue != nullptr && ItemValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
         return JsonRootObject;
     }
 }

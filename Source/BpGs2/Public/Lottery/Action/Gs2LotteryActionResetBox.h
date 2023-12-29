@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Lottery/Model/Gs2LotteryBoxItems.h"
+#include "Lottery/Model/Gs2LotteryBoxItems.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2LotteryActionResetBox.generated.h"
