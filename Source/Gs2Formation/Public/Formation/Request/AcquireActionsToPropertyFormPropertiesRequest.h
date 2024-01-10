@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "../Model/AcquireAction.h"
-#include "../Model/AcquireActionConfig.h"
+#include "../Model/Config.h"
 
 namespace Gs2::Formation::Request
 {
@@ -32,7 +32,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
         TSharedPtr<Model::FAcquireAction> AcquireActionValue;
-        TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> ConfigValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -49,7 +49,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithAcquireAction(const TSharedPtr<Model::FAcquireAction> AcquireAction);
-        TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> Config);
+        TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -57,7 +57,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;
-        TSharedPtr<Model::FAcquireAction> GetAcquireAction() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> GetConfig() const;
+        TSharedPtr<Model::FAcquireAction> GetAcquireAction() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -32,7 +32,6 @@
 #include "Model/SlotModel.h"
 #include "Model/SlotWithSignature.h"
 #include "Model/AcquireAction.h"
-#include "Model/AcquireActionConfig.h"
 #include "Model/Config.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"

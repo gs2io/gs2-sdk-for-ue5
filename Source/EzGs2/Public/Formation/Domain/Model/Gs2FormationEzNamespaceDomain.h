@@ -27,7 +27,6 @@
 #include "Formation/Model/Gs2FormationEzSlot.h"
 #include "Formation/Model/Gs2FormationEzSlotModel.h"
 #include "Formation/Model/Gs2FormationEzSlotWithSignature.h"
-#include "Formation/Model/Gs2FormationEzAcquireActionConfig.h"
 #include "Formation/Model/Gs2FormationEzConfig.h"
 #include "Formation/Model/Gs2FormationEzAcquireAction.h"
 #include "Gs2FormationEzMoldModelDomain.h"

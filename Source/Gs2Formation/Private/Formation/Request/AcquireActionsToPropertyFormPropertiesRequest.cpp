@@ -89,7 +89,7 @@ namespace Gs2::Formation::Request
     }
 
     TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> FAcquireActionsToPropertyFormPropertiesRequest::WithConfig(
-        const TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> Config
+        const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config
     )
     {
         this->ConfigValue = Config;
@@ -138,7 +138,7 @@ namespace Gs2::Formation::Request
         return AcquireActionValue;
     }
 
-    TSharedPtr<TArray<TSharedPtr<Model::FAcquireActionConfig>>> FAcquireActionsToPropertyFormPropertiesRequest::GetConfig() const
+    TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> FAcquireActionsToPropertyFormPropertiesRequest::GetConfig() const
     {
         if (!ConfigValue.IsValid())
         {
@@ -203,18 +203,18 @@ namespace Gs2::Formation::Request
                   }
                   return Model::FAcquireAction::FromJson(Data->GetObjectField("acquireAction"));
               }() : nullptr)
-          ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionConfigPtr>>
+          ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FAcquireActionConfigPtr>>();
+                  auto v = MakeShared<TArray<Model::FConfigPtr>>();
                   if (!Data->HasTypedField<EJson::Null>("config") && Data->HasTypedField<EJson::Array>("config"))
                   {
                       for (auto JsonObjectValue : Data->GetArrayField("config"))
                       {
-                          v->Add(Model::FAcquireActionConfig::FromJson(JsonObjectValue->AsObject()));
+                          v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
                       }
                   }
                   return v;
-              }() : MakeShared<TArray<Model::FAcquireActionConfigPtr>>())
+              }() : MakeShared<TArray<Model::FConfigPtr>>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
