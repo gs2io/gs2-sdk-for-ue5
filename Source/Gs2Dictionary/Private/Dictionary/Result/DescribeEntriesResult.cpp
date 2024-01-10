@@ -79,7 +79,7 @@ namespace Gs2::Dictionary::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FEntryPtr>>())
             ->WithNextPageToken(Data->HasField("nextPageToken") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

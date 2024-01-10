@@ -302,7 +302,7 @@ namespace Gs2::Exchange::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
           ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
@@ -314,7 +314,7 @@ namespace Gs2::Exchange::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
           ->WithConsumeActions(Data->HasField("consumeActions") ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -326,7 +326,7 @@ namespace Gs2::Exchange::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FConsumeActionPtr>>());
     }
 
     TSharedPtr<FJsonObject> FUpdateRateModelMasterRequest::ToJson() const

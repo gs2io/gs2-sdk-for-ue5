@@ -174,7 +174,7 @@ namespace Gs2::Showcase::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<FString>>());
     }
 
     TSharedPtr<FJsonObject> FUpdateSalesItemGroupMasterRequest::ToJson() const

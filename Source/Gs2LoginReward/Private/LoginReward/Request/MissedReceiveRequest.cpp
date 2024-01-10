@@ -196,7 +196,7 @@ namespace Gs2::LoginReward::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FConfigPtr>>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 

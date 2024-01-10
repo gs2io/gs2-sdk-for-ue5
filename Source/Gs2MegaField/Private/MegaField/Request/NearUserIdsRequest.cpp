@@ -231,7 +231,7 @@ namespace Gs2::MegaField::Request
                       return nullptr;
                   }
                   return Model::FPosition::FromJson(Data->GetObjectField("point"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithR(Data->HasField("r") ? [Data]() -> TOptional<float>
               {
                   float v;

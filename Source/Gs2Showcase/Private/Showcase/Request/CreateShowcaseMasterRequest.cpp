@@ -189,7 +189,7 @@ namespace Gs2::Showcase::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FDisplayItemMasterPtr>>())
             ->WithSalesPeriodEventId(Data->HasField("salesPeriodEventId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

@@ -306,7 +306,7 @@ namespace Gs2::Exchange::Request
                       return nullptr;
                   }
                   return Model::FConsumeAction::FromJson(Data->GetObjectField("consumeAction"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithCalculateType(Data->HasField("calculateType") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -372,7 +372,7 @@ namespace Gs2::Exchange::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FAcquireActionPtr>>());
     }
 
     TSharedPtr<FJsonObject> FUpdateIncrementalRateModelMasterRequest::ToJson() const

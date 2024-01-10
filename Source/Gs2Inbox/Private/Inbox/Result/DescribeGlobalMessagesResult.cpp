@@ -64,7 +64,7 @@ namespace Gs2::Inbox::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FGlobalMessagePtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeGlobalMessagesResult::ToJson() const

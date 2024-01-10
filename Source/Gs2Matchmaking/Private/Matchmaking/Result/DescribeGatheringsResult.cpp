@@ -79,7 +79,7 @@ namespace Gs2::Matchmaking::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FGatheringPtr>>())
             ->WithNextPageToken(Data->HasField("nextPageToken") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

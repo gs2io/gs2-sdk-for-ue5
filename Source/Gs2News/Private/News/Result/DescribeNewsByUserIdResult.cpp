@@ -94,7 +94,7 @@ namespace Gs2::News::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FNewsPtr>>())
             ->WithContentHash(Data->HasField("contentHash") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

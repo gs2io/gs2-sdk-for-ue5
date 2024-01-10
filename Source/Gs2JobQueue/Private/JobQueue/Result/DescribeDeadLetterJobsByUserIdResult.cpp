@@ -79,7 +79,7 @@ namespace Gs2::JobQueue::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FDeadLetterJobPtr>>())
             ->WithNextPageToken(Data->HasField("nextPageToken") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

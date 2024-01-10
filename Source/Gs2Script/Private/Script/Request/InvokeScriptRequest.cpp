@@ -146,7 +146,7 @@ namespace Gs2::Script::Request
                       return nullptr;
                   }
                   return Model::FRandomStatus::FromJson(Data->GetObjectField("randomStatus"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FInvokeScriptRequest::ToJson() const

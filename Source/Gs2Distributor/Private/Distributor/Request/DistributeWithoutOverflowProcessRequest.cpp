@@ -98,7 +98,7 @@ namespace Gs2::Distributor::Request
                       return nullptr;
                   }
                   return Model::FDistributeResource::FromJson(Data->GetObjectField("distributeResource"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FDistributeWithoutOverflowProcessRequest::ToJson() const

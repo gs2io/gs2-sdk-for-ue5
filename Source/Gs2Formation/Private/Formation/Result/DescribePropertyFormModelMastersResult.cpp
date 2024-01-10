@@ -79,7 +79,7 @@ namespace Gs2::Formation::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FPropertyFormModelMasterPtr>>())
             ->WithNextPageToken(Data->HasField("nextPageToken") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

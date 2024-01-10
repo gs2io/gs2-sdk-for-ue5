@@ -122,7 +122,7 @@ namespace Gs2::Limit::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateNamespaceRequest::ToJson() const

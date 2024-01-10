@@ -64,7 +64,7 @@ namespace Gs2::MegaField::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<FString>>());
     }
 
     TSharedPtr<FJsonObject> FNearUserIdsFromSystemResult::ToJson() const

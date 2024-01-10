@@ -136,7 +136,7 @@ namespace Gs2::Matchmaking::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FSignedBallotPtr>>())
           ->WithGameResults(Data->HasField("gameResults") ? [Data]() -> TSharedPtr<TArray<Model::FGameResultPtr>>
               {
                   auto v = MakeShared<TArray<Model::FGameResultPtr>>();
@@ -148,7 +148,7 @@ namespace Gs2::Matchmaking::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FGameResultPtr>>())
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

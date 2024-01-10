@@ -64,7 +64,7 @@ namespace Gs2::Schedule::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FEventPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeRawEventsResult::ToJson() const

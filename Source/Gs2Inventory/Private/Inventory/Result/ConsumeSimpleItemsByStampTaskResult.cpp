@@ -79,7 +79,7 @@ namespace Gs2::Inventory::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FSimpleItemPtr>>())
             ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

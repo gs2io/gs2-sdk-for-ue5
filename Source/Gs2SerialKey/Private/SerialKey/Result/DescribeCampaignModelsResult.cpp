@@ -64,7 +64,7 @@ namespace Gs2::SerialKey::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FCampaignModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeCampaignModelsResult::ToJson() const

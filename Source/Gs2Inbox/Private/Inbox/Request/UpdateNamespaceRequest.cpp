@@ -280,7 +280,7 @@ namespace Gs2::Inbox::Request
                       return nullptr;
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithReceiveMessageScript(Data->HasField("receiveMessageScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("receiveMessageScript"))
@@ -288,7 +288,7 @@ namespace Gs2::Inbox::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("receiveMessageScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithReadMessageScript(Data->HasField("readMessageScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("readMessageScript"))
@@ -296,7 +296,7 @@ namespace Gs2::Inbox::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("readMessageScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithDeleteMessageScript(Data->HasField("deleteMessageScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("deleteMessageScript"))
@@ -304,7 +304,7 @@ namespace Gs2::Inbox::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("deleteMessageScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithReceiveNotification(Data->HasField("receiveNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("receiveNotification"))
@@ -312,7 +312,7 @@ namespace Gs2::Inbox::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("receiveNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -320,7 +320,7 @@ namespace Gs2::Inbox::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

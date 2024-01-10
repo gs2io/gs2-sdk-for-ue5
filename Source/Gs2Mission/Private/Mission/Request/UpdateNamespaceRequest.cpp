@@ -247,7 +247,7 @@ namespace Gs2::Mission::Request
                       return nullptr;
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithMissionCompleteScript(Data->HasField("missionCompleteScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("missionCompleteScript"))
@@ -255,7 +255,7 @@ namespace Gs2::Mission::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("missionCompleteScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithCounterIncrementScript(Data->HasField("counterIncrementScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("counterIncrementScript"))
@@ -263,7 +263,7 @@ namespace Gs2::Mission::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("counterIncrementScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithReceiveRewardsScript(Data->HasField("receiveRewardsScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("receiveRewardsScript"))
@@ -271,7 +271,7 @@ namespace Gs2::Mission::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("receiveRewardsScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithCompleteNotification(Data->HasField("completeNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("completeNotification"))
@@ -279,7 +279,7 @@ namespace Gs2::Mission::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("completeNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -287,7 +287,7 @@ namespace Gs2::Mission::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

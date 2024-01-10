@@ -64,7 +64,7 @@ namespace Gs2::Chat::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FMessagePtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeMessagesByUserIdResult::ToJson() const

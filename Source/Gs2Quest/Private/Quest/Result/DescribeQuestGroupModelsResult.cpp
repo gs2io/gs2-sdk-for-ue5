@@ -64,7 +64,7 @@ namespace Gs2::Quest::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FQuestGroupModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeQuestGroupModelsResult::ToJson() const

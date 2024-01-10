@@ -206,7 +206,7 @@ namespace Gs2::Inbox::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithExpiresAt(Data->HasField("expiresAt") ? [Data]() -> TOptional<int64>
               {
                   int64 v;
@@ -223,7 +223,7 @@ namespace Gs2::Inbox::Request
                       return nullptr;
                   }
                   return Model::FTimeSpan::FromJson(Data->GetObjectField("expiresTimeSpan"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 

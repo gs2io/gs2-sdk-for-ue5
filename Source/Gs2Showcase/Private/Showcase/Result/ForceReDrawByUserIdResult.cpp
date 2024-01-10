@@ -64,7 +64,7 @@ namespace Gs2::Showcase::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FRandomDisplayItemPtr>>());
     }
 
     TSharedPtr<FJsonObject> FForceReDrawByUserIdResult::ToJson() const

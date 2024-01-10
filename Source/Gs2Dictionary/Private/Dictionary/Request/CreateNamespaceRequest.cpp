@@ -156,7 +156,7 @@ namespace Gs2::Dictionary::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("entryScript"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithDuplicateEntryScript(Data->HasField("duplicateEntryScript") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -173,7 +173,7 @@ namespace Gs2::Dictionary::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateNamespaceRequest::ToJson() const

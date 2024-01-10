@@ -64,7 +64,7 @@ namespace Gs2::Dictionary::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FEntryPtr>>());
     }
 
     TSharedPtr<FJsonObject> FAddEntriesByStampSheetResult::ToJson() const

@@ -228,7 +228,7 @@ namespace Gs2::Experience::Request
                       return nullptr;
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithRankCapScriptId(Data->HasField("rankCapScriptId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -245,7 +245,7 @@ namespace Gs2::Experience::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("changeExperienceScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithChangeRankScript(Data->HasField("changeRankScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("changeRankScript"))
@@ -253,7 +253,7 @@ namespace Gs2::Experience::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("changeRankScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithChangeRankCapScript(Data->HasField("changeRankCapScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("changeRankCapScript"))
@@ -261,7 +261,7 @@ namespace Gs2::Experience::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("changeRankCapScript"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithOverflowExperienceScript(Data->HasField("overflowExperienceScript") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -278,7 +278,7 @@ namespace Gs2::Experience::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateNamespaceRequest::ToJson() const

@@ -139,7 +139,7 @@ namespace Gs2::Inbox::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<FString>>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 

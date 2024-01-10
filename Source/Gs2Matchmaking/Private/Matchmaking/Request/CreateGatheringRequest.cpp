@@ -235,7 +235,7 @@ namespace Gs2::Matchmaking::Request
                       return nullptr;
                   }
                   return Model::FPlayer::FromJson(Data->GetObjectField("player"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithAttributeRanges(Data->HasField("attributeRanges") ? [Data]() -> TSharedPtr<TArray<Model::FAttributeRangePtr>>
               {
                   auto v = MakeShared<TArray<Model::FAttributeRangePtr>>();
@@ -247,7 +247,7 @@ namespace Gs2::Matchmaking::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FAttributeRangePtr>>())
           ->WithCapacityOfRoles(Data->HasField("capacityOfRoles") ? [Data]() -> TSharedPtr<TArray<Model::FCapacityOfRolePtr>>
               {
                   auto v = MakeShared<TArray<Model::FCapacityOfRolePtr>>();
@@ -259,7 +259,7 @@ namespace Gs2::Matchmaking::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FCapacityOfRolePtr>>())
           ->WithAllowUserIds(Data->HasField("allowUserIds") ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
@@ -271,7 +271,7 @@ namespace Gs2::Matchmaking::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<FString>>())
             ->WithExpiresAt(Data->HasField("expiresAt") ? [Data]() -> TOptional<int64>
               {
                   int64 v;
@@ -288,7 +288,7 @@ namespace Gs2::Matchmaking::Request
                       return nullptr;
                   }
                   return Model::FTimeSpan::FromJson(Data->GetObjectField("expiresAtTimeSpan"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 

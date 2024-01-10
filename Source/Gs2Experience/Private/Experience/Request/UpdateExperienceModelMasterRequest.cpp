@@ -297,7 +297,7 @@ namespace Gs2::Experience::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FAcquireActionRatePtr>>());
     }
 
     TSharedPtr<FJsonObject> FUpdateExperienceModelMasterRequest::ToJson() const

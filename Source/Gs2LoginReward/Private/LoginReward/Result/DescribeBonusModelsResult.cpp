@@ -64,7 +64,7 @@ namespace Gs2::LoginReward::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FBonusModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeBonusModelsResult::ToJson() const

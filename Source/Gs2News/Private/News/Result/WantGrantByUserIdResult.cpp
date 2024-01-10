@@ -94,7 +94,7 @@ namespace Gs2::News::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FSetCookieRequestEntryPtr>>())
             ->WithBrowserUrl(Data->HasField("browserUrl") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

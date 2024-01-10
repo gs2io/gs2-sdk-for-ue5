@@ -201,7 +201,7 @@ namespace Gs2::Lottery::Request
                       return nullptr;
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithLotteryTriggerScriptId(Data->HasField("lotteryTriggerScriptId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -227,7 +227,7 @@ namespace Gs2::Lottery::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

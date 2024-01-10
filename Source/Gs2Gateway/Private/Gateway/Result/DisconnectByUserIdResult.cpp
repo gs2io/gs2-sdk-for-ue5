@@ -64,7 +64,7 @@ namespace Gs2::Gateway::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FWebSocketSessionPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDisconnectByUserIdResult::ToJson() const

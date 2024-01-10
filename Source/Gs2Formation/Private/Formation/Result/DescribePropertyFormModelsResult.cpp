@@ -64,7 +64,7 @@ namespace Gs2::Formation::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FPropertyFormModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribePropertyFormModelsResult::ToJson() const

@@ -226,7 +226,7 @@ namespace Gs2::MegaField::Request
                       return nullptr;
                   }
                   return Model::FPosition::FromJson(Data->GetObjectField("position"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithVector(Data->HasField("vector") ? [Data]() -> Model::FVectorPtr
               {
                   if (Data->HasTypedField<EJson::Null>("vector"))
@@ -234,7 +234,7 @@ namespace Gs2::MegaField::Request
                       return nullptr;
                   }
                   return Model::FVector::FromJson(Data->GetObjectField("vector"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithR(Data->HasField("r") ? [Data]() -> TOptional<float>
               {
                   float v;

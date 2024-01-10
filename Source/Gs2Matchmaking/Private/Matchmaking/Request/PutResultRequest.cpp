@@ -126,7 +126,7 @@ namespace Gs2::Matchmaking::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FGameResultPtr>>());
     }
 
     TSharedPtr<FJsonObject> FPutResultRequest::ToJson() const

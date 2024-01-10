@@ -270,7 +270,7 @@ namespace Gs2::Idle::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FAcquireActionListPtr>>())
             ->WithIdlePeriodScheduleId(Data->HasField("idlePeriodScheduleId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

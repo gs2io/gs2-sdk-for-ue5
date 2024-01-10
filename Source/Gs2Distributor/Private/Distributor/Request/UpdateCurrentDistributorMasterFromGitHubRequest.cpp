@@ -98,7 +98,7 @@ namespace Gs2::Distributor::Request
                       return nullptr;
                   }
                   return Model::FGitHubCheckoutSetting::FromJson(Data->GetObjectField("checkoutSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateCurrentDistributorMasterFromGitHubRequest::ToJson() const

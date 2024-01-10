@@ -211,7 +211,7 @@ namespace Gs2::Enhance::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FMaterialPtr>>())
             ->WithForce(Data->HasField("force") ? [Data]() -> TOptional<bool>
               {
                   bool v;

@@ -165,7 +165,7 @@ namespace Gs2::Matchmaking::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FGameResultPtr>>())
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

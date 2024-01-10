@@ -226,7 +226,7 @@ namespace Gs2::Enchant::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FRarityParameterCountModelPtr>>())
           ->WithParameters(Data->HasField("parameters") ? [Data]() -> TSharedPtr<TArray<Model::FRarityParameterValueModelPtr>>
               {
                   auto v = MakeShared<TArray<Model::FRarityParameterValueModelPtr>>();
@@ -238,7 +238,7 @@ namespace Gs2::Enchant::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FRarityParameterValueModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FCreateRarityParameterModelMasterRequest::ToJson() const

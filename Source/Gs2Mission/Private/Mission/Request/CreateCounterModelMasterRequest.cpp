@@ -189,7 +189,7 @@ namespace Gs2::Mission::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FCounterScopeModelPtr>>())
             ->WithChallengePeriodEventId(Data->HasField("challengePeriodEventId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

@@ -121,7 +121,7 @@ namespace Gs2::Account::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FBanStatusPtr>>())
             ->WithBody(Data->HasField("body") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

@@ -64,7 +64,7 @@ namespace Gs2::Enchant::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FBalanceParameterModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeBalanceParameterModelsResult::ToJson() const

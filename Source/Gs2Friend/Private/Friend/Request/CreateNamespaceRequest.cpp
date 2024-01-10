@@ -331,7 +331,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("followScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithUnfollowScript(Data->HasField("unfollowScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("unfollowScript"))
@@ -339,7 +339,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("unfollowScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithSendRequestScript(Data->HasField("sendRequestScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("sendRequestScript"))
@@ -347,7 +347,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("sendRequestScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithCancelRequestScript(Data->HasField("cancelRequestScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("cancelRequestScript"))
@@ -355,7 +355,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("cancelRequestScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithAcceptRequestScript(Data->HasField("acceptRequestScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("acceptRequestScript"))
@@ -363,7 +363,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("acceptRequestScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithRejectRequestScript(Data->HasField("rejectRequestScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("rejectRequestScript"))
@@ -371,7 +371,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("rejectRequestScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithDeleteFriendScript(Data->HasField("deleteFriendScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("deleteFriendScript"))
@@ -379,7 +379,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("deleteFriendScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithUpdateProfileScript(Data->HasField("updateProfileScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("updateProfileScript"))
@@ -387,7 +387,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("updateProfileScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithFollowNotification(Data->HasField("followNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("followNotification"))
@@ -395,7 +395,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("followNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithReceiveRequestNotification(Data->HasField("receiveRequestNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("receiveRequestNotification"))
@@ -403,7 +403,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("receiveRequestNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithAcceptRequestNotification(Data->HasField("acceptRequestNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("acceptRequestNotification"))
@@ -411,7 +411,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("acceptRequestNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -419,7 +419,7 @@ namespace Gs2::Friend::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateNamespaceRequest::ToJson() const

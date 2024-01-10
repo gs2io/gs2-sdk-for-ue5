@@ -179,7 +179,7 @@ namespace Gs2::Inventory::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("acquireScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithOverflowScript(Data->HasField("overflowScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("overflowScript"))
@@ -187,7 +187,7 @@ namespace Gs2::Inventory::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("overflowScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithConsumeScript(Data->HasField("consumeScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("consumeScript"))
@@ -195,7 +195,7 @@ namespace Gs2::Inventory::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("consumeScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -203,7 +203,7 @@ namespace Gs2::Inventory::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateNamespaceRequest::ToJson() const

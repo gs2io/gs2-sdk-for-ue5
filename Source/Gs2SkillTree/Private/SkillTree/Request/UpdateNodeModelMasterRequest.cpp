@@ -217,7 +217,7 @@ namespace Gs2::SkillTree::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
             ->WithRestrainReturnRate(Data->HasField("restrainReturnRate") ? [Data]() -> TOptional<float>
               {
                   float v;
@@ -238,7 +238,7 @@ namespace Gs2::SkillTree::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<FString>>());
     }
 
     TSharedPtr<FJsonObject> FUpdateNodeModelMasterRequest::ToJson() const

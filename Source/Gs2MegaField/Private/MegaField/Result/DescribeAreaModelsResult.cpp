@@ -64,7 +64,7 @@ namespace Gs2::MegaField::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FAreaModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeAreaModelsResult::ToJson() const

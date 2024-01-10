@@ -180,7 +180,7 @@ namespace Gs2::Version::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("acceptVersionScript"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithCheckVersionTriggerScriptId(Data->HasField("checkVersionTriggerScriptId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -197,7 +197,7 @@ namespace Gs2::Version::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateNamespaceRequest::ToJson() const

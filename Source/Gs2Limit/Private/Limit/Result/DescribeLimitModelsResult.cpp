@@ -64,7 +64,7 @@ namespace Gs2::Limit::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FLimitModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeLimitModelsResult::ToJson() const

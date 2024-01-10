@@ -64,7 +64,7 @@ namespace Gs2::Deploy::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FChangeSetPtr>>());
     }
 
     TSharedPtr<FJsonObject> FChangeSetResult::ToJson() const

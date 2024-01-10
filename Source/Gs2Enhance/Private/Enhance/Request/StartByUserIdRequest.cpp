@@ -221,7 +221,7 @@ namespace Gs2::Enhance::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FMaterialPtr>>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -251,7 +251,7 @@ namespace Gs2::Enhance::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FConfigPtr>>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 

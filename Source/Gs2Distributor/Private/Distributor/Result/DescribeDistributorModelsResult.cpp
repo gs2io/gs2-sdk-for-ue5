@@ -64,7 +64,7 @@ namespace Gs2::Distributor::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FDistributorModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeDistributorModelsResult::ToJson() const

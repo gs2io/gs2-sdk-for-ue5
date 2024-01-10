@@ -179,7 +179,7 @@ namespace Gs2::AdReward::Request
                       return nullptr;
                   }
                   return Model::FAdMob::FromJson(Data->GetObjectField("admob"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithUnityAd(Data->HasField("unityAd") ? [Data]() -> Model::FUnityAdPtr
               {
                   if (Data->HasTypedField<EJson::Null>("unityAd"))
@@ -187,7 +187,7 @@ namespace Gs2::AdReward::Request
                       return nullptr;
                   }
                   return Model::FUnityAd::FromJson(Data->GetObjectField("unityAd"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithChangePointNotification(Data->HasField("changePointNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("changePointNotification"))
@@ -195,7 +195,7 @@ namespace Gs2::AdReward::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("changePointNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -203,7 +203,7 @@ namespace Gs2::AdReward::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateNamespaceRequest::ToJson() const

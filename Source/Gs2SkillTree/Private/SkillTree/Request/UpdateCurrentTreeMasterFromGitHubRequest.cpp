@@ -98,7 +98,7 @@ namespace Gs2::SkillTree::Request
                       return nullptr;
                   }
                   return Model::FGitHubCheckoutSetting::FromJson(Data->GetObjectField("checkoutSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateCurrentTreeMasterFromGitHubRequest::ToJson() const

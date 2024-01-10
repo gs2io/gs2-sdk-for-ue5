@@ -193,7 +193,7 @@ namespace Gs2::Inbox::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
           ->WithExpiresTimeSpan(Data->HasField("expiresTimeSpan") ? [Data]() -> Model::FTimeSpanPtr
               {
                   if (Data->HasTypedField<EJson::Null>("expiresTimeSpan"))
@@ -201,7 +201,7 @@ namespace Gs2::Inbox::Request
                       return nullptr;
                   }
                   return Model::FTimeSpan::FromJson(Data->GetObjectField("expiresTimeSpan"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithExpiresAt(Data->HasField("expiresAt") ? [Data]() -> TOptional<int64>
               {
                   int64 v;

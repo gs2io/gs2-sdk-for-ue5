@@ -231,7 +231,7 @@ namespace Gs2::Enchant::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FBalanceParameterValueModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FCreateBalanceParameterModelMasterRequest::ToJson() const

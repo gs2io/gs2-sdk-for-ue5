@@ -64,7 +64,7 @@ namespace Gs2::Experience::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FExperienceModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeExperienceModelsResult::ToJson() const

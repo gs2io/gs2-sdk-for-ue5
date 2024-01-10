@@ -64,7 +64,7 @@ namespace Gs2::SkillTree::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FNodeModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeNodeModelsResult::ToJson() const

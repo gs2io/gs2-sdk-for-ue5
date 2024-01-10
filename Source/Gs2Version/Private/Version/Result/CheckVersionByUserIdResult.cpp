@@ -107,7 +107,7 @@ namespace Gs2::Version::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FStatusPtr>>())
             ->WithErrors(Data->HasField("errors") ? [Data]() -> TSharedPtr<TArray<Model::FStatusPtr>>
                  {
                     auto v = MakeShared<TArray<Model::FStatusPtr>>();
@@ -119,7 +119,7 @@ namespace Gs2::Version::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FStatusPtr>>());
     }
 
     TSharedPtr<FJsonObject> FCheckVersionByUserIdResult::ToJson() const

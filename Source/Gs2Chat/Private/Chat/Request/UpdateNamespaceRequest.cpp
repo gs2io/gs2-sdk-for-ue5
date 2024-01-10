@@ -269,7 +269,7 @@ namespace Gs2::Chat::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("postMessageScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithCreateRoomScript(Data->HasField("createRoomScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("createRoomScript"))
@@ -277,7 +277,7 @@ namespace Gs2::Chat::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("createRoomScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithDeleteRoomScript(Data->HasField("deleteRoomScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("deleteRoomScript"))
@@ -285,7 +285,7 @@ namespace Gs2::Chat::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("deleteRoomScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithSubscribeRoomScript(Data->HasField("subscribeRoomScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("subscribeRoomScript"))
@@ -293,7 +293,7 @@ namespace Gs2::Chat::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("subscribeRoomScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithUnsubscribeRoomScript(Data->HasField("unsubscribeRoomScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("unsubscribeRoomScript"))
@@ -301,7 +301,7 @@ namespace Gs2::Chat::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("unsubscribeRoomScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithPostNotification(Data->HasField("postNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("postNotification"))
@@ -309,7 +309,7 @@ namespace Gs2::Chat::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("postNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -317,7 +317,7 @@ namespace Gs2::Chat::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateNamespaceRequest::ToJson() const

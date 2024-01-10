@@ -64,7 +64,7 @@ namespace Gs2::Inventory::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FItemModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeItemModelsResult::ToJson() const

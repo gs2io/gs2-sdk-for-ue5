@@ -179,7 +179,7 @@ namespace Gs2::SkillTree::Request
                       return nullptr;
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithReleaseScript(Data->HasField("releaseScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("releaseScript"))
@@ -187,7 +187,7 @@ namespace Gs2::SkillTree::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("releaseScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithRestrainScript(Data->HasField("restrainScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("restrainScript"))
@@ -195,7 +195,7 @@ namespace Gs2::SkillTree::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("restrainScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -203,7 +203,7 @@ namespace Gs2::SkillTree::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateNamespaceRequest::ToJson() const

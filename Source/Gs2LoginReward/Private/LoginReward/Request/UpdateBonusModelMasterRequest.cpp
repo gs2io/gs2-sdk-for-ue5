@@ -313,7 +313,7 @@ namespace Gs2::LoginReward::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FRewardPtr>>())
             ->WithMissedReceiveRelief(Data->HasField("missedReceiveRelief") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -334,7 +334,7 @@ namespace Gs2::LoginReward::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FConsumeActionPtr>>());
     }
 
     TSharedPtr<FJsonObject> FUpdateBonusModelMasterRequest::ToJson() const

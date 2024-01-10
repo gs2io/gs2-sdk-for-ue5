@@ -79,7 +79,7 @@ namespace Gs2::Dictionary::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FEntryPtr>>())
             ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

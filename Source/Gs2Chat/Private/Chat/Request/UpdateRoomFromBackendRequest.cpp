@@ -202,7 +202,7 @@ namespace Gs2::Chat::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<FString>>())
             ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

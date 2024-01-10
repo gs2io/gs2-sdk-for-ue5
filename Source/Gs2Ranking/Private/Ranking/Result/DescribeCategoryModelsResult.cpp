@@ -64,7 +64,7 @@ namespace Gs2::Ranking::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FCategoryModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeCategoryModelsResult::ToJson() const

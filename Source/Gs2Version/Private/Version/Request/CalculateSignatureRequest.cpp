@@ -122,7 +122,7 @@ namespace Gs2::Version::Request
                       return nullptr;
                   }
                   return Model::FVersion::FromJson(Data->GetObjectField("version"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCalculateSignatureRequest::ToJson() const

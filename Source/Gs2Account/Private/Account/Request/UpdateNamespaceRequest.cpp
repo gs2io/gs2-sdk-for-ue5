@@ -231,7 +231,7 @@ namespace Gs2::Account::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("createAccountScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithAuthenticationScript(Data->HasField("authenticationScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("authenticationScript"))
@@ -239,7 +239,7 @@ namespace Gs2::Account::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("authenticationScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithCreateTakeOverScript(Data->HasField("createTakeOverScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("createTakeOverScript"))
@@ -247,7 +247,7 @@ namespace Gs2::Account::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("createTakeOverScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithDoTakeOverScript(Data->HasField("doTakeOverScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("doTakeOverScript"))
@@ -255,7 +255,7 @@ namespace Gs2::Account::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("doTakeOverScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -263,7 +263,7 @@ namespace Gs2::Account::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateNamespaceRequest::ToJson() const

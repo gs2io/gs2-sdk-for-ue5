@@ -174,7 +174,7 @@ namespace Gs2::Experience::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<int64>>());
     }
 
     TSharedPtr<FJsonObject> FCreateThresholdMasterRequest::ToJson() const

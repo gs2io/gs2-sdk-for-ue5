@@ -98,7 +98,7 @@ namespace Gs2::Grade::Request
                       return nullptr;
                   }
                   return Model::FGitHubCheckoutSetting::FromJson(Data->GetObjectField("checkoutSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateCurrentGradeMasterFromGitHubRequest::ToJson() const

@@ -98,7 +98,7 @@ namespace Gs2::Exchange::Request
                       return nullptr;
                   }
                   return Model::FGitHubCheckoutSetting::FromJson(Data->GetObjectField("checkoutSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateCurrentRateMasterFromGitHubRequest::ToJson() const

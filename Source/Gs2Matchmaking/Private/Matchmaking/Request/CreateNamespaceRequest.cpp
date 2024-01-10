@@ -394,7 +394,7 @@ namespace Gs2::Matchmaking::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("changeRatingScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithJoinNotification(Data->HasField("joinNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("joinNotification"))
@@ -402,7 +402,7 @@ namespace Gs2::Matchmaking::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("joinNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLeaveNotification(Data->HasField("leaveNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("leaveNotification"))
@@ -410,7 +410,7 @@ namespace Gs2::Matchmaking::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("leaveNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithCompleteNotification(Data->HasField("completeNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("completeNotification"))
@@ -418,7 +418,7 @@ namespace Gs2::Matchmaking::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("completeNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithChangeRatingNotification(Data->HasField("changeRatingNotification") ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("changeRatingNotification"))
@@ -426,7 +426,7 @@ namespace Gs2::Matchmaking::Request
                       return nullptr;
                   }
                   return Model::FNotificationSetting::FromJson(Data->GetObjectField("changeRatingNotification"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -434,7 +434,7 @@ namespace Gs2::Matchmaking::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateNamespaceRequest::ToJson() const

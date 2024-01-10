@@ -198,7 +198,7 @@ namespace Gs2::Stamina::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<int32>>());
     }
 
     TSharedPtr<FJsonObject> FUpdateMaxStaminaTableMasterRequest::ToJson() const

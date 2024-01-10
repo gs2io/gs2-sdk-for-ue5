@@ -64,7 +64,7 @@ namespace Gs2::Matchmaking::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FRatingPtr>>());
     }
 
     TSharedPtr<FJsonObject> FPutResultResult::ToJson() const

@@ -241,7 +241,7 @@ namespace Gs2::Script::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<FString>>());
     }
 
     TSharedPtr<FJsonObject> FDebugInvokeResult::ToJson() const

@@ -152,7 +152,7 @@ namespace Gs2::Lottery::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FDrawnPrizePtr>>())
             ->WithBoxItems(Data->HasField("boxItems") ? [Data]() -> Model::FBoxItemsPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("boxItems"))

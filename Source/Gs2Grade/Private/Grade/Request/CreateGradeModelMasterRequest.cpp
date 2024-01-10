@@ -227,7 +227,7 @@ namespace Gs2::Grade::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FDefaultGradeModelPtr>>())
             ->WithExperienceModelId(Data->HasField("experienceModelId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -248,7 +248,7 @@ namespace Gs2::Grade::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FGradeEntryModelPtr>>())
           ->WithAcquireActionRates(Data->HasField("acquireActionRates") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionRatePtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionRatePtr>>();
@@ -260,7 +260,7 @@ namespace Gs2::Grade::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FAcquireActionRatePtr>>());
     }
 
     TSharedPtr<FJsonObject> FCreateGradeModelMasterRequest::ToJson() const

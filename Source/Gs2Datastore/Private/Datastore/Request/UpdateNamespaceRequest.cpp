@@ -141,7 +141,7 @@ namespace Gs2::Datastore::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithDoneUploadScript(Data->HasField("doneUploadScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("doneUploadScript"))
@@ -149,7 +149,7 @@ namespace Gs2::Datastore::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("doneUploadScript"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateNamespaceRequest::ToJson() const

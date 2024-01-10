@@ -280,7 +280,7 @@ namespace Gs2::Enhance::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<FString>>())
             ->WithExperienceModelId(Data->HasField("experienceModelId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -301,7 +301,7 @@ namespace Gs2::Enhance::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FBonusRatePtr>>());
     }
 
     TSharedPtr<FJsonObject> FCreateRateModelMasterRequest::ToJson() const

@@ -64,7 +64,7 @@ namespace Gs2::Grade::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FGradeModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeGradeModelsResult::ToJson() const

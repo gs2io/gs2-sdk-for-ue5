@@ -79,7 +79,7 @@ namespace Gs2::Distributor::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithSheetResult(Data->HasField("sheetResult") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

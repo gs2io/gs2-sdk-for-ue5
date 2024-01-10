@@ -136,7 +136,7 @@ namespace Gs2::Inventory::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<FString>>())
             ->WithItemSet(Data->HasField("itemSet") ? [Data]() -> Model::FItemSetPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("itemSet"))

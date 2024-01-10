@@ -314,7 +314,7 @@ namespace Gs2::Version::Request
                       return nullptr;
                   }
                   return Model::FVersion::FromJson(Data->GetObjectField("currentVersion"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithWarningVersion(Data->HasField("warningVersion") ? [Data]() -> Model::FVersionPtr
               {
                   if (Data->HasTypedField<EJson::Null>("warningVersion"))
@@ -322,7 +322,7 @@ namespace Gs2::Version::Request
                       return nullptr;
                   }
                   return Model::FVersion::FromJson(Data->GetObjectField("warningVersion"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithErrorVersion(Data->HasField("errorVersion") ? [Data]() -> Model::FVersionPtr
               {
                   if (Data->HasTypedField<EJson::Null>("errorVersion"))
@@ -330,7 +330,7 @@ namespace Gs2::Version::Request
                       return nullptr;
                   }
                   return Model::FVersion::FromJson(Data->GetObjectField("errorVersion"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithScheduleVersions(Data->HasField("scheduleVersions") ? [Data]() -> TSharedPtr<TArray<Model::FScheduleVersionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FScheduleVersionPtr>>();
@@ -342,7 +342,7 @@ namespace Gs2::Version::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FScheduleVersionPtr>>())
             ->WithNeedSignature(Data->HasField("needSignature") ? [Data]() -> TOptional<bool>
               {
                   bool v;

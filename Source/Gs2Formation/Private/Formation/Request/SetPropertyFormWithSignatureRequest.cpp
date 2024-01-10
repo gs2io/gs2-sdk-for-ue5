@@ -202,7 +202,7 @@ namespace Gs2::Formation::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FSlotWithSignaturePtr>>())
             ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

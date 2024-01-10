@@ -64,7 +64,7 @@ namespace Gs2::Enchant::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FRarityParameterModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeRarityParameterModelsResult::ToJson() const

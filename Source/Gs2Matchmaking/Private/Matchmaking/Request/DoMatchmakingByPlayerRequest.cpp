@@ -113,7 +113,7 @@ namespace Gs2::Matchmaking::Request
                       return nullptr;
                   }
                   return Model::FPlayer::FromJson(Data->GetObjectField("player"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithMatchmakingContextToken(Data->HasField("matchmakingContextToken") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

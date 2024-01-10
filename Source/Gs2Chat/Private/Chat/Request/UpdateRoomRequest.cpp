@@ -202,7 +202,7 @@ namespace Gs2::Chat::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<FString>>())
             ->WithAccessToken(Data->HasField("xGs2AccessToken") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

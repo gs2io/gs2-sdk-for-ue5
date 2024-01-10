@@ -270,7 +270,7 @@ namespace Gs2::Showcase::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FRandomDisplayItemModelPtr>>())
             ->WithBaseTimestamp(Data->HasField("baseTimestamp") ? [Data]() -> TOptional<int64>
               {
                   int64 v;

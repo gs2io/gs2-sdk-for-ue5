@@ -88,7 +88,7 @@ namespace Gs2::JobQueue::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FJobPtr>>())
             ->WithAutoRun(Data->HasField("autoRun") ? [Data]() -> TOptional<bool>
                 {
                     bool v;

@@ -135,7 +135,7 @@ namespace Gs2::Account::Request
                       return nullptr;
                   }
                   return Model::FBanStatus::FromJson(Data->GetObjectField("banStatus"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 

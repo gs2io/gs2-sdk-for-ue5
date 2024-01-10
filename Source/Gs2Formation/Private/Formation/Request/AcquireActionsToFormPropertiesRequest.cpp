@@ -211,7 +211,7 @@ namespace Gs2::Formation::Request
                       return nullptr;
                   }
                   return Model::FAcquireAction::FromJson(Data->GetObjectField("acquireAction"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionConfigPtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionConfigPtr>>();
@@ -223,7 +223,7 @@ namespace Gs2::Formation::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FAcquireActionConfigPtr>>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 

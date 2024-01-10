@@ -64,7 +64,7 @@ namespace Gs2::Identifier::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FSecurityPolicyPtr>>());
     }
 
     TSharedPtr<FJsonObject> FAttachSecurityPolicyResult::ToJson() const

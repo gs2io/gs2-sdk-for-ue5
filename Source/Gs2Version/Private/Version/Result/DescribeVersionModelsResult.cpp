@@ -64,7 +64,7 @@ namespace Gs2::Version::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FVersionModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeVersionModelsResult::ToJson() const

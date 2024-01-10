@@ -246,7 +246,7 @@ namespace Gs2::StateMachine::Request
                       return nullptr;
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithStartScript(Data->HasField("startScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("startScript"))
@@ -254,7 +254,7 @@ namespace Gs2::StateMachine::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("startScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithPassScript(Data->HasField("passScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("passScript"))
@@ -262,7 +262,7 @@ namespace Gs2::StateMachine::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("passScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithErrorScript(Data->HasField("errorScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("errorScript"))
@@ -270,7 +270,7 @@ namespace Gs2::StateMachine::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("errorScript"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithLowestStateMachineVersion(Data->HasField("lowestStateMachineVersion") ? [Data]() -> TOptional<int64>
               {
                   int64 v;
@@ -287,7 +287,7 @@ namespace Gs2::StateMachine::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateNamespaceRequest::ToJson() const

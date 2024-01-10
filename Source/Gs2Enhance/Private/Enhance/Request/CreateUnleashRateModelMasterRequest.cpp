@@ -222,7 +222,7 @@ namespace Gs2::Enhance::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FUnleashRateEntryModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FCreateUnleashRateModelMasterRequest::ToJson() const

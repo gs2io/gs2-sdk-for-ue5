@@ -64,7 +64,7 @@ namespace Gs2::Lottery::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FPrizeTablePtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribePrizeTablesResult::ToJson() const

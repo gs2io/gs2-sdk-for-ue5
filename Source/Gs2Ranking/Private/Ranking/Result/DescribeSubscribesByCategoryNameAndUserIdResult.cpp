@@ -64,7 +64,7 @@ namespace Gs2::Ranking::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FSubscribeUserPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeSubscribesByCategoryNameAndUserIdResult::ToJson() const

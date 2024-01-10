@@ -122,7 +122,7 @@ namespace Gs2::Deploy::Request
                       return nullptr;
                   }
                   return Model::FGitHubCheckoutSetting::FromJson(Data->GetObjectField("checkoutSetting"));
-             }() : nullptr);
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateStackFromGitHubRequest::ToJson() const

@@ -64,7 +64,7 @@ namespace Gs2::Mission::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FCounterModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeCounterModelsResult::ToJson() const

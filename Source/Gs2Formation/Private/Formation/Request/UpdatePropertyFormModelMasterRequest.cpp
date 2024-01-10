@@ -174,7 +174,7 @@ namespace Gs2::Formation::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FSlotModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FUpdatePropertyFormModelMasterRequest::ToJson() const

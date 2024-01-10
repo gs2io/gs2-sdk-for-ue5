@@ -126,7 +126,7 @@ namespace Gs2::Realtime::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<FString>>());
     }
 
     TSharedPtr<FJsonObject> FWantRoomRequest::ToJson() const

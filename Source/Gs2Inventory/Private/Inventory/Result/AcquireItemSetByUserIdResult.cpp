@@ -126,7 +126,7 @@ namespace Gs2::Inventory::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FItemSetPtr>>())
             ->WithItemModel(Data->HasField("itemModel") ? [Data]() -> Model::FItemModelPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("itemModel"))

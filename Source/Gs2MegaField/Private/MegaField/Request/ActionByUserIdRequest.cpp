@@ -202,7 +202,7 @@ namespace Gs2::MegaField::Request
                       return nullptr;
                   }
                   return Model::FMyPosition::FromJson(Data->GetObjectField("position"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithScopes(Data->HasField("scopes") ? [Data]() -> TSharedPtr<TArray<Model::FScopePtr>>
               {
                   auto v = MakeShared<TArray<Model::FScopePtr>>();
@@ -214,7 +214,7 @@ namespace Gs2::MegaField::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FScopePtr>>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 

@@ -64,7 +64,7 @@ namespace Gs2::Mission::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FMissionTaskModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeMissionTaskModelsResult::ToJson() const

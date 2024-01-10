@@ -64,7 +64,7 @@ namespace Gs2::Enhance::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FRateModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeRateModelsResult::ToJson() const

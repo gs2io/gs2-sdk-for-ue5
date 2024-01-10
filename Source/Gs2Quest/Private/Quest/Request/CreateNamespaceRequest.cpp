@@ -228,7 +228,7 @@ namespace Gs2::Quest::Request
                       return nullptr;
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithStartQuestScript(Data->HasField("startQuestScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("startQuestScript"))
@@ -236,7 +236,7 @@ namespace Gs2::Quest::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("startQuestScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithCompleteQuestScript(Data->HasField("completeQuestScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("completeQuestScript"))
@@ -244,7 +244,7 @@ namespace Gs2::Quest::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("completeQuestScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithFailedQuestScript(Data->HasField("failedQuestScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("failedQuestScript"))
@@ -252,7 +252,7 @@ namespace Gs2::Quest::Request
                       return nullptr;
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("failedQuestScript"));
-             }() : nullptr)
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -260,7 +260,7 @@ namespace Gs2::Quest::Request
                       return nullptr;
                   }
                   return Model::FLogSetting::FromJson(Data->GetObjectField("logSetting"));
-             }() : nullptr)
+              }() : nullptr)
             ->WithQueueNamespaceId(Data->HasField("queueNamespaceId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

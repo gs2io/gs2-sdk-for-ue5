@@ -64,7 +64,7 @@ namespace Gs2::Formation::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FMoldModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeMoldModelsResult::ToJson() const

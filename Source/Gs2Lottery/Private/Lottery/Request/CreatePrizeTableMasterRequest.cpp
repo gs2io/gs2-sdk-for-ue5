@@ -174,7 +174,7 @@ namespace Gs2::Lottery::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FPrizePtr>>());
     }
 
     TSharedPtr<FJsonObject> FCreatePrizeTableMasterRequest::ToJson() const

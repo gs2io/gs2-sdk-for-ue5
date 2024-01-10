@@ -193,7 +193,7 @@ namespace Gs2::Showcase::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
           ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
@@ -205,7 +205,7 @@ namespace Gs2::Showcase::Request
                       }
                   }
                   return v;
-             }() : nullptr);
+              }() : MakeShared<TArray<Model::FAcquireActionPtr>>());
     }
 
     TSharedPtr<FJsonObject> FUpdateSalesItemMasterRequest::ToJson() const

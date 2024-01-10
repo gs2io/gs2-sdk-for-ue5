@@ -64,7 +64,7 @@ namespace Gs2::Dictionary::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FEntryModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeEntryModelsResult::ToJson() const

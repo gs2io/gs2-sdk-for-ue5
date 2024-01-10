@@ -235,7 +235,7 @@ namespace Gs2::Datastore::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<FString>>())
             ->WithUpdateIfExists(Data->HasField("updateIfExists") ? [Data]() -> TOptional<bool>
               {
                   bool v;

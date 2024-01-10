@@ -64,7 +64,7 @@ namespace Gs2::Stamina::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FStaminaModelPtr>>());
     }
 
     TSharedPtr<FJsonObject> FDescribeStaminaModelsResult::ToJson() const

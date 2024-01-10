@@ -64,7 +64,7 @@ namespace Gs2::Lottery::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FDrawnPrizePtr>>());
     }
 
     TSharedPtr<FJsonObject> FPredictionByUserIdResult::ToJson() const

@@ -64,7 +64,7 @@ namespace Gs2::MegaField::Result
                         }
                     }
                     return v;
-                 }() : nullptr);
+                 }() : MakeShared<TArray<Model::FSpatialPtr>>());
     }
 
     TSharedPtr<FJsonObject> FActionByUserIdResult::ToJson() const

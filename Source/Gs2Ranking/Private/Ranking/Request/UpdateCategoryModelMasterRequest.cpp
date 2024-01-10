@@ -517,7 +517,7 @@ namespace Gs2::Ranking::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<Model::FScopePtr>>())
             ->WithEntryPeriodEventId(Data->HasField("entryPeriodEventId") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -547,7 +547,7 @@ namespace Gs2::Ranking::Request
                       }
                   }
                   return v;
-             }() : nullptr)
+              }() : MakeShared<TArray<FString>>())
             ->WithGeneration(Data->HasField("generation") ? [Data]() -> TOptional<FString>
               {
                   FString v("");

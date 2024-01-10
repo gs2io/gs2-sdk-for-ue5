@@ -83,7 +83,7 @@ namespace Gs2::Idle::Result
                         }
                     }
                     return v;
-                 }() : nullptr)
+                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
             ->WithStatus(Data->HasField("status") ? [Data]() -> Model::FStatusPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("status"))
