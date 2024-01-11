@@ -26,12 +26,14 @@ namespace Gs2::UE5::Money::Model
         TOptional<int32> SlotValue;
         TOptional<int32> PaidValue;
         TOptional<int32> FreeValue;
+        TOptional<bool> ShareFreeValue;
         TOptional<int64> UpdatedAtValue;
 
 	public:
         TSharedPtr<FEzWallet> WithSlot(const TOptional<int32> Slot);
         TSharedPtr<FEzWallet> WithPaid(const TOptional<int32> Paid);
         TSharedPtr<FEzWallet> WithFree(const TOptional<int32> Free);
+        TSharedPtr<FEzWallet> WithShareFree(const TOptional<bool> ShareFree);
         TSharedPtr<FEzWallet> WithUpdatedAt(const TOptional<int64> UpdatedAt);
 
         TOptional<int32> GetSlot() const;
@@ -42,6 +44,9 @@ namespace Gs2::UE5::Money::Model
 
         TOptional<int32> GetFree() const;
         FString GetFreeString() const;
+
+        TOptional<bool> GetShareFree() const;
+        FString GetShareFreeString() const;
 
         TOptional<int64> GetUpdatedAt() const;
         FString GetUpdatedAtString() const;

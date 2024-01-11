@@ -43,6 +43,14 @@ namespace Gs2::UE5::Money::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzWallet> FEzWallet::WithShareFree(
+        const TOptional<bool> ShareFree
+    )
+    {
+        this->ShareFreeValue = ShareFree;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzWallet> FEzWallet::WithUpdatedAt(
         const TOptional<int64> UpdatedAt
     )
@@ -89,6 +97,19 @@ namespace Gs2::UE5::Money::Model
         }
         return FString::Printf(TEXT("%d"), FreeValue.GetValue());
     }
+    TOptional<bool> FEzWallet::GetShareFree() const
+    {
+        return ShareFreeValue;
+    }
+
+    FString FEzWallet::GetShareFreeString() const
+    {
+        if (!ShareFreeValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(ShareFreeValue.GetValue() ? "true" : "false");
+    }
     TOptional<int64> FEzWallet::GetUpdatedAt() const
     {
         return UpdatedAtValue;
@@ -109,6 +130,7 @@ namespace Gs2::UE5::Money::Model
             ->WithSlot(SlotValue)
             ->WithPaid(PaidValue)
             ->WithFree(FreeValue)
+            ->WithShareFree(ShareFreeValue)
             ->WithUpdatedAt(UpdatedAtValue);
     }
 
@@ -122,6 +144,7 @@ namespace Gs2::UE5::Money::Model
             ->WithSlot(Model->GetSlot())
             ->WithPaid(Model->GetPaid())
             ->WithFree(Model->GetFree())
+            ->WithShareFree(Model->GetShareFree())
             ->WithUpdatedAt(Model->GetUpdatedAt());
     }
 }

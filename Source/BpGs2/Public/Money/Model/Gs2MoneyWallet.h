@@ -41,6 +41,8 @@ struct FGs2MoneyWalletValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 Free = 0;
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    bool ShareFree = false;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 UpdatedAt = 0;
 };
 
@@ -56,6 +58,7 @@ inline FGs2MoneyWalletValue EzWalletToFGs2MoneyWalletValue(
     Value.Slot = Model->GetSlot() ? *Model->GetSlot() : 0;
     Value.Paid = Model->GetPaid() ? *Model->GetPaid() : 0;
     Value.Free = Model->GetFree() ? *Model->GetFree() : 0;
+    Value.ShareFree = Model->GetShareFree() ? *Model->GetShareFree() : false;
     Value.UpdatedAt = Model->GetUpdatedAt() ? *Model->GetUpdatedAt() : 0;
     return Value;
 }
@@ -68,6 +71,7 @@ inline Gs2::UE5::Money::Model::FEzWalletPtr FGs2MoneyWalletValueToEzWallet(
         ->WithSlot(Model.Slot)
         ->WithPaid(Model.Paid)
         ->WithFree(Model.Free)
+        ->WithShareFree(Model.ShareFree)
         ->WithUpdatedAt(Model.UpdatedAt);
 }
 

@@ -25,6 +25,7 @@ namespace Gs2::Money::Model
         PaidValue(TOptional<int32>()),
         FreeValue(TOptional<int32>()),
         DetailValue(nullptr),
+        ShareFreeValue(TOptional<bool>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -40,6 +41,7 @@ namespace Gs2::Money::Model
         PaidValue(From.PaidValue),
         FreeValue(From.FreeValue),
         DetailValue(From.DetailValue),
+        ShareFreeValue(From.ShareFreeValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -91,6 +93,14 @@ namespace Gs2::Money::Model
     )
     {
         this->DetailValue = Detail;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FWallet> FWallet::WithShareFree(
+        const TOptional<bool> ShareFree
+    )
+    {
+        this->ShareFreeValue = ShareFree;
         return SharedThis(this);
     }
 
@@ -167,6 +177,19 @@ namespace Gs2::Money::Model
     TSharedPtr<TArray<TSharedPtr<Model::FWalletDetail>>> FWallet::GetDetail() const
     {
         return DetailValue;
+    }
+    TOptional<bool> FWallet::GetShareFree() const
+    {
+        return ShareFreeValue;
+    }
+
+    FString FWallet::GetShareFreeString() const
+    {
+        if (!ShareFreeValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(ShareFreeValue.GetValue() ? "true" : "false");
     }
     TOptional<int64> FWallet::GetCreatedAt() const
     {
@@ -326,6 +349,15 @@ namespace Gs2::Money::Model
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FWalletDetailPtr>>())
+            ->WithShareFree(Data->HasField("shareFree") ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField("shareFree", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -386,6 +418,10 @@ namespace Gs2::Money::Model
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("detail", v);
+        }
+        if (ShareFreeValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("shareFree", ShareFreeValue.GetValue());
         }
         if (CreatedAtValue.IsSet())
         {

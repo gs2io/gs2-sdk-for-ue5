@@ -30,6 +30,7 @@ namespace Gs2::Money::Model
         TOptional<int32> PaidValue;
         TOptional<int32> FreeValue;
         TSharedPtr<TArray<TSharedPtr<FWalletDetail>>> DetailValue;
+        TOptional<bool> ShareFreeValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -47,6 +48,7 @@ namespace Gs2::Money::Model
         TSharedPtr<FWallet> WithPaid(const TOptional<int32> Paid);
         TSharedPtr<FWallet> WithFree(const TOptional<int32> Free);
         TSharedPtr<FWallet> WithDetail(const TSharedPtr<TArray<TSharedPtr<FWalletDetail>>> Detail);
+        TSharedPtr<FWallet> WithShareFree(const TOptional<bool> ShareFree);
         TSharedPtr<FWallet> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FWallet> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FWallet> WithRevision(const TOptional<int64> Revision);
@@ -60,6 +62,8 @@ namespace Gs2::Money::Model
         TOptional<int32> GetFree() const;
         FString GetFreeString() const;
         TSharedPtr<TArray<TSharedPtr<FWalletDetail>>> GetDetail() const;
+        TOptional<bool> GetShareFree() const;
+        FString GetShareFreeString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;
