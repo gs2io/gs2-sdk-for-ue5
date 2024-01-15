@@ -25,6 +25,8 @@ namespace Gs2::Inventory::Model
         AcquireScriptValue(nullptr),
         OverflowScriptValue(nullptr),
         ConsumeScriptValue(nullptr),
+        SimpleItemAcquireScriptValue(nullptr),
+        SimpleItemConsumeScriptValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -41,6 +43,8 @@ namespace Gs2::Inventory::Model
         AcquireScriptValue(From.AcquireScriptValue),
         OverflowScriptValue(From.OverflowScriptValue),
         ConsumeScriptValue(From.ConsumeScriptValue),
+        SimpleItemAcquireScriptValue(From.SimpleItemAcquireScriptValue),
+        SimpleItemConsumeScriptValue(From.SimpleItemConsumeScriptValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -93,6 +97,22 @@ namespace Gs2::Inventory::Model
     )
     {
         this->ConsumeScriptValue = ConsumeScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithSimpleItemAcquireScript(
+        const TSharedPtr<FScriptSetting> SimpleItemAcquireScript
+    )
+    {
+        this->SimpleItemAcquireScriptValue = SimpleItemAcquireScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithSimpleItemConsumeScript(
+        const TSharedPtr<FScriptSetting> SimpleItemConsumeScript
+    )
+    {
+        this->SimpleItemConsumeScriptValue = SimpleItemConsumeScript;
         return SharedThis(this);
     }
 
@@ -150,6 +170,14 @@ namespace Gs2::Inventory::Model
     TSharedPtr<FScriptSetting> FNamespace::GetConsumeScript() const
     {
         return ConsumeScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetSimpleItemAcquireScript() const
+    {
+        return SimpleItemAcquireScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetSimpleItemConsumeScript() const
+    {
+        return SimpleItemConsumeScriptValue;
     }
     TSharedPtr<FLogSetting> FNamespace::GetLogSetting() const
     {
@@ -285,6 +313,22 @@ namespace Gs2::Inventory::Model
                     }
                     return Model::FScriptSetting::FromJson(Data->GetObjectField("consumeScript"));
                  }() : nullptr)
+            ->WithSimpleItemAcquireScript(Data->HasField("simpleItemAcquireScript") ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>("simpleItemAcquireScript"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField("simpleItemAcquireScript"));
+                 }() : nullptr)
+            ->WithSimpleItemConsumeScript(Data->HasField("simpleItemConsumeScript") ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>("simpleItemConsumeScript"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField("simpleItemConsumeScript"));
+                 }() : nullptr)
             ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -348,6 +392,14 @@ namespace Gs2::Inventory::Model
         if (ConsumeScriptValue != nullptr && ConsumeScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("consumeScript", ConsumeScriptValue->ToJson());
+        }
+        if (SimpleItemAcquireScriptValue != nullptr && SimpleItemAcquireScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("simpleItemAcquireScript", SimpleItemAcquireScriptValue->ToJson());
+        }
+        if (SimpleItemConsumeScriptValue != nullptr && SimpleItemConsumeScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("simpleItemConsumeScript", SimpleItemConsumeScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

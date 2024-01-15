@@ -98,6 +98,14 @@ namespace Gs2::Inventory::Task::Rest
             {
                 JsonRootObject->SetObjectField("consumeScript", this->Request->GetConsumeScript()->ToJson());
             }
+            if (this->Request->GetSimpleItemAcquireScript() != nullptr && this->Request->GetSimpleItemAcquireScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("simpleItemAcquireScript", this->Request->GetSimpleItemAcquireScript()->ToJson());
+            }
+            if (this->Request->GetSimpleItemConsumeScript() != nullptr && this->Request->GetSimpleItemConsumeScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("simpleItemConsumeScript", this->Request->GetSimpleItemConsumeScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());

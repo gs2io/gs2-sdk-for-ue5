@@ -31,6 +31,8 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FScriptSetting> AcquireScriptValue;
         TSharedPtr<FScriptSetting> OverflowScriptValue;
         TSharedPtr<FScriptSetting> ConsumeScriptValue;
+        TSharedPtr<FScriptSetting> SimpleItemAcquireScriptValue;
+        TSharedPtr<FScriptSetting> SimpleItemConsumeScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -49,6 +51,8 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FNamespace> WithAcquireScript(const TSharedPtr<FScriptSetting> AcquireScript);
         TSharedPtr<FNamespace> WithOverflowScript(const TSharedPtr<FScriptSetting> OverflowScript);
         TSharedPtr<FNamespace> WithConsumeScript(const TSharedPtr<FScriptSetting> ConsumeScript);
+        TSharedPtr<FNamespace> WithSimpleItemAcquireScript(const TSharedPtr<FScriptSetting> SimpleItemAcquireScript);
+        TSharedPtr<FNamespace> WithSimpleItemConsumeScript(const TSharedPtr<FScriptSetting> SimpleItemConsumeScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -60,6 +64,8 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FScriptSetting> GetAcquireScript() const;
         TSharedPtr<FScriptSetting> GetOverflowScript() const;
         TSharedPtr<FScriptSetting> GetConsumeScript() const;
+        TSharedPtr<FScriptSetting> GetSimpleItemAcquireScript() const;
+        TSharedPtr<FScriptSetting> GetSimpleItemConsumeScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

@@ -32,6 +32,8 @@ namespace Gs2::Inventory::Request
         TSharedPtr<Model::FScriptSetting> AcquireScriptValue;
         TSharedPtr<Model::FScriptSetting> OverflowScriptValue;
         TSharedPtr<Model::FScriptSetting> ConsumeScriptValue;
+        TSharedPtr<Model::FScriptSetting> SimpleItemAcquireScriptValue;
+        TSharedPtr<Model::FScriptSetting> SimpleItemConsumeScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -48,6 +50,8 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FUpdateNamespaceRequest> WithAcquireScript(const TSharedPtr<Model::FScriptSetting> AcquireScript);
         TSharedPtr<FUpdateNamespaceRequest> WithOverflowScript(const TSharedPtr<Model::FScriptSetting> OverflowScript);
         TSharedPtr<FUpdateNamespaceRequest> WithConsumeScript(const TSharedPtr<Model::FScriptSetting> ConsumeScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithSimpleItemAcquireScript(const TSharedPtr<Model::FScriptSetting> SimpleItemAcquireScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithSimpleItemConsumeScript(const TSharedPtr<Model::FScriptSetting> SimpleItemConsumeScript);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -56,6 +60,8 @@ namespace Gs2::Inventory::Request
         TSharedPtr<Model::FScriptSetting> GetAcquireScript() const;
         TSharedPtr<Model::FScriptSetting> GetOverflowScript() const;
         TSharedPtr<Model::FScriptSetting> GetConsumeScript() const;
+        TSharedPtr<Model::FScriptSetting> GetSimpleItemAcquireScript() const;
+        TSharedPtr<Model::FScriptSetting> GetSimpleItemConsumeScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);
