@@ -19,6 +19,7 @@
 namespace Gs2::Script::Model
 {
     FTransaction::FTransaction():
+        TransactionIdValue(TOptional<FString>()),
         ConsumeActionsValue(nullptr),
         AcquireActionsValue(nullptr)
     {
@@ -27,9 +28,18 @@ namespace Gs2::Script::Model
     FTransaction::FTransaction(
         const FTransaction& From
     ):
+        TransactionIdValue(From.TransactionIdValue),
         ConsumeActionsValue(From.ConsumeActionsValue),
         AcquireActionsValue(From.AcquireActionsValue)
     {
+    }
+
+    TSharedPtr<FTransaction> FTransaction::WithTransactionId(
+        const TOptional<FString> TransactionId
+    )
+    {
+        this->TransactionIdValue = TransactionId;
+        return SharedThis(this);
     }
 
     TSharedPtr<FTransaction> FTransaction::WithConsumeActions(
@@ -47,6 +57,10 @@ namespace Gs2::Script::Model
         this->AcquireActionsValue = AcquireActions;
         return SharedThis(this);
     }
+    TOptional<FString> FTransaction::GetTransactionId() const
+    {
+        return TransactionIdValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FTransaction::GetConsumeActions() const
     {
         return ConsumeActionsValue;
@@ -62,6 +76,15 @@ namespace Gs2::Script::Model
             return nullptr;
         }
         return MakeShared<FTransaction>()
+            ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("transactionId", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithConsumeActions(Data->HasField("consumeActions") ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
@@ -91,6 +114,10 @@ namespace Gs2::Script::Model
     TSharedPtr<FJsonObject> FTransaction::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (TransactionIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
+        }
         if (ConsumeActionsValue != nullptr && ConsumeActionsValue.IsValid())
         {
             TArray<TSharedPtr<FJsonValue>> v;

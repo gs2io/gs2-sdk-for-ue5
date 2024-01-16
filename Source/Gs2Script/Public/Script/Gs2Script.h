@@ -24,6 +24,7 @@
 #include "Model/AcquireAction.h"
 #include "Model/ConsumeAction.h"
 #include "Model/Transaction.h"
+#include "Model/TransactionSetting.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/LogSetting.h"
 

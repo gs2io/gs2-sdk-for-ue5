@@ -25,6 +25,7 @@ namespace Gs2::Script::Model
 {
     class GS2SCRIPT_API FTransaction final : public Gs2Object, public TSharedFromThis<FTransaction>
     {
+        TOptional<FString> TransactionIdValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
 
@@ -35,9 +36,11 @@ namespace Gs2::Script::Model
         );
         virtual ~FTransaction() override = default;
 
+        TSharedPtr<FTransaction> WithTransactionId(const TOptional<FString> TransactionId);
         TSharedPtr<FTransaction> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActions);
         TSharedPtr<FTransaction> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
 
+        TOptional<FString> GetTransactionId() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
 

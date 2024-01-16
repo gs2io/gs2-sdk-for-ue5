@@ -22,6 +22,7 @@ namespace Gs2::Script::Model
         NamespaceIdValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
+        TransactionSettingValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -35,6 +36,7 @@ namespace Gs2::Script::Model
         NamespaceIdValue(From.NamespaceIdValue),
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
+        TransactionSettingValue(From.TransactionSettingValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -63,6 +65,14 @@ namespace Gs2::Script::Model
     )
     {
         this->DescriptionValue = Description;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSetting(
+        const TSharedPtr<FTransactionSetting> TransactionSetting
+    )
+    {
+        this->TransactionSettingValue = TransactionSetting;
         return SharedThis(this);
     }
 
@@ -108,6 +118,10 @@ namespace Gs2::Script::Model
     TOptional<FString> FNamespace::GetDescription() const
     {
         return DescriptionValue;
+    }
+    TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
+    {
+        return TransactionSettingValue;
     }
     TSharedPtr<FLogSetting> FNamespace::GetLogSetting() const
     {
@@ -219,6 +233,14 @@ namespace Gs2::Script::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithTransactionSetting(Data->HasField("transactionSetting") ? [Data]() -> Model::FTransactionSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>("transactionSetting"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSetting::FromJson(Data->GetObjectField("transactionSetting"));
+                 }() : nullptr)
             ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -270,6 +292,10 @@ namespace Gs2::Script::Model
         if (DescriptionValue.IsSet())
         {
             JsonRootObject->SetStringField("description", DescriptionValue.GetValue());
+        }
+        if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("transactionSetting", TransactionSettingValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
