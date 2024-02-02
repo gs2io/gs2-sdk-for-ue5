@@ -52,6 +52,8 @@ namespace Gs2::Friend::Domain::Model
     class FUserAccessTokenDomain;
     class FProfileDomain;
     class FProfileAccessTokenDomain;
+    class FFollowDomain;
+    class FFollowAccessTokenDomain;
     class FFriendDomain;
     class FFriendAccessTokenDomain;
     class FBlackListDomain;
@@ -76,6 +78,11 @@ namespace Gs2::Friend::Domain::Model
         const Gs2::Friend::FGs2FriendRestClientPtr Client;
 
         public:
+        TOptional<FString> NextPageToken;
+        TOptional<FString> GetNextPageToken() const
+        {
+            return NextPageToken;
+        }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
@@ -97,6 +104,21 @@ namespace Gs2::Friend::Domain::Model
 
         FFollowAccessTokenDomain(
             const FFollowAccessTokenDomain& From
+        );
+
+        Gs2::Friend::Domain::Iterator::FDescribeFollowsIteratorPtr Follows(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeFollows(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeFollows(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain> FollowUser(
+            const FString TargetUserId
         );
 
         static FString CreateCacheParentKey(

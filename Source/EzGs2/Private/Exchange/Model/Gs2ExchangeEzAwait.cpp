@@ -43,6 +43,14 @@ namespace Gs2::UE5::Exchange::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzAwait> FEzAwait::WithConfig(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> Config
+    )
+    {
+        this->ConfigValue = Config;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzAwait> FEzAwait::WithExchangedAt(
         const TOptional<int64> ExchangedAt
     )
@@ -61,6 +69,10 @@ namespace Gs2::UE5::Exchange::Model
     TOptional<FString> FEzAwait::GetName() const
     {
         return NameValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> FEzAwait::GetConfig() const
+    {
+        return ConfigValue;
     }
     TOptional<int64> FEzAwait::GetExchangedAt() const
     {
@@ -82,6 +94,20 @@ namespace Gs2::UE5::Exchange::Model
             ->WithUserId(UserIdValue)
             ->WithRateName(RateNameValue)
             ->WithName(NameValue)
+            ->WithConfig([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Exchange::Model::FConfig>>>();
+                    if (ConfigValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *ConfigValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            )
             ->WithExchangedAt(ExchangedAtValue);
     }
 
@@ -95,6 +121,20 @@ namespace Gs2::UE5::Exchange::Model
             ->WithUserId(Model->GetUserId())
             ->WithRateName(Model->GetRateName())
             ->WithName(Model->GetName())
+            ->WithConfig([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzConfig>>>();
+                    if (Model->GetConfig() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetConfig())
+                    {
+                        v->Add(FEzConfig::FromModel(v2));
+                    }
+                    return v;
+                }()
+            )
             ->WithExchangedAt(Model->GetExchangedAt());
     }
 }

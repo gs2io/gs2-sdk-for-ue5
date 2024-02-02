@@ -12,12 +12,14 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking/Domain/Model/User.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
 #include "Ranking/Model/Gs2RankingEzRanking.h"
 #include "Util/Net/GameSession.h"
 
@@ -28,32 +30,24 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
         public TSharedFromThis<FEzDescribeNearRankingsIterator>
     {
         Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIteratorPtr It;
-        Gs2::Ranking::Domain::Model::FUserDomainPtr Domain;
+        Gs2::Ranking::Domain::Model::FRankingCategoryDomainPtr Domain;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
-        FString CategoryName;
-        TOptional<FString> AdditionalScopeName;
         int64 Score;
 
 	public:
 
         explicit FEzDescribeNearRankingsIterator(
-            Gs2::Ranking::Domain::Model::FUserDomainPtr Domain,
+            Gs2::Ranking::Domain::Model::FRankingCategoryDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-            FString CategoryName,
-            int64 Score,
-            TOptional<FString> AdditionalScopeName = TOptional<FString>()
+            int64 Score
         ) :
             It(
                 Domain->NearRankings(
-                    CategoryName,
-                    Score,
-                    AdditionalScopeName
+                    Score
                 )
             ),
             Domain(Domain),
             Connection(Connection),
-            CategoryName(CategoryName),
-            AdditionalScopeName(AdditionalScopeName),
             Score(Score)
         {
         }
@@ -64,8 +58,6 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 			It(From.It),
 			Domain(From.Domain),
 			Connection(From.Connection),
-            CategoryName(From.CategoryName),
-            AdditionalScopeName(From.AdditionalScopeName),
             Score(From.Score)
 		{
 		}

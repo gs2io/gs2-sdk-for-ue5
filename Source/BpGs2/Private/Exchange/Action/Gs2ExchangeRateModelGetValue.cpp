@@ -41,8 +41,7 @@ UGs2ExchangeRateModelGetValueAsyncFunction* UGs2ExchangeRateModelGetValueAsyncFu
 
 void UGs2ExchangeRateModelGetValueAsyncFunction::Activate()
 {
-    auto Future = RateModel.Value->Model(
-    );
+    auto Future = RateModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzRateModelToFGs2ExchangeRateModelValue(Result);

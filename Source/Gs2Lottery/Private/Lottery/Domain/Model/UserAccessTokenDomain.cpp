@@ -81,13 +81,15 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryAccessTokenDomain> FUserAccessTokenDomain::Lottery(
+        const FString LotteryName
     )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FLotteryAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,
-            AccessToken
+            AccessToken,
+            LotteryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LotteryName)
         );
     }
 
@@ -142,49 +144,6 @@ namespace Gs2::Lottery::Domain::Model
             NamespaceName,
             AccessToken,
             PrizeTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PrizeTableName)
-        );
-    }
-
-    Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIteratorPtr FUserAccessTokenDomain::Probabilities(
-        const FString LotteryName
-    ) const
-    {
-        return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            LotteryName,
-            AccessToken
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeProbabilities(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Lottery::Model::FProbability::TypeName,
-            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                "Probability"
-            ),
-            Callback
-        );
-    }
-
-    void FUserAccessTokenDomain::UnsubscribeProbabilities(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Lottery::Model::FProbability::TypeName,
-            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                "Probability"
-            ),
-            CallbackID
         );
     }
 

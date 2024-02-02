@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Config.h"
 
 namespace Gs2::Exchange::Request
 {
@@ -29,6 +30,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> RateNameValue;
         TOptional<int32> CountValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +46,7 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FCreateAwaitByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FCreateAwaitByUserIdRequest> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FCreateAwaitByUserIdRequest> WithCount(const TOptional<int32> Count);
+        TSharedPtr<FCreateAwaitByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
         TSharedPtr<FCreateAwaitByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,7 +54,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetRateName() const;
         TOptional<int32> GetCount() const;
-        FString GetCountString() const;
+        FString GetCountString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCreateAwaitByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

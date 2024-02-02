@@ -107,7 +107,7 @@ namespace Gs2::Matchmaking::Domain::Model
         );
 
         class GS2MATCHMAKING_API FGetTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Model::FBallot>,
             public TSharedFromThis<FGetTask>
         {
             const TSharedPtr<FBallotAccessTokenDomain> Self;
@@ -123,7 +123,7 @@ namespace Gs2::Matchmaking::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FBallot>> Result
             ) override;
         };
         friend FGetTask;

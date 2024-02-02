@@ -29,18 +29,16 @@ UGs2FriendListOfFollowUserAsyncFunction::UGs2FriendListOfFollowUserAsyncFunction
 
 UGs2FriendListOfFollowUserAsyncFunction* UGs2FriendListOfFollowUserAsyncFunction::ListOfFollowUser(
     UObject* WorldContextObject,
-    FGs2FriendOwnUser User,
-    bool WithProfile
+    FGs2FriendOwnFollow Follow
 )
 {
     UGs2FriendListOfFollowUserAsyncFunction* Action = NewObject<UGs2FriendListOfFollowUserAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendListOfFollowUserAsyncFunction::ListOfFollowUser] User parameter specification is missing."))
+    if (Follow.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendListOfFollowUserAsyncFunction::ListOfFollowUser] Follow parameter specification is missing."))
         return Action;
     }
-    Action->User = User;
-    Action->WithProfile = WithProfile;
+    Action->Follow = Follow;
     return Action;
 }
 
@@ -49,12 +47,11 @@ void UGs2FriendListOfFollowUserAsyncFunction::Activate()
     TArray<FGs2FriendFollowUserValue> ReturnFollowUsers;
     FGs2Error ReturnError;
 
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendListOfFollowUserAsyncFunction::Activate] User parameter specification is missing."))
+    if (Follow.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendListOfFollowUserAsyncFunction::Activate] Follow parameter specification is missing."))
         return;
     }
-    const auto It = User.Value->Follows(
-        WithProfile
+    const auto It = Follow.Value->Follows(
     );
     for (auto v : *It)
     {

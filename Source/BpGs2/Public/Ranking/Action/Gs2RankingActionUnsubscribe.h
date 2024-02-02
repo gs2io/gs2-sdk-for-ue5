@@ -44,7 +44,7 @@ public:
 
     UGs2RankingUnsubscribeAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::SubscribeUser::Action::Unsubscribe", Category="Game Server Services|GS2-Ranking|Namespace|User|SubscribeUser|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::SubscribeUser::Action::Unsubscribe", Category="Game Server Services|GS2-Ranking|Namespace|User|RankingCategory|SubscribeUser|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2RankingUnsubscribeAsyncFunction* Unsubscribe(
         UObject* WorldContextObject,
         FGs2RankingOwnSubscribeUser SubscribeUser

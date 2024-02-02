@@ -41,8 +41,7 @@ UGs2IdleCategoryModelGetValueAsyncFunction* UGs2IdleCategoryModelGetValueAsyncFu
 
 void UGs2IdleCategoryModelGetValueAsyncFunction::Activate()
 {
-    auto Future = CategoryModel.Value->Model(
-    );
+    auto Future = CategoryModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzCategoryModelToFGs2IdleCategoryModelValue(Result);

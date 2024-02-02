@@ -59,31 +59,6 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
     }
 
-    Gs2::UE5::Lottery::Domain::Model::FEzUserDomainPtr FEzNamespaceDomain::User(
-        const FString UserId
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Lottery::Domain::Model::FEzUserDomain>(
-            Domain->User(
-                UserId
-            ),
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Lottery::Domain::Model::FEzUserGameSessionDomainPtr FEzNamespaceDomain::Me(
-        Gs2::UE5::Util::FGameSessionPtr GameSession
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Lottery::Domain::Model::FEzUserGameSessionDomain>(
-            Domain->AccessToken(
-                GameSession->AccessToken()->ToModel()
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeLotteryModelsIteratorPtr FEzNamespaceDomain::LotteryModels(
     ) const
     {
@@ -115,6 +90,31 @@ namespace Gs2::UE5::Lottery::Domain::Model
             Domain->LotteryModel(
                 LotteryName
             ),
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Lottery::Domain::Model::FEzUserDomainPtr FEzNamespaceDomain::User(
+        const FString UserId
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Lottery::Domain::Model::FEzUserDomain>(
+            Domain->User(
+                UserId
+            ),
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Lottery::Domain::Model::FEzUserGameSessionDomainPtr FEzNamespaceDomain::Me(
+        Gs2::UE5::Util::FGameSessionPtr GameSession
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Lottery::Domain::Model::FEzUserGameSessionDomain>(
+            Domain->AccessToken(
+                GameSession->AccessToken()->ToModel()
+            ),
+            GameSession,
             ConnectionValue
         );
     }

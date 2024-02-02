@@ -17,7 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Friend/Model/Gs2FriendUser.h"
+#include "Friend/Model/Gs2FriendFollow.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendListOfFollowUser.generated.h"
@@ -30,10 +30,9 @@ class BPGS2_API UGs2FriendListOfFollowUserAsyncFunction : public UBlueprintAsync
 {
     GENERATED_BODY()
 
-    FGs2FriendOwnUser User;
+    FGs2FriendOwnFollow Follow;
 
 public:
-    bool WithProfile;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendListOfFollowUserSuccessDelegate OnSuccess;
@@ -43,11 +42,10 @@ public:
 
     UGs2FriendListOfFollowUserAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::Fetch::ListOfFollowUser", Category="Game Server Services|GS2-Friend|Namespace|User|FollowUser|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::Fetch::ListOfFollowUser", Category="Game Server Services|GS2-Friend|Namespace|User|Follow|FollowUser|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2FriendListOfFollowUserAsyncFunction* ListOfFollowUser(
         UObject* WorldContextObject,
-        FGs2FriendOwnUser User,
-        bool WithProfile
+        FGs2FriendOwnFollow Follow
     );
 
     virtual void Activate() override;

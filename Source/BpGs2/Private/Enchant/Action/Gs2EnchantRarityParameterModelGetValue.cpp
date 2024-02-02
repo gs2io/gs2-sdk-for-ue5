@@ -41,8 +41,7 @@ UGs2EnchantRarityParameterModelGetValueAsyncFunction* UGs2EnchantRarityParameter
 
 void UGs2EnchantRarityParameterModelGetValueAsyncFunction::Activate()
 {
-    auto Future = RarityParameterModel.Value->Model(
-    );
+    auto Future = RarityParameterModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzRarityParameterModelToFGs2EnchantRarityParameterModelValue(Result);

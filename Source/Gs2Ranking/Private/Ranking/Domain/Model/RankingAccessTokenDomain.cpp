@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -33,6 +31,8 @@
 #include "Ranking/Domain/Model/SubscribeAccessToken.h"
 #include "Ranking/Domain/Model/Score.h"
 #include "Ranking/Domain/Model/ScoreAccessToken.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
+#include "Ranking/Domain/Model/RankingCategoryAccessToken.h"
 #include "Ranking/Domain/Model/Ranking.h"
 #include "Ranking/Domain/Model/RankingAccessToken.h"
 #include "Ranking/Domain/Model/CurrentRankingMaster.h"
@@ -42,6 +42,9 @@
 #include "Ranking/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::Ranking::Domain::Model
 {
@@ -51,7 +54,10 @@ namespace Gs2::Ranking::Domain::Model
         const Ranking::Domain::FGs2RankingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const TOptional<FString> CategoryName
+        const TOptional<FString> CategoryName,
+        const TOptional<FString> AdditionalScopeName,
+        const TOptional<FString> ScorerUserId,
+        const TOptional<int64> Index
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -60,9 +66,14 @@ namespace Gs2::Ranking::Domain::Model
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         CategoryName(CategoryName),
-        ParentKey(Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+        AdditionalScopeName(AdditionalScopeName),
+        ScorerUserId(ScorerUserId),
+        Index(Index),
+        ParentKey(Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
+            CategoryName,
+            AdditionalScopeName,
             "Ranking"
         ))
     {
@@ -77,6 +88,9 @@ namespace Gs2::Ranking::Domain::Model
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
         CategoryName(From.CategoryName),
+        AdditionalScopeName(From.AdditionalScopeName),
+        ScorerUserId(From.ScorerUserId),
+        Index(From.Index),
         ParentKey(From.ParentKey)
     {
 
@@ -103,7 +117,9 @@ namespace Gs2::Ranking::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithCategoryName(Self->CategoryName);
+            ->WithCategoryName(Self->CategoryName)
+            ->WithAdditionalScopeName(Self->AdditionalScopeName)
+            ->WithScorerUserId(Self->ScorerUserId);
         const auto Future = Self->Client->GetRanking(
             Request
         );
@@ -125,7 +141,8 @@ namespace Gs2::Ranking::Domain::Model
                     (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
                     "Ranking";
                 const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
+                    RequestModel->GetScorerUserId(),
+                    ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Ranking::Model::FRanking::TypeName,
@@ -146,86 +163,13 @@ namespace Gs2::Ranking::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
-    FRankingAccessTokenDomain::FPutScoreTask::FPutScoreTask(
-        const TSharedPtr<FRankingAccessTokenDomain>& Self,
-        const Request::FPutScoreRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FRankingAccessTokenDomain::FPutScoreTask::FPutScoreTask(
-        const FPutScoreTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FRankingAccessTokenDomain::FPutScoreTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Ranking::Domain::Model::FScoreAccessTokenDomain>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithCategoryName(Self->CategoryName);
-        const auto Future = Self->Client->PutScore(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = FString("") +
-                    (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
-                    (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
-                    (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
-                    "Score";
-                const auto Key = Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName(),
-                    ResultModel->GetItem()->GetScorerUserId(),
-                    ResultModel->GetItem()->GetUniqueId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking::Model::FScore::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FScoreAccessTokenDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            Self->AccessToken,
-            ResultModel->GetItem()->GetCategoryName(),
-            ResultModel->GetItem()->GetScorerUserId(),
-            ResultModel->GetItem()->GetUniqueId()
-        );
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FRankingAccessTokenDomain::FPutScoreTask>> FRankingAccessTokenDomain::PutScore(
-        Request::FPutScoreRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FPutScoreTask>>(this->AsShared(), Request);
-    }
-
     FString FRankingAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
         TOptional<FString> CategoryName,
+        TOptional<FString> AdditionalScopeName,
+        TOptional<FString> ScorerUserId,
+        TOptional<FString> Index,
         FString ChildType
     )
     {
@@ -233,21 +177,25 @@ namespace Gs2::Ranking::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (CategoryName.IsSet() ? *CategoryName : "null") + ":" +
+            (AdditionalScopeName.IsSet() ? *AdditionalScopeName : "null") + ":" +
+            (ScorerUserId.IsSet() ? *ScorerUserId : "null") + ":" +
+            (Index.IsSet() ? *Index : "null") + ":" +
             ChildType;
     }
 
     FString FRankingAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> CategoryName
+        TOptional<FString> ScorerUserId,
+        TOptional<FString> Index
     )
     {
         return FString("") +
-            (CategoryName.IsSet() ? *CategoryName : "null");
+            (ScorerUserId.IsSet() ? *ScorerUserId : "null") + ":" + 
+            (Index.IsSet() ? *Index : "null");
     }
 
     FRankingAccessTokenDomain::FModelTask::FModelTask(
-        const TSharedPtr<FRankingAccessTokenDomain> Self,
-        const TOptional<FString> ScorerUserId
-    ): Self(Self), ScorerUserId(ScorerUserId)
+        const TSharedPtr<FRankingAccessTokenDomain> Self
+    ): Self(Self)
     {
 
     }
@@ -273,14 +221,14 @@ namespace Gs2::Ranking::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
             ParentKey,
             Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                ScorerUserId
+                Self->ScorerUserId,
+                Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
             ),
             &Value
         );
         if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Ranking::Request::FGetRankingRequest>()
-                    ->WithScorerUserId(ScorerUserId)
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
@@ -291,7 +239,8 @@ namespace Gs2::Ranking::Domain::Model
                 }
 
                 const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    ScorerUserId
+                    Self->ScorerUserId,
+                    Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Ranking::Model::FRanking::TypeName,
@@ -309,7 +258,8 @@ namespace Gs2::Ranking::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
                 ParentKey,
                 Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    ScorerUserId
+                    Self->ScorerUserId,
+                    Self->Index.IsSet() ? FString::FromInt(*Self->Index) : TOptional<FString>()
                 ),
                 &Value
             );
@@ -320,10 +270,8 @@ namespace Gs2::Ranking::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FRankingAccessTokenDomain::FModelTask>> FRankingAccessTokenDomain::Model(
-        const TOptional<FString> ScorerUserId
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FRankingAccessTokenDomain::FModelTask>>(this->AsShared(), ScorerUserId);
+    TSharedPtr<FAsyncTask<FRankingAccessTokenDomain::FModelTask>> FRankingAccessTokenDomain::Model() {
+        return Gs2::Core::Util::New<FAsyncTask<FRankingAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
     Gs2::Core::Domain::CallbackID FRankingAccessTokenDomain::Subscribe(
@@ -334,7 +282,8 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FRanking::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                CategoryName
+                ScorerUserId,
+                Index.IsSet() ? FString::FromInt(*Index) : TOptional<FString>()
             ),
             [Callback](TSharedPtr<Gs2Object> obj)
             {
@@ -351,7 +300,8 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FRanking::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                CategoryName
+                ScorerUserId,
+                Index.IsSet() ? FString::FromInt(*Index) : TOptional<FString>()
             ),
             CallbackID
         );

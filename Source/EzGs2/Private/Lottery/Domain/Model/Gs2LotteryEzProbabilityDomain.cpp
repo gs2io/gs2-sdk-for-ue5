@@ -29,6 +29,16 @@ namespace Gs2::UE5::Lottery::Domain::Model
         return Domain->UserId;
     }
 
+    TOptional<FString> FEzProbabilityDomain::LotteryName() const
+    {
+        return Domain->LotteryName;
+    }
+
+    TOptional<FString> FEzProbabilityDomain::PrizeId() const
+    {
+        return Domain->PrizeId;
+    }
+
     FEzProbabilityDomain::FEzProbabilityDomain(
         Gs2::Lottery::Domain::Model::FProbabilityDomainPtr Domain,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection

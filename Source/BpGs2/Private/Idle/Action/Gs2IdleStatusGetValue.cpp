@@ -41,8 +41,7 @@ UGs2IdleStatusGetValueAsyncFunction* UGs2IdleStatusGetValueAsyncFunction::Status
 
 void UGs2IdleStatusGetValueAsyncFunction::Activate()
 {
-    auto Future = Status.Value->Model(
-    );
+    auto Future = Status.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzStatusToFGs2IdleStatusValue(Result);

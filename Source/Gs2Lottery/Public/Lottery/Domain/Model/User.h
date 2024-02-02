@@ -105,6 +105,7 @@ namespace Gs2::Lottery::Domain::Model
         );
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryDomain> Lottery(
+            const FString LotteryName
         );
 
         Gs2::Lottery::Domain::Iterator::FDescribeBoxesByUserIdIteratorPtr Boxes(
@@ -120,18 +121,6 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FBoxItemsDomain> BoxItems(
             const FString PrizeTableName
-        );
-
-        Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIteratorPtr Probabilities(
-            const FString LotteryName
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeProbabilities(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeProbabilities(
-            Gs2::Core::Domain::CallbackID CallbackID
         );
 
         static FString CreateCacheParentKey(

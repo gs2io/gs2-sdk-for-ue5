@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Ranking/Model/Gs2RankingScore.h"
-#include "Ranking/Model/Gs2RankingRanking.h"
+#include "Ranking/Model/Gs2RankingRankingCategory.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2RankingActionPutScore.generated.h"
@@ -32,7 +32,7 @@ class BPGS2_API UGs2RankingPutScoreAsyncFunction : public UBlueprintAsyncActionB
 {
     GENERATED_BODY()
 
-    FGs2RankingOwnRanking Ranking;
+    FGs2RankingOwnRankingCategory RankingCategory;
     int64 Score;
     FString Metadata;
 
@@ -46,10 +46,10 @@ public:
 
     UGs2RankingPutScoreAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Ranking::Action::PutScore", Category="Game Server Services|GS2-Ranking|Namespace|User|Ranking|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Ranking::Action::PutScore", Category="Game Server Services|GS2-Ranking|Namespace|User|RankingCategory|Ranking|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2RankingPutScoreAsyncFunction* PutScore(
         UObject* WorldContextObject,
-        FGs2RankingOwnRanking Ranking,
+        FGs2RankingOwnRankingCategory RankingCategory,
         int64 Score,
         FString Metadata
     );

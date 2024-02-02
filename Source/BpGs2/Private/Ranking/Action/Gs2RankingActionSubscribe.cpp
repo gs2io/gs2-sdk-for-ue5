@@ -28,32 +28,29 @@ UGs2RankingSubscribeAsyncFunction::UGs2RankingSubscribeAsyncFunction(
 
 UGs2RankingSubscribeAsyncFunction* UGs2RankingSubscribeAsyncFunction::Subscribe(
     UObject* WorldContextObject,
-    FGs2RankingOwnUser User,
-    FString CategoryName,
+    FGs2RankingOwnRankingCategory RankingCategory,
     FString TargetUserId
 )
 {
     UGs2RankingSubscribeAsyncFunction* Action = NewObject<UGs2RankingSubscribeAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingSubscribeAsyncFunction::Subscribe] User parameter specification is missing."))
+    if (RankingCategory.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingSubscribeAsyncFunction::Subscribe] RankingCategory parameter specification is missing."))
         return Action;
     }
-    Action->User = User;
-    Action->CategoryName = CategoryName;
+    Action->RankingCategory = RankingCategory;
     Action->TargetUserId = TargetUserId;
     return Action;
 }
 
 void UGs2RankingSubscribeAsyncFunction::Activate()
 {
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingSubscribeAsyncFunction] User parameter specification is missing."))
+    if (RankingCategory.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingSubscribeAsyncFunction] RankingCategory parameter specification is missing."))
         return;
     }
 
-    auto Future = User.Value->Subscribe(
-        CategoryName,
+    auto Future = RankingCategory.Value->Subscribe(
         TargetUserId
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)

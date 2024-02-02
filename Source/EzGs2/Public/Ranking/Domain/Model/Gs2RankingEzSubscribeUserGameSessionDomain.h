@@ -41,6 +41,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> CategoryName() const;
+        TOptional<FString> AdditionalScopeName() const;
         TOptional<FString> TargetUserId() const;
 
         FEzSubscribeUserGameSessionDomain(

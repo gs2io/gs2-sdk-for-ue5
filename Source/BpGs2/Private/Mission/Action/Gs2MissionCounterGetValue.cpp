@@ -41,8 +41,7 @@ UGs2MissionCounterGetValueAsyncFunction* UGs2MissionCounterGetValueAsyncFunction
 
 void UGs2MissionCounterGetValueAsyncFunction::Activate()
 {
-    auto Future = Counter.Value->Model(
-    );
+    auto Future = Counter.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzCounterToFGs2MissionCounterValue(Result);

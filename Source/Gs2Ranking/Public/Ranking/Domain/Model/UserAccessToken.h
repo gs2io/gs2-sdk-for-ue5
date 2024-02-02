@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -55,6 +53,8 @@ namespace Gs2::Ranking::Domain::Model
     class FSubscribeAccessTokenDomain;
     class FScoreDomain;
     class FScoreAccessTokenDomain;
+    class FRankingCategoryDomain;
+    class FRankingCategoryAccessTokenDomain;
     class FRankingDomain;
     class FRankingAccessTokenDomain;
     class FCurrentRankingMasterDomain;
@@ -72,14 +72,9 @@ namespace Gs2::Ranking::Domain::Model
 
         public:
         TOptional<FString> NextPageToken;
-        TOptional<bool> Processing;
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;
-        }
-        TOptional<bool> GetProcessing() const
-        {
-            return Processing;
         }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -102,64 +97,9 @@ namespace Gs2::Ranking::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
-        class GS2RANKING_API FSubscribeTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain>,
-            public TSharedFromThis<FSubscribeTask>
-        {
-            const TSharedPtr<FUserAccessTokenDomain> Self;
-            const Request::FSubscribeRequestPtr Request;
-        public:
-            explicit FSubscribeTask(
-                const TSharedPtr<FUserAccessTokenDomain>& Self,
-                const Request::FSubscribeRequestPtr Request
-            );
-
-            FSubscribeTask(
-                const FSubscribeTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FSubscribeTask;
-
-        TSharedPtr<FAsyncTask<FSubscribeTask>> Subscribe(
-            Request::FSubscribeRequestPtr Request
-        );
-
-        Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameIteratorPtr SubscribeUsers(
-            const FString CategoryName
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeSubscribeUsers(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeSubscribeUsers(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain> SubscribeUser(
-            const FString CategoryName,
-            const FString TargetUserId
-        );
-
-        Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr Rankings(
+        TSharedPtr<Gs2::Ranking::Domain::Model::FRankingCategoryAccessTokenDomain> RankingCategory(
             const FString CategoryName,
             const TOptional<FString> AdditionalScopeName = TOptional<FString>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeRankings(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeRankings(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Ranking::Domain::Model::FRankingAccessTokenDomain> Ranking(
-            const FString CategoryName
         );
 
         Gs2::Ranking::Domain::Iterator::FDescribeScoresIteratorPtr Scores(

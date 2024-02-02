@@ -430,30 +430,6 @@ namespace Gs2::Lottery::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateLotteryModelMasterTask>>(this->AsShared(), Request);
     }
 
-    TSharedPtr<Gs2::Lottery::Domain::Model::FUserDomain> FNamespaceDomain::User(
-        const FString UserId
-    )
-    {
-        return MakeShared<Gs2::Lottery::Domain::Model::FUserDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
-        );
-    }
-
-    TSharedPtr<Gs2::Lottery::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
-        Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    )
-    {
-        return MakeShared<Gs2::Lottery::Domain::Model::FUserAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken
-        );
-    }
-
     TSharedPtr<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain> FNamespaceDomain::CurrentLotteryMaster(
     )
     {
@@ -561,6 +537,30 @@ namespace Gs2::Lottery::Domain::Model
             Service,
             NamespaceName,
             LotteryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LotteryName)
+        );
+    }
+
+    TSharedPtr<Gs2::Lottery::Domain::Model::FUserDomain> FNamespaceDomain::User(
+        const FString UserId
+    )
+    {
+        return MakeShared<Gs2::Lottery::Domain::Model::FUserDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
+        );
+    }
+
+    TSharedPtr<Gs2::Lottery::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
+        Gs2::Auth::Model::FAccessTokenPtr AccessToken
+    )
+    {
+        return MakeShared<Gs2::Lottery::Domain::Model::FUserAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken
         );
     }
 

@@ -51,6 +51,16 @@ namespace Gs2::UE5::Friend::Domain::Iterator
         {
         }
 
+		FEzDescribeSendRequestsIterator(
+			const FEzDescribeSendRequestsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection)
+		{
+		}
+
 		class EZGS2_API FIterator
 		{
 		    friend class FEzDescribeSendRequestsIterator;

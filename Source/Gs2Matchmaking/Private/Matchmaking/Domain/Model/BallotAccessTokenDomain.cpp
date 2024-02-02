@@ -106,7 +106,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FBallotAccessTokenDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FBallotAccessTokenDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FBallot>> Result
     )
     {
         Request
@@ -151,14 +151,7 @@ namespace Gs2::Matchmaking::Domain::Model
                 );
             }
         }
-        auto Domain = Self;
-        if (ResultModel != nullptr)
-        {
-            Domain->Body = *ResultModel->GetBody();
-            Domain->Signature = *ResultModel->GetSignature();
-        }
-
-        *Result = Domain;
+        *Result = ResultModel->GetItem();
         return nullptr;
     }
 

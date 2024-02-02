@@ -34,6 +34,11 @@ namespace Gs2::UE5::Ranking::Domain::Model
         return Domain->CategoryName;
     }
 
+    TOptional<FString> FEzSubscribeUserDomain::AdditionalScopeName() const
+    {
+        return Domain->AdditionalScopeName;
+    }
+
     TOptional<FString> FEzSubscribeUserDomain::TargetUserId() const
     {
         return Domain->TargetUserId;

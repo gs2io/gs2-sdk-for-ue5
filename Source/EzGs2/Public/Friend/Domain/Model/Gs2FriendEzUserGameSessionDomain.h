@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -29,8 +27,7 @@
 #include "Gs2FriendEzProfileGameSessionDomain.h"
 #include "Gs2FriendEzBlackListGameSessionDomain.h"
 #include "Friend/Domain/Iterator/Gs2FriendEzDescribeBlackListIterator.h"
-#include "Gs2FriendEzFollowUserGameSessionDomain.h"
-#include "Friend/Domain/Iterator/Gs2FriendEzDescribeFollowsIterator.h"
+#include "Gs2FriendEzFollowGameSessionDomain.h"
 #include "Gs2FriendEzFriendGameSessionDomain.h"
 #include "Friend/Domain/Iterator/Gs2FriendEzDescribeFriendsIterator.h"
 #include "Gs2FriendEzSendFriendRequestGameSessionDomain.h"
@@ -88,25 +85,17 @@ namespace Gs2::UE5::Friend::Domain::Model
         Gs2::UE5::Friend::Domain::Model::FEzProfileGameSessionDomainPtr Profile(
         ) const;
 
+        Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIteratorPtr BlackLists(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeBlackLists(TFunction<void()> Callback);
+
+        void UnsubscribeBlackLists(Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Friend::Domain::Model::FEzBlackListGameSessionDomainPtr BlackList(
         ) const;
 
-        Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFollowsIteratorPtr Follows(
-            const bool WithProfile
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeFollows(
-            TFunction<void()> Callback,
-            bool WithProfile
-        );
-
-        void UnsubscribeFollows(
-            Gs2::Core::Domain::CallbackID CallbackId,
-            bool WithProfile
-        );
-
-        Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomainPtr FollowUser(
-            const FString TargetUserId,
+        Gs2::UE5::Friend::Domain::Model::FEzFollowGameSessionDomainPtr Follow(
             const bool WithProfile
         ) const;
 
@@ -114,15 +103,9 @@ namespace Gs2::UE5::Friend::Domain::Model
             const bool WithProfile
         ) const;
 
-        Gs2::Core::Domain::CallbackID SubscribeFriends(
-            TFunction<void()> Callback,
-            bool WithProfile
-        );
+        Gs2::Core::Domain::CallbackID SubscribeFriends(TFunction<void()> Callback);
 
-        void UnsubscribeFriends(
-            Gs2::Core::Domain::CallbackID CallbackId,
-            bool WithProfile
-        );
+        void UnsubscribeFriends(Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Friend::Domain::Model::FEzFriendGameSessionDomainPtr Friend(
             const bool WithProfile

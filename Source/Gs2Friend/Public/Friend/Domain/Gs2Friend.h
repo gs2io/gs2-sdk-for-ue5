@@ -29,6 +29,8 @@
 #include "Friend/Domain/Model/UserAccessToken.h"
 #include "Friend/Domain/Model/Profile.h"
 #include "Friend/Domain/Model/ProfileAccessToken.h"
+#include "Friend/Domain/Model/Follow.h"
+#include "Friend/Domain/Model/FollowAccessToken.h"
 #include "Friend/Domain/Model/Friend.h"
 #include "Friend/Domain/Model/FriendAccessToken.h"
 #include "Friend/Domain/Model/BlackList.h"

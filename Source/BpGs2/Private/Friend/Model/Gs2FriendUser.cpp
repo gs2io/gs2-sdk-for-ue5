@@ -94,9 +94,10 @@ FGs2FriendOwnFollowUser UGs2FriendUserFunctionLibrary::OwnFollowUser(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendUserFunctionLibrary::OwnFollowUser] TargetUserId parameter specification is missing."))
         return Return;
     }
-    Return.Value = User.Value->FollowUser(
-        TargetUserId,
+    Return.Value = User.Value->Follow(
         WithProfile
+    )->FollowUser(
+        TargetUserId
     );
     return Return;
 }

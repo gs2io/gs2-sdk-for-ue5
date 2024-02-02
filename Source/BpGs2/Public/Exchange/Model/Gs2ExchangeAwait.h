@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Exchange/Domain/Model/Gs2ExchangeEzAwaitGameSessionDomain.h"
+#include "Exchange/Model/Gs2ExchangeConfig.h"
 #include "Core/BpGs2Constant.h"
 #include "Gs2ExchangeAwait.generated.h"
 
@@ -41,6 +42,8 @@ struct FGs2ExchangeAwaitValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FGs2ExchangeConfig> Config = TArray<FGs2ExchangeConfig>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 ExchangedAt = 0;
 };
 
@@ -56,6 +59,15 @@ inline FGs2ExchangeAwaitValue EzAwaitToFGs2ExchangeAwaitValue(
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.RateName = Model->GetRateName() ? *Model->GetRateName() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
+    Value.Config = Model->GetConfig() ? [&]
+    {
+        TArray<FGs2ExchangeConfig> r;
+        for (auto v : *Model->GetConfig())
+        {
+            r.Add(EzConfigToFGs2ExchangeConfig(v));
+        }
+        return r;
+    }() : TArray<FGs2ExchangeConfig>();
     Value.ExchangedAt = Model->GetExchangedAt() ? *Model->GetExchangedAt() : 0;
     return Value;
 }
@@ -68,6 +80,13 @@ inline Gs2::UE5::Exchange::Model::FEzAwaitPtr FGs2ExchangeAwaitValueToEzAwait(
         ->WithUserId(Model.UserId)
         ->WithRateName(Model.RateName)
         ->WithName(Model.Name)
+        ->WithConfig([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Exchange::Model::FEzConfigPtr>>();
+            for (auto v : Model.Config) {
+                r->Add(FGs2ExchangeConfigToEzConfig(v));
+            }
+            return r;
+        }())
         ->WithExchangedAt(Model.ExchangedAt);
 }
 

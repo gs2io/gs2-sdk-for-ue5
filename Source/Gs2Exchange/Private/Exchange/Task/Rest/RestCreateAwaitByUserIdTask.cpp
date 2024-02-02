@@ -98,6 +98,15 @@ namespace Gs2::Exchange::Task::Rest
             {
                 JsonRootObject->SetNumberField("count", this->Request->GetCount().GetValue());
             }
+            if (this->Request->GetConfig() != nullptr && this->Request->GetConfig().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetConfig())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField("config", v);
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

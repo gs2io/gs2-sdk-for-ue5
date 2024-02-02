@@ -41,8 +41,7 @@ UGs2InventoryInventoryModelGetValueAsyncFunction* UGs2InventoryInventoryModelGet
 
 void UGs2InventoryInventoryModelGetValueAsyncFunction::Activate()
 {
-    auto Future = InventoryModel.Value->Model(
-    );
+    auto Future = InventoryModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzInventoryModelToFGs2InventoryInventoryModelValue(Result);

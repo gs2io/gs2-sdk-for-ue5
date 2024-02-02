@@ -29,6 +29,16 @@ namespace Gs2::UE5::Lottery::Domain::Model
         return Domain->UserId();
     }
 
+    TOptional<FString> FEzProbabilityGameSessionDomain::LotteryName() const
+    {
+        return Domain->LotteryName;
+    }
+
+    TOptional<FString> FEzProbabilityGameSessionDomain::PrizeId() const
+    {
+        return Domain->PrizeId;
+    }
+
     FEzProbabilityGameSessionDomain::FEzProbabilityGameSessionDomain(
         Gs2::Lottery::Domain::Model::FProbabilityAccessTokenDomainPtr Domain,
         Gs2::UE5::Util::FGameSessionPtr GameSession,

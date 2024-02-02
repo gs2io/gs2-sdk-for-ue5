@@ -41,8 +41,7 @@ UGs2MissionCompleteGetValueAsyncFunction* UGs2MissionCompleteGetValueAsyncFuncti
 
 void UGs2MissionCompleteGetValueAsyncFunction::Activate()
 {
-    auto Future = Complete.Value->Model(
-    );
+    auto Future = Complete.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzCompleteToFGs2MissionCompleteValue(Result);

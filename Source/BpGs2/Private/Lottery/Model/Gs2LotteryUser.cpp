@@ -16,7 +16,6 @@
 
 #include "Lottery/Model/Gs2LotteryUser.h"
 #include "Lottery/Model/Gs2LotteryBoxItems.h"
-#include "Lottery/Model/Gs2LotteryProbability.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Lottery/Model/Gs2LotteryBoxItems.h"
 #include "Core/BpGs2Constant.h"

@@ -52,6 +52,8 @@ namespace Gs2::Ranking::Domain::Model
     class FSubscribeAccessTokenDomain;
     class FScoreDomain;
     class FScoreAccessTokenDomain;
+    class FRankingCategoryDomain;
+    class FRankingCategoryAccessTokenDomain;
     class FRankingDomain;
     class FRankingAccessTokenDomain;
     class FCurrentRankingMasterDomain;

@@ -54,6 +54,8 @@ namespace Gs2::Friend::Domain::Model
     class FUserAccessTokenDomain;
     class FProfileDomain;
     class FProfileAccessTokenDomain;
+    class FFollowDomain;
+    class FFollowAccessTokenDomain;
     class FFriendDomain;
     class FFriendAccessTokenDomain;
     class FBlackListDomain;
@@ -142,38 +144,13 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<Gs2::Friend::Domain::Model::FBlackListAccessTokenDomain> BlackList(
         );
 
-        Gs2::Friend::Domain::Iterator::FDescribeFollowsIteratorPtr Follows(
-            const TOptional<bool> WithProfile
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeFollows(
-            TFunction<void()> Callback,
-            bool WithProfile
-        );
-
-        void UnsubscribeFollows(
-            Gs2::Core::Domain::CallbackID CallbackID,
-            bool WithProfile
-        );
-
-        TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain> FollowUser(
-            const FString TargetUserId,
+        TSharedPtr<Gs2::Friend::Domain::Model::FFollowAccessTokenDomain> Follow(
             const bool WithProfile
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeFriendsIteratorPtr Friends(
             const TOptional<bool> WithProfile
         ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeFriends(
-            TFunction<void()> Callback,
-            bool WithProfile
-        );
-
-        void UnsubscribeFriends(
-            Gs2::Core::Domain::CallbackID CallbackID,
-            bool WithProfile
-        );
 
         TSharedPtr<Gs2::Friend::Domain::Model::FFriendAccessTokenDomain> Friend(
             const bool WithProfile

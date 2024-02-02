@@ -12,15 +12,12 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking/Model/Gs2RankingUser.h"
-#include "Ranking/Model/Gs2RankingSubscribeUser.h"
+#include "Ranking/Model/Gs2RankingRankingCategory.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2RankingListOfSubscribeUser.generated.h"
@@ -33,8 +30,7 @@ class BPGS2_API UGs2RankingListOfSubscribeUserAsyncFunction : public UBlueprintA
 {
     GENERATED_BODY()
 
-    FGs2RankingOwnUser User;
-    FString CategoryName;
+    FGs2RankingOwnRankingCategory RankingCategory;
 
 public:
 
@@ -46,11 +42,10 @@ public:
 
     UGs2RankingListOfSubscribeUserAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Fetch::ListOfSubscribeUser", Category="Game Server Services|GS2-Ranking|Namespace|User|SubscribeUser|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Fetch::ListOfSubscribeUser", Category="Game Server Services|GS2-Ranking|Namespace|User|RankingCategory|SubscribeUser|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2RankingListOfSubscribeUserAsyncFunction* ListOfSubscribeUser(
         UObject* WorldContextObject,
-        FGs2RankingOwnUser User,
-        FString CategoryName
+        FGs2RankingOwnRankingCategory RankingCategory
     );
 
     virtual void Activate() override;

@@ -41,8 +41,7 @@ UGs2FriendProfileGetValueAsyncFunction* UGs2FriendProfileGetValueAsyncFunction::
 
 void UGs2FriendProfileGetValueAsyncFunction::Activate()
 {
-    auto Future = Profile.Value->Model(
-    );
+    auto Future = Profile.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzProfileToFGs2FriendProfileValue(Result);

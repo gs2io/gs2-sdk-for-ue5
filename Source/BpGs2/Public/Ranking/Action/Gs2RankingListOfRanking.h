@@ -19,7 +19,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking/Model/Gs2RankingUser.h"
+#include "Ranking/Model/Gs2RankingRankingCategory.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2RankingListOfRanking.generated.h"
@@ -32,8 +32,7 @@ class BPGS2_API UGs2RankingListOfRankingAsyncFunction : public UBlueprintAsyncAc
 {
     GENERATED_BODY()
 
-    FGs2RankingOwnUser User;
-    FString CategoryName;
+    FGs2RankingOwnRankingCategory RankingCategory;
 
 public:
 
@@ -45,11 +44,10 @@ public:
 
     UGs2RankingListOfRankingAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Fetch::ListOfRanking", Category="Game Server Services|GS2-Ranking|Namespace|User|Ranking|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Fetch::ListOfRanking", Category="Game Server Services|GS2-Ranking|Namespace|User|RankingCategory|Ranking|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2RankingListOfRankingAsyncFunction* ListOfRanking(
         UObject* WorldContextObject,
-        FGs2RankingOwnUser User,
-        FString CategoryName
+        FGs2RankingOwnRankingCategory RankingCategory
     );
 
     virtual void Activate() override;

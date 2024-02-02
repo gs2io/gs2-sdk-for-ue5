@@ -52,6 +52,8 @@ namespace Gs2::Ranking::Domain::Model
     class FSubscribeAccessTokenDomain;
     class FScoreDomain;
     class FScoreAccessTokenDomain;
+    class FRankingCategoryDomain;
+    class FRankingCategoryAccessTokenDomain;
     class FRankingDomain;
     class FRankingAccessTokenDomain;
     class FCurrentRankingMasterDomain;
@@ -71,6 +73,7 @@ namespace Gs2::Ranking::Domain::Model
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> CategoryName;
+        TOptional<FString> AdditionalScopeName;
         TOptional<FString> TargetUserId;
     private:
 
@@ -84,6 +87,7 @@ namespace Gs2::Ranking::Domain::Model
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
             const TOptional<FString> CategoryName,
+            const TOptional<FString> AdditionalScopeName,
             const TOptional<FString> TargetUserId
             // ReSharper disable once CppMemberInitializersOrder
         );
@@ -148,12 +152,12 @@ namespace Gs2::Ranking::Domain::Model
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
             TOptional<FString> CategoryName,
+            TOptional<FString> AdditionalScopeName,
             TOptional<FString> TargetUserId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> CategoryName,
             TOptional<FString> TargetUserId
         );
 

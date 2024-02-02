@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -33,6 +31,8 @@
 #include "Ranking/Domain/Model/SubscribeAccessToken.h"
 #include "Ranking/Domain/Model/Score.h"
 #include "Ranking/Domain/Model/ScoreAccessToken.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
+#include "Ranking/Domain/Model/RankingCategoryAccessToken.h"
 #include "Ranking/Domain/Model/Ranking.h"
 #include "Ranking/Domain/Model/RankingAccessToken.h"
 #include "Ranking/Domain/Model/CurrentRankingMaster.h"
@@ -42,6 +42,9 @@
 #include "Ranking/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::Ranking::Domain::Model
 {
@@ -52,6 +55,7 @@ namespace Gs2::Ranking::Domain::Model
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const TOptional<FString> CategoryName,
+        const TOptional<FString> AdditionalScopeName,
         const TOptional<FString> TargetUserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -61,10 +65,13 @@ namespace Gs2::Ranking::Domain::Model
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         CategoryName(CategoryName),
+        AdditionalScopeName(AdditionalScopeName),
         TargetUserId(TargetUserId),
-        ParentKey(Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
+            CategoryName,
+            AdditionalScopeName,
             "SubscribeUser"
         ))
     {
@@ -79,6 +86,7 @@ namespace Gs2::Ranking::Domain::Model
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
         CategoryName(From.CategoryName),
+        AdditionalScopeName(From.AdditionalScopeName),
         TargetUserId(From.TargetUserId),
         ParentKey(From.ParentKey)
     {
@@ -123,13 +131,14 @@ namespace Gs2::Ranking::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId(),
+                    Self->CategoryName,
+                    Self->AdditionalScopeName,
                     "SubscribeUser"
                 );
                 const auto Key = Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName(),
                     ResultModel->GetItem()->GetTargetUserId()
                 );
                 Self->Gs2->Cache->Put(
@@ -189,13 +198,14 @@ namespace Gs2::Ranking::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId(),
+                    Self->CategoryName,
+                    Self->AdditionalScopeName,
                     "SubscribeUser"
                 );
                 const auto Key = Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName(),
                     ResultModel->GetItem()->GetTargetUserId()
                 );
                 Self->Gs2->Cache->Delete(Gs2::Ranking::Model::FSubscribeUser::TypeName, ParentKey, Key);
@@ -217,6 +227,7 @@ namespace Gs2::Ranking::Domain::Model
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
         TOptional<FString> CategoryName,
+        TOptional<FString> AdditionalScopeName,
         TOptional<FString> TargetUserId,
         FString ChildType
     )
@@ -225,17 +236,16 @@ namespace Gs2::Ranking::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (CategoryName.IsSet() ? *CategoryName : "null") + ":" +
+            (AdditionalScopeName.IsSet() ? *AdditionalScopeName : "null") + ":" +
             (TargetUserId.IsSet() ? *TargetUserId : "null") + ":" +
             ChildType;
     }
 
     FString FSubscribeUserAccessTokenDomain::CreateCacheKey(
-        TOptional<FString> CategoryName,
         TOptional<FString> TargetUserId
     )
     {
         return FString("") +
-            (CategoryName.IsSet() ? *CategoryName : "null") + ":" + 
             (TargetUserId.IsSet() ? *TargetUserId : "null");
     }
 
@@ -262,7 +272,6 @@ namespace Gs2::Ranking::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FSubscribeUser>(
             Self->ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                Self->CategoryName,
                 Self->TargetUserId
             ),
             &Value
@@ -280,7 +289,6 @@ namespace Gs2::Ranking::Domain::Model
                 }
 
                 const auto Key = Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    Self->CategoryName,
                     Self->TargetUserId
                 );
                 Self->Gs2->Cache->Put(
@@ -299,7 +307,6 @@ namespace Gs2::Ranking::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FSubscribeUser>(
                 Self->ParentKey,
                 Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    Self->CategoryName,
                     Self->TargetUserId
                 ),
                 &Value
@@ -323,7 +330,6 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FSubscribeUser::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                CategoryName,
                 TargetUserId
             ),
             [Callback](TSharedPtr<Gs2Object> obj)
@@ -341,7 +347,6 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FSubscribeUser::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                CategoryName,
                 TargetUserId
             ),
             CallbackID

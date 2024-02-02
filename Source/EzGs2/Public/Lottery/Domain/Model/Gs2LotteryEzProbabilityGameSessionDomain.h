@@ -42,6 +42,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
         public:
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
+        TOptional<FString> LotteryName() const;
+        TOptional<FString> PrizeId() const;
 
         FEzProbabilityGameSessionDomain(
             Gs2::Lottery::Domain::Model::FProbabilityAccessTokenDomainPtr Domain,

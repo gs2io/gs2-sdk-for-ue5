@@ -30,6 +30,8 @@
 #include "Friend/Domain/Model/UserAccessToken.h"
 #include "Friend/Domain/Model/Profile.h"
 #include "Friend/Domain/Model/ProfileAccessToken.h"
+#include "Friend/Domain/Model/Follow.h"
+#include "Friend/Domain/Model/FollowAccessToken.h"
 #include "Friend/Domain/Model/Friend.h"
 #include "Friend/Domain/Model/FriendAccessToken.h"
 #include "Friend/Domain/Model/BlackList.h"
@@ -47,6 +49,9 @@
 #include "Friend/Domain/Model/FriendRequest.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Friend::Domain::Model
 {
@@ -198,62 +203,15 @@ namespace Gs2::Friend::Domain::Model
         );
     }
 
-    Gs2::Friend::Domain::Iterator::FDescribeFollowsByUserIdIteratorPtr FUserDomain::Follows(
-        const TOptional<bool> WithProfile
-    ) const
-    {
-        return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeFollowsByUserIdIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            UserId,
-            WithProfile
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeFollows(
-        TFunction<void()> Callback,
-        bool WithProfile
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Friend::Model::FFollowUser::TypeName,
-            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                FString("FollowUser:") + (WithProfile == true ? "True" : "False")
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribeFollows(
-        Gs2::Core::Domain::CallbackID CallbackID,
-        bool WithProfile
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Friend::Model::FFollowUser::TypeName,
-            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                FString("FollowUser:") + (WithProfile ? "True" : "False")
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserDomain> FUserDomain::FollowUser(
-        const FString TargetUserId,
+    TSharedPtr<Gs2::Friend::Domain::Model::FFollowDomain> FUserDomain::Follow(
         const bool WithProfile
     )
     {
-        return MakeShared<Gs2::Friend::Domain::Model::FFollowUserDomain>(
+        return MakeShared<Gs2::Friend::Domain::Model::FFollowDomain>(
             Gs2,
             Service,
             NamespaceName,
             UserId,
-            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId),
             WithProfile
         );
     }
@@ -268,40 +226,6 @@ namespace Gs2::Friend::Domain::Model
             NamespaceName,
             UserId,
             WithProfile
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeFriends(
-        TFunction<void()> Callback,
-        bool WithProfile
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Friend::Model::FFriendUser::TypeName,
-            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                WithProfile ? TOptional<FString>("True") : TOptional<FString>("False"),
-                "FriendUser"
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribeFriends(
-        Gs2::Core::Domain::CallbackID CallbackID,
-        bool WithProfile
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Friend::Model::FFriendUser::TypeName,
-            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                WithProfile ? TOptional<FString>("True") : TOptional<FString>("False"),
-                "FriendUser"
-            ),
-            CallbackID
         );
     }
 

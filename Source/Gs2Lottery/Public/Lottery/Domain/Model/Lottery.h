@@ -22,7 +22,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Lottery/Domain/Gs2Lottery.h"
 #include "Lottery/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Lottery/Domain/Iterator/DescribeLotteryModelMastersIterator.h"
 #include "Lottery/Domain/Iterator/DescribePrizeTableMastersIterator.h"
@@ -84,6 +83,7 @@ namespace Gs2::Lottery::Domain::Model
         }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
+        TOptional<FString> LotteryName;
     private:
 
         FString ParentKey;
@@ -94,7 +94,8 @@ namespace Gs2::Lottery::Domain::Model
             const Core::Domain::FGs2Ptr& Gs2,
             const Lottery::Domain::FGs2LotteryDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> LotteryName
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -180,13 +181,26 @@ namespace Gs2::Lottery::Domain::Model
             Request::FDrawWithRandomSeedByUserIdRequestPtr Request
         );
 
+        Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIteratorPtr Probabilities(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeProbabilities(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeProbabilities(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
+            TOptional<FString> LotteryName,
             FString ChildType
         );
 
         static FString CreateCacheKey(
+            TOptional<FString> LotteryName
         );
 
     };

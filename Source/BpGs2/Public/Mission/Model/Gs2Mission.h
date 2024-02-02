@@ -39,6 +39,8 @@ struct FGs2MissionCompleteNotification
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString GroupName = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString UserId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     FString TaskName = "";
 };
 
@@ -49,6 +51,7 @@ inline FGs2MissionCompleteNotification EzCompleteNotificationToFGs2MissionComple
     FGs2MissionCompleteNotification Value;
     Value.NamespaceName = Model->GetNamespaceName() ? *Model->GetNamespaceName() : "";
     Value.GroupName = Model->GetGroupName() ? *Model->GetGroupName() : "";
+    Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.TaskName = Model->GetTaskName() ? *Model->GetTaskName() : "";
     return Value;
 }

@@ -20,11 +20,12 @@
 
 #include "CoreMinimal.h"
 #include "Ranking/Model/Gs2RankingSubscribeUser.h"
-#include "Ranking/Model/Gs2RankingUser.h"
+#include "Ranking/Model/Gs2RankingRankingCategory.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2RankingActionSubscribe.generated.h"
-  
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2RankingSubscribeSuccessDelegate, FGs2RankingOwnSubscribeUser, SubscribeUser, const FGs2Error, Error);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2RankingSubscribeErrorDelegate, FGs2RankingOwnSubscribeUser, SubscribeUser, const FGs2Error, Error);
 
@@ -33,8 +34,7 @@ class BPGS2_API UGs2RankingSubscribeAsyncFunction : public UBlueprintAsyncAction
 {
     GENERATED_BODY()
 
-    FGs2RankingOwnUser User;
-    FString CategoryName;
+    FGs2RankingOwnRankingCategory RankingCategory;
     FString TargetUserId;
 
 public:
@@ -47,11 +47,10 @@ public:
 
     UGs2RankingSubscribeAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Subscribe::Action::Subscribe", Category="Game Server Services|GS2-Ranking|Namespace|User|Subscribe|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Subscribe::Action::Subscribe", Category="Game Server Services|GS2-Ranking|Namespace|User|RankingCategory|Subscribe|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2RankingSubscribeAsyncFunction* Subscribe(
         UObject* WorldContextObject,
-        FGs2RankingOwnUser User,
-        FString CategoryName,
+        FGs2RankingOwnRankingCategory RankingCategory,
         FString TargetUserId
     );
 

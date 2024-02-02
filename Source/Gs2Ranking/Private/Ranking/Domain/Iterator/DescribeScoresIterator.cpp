@@ -84,12 +84,11 @@ namespace Gs2::Ranking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = FString("") +
-                (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
-                (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
-                (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
-                (Self->ScorerUserId.IsSet() ? *Self->ScorerUserId : "null") + ":" +
-                "Score";
+            const auto ListParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                "Score"
+            );
 
             if (!RangeIteratorOpt)
             {

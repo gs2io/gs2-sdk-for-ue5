@@ -41,8 +41,7 @@ UGs2RankingCategoryModelGetValueAsyncFunction* UGs2RankingCategoryModelGetValueA
 
 void UGs2RankingCategoryModelGetValueAsyncFunction::Activate()
 {
-    auto Future = CategoryModel.Value->Model(
-    );
+    auto Future = CategoryModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzCategoryModelToFGs2RankingCategoryModelValue(Result);

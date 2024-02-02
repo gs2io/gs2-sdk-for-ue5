@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -25,6 +23,7 @@
 #include "Ranking/Model/Gs2RankingEzRanking.h"
 #include "Ranking/Model/Gs2RankingEzSubscribeUser.h"
 #include "Gs2RankingEzRankingDomain.h"
+#include "Ranking/Domain/Iterator/Gs2RankingEzDescribeNearRankingsIterator.h"
 #include "Gs2RankingEzScoreDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -42,6 +41,9 @@ namespace Gs2::UE5::Ranking::Domain::Model
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> CategoryName() const;
+        TOptional<FString> AdditionalScopeName() const;
+        TOptional<FString> ScorerUserId() const;
+        TOptional<int64> Index() const;
 
         FEzRankingDomain(
             Gs2::Ranking::Domain::Model::FRankingDomainPtr Domain,
@@ -53,12 +55,10 @@ namespace Gs2::UE5::Ranking::Domain::Model
             public TSharedFromThis<FModelTask>
         {
             TSharedPtr<FEzRankingDomain> Self;
-            FString ScorerUserId;
 
         public:
             explicit FModelTask(
-                TSharedPtr<FEzRankingDomain> Self,
-                FString ScorerUserId
+                TSharedPtr<FEzRankingDomain> Self
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -66,9 +66,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
             ) override;
         };
 
-        TSharedPtr<FAsyncTask<FModelTask>> Model(
-            FString ScorerUserId
-        );
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
 
         Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Ranking::Model::FEzRankingPtr)> Callback);
 

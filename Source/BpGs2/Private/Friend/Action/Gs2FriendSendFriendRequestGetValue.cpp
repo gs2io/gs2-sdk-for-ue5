@@ -41,8 +41,7 @@ UGs2FriendSendFriendRequestGetValueAsyncFunction* UGs2FriendSendFriendRequestGet
 
 void UGs2FriendSendFriendRequestGetValueAsyncFunction::Activate()
 {
-    auto Future = SendFriendRequest.Value->Model(
-    );
+    auto Future = SendFriendRequest.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzFriendRequestToFGs2FriendFriendRequest(Result);

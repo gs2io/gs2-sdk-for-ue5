@@ -24,11 +24,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
         return Domain->NextPageToken;
     }
 
-    TOptional<bool> FEzUserDomain::Processing() const
-    {
-        return Domain->Processing;
-    }
-
     TOptional<FString> FEzUserDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
@@ -47,61 +42,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
         ConnectionValue(Connection)
     {
 
-    }
-
-    Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomainPtr FEzUserDomain::SubscribeUser(
-        const FString CategoryName,
-        const FString TargetUserId
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomain>(
-            Domain->SubscribeUser(
-                CategoryName,
-                TargetUserId
-            ),
-            ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeNearRankingsIteratorPtr FEzUserDomain::NearRankings(
-          const FString CategoryName,
-          const int64 Score,
-          const TOptional<FString> AdditionalScopeName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeNearRankingsIterator>(
-            Domain,
-            ConnectionValue,
-            CategoryName,
-            Score,
-            AdditionalScopeName
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzUserDomain::SubscribeNearRankings(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeNearRankings(
-            Callback
-        );
-    }
-
-    void FEzUserDomain::UnsubscribeNearRankings(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeNearRankings(
-            CallbackId
-        );
-    }
-
-    Gs2::UE5::Ranking::Domain::Model::FEzRankingDomainPtr FEzUserDomain::Ranking(
-        const FString CategoryName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzRankingDomain>(
-            Domain->Ranking(
-                CategoryName
-            ),
-            ConnectionValue
-        );
     }
 
     Gs2::UE5::Ranking::Domain::Model::FEzScoreDomainPtr FEzUserDomain::Score(

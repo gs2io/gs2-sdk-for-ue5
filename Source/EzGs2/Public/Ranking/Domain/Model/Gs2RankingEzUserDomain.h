@@ -22,9 +22,6 @@
 #include "Ranking/Model/Gs2RankingEzScore.h"
 #include "Ranking/Model/Gs2RankingEzRanking.h"
 #include "Ranking/Model/Gs2RankingEzSubscribeUser.h"
-#include "Gs2RankingEzSubscribeUserDomain.h"
-#include "Gs2RankingEzRankingDomain.h"
-#include "Ranking/Domain/Iterator/Gs2RankingEzDescribeNearRankingsIterator.h"
 #include "Gs2RankingEzScoreDomain.h"
 #include "Gs2RankingEzUserDomain.h"
 #include "Gs2RankingEzUserDomain.h"
@@ -43,7 +40,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
         public:
         TOptional<FString> NextPageToken() const;
-        TOptional<bool> Processing() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
 
@@ -51,25 +47,6 @@ namespace Gs2::UE5::Ranking::Domain::Model
             Gs2::Ranking::Domain::Model::FUserDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
-
-        Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomainPtr SubscribeUser(
-            const FString CategoryName,
-            const FString TargetUserId
-        ) const;
-
-        Gs2::UE5::Ranking::Domain::Iterator::FEzDescribeNearRankingsIteratorPtr NearRankings(
-            const FString CategoryName,
-            const int64 Score,
-            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeNearRankings(TFunction<void()> Callback);
-
-        void UnsubscribeNearRankings(Gs2::Core::Domain::CallbackID CallbackId);
-
-        Gs2::UE5::Ranking::Domain::Model::FEzRankingDomainPtr Ranking(
-            const FString CategoryName
-        ) const;
 
         Gs2::UE5::Ranking::Domain::Model::FEzScoreDomainPtr Score(
             const FString CategoryName,

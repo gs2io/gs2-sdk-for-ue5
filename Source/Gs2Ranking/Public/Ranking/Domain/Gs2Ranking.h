@@ -29,6 +29,8 @@
 #include "Ranking/Domain/Model/CategoryModelMaster.h"
 #include "Ranking/Domain/Model/Score.h"
 #include "Ranking/Domain/Model/ScoreAccessToken.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
+#include "Ranking/Domain/Model/RankingCategoryAccessToken.h"
 #include "Ranking/Domain/Model/Ranking.h"
 #include "Ranking/Domain/Model/RankingAccessToken.h"
 #include "Ranking/Domain/Model/CurrentRankingMaster.h"

@@ -12,12 +12,14 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Lottery/Domain/Model/UserAccessToken.h"
+#include "Lottery/Domain/Model/LotteryAccessToken.h"
 #include "Lottery/Model/Gs2LotteryEzProbability.h"
 #include "Util/Net/GameSession.h"
 
@@ -28,28 +30,24 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
         public TSharedFromThis<FEzDescribeProbabilitiesIterator>
     {
         Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIteratorPtr It;
-        Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::Lottery::Domain::Model::FLotteryAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::FGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
-        FString LotteryName;
 
 	public:
 
         explicit FEzDescribeProbabilitiesIterator(
-            Gs2::Lottery::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::Lottery::Domain::Model::FLotteryAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::FGameSessionPtr GameSession,
-            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-            FString LotteryName
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(
                 Domain->Probabilities(
-                    LotteryName
                 )
             ),
             Domain(Domain),
             GameSession(GameSession),
-            Connection(Connection),
-            LotteryName(LotteryName)
+            Connection(Connection)
         {
         }
 
@@ -59,8 +57,7 @@ namespace Gs2::UE5::Lottery::Domain::Iterator
 			It(From.It),
 			Domain(From.Domain),
 			GameSession(From.GameSession),
-			Connection(From.Connection),
-            LotteryName(From.LotteryName)
+			Connection(From.Connection)
 		{
 		}
 

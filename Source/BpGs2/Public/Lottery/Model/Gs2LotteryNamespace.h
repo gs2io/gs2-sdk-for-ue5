@@ -33,15 +33,15 @@ UCLASS()
 class BPGS2_API UGs2LotteryNamespaceFunctionLibrary : public UBlueprintFunctionLibrary
 {
     GENERATED_BODY()
-    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Lottery::Me", Category="Game Server Services|GS2-Lottery|Namespace|User", meta=(WorldContext="WorldContextObject"))
-    static UPARAM(DisplayName="User") FGs2LotteryOwnUser Me(
-        FGs2LotteryNamespace Namespace,
-        FGs2AccessToken AccessToken
-    );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Lottery::LotteryModel", Category="Game Server Services|GS2-Lottery|Namespace|LotteryModel", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="LotteryModel") FGs2LotteryLotteryModel LotteryModel(
         FGs2LotteryNamespace Namespace,
         FString LotteryName
+    );
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Lottery::Me", Category="Game Server Services|GS2-Lottery|Namespace|User", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="User") FGs2LotteryOwnUser Me(
+        FGs2LotteryNamespace Namespace,
+        FGs2AccessToken AccessToken
     );
 };

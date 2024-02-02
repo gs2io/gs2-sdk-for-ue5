@@ -32,6 +32,8 @@
 #include "Ranking/Domain/Model/SubscribeAccessToken.h"
 #include "Ranking/Domain/Model/Score.h"
 #include "Ranking/Domain/Model/ScoreAccessToken.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
+#include "Ranking/Domain/Model/RankingCategoryAccessToken.h"
 #include "Ranking/Domain/Model/Ranking.h"
 #include "Ranking/Domain/Model/RankingAccessToken.h"
 #include "Ranking/Domain/Model/CurrentRankingMaster.h"
@@ -41,6 +43,9 @@
 #include "Ranking/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Ranking::Domain::Model
 {
@@ -362,7 +367,7 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FCategoryModelMaster::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(
-            CategoryName
+                CategoryName
             ),
             [Callback](TSharedPtr<Gs2Object> obj)
             {
@@ -379,7 +384,7 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FCategoryModelMaster::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FCategoryModelMasterDomain::CreateCacheKey(
-            CategoryName
+                CategoryName
             ),
             CallbackID
         );

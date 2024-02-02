@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -32,6 +30,8 @@
 #include "Ranking/Domain/Model/SubscribeAccessToken.h"
 #include "Ranking/Domain/Model/Score.h"
 #include "Ranking/Domain/Model/ScoreAccessToken.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
+#include "Ranking/Domain/Model/RankingCategoryAccessToken.h"
 #include "Ranking/Domain/Model/Ranking.h"
 #include "Ranking/Domain/Model/RankingAccessToken.h"
 #include "Ranking/Domain/Model/CurrentRankingMaster.h"
@@ -41,6 +41,9 @@
 #include "Ranking/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Ranking::Domain::Model
 {
@@ -50,7 +53,8 @@ namespace Gs2::Ranking::Domain::Model
         const Ranking::Domain::FGs2RankingDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> CategoryName
+        const TOptional<FString> CategoryName,
+        const TOptional<FString> AdditionalScopeName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -59,9 +63,12 @@ namespace Gs2::Ranking::Domain::Model
         NamespaceName(NamespaceName),
         UserId(UserId),
         CategoryName(CategoryName),
-        ParentKey(Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+        AdditionalScopeName(AdditionalScopeName),
+        ParentKey(Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
+            CategoryName,
+            AdditionalScopeName,
             "Subscribe"
         ))
     {
@@ -76,6 +83,7 @@ namespace Gs2::Ranking::Domain::Model
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
         CategoryName(From.CategoryName),
+        AdditionalScopeName(From.AdditionalScopeName),
         ParentKey(From.ParentKey)
     {
 
@@ -85,6 +93,7 @@ namespace Gs2::Ranking::Domain::Model
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
         TOptional<FString> CategoryName,
+        TOptional<FString> AdditionalScopeName,
         FString ChildType
     )
     {
@@ -92,15 +101,14 @@ namespace Gs2::Ranking::Domain::Model
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
             (CategoryName.IsSet() ? *CategoryName : "null") + ":" +
+            (AdditionalScopeName.IsSet() ? *AdditionalScopeName : "null") + ":" +
             ChildType;
     }
 
     FString FSubscribeDomain::CreateCacheKey(
-        TOptional<FString> CategoryName
     )
     {
-        return FString("") +
-            (CategoryName.IsSet() ? *CategoryName : "null");
+        return "Singleton";
     }
 
     FSubscribeDomain::FModelTask::FModelTask(
@@ -126,7 +134,6 @@ namespace Gs2::Ranking::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FSubscribe>(
             Self->ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeDomain::CreateCacheKey(
-                Self->CategoryName
             ),
             &Value
         );
@@ -147,7 +154,6 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FSubscribe::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeDomain::CreateCacheKey(
-                CategoryName
             ),
             [Callback](TSharedPtr<Gs2Object> obj)
             {
@@ -164,7 +170,6 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FSubscribe::TypeName,
             ParentKey,
             Gs2::Ranking::Domain::Model::FSubscribeDomain::CreateCacheKey(
-                CategoryName
             ),
             CallbackID
         );

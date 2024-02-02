@@ -12,12 +12,14 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Friend/Domain/Model/UserAccessToken.h"
+#include "Friend/Domain/Model/FollowAccessToken.h"
 #include "Friend/Model/Gs2FriendEzFollowUser.h"
 #include "Util/Net/GameSession.h"
 
@@ -28,28 +30,24 @@ namespace Gs2::UE5::Friend::Domain::Iterator
         public TSharedFromThis<FEzDescribeFollowsIterator>
     {
         Gs2::Friend::Domain::Iterator::FDescribeFollowsIteratorPtr It;
-        Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::Friend::Domain::Model::FFollowAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::FGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
-        bool WithProfile;
 
 	public:
 
         explicit FEzDescribeFollowsIterator(
-            Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::Friend::Domain::Model::FFollowAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::FGameSessionPtr GameSession,
-            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-            bool WithProfile
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(
                 Domain->Follows(
-                    WithProfile
                 )
             ),
             Domain(Domain),
             GameSession(GameSession),
-            Connection(Connection),
-            WithProfile(WithProfile)
+            Connection(Connection)
         {
         }
 
@@ -59,8 +57,7 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 			It(From.It),
 			Domain(From.Domain),
 			GameSession(From.GameSession),
-			Connection(From.Connection),
-            WithProfile(From.WithProfile)
+			Connection(From.Connection)
 		{
 		}
 

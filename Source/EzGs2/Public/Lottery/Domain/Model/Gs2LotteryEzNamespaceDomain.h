@@ -25,11 +25,11 @@
 #include "Lottery/Model/Gs2LotteryEzBoxItem.h"
 #include "Lottery/Model/Gs2LotteryEzBoxItems.h"
 #include "Lottery/Model/Gs2LotteryEzConfig.h"
+#include "Gs2LotteryEzLotteryModelDomain.h"
+#include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeLotteryModelsIterator.h"
 #include "Gs2LotteryEzUserDomain.h"
 #include "Gs2LotteryEzUserDomain.h"
 #include "Gs2LotteryEzUserGameSessionDomain.h"
-#include "Gs2LotteryEzLotteryModelDomain.h"
-#include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeLotteryModelsIterator.h"
 #include "Gs2LotteryEzNamespaceDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -56,14 +56,6 @@ namespace Gs2::UE5::Lottery::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Lottery::Domain::Model::FEzUserDomainPtr User(
-            const FString UserId
-        ) const;
-
-        Gs2::UE5::Lottery::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Util::FGameSessionPtr GameSession
-        ) const;
-
         Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeLotteryModelsIteratorPtr LotteryModels(
         ) const;
 
@@ -73,6 +65,14 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
         Gs2::UE5::Lottery::Domain::Model::FEzLotteryModelDomainPtr LotteryModel(
             const FString LotteryName
+        ) const;
+
+        Gs2::UE5::Lottery::Domain::Model::FEzUserDomainPtr User(
+            const FString UserId
+        ) const;
+
+        Gs2::UE5::Lottery::Domain::Model::FEzUserGameSessionDomainPtr Me(
+            Gs2::UE5::Util::FGameSessionPtr GameSession
         ) const;
 
     };

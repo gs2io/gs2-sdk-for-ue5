@@ -41,8 +41,7 @@ UGs2ExchangeAwaitGetValueAsyncFunction* UGs2ExchangeAwaitGetValueAsyncFunction::
 
 void UGs2ExchangeAwaitGetValueAsyncFunction::Activate()
 {
-    auto Future = Await.Value->Model(
-    );
+    auto Future = Await.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzAwaitToFGs2ExchangeAwaitValue(Result);

@@ -73,18 +73,4 @@ namespace Gs2::UE5::Friend::Domain::Model
             ConnectionValue
         );
     }
-
-    Gs2::UE5::Friend::Domain::Model::FEzFollowUserDomainPtr FEzUserDomain::FollowUser(
-        const FString TargetUserId,
-        const bool WithProfile
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFollowUserDomain>(
-            Domain->FollowUser(
-                TargetUserId,
-                WithProfile
-            ),
-            ConnectionValue
-        );
-    }
 }

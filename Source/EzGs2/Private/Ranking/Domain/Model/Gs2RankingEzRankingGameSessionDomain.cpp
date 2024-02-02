@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Ranking/Domain/Model/Gs2RankingEzRankingGameSessionDomain.h"
@@ -36,6 +34,21 @@ namespace Gs2::UE5::Ranking::Domain::Model
         return Domain->CategoryName;
     }
 
+    TOptional<FString> FEzRankingGameSessionDomain::AdditionalScopeName() const
+    {
+        return Domain->AdditionalScopeName;
+    }
+
+    TOptional<FString> FEzRankingGameSessionDomain::ScorerUserId() const
+    {
+        return Domain->ScorerUserId;
+    }
+
+    TOptional<int64> FEzRankingGameSessionDomain::Index() const
+    {
+        return Domain->Index;
+    }
+
     FEzRankingGameSessionDomain::FEzRankingGameSessionDomain(
         Gs2::Ranking::Domain::Model::FRankingAccessTokenDomainPtr Domain,
         Gs2::UE5::Util::FGameSessionPtr GameSession,
@@ -48,68 +61,9 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
     }
 
-    FEzRankingGameSessionDomain::FPutScoreTask::FPutScoreTask(
-        TSharedPtr<FEzRankingGameSessionDomain> Self,
-        int64 Score,
-        TOptional<FString> Metadata
-    ): Self(Self), Score(Score), Metadata(Metadata)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzRankingGameSessionDomain::FPutScoreTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Ranking::Domain::Model::FEzScoreGameSessionDomain>> Result
-    )
-    {
-        const auto Future = Self->ConnectionValue->Run(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->PutScore(
-                    MakeShared<Gs2::Ranking::Request::FPutScoreRequest>()
-                        ->WithScore(Score)
-                        ->WithMetadata(Metadata)
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Ranking::Domain::Model::FEzScoreGameSessionDomain>(
-                    Task->GetTask().Result(),
-                    Self->GameSession,
-                    Self->ConnectionValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzRankingGameSessionDomain::FPutScoreTask>> FEzRankingGameSessionDomain::PutScore(
-        int64 Score,
-        TOptional<FString> Metadata
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FPutScoreTask>>(
-            this->AsShared(),
-            Score,
-            Metadata
-        );
-    }
-
     FEzRankingGameSessionDomain::FModelTask::FModelTask(
-        TSharedPtr<FEzRankingGameSessionDomain> Self,
-        FString ScorerUserId
-    ): Self(Self), ScorerUserId(ScorerUserId)
+        TSharedPtr<FEzRankingGameSessionDomain> Self
+    ): Self(Self)
     {
 
     }
@@ -120,7 +74,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
     {
         const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Model(ScorerUserId);
+                const auto Task = Self->Domain->Model();
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
                 {
@@ -143,10 +97,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FEzRankingGameSessionDomain::FModelTask>> FEzRankingGameSessionDomain::Model(
-        FString ScorerUserId
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared(), ScorerUserId);
+    TSharedPtr<FAsyncTask<FEzRankingGameSessionDomain::FModelTask>> FEzRankingGameSessionDomain::Model() {
+        return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
 
     Gs2::Core::Domain::CallbackID FEzRankingGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Ranking::Model::FEzRankingPtr)> Callback)

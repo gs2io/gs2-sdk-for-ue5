@@ -51,7 +51,9 @@ namespace Gs2::Lottery::Domain::Model
         const Core::Domain::FGs2Ptr& Gs2,
         const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> UserId
+        const TOptional<FString> UserId,
+        const TOptional<FString> LotteryName,
+        const TOptional<FString> PrizeId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -59,9 +61,12 @@ namespace Gs2::Lottery::Domain::Model
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        ParentKey(Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+        LotteryName(LotteryName),
+        PrizeId(PrizeId),
+        ParentKey(Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
+            LotteryName,
             "Probability"
         ))
     {
@@ -75,6 +80,8 @@ namespace Gs2::Lottery::Domain::Model
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
+        LotteryName(From.LotteryName),
+        PrizeId(From.PrizeId),
         ParentKey(From.ParentKey)
     {
 
@@ -83,19 +90,25 @@ namespace Gs2::Lottery::Domain::Model
     FString FProbabilityDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
+        TOptional<FString> LotteryName,
+        TOptional<FString> PrizeId,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
+            (LotteryName.IsSet() ? *LotteryName : "null") + ":" +
+            (PrizeId.IsSet() ? *PrizeId : "null") + ":" +
             ChildType;
     }
 
     FString FProbabilityDomain::CreateCacheKey(
+        TOptional<FString> PrizeId
     )
     {
-        return "Singleton";
+        return FString("") +
+            (PrizeId.IsSet() ? *PrizeId : "null");
     }
 
     FProbabilityDomain::FModelTask::FModelTask(
@@ -121,6 +134,7 @@ namespace Gs2::Lottery::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FProbability>(
             Self->ParentKey,
             Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
+                Self->PrizeId
             ),
             &Value
         );
@@ -141,6 +155,7 @@ namespace Gs2::Lottery::Domain::Model
             Gs2::Lottery::Model::FProbability::TypeName,
             ParentKey,
             Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
+                PrizeId
             ),
             [Callback](TSharedPtr<Gs2Object> obj)
             {
@@ -157,6 +172,7 @@ namespace Gs2::Lottery::Domain::Model
             Gs2::Lottery::Model::FProbability::TypeName,
             ParentKey,
             Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
+                PrizeId
             ),
             CallbackID
         );

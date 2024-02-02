@@ -41,8 +41,7 @@ UGs2LotteryLotteryModelGetValueAsyncFunction* UGs2LotteryLotteryModelGetValueAsy
 
 void UGs2LotteryLotteryModelGetValueAsyncFunction::Activate()
 {
-    auto Future = LotteryModel.Value->Model(
-    );
+    auto Future = LotteryModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzLotteryModelToFGs2LotteryLotteryModelValue(Result);

@@ -45,6 +45,9 @@
 #include "Lottery/Domain/SpeculativeExecutor/Transaction/DrawWithRandomSeedByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::Lottery::Domain::Model
 {
@@ -53,7 +56,8 @@ namespace Gs2::Lottery::Domain::Model
         const Core::Domain::FGs2Ptr& Gs2,
         const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const TOptional<FString> LotteryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -61,6 +65,7 @@ namespace Gs2::Lottery::Domain::Model
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
+        LotteryName(LotteryName),
         ParentKey(Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
@@ -77,6 +82,7 @@ namespace Gs2::Lottery::Domain::Model
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
+        LotteryName(From.LotteryName),
         ParentKey(From.ParentKey)
     {
 
@@ -102,7 +108,8 @@ namespace Gs2::Lottery::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken());
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithLotteryName(Self->LotteryName);
         const auto Future = Self->Client->Prediction(
             Request
         );
@@ -127,22 +134,70 @@ namespace Gs2::Lottery::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FPredictionTask>>(this->AsShared(), Request);
     }
 
+    Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIteratorPtr FLotteryAccessTokenDomain::Probabilities(
+    ) const
+    {
+        return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName,
+            LotteryName,
+            AccessToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FLotteryAccessTokenDomain::SubscribeProbabilities(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                LotteryName,
+                "Probability"
+            ),
+            Callback
+        );
+    }
+
+    void FLotteryAccessTokenDomain::UnsubscribeProbabilities(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                LotteryName,
+                "Probability"
+            ),
+            CallbackID
+        );
+    }
+
     FString FLotteryAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
+        TOptional<FString> LotteryName,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
+            (LotteryName.IsSet() ? *LotteryName : "null") + ":" +
             ChildType;
     }
 
     FString FLotteryAccessTokenDomain::CreateCacheKey(
+        TOptional<FString> LotteryName
     )
     {
-        return "Singleton";
+        return FString("") +
+            (LotteryName.IsSet() ? *LotteryName : "null");
     }
 }
 

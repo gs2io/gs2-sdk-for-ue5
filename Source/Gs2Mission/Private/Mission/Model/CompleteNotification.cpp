@@ -41,6 +41,17 @@ namespace Gs2::Mission::Model
         return GroupNameValue;
     }
 
+    TSharedPtr<FCompleteNotification> FCompleteNotification::WithUserId(
+        const TOptional<FString> UserId
+    ) {
+        UserIdValue = UserId;
+        return SharedThis(this);
+    }
+    TOptional<FString> FCompleteNotification::GetUserId() const
+    {
+        return UserIdValue;
+    }
+
     TSharedPtr<FCompleteNotification> FCompleteNotification::WithTaskName(
         const TOptional<FString> TaskName
     ) {
@@ -71,6 +82,15 @@ namespace Gs2::Mission::Model
                 {
                     FString v("");
                     if (Data->TryGetStringField("groupName", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithUserId(Data->HasField("userId") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("userId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }

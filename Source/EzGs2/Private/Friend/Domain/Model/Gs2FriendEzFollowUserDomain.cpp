@@ -29,6 +29,11 @@ namespace Gs2::UE5::Friend::Domain::Model
         return Domain->UserId;
     }
 
+    TOptional<bool> FEzFollowUserDomain::WithProfile() const
+    {
+        return Domain->WithProfile;
+    }
+
     TOptional<FString> FEzFollowUserDomain::TargetUserId() const
     {
         return Domain->TargetUserId;

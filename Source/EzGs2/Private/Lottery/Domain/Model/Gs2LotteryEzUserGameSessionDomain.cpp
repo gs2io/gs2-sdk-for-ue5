@@ -57,10 +57,12 @@ namespace Gs2::UE5::Lottery::Domain::Model
     }
 
     Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomainPtr FEzUserGameSessionDomain::Lottery(
+        const FString LotteryName
     ) const
     {
         return MakeShared<Gs2::UE5::Lottery::Domain::Model::FEzLotteryGameSessionDomain>(
             Domain->Lottery(
+                LotteryName
             ),
             GameSession,
             ConnectionValue
@@ -101,32 +103,6 @@ namespace Gs2::UE5::Lottery::Domain::Model
             ),
             GameSession,
             ConnectionValue
-        );
-    }
-
-    Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeProbabilitiesIteratorPtr FEzUserGameSessionDomain::Probabilities(
-          const FString LotteryName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeProbabilitiesIterator>(
-            Domain,
-            GameSession,
-            ConnectionValue,
-            LotteryName
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeProbabilities(TFunction<void()> Callback)
-    {
-        return Domain->SubscribeProbabilities(
-            Callback
-        );
-    }
-
-    void FEzUserGameSessionDomain::UnsubscribeProbabilities(Gs2::Core::Domain::CallbackID CallbackId)
-    {
-        Domain->UnsubscribeProbabilities(
-            CallbackId
         );
     }
 }

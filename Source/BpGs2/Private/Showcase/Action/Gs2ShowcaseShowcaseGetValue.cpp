@@ -41,8 +41,7 @@ UGs2ShowcaseShowcaseGetValueAsyncFunction* UGs2ShowcaseShowcaseGetValueAsyncFunc
 
 void UGs2ShowcaseShowcaseGetValueAsyncFunction::Activate()
 {
-    auto Future = Showcase.Value->Model(
-    );
+    auto Future = Showcase.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzShowcaseToFGs2ShowcaseShowcaseValue(Result);

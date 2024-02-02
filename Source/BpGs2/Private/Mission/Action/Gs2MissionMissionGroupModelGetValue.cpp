@@ -41,8 +41,7 @@ UGs2MissionMissionGroupModelGetValueAsyncFunction* UGs2MissionMissionGroupModelG
 
 void UGs2MissionMissionGroupModelGetValueAsyncFunction::Activate()
 {
-    auto Future = MissionGroupModel.Value->Model(
-    );
+    auto Future = MissionGroupModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzMissionGroupModelToFGs2MissionMissionGroupModelValue(Result);

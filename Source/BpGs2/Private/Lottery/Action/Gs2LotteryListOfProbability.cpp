@@ -12,51 +12,10 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Lottery/Action/Gs2LotteryListOfProbability.h"
 #include "Lottery/Model/Gs2LotteryProbability.h"
 #include "Core/BpGs2Constant.h"
-
-UGs2LotteryListOfProbabilityAsyncFunction::UGs2LotteryListOfProbabilityAsyncFunction(
-    const FObjectInitializer& ObjectInitializer
-): Super(ObjectInitializer)
-{
-    
-}
-
-UGs2LotteryListOfProbabilityAsyncFunction* UGs2LotteryListOfProbabilityAsyncFunction::ListOfProbability(
-    UObject* WorldContextObject,
-    FGs2LotteryOwnUser User,
-    FString LotteryName
-)
-{
-    UGs2LotteryListOfProbabilityAsyncFunction* Action = NewObject<UGs2LotteryListOfProbabilityAsyncFunction>();
-    Action->RegisterWithGameInstance(WorldContextObject);
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LotteryListOfProbabilityAsyncFunction::ListOfProbability] User parameter specification is missing."))
-        return Action;
-    }
-    Action->User = User;
-    Action->LotteryName = LotteryName;
-    return Action;
-}
-
-void UGs2LotteryListOfProbabilityAsyncFunction::Activate()
-{
-    TArray<FGs2LotteryProbability> ReturnProbabilities;
-    FGs2Error ReturnError;
-
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LotteryListOfProbabilityAsyncFunction::Activate] User parameter specification is missing."))
-        return;
-    }
-    const auto It = User.Value->Probabilities(
-        LotteryName
-    );
-    for (auto v : *It)
-    {
-        ReturnProbabilities.Add(EzProbabilityToFGs2LotteryProbability(v->Current()));
-    }
-    OnSuccess.Broadcast(ReturnProbabilities, ReturnError);
-}

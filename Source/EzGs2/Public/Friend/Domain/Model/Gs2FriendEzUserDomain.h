@@ -27,7 +27,6 @@
 #include "Gs2FriendEzProfileDomain.h"
 #include "Gs2FriendEzPublicProfileDomain.h"
 #include "Gs2FriendEzBlackListDomain.h"
-#include "Gs2FriendEzFollowUserDomain.h"
 #include "Gs2FriendEzUserDomain.h"
 #include "Gs2FriendEzUserDomain.h"
 #include "Gs2FriendEzUserGameSessionDomain.h"
@@ -60,11 +59,6 @@ namespace Gs2::UE5::Friend::Domain::Model
         ) const;
 
         Gs2::UE5::Friend::Domain::Model::FEzBlackListDomainPtr BlackList(
-        ) const;
-
-        Gs2::UE5::Friend::Domain::Model::FEzFollowUserDomainPtr FollowUser(
-            const FString TargetUserId,
-            const bool WithProfile
         ) const;
 
     };

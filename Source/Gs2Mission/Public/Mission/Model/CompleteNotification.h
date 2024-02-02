@@ -23,6 +23,7 @@ namespace Gs2::Mission::Model
 	public:
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> GroupNameValue;
+        TOptional<FString> UserIdValue;
         TOptional<FString> TaskNameValue;
 
         TSharedPtr<FCompleteNotification> WithNamespaceName(
@@ -34,6 +35,11 @@ namespace Gs2::Mission::Model
             const TOptional<FString> GroupName
         );
         TOptional<FString> GetGroupName() const;
+
+        TSharedPtr<FCompleteNotification> WithUserId(
+            const TOptional<FString> UserId
+        );
+        TOptional<FString> GetUserId() const;
 
         TSharedPtr<FCompleteNotification> WithTaskName(
             const TOptional<FString> TaskName

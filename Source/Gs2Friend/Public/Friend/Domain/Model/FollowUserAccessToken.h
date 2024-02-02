@@ -52,6 +52,8 @@ namespace Gs2::Friend::Domain::Model
     class FUserAccessTokenDomain;
     class FProfileDomain;
     class FProfileAccessTokenDomain;
+    class FFollowDomain;
+    class FFollowAccessTokenDomain;
     class FFriendDomain;
     class FFriendAccessTokenDomain;
     class FBlackListDomain;
@@ -79,8 +81,8 @@ namespace Gs2::Friend::Domain::Model
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
-        TOptional<FString> TargetUserId;
         TOptional<bool> WithProfile;
+        TOptional<FString> TargetUserId;
     private:
 
         FString ParentKey;
@@ -92,8 +94,8 @@ namespace Gs2::Friend::Domain::Model
             const Friend::Domain::FGs2FriendDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-            const TOptional<FString> TargetUserId,
-            const TOptional<bool> WithProfile
+            const TOptional<bool> WithProfile,
+            const TOptional<FString> TargetUserId
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -182,6 +184,7 @@ namespace Gs2::Friend::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
+            TOptional<FString> WithProfile,
             TOptional<FString> TargetUserId,
             FString ChildType
         );

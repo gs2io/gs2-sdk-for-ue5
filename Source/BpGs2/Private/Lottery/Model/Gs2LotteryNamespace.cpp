@@ -16,28 +16,11 @@
 
 #include "Lottery/Model/Gs2LotteryNamespace.h"
 #include "Lottery/Model/Gs2LotteryLotteryModel.h"
+#include "Lottery/Model/Gs2LotteryDrawnPrize.h"
 #include "Core/Model/Gs2AccessToken.h"
-#include "Lottery/Model/Gs2LotteryUser.h"
 #include "Lottery/Model/Gs2LotteryLotteryModel.h"
+#include "Lottery/Model/Gs2LotteryUser.h"
 #include "Core/BpGs2Constant.h"
-
-FGs2LotteryOwnUser UGs2LotteryNamespaceFunctionLibrary::Me(
-    FGs2LotteryNamespace Namespace,
-    FGs2AccessToken AccessToken
-)
-{
-    FGs2LotteryOwnUser Return;
-    if (Namespace.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LotteryNamespaceFunctionLibrary::Me] Namespace parameter specification is missing."))
-        return Return;
-    }
-    if (AccessToken.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LotteryNamespaceFunctionLibrary::Me] AccessToken parameter specification is missing."))
-        return Return;
-    }
-    Return.Value = Namespace.Value->Me(AccessToken.Value);
-    return Return;
-}
 
 FGs2LotteryLotteryModel UGs2LotteryNamespaceFunctionLibrary::LotteryModel(
     FGs2LotteryNamespace Namespace,
@@ -56,5 +39,23 @@ FGs2LotteryLotteryModel UGs2LotteryNamespaceFunctionLibrary::LotteryModel(
     Return.Value = Namespace.Value->LotteryModel(
         LotteryName
     );
+    return Return;
+}
+
+FGs2LotteryOwnUser UGs2LotteryNamespaceFunctionLibrary::Me(
+    FGs2LotteryNamespace Namespace,
+    FGs2AccessToken AccessToken
+)
+{
+    FGs2LotteryOwnUser Return;
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LotteryNamespaceFunctionLibrary::Me] Namespace parameter specification is missing."))
+        return Return;
+    }
+    if (AccessToken.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2LotteryNamespaceFunctionLibrary::Me] AccessToken parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = Namespace.Value->Me(AccessToken.Value);
     return Return;
 }

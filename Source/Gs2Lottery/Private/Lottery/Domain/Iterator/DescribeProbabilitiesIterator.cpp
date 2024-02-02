@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -25,8 +27,8 @@
 // ReSharper disable CppUnusedIncludeDirective
 
 #include "Lottery/Domain/Iterator/DescribeProbabilitiesIterator.h"
+#include "Lottery/Domain/Model/Lottery.h"
 #include "Lottery/Domain/Model/Probability.h"
-#include "Lottery/Domain/Model/User.h"
 
 namespace Gs2::Lottery::Domain::Iterator
 {
@@ -81,9 +83,10 @@ namespace Gs2::Lottery::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId(),
+                Self->LotteryName,
                 "Probability"
             );
 
@@ -126,6 +129,7 @@ namespace Gs2::Lottery::Domain::Iterator
                     Gs2::Lottery::Model::FProbability::TypeName,
                     ListParentKey,
                     Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
+                        Item->GetPrize().IsValid() && Item->GetPrize()->GetPrizeId().IsSet() ? Item->GetPrize()->GetPrizeId() : TOptional<FString>()
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

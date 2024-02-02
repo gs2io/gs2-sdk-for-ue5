@@ -31,6 +31,8 @@
 #include "Friend/Domain/Model/UserAccessToken.h"
 #include "Friend/Domain/Model/Profile.h"
 #include "Friend/Domain/Model/ProfileAccessToken.h"
+#include "Friend/Domain/Model/Follow.h"
+#include "Friend/Domain/Model/FollowAccessToken.h"
 #include "Friend/Domain/Model/Friend.h"
 #include "Friend/Domain/Model/FriendAccessToken.h"
 #include "Friend/Domain/Model/BlackList.h"
@@ -48,6 +50,9 @@
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::Friend::Domain::Model
 {
@@ -199,62 +204,15 @@ namespace Gs2::Friend::Domain::Model
         );
     }
 
-    Gs2::Friend::Domain::Iterator::FDescribeFollowsIteratorPtr FUserAccessTokenDomain::Follows(
-        const TOptional<bool> WithProfile
-    ) const
-    {
-        return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeFollowsIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            AccessToken,
-            WithProfile
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeFollows(
-        TFunction<void()> Callback,
-        bool WithProfile
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Friend::Model::FFollowUser::TypeName,
-            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                FString("FollowUser:") + (WithProfile == true ? "True" : "False")
-            ),
-            Callback
-        );
-    }
-
-    void FUserAccessTokenDomain::UnsubscribeFollows(
-        Gs2::Core::Domain::CallbackID CallbackID,
-        bool WithProfile
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Friend::Model::FFollowUser::TypeName,
-            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                FString("FollowUser:") + (WithProfile == true ? "True" : "False")
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain> FUserAccessTokenDomain::FollowUser(
-        const FString TargetUserId,
+    TSharedPtr<Gs2::Friend::Domain::Model::FFollowAccessTokenDomain> FUserAccessTokenDomain::Follow(
         const bool WithProfile
     )
     {
-        return MakeShared<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain>(
+        return MakeShared<Gs2::Friend::Domain::Model::FFollowAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,
             AccessToken,
-            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId),
             WithProfile
         );
     }
@@ -269,40 +227,6 @@ namespace Gs2::Friend::Domain::Model
             NamespaceName,
             AccessToken,
             WithProfile
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeFriends(
-        TFunction<void()> Callback,
-        bool WithProfile
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Friend::Model::FFriendUser::TypeName,
-            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                WithProfile ? TOptional<FString>("True") : TOptional<FString>("False"),
-                "FriendUser"
-            ),
-            Callback
-        );
-    }
-
-    void FUserAccessTokenDomain::UnsubscribeFriends(
-        Gs2::Core::Domain::CallbackID CallbackID,
-        bool WithProfile
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Friend::Model::FFriendUser::TypeName,
-            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                WithProfile ? TOptional<FString>("True") : TOptional<FString>("False"),
-                "FriendUser"
-            ),
-            CallbackID
         );
     }
 

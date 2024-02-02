@@ -41,8 +41,7 @@ UGs2MissionMissionTaskModelGetValueAsyncFunction* UGs2MissionMissionTaskModelGet
 
 void UGs2MissionMissionTaskModelGetValueAsyncFunction::Activate()
 {
-    auto Future = MissionTaskModel.Value->Model(
-    );
+    auto Future = MissionTaskModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzMissionTaskModelToFGs2MissionMissionTaskModelValue(Result);

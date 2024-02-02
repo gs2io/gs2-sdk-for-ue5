@@ -12,16 +12,12 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Friend/Model/FriendRequest.h"
-#include "Friend/Model/ReceiveFriendRequest.h"
-#include "Friend/Model/SendFriendRequest.h"
 
 namespace Gs2::UE5::Friend::Model
 {
@@ -40,8 +36,6 @@ namespace Gs2::UE5::Friend::Model
 
         Gs2::Friend::Model::FFriendRequestPtr ToModel() const;
         static TSharedPtr<FEzFriendRequest> FromModel(Gs2::Friend::Model::FFriendRequestPtr Model);
-        static TSharedPtr<FEzFriendRequest> FromModel(Gs2::Friend::Model::FSendFriendRequestPtr Model);
-        static TSharedPtr<FEzFriendRequest> FromModel(Gs2::Friend::Model::FReceiveFriendRequestPtr Model);
     };
     typedef TSharedPtr<FEzFriendRequest> FEzFriendRequestPtr;
 }

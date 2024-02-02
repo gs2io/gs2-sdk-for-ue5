@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "Config.h"
 
 namespace Gs2::Exchange::Model
 {
@@ -28,6 +29,7 @@ namespace Gs2::Exchange::Model
         TOptional<FString> RateNameValue;
         TOptional<FString> NameValue;
         TOptional<int32> CountValue;
+        TSharedPtr<TArray<TSharedPtr<FConfig>>> ConfigValue;
         TOptional<int64> ExchangedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -43,6 +45,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FAwait> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FAwait> WithName(const TOptional<FString> Name);
         TSharedPtr<FAwait> WithCount(const TOptional<int32> Count);
+        TSharedPtr<FAwait> WithConfig(const TSharedPtr<TArray<TSharedPtr<FConfig>>> Config);
         TSharedPtr<FAwait> WithExchangedAt(const TOptional<int64> ExchangedAt);
         TSharedPtr<FAwait> WithRevision(const TOptional<int64> Revision);
 
@@ -52,6 +55,7 @@ namespace Gs2::Exchange::Model
         TOptional<FString> GetName() const;
         TOptional<int32> GetCount() const;
         FString GetCountString() const;
+        TSharedPtr<TArray<TSharedPtr<FConfig>>> GetConfig() const;
         TOptional<int64> GetExchangedAt() const;
         FString GetExchangedAtString() const;
         TOptional<int64> GetRevision() const;

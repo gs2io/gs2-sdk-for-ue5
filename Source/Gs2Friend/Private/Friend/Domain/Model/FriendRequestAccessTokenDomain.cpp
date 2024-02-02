@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -31,6 +29,8 @@
 #include "Friend/Domain/Model/UserAccessToken.h"
 #include "Friend/Domain/Model/Profile.h"
 #include "Friend/Domain/Model/ProfileAccessToken.h"
+#include "Friend/Domain/Model/Follow.h"
+#include "Friend/Domain/Model/FollowAccessToken.h"
 #include "Friend/Domain/Model/Friend.h"
 #include "Friend/Domain/Model/FriendAccessToken.h"
 #include "Friend/Domain/Model/BlackList.h"
@@ -48,19 +48,23 @@
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::Friend::Domain::Model
 {
 
     FFriendRequestAccessTokenDomain::FFriendRequestAccessTokenDomain(
-        const Core::Domain::FGs2Ptr Gs2,
+        const Core::Domain::FGs2Ptr& Gs2,
+        const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-        const TOptional<FString> TargetUserId,
-        const FString Type
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const TOptional<FString> TargetUserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
+        Service(Service),
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -68,7 +72,7 @@ namespace Gs2::Friend::Domain::Model
         ParentKey(Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
-            Type
+            "FriendRequest"
         ))
     {
     }
@@ -77,6 +81,7 @@ namespace Gs2::Friend::Domain::Model
         const FFriendRequestAccessTokenDomain& From
     ):
         Gs2(From.Gs2),
+        Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),

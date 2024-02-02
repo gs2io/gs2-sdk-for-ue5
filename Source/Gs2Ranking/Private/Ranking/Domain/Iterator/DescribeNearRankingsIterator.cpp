@@ -28,7 +28,7 @@
 
 #include "Ranking/Domain/Iterator/DescribeNearRankingsIterator.h"
 #include "Ranking/Domain/Model/Ranking.h"
-#include "Ranking/Domain/Model/User.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
 
 namespace Gs2::Ranking::Domain::Iterator
 {
@@ -85,12 +85,13 @@ namespace Gs2::Ranking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = FString() +
-                (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
-                "Singleton" + ":" +
-                (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
-                (Self->AdditionalScopeName.IsSet() ? *Self->AdditionalScopeName : "null") + ":" +
-                "NearRanking";
+            const auto ListParentKey = Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                TOptional<FString>("Singleton"),
+                Self->CategoryName,
+                Self->AdditionalScopeName,
+                "NearRanking"
+            );
 
             if (!RangeIteratorOpt)
             {
@@ -98,7 +99,6 @@ namespace Gs2::Ranking::Domain::Iterator
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Ranking::Model::FRankingPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
                     Range->RemoveAll([this](const Gs2::Ranking::Model::FRankingPtr& Item) { return Self->Score && Item->GetScore() != Self->Score; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
@@ -134,11 +134,16 @@ namespace Gs2::Ranking::Domain::Iterator
                     Gs2::Ranking::Model::FRanking::TypeName,
                     ListParentKey,
                     Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                        Item->GetCategoryName()
+                        Item->GetUserId().IsSet() ? Item->GetUserId() : TOptional<FString>(),
+                        FString::FromInt(*Item->GetIndex())
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
+                Range->RemoveAll([this](const Gs2::Ranking::Model::FRankingPtr& Item) { return Self->Score && Item->GetScore() != Self->Score; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;

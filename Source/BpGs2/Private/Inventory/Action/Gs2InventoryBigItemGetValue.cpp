@@ -41,8 +41,7 @@ UGs2InventoryBigItemGetValueAsyncFunction* UGs2InventoryBigItemGetValueAsyncFunc
 
 void UGs2InventoryBigItemGetValueAsyncFunction::Activate()
 {
-    auto Future = BigItem.Value->Model(
-    );
+    auto Future = BigItem.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzBigItemToFGs2InventoryBigItemValue(Result);

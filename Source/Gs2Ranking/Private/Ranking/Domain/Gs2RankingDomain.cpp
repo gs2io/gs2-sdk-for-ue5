@@ -30,6 +30,7 @@
 #include "Ranking/Domain/Model/CategoryModelMaster.h"
 #include "Ranking/Domain/Model/Subscribe.h"
 #include "Ranking/Domain/Model/Score.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
 #include "Ranking/Domain/Model/Ranking.h"
 #include "Ranking/Domain/Model/CurrentRankingMaster.h"
 #include "Ranking/Domain/Model/SubscribeUser.h"

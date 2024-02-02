@@ -25,6 +25,7 @@
 #include "Lottery/Model/Gs2LotteryEzBoxItem.h"
 #include "Lottery/Model/Gs2LotteryEzBoxItems.h"
 #include "Lottery/Model/Gs2LotteryEzConfig.h"
+#include "Lottery/Domain/Iterator/Gs2LotteryEzDescribeProbabilitiesIterator.h"
 #include "Gs2LotteryEzLotteryGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -44,12 +45,20 @@ namespace Gs2::UE5::Lottery::Domain::Model
         TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
+        TOptional<FString> LotteryName() const;
 
         FEzLotteryGameSessionDomain(
             Gs2::Lottery::Domain::Model::FLotteryAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::FGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        Gs2::UE5::Lottery::Domain::Iterator::FEzDescribeProbabilitiesIteratorPtr Probabilities(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeProbabilities(TFunction<void()> Callback);
+
+        void UnsubscribeProbabilities(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzLotteryGameSessionDomain> FEzLotteryGameSessionDomainPtr;

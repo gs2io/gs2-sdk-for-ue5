@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -44,6 +42,9 @@ namespace Gs2::UE5::Ranking::Domain::Model
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
         TOptional<FString> CategoryName() const;
+        TOptional<FString> AdditionalScopeName() const;
+        TOptional<FString> ScorerUserId() const;
+        TOptional<int64> Index() const;
 
         FEzRankingGameSessionDomain(
             Gs2::Ranking::Domain::Model::FRankingAccessTokenDomainPtr Domain,
@@ -51,43 +52,15 @@ namespace Gs2::UE5::Ranking::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        class FPutScoreTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking::Domain::Model::FEzScoreGameSessionDomain>,
-            public TSharedFromThis<FPutScoreTask>
-        {
-            TSharedPtr<FEzRankingGameSessionDomain> Self;
-            int64 Score;
-            TOptional<FString> Metadata;
-
-        public:
-            explicit FPutScoreTask(
-                TSharedPtr<FEzRankingGameSessionDomain> Self,
-                int64 Score,
-                TOptional<FString> Metadata = TOptional<FString>()
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Ranking::Domain::Model::FEzScoreGameSessionDomain>> Result
-            ) override;
-        };
-        friend FPutScoreTask;
-
-        TSharedPtr<FAsyncTask<FPutScoreTask>> PutScore(
-            int64 Score,
-            TOptional<FString> Metadata = TOptional<FString>()
-        );
-
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Ranking::Model::FEzRanking>,
             public TSharedFromThis<FModelTask>
         {
             TSharedPtr<FEzRankingGameSessionDomain> Self;
-            FString ScorerUserId;
 
         public:
             explicit FModelTask(
-                TSharedPtr<FEzRankingGameSessionDomain> Self,
-                FString ScorerUserId
+                TSharedPtr<FEzRankingGameSessionDomain> Self
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -95,9 +68,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
             ) override;
         };
 
-        TSharedPtr<FAsyncTask<FModelTask>> Model(
-            FString ScorerUserId
-        );
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
 
         Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Ranking::Model::FEzRankingPtr)> Callback);
 

@@ -52,6 +52,8 @@ namespace Gs2::Friend::Domain::Model
     class FUserAccessTokenDomain;
     class FProfileDomain;
     class FProfileAccessTokenDomain;
+    class FFollowDomain;
+    class FFollowAccessTokenDomain;
     class FFriendDomain;
     class FFriendAccessTokenDomain;
     class FBlackListDomain;

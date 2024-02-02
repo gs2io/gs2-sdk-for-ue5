@@ -41,8 +41,7 @@ UGs2InventoryItemSetGetValueAsyncFunction* UGs2InventoryItemSetGetValueAsyncFunc
 
 void UGs2InventoryItemSetGetValueAsyncFunction::Activate()
 {
-    auto Future = ItemSet.Value->Model(
-    );
+    auto Future = ItemSet.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         TArray<FGs2InventoryItemSetValue> ReturnValue;

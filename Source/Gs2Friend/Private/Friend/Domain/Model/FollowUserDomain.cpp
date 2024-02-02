@@ -28,6 +28,8 @@
 #include "Friend/Domain/Model/UserAccessToken.h"
 #include "Friend/Domain/Model/Profile.h"
 #include "Friend/Domain/Model/ProfileAccessToken.h"
+#include "Friend/Domain/Model/Follow.h"
+#include "Friend/Domain/Model/FollowAccessToken.h"
 #include "Friend/Domain/Model/Friend.h"
 #include "Friend/Domain/Model/FriendAccessToken.h"
 #include "Friend/Domain/Model/BlackList.h"
@@ -57,8 +59,8 @@ namespace Gs2::Friend::Domain::Model
         const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> TargetUserId,
-        const TOptional<bool> WithProfile
+        const TOptional<bool> WithProfile,
+        const TOptional<FString> TargetUserId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -66,11 +68,12 @@ namespace Gs2::Friend::Domain::Model
         Client(MakeShared<Gs2::Friend::FGs2FriendRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        TargetUserId(TargetUserId),
         WithProfile(WithProfile),
-        ParentKey(Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+        TargetUserId(TargetUserId),
+        ParentKey(Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
+            WithProfile.IsSet() ? *WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
             FString("FollowUser:") + (WithProfile.IsSet() ? *WithProfile == true ? "True" : "False" : "False")
         ))
     {
@@ -84,8 +87,8 @@ namespace Gs2::Friend::Domain::Model
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
-        TargetUserId(From.TargetUserId),
         WithProfile(From.WithProfile),
+        TargetUserId(From.TargetUserId),
         ParentKey(From.ParentKey)
     {
 
@@ -112,8 +115,8 @@ namespace Gs2::Friend::Domain::Model
         Request
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
-            ->WithTargetUserId(Self->TargetUserId)
-            ->WithWithProfile(Self->WithProfile);
+            ->WithWithProfile(Self->WithProfile)
+            ->WithTargetUserId(Self->TargetUserId);
         const auto Future = Self->Client->GetFollowByUserId(
             Request
         );
@@ -129,9 +132,10 @@ namespace Gs2::Friend::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
+                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
                     FString("FollowUser:") + (Self->WithProfile.IsSet() ? *Self->WithProfile == true ? "True" : "False" : "False")
                 );
                 const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
@@ -193,9 +197,10 @@ namespace Gs2::Friend::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
+                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
                     FString("FollowUser:") + (Self->WithProfile.IsSet() ? *Self->WithProfile == true ? "True" : "False" : "False")
                 );
                 const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
@@ -259,9 +264,10 @@ namespace Gs2::Friend::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
+                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
                     FString("FollowUser:") + (Self->WithProfile.IsSet() ? *Self->WithProfile == true ? "True" : "False" : "False")
                 );
                 const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
@@ -270,9 +276,10 @@ namespace Gs2::Friend::Domain::Model
                 Self->Gs2->Cache->Delete(Gs2::Friend::Model::FFollowUser::TypeName, ParentKey, Key);
             }
             {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
                     Self->NamespaceName,
                     Self->UserId,
+                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
                     FString("FollowUser:") + (Self->WithProfile.IsSet() ? *Self->WithProfile != true ? "True" : "False" : "False")
                 );
                 const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
@@ -296,6 +303,7 @@ namespace Gs2::Friend::Domain::Model
     FString FFollowUserDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
+        TOptional<FString> WithProfile,
         TOptional<FString> TargetUserId,
         FString ChildType
     )
@@ -303,6 +311,7 @@ namespace Gs2::Friend::Domain::Model
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
+            (WithProfile.IsSet() ? *WithProfile : "null") + ":" +
             (TargetUserId.IsSet() ? *TargetUserId : "null") + ":" +
             ChildType;
     }
@@ -345,7 +354,6 @@ namespace Gs2::Friend::Domain::Model
         if (!bCacheHit) {
             const auto Future = Self->Get(
                 MakeShared<Gs2::Friend::Request::FGetFollowByUserIdRequest>()
-                    ->WithWithProfile(Self->WithProfile)
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())

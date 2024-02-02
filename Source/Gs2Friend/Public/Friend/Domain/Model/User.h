@@ -22,7 +22,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Friend/Domain/Gs2Friend.h"
 #include "Friend/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Friend/Domain/Iterator/DescribeFriendsIterator.h"
 #include "Friend/Domain/Iterator/DescribeFriendsByUserIdIterator.h"
@@ -54,6 +53,8 @@ namespace Gs2::Friend::Domain::Model
     class FUserAccessTokenDomain;
     class FProfileDomain;
     class FProfileAccessTokenDomain;
+    class FFollowDomain;
+    class FFollowAccessTokenDomain;
     class FFriendDomain;
     class FFriendAccessTokenDomain;
     class FBlackListDomain;
@@ -141,38 +142,13 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<Gs2::Friend::Domain::Model::FBlackListDomain> BlackList(
         );
 
-        Gs2::Friend::Domain::Iterator::FDescribeFollowsByUserIdIteratorPtr Follows(
-            const TOptional<bool> WithProfile
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeFollows(
-            TFunction<void()> Callback,
-            bool WithProfile
-        );
-
-        void UnsubscribeFollows(
-            Gs2::Core::Domain::CallbackID CallbackID,
-            bool WithProfile
-        );
-
-        TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserDomain> FollowUser(
-            const FString TargetUserId,
+        TSharedPtr<Gs2::Friend::Domain::Model::FFollowDomain> Follow(
             const bool WithProfile
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeFriendsByUserIdIteratorPtr Friends(
             const TOptional<bool> WithProfile
         ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeFriends(
-            TFunction<void()> Callback,
-            bool WithProfile
-        );
-
-        void UnsubscribeFriends(
-            Gs2::Core::Domain::CallbackID CallbackID,
-            bool WithProfile
-        );
 
         TSharedPtr<Gs2::Friend::Domain::Model::FFriendDomain> Friend(
             const bool WithProfile

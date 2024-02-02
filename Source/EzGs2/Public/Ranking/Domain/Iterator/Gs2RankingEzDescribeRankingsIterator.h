@@ -12,12 +12,14 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ranking/Domain/Model/UserAccessToken.h"
+#include "Ranking/Domain/Model/RankingCategoryAccessToken.h"
 #include "Ranking/Model/Gs2RankingEzRanking.h"
 #include "Util/Net/GameSession.h"
 
@@ -28,32 +30,23 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
         public TSharedFromThis<FEzDescribeRankingsIterator>
     {
         Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr It;
-        Gs2::Ranking::Domain::Model::FUserAccessTokenDomainPtr Domain;
+        Gs2::Ranking::Domain::Model::FRankingCategoryAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::FGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
-        FString CategoryName;
-        TOptional<FString> AdditionalScopeName;
 
 	public:
 
         explicit FEzDescribeRankingsIterator(
-            Gs2::Ranking::Domain::Model::FUserAccessTokenDomainPtr Domain,
+            Gs2::Ranking::Domain::Model::FRankingCategoryAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::FGameSessionPtr GameSession,
-            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-            FString CategoryName,
-            TOptional<FString> AdditionalScopeName = TOptional<FString>()
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(
-                Domain->Rankings(
-                    CategoryName,
-                    AdditionalScopeName
-                )
+                Domain->Rankings()
             ),
             Domain(Domain),
             GameSession(GameSession),
-            Connection(Connection),
-            CategoryName(CategoryName),
-            AdditionalScopeName(AdditionalScopeName)
+            Connection(Connection)
         {
         }
 
@@ -63,9 +56,7 @@ namespace Gs2::UE5::Ranking::Domain::Iterator
 			It(From.It),
 			Domain(From.Domain),
 			GameSession(From.GameSession),
-			Connection(From.Connection),
-            CategoryName(From.CategoryName),
-            AdditionalScopeName(From.AdditionalScopeName)
+			Connection(From.Connection)
 		{
 		}
 

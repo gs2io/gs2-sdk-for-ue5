@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -33,10 +31,10 @@ class BPGS2_API UGs2RankingListOfScoreAsyncFunction : public UBlueprintAsyncActi
     GENERATED_BODY()
 
     FGs2RankingOwnUser User;
-    FString CategoryName;
-    FString ScorerUserId;
 
 public:
+    FString CategoryName;
+    FString ScorerUserId;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingListOfScoreSuccessDelegate OnSuccess;

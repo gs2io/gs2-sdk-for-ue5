@@ -62,20 +62,6 @@ namespace Gs2::UE5::SerialKey::Domain::Model
     {
         const auto Future = Self->ConnectionValue->Run(
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->GetSerialKey(
-                    MakeShared<Gs2::SerialKey::Request::FGetSerialKeyRequest>()
-                        ->WithCode(Code)
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = Gs2::UE5::SerialKey::Model::FEzSerialKey::FromModel(
-                    Task->GetTask().Result()
-                );
-                Task->EnsureCompletion();
                 return nullptr;
             },
             nullptr

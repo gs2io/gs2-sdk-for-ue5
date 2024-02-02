@@ -22,7 +22,8 @@ namespace Gs2::Exchange::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         RateNameValue(TOptional<FString>()),
-        CountValue(TOptional<int32>())
+        CountValue(TOptional<int32>()),
+        ConfigValue(nullptr)
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Exchange::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         RateNameValue(From.RateNameValue),
-        CountValue(From.CountValue)
+        CountValue(From.CountValue),
+        ConfigValue(From.ConfigValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Exchange::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateAwaitByUserIdRequest> FCreateAwaitByUserIdRequest::WithConfig(
+        const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config
+    )
+    {
+        this->ConfigValue = Config;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateAwaitByUserIdRequest> FCreateAwaitByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -116,6 +126,15 @@ namespace Gs2::Exchange::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), CountValue.GetValue());
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> FCreateAwaitByUserIdRequest::GetConfig() const
+    {
+        if (!ConfigValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ConfigValue;
     }
 
     TOptional<FString> FCreateAwaitByUserIdRequest::GetDuplicationAvoider() const
@@ -166,6 +185,18 @@ namespace Gs2::Exchange::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+          ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
+              {
+                  auto v = MakeShared<TArray<Model::FConfigPtr>>();
+                  if (!Data->HasTypedField<EJson::Null>("config") && Data->HasTypedField<EJson::Array>("config"))
+                  {
+                      for (auto JsonObjectValue : Data->GetArrayField("config"))
+                      {
+                          v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
+                      }
+                  }
+                  return v;
+              }() : MakeShared<TArray<Model::FConfigPtr>>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -191,6 +222,15 @@ namespace Gs2::Exchange::Request
         if (CountValue.IsSet())
         {
             JsonRootObject->SetNumberField("count", CountValue.GetValue());
+        }
+        if (ConfigValue != nullptr && ConfigValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *ConfigValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("config", v);
         }
         if (DuplicationAvoiderValue.IsSet())
         {

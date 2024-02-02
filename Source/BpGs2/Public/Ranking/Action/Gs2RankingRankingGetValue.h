@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -35,7 +33,7 @@ class BPGS2_API UGs2RankingRankingGetValueAsyncFunction : public UBlueprintAsync
     FGs2RankingOwnRanking Ranking;
 
 public:
-    FString ScorerUserId;
+    FString UniqueId;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2RankingRankingGetValueSuccessDelegate OnSuccess;
@@ -45,7 +43,7 @@ public:
 
     UGs2RankingRankingGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Fetch::GetValueOfRanking", Category="Game Server Services|GS2-Ranking|Namespace|User|Ranking|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Ranking::Fetch::GetValueOfRanking", Category="Game Server Services|GS2-Ranking|Namespace|User|RankingCategory|Ranking|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2RankingRankingGetValueAsyncFunction* RankingGetValue(
         UObject* WorldContextObject,
         FGs2RankingOwnRanking Ranking

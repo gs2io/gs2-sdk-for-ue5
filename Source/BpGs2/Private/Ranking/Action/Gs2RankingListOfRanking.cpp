@@ -29,18 +29,16 @@ UGs2RankingListOfRankingAsyncFunction::UGs2RankingListOfRankingAsyncFunction(
 
 UGs2RankingListOfRankingAsyncFunction* UGs2RankingListOfRankingAsyncFunction::ListOfRanking(
     UObject* WorldContextObject,
-    FGs2RankingOwnUser User,
-    FString CategoryName
+    FGs2RankingOwnRankingCategory RankingCategory
 )
 {
     UGs2RankingListOfRankingAsyncFunction* Action = NewObject<UGs2RankingListOfRankingAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingListOfRankingAsyncFunction::ListOfRanking] User parameter specification is missing."))
+    if (RankingCategory.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingListOfRankingAsyncFunction::ListOfRanking] RankingCategory parameter specification is missing."))
         return Action;
     }
-    Action->User = User;
-    Action->CategoryName = CategoryName;
+    Action->RankingCategory = RankingCategory;
     return Action;
 }
 
@@ -49,12 +47,11 @@ void UGs2RankingListOfRankingAsyncFunction::Activate()
     TArray<FGs2RankingRankingValue> ReturnRankings;
     FGs2Error ReturnError;
 
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingListOfRankingAsyncFunction::Activate] User parameter specification is missing."))
+    if (RankingCategory.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingListOfRankingAsyncFunction::Activate] RankingCategory parameter specification is missing."))
         return;
     }
-    const auto It = User.Value->Rankings(
-        CategoryName
+    const auto It = RankingCategory.Value->Rankings(
     );
     for (auto v : *It)
     {

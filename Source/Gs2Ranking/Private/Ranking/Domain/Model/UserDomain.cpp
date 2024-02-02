@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -32,6 +30,8 @@
 #include "Ranking/Domain/Model/SubscribeAccessToken.h"
 #include "Ranking/Domain/Model/Score.h"
 #include "Ranking/Domain/Model/ScoreAccessToken.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
+#include "Ranking/Domain/Model/RankingCategoryAccessToken.h"
 #include "Ranking/Domain/Model/Ranking.h"
 #include "Ranking/Domain/Model/RankingAccessToken.h"
 #include "Ranking/Domain/Model/CurrentRankingMaster.h"
@@ -41,6 +41,9 @@
 #include "Ranking/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Ranking::Domain::Model
 {
@@ -77,208 +80,18 @@ namespace Gs2::Ranking::Domain::Model
 
     }
 
-    FUserDomain::FSubscribeTask::FSubscribeTask(
-        const TSharedPtr<FUserDomain>& Self,
-        const Request::FSubscribeByUserIdRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FUserDomain::FSubscribeTask::FSubscribeTask(
-        const FSubscribeTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
-        const auto Future = Self->Client->SubscribeByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "SubscribeUser"
-                );
-                const auto Key = Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName(),
-                    ResultModel->GetItem()->GetTargetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking::Model::FSubscribeUser::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            ResultModel->GetItem()->GetCategoryName(),
-            ResultModel->GetItem()->GetTargetUserId()
-        );
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeTask>> FUserDomain::Subscribe(
-        Request::FSubscribeByUserIdRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FSubscribeTask>>(this->AsShared(), Request);
-    }
-
-    Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameAndUserIdIteratorPtr FUserDomain::SubscribesByCategoryName(
-        const FString CategoryName
-    ) const
-    {
-        return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameAndUserIdIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            CategoryName,
-            UserId
-        );
-    }
-
-    TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserDomain> FUserDomain::SubscribeUser(
+    TSharedPtr<Gs2::Ranking::Domain::Model::FRankingCategoryDomain> FUserDomain::RankingCategory(
         const FString CategoryName,
-        const FString TargetUserId
+        const TOptional<FString> AdditionalScopeName
     )
     {
-        return MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>(
+        return MakeShared<Gs2::Ranking::Domain::Model::FRankingCategoryDomain>(
             Gs2,
             Service,
             NamespaceName,
             UserId,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),
-            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
-        );
-    }
-
-    Gs2::Ranking::Domain::Iterator::FDescribeRankingsByUserIdIteratorPtr FUserDomain::Rankings(
-        const FString CategoryName,
-        const TOptional<FString> AdditionalScopeName
-    ) const
-    {
-        return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeRankingsByUserIdIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            CategoryName,
-            UserId,
             AdditionalScopeName
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeRankings(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Ranking::Model::FRanking::TypeName,
-            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "Ranking"
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribeRankings(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Ranking::Model::FRanking::TypeName,
-            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "Ranking"
-            ),
-            CallbackID
-        );
-    }
-
-    Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIteratorPtr FUserDomain::NearRankings(
-        const FString CategoryName,
-        const int64 Score,
-        const TOptional<FString> AdditionalScopeName
-    ) const
-    {
-        return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            CategoryName,
-            AdditionalScopeName,
-            Score
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeNearRankings(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Ranking::Model::FRanking::TypeName,
-            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                TOptional<FString>("Singleton"),
-                "NearRanking"
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribeNearRankings(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Ranking::Model::FRanking::TypeName,
-            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                TOptional<FString>("Singleton"),
-                "NearRanking"
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::Ranking::Domain::Model::FRankingDomain> FUserDomain::Ranking(
-        const FString CategoryName
-    )
-    {
-        return MakeShared<Gs2::Ranking::Domain::Model::FRankingDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId,
-            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
         );
     }
 

@@ -28,7 +28,7 @@
 
 #include "Ranking/Domain/Iterator/DescribeRankingsByUserIdIterator.h"
 #include "Ranking/Domain/Model/Ranking.h"
-#include "Ranking/Domain/Model/User.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
 
 namespace Gs2::Ranking::Domain::Iterator
 {
@@ -86,12 +86,13 @@ namespace Gs2::Ranking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = FString() +
-                (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
-                (Self->UserId.IsSet() ? *Self->UserId : "null") + ":" +
-                (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
-                (Self->AdditionalScopeName.IsSet() ? *Self->AdditionalScopeName : "null") + ":" +
-                "Ranking";
+            const auto ListParentKey = Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId,
+                Self->CategoryName,
+                Self->AdditionalScopeName,
+                "Ranking"
+            );
 
             if (!RangeIteratorOpt)
             {
@@ -99,7 +100,6 @@ namespace Gs2::Ranking::Domain::Iterator
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Ranking::Model::FRankingPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -137,11 +137,15 @@ namespace Gs2::Ranking::Domain::Iterator
                     Gs2::Ranking::Model::FRanking::TypeName,
                     ListParentKey,
                     Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                        Item->GetCategoryName()
+                        Item->GetUserId().IsSet() ? Item->GetUserId() : TOptional<FString>(),
+                        FString::FromInt(*Item->GetIndex())
                     ),
                     Item,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }
+            if (Range)
+            {
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();

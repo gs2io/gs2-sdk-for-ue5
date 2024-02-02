@@ -42,7 +42,8 @@
 #include "Lottery/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Lottery::Domain::Model
@@ -52,7 +53,8 @@ namespace Gs2::Lottery::Domain::Model
         const Core::Domain::FGs2Ptr& Gs2,
         const Lottery::Domain::FGs2LotteryDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> UserId
+        const TOptional<FString> UserId,
+        const TOptional<FString> LotteryName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -60,6 +62,7 @@ namespace Gs2::Lottery::Domain::Model
         Client(MakeShared<Gs2::Lottery::FGs2LotteryRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
+        LotteryName(LotteryName),
         ParentKey(Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
@@ -76,6 +79,7 @@ namespace Gs2::Lottery::Domain::Model
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
+        LotteryName(From.LotteryName),
         ParentKey(From.ParentKey)
     {
 
@@ -101,7 +105,8 @@ namespace Gs2::Lottery::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithUserId(Self->UserId)
+            ->WithLotteryName(Self->LotteryName);
         const auto Future = Self->Client->DrawByUserId(
             Request
         );
@@ -114,7 +119,42 @@ namespace Gs2::Lottery::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
         if (ResultModel != nullptr) {
-            
+            {
+                for (auto Item : *ResultModel->GetItems())
+                {
+                    const auto ParentKey = Gs2::Lottery::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        "DrawnPrize"
+                    );
+                    const auto Key = Gs2::Lottery::Domain::Model::FDrawnPrizeDomain::CreateCacheKey(
+                    );
+                    Self->Gs2->Cache->Put(
+                        Gs2::Lottery::Model::FDrawnPrize::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
+                }
+            }
+            if (ResultModel->GetBoxItems() != nullptr)
+            {
+                const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    "BoxItems"
+                );
+                const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                    ResultModel->GetBoxItems()->GetPrizeTableName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetBoxItems(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
         if (ResultModel && ResultModel->GetStampSheet())
         {
@@ -168,7 +208,8 @@ namespace Gs2::Lottery::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithUserId(Self->UserId)
+            ->WithLotteryName(Self->LotteryName);
         const auto Future = Self->Client->PredictionByUserId(
             Request
         );
@@ -213,7 +254,8 @@ namespace Gs2::Lottery::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithUserId(Self->UserId)
+            ->WithLotteryName(Self->LotteryName);
         const auto Future = Self->Client->DrawWithRandomSeedByUserId(
             Request
         );
@@ -260,22 +302,70 @@ namespace Gs2::Lottery::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDrawWithRandomSeedTask>>(this->AsShared(), Request);
     }
 
+    Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIteratorPtr FLotteryDomain::Probabilities(
+    ) const
+    {
+        return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName,
+            LotteryName,
+            UserId
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FLotteryDomain::SubscribeProbabilities(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                LotteryName,
+                "Probability"
+            ),
+            Callback
+        );
+    }
+
+    void FLotteryDomain::UnsubscribeProbabilities(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                LotteryName,
+                "Probability"
+            ),
+            CallbackID
+        );
+    }
+
     FString FLotteryDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
+        TOptional<FString> LotteryName,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
+            (LotteryName.IsSet() ? *LotteryName : "null") + ":" +
             ChildType;
     }
 
     FString FLotteryDomain::CreateCacheKey(
+        TOptional<FString> LotteryName
     )
     {
-        return "Singleton";
+        return FString("") +
+            (LotteryName.IsSet() ? *LotteryName : "null");
     }
 }
 

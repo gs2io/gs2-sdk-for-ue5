@@ -41,8 +41,7 @@ UGs2ShowcaseRandomDisplayItemGetValueAsyncFunction* UGs2ShowcaseRandomDisplayIte
 
 void UGs2ShowcaseRandomDisplayItemGetValueAsyncFunction::Activate()
 {
-    auto Future = RandomDisplayItem.Value->Model(
-    );
+    auto Future = RandomDisplayItem.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzRandomDisplayItemToFGs2ShowcaseRandomDisplayItemValue(Result);

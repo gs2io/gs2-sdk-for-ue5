@@ -42,6 +42,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         public:
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
+        TOptional<bool> WithProfile() const;
         TOptional<FString> TargetUserId() const;
 
         FEzFollowUserGameSessionDomain(

@@ -31,6 +31,8 @@
 #include "Ranking/Domain/Model/SubscribeAccessToken.h"
 #include "Ranking/Domain/Model/Score.h"
 #include "Ranking/Domain/Model/ScoreAccessToken.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
+#include "Ranking/Domain/Model/RankingCategoryAccessToken.h"
 #include "Ranking/Domain/Model/Ranking.h"
 #include "Ranking/Domain/Model/RankingAccessToken.h"
 #include "Ranking/Domain/Model/CurrentRankingMaster.h"
@@ -79,192 +81,18 @@ namespace Gs2::Ranking::Domain::Model
 
     }
 
-    FUserAccessTokenDomain::FSubscribeTask::FSubscribeTask(
-        const TSharedPtr<FUserAccessTokenDomain>& Self,
-        const Request::FSubscribeRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FUserAccessTokenDomain::FSubscribeTask::FSubscribeTask(
-        const FSubscribeTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken());
-        const auto Future = Self->Client->Subscribe(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "SubscribeUser"
-                );
-                const auto Key = Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName(),
-                    ResultModel->GetItem()->GetTargetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking::Model::FSubscribeUser::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            Self->AccessToken,
-            ResultModel->GetItem()->GetCategoryName(),
-            ResultModel->GetItem()->GetTargetUserId()
-        );
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeTask>> FUserAccessTokenDomain::Subscribe(
-        Request::FSubscribeRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FSubscribeTask>>(this->AsShared(), Request);
-    }
-
-    Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameIteratorPtr FUserAccessTokenDomain::SubscribeUsers(
-        const FString CategoryName
-    ) const
-    {
-        return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            CategoryName,
-            AccessToken
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeSubscribeUsers(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Ranking::Model::FSubscribeUser::TypeName,
-            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                "SubscribeUser"
-            ),
-            Callback
-        );
-    }
-
-    void FUserAccessTokenDomain::UnsubscribeSubscribeUsers(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Ranking::Model::FSubscribeUser::TypeName,
-            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                "SubscribeUser"
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain> FUserAccessTokenDomain::SubscribeUser(
+    TSharedPtr<Gs2::Ranking::Domain::Model::FRankingCategoryAccessTokenDomain> FUserAccessTokenDomain::RankingCategory(
         const FString CategoryName,
-        const FString TargetUserId
+        const TOptional<FString> AdditionalScopeName
     )
     {
-        return MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain>(
+        return MakeShared<Gs2::Ranking::Domain::Model::FRankingCategoryAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,
             AccessToken,
             CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName),
-            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
-        );
-    }
-
-    Gs2::Ranking::Domain::Iterator::FDescribeRankingsIteratorPtr FUserAccessTokenDomain::Rankings(
-        const FString CategoryName,
-        const TOptional<FString> AdditionalScopeName
-    ) const
-    {
-        return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            CategoryName,
-            AccessToken,
             AdditionalScopeName
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeRankings(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Ranking::Model::FRanking::TypeName,
-            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                "Ranking"
-            ),
-            Callback
-        );
-    }
-
-    void FUserAccessTokenDomain::UnsubscribeRankings(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Ranking::Model::FRanking::TypeName,
-            Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                "Ranking"
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::Ranking::Domain::Model::FRankingAccessTokenDomain> FUserAccessTokenDomain::Ranking(
-        const FString CategoryName
-    )
-    {
-        return MakeShared<Gs2::Ranking::Domain::Model::FRankingAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken,
-            CategoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CategoryName)
         );
     }
 

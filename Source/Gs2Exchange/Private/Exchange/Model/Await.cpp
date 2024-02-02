@@ -24,6 +24,7 @@ namespace Gs2::Exchange::Model
         RateNameValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         CountValue(TOptional<int32>()),
+        ConfigValue(nullptr),
         ExchangedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -37,6 +38,7 @@ namespace Gs2::Exchange::Model
         RateNameValue(From.RateNameValue),
         NameValue(From.NameValue),
         CountValue(From.CountValue),
+        ConfigValue(From.ConfigValue),
         ExchangedAtValue(From.ExchangedAtValue),
         RevisionValue(From.RevisionValue)
     {
@@ -79,6 +81,14 @@ namespace Gs2::Exchange::Model
     )
     {
         this->CountValue = Count;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAwait> FAwait::WithConfig(
+        const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config
+    )
+    {
+        this->ConfigValue = Config;
         return SharedThis(this);
     }
 
@@ -125,6 +135,10 @@ namespace Gs2::Exchange::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), CountValue.GetValue());
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> FAwait::GetConfig() const
+    {
+        return ConfigValue;
     }
     TOptional<int64> FAwait::GetExchangedAt() const
     {
@@ -259,6 +273,18 @@ namespace Gs2::Exchange::Model
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
+            ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FConfigPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("config") && Data->HasTypedField<EJson::Array>("config"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("config"))
+                        {
+                            v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FConfigPtr>>())
             ->WithExchangedAt(Data->HasField("exchangedAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -301,6 +327,15 @@ namespace Gs2::Exchange::Model
         if (CountValue.IsSet())
         {
             JsonRootObject->SetNumberField("count", CountValue.GetValue());
+        }
+        if (ConfigValue != nullptr && ConfigValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *ConfigValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("config", v);
         }
         if (ExchangedAtValue.IsSet())
         {

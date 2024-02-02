@@ -41,8 +41,7 @@ UGs2FormationMoldModelGetValueAsyncFunction* UGs2FormationMoldModelGetValueAsync
 
 void UGs2FormationMoldModelGetValueAsyncFunction::Activate()
 {
-    auto Future = MoldModel.Value->Model(
-    );
+    auto Future = MoldModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzMoldModelToFGs2FormationMoldModelValue(Result);

@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Exchange/Model/Await.h"
+#include "Gs2ExchangeEzConfig.h"
 
 namespace Gs2::UE5::Exchange::Model
 {
@@ -26,12 +27,14 @@ namespace Gs2::UE5::Exchange::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> RateNameValue;
         TOptional<FString> NameValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> ConfigValue;
         TOptional<int64> ExchangedAtValue;
 
 	public:
         TSharedPtr<FEzAwait> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FEzAwait> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FEzAwait> WithName(const TOptional<FString> Name);
+        TSharedPtr<FEzAwait> WithConfig(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> Config);
         TSharedPtr<FEzAwait> WithExchangedAt(const TOptional<int64> ExchangedAt);
 
         TOptional<FString> GetUserId() const;
@@ -39,6 +42,8 @@ namespace Gs2::UE5::Exchange::Model
         TOptional<FString> GetRateName() const;
 
         TOptional<FString> GetName() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> GetConfig() const;
 
         TOptional<int64> GetExchangedAt() const;
         FString GetExchangedAtString() const;

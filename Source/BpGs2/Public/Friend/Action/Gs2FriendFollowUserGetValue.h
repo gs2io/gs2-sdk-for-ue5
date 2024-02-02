@@ -33,7 +33,6 @@ class BPGS2_API UGs2FriendFollowUserGetValueAsyncFunction : public UBlueprintAsy
     FGs2FriendOwnFollowUser FollowUser;
 
 public:
-    bool WithProfile;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendFollowUserGetValueSuccessDelegate OnSuccess;
@@ -43,7 +42,7 @@ public:
 
     UGs2FriendFollowUserGetValueAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::Fetch::GetValueOfFollowUser", Category="Game Server Services|GS2-Friend|Namespace|User|FollowUser|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::Fetch::GetValueOfFollowUser", Category="Game Server Services|GS2-Friend|Namespace|User|Follow|FollowUser|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2FriendFollowUserGetValueAsyncFunction* FollowUserGetValue(
         UObject* WorldContextObject,
         FGs2FriendOwnFollowUser FollowUser

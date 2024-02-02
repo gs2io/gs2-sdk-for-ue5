@@ -41,8 +41,7 @@ UGs2FormationPropertyFormModelGetValueAsyncFunction* UGs2FormationPropertyFormMo
 
 void UGs2FormationPropertyFormModelGetValueAsyncFunction::Activate()
 {
-    auto Future = PropertyFormModel.Value->Model(
-    );
+    auto Future = PropertyFormModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzPropertyFormModelToFGs2FormationPropertyFormModelValue(Result);

@@ -41,8 +41,7 @@ UGs2FormationFormGetValueAsyncFunction* UGs2FormationFormGetValueAsyncFunction::
 
 void UGs2FormationFormGetValueAsyncFunction::Activate()
 {
-    auto Future = Form.Value->Model(
-    );
+    auto Future = Form.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzFormToFGs2FormationFormValue(Result);

@@ -26,7 +26,7 @@
 
 #include "Friend/Domain/Iterator/DescribeFollowsByUserIdIterator.h"
 #include "Friend/Domain/Model/FollowUser.h"
-#include "Friend/Domain/Model/User.h"
+#include "Friend/Domain/Model/Follow.h"
 
 namespace Gs2::Friend::Domain::Iterator
 {
@@ -82,9 +82,10 @@ namespace Gs2::Friend::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
+                Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
                 FString("FollowUser:") + (Self->WithProfile.IsSet() ? *Self->WithProfile == true ? "True" : "False" : "False")
             );
 

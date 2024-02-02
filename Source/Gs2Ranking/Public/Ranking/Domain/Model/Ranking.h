@@ -52,6 +52,8 @@ namespace Gs2::Ranking::Domain::Model
     class FSubscribeAccessTokenDomain;
     class FScoreDomain;
     class FScoreAccessTokenDomain;
+    class FRankingCategoryDomain;
+    class FRankingCategoryAccessTokenDomain;
     class FRankingDomain;
     class FRankingAccessTokenDomain;
     class FCurrentRankingMasterDomain;
@@ -71,6 +73,9 @@ namespace Gs2::Ranking::Domain::Model
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> CategoryName;
+        TOptional<FString> AdditionalScopeName;
+        TOptional<FString> ScorerUserId;
+        TOptional<int64> Index;
     private:
 
         FString ParentKey;
@@ -82,7 +87,10 @@ namespace Gs2::Ranking::Domain::Model
             const Ranking::Domain::FGs2RankingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> CategoryName
+            const TOptional<FString> CategoryName,
+            const TOptional<FString> AdditionalScopeName,
+            const TOptional<FString> ScorerUserId,
+            const TOptional<int64> Index
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -116,41 +124,19 @@ namespace Gs2::Ranking::Domain::Model
             Request::FGetRankingByUserIdRequestPtr Request
         );
 
-        class GS2RANKING_API FPutScoreTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FScoreDomain>,
-            public TSharedFromThis<FPutScoreTask>
-        {
-            const TSharedPtr<FRankingDomain> Self;
-            const Request::FPutScoreByUserIdRequestPtr Request;
-        public:
-            explicit FPutScoreTask(
-                const TSharedPtr<FRankingDomain>& Self,
-                const Request::FPutScoreByUserIdRequestPtr Request
-            );
-
-            FPutScoreTask(
-                const FPutScoreTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking::Domain::Model::FScoreDomain>> Result
-            ) override;
-        };
-        friend FPutScoreTask;
-
-        TSharedPtr<FAsyncTask<FPutScoreTask>> PutScore(
-            Request::FPutScoreByUserIdRequestPtr Request
-        );
-
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
             TOptional<FString> CategoryName,
+            TOptional<FString> AdditionalScopeName,
+            TOptional<FString> ScorerUserId,
+            TOptional<FString> Index,
             FString ChildType
         );
 
         static FString CreateCacheKey(
-            TOptional<FString> CategoryName
+            TOptional<FString> ScorerUserId,
+            TOptional<FString> Index
         );
 
         class GS2RANKING_API FModelTask final :
@@ -158,11 +144,9 @@ namespace Gs2::Ranking::Domain::Model
             public TSharedFromThis<FModelTask>
         {
             const TSharedPtr<FRankingDomain> Self;
-            const TOptional<FString> ScorerUserId;
         public:
             explicit FModelTask(
-                const TSharedPtr<FRankingDomain> Self,
-                const TOptional<FString> ScorerUserId
+                const TSharedPtr<FRankingDomain> Self
             );
 
             FModelTask(
@@ -175,9 +159,7 @@ namespace Gs2::Ranking::Domain::Model
         };
         friend FModelTask;
 
-        TSharedPtr<FAsyncTask<FModelTask>> Model(
-            const TOptional<FString> ScorerUserId
-        );
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Ranking::Model::FRankingPtr)> Callback

@@ -114,32 +114,6 @@ namespace Gs2::SerialKey::Domain::Model
             Request::FDownloadSerialCodesRequestPtr Request
         );
 
-        class GS2SERIALKEY_API FGetSerialKeyTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Model::FSerialKey>,
-            public TSharedFromThis<FGetSerialKeyTask>
-        {
-            const TSharedPtr<FUserDomain> Self;
-            const Request::FGetSerialKeyRequestPtr Request;
-        public:
-            explicit FGetSerialKeyTask(
-                const TSharedPtr<FUserDomain>& Self,
-                const Request::FGetSerialKeyRequestPtr Request
-            );
-
-            FGetSerialKeyTask(
-                const FGetSerialKeyTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::SerialKey::Model::FSerialKey>> Result
-            ) override;
-        };
-        friend FGetSerialKeyTask;
-
-        TSharedPtr<FAsyncTask<FGetSerialKeyTask>> GetSerialKey(
-            Request::FGetSerialKeyRequestPtr Request
-        );
-
         class GS2SERIALKEY_API FRevertUseTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>,
             public TSharedFromThis<FRevertUseTask>

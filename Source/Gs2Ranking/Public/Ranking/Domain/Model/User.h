@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -22,7 +20,6 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Ranking/Domain/Gs2Ranking.h"
 #include "Ranking/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Ranking/Domain/Iterator/DescribeCategoryModelsIterator.h"
 #include "Ranking/Domain/Iterator/DescribeCategoryModelMastersIterator.h"
@@ -55,6 +52,8 @@ namespace Gs2::Ranking::Domain::Model
     class FSubscribeAccessTokenDomain;
     class FScoreDomain;
     class FScoreAccessTokenDomain;
+    class FRankingCategoryDomain;
+    class FRankingCategoryAccessTokenDomain;
     class FRankingDomain;
     class FRankingAccessTokenDomain;
     class FCurrentRankingMasterDomain;
@@ -72,14 +71,9 @@ namespace Gs2::Ranking::Domain::Model
 
         public:
         TOptional<FString> NextPageToken;
-        TOptional<bool> Processing;
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;
-        }
-        TOptional<bool> GetProcessing() const
-        {
-            return Processing;
         }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
@@ -101,70 +95,9 @@ namespace Gs2::Ranking::Domain::Model
             const FUserDomain& From
         );
 
-        class GS2RANKING_API FSubscribeTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>,
-            public TSharedFromThis<FSubscribeTask>
-        {
-            const TSharedPtr<FUserDomain> Self;
-            const Request::FSubscribeByUserIdRequestPtr Request;
-        public:
-            explicit FSubscribeTask(
-                const TSharedPtr<FUserDomain>& Self,
-                const Request::FSubscribeByUserIdRequestPtr Request
-            );
-
-            FSubscribeTask(
-                const FSubscribeTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>> Result
-            ) override;
-        };
-        friend FSubscribeTask;
-
-        TSharedPtr<FAsyncTask<FSubscribeTask>> Subscribe(
-            Request::FSubscribeByUserIdRequestPtr Request
-        );
-
-        Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameAndUserIdIteratorPtr SubscribesByCategoryName(
-            const FString CategoryName
-        ) const;
-
-        TSharedPtr<Gs2::Ranking::Domain::Model::FSubscribeUserDomain> SubscribeUser(
-            const FString CategoryName,
-            const FString TargetUserId
-        );
-
-        Gs2::Ranking::Domain::Iterator::FDescribeRankingsByUserIdIteratorPtr Rankings(
+        TSharedPtr<Gs2::Ranking::Domain::Model::FRankingCategoryDomain> RankingCategory(
             const FString CategoryName,
             const TOptional<FString> AdditionalScopeName = TOptional<FString>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeRankings(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeRankings(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        Gs2::Ranking::Domain::Iterator::FDescribeNearRankingsIteratorPtr NearRankings(
-            const FString CategoryName,
-            const int64 Score,
-            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeNearRankings(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeNearRankings(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Ranking::Domain::Model::FRankingDomain> Ranking(
-            const FString CategoryName
         );
 
         Gs2::Ranking::Domain::Iterator::FDescribeScoresByUserIdIteratorPtr Scores(

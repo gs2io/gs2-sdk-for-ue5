@@ -41,8 +41,7 @@ UGs2RankingScoreGetValueAsyncFunction* UGs2RankingScoreGetValueAsyncFunction::Sc
 
 void UGs2RankingScoreGetValueAsyncFunction::Activate()
 {
-    auto Future = Score.Value->Model(
-    );
+    auto Future = Score.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzScoreToFGs2RankingScoreValue(Result);

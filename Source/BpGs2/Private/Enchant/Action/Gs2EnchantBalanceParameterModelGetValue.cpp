@@ -41,8 +41,7 @@ UGs2EnchantBalanceParameterModelGetValueAsyncFunction* UGs2EnchantBalanceParamet
 
 void UGs2EnchantBalanceParameterModelGetValueAsyncFunction::Activate()
 {
-    auto Future = BalanceParameterModel.Value->Model(
-    );
+    auto Future = BalanceParameterModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzBalanceParameterModelToFGs2EnchantBalanceParameterModelValue(Result);

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -26,7 +28,7 @@
 
 #include "Ranking/Domain/Iterator/DescribeSubscribesByCategoryNameAndUserIdIterator.h"
 #include "Ranking/Domain/Model/SubscribeUser.h"
-#include "Ranking/Domain/Model/User.h"
+#include "Ranking/Domain/Model/RankingCategory.h"
 
 namespace Gs2::Ranking::Domain::Iterator
 {
@@ -81,9 +83,11 @@ namespace Gs2::Ranking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
+                Self->CategoryName,
+                TOptional<FString>(),
                 "SubscribeUser"
             );
 
@@ -93,7 +97,6 @@ namespace Gs2::Ranking::Domain::Iterator
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Ranking::Model::FSubscribeUserPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
@@ -127,7 +130,6 @@ namespace Gs2::Ranking::Domain::Iterator
                     Gs2::Ranking::Model::FSubscribeUser::TypeName,
                     ListParentKey,
                     Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                        Item->GetCategoryName(),
                         Item->GetTargetUserId()
                     ),
                     Item,
@@ -136,7 +138,6 @@ namespace Gs2::Ranking::Domain::Iterator
             }
             if (Range)
             {
-                Range->RemoveAll([this](const Gs2::Ranking::Model::FSubscribeUserPtr& Item) { return Self->CategoryName && Item->GetCategoryName() != Self->CategoryName; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;

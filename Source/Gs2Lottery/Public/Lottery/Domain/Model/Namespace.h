@@ -268,14 +268,6 @@ namespace Gs2::Lottery::Domain::Model
             Request::FCreateLotteryModelMasterRequestPtr Request
         );
 
-        TSharedPtr<Gs2::Lottery::Domain::Model::FUserDomain> User(
-            const FString UserId
-        );
-
-        TSharedPtr<Gs2::Lottery::Domain::Model::FUserAccessTokenDomain> AccessToken(
-            Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        );
-
         TSharedPtr<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain> CurrentLotteryMaster(
         );
 
@@ -307,6 +299,14 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryModelDomain> LotteryModel(
             const FString LotteryName
+        );
+
+        TSharedPtr<Gs2::Lottery::Domain::Model::FUserDomain> User(
+            const FString UserId
+        );
+
+        TSharedPtr<Gs2::Lottery::Domain::Model::FUserAccessTokenDomain> AccessToken(
+            Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
         Gs2::Lottery::Domain::Iterator::FDescribePrizeTableMastersIteratorPtr PrizeTableMasters(

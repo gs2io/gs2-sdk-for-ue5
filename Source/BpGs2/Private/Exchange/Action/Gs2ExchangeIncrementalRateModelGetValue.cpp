@@ -41,8 +41,7 @@ UGs2ExchangeIncrementalRateModelGetValueAsyncFunction* UGs2ExchangeIncrementalRa
 
 void UGs2ExchangeIncrementalRateModelGetValueAsyncFunction::Activate()
 {
-    auto Future = IncrementalRateModel.Value->Model(
-    );
+    auto Future = IncrementalRateModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzIncrementalRateModelToFGs2ExchangeIncrementalRateModelValue(Result);

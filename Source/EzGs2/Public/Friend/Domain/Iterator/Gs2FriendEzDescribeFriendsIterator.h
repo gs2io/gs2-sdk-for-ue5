@@ -33,7 +33,7 @@ namespace Gs2::UE5::Friend::Domain::Iterator
         Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::FGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
-        TOptional<bool> WithProfile;
+        bool WithProfile;
 
 	public:
 
@@ -41,7 +41,7 @@ namespace Gs2::UE5::Friend::Domain::Iterator
             Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::FGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection,
-			TOptional<bool> WithProfile = TOptional<bool>()
+            bool WithProfile
         ) :
             It(
                 Domain->Friends(
@@ -55,13 +55,23 @@ namespace Gs2::UE5::Friend::Domain::Iterator
         {
         }
 
+		FEzDescribeFriendsIterator(
+			const FEzDescribeFriendsIterator& From
+		) :
+			It(From.It),
+			Domain(From.Domain),
+			GameSession(From.GameSession),
+			Connection(From.Connection),
+            WithProfile(From.WithProfile)
+		{
+		}
+
 		class EZGS2_API FIterator
 		{
 		    friend class FEzDescribeFriendsIterator;
 
 			Gs2::Friend::Domain::Iterator::FDescribeFriendsIterator::FIterator DomainIterator;
 			Gs2::UE5::Friend::Model::FEzFriendUserPtr CurrentValue;
-
         	static Gs2::UE5::Friend::Model::FEzFriendUserPtr ConvertCurrent(
         		Gs2::Friend::Domain::Iterator::FDescribeFriendsIterator::FIterator& DomainIterator
         	)
@@ -118,7 +128,6 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 				CurrentValue = ConvertCurrent(DomainIterator);
 				return *this;
 			}
-
             Gs2::UE5::Friend::Model::FEzFriendUserPtr& Current()
             {
                 return CurrentValue;

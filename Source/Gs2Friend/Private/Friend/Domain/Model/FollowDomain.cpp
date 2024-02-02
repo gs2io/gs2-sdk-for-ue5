@@ -28,6 +28,8 @@
 #include "Friend/Domain/Model/UserAccessToken.h"
 #include "Friend/Domain/Model/Profile.h"
 #include "Friend/Domain/Model/ProfileAccessToken.h"
+#include "Friend/Domain/Model/Follow.h"
+#include "Friend/Domain/Model/FollowAccessToken.h"
 #include "Friend/Domain/Model/Friend.h"
 #include "Friend/Domain/Model/FriendAccessToken.h"
 #include "Friend/Domain/Model/BlackList.h"
@@ -86,6 +88,64 @@ namespace Gs2::Friend::Domain::Model
         ParentKey(From.ParentKey)
     {
 
+    }
+
+    Gs2::Friend::Domain::Iterator::FDescribeFollowsByUserIdIteratorPtr FFollowDomain::Follows(
+    ) const
+    {
+        return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeFollowsByUserIdIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName,
+            UserId,
+            WithProfile
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FFollowDomain::SubscribeFollows(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Friend::Model::FFollowUser::TypeName,
+            Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                WithProfile.IsSet() ? *WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
+                FString("FollowUser:") + (WithProfile.IsSet() ? *WithProfile == true ? "True" : "False" : "False")
+            ),
+            Callback
+        );
+    }
+
+    void FFollowDomain::UnsubscribeFollows(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Friend::Model::FFollowUser::TypeName,
+            Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                WithProfile.IsSet() ? *WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
+                FString("FollowUser:") + (WithProfile.IsSet() ? *WithProfile == true ? "True" : "False" : "False")
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserDomain> FFollowDomain::FollowUser(
+        const FString TargetUserId
+    )
+    {
+        return MakeShared<Gs2::Friend::Domain::Model::FFollowUserDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId,
+            WithProfile,
+            TargetUserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(TargetUserId)
+        );
     }
 
     FString FFollowDomain::CreateCacheParentKey(

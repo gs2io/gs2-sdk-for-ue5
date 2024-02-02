@@ -44,7 +44,7 @@ public:
 
     UGs2FriendFollowAsyncFunction(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::FollowUser::Action::Follow", Category="Game Server Services|GS2-Friend|Namespace|User|FollowUser|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
+	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::FollowUser::Action::Follow", Category="Game Server Services|GS2-Friend|Namespace|User|Follow|FollowUser|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2FriendFollowAsyncFunction* Follow(
         UObject* WorldContextObject,
         FGs2FriendOwnFollowUser FollowUser

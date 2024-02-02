@@ -28,18 +28,18 @@ UGs2RankingPutScoreAsyncFunction::UGs2RankingPutScoreAsyncFunction(
 
 UGs2RankingPutScoreAsyncFunction* UGs2RankingPutScoreAsyncFunction::PutScore(
     UObject* WorldContextObject,
-    FGs2RankingOwnRanking Ranking,
+    FGs2RankingOwnRankingCategory RankingCategory,
     int64 Score,
     FString Metadata
 )
 {
     UGs2RankingPutScoreAsyncFunction* Action = NewObject<UGs2RankingPutScoreAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (Ranking.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingPutScoreAsyncFunction::PutScore] Ranking parameter specification is missing."))
+    if (RankingCategory.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingPutScoreAsyncFunction::PutScore] RankingCategory parameter specification is missing."))
         return Action;
     }
-    Action->Ranking = Ranking;
+    Action->RankingCategory = RankingCategory;
     Action->Score = Score;
     Action->Metadata = Metadata;
     return Action;
@@ -47,12 +47,12 @@ UGs2RankingPutScoreAsyncFunction* UGs2RankingPutScoreAsyncFunction::PutScore(
 
 void UGs2RankingPutScoreAsyncFunction::Activate()
 {
-    if (Ranking.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingPutScoreAsyncFunction] Ranking parameter specification is missing."))
+    if (RankingCategory.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2RankingPutScoreAsyncFunction] RankingCategory parameter specification is missing."))
         return;
     }
 
-    auto Future = Ranking.Value->PutScore(
+    auto Future = RankingCategory.Value->PutScore(
         Score,
         Metadata
     );

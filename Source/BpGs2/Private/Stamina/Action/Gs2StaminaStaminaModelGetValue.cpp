@@ -41,8 +41,7 @@ UGs2StaminaStaminaModelGetValueAsyncFunction* UGs2StaminaStaminaModelGetValueAsy
 
 void UGs2StaminaStaminaModelGetValueAsyncFunction::Activate()
 {
-    auto Future = StaminaModel.Value->Model(
-    );
+    auto Future = StaminaModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzStaminaModelToFGs2StaminaStaminaModelValue(Result);

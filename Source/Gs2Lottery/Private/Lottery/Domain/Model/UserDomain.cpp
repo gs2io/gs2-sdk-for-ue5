@@ -80,13 +80,15 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FLotteryDomain> FUserDomain::Lottery(
+        const FString LotteryName
     )
     {
         return MakeShared<Gs2::Lottery::Domain::Model::FLotteryDomain>(
             Gs2,
             Service,
             NamespaceName,
-            UserId
+            UserId,
+            LotteryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(LotteryName)
         );
     }
 
@@ -141,49 +143,6 @@ namespace Gs2::Lottery::Domain::Model
             NamespaceName,
             UserId,
             PrizeTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(PrizeTableName)
-        );
-    }
-
-    Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIteratorPtr FUserDomain::Probabilities(
-        const FString LotteryName
-    ) const
-    {
-        return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesByUserIdIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            LotteryName,
-            UserId
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeProbabilities(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Lottery::Model::FProbability::TypeName,
-            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "Probability"
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribeProbabilities(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Lottery::Model::FProbability::TypeName,
-            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "Probability"
-            ),
-            CallbackID
         );
     }
 

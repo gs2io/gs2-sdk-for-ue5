@@ -113,6 +113,16 @@ namespace Gs2::UE5::Friend::Domain::Model
         );
     }
 
+    Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIteratorPtr FEzUserGameSessionDomain::BlackLists(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
     Gs2::UE5::Friend::Domain::Model::FEzBlackListGameSessionDomainPtr FEzUserGameSessionDomain::BlackList(
     ) const
     {
@@ -124,48 +134,12 @@ namespace Gs2::UE5::Friend::Domain::Model
         );
     }
 
-    Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFollowsIteratorPtr FEzUserGameSessionDomain::Follows(
-          const bool WithProfile
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFollowsIterator>(
-            Domain,
-            GameSession,
-            ConnectionValue,
-            WithProfile
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeFollows(
-        TFunction<void()> Callback,
-        bool WithProfile
-    )
-    {
-        return Domain->SubscribeFollows(
-            Callback,
-            WithProfile
-        );
-    }
-
-    void FEzUserGameSessionDomain::UnsubscribeFollows(
-        Gs2::Core::Domain::CallbackID CallbackId,
-        bool WithProfile
-    )
-    {
-        Domain->UnsubscribeFollows(
-            CallbackId,
-            WithProfile
-        );
-    }
-
-    Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomainPtr FEzUserGameSessionDomain::FollowUser(
-        const FString TargetUserId,
+    Gs2::UE5::Friend::Domain::Model::FEzFollowGameSessionDomainPtr FEzUserGameSessionDomain::Follow(
         const bool WithProfile
     ) const
     {
-        return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>(
-            Domain->FollowUser(
-                TargetUserId,
+        return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFollowGameSessionDomain>(
+            Domain->Follow(
                 WithProfile
             ),
             GameSession,
@@ -181,28 +155,6 @@ namespace Gs2::UE5::Friend::Domain::Model
             Domain,
             GameSession,
             ConnectionValue,
-            WithProfile
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeFriends(
-        TFunction<void()> Callback,
-        bool WithProfile
-    )
-    {
-        return Domain->SubscribeFriends(
-            Callback,
-            WithProfile
-        );
-    }
-
-    void FEzUserGameSessionDomain::UnsubscribeFriends(
-        Gs2::Core::Domain::CallbackID CallbackId,
-        bool WithProfile
-    )
-    {
-        Domain->UnsubscribeFriends(
-            CallbackId,
             WithProfile
         );
     }
