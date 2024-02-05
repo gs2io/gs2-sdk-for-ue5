@@ -289,6 +289,15 @@ namespace Gs2::Idle
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetMaximumIdleMinutesByUserIdTask>> FGs2IdleWebSocketClient::SetMaximumIdleMinutesByUserId(
+        const Request::FSetMaximumIdleMinutesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetMaximumIdleMinutesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FIncreaseMaximumIdleMinutesByStampSheetTask>> FGs2IdleWebSocketClient::IncreaseMaximumIdleMinutesByStampSheet(
         const Request::FIncreaseMaximumIdleMinutesByStampSheetRequestPtr Request) const
     {
@@ -302,6 +311,15 @@ namespace Gs2::Idle
         const Request::FDecreaseMaximumIdleMinutesByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDecreaseMaximumIdleMinutesByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetMaximumIdleMinutesByStampSheetTask>> FGs2IdleWebSocketClient::SetMaximumIdleMinutesByStampSheet(
+        const Request::FSetMaximumIdleMinutesByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetMaximumIdleMinutesByStampSheetTask>>(
             Session,
             Request
         );

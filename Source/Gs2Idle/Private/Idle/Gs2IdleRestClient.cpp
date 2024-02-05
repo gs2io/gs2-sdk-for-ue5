@@ -289,6 +289,15 @@ namespace Gs2::Idle
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSetMaximumIdleMinutesByUserIdTask>> FGs2IdleRestClient::SetMaximumIdleMinutesByUserId(
+        const Request::FSetMaximumIdleMinutesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetMaximumIdleMinutesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FIncreaseMaximumIdleMinutesByStampSheetTask>> FGs2IdleRestClient::IncreaseMaximumIdleMinutesByStampSheet(
         const Request::FIncreaseMaximumIdleMinutesByStampSheetRequestPtr Request) const
     {
@@ -302,6 +311,15 @@ namespace Gs2::Idle
         const Request::FDecreaseMaximumIdleMinutesByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDecreaseMaximumIdleMinutesByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSetMaximumIdleMinutesByStampSheetTask>> FGs2IdleRestClient::SetMaximumIdleMinutesByStampSheet(
+        const Request::FSetMaximumIdleMinutesByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetMaximumIdleMinutesByStampSheetTask>>(
             Session,
             Request
         );

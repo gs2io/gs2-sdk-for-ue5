@@ -222,6 +222,32 @@ namespace Gs2::Idle::Domain::Model
             Request::FDecreaseMaximumIdleMinutesByUserIdRequestPtr Request
         );
 
+        class GS2IDLE_API FSetMaximumIdleMinutesTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FStatusDomain>,
+            public TSharedFromThis<FSetMaximumIdleMinutesTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const Request::FSetMaximumIdleMinutesByUserIdRequestPtr Request;
+        public:
+            explicit FSetMaximumIdleMinutesTask(
+                const TSharedPtr<FStatusDomain>& Self,
+                const Request::FSetMaximumIdleMinutesByUserIdRequestPtr Request
+            );
+
+            FSetMaximumIdleMinutesTask(
+                const FSetMaximumIdleMinutesTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FStatusDomain>> Result
+            ) override;
+        };
+        friend FSetMaximumIdleMinutesTask;
+
+        TSharedPtr<FAsyncTask<FSetMaximumIdleMinutesTask>> SetMaximumIdleMinutes(
+            Request::FSetMaximumIdleMinutesByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

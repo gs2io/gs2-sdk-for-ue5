@@ -525,6 +525,41 @@ namespace Gs2::Idle::Domain
                 );
             }
         }
+        if (Method == "SetMaximumIdleMinutesByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Idle::Request::FSetMaximumIdleMinutesByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Idle::Result::FSetMaximumIdleMinutesByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCategoryName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Idle::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2IdleDomain::UpdateCacheFromStampTask(
@@ -597,6 +632,49 @@ namespace Gs2::Idle::Domain
             }
             const auto RequestModel = Gs2::Idle::Request::FIncreaseMaximumIdleMinutesByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Idle::Result::FIncreaseMaximumIdleMinutesByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Status"
+                );
+                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetCategoryName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Idle::Model::FStatus::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "set_maximum_idle_minutes_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Idle::Request::FSetMaximumIdleMinutesByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Idle::Result::FSetMaximumIdleMinutesByUserIdResult::FromJson(ResultModelJson);
             
             if (ResultModel->GetItem() != nullptr)
             {
