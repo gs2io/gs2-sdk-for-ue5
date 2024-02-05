@@ -25,6 +25,7 @@ namespace Gs2::Formation::Model
         TransactionSettingValue(nullptr),
         UpdateMoldScriptValue(nullptr),
         UpdateFormScriptValue(nullptr),
+        UpdatePropertyFormScriptValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -41,6 +42,7 @@ namespace Gs2::Formation::Model
         TransactionSettingValue(From.TransactionSettingValue),
         UpdateMoldScriptValue(From.UpdateMoldScriptValue),
         UpdateFormScriptValue(From.UpdateFormScriptValue),
+        UpdatePropertyFormScriptValue(From.UpdatePropertyFormScriptValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -93,6 +95,14 @@ namespace Gs2::Formation::Model
     )
     {
         this->UpdateFormScriptValue = UpdateFormScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithUpdatePropertyFormScript(
+        const TSharedPtr<FScriptSetting> UpdatePropertyFormScript
+    )
+    {
+        this->UpdatePropertyFormScriptValue = UpdatePropertyFormScript;
         return SharedThis(this);
     }
 
@@ -150,6 +160,10 @@ namespace Gs2::Formation::Model
     TSharedPtr<FScriptSetting> FNamespace::GetUpdateFormScript() const
     {
         return UpdateFormScriptValue;
+    }
+    TSharedPtr<FScriptSetting> FNamespace::GetUpdatePropertyFormScript() const
+    {
+        return UpdatePropertyFormScriptValue;
     }
     TSharedPtr<FLogSetting> FNamespace::GetLogSetting() const
     {
@@ -285,6 +299,14 @@ namespace Gs2::Formation::Model
                     }
                     return Model::FScriptSetting::FromJson(Data->GetObjectField("updateFormScript"));
                  }() : nullptr)
+            ->WithUpdatePropertyFormScript(Data->HasField("updatePropertyFormScript") ? [Data]() -> Model::FScriptSettingPtr
+                {
+                    if (Data->HasTypedField<EJson::Null>("updatePropertyFormScript"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FScriptSetting::FromJson(Data->GetObjectField("updatePropertyFormScript"));
+                 }() : nullptr)
             ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -348,6 +370,10 @@ namespace Gs2::Formation::Model
         if (UpdateFormScriptValue != nullptr && UpdateFormScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("updateFormScript", UpdateFormScriptValue->ToJson());
+        }
+        if (UpdatePropertyFormScriptValue != nullptr && UpdatePropertyFormScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("updatePropertyFormScript", UpdatePropertyFormScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

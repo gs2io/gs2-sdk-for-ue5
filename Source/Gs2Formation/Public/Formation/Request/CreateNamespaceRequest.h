@@ -33,6 +33,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FScriptSetting> UpdateMoldScriptValue;
         TSharedPtr<Model::FScriptSetting> UpdateFormScriptValue;
+        TSharedPtr<Model::FScriptSetting> UpdatePropertyFormScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -49,6 +50,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithUpdateMoldScript(const TSharedPtr<Model::FScriptSetting> UpdateMoldScript);
         TSharedPtr<FCreateNamespaceRequest> WithUpdateFormScript(const TSharedPtr<Model::FScriptSetting> UpdateFormScript);
+        TSharedPtr<FCreateNamespaceRequest> WithUpdatePropertyFormScript(const TSharedPtr<Model::FScriptSetting> UpdatePropertyFormScript);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -57,6 +59,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FScriptSetting> GetUpdateMoldScript() const;
         TSharedPtr<Model::FScriptSetting> GetUpdateFormScript() const;
+        TSharedPtr<Model::FScriptSetting> GetUpdatePropertyFormScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

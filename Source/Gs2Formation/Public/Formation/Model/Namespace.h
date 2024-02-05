@@ -32,6 +32,7 @@ namespace Gs2::Formation::Model
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
         TSharedPtr<FScriptSetting> UpdateMoldScriptValue;
         TSharedPtr<FScriptSetting> UpdateFormScriptValue;
+        TSharedPtr<FScriptSetting> UpdatePropertyFormScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -50,6 +51,7 @@ namespace Gs2::Formation::Model
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
         TSharedPtr<FNamespace> WithUpdateMoldScript(const TSharedPtr<FScriptSetting> UpdateMoldScript);
         TSharedPtr<FNamespace> WithUpdateFormScript(const TSharedPtr<FScriptSetting> UpdateFormScript);
+        TSharedPtr<FNamespace> WithUpdatePropertyFormScript(const TSharedPtr<FScriptSetting> UpdatePropertyFormScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -61,6 +63,7 @@ namespace Gs2::Formation::Model
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<FScriptSetting> GetUpdateMoldScript() const;
         TSharedPtr<FScriptSetting> GetUpdateFormScript() const;
+        TSharedPtr<FScriptSetting> GetUpdatePropertyFormScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

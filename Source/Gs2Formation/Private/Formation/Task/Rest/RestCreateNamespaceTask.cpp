@@ -98,6 +98,10 @@ namespace Gs2::Formation::Task::Rest
             {
                 JsonRootObject->SetObjectField("updateFormScript", this->Request->GetUpdateFormScript()->ToJson());
             }
+            if (this->Request->GetUpdatePropertyFormScript() != nullptr && this->Request->GetUpdatePropertyFormScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("updatePropertyFormScript", this->Request->GetUpdatePropertyFormScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
