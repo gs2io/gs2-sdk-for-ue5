@@ -41,8 +41,7 @@ UGs2ScheduleEventGetValueAsyncFunction* UGs2ScheduleEventGetValueAsyncFunction::
 
 void UGs2ScheduleEventGetValueAsyncFunction::Activate()
 {
-    auto Future = Event.Value->Model(
-    );
+    auto Future = Event.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzEventToFGs2ScheduleEventValue(Result);

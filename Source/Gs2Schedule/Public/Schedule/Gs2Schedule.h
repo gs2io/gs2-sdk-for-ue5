@@ -224,6 +224,24 @@
 #include "Task/Rest/GetRawEventTask.h"
 #include "Task/WebSocket/GetRawEventTask.h"
 
+// VerifyEvent
+#include "Request/VerifyEventRequest.h"
+#include "Result/VerifyEventResult.h"
+#include "Task/Rest/VerifyEventTask.h"
+#include "Task/WebSocket/VerifyEventTask.h"
+
+// VerifyEventByUserId
+#include "Request/VerifyEventByUserIdRequest.h"
+#include "Result/VerifyEventByUserIdResult.h"
+#include "Task/Rest/VerifyEventByUserIdTask.h"
+#include "Task/WebSocket/VerifyEventByUserIdTask.h"
+
+// VerifyEventByStampTask
+#include "Request/VerifyEventByStampTaskRequest.h"
+#include "Result/VerifyEventByStampTaskResult.h"
+#include "Task/Rest/VerifyEventByStampTaskTask.h"
+#include "Task/WebSocket/VerifyEventByStampTaskTask.h"
+
 // ExportMaster
 #include "Request/ExportMasterRequest.h"
 #include "Result/ExportMasterResult.h"

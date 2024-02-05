@@ -84,6 +84,12 @@
 #include "Task/Rest/GetEventByUserIdTask.h"
 #include "Request/GetRawEventRequest.h"
 #include "Task/Rest/GetRawEventTask.h"
+#include "Request/VerifyEventRequest.h"
+#include "Task/Rest/VerifyEventTask.h"
+#include "Request/VerifyEventByUserIdRequest.h"
+#include "Task/Rest/VerifyEventByUserIdTask.h"
+#include "Request/VerifyEventByStampTaskRequest.h"
+#include "Task/Rest/VerifyEventByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentEventMasterRequest.h"
@@ -234,6 +240,18 @@ namespace Gs2::Schedule
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetRawEventTask>> GetRawEvent(
             const Request::FGetRawEventRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyEventTask>> VerifyEvent(
+            const Request::FVerifyEventRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyEventByUserIdTask>> VerifyEventByUserId(
+            const Request::FVerifyEventByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyEventByStampTaskTask>> VerifyEventByStampTask(
+            const Request::FVerifyEventByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

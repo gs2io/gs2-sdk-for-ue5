@@ -122,6 +122,32 @@ namespace Gs2::Schedule::Domain::Model
             Request::FGetEventByUserIdRequestPtr Request
         );
 
+        class GS2SCHEDULE_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FEventDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FEventDomain> Self;
+            const Request::FVerifyEventByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FEventDomain>& Self,
+                const Request::FVerifyEventByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Schedule::Domain::Model::FEventDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyEventByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

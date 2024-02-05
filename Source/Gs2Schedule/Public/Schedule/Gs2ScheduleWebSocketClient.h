@@ -84,6 +84,12 @@
 #include "Task/WebSocket/GetEventByUserIdTask.h"
 #include "Request/GetRawEventRequest.h"
 #include "Task/WebSocket/GetRawEventTask.h"
+#include "Request/VerifyEventRequest.h"
+#include "Task/WebSocket/VerifyEventTask.h"
+#include "Request/VerifyEventByUserIdRequest.h"
+#include "Task/WebSocket/VerifyEventByUserIdTask.h"
+#include "Request/VerifyEventByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyEventByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentEventMasterRequest.h"
@@ -234,6 +240,18 @@ namespace Gs2::Schedule
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetRawEventTask>> GetRawEvent(
             const Request::FGetRawEventRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEventTask>> VerifyEvent(
+            const Request::FVerifyEventRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEventByUserIdTask>> VerifyEventByUserId(
+            const Request::FVerifyEventByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEventByStampTaskTask>> VerifyEventByStampTask(
+            const Request::FVerifyEventByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

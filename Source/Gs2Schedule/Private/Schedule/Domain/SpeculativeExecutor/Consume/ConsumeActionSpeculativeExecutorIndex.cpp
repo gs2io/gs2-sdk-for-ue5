@@ -24,6 +24,7 @@
 
 #include "Schedule/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
 #include "Schedule/Domain/SpeculativeExecutor/Consume/DeleteTriggerByUserIdSpeculativeExecutor.h"
+#include "Schedule/Domain/SpeculativeExecutor/Consume/VerifyEventByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -74,6 +75,28 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
             auto Request = Request::FDeleteTriggerByUserIdRequest::FromJson(RequestModelJson);
             Request = FDeleteTriggerByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDeleteTriggerByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FVerifyEventByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FVerifyEventByUserIdRequest::FromJson(RequestModelJson);
+            Request = FVerifyEventByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FVerifyEventByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

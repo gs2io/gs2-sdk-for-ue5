@@ -316,6 +316,33 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEventTask>> FGs2ScheduleWebSocketClient::VerifyEvent(
+        const Request::FVerifyEventRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyEventTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEventByUserIdTask>> FGs2ScheduleWebSocketClient::VerifyEventByUserId(
+        const Request::FVerifyEventByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyEventByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEventByStampTaskTask>> FGs2ScheduleWebSocketClient::VerifyEventByStampTask(
+        const Request::FVerifyEventByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyEventByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> FGs2ScheduleWebSocketClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {

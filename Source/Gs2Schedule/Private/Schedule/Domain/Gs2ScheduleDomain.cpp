@@ -565,6 +565,23 @@ namespace Gs2::Schedule::Domain
                 Gs2->Cache->Delete(Gs2::Schedule::Model::FTrigger::TypeName, ParentKey, Key);
             }
         }
+        if (Method == "VerifyEventByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Schedule::Request::FVerifyEventByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Schedule::Result::FVerifyEventByUserIdResult::FromJson(ResultModelJson);
+            
+        }
     }
 
     void FGs2ScheduleDomain::UpdateCacheFromJobResult(

@@ -41,8 +41,7 @@ UGs2ScheduleTriggerGetValueAsyncFunction* UGs2ScheduleTriggerGetValueAsyncFuncti
 
 void UGs2ScheduleTriggerGetValueAsyncFunction::Activate()
 {
-    auto Future = Trigger.Value->Model(
-    );
+    auto Future = Trigger.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzTriggerToFGs2ScheduleTriggerValue(Result);

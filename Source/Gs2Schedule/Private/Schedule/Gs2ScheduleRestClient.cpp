@@ -316,6 +316,33 @@ namespace Gs2::Schedule
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyEventTask>> FGs2ScheduleRestClient::VerifyEvent(
+        const Request::FVerifyEventRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyEventTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyEventByUserIdTask>> FGs2ScheduleRestClient::VerifyEventByUserId(
+        const Request::FVerifyEventByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyEventByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyEventByStampTaskTask>> FGs2ScheduleRestClient::VerifyEventByStampTask(
+        const Request::FVerifyEventByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyEventByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> FGs2ScheduleRestClient::ExportMaster(
         const Request::FExportMasterRequestPtr Request) const
     {
