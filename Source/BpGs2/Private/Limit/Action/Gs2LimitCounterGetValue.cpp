@@ -41,8 +41,7 @@ UGs2LimitCounterGetValueAsyncFunction* UGs2LimitCounterGetValueAsyncFunction::Co
 
 void UGs2LimitCounterGetValueAsyncFunction::Activate()
 {
-    auto Future = Counter.Value->Model(
-    );
+    auto Future = Counter.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzCounterToFGs2LimitCounterValue(Result);

@@ -41,8 +41,7 @@ UGs2GradeStatusGetValueAsyncFunction* UGs2GradeStatusGetValueAsyncFunction::Stat
 
 void UGs2GradeStatusGetValueAsyncFunction::Activate()
 {
-    auto Future = Status.Value->Model(
-    );
+    auto Future = Status.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzStatusToFGs2GradeStatusValue(Result);

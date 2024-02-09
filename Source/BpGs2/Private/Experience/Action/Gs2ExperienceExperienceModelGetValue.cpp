@@ -41,8 +41,7 @@ UGs2ExperienceExperienceModelGetValueAsyncFunction* UGs2ExperienceExperienceMode
 
 void UGs2ExperienceExperienceModelGetValueAsyncFunction::Activate()
 {
-    auto Future = ExperienceModel.Value->Model(
-    );
+    auto Future = ExperienceModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzExperienceModelToFGs2ExperienceExperienceModelValue(Result);

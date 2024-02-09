@@ -41,8 +41,7 @@ UGs2LoginRewardReceiveStatusGetValueAsyncFunction* UGs2LoginRewardReceiveStatusG
 
 void UGs2LoginRewardReceiveStatusGetValueAsyncFunction::Activate()
 {
-    auto Future = ReceiveStatus.Value->Model(
-    );
+    auto Future = ReceiveStatus.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzReceiveStatusToFGs2LoginRewardReceiveStatusValue(Result);

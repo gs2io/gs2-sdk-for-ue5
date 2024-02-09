@@ -41,8 +41,7 @@ UGs2InboxMessageGetValueAsyncFunction* UGs2InboxMessageGetValueAsyncFunction::Me
 
 void UGs2InboxMessageGetValueAsyncFunction::Activate()
 {
-    auto Future = Message.Value->Model(
-    );
+    auto Future = Message.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzMessageToFGs2InboxMessageValue(Result);

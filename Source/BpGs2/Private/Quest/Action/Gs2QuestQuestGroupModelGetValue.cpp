@@ -41,8 +41,7 @@ UGs2QuestQuestGroupModelGetValueAsyncFunction* UGs2QuestQuestGroupModelGetValueA
 
 void UGs2QuestQuestGroupModelGetValueAsyncFunction::Activate()
 {
-    auto Future = QuestGroupModel.Value->Model(
-    );
+    auto Future = QuestGroupModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzQuestGroupModelToFGs2QuestQuestGroupModelValue(Result);

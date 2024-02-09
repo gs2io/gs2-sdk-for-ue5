@@ -41,8 +41,7 @@ UGs2MegaFieldAreaModelGetValueAsyncFunction* UGs2MegaFieldAreaModelGetValueAsync
 
 void UGs2MegaFieldAreaModelGetValueAsyncFunction::Activate()
 {
-    auto Future = AreaModel.Value->Model(
-    );
+    auto Future = AreaModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzAreaModelToFGs2MegaFieldAreaModelValue(Result);

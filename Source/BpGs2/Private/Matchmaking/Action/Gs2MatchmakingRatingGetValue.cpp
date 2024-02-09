@@ -41,8 +41,7 @@ UGs2MatchmakingRatingGetValueAsyncFunction* UGs2MatchmakingRatingGetValueAsyncFu
 
 void UGs2MatchmakingRatingGetValueAsyncFunction::Activate()
 {
-    auto Future = Rating.Value->Model(
-    );
+    auto Future = Rating.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzRatingToFGs2MatchmakingRatingValue(Result);

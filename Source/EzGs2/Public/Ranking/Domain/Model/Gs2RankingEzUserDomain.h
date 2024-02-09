@@ -22,6 +22,7 @@
 #include "Ranking/Model/Gs2RankingEzScore.h"
 #include "Ranking/Model/Gs2RankingEzRanking.h"
 #include "Ranking/Model/Gs2RankingEzSubscribeUser.h"
+#include "Gs2RankingEzRankingCategoryDomain.h"
 #include "Gs2RankingEzScoreDomain.h"
 #include "Gs2RankingEzUserDomain.h"
 #include "Gs2RankingEzUserDomain.h"
@@ -47,6 +48,11 @@ namespace Gs2::UE5::Ranking::Domain::Model
             Gs2::Ranking::Domain::Model::FUserDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryDomainPtr RankingCategory(
+            const FString CategoryName,
+            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
+        ) const;
 
         Gs2::UE5::Ranking::Domain::Model::FEzScoreDomainPtr Score(
             const FString CategoryName,

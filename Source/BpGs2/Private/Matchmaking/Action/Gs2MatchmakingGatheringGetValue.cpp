@@ -41,8 +41,7 @@ UGs2MatchmakingGatheringGetValueAsyncFunction* UGs2MatchmakingGatheringGetValueA
 
 void UGs2MatchmakingGatheringGetValueAsyncFunction::Activate()
 {
-    auto Future = Gathering.Value->Model(
-    );
+    auto Future = Gathering.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzGatheringToFGs2MatchmakingGatheringValue(Result);

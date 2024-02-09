@@ -41,8 +41,7 @@ UGs2MegaFieldLayerModelGetValueAsyncFunction* UGs2MegaFieldLayerModelGetValueAsy
 
 void UGs2MegaFieldLayerModelGetValueAsyncFunction::Activate()
 {
-    auto Future = LayerModel.Value->Model(
-    );
+    auto Future = LayerModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzLayerModelToFGs2MegaFieldLayerModelValue(Result);

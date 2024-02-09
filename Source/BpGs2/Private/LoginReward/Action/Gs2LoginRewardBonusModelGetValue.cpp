@@ -41,8 +41,7 @@ UGs2LoginRewardBonusModelGetValueAsyncFunction* UGs2LoginRewardBonusModelGetValu
 
 void UGs2LoginRewardBonusModelGetValueAsyncFunction::Activate()
 {
-    auto Future = BonusModel.Value->Model(
-    );
+    auto Future = BonusModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzBonusModelToFGs2LoginRewardBonusModelValue(Result);

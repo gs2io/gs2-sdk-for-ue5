@@ -20,6 +20,7 @@ namespace Gs2::Idle::Result
 {
     FReceiveResult::FReceiveResult():
         ItemsValue(nullptr),
+        StatusValue(nullptr),
         TransactionIdValue(TOptional<FString>()),
         StampSheetValue(TOptional<FString>()),
         StampSheetEncryptionKeyIdValue(TOptional<FString>()),
@@ -31,6 +32,7 @@ namespace Gs2::Idle::Result
         const FReceiveResult& From
     ):
         ItemsValue(From.ItemsValue),
+        StatusValue(From.StatusValue),
         TransactionIdValue(From.TransactionIdValue),
         StampSheetValue(From.StampSheetValue),
         StampSheetEncryptionKeyIdValue(From.StampSheetEncryptionKeyIdValue),
@@ -43,6 +45,14 @@ namespace Gs2::Idle::Result
     )
     {
         this->ItemsValue = Items;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FReceiveResult> FReceiveResult::WithStatus(
+        const TSharedPtr<Model::FStatus> Status
+    )
+    {
+        this->StatusValue = Status;
         return SharedThis(this);
     }
 
@@ -85,6 +95,15 @@ namespace Gs2::Idle::Result
             return nullptr;
         }
         return ItemsValue;
+    }
+
+    TSharedPtr<Model::FStatus> FReceiveResult::GetStatus() const
+    {
+        if (!StatusValue.IsValid())
+        {
+            return nullptr;
+        }
+        return StatusValue;
     }
 
     TOptional<FString> FReceiveResult::GetTransactionId() const
@@ -134,6 +153,14 @@ namespace Gs2::Idle::Result
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
+            ->WithStatus(Data->HasField("status") ? [Data]() -> Model::FStatusPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("status"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FStatus::FromJson(Data->GetObjectField("status"));
+                 }() : nullptr)
             ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -183,6 +210,10 @@ namespace Gs2::Idle::Result
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("items", v);
+        }
+        if (StatusValue != nullptr && StatusValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("status", StatusValue->ToJson());
         }
         if (TransactionIdValue.IsSet())
         {

@@ -41,8 +41,7 @@ UGs2DictionaryEntryModelGetValueAsyncFunction* UGs2DictionaryEntryModelGetValueA
 
 void UGs2DictionaryEntryModelGetValueAsyncFunction::Activate()
 {
-    auto Future = EntryModel.Value->Model(
-    );
+    auto Future = EntryModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzEntryModelToFGs2DictionaryEntryModelValue(Result);

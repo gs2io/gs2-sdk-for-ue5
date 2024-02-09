@@ -41,8 +41,7 @@ UGs2EnhanceRateModelGetValueAsyncFunction* UGs2EnhanceRateModelGetValueAsyncFunc
 
 void UGs2EnhanceRateModelGetValueAsyncFunction::Activate()
 {
-    auto Future = RateModel.Value->Model(
-    );
+    auto Future = RateModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzRateModelToFGs2EnhanceRateModelValue(Result);

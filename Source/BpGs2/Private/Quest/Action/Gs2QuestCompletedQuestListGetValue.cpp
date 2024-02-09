@@ -41,8 +41,7 @@ UGs2QuestCompletedQuestListGetValueAsyncFunction* UGs2QuestCompletedQuestListGet
 
 void UGs2QuestCompletedQuestListGetValueAsyncFunction::Activate()
 {
-    auto Future = CompletedQuestList.Value->Model(
-    );
+    auto Future = CompletedQuestList.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzCompletedQuestListToFGs2QuestCompletedQuestListValue(Result);

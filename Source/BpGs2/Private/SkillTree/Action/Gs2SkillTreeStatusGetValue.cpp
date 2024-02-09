@@ -41,8 +41,7 @@ UGs2SkillTreeStatusGetValueAsyncFunction* UGs2SkillTreeStatusGetValueAsyncFuncti
 
 void UGs2SkillTreeStatusGetValueAsyncFunction::Activate()
 {
-    auto Future = Status.Value->Model(
-    );
+    auto Future = Status.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzStatusToFGs2SkillTreeStatusValue(Result);

@@ -41,8 +41,7 @@ UGs2SerialKeyCampaignModelGetValueAsyncFunction* UGs2SerialKeyCampaignModelGetVa
 
 void UGs2SerialKeyCampaignModelGetValueAsyncFunction::Activate()
 {
-    auto Future = CampaignModel.Value->Model(
-    );
+    auto Future = CampaignModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzCampaignModelToFGs2SerialKeyCampaignModelValue(Result);

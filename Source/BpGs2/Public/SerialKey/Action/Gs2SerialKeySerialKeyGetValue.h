@@ -18,7 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "SerialKey/Model/Gs2SerialKeySerialKey.h"
-#include "SerialKey/Model/Gs2SerialKeyUser.h"
+#include "SerialKey/Model/Gs2SerialKeySerialKey.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2SerialKeySerialKeyGetValue.generated.h"
@@ -30,7 +30,7 @@ class BPGS2_API UGs2SerialKeySerialKeyGetValueAsyncFunction : public UBlueprintA
 {
     GENERATED_BODY()
 
-    FGs2SerialKeyUser User;
+    FGs2SerialKeySerialKey SerialKey;
 
 public:
     FString Code;
@@ -46,7 +46,7 @@ public:
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::SerialKey::Fetch::GetValueOfSerialKey", Category="Game Server Services|GS2-SerialKey|Namespace|User|SerialKey|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2SerialKeySerialKeyGetValueAsyncFunction* SerialKeyGetValue(
         UObject* WorldContextObject,
-        FGs2SerialKeyUser User
+        FGs2SerialKeySerialKey SerialKey
     );
 
     virtual void Activate() override;

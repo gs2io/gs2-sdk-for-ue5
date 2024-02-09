@@ -41,8 +41,7 @@ UGs2MatchmakingBallotGetValueAsyncFunction* UGs2MatchmakingBallotGetValueAsyncFu
 
 void UGs2MatchmakingBallotGetValueAsyncFunction::Activate()
 {
-    auto Future = Ballot.Value->Model(
-    );
+    auto Future = Ballot.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzBallotToFGs2MatchmakingBallotValue(Result);

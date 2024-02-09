@@ -41,8 +41,7 @@ UGs2LimitLimitModelGetValueAsyncFunction* UGs2LimitLimitModelGetValueAsyncFuncti
 
 void UGs2LimitLimitModelGetValueAsyncFunction::Activate()
 {
-    auto Future = LimitModel.Value->Model(
-    );
+    auto Future = LimitModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzLimitModelToFGs2LimitLimitModelValue(Result);

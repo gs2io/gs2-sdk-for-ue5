@@ -18,12 +18,14 @@
 
 #include "CoreMinimal.h"
 #include "../Model/AcquireAction.h"
+#include "../Model/Status.h"
 
 namespace Gs2::Idle::Result
 {
     class GS2IDLE_API FReceiveByUserIdResult final : public TSharedFromThis<FReceiveByUserIdResult>
     {
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> ItemsValue;
+        TSharedPtr<Model::FStatus> StatusValue;
         TOptional<FString> TransactionIdValue;
         TOptional<FString> StampSheetValue;
         TOptional<FString> StampSheetEncryptionKeyIdValue;
@@ -38,12 +40,14 @@ namespace Gs2::Idle::Result
         ~FReceiveByUserIdResult() = default;
 
         TSharedPtr<FReceiveByUserIdResult> WithItems(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> Items);
+        TSharedPtr<FReceiveByUserIdResult> WithStatus(const TSharedPtr<Model::FStatus> Status);
         TSharedPtr<FReceiveByUserIdResult> WithTransactionId(const TOptional<FString> TransactionId);
         TSharedPtr<FReceiveByUserIdResult> WithStampSheet(const TOptional<FString> StampSheet);
         TSharedPtr<FReceiveByUserIdResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
         TSharedPtr<FReceiveByUserIdResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
 
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetItems() const;
+        TSharedPtr<Model::FStatus> GetStatus() const;
         TOptional<FString> GetTransactionId() const;
         TOptional<FString> GetStampSheet() const;
         TOptional<FString> GetStampSheetEncryptionKeyId() const;

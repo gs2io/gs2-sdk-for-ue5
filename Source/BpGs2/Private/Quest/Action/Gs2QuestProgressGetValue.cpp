@@ -41,8 +41,7 @@ UGs2QuestProgressGetValueAsyncFunction* UGs2QuestProgressGetValueAsyncFunction::
 
 void UGs2QuestProgressGetValueAsyncFunction::Activate()
 {
-    auto Future = Progress.Value->Model(
-    );
+    auto Future = Progress.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzProgressToFGs2QuestProgressValue(Result);

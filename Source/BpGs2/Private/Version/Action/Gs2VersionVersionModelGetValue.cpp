@@ -41,8 +41,7 @@ UGs2VersionVersionModelGetValueAsyncFunction* UGs2VersionVersionModelGetValueAsy
 
 void UGs2VersionVersionModelGetValueAsyncFunction::Activate()
 {
-    auto Future = VersionModel.Value->Model(
-    );
+    auto Future = VersionModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzVersionModelToFGs2VersionVersionModelValue(Result);

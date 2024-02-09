@@ -41,8 +41,7 @@ UGs2EnhanceProgressGetValueAsyncFunction* UGs2EnhanceProgressGetValueAsyncFuncti
 
 void UGs2EnhanceProgressGetValueAsyncFunction::Activate()
 {
-    auto Future = Progress.Value->Model(
-    );
+    auto Future = Progress.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzProgressToFGs2EnhanceProgressValue(Result);

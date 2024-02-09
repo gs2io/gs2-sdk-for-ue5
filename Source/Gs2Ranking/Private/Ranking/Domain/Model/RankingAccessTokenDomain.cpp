@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -67,7 +69,7 @@ namespace Gs2::Ranking::Domain::Model
         AccessToken(AccessToken),
         CategoryName(CategoryName),
         AdditionalScopeName(AdditionalScopeName),
-        ScorerUserId(ScorerUserId),
+        ScorerUserId(ScorerUserId.IsSet() ? ScorerUserId : AccessToken->GetUserId()),
         Index(Index),
         ParentKey(Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
             NamespaceName,
@@ -139,7 +141,7 @@ namespace Gs2::Ranking::Domain::Model
                     (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
                     (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
                     (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
-                    "Ranking";
+                        "Ranking";
                 const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
                     RequestModel->GetScorerUserId(),
                     ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
@@ -148,6 +150,18 @@ namespace Gs2::Ranking::Domain::Model
                     Gs2::Ranking::Model::FRanking::TypeName,
                     ParentKey,
                     Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+                
+                const auto Key2 = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
+                    RequestModel->GetScorerUserId(),
+                    TOptional<FString>()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Ranking::Model::FRanking::TypeName,
+                    ParentKey,
+                    Key2,
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );

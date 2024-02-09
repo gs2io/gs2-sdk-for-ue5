@@ -41,8 +41,7 @@ UGs2SkillTreeNodeModelGetValueAsyncFunction* UGs2SkillTreeNodeModelGetValueAsync
 
 void UGs2SkillTreeNodeModelGetValueAsyncFunction::Activate()
 {
-    auto Future = NodeModel.Value->Model(
-    );
+    auto Future = NodeModel.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzNodeModelToFGs2SkillTreeNodeModelValue(Result);
