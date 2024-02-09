@@ -19,7 +19,9 @@
 namespace Gs2::Distributor::Result
 {
     FRunStampSheetExpressResult::FRunStampSheetExpressResult():
+        TaskResultCodesValue(nullptr),
         TaskResultsValue(nullptr),
+        SheetResultCodeValue(TOptional<int32>()),
         SheetResultValue(TOptional<FString>())
     {
     }
@@ -27,9 +29,19 @@ namespace Gs2::Distributor::Result
     FRunStampSheetExpressResult::FRunStampSheetExpressResult(
         const FRunStampSheetExpressResult& From
     ):
+        TaskResultCodesValue(From.TaskResultCodesValue),
         TaskResultsValue(From.TaskResultsValue),
+        SheetResultCodeValue(From.SheetResultCodeValue),
         SheetResultValue(From.SheetResultValue)
     {
+    }
+
+    TSharedPtr<FRunStampSheetExpressResult> FRunStampSheetExpressResult::WithTaskResultCodes(
+        const TSharedPtr<TArray<int32>> TaskResultCodes
+    )
+    {
+        this->TaskResultCodesValue = TaskResultCodes;
+        return SharedThis(this);
     }
 
     TSharedPtr<FRunStampSheetExpressResult> FRunStampSheetExpressResult::WithTaskResults(
@@ -37,6 +49,14 @@ namespace Gs2::Distributor::Result
     )
     {
         this->TaskResultsValue = TaskResults;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FRunStampSheetExpressResult> FRunStampSheetExpressResult::WithSheetResultCode(
+        const TOptional<int32> SheetResultCode
+    )
+    {
+        this->SheetResultCodeValue = SheetResultCode;
         return SharedThis(this);
     }
 
@@ -48,6 +68,15 @@ namespace Gs2::Distributor::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<TArray<int32>> FRunStampSheetExpressResult::GetTaskResultCodes() const
+    {
+        if (!TaskResultCodesValue.IsValid())
+        {
+            return nullptr;
+        }
+        return TaskResultCodesValue;
+    }
+
     TSharedPtr<TArray<FString>> FRunStampSheetExpressResult::GetTaskResults() const
     {
         if (!TaskResultsValue.IsValid())
@@ -55,6 +84,20 @@ namespace Gs2::Distributor::Result
             return nullptr;
         }
         return TaskResultsValue;
+    }
+
+    TOptional<int32> FRunStampSheetExpressResult::GetSheetResultCode() const
+    {
+        return SheetResultCodeValue;
+    }
+
+    FString FRunStampSheetExpressResult::GetSheetResultCodeString() const
+    {
+        if (!SheetResultCodeValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), SheetResultCodeValue.GetValue());
     }
 
     TOptional<FString> FRunStampSheetExpressResult::GetSheetResult() const
@@ -68,6 +111,18 @@ namespace Gs2::Distributor::Result
             return nullptr;
         }
         return MakeShared<FRunStampSheetExpressResult>()
+            ->WithTaskResultCodes(Data->HasField("taskResultCodes") ? [Data]() -> TSharedPtr<TArray<int32>>
+                 {
+                    auto v = MakeShared<TArray<int32>>();
+                    if (!Data->HasTypedField<EJson::Null>("taskResultCodes") && Data->HasTypedField<EJson::Array>("taskResultCodes"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("taskResultCodes"))
+                        {
+                            v->Add(JsonObjectValue->AsNumber());
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<int32>>())
             ->WithTaskResults(Data->HasField("taskResults") ? [Data]() -> TSharedPtr<TArray<FString>>
                  {
                     auto v = MakeShared<TArray<FString>>();
@@ -80,6 +135,15 @@ namespace Gs2::Distributor::Result
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
+            ->WithSheetResultCode(Data->HasField("sheetResultCode") ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField("sheetResultCode", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithSheetResult(Data->HasField("sheetResult") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -94,6 +158,15 @@ namespace Gs2::Distributor::Result
     TSharedPtr<FJsonObject> FRunStampSheetExpressResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (TaskResultCodesValue != nullptr && TaskResultCodesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *TaskResultCodesValue)
+            {
+                v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
+            }
+            JsonRootObject->SetArrayField("taskResultCodes", v);
+        }
         if (TaskResultsValue != nullptr && TaskResultsValue.IsValid())
         {
             TArray<TSharedPtr<FJsonValue>> v;
@@ -102,6 +175,10 @@ namespace Gs2::Distributor::Result
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("taskResults", v);
+        }
+        if (SheetResultCodeValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("sheetResultCode", SheetResultCodeValue.GetValue());
         }
         if (SheetResultValue.IsSet())
         {

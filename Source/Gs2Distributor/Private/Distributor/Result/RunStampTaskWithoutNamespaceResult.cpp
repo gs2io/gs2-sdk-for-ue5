@@ -20,6 +20,7 @@ namespace Gs2::Distributor::Result
 {
     FRunStampTaskWithoutNamespaceResult::FRunStampTaskWithoutNamespaceResult():
         ContextStackValue(TOptional<FString>()),
+        StatusCodeValue(TOptional<int32>()),
         ResultValue(TOptional<FString>())
     {
     }
@@ -28,6 +29,7 @@ namespace Gs2::Distributor::Result
         const FRunStampTaskWithoutNamespaceResult& From
     ):
         ContextStackValue(From.ContextStackValue),
+        StatusCodeValue(From.StatusCodeValue),
         ResultValue(From.ResultValue)
     {
     }
@@ -37,6 +39,14 @@ namespace Gs2::Distributor::Result
     )
     {
         this->ContextStackValue = ContextStack;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FRunStampTaskWithoutNamespaceResult> FRunStampTaskWithoutNamespaceResult::WithStatusCode(
+        const TOptional<int32> StatusCode
+    )
+    {
+        this->StatusCodeValue = StatusCode;
         return SharedThis(this);
     }
 
@@ -51,6 +61,20 @@ namespace Gs2::Distributor::Result
     TOptional<FString> FRunStampTaskWithoutNamespaceResult::GetContextStack() const
     {
         return ContextStackValue;
+    }
+
+    TOptional<int32> FRunStampTaskWithoutNamespaceResult::GetStatusCode() const
+    {
+        return StatusCodeValue;
+    }
+
+    FString FRunStampTaskWithoutNamespaceResult::GetStatusCodeString() const
+    {
+        if (!StatusCodeValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), StatusCodeValue.GetValue());
     }
 
     TOptional<FString> FRunStampTaskWithoutNamespaceResult::GetResult() const
@@ -73,6 +97,15 @@ namespace Gs2::Distributor::Result
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithStatusCode(Data->HasField("statusCode") ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField("statusCode", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -90,6 +123,10 @@ namespace Gs2::Distributor::Result
         if (ContextStackValue.IsSet())
         {
             JsonRootObject->SetStringField("contextStack", ContextStackValue.GetValue());
+        }
+        if (StatusCodeValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("statusCode", StatusCodeValue.GetValue());
         }
         if (ResultValue.IsSet())
         {

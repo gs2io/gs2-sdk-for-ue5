@@ -73,4 +73,28 @@ namespace Gs2::UE5::Friend::Domain::Model
             ConnectionValue
         );
     }
+
+    Gs2::UE5::Friend::Domain::Model::FEzFollowDomainPtr FEzUserDomain::Follow(
+        const bool WithProfile
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFollowDomain>(
+            Domain->Follow(
+                WithProfile
+            ),
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Friend::Domain::Model::FEzFriendDomainPtr FEzUserDomain::Friend(
+        const bool WithProfile
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFriendDomain>(
+            Domain->Friend(
+                WithProfile
+            ),
+            ConnectionValue
+        );
+    }
 }

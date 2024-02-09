@@ -24,7 +24,9 @@ namespace Gs2::Distributor::Model
         TransactionIdValue(TOptional<FString>()),
         TaskRequestsValue(nullptr),
         SheetRequestValue(nullptr),
+        TaskResultCodesValue(nullptr),
         TaskResultsValue(nullptr),
+        SheetResultCodeValue(TOptional<int32>()),
         SheetResultValue(TOptional<FString>()),
         NextTransactionIdValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
@@ -40,7 +42,9 @@ namespace Gs2::Distributor::Model
         TransactionIdValue(From.TransactionIdValue),
         TaskRequestsValue(From.TaskRequestsValue),
         SheetRequestValue(From.SheetRequestValue),
+        TaskResultCodesValue(From.TaskResultCodesValue),
         TaskResultsValue(From.TaskResultsValue),
+        SheetResultCodeValue(From.SheetResultCodeValue),
         SheetResultValue(From.SheetResultValue),
         NextTransactionIdValue(From.NextTransactionIdValue),
         CreatedAtValue(From.CreatedAtValue),
@@ -88,11 +92,27 @@ namespace Gs2::Distributor::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FStampSheetResult> FStampSheetResult::WithTaskResultCodes(
+        const TSharedPtr<TArray<int32>> TaskResultCodes
+    )
+    {
+        this->TaskResultCodesValue = TaskResultCodes;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FStampSheetResult> FStampSheetResult::WithTaskResults(
         const TSharedPtr<TArray<FString>> TaskResults
     )
     {
         this->TaskResultsValue = TaskResults;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStampSheetResult> FStampSheetResult::WithSheetResultCode(
+        const TOptional<int32> SheetResultCode
+    )
+    {
+        this->SheetResultCodeValue = SheetResultCode;
         return SharedThis(this);
     }
 
@@ -147,9 +167,26 @@ namespace Gs2::Distributor::Model
     {
         return SheetRequestValue;
     }
+    TSharedPtr<TArray<int32>> FStampSheetResult::GetTaskResultCodes() const
+    {
+        return TaskResultCodesValue;
+    }
     TSharedPtr<TArray<FString>> FStampSheetResult::GetTaskResults() const
     {
         return TaskResultsValue;
+    }
+    TOptional<int32> FStampSheetResult::GetSheetResultCode() const
+    {
+        return SheetResultCodeValue;
+    }
+
+    FString FStampSheetResult::GetSheetResultCodeString() const
+    {
+        if (!SheetResultCodeValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), SheetResultCodeValue.GetValue());
     }
     TOptional<FString> FStampSheetResult::GetSheetResult() const
     {
@@ -294,6 +331,18 @@ namespace Gs2::Distributor::Model
                     }
                     return Model::FAcquireAction::FromJson(Data->GetObjectField("sheetRequest"));
                  }() : nullptr)
+            ->WithTaskResultCodes(Data->HasField("taskResultCodes") ? [Data]() -> TSharedPtr<TArray<int32>>
+                {
+                    auto v = MakeShared<TArray<int32>>();
+                    if (!Data->HasTypedField<EJson::Null>("taskResultCodes") && Data->HasTypedField<EJson::Array>("taskResultCodes"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("taskResultCodes"))
+                        {
+                            v->Add(JsonObjectValue->AsNumber());
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<int32>>())
             ->WithTaskResults(Data->HasField("taskResults") ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
                     auto v = MakeShared<TArray<FString>>();
@@ -306,6 +355,15 @@ namespace Gs2::Distributor::Model
                     }
                     return v;
                  }() : MakeShared<TArray<FString>>())
+            ->WithSheetResultCode(Data->HasField("sheetResultCode") ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField("sheetResultCode", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithSheetResult(Data->HasField("sheetResult") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -372,6 +430,15 @@ namespace Gs2::Distributor::Model
         {
             JsonRootObject->SetObjectField("sheetRequest", SheetRequestValue->ToJson());
         }
+        if (TaskResultCodesValue != nullptr && TaskResultCodesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *TaskResultCodesValue)
+            {
+                v.Add(MakeShared<FJsonValueNumber>(JsonObjectValue));
+            }
+            JsonRootObject->SetArrayField("taskResultCodes", v);
+        }
         if (TaskResultsValue != nullptr && TaskResultsValue.IsValid())
         {
             TArray<TSharedPtr<FJsonValue>> v;
@@ -380,6 +447,10 @@ namespace Gs2::Distributor::Model
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("taskResults", v);
+        }
+        if (SheetResultCodeValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("sheetResultCode", SheetResultCodeValue.GetValue());
         }
         if (SheetResultValue.IsSet())
         {

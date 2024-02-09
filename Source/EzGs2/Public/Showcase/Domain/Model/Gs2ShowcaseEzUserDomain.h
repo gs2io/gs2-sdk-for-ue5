@@ -26,6 +26,7 @@
 #include "Showcase/Model/Gs2ShowcaseEzConfig.h"
 #include "Showcase/Model/Gs2ShowcaseEzConsumeAction.h"
 #include "Showcase/Model/Gs2ShowcaseEzAcquireAction.h"
+#include "Gs2ShowcaseEzRandomShowcaseDomain.h"
 #include "Gs2ShowcaseEzShowcaseDomain.h"
 #include "Gs2ShowcaseEzUserDomain.h"
 #include "Gs2ShowcaseEzUserDomain.h"
@@ -50,6 +51,10 @@ namespace Gs2::UE5::Showcase::Domain::Model
             Gs2::Showcase::Domain::Model::FUserDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseDomainPtr RandomShowcase(
+            const FString ShowcaseName
+        ) const;
 
         Gs2::UE5::Showcase::Domain::Model::FEzShowcaseDomainPtr Showcase(
             const FString ShowcaseName

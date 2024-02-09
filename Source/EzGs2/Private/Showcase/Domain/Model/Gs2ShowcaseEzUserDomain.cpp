@@ -39,6 +39,18 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
     }
 
+    Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseDomainPtr FEzUserDomain::RandomShowcase(
+        const FString ShowcaseName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseDomain>(
+            Domain->RandomShowcase(
+                ShowcaseName
+            ),
+            ConnectionValue
+        );
+    }
+
     Gs2::UE5::Showcase::Domain::Model::FEzShowcaseDomainPtr FEzUserDomain::Showcase(
         const FString ShowcaseName
     ) const

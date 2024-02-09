@@ -24,17 +24,12 @@
 
 FGs2FriendOwnFollowUser UGs2FriendFollowFunctionLibrary::OwnFollowUser(
     FGs2FriendOwnFollow Follow,
-    FString UserId,
     FString TargetUserId
 )
 {
     FGs2FriendOwnFollowUser Return;
     if (Follow.Value == nullptr) {
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendFollowFunctionLibrary::OwnFollowUser] Follow parameter specification is missing."))
-        return Return;
-    }
-    if (UserId == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendFollowFunctionLibrary::OwnFollowUser] UserId parameter specification is missing."))
         return Return;
     }
     if (TargetUserId == "") {

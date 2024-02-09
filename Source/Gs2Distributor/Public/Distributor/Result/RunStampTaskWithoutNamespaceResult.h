@@ -23,6 +23,7 @@ namespace Gs2::Distributor::Result
     class GS2DISTRIBUTOR_API FRunStampTaskWithoutNamespaceResult final : public TSharedFromThis<FRunStampTaskWithoutNamespaceResult>
     {
         TOptional<FString> ContextStackValue;
+        TOptional<int32> StatusCodeValue;
         TOptional<FString> ResultValue;
         
     public:
@@ -34,9 +35,12 @@ namespace Gs2::Distributor::Result
         ~FRunStampTaskWithoutNamespaceResult() = default;
 
         TSharedPtr<FRunStampTaskWithoutNamespaceResult> WithContextStack(const TOptional<FString> ContextStack);
+        TSharedPtr<FRunStampTaskWithoutNamespaceResult> WithStatusCode(const TOptional<int32> StatusCode);
         TSharedPtr<FRunStampTaskWithoutNamespaceResult> WithResult(const TOptional<FString> Result);
 
         TOptional<FString> GetContextStack() const;
+        TOptional<int32> GetStatusCode() const;
+        FString GetStatusCodeString() const;
         TOptional<FString> GetResult() const;
 
         static TSharedPtr<FRunStampTaskWithoutNamespaceResult> FromJson(const TSharedPtr<FJsonObject> Data);

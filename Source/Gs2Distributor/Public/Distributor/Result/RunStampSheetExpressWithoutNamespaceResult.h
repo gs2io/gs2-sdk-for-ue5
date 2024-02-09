@@ -22,7 +22,9 @@ namespace Gs2::Distributor::Result
 {
     class GS2DISTRIBUTOR_API FRunStampSheetExpressWithoutNamespaceResult final : public TSharedFromThis<FRunStampSheetExpressWithoutNamespaceResult>
     {
+        TSharedPtr<TArray<int32>> TaskResultCodesValue;
         TSharedPtr<TArray<FString>> TaskResultsValue;
+        TOptional<int32> SheetResultCodeValue;
         TOptional<FString> SheetResultValue;
         
     public:
@@ -33,10 +35,15 @@ namespace Gs2::Distributor::Result
         );
         ~FRunStampSheetExpressWithoutNamespaceResult() = default;
 
+        TSharedPtr<FRunStampSheetExpressWithoutNamespaceResult> WithTaskResultCodes(const TSharedPtr<TArray<int32>> TaskResultCodes);
         TSharedPtr<FRunStampSheetExpressWithoutNamespaceResult> WithTaskResults(const TSharedPtr<TArray<FString>> TaskResults);
+        TSharedPtr<FRunStampSheetExpressWithoutNamespaceResult> WithSheetResultCode(const TOptional<int32> SheetResultCode);
         TSharedPtr<FRunStampSheetExpressWithoutNamespaceResult> WithSheetResult(const TOptional<FString> SheetResult);
 
+        TSharedPtr<TArray<int32>> GetTaskResultCodes() const;
         TSharedPtr<TArray<FString>> GetTaskResults() const;
+        TOptional<int32> GetSheetResultCode() const;
+        FString GetSheetResultCodeString() const;
         TOptional<FString> GetSheetResult() const;
 
         static TSharedPtr<FRunStampSheetExpressWithoutNamespaceResult> FromJson(const TSharedPtr<FJsonObject> Data);

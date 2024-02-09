@@ -22,6 +22,7 @@ namespace Gs2::Distributor::Result
 {
     class GS2DISTRIBUTOR_API FRunStampSheetResult final : public TSharedFromThis<FRunStampSheetResult>
     {
+        TOptional<int32> StatusCodeValue;
         TOptional<FString> ResultValue;
         
     public:
@@ -32,8 +33,11 @@ namespace Gs2::Distributor::Result
         );
         ~FRunStampSheetResult() = default;
 
+        TSharedPtr<FRunStampSheetResult> WithStatusCode(const TOptional<int32> StatusCode);
         TSharedPtr<FRunStampSheetResult> WithResult(const TOptional<FString> Result);
 
+        TOptional<int32> GetStatusCode() const;
+        FString GetStatusCodeString() const;
         TOptional<FString> GetResult() const;
 
         static TSharedPtr<FRunStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);

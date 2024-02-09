@@ -37,7 +37,6 @@ class BPGS2_API UGs2FriendFollowFunctionLibrary : public UBlueprintFunctionLibra
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::OwnFollowUser", Category="Game Server Services|GS2-Friend|Namespace|User|Follow|FollowUser", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="FollowUser") FGs2FriendOwnFollowUser OwnFollowUser(
         FGs2FriendOwnFollow Follow,
-        FString UserId,
         FString TargetUserId
     );
 };

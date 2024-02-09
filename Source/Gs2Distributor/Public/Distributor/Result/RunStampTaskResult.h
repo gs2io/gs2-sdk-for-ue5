@@ -23,6 +23,7 @@ namespace Gs2::Distributor::Result
     class GS2DISTRIBUTOR_API FRunStampTaskResult final : public TSharedFromThis<FRunStampTaskResult>
     {
         TOptional<FString> ContextStackValue;
+        TOptional<int32> StatusCodeValue;
         TOptional<FString> ResultValue;
         
     public:
@@ -34,9 +35,12 @@ namespace Gs2::Distributor::Result
         ~FRunStampTaskResult() = default;
 
         TSharedPtr<FRunStampTaskResult> WithContextStack(const TOptional<FString> ContextStack);
+        TSharedPtr<FRunStampTaskResult> WithStatusCode(const TOptional<int32> StatusCode);
         TSharedPtr<FRunStampTaskResult> WithResult(const TOptional<FString> Result);
 
         TOptional<FString> GetContextStack() const;
+        TOptional<int32> GetStatusCode() const;
+        FString GetStatusCodeString() const;
         TOptional<FString> GetResult() const;
 
         static TSharedPtr<FRunStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);

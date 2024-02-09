@@ -59,7 +59,10 @@ namespace Gs2::Distributor::Domain::Model
         TOptional<FString> InboxNamespaceId;
         TOptional<FString> Result;
         TOptional<FString> ContextStack;
+        TOptional<int32> StatusCode;
+        TSharedPtr<TArray<int32>> TaskResultCodes;
         TSharedPtr<TArray<FString>> TaskResults;
+        TOptional<int32> SheetResultCode;
         TOptional<FString> SheetResult;
         TOptional<FString> GetInboxNamespaceId() const
         {
@@ -73,9 +76,21 @@ namespace Gs2::Distributor::Domain::Model
         {
             return ContextStack;
         }
+        TOptional<int32> GetStatusCode() const
+        {
+            return StatusCode;
+        }
+        TSharedPtr<TArray<int32>> GetTaskResultCodes() const
+        {
+            return TaskResultCodes;
+        }
         TSharedPtr<TArray<FString>> GetTaskResults() const
         {
             return TaskResults;
+        }
+        TOptional<int32> GetSheetResultCode() const
+        {
+            return SheetResultCode;
         }
         TOptional<FString> GetSheetResult() const
         {

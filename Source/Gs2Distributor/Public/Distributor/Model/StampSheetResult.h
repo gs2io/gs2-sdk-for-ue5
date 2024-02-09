@@ -30,7 +30,9 @@ namespace Gs2::Distributor::Model
         TOptional<FString> TransactionIdValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> TaskRequestsValue;
         TSharedPtr<FAcquireAction> SheetRequestValue;
+        TSharedPtr<TArray<int32>> TaskResultCodesValue;
         TSharedPtr<TArray<FString>> TaskResultsValue;
+        TOptional<int32> SheetResultCodeValue;
         TOptional<FString> SheetResultValue;
         TOptional<FString> NextTransactionIdValue;
         TOptional<int64> CreatedAtValue;
@@ -48,7 +50,9 @@ namespace Gs2::Distributor::Model
         TSharedPtr<FStampSheetResult> WithTransactionId(const TOptional<FString> TransactionId);
         TSharedPtr<FStampSheetResult> WithTaskRequests(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> TaskRequests);
         TSharedPtr<FStampSheetResult> WithSheetRequest(const TSharedPtr<FAcquireAction> SheetRequest);
+        TSharedPtr<FStampSheetResult> WithTaskResultCodes(const TSharedPtr<TArray<int32>> TaskResultCodes);
         TSharedPtr<FStampSheetResult> WithTaskResults(const TSharedPtr<TArray<FString>> TaskResults);
+        TSharedPtr<FStampSheetResult> WithSheetResultCode(const TOptional<int32> SheetResultCode);
         TSharedPtr<FStampSheetResult> WithSheetResult(const TOptional<FString> SheetResult);
         TSharedPtr<FStampSheetResult> WithNextTransactionId(const TOptional<FString> NextTransactionId);
         TSharedPtr<FStampSheetResult> WithCreatedAt(const TOptional<int64> CreatedAt);
@@ -59,7 +63,10 @@ namespace Gs2::Distributor::Model
         TOptional<FString> GetTransactionId() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetTaskRequests() const;
         TSharedPtr<FAcquireAction> GetSheetRequest() const;
+        TSharedPtr<TArray<int32>> GetTaskResultCodes() const;
         TSharedPtr<TArray<FString>> GetTaskResults() const;
+        TOptional<int32> GetSheetResultCode() const;
+        FString GetSheetResultCodeString() const;
         TOptional<FString> GetSheetResult() const;
         TOptional<FString> GetNextTransactionId() const;
         TOptional<int64> GetCreatedAt() const;

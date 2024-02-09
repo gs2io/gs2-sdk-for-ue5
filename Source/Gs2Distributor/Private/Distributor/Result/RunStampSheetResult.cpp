@@ -19,6 +19,7 @@
 namespace Gs2::Distributor::Result
 {
     FRunStampSheetResult::FRunStampSheetResult():
+        StatusCodeValue(TOptional<int32>()),
         ResultValue(TOptional<FString>())
     {
     }
@@ -26,8 +27,17 @@ namespace Gs2::Distributor::Result
     FRunStampSheetResult::FRunStampSheetResult(
         const FRunStampSheetResult& From
     ):
+        StatusCodeValue(From.StatusCodeValue),
         ResultValue(From.ResultValue)
     {
+    }
+
+    TSharedPtr<FRunStampSheetResult> FRunStampSheetResult::WithStatusCode(
+        const TOptional<int32> StatusCode
+    )
+    {
+        this->StatusCodeValue = StatusCode;
+        return SharedThis(this);
     }
 
     TSharedPtr<FRunStampSheetResult> FRunStampSheetResult::WithResult(
@@ -36,6 +46,20 @@ namespace Gs2::Distributor::Result
     {
         this->ResultValue = Result;
         return SharedThis(this);
+    }
+
+    TOptional<int32> FRunStampSheetResult::GetStatusCode() const
+    {
+        return StatusCodeValue;
+    }
+
+    FString FRunStampSheetResult::GetStatusCodeString() const
+    {
+        if (!StatusCodeValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), StatusCodeValue.GetValue());
     }
 
     TOptional<FString> FRunStampSheetResult::GetResult() const
@@ -49,6 +73,15 @@ namespace Gs2::Distributor::Result
             return nullptr;
         }
         return MakeShared<FRunStampSheetResult>()
+            ->WithStatusCode(Data->HasField("statusCode") ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField("statusCode", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithResult(Data->HasField("result") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -63,6 +96,10 @@ namespace Gs2::Distributor::Result
     TSharedPtr<FJsonObject> FRunStampSheetResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (StatusCodeValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("statusCode", StatusCodeValue.GetValue());
+        }
         if (ResultValue.IsSet())
         {
             JsonRootObject->SetStringField("result", ResultValue.GetValue());

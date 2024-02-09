@@ -34,9 +34,24 @@ namespace Gs2::UE5::Distributor::Domain::Model
         return Domain->ContextStack;
     }
 
+    TOptional<int32> FEzNamespaceDomain::StatusCode() const
+    {
+        return Domain->StatusCode;
+    }
+
+    TSharedPtr<TArray<int32>> FEzNamespaceDomain::TaskResultCodes() const
+    {
+        return Domain->TaskResultCodes;
+    }
+
     TSharedPtr<TArray<FString>> FEzNamespaceDomain::TaskResults() const
     {
         return Domain->TaskResults;
+    }
+
+    TOptional<int32> FEzNamespaceDomain::SheetResultCode() const
+    {
+        return Domain->SheetResultCode;
     }
 
     TOptional<FString> FEzNamespaceDomain::SheetResult() const
