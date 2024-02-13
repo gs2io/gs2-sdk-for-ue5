@@ -21,6 +21,7 @@ namespace Gs2::SkillTree::Request
     FRestrainRequest::FRestrainRequest():
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
+        PropertyIdValue(TOptional<FString>()),
         NodeModelNamesValue(nullptr),
         ConfigValue(nullptr)
     {
@@ -31,6 +32,7 @@ namespace Gs2::SkillTree::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
+        PropertyIdValue(From.PropertyIdValue),
         NodeModelNamesValue(From.NodeModelNamesValue),
         ConfigValue(From.ConfigValue)
     {
@@ -57,6 +59,14 @@ namespace Gs2::SkillTree::Request
     )
     {
         this->AccessTokenValue = AccessToken;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FRestrainRequest> FRestrainRequest::WithPropertyId(
+        const TOptional<FString> PropertyId
+    )
+    {
+        this->PropertyIdValue = PropertyId;
         return SharedThis(this);
     }
 
@@ -97,6 +107,11 @@ namespace Gs2::SkillTree::Request
     TOptional<FString> FRestrainRequest::GetAccessToken() const
     {
         return AccessTokenValue;
+    }
+
+    TOptional<FString> FRestrainRequest::GetPropertyId() const
+    {
+        return PropertyIdValue;
     }
 
     TSharedPtr<TArray<FString>> FRestrainRequest::GetNodeModelNames() const
@@ -147,6 +162,15 @@ namespace Gs2::SkillTree::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("propertyId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithNodeModelNames(Data->HasField("nodeModelNames") ? [Data]() -> TSharedPtr<TArray<FString>>
               {
                   auto v = MakeShared<TArray<FString>>();
@@ -188,6 +212,10 @@ namespace Gs2::SkillTree::Request
         if (AccessTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+        }
+        if (PropertyIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
         }
         if (NodeModelNamesValue != nullptr && NodeModelNamesValue.IsValid())
         {

@@ -85,6 +85,7 @@ namespace Gs2::SkillTree::Domain::SpeculativeExecutor
             )->AccessToken(
                 AccessToken
             )->Status(
+                Request->GetPropertyId().IsSet() ? *Request->GetPropertyId() : FString("")
             )->Model();
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
@@ -113,6 +114,7 @@ namespace Gs2::SkillTree::Domain::SpeculativeExecutor
             FString("Status")
         );
         const auto Key = Model::FStatusDomain::CreateCacheKey(
+            Request->GetPropertyId()
         );
 
         *Result = MakeShared<TFunction<void()>>([&]()

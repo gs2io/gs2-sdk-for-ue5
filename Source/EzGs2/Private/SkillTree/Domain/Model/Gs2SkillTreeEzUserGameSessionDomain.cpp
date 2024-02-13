@@ -19,6 +19,11 @@
 namespace Gs2::UE5::SkillTree::Domain::Model
 {
 
+    TOptional<FString> FEzUserGameSessionDomain::NextPageToken() const
+    {
+        return Domain->NextPageToken;
+    }
+
     TOptional<FString> FEzUserGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
@@ -42,10 +47,12 @@ namespace Gs2::UE5::SkillTree::Domain::Model
     }
 
     Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomainPtr FEzUserGameSessionDomain::Status(
+        const FString PropertyId
     ) const
     {
         return MakeShared<Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomain>(
             Domain->Status(
+                PropertyId
             ),
             GameSession,
             ConnectionValue

@@ -28,6 +28,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<FString>> NodeModelNamesValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
         TOptional<FString> DuplicationAvoiderValue;
@@ -43,6 +44,7 @@ namespace Gs2::SkillTree::Request
         TSharedPtr<FReleaseByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FReleaseByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FReleaseByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FReleaseByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FReleaseByUserIdRequest> WithNodeModelNames(
             const TSharedPtr<TArray<FString>> NodeModelNames);
         TSharedPtr<FReleaseByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
@@ -51,6 +53,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetPropertyId() const;
         TSharedPtr<TArray<FString>> GetNodeModelNames() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

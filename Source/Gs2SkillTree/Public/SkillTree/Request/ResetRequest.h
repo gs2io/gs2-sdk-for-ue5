@@ -28,6 +28,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
+        TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -42,12 +43,14 @@ namespace Gs2::SkillTree::Request
         TSharedPtr<FResetRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FResetRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FResetRequest> WithAccessToken(const TOptional<FString> AccessToken);
+        TSharedPtr<FResetRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FResetRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
         TSharedPtr<FResetRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
-        TOptional<FString> GetAccessToken() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetAccessToken() const;
+        TOptional<FString> GetPropertyId() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FResetRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -44,7 +44,8 @@ namespace Gs2::SkillTree::Domain::Model
         const Core::Domain::FGs2Ptr& Gs2,
         const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> UserId
+        const TOptional<FString> UserId,
+        const TOptional<FString> PropertyId
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -52,6 +53,7 @@ namespace Gs2::SkillTree::Domain::Model
         Client(MakeShared<Gs2::SkillTree::FGs2SkillTreeRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         UserId(UserId),
+        PropertyId(PropertyId),
         ParentKey(Gs2::SkillTree::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
@@ -68,6 +70,7 @@ namespace Gs2::SkillTree::Domain::Model
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
+        PropertyId(From.PropertyId),
         ParentKey(From.ParentKey)
     {
 
@@ -93,7 +96,8 @@ namespace Gs2::SkillTree::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithUserId(Self->UserId)
+            ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->MarkReleaseByUserId(
             Request
         );
@@ -115,6 +119,7 @@ namespace Gs2::SkillTree::Domain::Model
                     "Status"
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
@@ -157,7 +162,8 @@ namespace Gs2::SkillTree::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithUserId(Self->UserId)
+            ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->ReleaseByUserId(
             Request
         );
@@ -179,6 +185,7 @@ namespace Gs2::SkillTree::Domain::Model
                     "Status"
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
@@ -241,7 +248,8 @@ namespace Gs2::SkillTree::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithUserId(Self->UserId)
+            ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->MarkRestrainByUserId(
             Request
         );
@@ -263,6 +271,7 @@ namespace Gs2::SkillTree::Domain::Model
                     "Status"
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
@@ -305,7 +314,8 @@ namespace Gs2::SkillTree::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithUserId(Self->UserId)
+            ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->RestrainByUserId(
             Request
         );
@@ -327,6 +337,7 @@ namespace Gs2::SkillTree::Domain::Model
                     "Status"
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
@@ -389,7 +400,8 @@ namespace Gs2::SkillTree::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithUserId(Self->UserId)
+            ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->GetStatusByUserId(
             Request
         );
@@ -411,6 +423,7 @@ namespace Gs2::SkillTree::Domain::Model
                     "Status"
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
@@ -451,7 +464,8 @@ namespace Gs2::SkillTree::Domain::Model
     {
         Request
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId);
+            ->WithUserId(Self->UserId)
+            ->WithPropertyId(Self->PropertyId);
         const auto Future = Self->Client->ResetByUserId(
             Request
         );
@@ -473,6 +487,7 @@ namespace Gs2::SkillTree::Domain::Model
                     "Status"
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
@@ -518,19 +533,23 @@ namespace Gs2::SkillTree::Domain::Model
     FString FStatusDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
+        TOptional<FString> PropertyId,
         FString ChildType
     )
     {
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
+            (PropertyId.IsSet() ? *PropertyId : "null") + ":" +
             ChildType;
     }
 
     FString FStatusDomain::CreateCacheKey(
+        TOptional<FString> PropertyId
     )
     {
-        return "Singleton";
+        return FString("") +
+            (PropertyId.IsSet() ? *PropertyId : "null");
     }
 
     FStatusDomain::FModelTask::FModelTask(
@@ -556,6 +575,7 @@ namespace Gs2::SkillTree::Domain::Model
         auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::SkillTree::Model::FStatus>(
             Self->ParentKey,
             Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                Self->PropertyId
             ),
             &Value
         );
@@ -572,6 +592,7 @@ namespace Gs2::SkillTree::Domain::Model
                 }
 
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    Self->PropertyId
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
@@ -589,6 +610,7 @@ namespace Gs2::SkillTree::Domain::Model
             Self->Gs2->Cache->TryGet<Gs2::SkillTree::Model::FStatus>(
                 Self->ParentKey,
                 Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    Self->PropertyId
                 ),
                 &Value
             );
@@ -611,6 +633,7 @@ namespace Gs2::SkillTree::Domain::Model
             Gs2::SkillTree::Model::FStatus::TypeName,
             ParentKey,
             Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                PropertyId
             ),
             [Callback](TSharedPtr<Gs2Object> obj)
             {
@@ -627,6 +650,7 @@ namespace Gs2::SkillTree::Domain::Model
             Gs2::SkillTree::Model::FStatus::TypeName,
             ParentKey,
             Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                PropertyId
             ),
             CallbackID
         );

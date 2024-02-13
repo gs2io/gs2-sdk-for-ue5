@@ -70,6 +70,10 @@
 #include "Task/WebSocket/RestrainTask.h"
 #include "Request/RestrainByUserIdRequest.h"
 #include "Task/WebSocket/RestrainByUserIdTask.h"
+#include "Request/DescribeStatusesRequest.h"
+#include "Task/WebSocket/DescribeStatusesTask.h"
+#include "Request/DescribeStatusesByUserIdRequest.h"
+#include "Task/WebSocket/DescribeStatusesByUserIdTask.h"
 #include "Request/GetStatusRequest.h"
 #include "Task/WebSocket/GetStatusTask.h"
 #include "Request/GetStatusByUserIdRequest.h"
@@ -204,6 +208,14 @@ namespace Gs2::SkillTree
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRestrainByUserIdTask>> RestrainByUserId(
             const Request::FRestrainByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStatusesTask>> DescribeStatuses(
+            const Request::FDescribeStatusesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStatusesByUserIdTask>> DescribeStatusesByUserId(
+            const Request::FDescribeStatusesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetStatusTask>> GetStatus(

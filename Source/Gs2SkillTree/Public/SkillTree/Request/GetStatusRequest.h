@@ -27,6 +27,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
+        TOptional<FString> PropertyIdValue;
         
     public:
         
@@ -39,10 +40,12 @@ namespace Gs2::SkillTree::Request
         TSharedPtr<FGetStatusRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FGetStatusRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetStatusRequest> WithAccessToken(const TOptional<FString> AccessToken);
+        TSharedPtr<FGetStatusRequest> WithPropertyId(const TOptional<FString> PropertyId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
+        TOptional<FString> GetPropertyId() const;
 
         static TSharedPtr<FGetStatusRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

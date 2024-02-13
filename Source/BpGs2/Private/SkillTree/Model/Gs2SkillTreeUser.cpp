@@ -21,7 +21,8 @@
 #include "Core/BpGs2Constant.h"
 
 FGs2SkillTreeOwnStatus UGs2SkillTreeUserFunctionLibrary::OwnStatus(
-    FGs2SkillTreeOwnUser User
+    FGs2SkillTreeOwnUser User,
+    FString PropertyId
 )
 {
     FGs2SkillTreeOwnStatus Return;
@@ -29,7 +30,12 @@ FGs2SkillTreeOwnStatus UGs2SkillTreeUserFunctionLibrary::OwnStatus(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2SkillTreeUserFunctionLibrary::OwnStatus] User parameter specification is missing."))
         return Return;
     }
+    if (PropertyId == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SkillTreeUserFunctionLibrary::OwnStatus] PropertyId parameter specification is missing."))
+        return Return;
+    }
     Return.Value = User.Value->Status(
+        PropertyId
     );
     return Return;
 }

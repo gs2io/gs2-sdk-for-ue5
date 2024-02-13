@@ -69,12 +69,17 @@ namespace Gs2::SkillTree::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("skill-tree"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/user/me/status/node/restrain");
+                .Append("/{namespaceName}/user/me/status/{propertyId}/node/restrain");
 
             Url = Url.Replace(
                 TEXT("{namespaceName}"),
                 !this->Request->GetNamespaceName().IsSet() || this->Request->GetNamespaceName().GetValue().Len() == 0 ?
                     TEXT("null") : ToCStr(*this->Request->GetNamespaceName())
+            );
+            Url = Url.Replace(
+                TEXT("{propertyId}"),
+                !this->Request->GetPropertyId().IsSet() || this->Request->GetPropertyId().GetValue().Len() == 0 ?
+                    TEXT("null") : ToCStr(*this->Request->GetPropertyId())
             );
 
             request->SetURL(Url);

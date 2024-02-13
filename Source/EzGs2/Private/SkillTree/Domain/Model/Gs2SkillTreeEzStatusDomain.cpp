@@ -39,6 +39,11 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         return Domain->UserId;
     }
 
+    TOptional<FString> FEzStatusDomain::PropertyId() const
+    {
+        return Domain->PropertyId;
+    }
+
     FEzStatusDomain::FEzStatusDomain(
         Gs2::SkillTree::Domain::Model::FStatusDomainPtr Domain,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection

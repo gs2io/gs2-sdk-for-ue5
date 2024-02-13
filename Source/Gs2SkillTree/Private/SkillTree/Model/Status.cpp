@@ -21,6 +21,7 @@ namespace Gs2::SkillTree::Model
     FStatus::FStatus():
         StatusIdValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
+        PropertyIdValue(TOptional<FString>()),
         ReleasedNodeNamesValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -33,6 +34,7 @@ namespace Gs2::SkillTree::Model
     ):
         StatusIdValue(From.StatusIdValue),
         UserIdValue(From.UserIdValue),
+        PropertyIdValue(From.PropertyIdValue),
         ReleasedNodeNamesValue(From.ReleasedNodeNamesValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -53,6 +55,14 @@ namespace Gs2::SkillTree::Model
     )
     {
         this->UserIdValue = UserId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FStatus> FStatus::WithPropertyId(
+        const TOptional<FString> PropertyId
+    )
+    {
+        this->PropertyIdValue = PropertyId;
         return SharedThis(this);
     }
 
@@ -94,6 +104,10 @@ namespace Gs2::SkillTree::Model
     TOptional<FString> FStatus::GetUserId() const
     {
         return UserIdValue;
+    }
+    TOptional<FString> FStatus::GetPropertyId() const
+    {
+        return PropertyIdValue;
     }
     TSharedPtr<TArray<FString>> FStatus::GetReleasedNodeNames() const
     {
@@ -141,7 +155,7 @@ namespace Gs2::SkillTree::Model
 
     TOptional<FString> FStatus::GetRegionFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):skillTree:(?<namespaceName>.+):user:(?<userId>.+):status"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):skillTree:(?<namespaceName>.+):user:(?<userId>.+):status:(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -152,7 +166,7 @@ namespace Gs2::SkillTree::Model
 
     TOptional<FString> FStatus::GetOwnerIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):skillTree:(?<namespaceName>.+):user:(?<userId>.+):status"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):skillTree:(?<namespaceName>.+):user:(?<userId>.+):status:(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -163,7 +177,7 @@ namespace Gs2::SkillTree::Model
 
     TOptional<FString> FStatus::GetNamespaceNameFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):skillTree:(?<namespaceName>.+):user:(?<userId>.+):status"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):skillTree:(?<namespaceName>.+):user:(?<userId>.+):status:(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
@@ -174,11 +188,22 @@ namespace Gs2::SkillTree::Model
 
     TOptional<FString> FStatus::GetUserIdFromGrn(const FString Grn)
     {
-        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):skillTree:(?<namespaceName>.+):user:(?<userId>.+):status"));
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):skillTree:(?<namespaceName>.+):user:(?<userId>.+):status:(?<propertyId>.+)"));
         FRegexMatcher Matcher(Pattern, Grn);
         while (Matcher.FindNext())
         {
             return Matcher.GetCaptureGroup(4);
+        }
+        return TOptional<FString>();
+    }
+
+    TOptional<FString> FStatus::GetPropertyIdFromGrn(const FString Grn)
+    {
+        const auto Pattern = FRegexPattern(TEXT("grn:gs2:(?<region>.+):(?<ownerId>.+):skillTree:(?<namespaceName>.+):user:(?<userId>.+):status:(?<propertyId>.+)"));
+        FRegexMatcher Matcher(Pattern, Grn);
+        while (Matcher.FindNext())
+        {
+            return Matcher.GetCaptureGroup(5);
         }
         return TOptional<FString>();
     }
@@ -202,6 +227,15 @@ namespace Gs2::SkillTree::Model
                 {
                     FString v("");
                     if (Data->TryGetStringField("userId", v))
+                    {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("propertyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
@@ -258,6 +292,10 @@ namespace Gs2::SkillTree::Model
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (PropertyIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
         }
         if (ReleasedNodeNamesValue != nullptr && ReleasedNodeNamesValue.IsValid())
         {

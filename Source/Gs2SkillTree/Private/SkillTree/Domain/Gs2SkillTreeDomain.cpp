@@ -514,6 +514,7 @@ namespace Gs2::SkillTree::Domain
                     "Status"
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
                 );
                 Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
@@ -555,6 +556,7 @@ namespace Gs2::SkillTree::Domain
                     "Status"
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
                 );
                 Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,
@@ -604,6 +606,7 @@ namespace Gs2::SkillTree::Domain
                     "Status"
                 );
                 const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPropertyId()
                 );
                 Gs2->Cache->Put(
                     Gs2::SkillTree::Model::FStatus::TypeName,

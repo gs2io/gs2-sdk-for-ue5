@@ -23,6 +23,8 @@
 #include "SkillTree/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelsIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelMastersIterator.h"
+#include "SkillTree/Domain/Iterator/DescribeStatusesIterator.h"
+#include "SkillTree/Domain/Iterator/DescribeStatusesByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -55,6 +57,11 @@ namespace Gs2::SkillTree::Domain::Model
         const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
 
         public:
+        TOptional<FString> NextPageToken;
+        TOptional<FString> GetNextPageToken() const
+        {
+            return NextPageToken;
+        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
     private:
@@ -75,7 +82,19 @@ namespace Gs2::SkillTree::Domain::Model
             const FUserDomain& From
         );
 
+        Gs2::SkillTree::Domain::Iterator::FDescribeStatusesByUserIdIteratorPtr Statuses(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeStatuses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
         TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusDomain> Status(
+            const FString PropertyId
         );
 
         static FString CreateCacheParentKey(

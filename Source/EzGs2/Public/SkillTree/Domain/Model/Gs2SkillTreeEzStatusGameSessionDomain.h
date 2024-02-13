@@ -42,6 +42,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
+        TOptional<FString> PropertyId() const;
 
         FEzStatusGameSessionDomain(
             Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomainPtr Domain,

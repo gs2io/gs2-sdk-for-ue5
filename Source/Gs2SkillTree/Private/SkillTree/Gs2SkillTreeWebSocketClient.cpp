@@ -253,6 +253,24 @@ namespace Gs2::SkillTree
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStatusesTask>> FGs2SkillTreeWebSocketClient::DescribeStatuses(
+        const Request::FDescribeStatusesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeStatusesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeStatusesByUserIdTask>> FGs2SkillTreeWebSocketClient::DescribeStatusesByUserId(
+        const Request::FDescribeStatusesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeStatusesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FGetStatusTask>> FGs2SkillTreeWebSocketClient::GetStatus(
         const Request::FGetStatusRequestPtr Request) const
     {

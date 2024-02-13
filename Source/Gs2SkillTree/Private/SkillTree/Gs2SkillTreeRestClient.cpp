@@ -253,6 +253,24 @@ namespace Gs2::SkillTree
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeStatusesTask>> FGs2SkillTreeRestClient::DescribeStatuses(
+        const Request::FDescribeStatusesRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeStatusesTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeStatusesByUserIdTask>> FGs2SkillTreeRestClient::DescribeStatusesByUserId(
+        const Request::FDescribeStatusesByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeStatusesByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FGetStatusTask>> FGs2SkillTreeRestClient::GetStatus(
         const Request::FGetStatusRequestPtr Request) const
     {

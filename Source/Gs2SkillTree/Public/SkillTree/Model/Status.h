@@ -25,6 +25,7 @@ namespace Gs2::SkillTree::Model
     {
         TOptional<FString> StatusIdValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<FString>> ReleasedNodeNamesValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -39,6 +40,7 @@ namespace Gs2::SkillTree::Model
 
         TSharedPtr<FStatus> WithStatusId(const TOptional<FString> StatusId);
         TSharedPtr<FStatus> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FStatus> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FStatus> WithReleasedNodeNames(const TSharedPtr<TArray<FString>> ReleasedNodeNames);
         TSharedPtr<FStatus> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FStatus> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -46,6 +48,7 @@ namespace Gs2::SkillTree::Model
 
         TOptional<FString> GetStatusId() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetPropertyId() const;
         TSharedPtr<TArray<FString>> GetReleasedNodeNames() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
@@ -58,6 +61,7 @@ namespace Gs2::SkillTree::Model
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);
         static TOptional<FString> GetNamespaceNameFromGrn(const FString Grn);
         static TOptional<FString> GetUserIdFromGrn(const FString Grn);
+        static TOptional<FString> GetPropertyIdFromGrn(const FString Grn);
 
         static TSharedPtr<FStatus> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

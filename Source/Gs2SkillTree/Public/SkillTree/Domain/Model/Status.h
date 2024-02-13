@@ -23,6 +23,8 @@
 #include "SkillTree/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelsIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelMastersIterator.h"
+#include "SkillTree/Domain/Iterator/DescribeStatusesIterator.h"
+#include "SkillTree/Domain/Iterator/DescribeStatusesByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -67,6 +69,7 @@ namespace Gs2::SkillTree::Domain::Model
         }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
+        TOptional<FString> PropertyId;
     private:
 
         FString ParentKey;
@@ -77,7 +80,8 @@ namespace Gs2::SkillTree::Domain::Model
             const Core::Domain::FGs2Ptr& Gs2,
             const SkillTree::Domain::FGs2SkillTreeDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> PropertyId
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -244,10 +248,12 @@ namespace Gs2::SkillTree::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
+            TOptional<FString> PropertyId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
+            TOptional<FString> PropertyId
         );
 
         class GS2SKILLTREE_API FModelTask final :

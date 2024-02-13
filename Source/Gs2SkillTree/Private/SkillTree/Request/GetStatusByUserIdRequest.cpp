@@ -20,7 +20,8 @@ namespace Gs2::SkillTree::Request
 {
     FGetStatusByUserIdRequest::FGetStatusByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
-        UserIdValue(TOptional<FString>())
+        UserIdValue(TOptional<FString>()),
+        PropertyIdValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::SkillTree::Request
         const FGetStatusByUserIdRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        UserIdValue(From.UserIdValue)
+        UserIdValue(From.UserIdValue),
+        PropertyIdValue(From.PropertyIdValue)
     {
     }
 
@@ -56,6 +58,14 @@ namespace Gs2::SkillTree::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetStatusByUserIdRequest> FGetStatusByUserIdRequest::WithPropertyId(
+        const TOptional<FString> PropertyId
+    )
+    {
+        this->PropertyIdValue = PropertyId;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetStatusByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -69,6 +79,11 @@ namespace Gs2::SkillTree::Request
     TOptional<FString> FGetStatusByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FGetStatusByUserIdRequest::GetPropertyId() const
+    {
+        return PropertyIdValue;
     }
 
     TSharedPtr<FGetStatusByUserIdRequest> FGetStatusByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -95,6 +110,15 @@ namespace Gs2::SkillTree::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("propertyId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -112,6 +136,10 @@ namespace Gs2::SkillTree::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (PropertyIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -70,6 +70,10 @@
 #include "Task/Rest/RestrainTask.h"
 #include "Request/RestrainByUserIdRequest.h"
 #include "Task/Rest/RestrainByUserIdTask.h"
+#include "Request/DescribeStatusesRequest.h"
+#include "Task/Rest/DescribeStatusesTask.h"
+#include "Request/DescribeStatusesByUserIdRequest.h"
+#include "Task/Rest/DescribeStatusesByUserIdTask.h"
 #include "Request/GetStatusRequest.h"
 #include "Task/Rest/GetStatusTask.h"
 #include "Request/GetStatusByUserIdRequest.h"
@@ -204,6 +208,14 @@ namespace Gs2::SkillTree
 
         TSharedPtr<FAsyncTask<Task::Rest::FRestrainByUserIdTask>> RestrainByUserId(
             const Request::FRestrainByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeStatusesTask>> DescribeStatuses(
+            const Request::FDescribeStatusesRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeStatusesByUserIdTask>> DescribeStatusesByUserId(
+            const Request::FDescribeStatusesByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetStatusTask>> GetStatus(

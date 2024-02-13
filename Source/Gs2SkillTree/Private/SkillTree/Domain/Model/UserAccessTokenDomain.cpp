@@ -73,14 +73,57 @@ namespace Gs2::SkillTree::Domain::Model
 
     }
 
+    Gs2::SkillTree::Domain::Iterator::FDescribeStatusesIteratorPtr FUserAccessTokenDomain::Statuses(
+    ) const
+    {
+        return MakeShared<Gs2::SkillTree::Domain::Iterator::FDescribeStatusesIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName,
+            AccessToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeStatuses(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::SkillTree::Model::FStatus::TypeName,
+            Gs2::SkillTree::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Status"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeStatuses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::SkillTree::Model::FStatus::TypeName,
+            Gs2::SkillTree::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                "Status"
+            ),
+            CallbackID
+        );
+    }
+
     TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain> FUserAccessTokenDomain::Status(
+        const FString PropertyId
     )
     {
         return MakeShared<Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,
-            AccessToken
+            AccessToken,
+            PropertyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(PropertyId)
         );
     }
 

@@ -21,6 +21,7 @@ namespace Gs2::SkillTree::Request
     FResetByUserIdRequest::FResetByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
+        PropertyIdValue(TOptional<FString>()),
         ConfigValue(nullptr)
     {
     }
@@ -30,6 +31,7 @@ namespace Gs2::SkillTree::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
+        PropertyIdValue(From.PropertyIdValue),
         ConfigValue(From.ConfigValue)
     {
     }
@@ -55,6 +57,14 @@ namespace Gs2::SkillTree::Request
     )
     {
         this->UserIdValue = UserId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FResetByUserIdRequest> FResetByUserIdRequest::WithPropertyId(
+        const TOptional<FString> PropertyId
+    )
+    {
+        this->PropertyIdValue = PropertyId;
         return SharedThis(this);
     }
 
@@ -87,6 +97,11 @@ namespace Gs2::SkillTree::Request
     TOptional<FString> FResetByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FResetByUserIdRequest::GetPropertyId() const
+    {
+        return PropertyIdValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> FResetByUserIdRequest::GetConfig() const
@@ -128,6 +143,15 @@ namespace Gs2::SkillTree::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("propertyId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
               {
                   auto v = MakeShared<TArray<Model::FConfigPtr>>();
@@ -157,6 +181,10 @@ namespace Gs2::SkillTree::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (PropertyIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
         }
         if (ConfigValue != nullptr && ConfigValue.IsValid())
         {

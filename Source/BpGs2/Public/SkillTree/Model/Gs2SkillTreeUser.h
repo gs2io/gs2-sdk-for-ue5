@@ -36,6 +36,7 @@ class BPGS2_API UGs2SkillTreeUserFunctionLibrary : public UBlueprintFunctionLibr
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::SkillTree::OwnStatus", Category="Game Server Services|GS2-SkillTree|Namespace|User|Status", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Status") FGs2SkillTreeOwnStatus OwnStatus(
-        FGs2SkillTreeOwnUser User
+        FGs2SkillTreeOwnUser User,
+        FString PropertyId
     );
 };

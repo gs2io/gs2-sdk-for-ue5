@@ -39,6 +39,11 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         return Domain->UserId();
     }
 
+    TOptional<FString> FEzStatusGameSessionDomain::PropertyId() const
+    {
+        return Domain->PropertyId;
+    }
+
     FEzStatusGameSessionDomain::FEzStatusGameSessionDomain(
         Gs2::SkillTree::Domain::Model::FStatusAccessTokenDomainPtr Domain,
         Gs2::UE5::Util::FGameSessionPtr GameSession,

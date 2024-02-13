@@ -186,6 +186,18 @@
 #include "Task/Rest/RestrainByUserIdTask.h"
 #include "Task/WebSocket/RestrainByUserIdTask.h"
 
+// DescribeStatuses
+#include "Request/DescribeStatusesRequest.h"
+#include "Result/DescribeStatusesResult.h"
+#include "Task/Rest/DescribeStatusesTask.h"
+#include "Task/WebSocket/DescribeStatusesTask.h"
+
+// DescribeStatusesByUserId
+#include "Request/DescribeStatusesByUserIdRequest.h"
+#include "Result/DescribeStatusesByUserIdResult.h"
+#include "Task/Rest/DescribeStatusesByUserIdTask.h"
+#include "Task/WebSocket/DescribeStatusesByUserIdTask.h"
+
 // GetStatus
 #include "Request/GetStatusRequest.h"
 #include "Result/GetStatusResult.h"

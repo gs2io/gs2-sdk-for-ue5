@@ -21,6 +21,7 @@ namespace Gs2::SkillTree::Request
     FResetRequest::FResetRequest():
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
+        PropertyIdValue(TOptional<FString>()),
         ConfigValue(nullptr)
     {
     }
@@ -30,6 +31,7 @@ namespace Gs2::SkillTree::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
+        PropertyIdValue(From.PropertyIdValue),
         ConfigValue(From.ConfigValue)
     {
     }
@@ -55,6 +57,14 @@ namespace Gs2::SkillTree::Request
     )
     {
         this->AccessTokenValue = AccessToken;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FResetRequest> FResetRequest::WithPropertyId(
+        const TOptional<FString> PropertyId
+    )
+    {
+        this->PropertyIdValue = PropertyId;
         return SharedThis(this);
     }
 
@@ -87,6 +97,11 @@ namespace Gs2::SkillTree::Request
     TOptional<FString> FResetRequest::GetAccessToken() const
     {
         return AccessTokenValue;
+    }
+
+    TOptional<FString> FResetRequest::GetPropertyId() const
+    {
+        return PropertyIdValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> FResetRequest::GetConfig() const
@@ -128,6 +143,15 @@ namespace Gs2::SkillTree::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithPropertyId(Data->HasField("propertyId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("propertyId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
               {
                   auto v = MakeShared<TArray<Model::FConfigPtr>>();
@@ -157,6 +181,10 @@ namespace Gs2::SkillTree::Request
         if (AccessTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+        }
+        if (PropertyIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
         }
         if (ConfigValue != nullptr && ConfigValue.IsValid())
         {

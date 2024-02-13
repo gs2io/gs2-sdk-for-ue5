@@ -23,6 +23,8 @@
 #include "SkillTree/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelsIterator.h"
 #include "SkillTree/Domain/Iterator/DescribeNodeModelMastersIterator.h"
+#include "SkillTree/Domain/Iterator/DescribeStatusesIterator.h"
+#include "SkillTree/Domain/Iterator/DescribeStatusesByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {

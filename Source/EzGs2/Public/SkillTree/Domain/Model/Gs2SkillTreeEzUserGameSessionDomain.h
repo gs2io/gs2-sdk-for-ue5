@@ -39,6 +39,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
 
@@ -49,6 +50,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         );
 
         Gs2::UE5::SkillTree::Domain::Model::FEzStatusGameSessionDomainPtr Status(
+            const FString PropertyId
         ) const;
 
     };
