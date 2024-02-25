@@ -93,6 +93,7 @@ namespace Gs2::Core::Domain
         Realtime(nullptr),
         Schedule(nullptr),
         Script(nullptr),
+        SeasonRating(nullptr),
         SerialKey(nullptr),
         Showcase(nullptr),
         SkillTree(nullptr),
@@ -260,6 +261,10 @@ namespace Gs2::Core::Domain
                     {
                         Script->HandleNotification(Method, *Message->GetPayload());
                     }
+                    if (Service == "Gs2SeasonRating")
+                    {
+                        SeasonRating->HandleNotification(Method, *Message->GetPayload());
+                    }
                     if (Service == "Gs2SerialKey")
                     {
                         SerialKey->HandleNotification(Method, *Message->GetPayload());
@@ -333,6 +338,7 @@ namespace Gs2::Core::Domain
         Realtime(From.Realtime),
         Schedule(From.Schedule),
         Script(From.Script),
+        SeasonRating(From.SeasonRating),
         SerialKey(From.SerialKey),
         Showcase(From.Showcase),
         SkillTree(From.SkillTree),
@@ -386,6 +392,7 @@ namespace Gs2::Core::Domain
         Realtime = MakeShared<Realtime::Domain::FGs2RealtimeDomain>(SharedThis(this));
         Schedule = MakeShared<Schedule::Domain::FGs2ScheduleDomain>(SharedThis(this));
         Script = MakeShared<Script::Domain::FGs2ScriptDomain>(SharedThis(this));
+        SeasonRating = MakeShared<SeasonRating::Domain::FGs2SeasonRatingDomain>(SharedThis(this));
         SerialKey = MakeShared<SerialKey::Domain::FGs2SerialKeyDomain>(SharedThis(this));
         Showcase = MakeShared<Showcase::Domain::FGs2ShowcaseDomain>(SharedThis(this));
         SkillTree = MakeShared<SkillTree::Domain::FGs2SkillTreeDomain>(SharedThis(this));
@@ -437,6 +444,7 @@ namespace Gs2::Core::Domain
         Realtime->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Schedule->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Script->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        SeasonRating->OnIssueTransaction.AddLambda(IssueTransactionAction);
         SerialKey->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Showcase->OnIssueTransaction.AddLambda(IssueTransactionAction);
         SkillTree->OnIssueTransaction.AddLambda(IssueTransactionAction);
@@ -603,6 +611,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Script")
             {
                 Script->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2SeasonRating")
+            {
+                SeasonRating->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2SerialKey")
             {
@@ -788,6 +800,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Script")
             {
                 Script->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2SeasonRating")
+            {
+                SeasonRating->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2SerialKey")
             {
@@ -992,6 +1008,10 @@ namespace Gs2::Core::Domain
             if (Service == "script")
             {
                 Script->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "season_rating")
+            {
+                SeasonRating->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "serial_key")
             {

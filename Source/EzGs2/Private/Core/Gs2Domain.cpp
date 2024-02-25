@@ -59,6 +59,7 @@ namespace Gs2::UE5::Core::Domain
         Ranking = MakeShared<Gs2::UE5::Ranking::Domain::FEzGs2Ranking>(Super->Ranking, Connection);
         Realtime = MakeShared<Gs2::UE5::Realtime::Domain::FEzGs2Realtime>(Super->Realtime, Connection);
         Schedule = MakeShared<Gs2::UE5::Schedule::Domain::FEzGs2Schedule>(Super->Schedule, Connection);
+        SeasonRating = MakeShared<Gs2::UE5::SeasonRating::Domain::FEzGs2SeasonRating>(Super->SeasonRating, Connection);
         SerialKey = MakeShared<Gs2::UE5::SerialKey::Domain::FEzGs2SerialKey>(Super->SerialKey, Connection);
         Showcase = MakeShared<Gs2::UE5::Showcase::Domain::FEzGs2Showcase>(Super->Showcase, Connection);
         SkillTree = MakeShared<Gs2::UE5::SkillTree::Domain::FEzGs2SkillTree>(Super->SkillTree, Connection);

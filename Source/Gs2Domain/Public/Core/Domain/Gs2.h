@@ -55,6 +55,7 @@
 #include "Realtime/Domain/Gs2Realtime.h"
 #include "Schedule/Domain/Gs2Schedule.h"
 #include "Script/Domain/Gs2Script.h"
+#include "SeasonRating/Domain/Gs2SeasonRating.h"
 #include "SerialKey/Domain/Gs2SerialKey.h"
 #include "Showcase/Domain/Gs2Showcase.h"
 #include "SkillTree/Domain/Gs2SkillTree.h"
@@ -113,6 +114,7 @@ namespace Gs2::Core::Domain
         Gs2::Realtime::Domain::FGs2RealtimeDomainPtr Realtime;
         Gs2::Schedule::Domain::FGs2ScheduleDomainPtr Schedule;
         Gs2::Script::Domain::FGs2ScriptDomainPtr Script;
+        Gs2::SeasonRating::Domain::FGs2SeasonRatingDomainPtr SeasonRating;
         Gs2::SerialKey::Domain::FGs2SerialKeyDomainPtr SerialKey;
         Gs2::Showcase::Domain::FGs2ShowcaseDomainPtr Showcase;
         Gs2::SkillTree::Domain::FGs2SkillTreeDomainPtr SkillTree;

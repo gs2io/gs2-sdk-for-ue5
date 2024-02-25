@@ -103,6 +103,10 @@ namespace Gs2::Experience::Task::Rest
             {
                 JsonRootObject->SetStringField("experienceValue", FString::Printf(TEXT("%lld"), this->Request->GetExperienceValue().GetValue()));
             }
+            if (this->Request->GetTruncateExperienceWhenRankUp().IsSet())
+            {
+                JsonRootObject->SetBoolField("truncateExperienceWhenRankUp", this->Request->GetTruncateExperienceWhenRankUp().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

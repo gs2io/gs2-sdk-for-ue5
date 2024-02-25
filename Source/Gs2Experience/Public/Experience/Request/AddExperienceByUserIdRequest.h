@@ -30,6 +30,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> ExperienceNameValue;
         TOptional<FString> PropertyIdValue;
         TOptional<int64> ExperienceValueValue;
+        TOptional<bool> TruncateExperienceWhenRankUpValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FAddExperienceByUserIdRequest> WithExperienceName(const TOptional<FString> ExperienceName);
         TSharedPtr<FAddExperienceByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FAddExperienceByUserIdRequest> WithExperienceValue(const TOptional<int64> ExperienceValue);
+        TSharedPtr<FAddExperienceByUserIdRequest> WithTruncateExperienceWhenRankUp(const TOptional<bool> TruncateExperienceWhenRankUp);
         TSharedPtr<FAddExperienceByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,8 @@ namespace Gs2::Experience::Request
         TOptional<FString> GetPropertyId() const;
         TOptional<int64> GetExperienceValue() const;
         FString GetExperienceValueString() const;
+        TOptional<bool> GetTruncateExperienceWhenRankUp() const;
+        FString GetTruncateExperienceWhenRankUpString() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAddExperienceByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

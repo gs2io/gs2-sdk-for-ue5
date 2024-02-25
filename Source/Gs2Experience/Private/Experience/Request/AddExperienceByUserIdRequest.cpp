@@ -23,7 +23,8 @@ namespace Gs2::Experience::Request
         UserIdValue(TOptional<FString>()),
         ExperienceNameValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
-        ExperienceValueValue(TOptional<int64>())
+        ExperienceValueValue(TOptional<int64>()),
+        TruncateExperienceWhenRankUpValue(TOptional<bool>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Experience::Request
         UserIdValue(From.UserIdValue),
         ExperienceNameValue(From.ExperienceNameValue),
         PropertyIdValue(From.PropertyIdValue),
-        ExperienceValueValue(From.ExperienceValueValue)
+        ExperienceValueValue(From.ExperienceValueValue),
+        TruncateExperienceWhenRankUpValue(From.TruncateExperienceWhenRankUpValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Experience::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FAddExperienceByUserIdRequest> FAddExperienceByUserIdRequest::WithTruncateExperienceWhenRankUp(
+        const TOptional<bool> TruncateExperienceWhenRankUp
+    )
+    {
+        this->TruncateExperienceWhenRankUpValue = TruncateExperienceWhenRankUp;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FAddExperienceByUserIdRequest> FAddExperienceByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -131,6 +141,20 @@ namespace Gs2::Experience::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), ExperienceValueValue.GetValue());
+    }
+
+    TOptional<bool> FAddExperienceByUserIdRequest::GetTruncateExperienceWhenRankUp() const
+    {
+        return TruncateExperienceWhenRankUpValue;
+    }
+
+    FString FAddExperienceByUserIdRequest::GetTruncateExperienceWhenRankUpString() const
+    {
+        if (!TruncateExperienceWhenRankUpValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(TruncateExperienceWhenRankUpValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FAddExperienceByUserIdRequest::GetDuplicationAvoider() const
@@ -190,6 +214,15 @@ namespace Gs2::Experience::Request
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
+            ->WithTruncateExperienceWhenRankUp(Data->HasField("truncateExperienceWhenRankUp") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("truncateExperienceWhenRankUp", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -219,6 +252,10 @@ namespace Gs2::Experience::Request
         if (ExperienceValueValue.IsSet())
         {
             JsonRootObject->SetStringField("experienceValue", FString::Printf(TEXT("%lld"), ExperienceValueValue.GetValue()));
+        }
+        if (TruncateExperienceWhenRankUpValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("truncateExperienceWhenRankUp", TruncateExperienceWhenRankUpValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

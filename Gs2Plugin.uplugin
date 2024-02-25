@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "2024.2.6",
+	"VersionName": "2024.2.7",
 	"FriendlyName": "GS2 Plugin",
 	"Description": "Plugin for Game Server Services",
 	"Category": "Online Service",
@@ -197,6 +197,11 @@
 		},
 		{
 			"Name": "Gs2Script",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "Gs2SeasonRating",
 			"Type": "Runtime",
 			"LoadingPhase": "PostEngineInit"
 		},

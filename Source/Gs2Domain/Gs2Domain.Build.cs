@@ -53,6 +53,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2Realtime",
 			"Gs2Schedule",
 			"Gs2Script",
+			"Gs2SeasonRating",
 			"Gs2SerialKey",
 			"Gs2Showcase",
 			"Gs2SkillTree",
