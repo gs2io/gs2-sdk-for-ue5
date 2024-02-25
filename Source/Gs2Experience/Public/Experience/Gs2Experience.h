@@ -313,6 +313,12 @@
 #include "Task/Rest/AddExperienceByStampSheetTask.h"
 #include "Task/WebSocket/AddExperienceByStampSheetTask.h"
 
+// SetExperienceByStampSheet
+#include "Request/SetExperienceByStampSheetRequest.h"
+#include "Result/SetExperienceByStampSheetResult.h"
+#include "Task/Rest/SetExperienceByStampSheetTask.h"
+#include "Task/WebSocket/SetExperienceByStampSheetTask.h"
+
 // SubExperienceByStampTask
 #include "Request/SubExperienceByStampTaskRequest.h"
 #include "Result/SubExperienceByStampTaskResult.h"

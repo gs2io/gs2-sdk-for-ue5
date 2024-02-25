@@ -112,6 +112,8 @@
 #include "Task/Rest/VerifyRankCapByUserIdTask.h"
 #include "Request/AddExperienceByStampSheetRequest.h"
 #include "Task/Rest/AddExperienceByStampSheetTask.h"
+#include "Request/SetExperienceByStampSheetRequest.h"
+#include "Task/Rest/SetExperienceByStampSheetTask.h"
 #include "Request/SubExperienceByStampTaskRequest.h"
 #include "Task/Rest/SubExperienceByStampTaskTask.h"
 #include "Request/AddRankCapByStampSheetRequest.h"
@@ -326,6 +328,10 @@ namespace Gs2::Experience
 
         TSharedPtr<FAsyncTask<Task::Rest::FAddExperienceByStampSheetTask>> AddExperienceByStampSheet(
             const Request::FAddExperienceByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetExperienceByStampSheetTask>> SetExperienceByStampSheet(
+            const Request::FSetExperienceByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceByStampTaskTask>> SubExperienceByStampTask(

@@ -24,6 +24,7 @@
 
 #include "Experience/Domain/SpeculativeExecutor/Acquire/AcquireActionSpeculativeExecutorIndex.h"
 #include "Experience/Domain/SpeculativeExecutor/Acquire/AddExperienceByUserIdSpeculativeExecutor.h"
+#include "Experience/Domain/SpeculativeExecutor/Acquire/SetExperienceByUserIdSpeculativeExecutor.h"
 #include "Experience/Domain/SpeculativeExecutor/Acquire/AddRankCapByUserIdSpeculativeExecutor.h"
 #include "Experience/Domain/SpeculativeExecutor/Acquire/SetRankCapByUserIdSpeculativeExecutor.h"
 #include "Experience/Domain/SpeculativeExecutor/Acquire/MultiplyAcquireActionsByUserIdSpeculativeExecutor.h"
@@ -77,6 +78,28 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
             auto Request = Request::FAddExperienceByUserIdRequest::FromJson(RequestModelJson);
             Request = FAddExperienceByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FAddExperienceByUserIdSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FSetExperienceByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FSetExperienceByUserIdRequest::FromJson(RequestModelJson);
+            Request = FSetExperienceByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FSetExperienceByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

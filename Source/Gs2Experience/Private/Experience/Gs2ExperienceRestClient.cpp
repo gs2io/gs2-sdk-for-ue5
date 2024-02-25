@@ -442,6 +442,15 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSetExperienceByStampSheetTask>> FGs2ExperienceRestClient::SetExperienceByStampSheet(
+        const Request::FSetExperienceByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetExperienceByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FSubExperienceByStampTaskTask>> FGs2ExperienceRestClient::SubExperienceByStampTask(
         const Request::FSubExperienceByStampTaskRequestPtr Request) const
     {

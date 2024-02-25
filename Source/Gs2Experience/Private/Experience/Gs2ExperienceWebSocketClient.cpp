@@ -442,6 +442,15 @@ namespace Gs2::Experience
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetExperienceByStampSheetTask>> FGs2ExperienceWebSocketClient::SetExperienceByStampSheet(
+        const Request::FSetExperienceByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetExperienceByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FSubExperienceByStampTaskTask>> FGs2ExperienceWebSocketClient::SubExperienceByStampTask(
         const Request::FSubExperienceByStampTaskRequestPtr Request) const
     {
