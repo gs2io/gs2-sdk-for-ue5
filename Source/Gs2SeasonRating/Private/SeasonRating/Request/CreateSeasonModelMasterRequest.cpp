@@ -24,7 +24,8 @@ namespace Gs2::SeasonRating::Request
         DescriptionValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
         TiersValue(nullptr),
-        ExperienceModelIdValue(TOptional<FString>())
+        ExperienceModelIdValue(TOptional<FString>()),
+        ChallengePeriodEventIdValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::SeasonRating::Request
         DescriptionValue(From.DescriptionValue),
         MetadataValue(From.MetadataValue),
         TiersValue(From.TiersValue),
-        ExperienceModelIdValue(From.ExperienceModelIdValue)
+        ExperienceModelIdValue(From.ExperienceModelIdValue),
+        ChallengePeriodEventIdValue(From.ChallengePeriodEventIdValue)
     {
     }
 
@@ -96,6 +98,14 @@ namespace Gs2::SeasonRating::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateSeasonModelMasterRequest> FCreateSeasonModelMasterRequest::WithChallengePeriodEventId(
+        const TOptional<FString> ChallengePeriodEventId
+    )
+    {
+        this->ChallengePeriodEventIdValue = ChallengePeriodEventId;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FCreateSeasonModelMasterRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -133,6 +143,11 @@ namespace Gs2::SeasonRating::Request
     TOptional<FString> FCreateSeasonModelMasterRequest::GetExperienceModelId() const
     {
         return ExperienceModelIdValue;
+    }
+
+    TOptional<FString> FCreateSeasonModelMasterRequest::GetChallengePeriodEventId() const
+    {
+        return ChallengePeriodEventIdValue;
     }
 
     TSharedPtr<FCreateSeasonModelMasterRequest> FCreateSeasonModelMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -198,6 +213,15 @@ namespace Gs2::SeasonRating::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithChallengePeriodEventId(Data->HasField("challengePeriodEventId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("challengePeriodEventId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -236,6 +260,10 @@ namespace Gs2::SeasonRating::Request
         if (ExperienceModelIdValue.IsSet())
         {
             JsonRootObject->SetStringField("experienceModelId", ExperienceModelIdValue.GetValue());
+        }
+        if (ChallengePeriodEventIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("challengePeriodEventId", ChallengePeriodEventIdValue.GetValue());
         }
         return JsonRootObject;
     }

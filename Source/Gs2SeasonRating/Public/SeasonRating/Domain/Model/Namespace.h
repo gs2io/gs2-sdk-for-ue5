@@ -231,6 +231,32 @@ namespace Gs2::SeasonRating::Domain::Model
             Request::FCreateSeasonModelMasterRequestPtr Request
         );
 
+        class GS2SEASONRATING_API FCreateMatchSessionTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FMatchSessionDomain>,
+            public TSharedFromThis<FCreateMatchSessionTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateMatchSessionRequestPtr Request;
+        public:
+            explicit FCreateMatchSessionTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FCreateMatchSessionRequestPtr Request
+            );
+
+            FCreateMatchSessionTask(
+                const FCreateMatchSessionTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::SeasonRating::Domain::Model::FMatchSessionDomain>> Result
+            ) override;
+        };
+        friend FCreateMatchSessionTask;
+
+        TSharedPtr<FAsyncTask<FCreateMatchSessionTask>> CreateMatchSession(
+            Request::FCreateMatchSessionRequestPtr Request
+        );
+
         class GS2SEASONRATING_API FVoteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FBallotDomain>,
             public TSharedFromThis<FVoteTask>

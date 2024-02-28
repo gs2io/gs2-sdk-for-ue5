@@ -23,9 +23,7 @@ namespace Gs2::SeasonRating::Model
 {
     class GS2SEASONRATING_API FTransactionSetting final : public Gs2Object, public TSharedFromThis<FTransactionSetting>
     {
-        TOptional<bool> EnableAutoRunValue;
         TOptional<FString> DistributorNamespaceIdValue;
-        TOptional<FString> KeyIdValue;
         TOptional<FString> QueueNamespaceIdValue;
 
     public:
@@ -35,15 +33,10 @@ namespace Gs2::SeasonRating::Model
         );
         virtual ~FTransactionSetting() override = default;
 
-        TSharedPtr<FTransactionSetting> WithEnableAutoRun(const TOptional<bool> EnableAutoRun);
         TSharedPtr<FTransactionSetting> WithDistributorNamespaceId(const TOptional<FString> DistributorNamespaceId);
-        TSharedPtr<FTransactionSetting> WithKeyId(const TOptional<FString> KeyId);
         TSharedPtr<FTransactionSetting> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
 
-        TOptional<bool> GetEnableAutoRun() const;
-        FString GetEnableAutoRunString() const;
         TOptional<FString> GetDistributorNamespaceId() const;
-        TOptional<FString> GetKeyId() const;
         TOptional<FString> GetQueueNamespaceId() const;
 
 

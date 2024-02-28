@@ -21,7 +21,11 @@
 #include "Core/BpGs2Constant.h"
 
 FGs2SeasonRatingOwnBallot UGs2SeasonRatingUserFunctionLibrary::OwnBallot(
-    FGs2SeasonRatingOwnUser User
+    FGs2SeasonRatingOwnUser User,
+    FString SeasonName,
+    FString SessionName,
+    int32 NumberOfPlayer,
+    FString KeyId
 )
 {
     FGs2SeasonRatingOwnBallot Return;
@@ -29,7 +33,23 @@ FGs2SeasonRatingOwnBallot UGs2SeasonRatingUserFunctionLibrary::OwnBallot(
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2SeasonRatingUserFunctionLibrary::OwnBallot] User parameter specification is missing."))
         return Return;
     }
+    if (SeasonName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SeasonRatingUserFunctionLibrary::OwnBallot] SeasonName parameter specification is missing."))
+        return Return;
+    }
+    if (SessionName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SeasonRatingUserFunctionLibrary::OwnBallot] SessionName parameter specification is missing."))
+        return Return;
+    }
+    if (KeyId == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2SeasonRatingUserFunctionLibrary::OwnBallot] KeyId parameter specification is missing."))
+        return Return;
+    }
     Return.Value = User.Value->Ballot(
+        SeasonName,
+        SessionName,
+        NumberOfPlayer,
+        KeyId
     );
     return Return;
 }

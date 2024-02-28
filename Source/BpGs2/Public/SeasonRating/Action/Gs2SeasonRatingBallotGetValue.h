@@ -33,8 +33,6 @@ class BPGS2_API UGs2SeasonRatingBallotGetValueAsyncFunction : public UBlueprintA
     FGs2SeasonRatingOwnBallot Ballot;
 
 public:
-    FString SeasonName;
-    FString SessionName;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2SeasonRatingBallotGetValueSuccessDelegate OnSuccess;

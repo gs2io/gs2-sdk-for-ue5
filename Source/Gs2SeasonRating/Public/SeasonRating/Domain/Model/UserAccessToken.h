@@ -81,6 +81,10 @@ namespace Gs2::SeasonRating::Domain::Model
         );
 
         TSharedPtr<Gs2::SeasonRating::Domain::Model::FBallotAccessTokenDomain> Ballot(
+            const FString SeasonName,
+            const FString SessionName,
+            const int32 NumberOfPlayer,
+            const FString KeyId
         );
 
         static FString CreateCacheParentKey(

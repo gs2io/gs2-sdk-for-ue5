@@ -30,6 +30,7 @@ namespace Gs2::SeasonRating::Model
         TOptional<FString> DescriptionValue;
         TSharedPtr<TArray<TSharedPtr<FTierModel>>> TiersValue;
         TOptional<FString> ExperienceModelIdValue;
+        TOptional<FString> ChallengePeriodEventIdValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -47,6 +48,7 @@ namespace Gs2::SeasonRating::Model
         TSharedPtr<FSeasonModelMaster> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FSeasonModelMaster> WithTiers(const TSharedPtr<TArray<TSharedPtr<FTierModel>>> Tiers);
         TSharedPtr<FSeasonModelMaster> WithExperienceModelId(const TOptional<FString> ExperienceModelId);
+        TSharedPtr<FSeasonModelMaster> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
         TSharedPtr<FSeasonModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FSeasonModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FSeasonModelMaster> WithRevision(const TOptional<int64> Revision);
@@ -57,6 +59,7 @@ namespace Gs2::SeasonRating::Model
         TOptional<FString> GetDescription() const;
         TSharedPtr<TArray<TSharedPtr<FTierModel>>> GetTiers() const;
         TOptional<FString> GetExperienceModelId() const;
+        TOptional<FString> GetChallengePeriodEventId() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

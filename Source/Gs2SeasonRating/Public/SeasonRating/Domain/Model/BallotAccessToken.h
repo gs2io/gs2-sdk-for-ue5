@@ -72,6 +72,10 @@ namespace Gs2::SeasonRating::Domain::Model
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
+        TOptional<FString> SeasonName;
+        TOptional<FString> SessionName;
+        TOptional<int32> NumberOfPlayer;
+        TOptional<FString> KeyId;
     private:
 
         FString ParentKey;
@@ -82,7 +86,11 @@ namespace Gs2::SeasonRating::Domain::Model
             const Core::Domain::FGs2Ptr& Gs2,
             const SeasonRating::Domain::FGs2SeasonRatingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const TOptional<FString> SeasonName,
+            const TOptional<FString> SessionName,
+            const TOptional<int32> NumberOfPlayer,
+            const TOptional<FString> KeyId
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -119,10 +127,18 @@ namespace Gs2::SeasonRating::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
+            TOptional<FString> SeasonName,
+            TOptional<FString> SessionName,
+            TOptional<FString> NumberOfPlayer,
+            TOptional<FString> KeyId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
+            TOptional<FString> SeasonName,
+            TOptional<FString> SessionName,
+            TOptional<FString> NumberOfPlayer,
+            TOptional<FString> KeyId
         );
 
         class GS2SEASONRATING_API FModelTask final :

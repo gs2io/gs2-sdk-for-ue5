@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -70,6 +72,10 @@ namespace Gs2::SeasonRating::Domain::Model
         }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
+        TOptional<FString> SeasonName;
+        TOptional<FString> SessionName;
+        TOptional<int32> NumberOfPlayer;
+        TOptional<FString> KeyId;
     private:
 
         FString ParentKey;
@@ -80,7 +86,11 @@ namespace Gs2::SeasonRating::Domain::Model
             const Core::Domain::FGs2Ptr& Gs2,
             const SeasonRating::Domain::FGs2SeasonRatingDomainPtr& Service,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> SeasonName,
+            const TOptional<FString> SessionName,
+            const TOptional<int32> NumberOfPlayer,
+            const TOptional<FString> KeyId
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -89,7 +99,7 @@ namespace Gs2::SeasonRating::Domain::Model
         );
 
         class GS2SEASONRATING_API FGetTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Model::FBallot>,
+            public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FBallotDomain>,
             public TSharedFromThis<FGetTask>
         {
             const TSharedPtr<FBallotDomain> Self;
@@ -105,7 +115,7 @@ namespace Gs2::SeasonRating::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FBallot>> Result
+                TSharedPtr<TSharedPtr<Gs2::SeasonRating::Domain::Model::FBallotDomain>> Result
             ) override;
         };
         friend FGetTask;
@@ -117,10 +127,18 @@ namespace Gs2::SeasonRating::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
+            TOptional<FString> SeasonName,
+            TOptional<FString> SessionName,
+            TOptional<FString> NumberOfPlayer,
+            TOptional<FString> KeyId,
             FString ChildType
         );
 
         static FString CreateCacheKey(
+            TOptional<FString> SeasonName,
+            TOptional<FString> SessionName,
+            TOptional<FString> NumberOfPlayer,
+            TOptional<FString> KeyId
         );
 
         class GS2SEASONRATING_API FModelTask final :

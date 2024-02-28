@@ -357,6 +357,74 @@ namespace Gs2::SeasonRating::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCreateSeasonModelMasterTask>>(this->AsShared(), Request);
     }
 
+    FNamespaceDomain::FCreateMatchSessionTask::FCreateMatchSessionTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FCreateMatchSessionRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateMatchSessionTask::FCreateMatchSessionTask(
+        const FCreateMatchSessionTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateMatchSessionTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::SeasonRating::Domain::Model::FMatchSessionDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateMatchSession(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::SeasonRating::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "MatchSession"
+                );
+                const auto Key = Gs2::SeasonRating::Domain::Model::FMatchSessionDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::SeasonRating::Model::FMatchSession::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::SeasonRating::Domain::Model::FMatchSessionDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateMatchSessionTask>> FNamespaceDomain::CreateMatchSession(
+        Request::FCreateMatchSessionRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateMatchSessionTask>>(this->AsShared(), Request);
+    }
+
     FNamespaceDomain::FVoteTask::FVoteTask(
         const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FVoteRequestPtr Request
@@ -398,6 +466,10 @@ namespace Gs2::SeasonRating::Domain::Model
                     "Ballot"
                 );
                 const auto Key = Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetSeasonName(),
+                    ResultModel->GetItem()->GetSessionName(),
+                    ResultModel->GetItem()->GetNumberOfPlayer().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetNumberOfPlayer()) : TOptional<FString>(),
+                    RequestModel->GetKeyId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::SeasonRating::Model::FBallot::TypeName,
@@ -412,7 +484,11 @@ namespace Gs2::SeasonRating::Domain::Model
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId()
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetSeasonName(),
+            ResultModel->GetItem()->GetSessionName(),
+            ResultModel->GetItem()->GetNumberOfPlayer(),
+            Request->GetKeyId()
         );
 
         *Result = Domain;
@@ -466,6 +542,10 @@ namespace Gs2::SeasonRating::Domain::Model
                     "Ballot"
                 );
                 const auto Key = Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetSeasonName(),
+                    ResultModel->GetItem()->GetSessionName(),
+                    ResultModel->GetItem()->GetNumberOfPlayer().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetNumberOfPlayer()) : TOptional<FString>(),
+                    RequestModel->GetKeyId()
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::SeasonRating::Model::FBallot::TypeName,
@@ -480,7 +560,11 @@ namespace Gs2::SeasonRating::Domain::Model
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId()
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetSeasonName(),
+            ResultModel->GetItem()->GetSessionName(),
+            ResultModel->GetItem()->GetNumberOfPlayer(),
+            Request->GetKeyId()
         );
 
         *Result = Domain;

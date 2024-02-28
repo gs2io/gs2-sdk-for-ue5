@@ -29,6 +29,7 @@ namespace Gs2::SeasonRating::Model
         TOptional<FString> MetadataValue;
         TSharedPtr<TArray<TSharedPtr<FTierModel>>> TiersValue;
         TOptional<FString> ExperienceModelIdValue;
+        TOptional<FString> ChallengePeriodEventIdValue;
 
     public:
         FSeasonModel();
@@ -42,12 +43,14 @@ namespace Gs2::SeasonRating::Model
         TSharedPtr<FSeasonModel> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FSeasonModel> WithTiers(const TSharedPtr<TArray<TSharedPtr<FTierModel>>> Tiers);
         TSharedPtr<FSeasonModel> WithExperienceModelId(const TOptional<FString> ExperienceModelId);
+        TSharedPtr<FSeasonModel> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
 
         TOptional<FString> GetSeasonModelId() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
         TSharedPtr<TArray<TSharedPtr<FTierModel>>> GetTiers() const;
         TOptional<FString> GetExperienceModelId() const;
+        TOptional<FString> GetChallengePeriodEventId() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

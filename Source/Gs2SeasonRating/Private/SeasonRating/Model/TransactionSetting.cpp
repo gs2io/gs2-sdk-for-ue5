@@ -19,9 +19,7 @@
 namespace Gs2::SeasonRating::Model
 {
     FTransactionSetting::FTransactionSetting():
-        EnableAutoRunValue(TOptional<bool>()),
         DistributorNamespaceIdValue(TOptional<FString>()),
-        KeyIdValue(TOptional<FString>()),
         QueueNamespaceIdValue(TOptional<FString>())
     {
     }
@@ -29,19 +27,9 @@ namespace Gs2::SeasonRating::Model
     FTransactionSetting::FTransactionSetting(
         const FTransactionSetting& From
     ):
-        EnableAutoRunValue(From.EnableAutoRunValue),
         DistributorNamespaceIdValue(From.DistributorNamespaceIdValue),
-        KeyIdValue(From.KeyIdValue),
         QueueNamespaceIdValue(From.QueueNamespaceIdValue)
     {
-    }
-
-    TSharedPtr<FTransactionSetting> FTransactionSetting::WithEnableAutoRun(
-        const TOptional<bool> EnableAutoRun
-    )
-    {
-        this->EnableAutoRunValue = EnableAutoRun;
-        return SharedThis(this);
     }
 
     TSharedPtr<FTransactionSetting> FTransactionSetting::WithDistributorNamespaceId(
@@ -52,14 +40,6 @@ namespace Gs2::SeasonRating::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FTransactionSetting> FTransactionSetting::WithKeyId(
-        const TOptional<FString> KeyId
-    )
-    {
-        this->KeyIdValue = KeyId;
-        return SharedThis(this);
-    }
-
     TSharedPtr<FTransactionSetting> FTransactionSetting::WithQueueNamespaceId(
         const TOptional<FString> QueueNamespaceId
     )
@@ -67,26 +47,9 @@ namespace Gs2::SeasonRating::Model
         this->QueueNamespaceIdValue = QueueNamespaceId;
         return SharedThis(this);
     }
-    TOptional<bool> FTransactionSetting::GetEnableAutoRun() const
-    {
-        return EnableAutoRunValue;
-    }
-
-    FString FTransactionSetting::GetEnableAutoRunString() const
-    {
-        if (!EnableAutoRunValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString(EnableAutoRunValue.GetValue() ? "true" : "false");
-    }
     TOptional<FString> FTransactionSetting::GetDistributorNamespaceId() const
     {
         return DistributorNamespaceIdValue;
-    }
-    TOptional<FString> FTransactionSetting::GetKeyId() const
-    {
-        return KeyIdValue;
     }
     TOptional<FString> FTransactionSetting::GetQueueNamespaceId() const
     {
@@ -99,28 +62,10 @@ namespace Gs2::SeasonRating::Model
             return nullptr;
         }
         return MakeShared<FTransactionSetting>()
-            ->WithEnableAutoRun(Data->HasField("enableAutoRun") ? [Data]() -> TOptional<bool>
-                {
-                    bool v;
-                    if (Data->TryGetBoolField("enableAutoRun", v))
-                    {
-                        return TOptional(v);
-                    }
-                    return TOptional<bool>();
-                }() : TOptional<bool>())
             ->WithDistributorNamespaceId(Data->HasField("distributorNamespaceId") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
                     if (Data->TryGetStringField("distributorNamespaceId", v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
-            ->WithKeyId(Data->HasField("keyId") ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField("keyId", v))
                     {
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
@@ -140,17 +85,9 @@ namespace Gs2::SeasonRating::Model
     TSharedPtr<FJsonObject> FTransactionSetting::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-        if (EnableAutoRunValue.IsSet())
-        {
-            JsonRootObject->SetBoolField("enableAutoRun", EnableAutoRunValue.GetValue());
-        }
         if (DistributorNamespaceIdValue.IsSet())
         {
             JsonRootObject->SetStringField("distributorNamespaceId", DistributorNamespaceIdValue.GetValue());
-        }
-        if (KeyIdValue.IsSet())
-        {
-            JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
         }
         if (QueueNamespaceIdValue.IsSet())
         {

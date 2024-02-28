@@ -36,6 +36,10 @@ class BPGS2_API UGs2SeasonRatingUserFunctionLibrary : public UBlueprintFunctionL
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::SeasonRating::OwnBallot", Category="Game Server Services|GS2-SeasonRating|Namespace|User|Ballot", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Ballot") FGs2SeasonRatingOwnBallot OwnBallot(
-        FGs2SeasonRatingOwnUser User
+        FGs2SeasonRatingOwnUser User,
+        FString SeasonName,
+        FString SessionName,
+        int32 NumberOfPlayer,
+        FString KeyId
     );
 };

@@ -32,6 +32,7 @@ namespace Gs2::SeasonRating::Request
         TOptional<FString> MetadataValue;
         TSharedPtr<TArray<TSharedPtr<Model::FTierModel>>> TiersValue;
         TOptional<FString> ExperienceModelIdValue;
+        TOptional<FString> ChallengePeriodEventIdValue;
         
     public:
         
@@ -48,6 +49,7 @@ namespace Gs2::SeasonRating::Request
         TSharedPtr<FCreateSeasonModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FCreateSeasonModelMasterRequest> WithTiers(const TSharedPtr<TArray<TSharedPtr<Model::FTierModel>>> Tiers);
         TSharedPtr<FCreateSeasonModelMasterRequest> WithExperienceModelId(const TOptional<FString> ExperienceModelId);
+        TSharedPtr<FCreateSeasonModelMasterRequest> WithChallengePeriodEventId(const TOptional<FString> ChallengePeriodEventId);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -55,6 +57,7 @@ namespace Gs2::SeasonRating::Request
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;TSharedPtr<TArray<TSharedPtr<Model::FTierModel>>> GetTiers() const;
         TOptional<FString> GetExperienceModelId() const;
+        TOptional<FString> GetChallengePeriodEventId() const;
 
         static TSharedPtr<FCreateSeasonModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -39,6 +39,26 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
         return Domain->UserId;
     }
 
+    TOptional<FString> FEzBallotDomain::SeasonName() const
+    {
+        return Domain->SeasonName;
+    }
+
+    TOptional<FString> FEzBallotDomain::SessionName() const
+    {
+        return Domain->SessionName;
+    }
+
+    TOptional<int32> FEzBallotDomain::NumberOfPlayer() const
+    {
+        return Domain->NumberOfPlayer;
+    }
+
+    TOptional<FString> FEzBallotDomain::KeyId() const
+    {
+        return Domain->KeyId;
+    }
+
     FEzBallotDomain::FEzBallotDomain(
         Gs2::SeasonRating::Domain::Model::FBallotDomainPtr Domain,
         Gs2::UE5::Util::FGs2ConnectionPtr Connection

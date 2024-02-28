@@ -76,13 +76,21 @@ namespace Gs2::SeasonRating::Domain::Model
     }
 
     TSharedPtr<Gs2::SeasonRating::Domain::Model::FBallotAccessTokenDomain> FUserAccessTokenDomain::Ballot(
+        const FString SeasonName,
+        const FString SessionName,
+        const int32 NumberOfPlayer,
+        const FString KeyId
     )
     {
         return MakeShared<Gs2::SeasonRating::Domain::Model::FBallotAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,
-            AccessToken
+            AccessToken,
+            SeasonName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SeasonName),
+            SessionName == TEXT("") ? TOptional<FString>() : TOptional<FString>(SessionName),
+            NumberOfPlayer,
+            KeyId == TEXT("") ? TOptional<FString>() : TOptional<FString>(KeyId)
         );
     }
 

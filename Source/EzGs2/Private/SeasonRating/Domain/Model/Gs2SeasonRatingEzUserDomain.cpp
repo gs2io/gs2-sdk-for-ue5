@@ -40,10 +40,18 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
     }
 
     Gs2::UE5::SeasonRating::Domain::Model::FEzBallotDomainPtr FEzUserDomain::Ballot(
+        const FString SeasonName,
+        const FString SessionName,
+        const int32 NumberOfPlayer,
+        const FString KeyId
     ) const
     {
         return MakeShared<Gs2::UE5::SeasonRating::Domain::Model::FEzBallotDomain>(
             Domain->Ballot(
+                SeasonName,
+                SessionName,
+                NumberOfPlayer,
+                KeyId
             ),
             ConnectionValue
         );

@@ -110,6 +110,10 @@ namespace Gs2::SeasonRating::Task::Rest
             {
                 JsonRootObject->SetStringField("experienceModelId", this->Request->GetExperienceModelId().GetValue());
             }
+            if (this->Request->GetChallengePeriodEventId().IsSet())
+            {
+                JsonRootObject->SetStringField("challengePeriodEventId", this->Request->GetChallengePeriodEventId().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

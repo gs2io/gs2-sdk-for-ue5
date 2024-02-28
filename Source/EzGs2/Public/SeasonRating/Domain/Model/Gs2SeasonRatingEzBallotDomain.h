@@ -41,6 +41,10 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
         TOptional<FString> Signature() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
+        TOptional<FString> SeasonName() const;
+        TOptional<FString> SessionName() const;
+        TOptional<int32> NumberOfPlayer() const;
+        TOptional<FString> KeyId() const;
 
         FEzBallotDomain(
             Gs2::SeasonRating::Domain::Model::FBallotDomainPtr Domain,

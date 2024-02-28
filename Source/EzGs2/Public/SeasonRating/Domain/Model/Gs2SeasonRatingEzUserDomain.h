@@ -49,6 +49,10 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
         );
 
         Gs2::UE5::SeasonRating::Domain::Model::FEzBallotDomainPtr Ballot(
+            const FString SeasonName,
+            const FString SessionName,
+            const int32 NumberOfPlayer,
+            const FString KeyId
         ) const;
 
     };
