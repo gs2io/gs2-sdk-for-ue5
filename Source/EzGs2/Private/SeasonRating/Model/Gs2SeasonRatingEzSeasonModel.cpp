@@ -19,6 +19,14 @@
 namespace Gs2::UE5::SeasonRating::Model
 {
 
+    TSharedPtr<FEzSeasonModel> FEzSeasonModel::WithSeasonModelId(
+        const TOptional<FString> SeasonModelId
+    )
+    {
+        this->SeasonModelIdValue = SeasonModelId;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzSeasonModel> FEzSeasonModel::WithName(
         const TOptional<FString> Name
     )
@@ -50,6 +58,10 @@ namespace Gs2::UE5::SeasonRating::Model
         this->ExperienceModelIdValue = ExperienceModelId;
         return SharedThis(this);
     }
+    TOptional<FString> FEzSeasonModel::GetSeasonModelId() const
+    {
+        return SeasonModelIdValue;
+    }
     TOptional<FString> FEzSeasonModel::GetName() const
     {
         return NameValue;
@@ -70,6 +82,7 @@ namespace Gs2::UE5::SeasonRating::Model
     Gs2::SeasonRating::Model::FSeasonModelPtr FEzSeasonModel::ToModel() const
     {
         return MakeShared<Gs2::SeasonRating::Model::FSeasonModel>()
+            ->WithSeasonModelId(SeasonModelIdValue)
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
             ->WithTiers([&]
@@ -96,6 +109,7 @@ namespace Gs2::UE5::SeasonRating::Model
             return nullptr;
         }
         return MakeShared<FEzSeasonModel>()
+            ->WithSeasonModelId(Model->GetSeasonModelId())
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
             ->WithTiers([&]

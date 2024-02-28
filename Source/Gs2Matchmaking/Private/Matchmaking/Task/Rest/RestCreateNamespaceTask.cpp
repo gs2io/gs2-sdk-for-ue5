@@ -114,6 +114,18 @@ namespace Gs2::Matchmaking::Task::Rest
             {
                 JsonRootObject->SetStringField("completeMatchmakingTriggerScriptId", this->Request->GetCompleteMatchmakingTriggerScriptId().GetValue());
             }
+            if (this->Request->GetEnableCollaborateSeasonRating().IsSet())
+            {
+                JsonRootObject->SetStringField("enableCollaborateSeasonRating", this->Request->GetEnableCollaborateSeasonRating().GetValue());
+            }
+            if (this->Request->GetCollaborateSeasonRatingNamespaceId().IsSet())
+            {
+                JsonRootObject->SetStringField("collaborateSeasonRatingNamespaceId", this->Request->GetCollaborateSeasonRatingNamespaceId().GetValue());
+            }
+            if (this->Request->GetCollaborateSeasonRatingTtl().IsSet())
+            {
+                JsonRootObject->SetNumberField("collaborateSeasonRatingTtl", this->Request->GetCollaborateSeasonRatingTtl().GetValue());
+            }
             if (this->Request->GetChangeRatingScript() != nullptr && this->Request->GetChangeRatingScript().IsValid())
             {
                 JsonRootObject->SetObjectField("changeRatingScript", this->Request->GetChangeRatingScript()->ToJson());

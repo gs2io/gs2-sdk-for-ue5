@@ -28,6 +28,9 @@ namespace Gs2::Matchmaking::Request
         CompleteMatchmakingTriggerTypeValue(TOptional<FString>()),
         CompleteMatchmakingTriggerRealtimeNamespaceIdValue(TOptional<FString>()),
         CompleteMatchmakingTriggerScriptIdValue(TOptional<FString>()),
+        EnableCollaborateSeasonRatingValue(TOptional<FString>()),
+        CollaborateSeasonRatingNamespaceIdValue(TOptional<FString>()),
+        CollaborateSeasonRatingTtlValue(TOptional<int32>()),
         ChangeRatingScriptValue(nullptr),
         JoinNotificationValue(nullptr),
         LeaveNotificationValue(nullptr),
@@ -49,6 +52,9 @@ namespace Gs2::Matchmaking::Request
         CompleteMatchmakingTriggerTypeValue(From.CompleteMatchmakingTriggerTypeValue),
         CompleteMatchmakingTriggerRealtimeNamespaceIdValue(From.CompleteMatchmakingTriggerRealtimeNamespaceIdValue),
         CompleteMatchmakingTriggerScriptIdValue(From.CompleteMatchmakingTriggerScriptIdValue),
+        EnableCollaborateSeasonRatingValue(From.EnableCollaborateSeasonRatingValue),
+        CollaborateSeasonRatingNamespaceIdValue(From.CollaborateSeasonRatingNamespaceIdValue),
+        CollaborateSeasonRatingTtlValue(From.CollaborateSeasonRatingTtlValue),
         ChangeRatingScriptValue(From.ChangeRatingScriptValue),
         JoinNotificationValue(From.JoinNotificationValue),
         LeaveNotificationValue(From.LeaveNotificationValue),
@@ -135,6 +141,30 @@ namespace Gs2::Matchmaking::Request
     )
     {
         this->CompleteMatchmakingTriggerScriptIdValue = CompleteMatchmakingTriggerScriptId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithEnableCollaborateSeasonRating(
+        const TOptional<FString> EnableCollaborateSeasonRating
+    )
+    {
+        this->EnableCollaborateSeasonRatingValue = EnableCollaborateSeasonRating;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithCollaborateSeasonRatingNamespaceId(
+        const TOptional<FString> CollaborateSeasonRatingNamespaceId
+    )
+    {
+        this->CollaborateSeasonRatingNamespaceIdValue = CollaborateSeasonRatingNamespaceId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithCollaborateSeasonRatingTtl(
+        const TOptional<int32> CollaborateSeasonRatingTtl
+    )
+    {
+        this->CollaborateSeasonRatingTtlValue = CollaborateSeasonRatingTtl;
         return SharedThis(this);
     }
 
@@ -243,6 +273,30 @@ namespace Gs2::Matchmaking::Request
     TOptional<FString> FUpdateNamespaceRequest::GetCompleteMatchmakingTriggerScriptId() const
     {
         return CompleteMatchmakingTriggerScriptIdValue;
+    }
+
+    TOptional<FString> FUpdateNamespaceRequest::GetEnableCollaborateSeasonRating() const
+    {
+        return EnableCollaborateSeasonRatingValue;
+    }
+
+    TOptional<FString> FUpdateNamespaceRequest::GetCollaborateSeasonRatingNamespaceId() const
+    {
+        return CollaborateSeasonRatingNamespaceIdValue;
+    }
+
+    TOptional<int32> FUpdateNamespaceRequest::GetCollaborateSeasonRatingTtl() const
+    {
+        return CollaborateSeasonRatingTtlValue;
+    }
+
+    FString FUpdateNamespaceRequest::GetCollaborateSeasonRatingTtlString() const
+    {
+        if (!CollaborateSeasonRatingTtlValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), CollaborateSeasonRatingTtlValue.GetValue());
     }
 
     TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetChangeRatingScript() const
@@ -387,6 +441,33 @@ namespace Gs2::Matchmaking::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithEnableCollaborateSeasonRating(Data->HasField("enableCollaborateSeasonRating") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("enableCollaborateSeasonRating", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithCollaborateSeasonRatingNamespaceId(Data->HasField("collaborateSeasonRatingNamespaceId") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("collaborateSeasonRatingNamespaceId", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithCollaborateSeasonRatingTtl(Data->HasField("collaborateSeasonRatingTtl") ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField("collaborateSeasonRatingTtl", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>())
           ->WithChangeRatingScript(Data->HasField("changeRatingScript") ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("changeRatingScript"))
@@ -479,6 +560,18 @@ namespace Gs2::Matchmaking::Request
         if (CompleteMatchmakingTriggerScriptIdValue.IsSet())
         {
             JsonRootObject->SetStringField("completeMatchmakingTriggerScriptId", CompleteMatchmakingTriggerScriptIdValue.GetValue());
+        }
+        if (EnableCollaborateSeasonRatingValue.IsSet())
+        {
+            JsonRootObject->SetStringField("enableCollaborateSeasonRating", EnableCollaborateSeasonRatingValue.GetValue());
+        }
+        if (CollaborateSeasonRatingNamespaceIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField("collaborateSeasonRatingNamespaceId", CollaborateSeasonRatingNamespaceIdValue.GetValue());
+        }
+        if (CollaborateSeasonRatingTtlValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("collaborateSeasonRatingTtl", CollaborateSeasonRatingTtlValue.GetValue());
         }
         if (ChangeRatingScriptValue != nullptr && ChangeRatingScriptValue.IsValid())
         {

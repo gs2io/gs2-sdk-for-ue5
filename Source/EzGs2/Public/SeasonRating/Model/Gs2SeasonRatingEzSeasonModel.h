@@ -24,16 +24,20 @@ namespace Gs2::UE5::SeasonRating::Model
 {
 	class EZGS2_API FEzSeasonModel final : public TSharedFromThis<FEzSeasonModel>
 	{
+        TOptional<FString> SeasonModelIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SeasonRating::Model::FEzTierModel>>> TiersValue;
         TOptional<FString> ExperienceModelIdValue;
 
 	public:
+        TSharedPtr<FEzSeasonModel> WithSeasonModelId(const TOptional<FString> SeasonModelId);
         TSharedPtr<FEzSeasonModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzSeasonModel> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FEzSeasonModel> WithTiers(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SeasonRating::Model::FEzTierModel>>> Tiers);
         TSharedPtr<FEzSeasonModel> WithExperienceModelId(const TOptional<FString> ExperienceModelId);
+
+        TOptional<FString> GetSeasonModelId() const;
 
         TOptional<FString> GetName() const;
 

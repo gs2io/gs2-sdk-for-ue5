@@ -36,6 +36,9 @@ namespace Gs2::Matchmaking::Model
         TOptional<FString> CompleteMatchmakingTriggerTypeValue;
         TOptional<FString> CompleteMatchmakingTriggerRealtimeNamespaceIdValue;
         TOptional<FString> CompleteMatchmakingTriggerScriptIdValue;
+        TOptional<FString> EnableCollaborateSeasonRatingValue;
+        TOptional<FString> CollaborateSeasonRatingNamespaceIdValue;
+        TOptional<int32> CollaborateSeasonRatingTtlValue;
         TSharedPtr<FScriptSetting> ChangeRatingScriptValue;
         TSharedPtr<FNotificationSetting> JoinNotificationValue;
         TSharedPtr<FNotificationSetting> LeaveNotificationValue;
@@ -63,6 +66,9 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FNamespace> WithCompleteMatchmakingTriggerType(const TOptional<FString> CompleteMatchmakingTriggerType);
         TSharedPtr<FNamespace> WithCompleteMatchmakingTriggerRealtimeNamespaceId(const TOptional<FString> CompleteMatchmakingTriggerRealtimeNamespaceId);
         TSharedPtr<FNamespace> WithCompleteMatchmakingTriggerScriptId(const TOptional<FString> CompleteMatchmakingTriggerScriptId);
+        TSharedPtr<FNamespace> WithEnableCollaborateSeasonRating(const TOptional<FString> EnableCollaborateSeasonRating);
+        TSharedPtr<FNamespace> WithCollaborateSeasonRatingNamespaceId(const TOptional<FString> CollaborateSeasonRatingNamespaceId);
+        TSharedPtr<FNamespace> WithCollaborateSeasonRatingTtl(const TOptional<int32> CollaborateSeasonRatingTtl);
         TSharedPtr<FNamespace> WithChangeRatingScript(const TSharedPtr<FScriptSetting> ChangeRatingScript);
         TSharedPtr<FNamespace> WithJoinNotification(const TSharedPtr<FNotificationSetting> JoinNotification);
         TSharedPtr<FNamespace> WithLeaveNotification(const TSharedPtr<FNotificationSetting> LeaveNotification);
@@ -84,6 +90,10 @@ namespace Gs2::Matchmaking::Model
         TOptional<FString> GetCompleteMatchmakingTriggerType() const;
         TOptional<FString> GetCompleteMatchmakingTriggerRealtimeNamespaceId() const;
         TOptional<FString> GetCompleteMatchmakingTriggerScriptId() const;
+        TOptional<FString> GetEnableCollaborateSeasonRating() const;
+        TOptional<FString> GetCollaborateSeasonRatingNamespaceId() const;
+        TOptional<int32> GetCollaborateSeasonRatingTtl() const;
+        FString GetCollaborateSeasonRatingTtlString() const;
         TSharedPtr<FScriptSetting> GetChangeRatingScript() const;
         TSharedPtr<FNotificationSetting> GetJoinNotification() const;
         TSharedPtr<FNotificationSetting> GetLeaveNotification() const;

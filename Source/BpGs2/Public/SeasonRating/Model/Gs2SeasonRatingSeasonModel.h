@@ -36,6 +36,8 @@ struct FGs2SeasonRatingSeasonModelValue
     GENERATED_BODY()
 
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString SeasonModelId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
@@ -54,6 +56,7 @@ inline FGs2SeasonRatingSeasonModelValue EzSeasonModelToFGs2SeasonRatingSeasonMod
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2SeasonRatingSeasonModelFunctionLibrary::EzSeasonModelToFGs2SeasonRatingSeasonModelValue] Model parameter specification is missing."))
         return Value;
     }
+    Value.SeasonModelId = Model->GetSeasonModelId() ? *Model->GetSeasonModelId() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.Tiers = Model->GetTiers() ? [&]
@@ -74,6 +77,7 @@ inline Gs2::UE5::SeasonRating::Model::FEzSeasonModelPtr FGs2SeasonRatingSeasonMo
 )
 {
     return MakeShared<Gs2::UE5::SeasonRating::Model::FEzSeasonModel>()
+        ->WithSeasonModelId(Model.SeasonModelId)
         ->WithName(Model.Name)
         ->WithMetadata(Model.Metadata)
         ->WithTiers([&]{
