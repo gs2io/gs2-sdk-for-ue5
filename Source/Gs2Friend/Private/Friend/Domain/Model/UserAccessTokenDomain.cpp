@@ -182,7 +182,7 @@ namespace Gs2::Friend::Domain::Model
         );
     }
 
-    Gs2::Friend::Domain::Iterator::FDescribeBlackListIteratorPtr FUserAccessTokenDomain::BlackLists(
+    Gs2::Friend::Domain::Iterator::FDescribeBlackListIteratorPtr FUserAccessTokenDomain::BlackListUsers(
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator>(
@@ -227,6 +227,40 @@ namespace Gs2::Friend::Domain::Model
             NamespaceName,
             AccessToken,
             WithProfile
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeFriends(
+        TFunction<void()> Callback,
+        const TOptional<bool> WithProfile
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Friend::Model::FFriendUser::TypeName,
+            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                WithProfile.IsSet() ? *WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
+                "FriendUser"
+            ),
+            Callback
+        );
+    }
+
+    void FUserAccessTokenDomain::UnsubscribeFriends(
+        Gs2::Core::Domain::CallbackID CallbackID,
+        const TOptional<bool> WithProfile
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Friend::Model::FFriendUser::TypeName,
+            Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId(),
+                WithProfile.IsSet() ? *WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
+                "FriendUser"
+            ),
+            CallbackID
         );
     }
 

@@ -40,7 +40,7 @@ namespace Gs2::UE5::Friend::Domain::Iterator
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         ) :
             It(
-                Domain->BlackLists(
+                Domain->BlackListUsers(
                 )
             ),
             Domain(Domain),

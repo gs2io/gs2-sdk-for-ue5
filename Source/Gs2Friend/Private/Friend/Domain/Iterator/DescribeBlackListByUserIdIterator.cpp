@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -80,7 +82,11 @@ namespace Gs2::Friend::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = "friend:UserId";
+            const auto ListParentKey = Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId,
+                "BlackList"
+            );
 
             if (!RangeIteratorOpt)
             {

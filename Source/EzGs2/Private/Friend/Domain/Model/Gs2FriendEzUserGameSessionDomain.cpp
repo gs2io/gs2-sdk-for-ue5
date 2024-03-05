@@ -113,7 +113,7 @@ namespace Gs2::UE5::Friend::Domain::Model
         );
     }
 
-    Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIteratorPtr FEzUserGameSessionDomain::BlackLists(
+    Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIteratorPtr FEzUserGameSessionDomain::BlackListUsers(
     ) const
     {
         return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeBlackListIterator>(

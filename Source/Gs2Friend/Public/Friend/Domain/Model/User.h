@@ -136,7 +136,7 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<Gs2::Friend::Domain::Model::FPublicProfileDomain> PublicProfile(
         );
 
-        Gs2::Friend::Domain::Iterator::FDescribeBlackListByUserIdIteratorPtr BlackLists(
+        Gs2::Friend::Domain::Iterator::FDescribeBlackListByUserIdIteratorPtr BlackListUsers(
         ) const;
 
         TSharedPtr<Gs2::Friend::Domain::Model::FBlackListDomain> BlackList(
@@ -150,6 +150,16 @@ namespace Gs2::Friend::Domain::Model
             const TOptional<bool> WithProfile
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeFriends(
+            TFunction<void()> Callback,
+            const TOptional<bool> WithProfile
+        );
+
+        void UnsubscribeFriends(
+            Gs2::Core::Domain::CallbackID CallbackID,
+            const TOptional<bool> WithProfile
+        );
+        
         TSharedPtr<Gs2::Friend::Domain::Model::FFriendDomain> Friend(
             const bool WithProfile
         );
