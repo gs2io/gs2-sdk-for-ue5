@@ -98,6 +98,10 @@ namespace Gs2::Inventory::Task::Rest
             {
                 JsonRootObject->SetNumberField("currentInventoryMaxCapacity", this->Request->GetCurrentInventoryMaxCapacity().GetValue());
             }
+            if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
+            {
+                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

@@ -568,6 +568,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetFormByStampSheetTask>> FGs2FormationWebSocketClient::SetFormByStampSheet(
+        const Request::FSetFormByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetFormByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePropertyFormsTask>> FGs2FormationWebSocketClient::DescribePropertyForms(
         const Request::FDescribePropertyFormsRequestPtr Request) const
     {

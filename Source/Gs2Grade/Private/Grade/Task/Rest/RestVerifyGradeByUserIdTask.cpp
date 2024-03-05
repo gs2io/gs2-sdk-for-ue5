@@ -107,6 +107,10 @@ namespace Gs2::Grade::Task::Rest
             {
                 JsonRootObject->SetStringField("gradeValue", FString::Printf(TEXT("%lld"), this->Request->GetGradeValue().GetValue()));
             }
+            if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
+            {
+                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

@@ -41,8 +41,7 @@ UGs2AdRewardPointGetValueAsyncFunction* UGs2AdRewardPointGetValueAsyncFunction::
 
 void UGs2AdRewardPointGetValueAsyncFunction::Activate()
 {
-    auto Future = Point.Value->Model(
-    );
+    auto Future = Point.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzPointToFGs2AdRewardPointValue(Result);

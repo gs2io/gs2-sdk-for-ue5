@@ -41,8 +41,7 @@ UGs2StateMachineStatusGetValueAsyncFunction* UGs2StateMachineStatusGetValueAsync
 
 void UGs2StateMachineStatusGetValueAsyncFunction::Activate()
 {
-    auto Future = Status.Value->Model(
-    );
+    auto Future = Status.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzStatusToFGs2StateMachineStatusValue(Result);

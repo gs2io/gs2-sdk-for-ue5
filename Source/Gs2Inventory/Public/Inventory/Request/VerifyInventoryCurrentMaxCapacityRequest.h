@@ -30,6 +30,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> InventoryNameValue;
         TOptional<FString> VerifyTypeValue;
         TOptional<int32> CurrentInventoryMaxCapacityValue;
+        TOptional<bool> MultiplyValueSpecifyingQuantityValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FVerifyInventoryCurrentMaxCapacityRequest> WithInventoryName(const TOptional<FString> InventoryName);
         TSharedPtr<FVerifyInventoryCurrentMaxCapacityRequest> WithVerifyType(const TOptional<FString> VerifyType);
         TSharedPtr<FVerifyInventoryCurrentMaxCapacityRequest> WithCurrentInventoryMaxCapacity(const TOptional<int32> CurrentInventoryMaxCapacity);
+        TSharedPtr<FVerifyInventoryCurrentMaxCapacityRequest> WithMultiplyValueSpecifyingQuantity(const TOptional<bool> MultiplyValueSpecifyingQuantity);
         TSharedPtr<FVerifyInventoryCurrentMaxCapacityRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,8 @@ namespace Gs2::Inventory::Request
         TOptional<FString> GetVerifyType() const;
         TOptional<int32> GetCurrentInventoryMaxCapacity() const;
         FString GetCurrentInventoryMaxCapacityString() const;
+        TOptional<bool> GetMultiplyValueSpecifyingQuantity() const;
+        FString GetMultiplyValueSpecifyingQuantityString() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyInventoryCurrentMaxCapacityRequest> FromJson(const TSharedPtr<FJsonObject> Data);

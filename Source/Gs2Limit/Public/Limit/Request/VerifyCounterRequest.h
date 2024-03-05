@@ -31,6 +31,7 @@ namespace Gs2::Limit::Request
         TOptional<FString> CounterNameValue;
         TOptional<FString> VerifyTypeValue;
         TOptional<int32> CountValue;
+        TOptional<bool> MultiplyValueSpecifyingQuantityValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::Limit::Request
         TSharedPtr<FVerifyCounterRequest> WithCounterName(const TOptional<FString> CounterName);
         TSharedPtr<FVerifyCounterRequest> WithVerifyType(const TOptional<FString> VerifyType);
         TSharedPtr<FVerifyCounterRequest> WithCount(const TOptional<int32> Count);
+        TSharedPtr<FVerifyCounterRequest> WithMultiplyValueSpecifyingQuantity(const TOptional<bool> MultiplyValueSpecifyingQuantity);
         TSharedPtr<FVerifyCounterRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,8 @@ namespace Gs2::Limit::Request
         TOptional<FString> GetVerifyType() const;
         TOptional<int32> GetCount() const;
         FString GetCountString() const;
+        TOptional<bool> GetMultiplyValueSpecifyingQuantity() const;
+        FString GetMultiplyValueSpecifyingQuantityString() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyCounterRequest> FromJson(const TSharedPtr<FJsonObject> Data);

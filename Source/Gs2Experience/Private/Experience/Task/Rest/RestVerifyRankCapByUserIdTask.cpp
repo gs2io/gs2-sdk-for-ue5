@@ -107,6 +107,10 @@ namespace Gs2::Experience::Task::Rest
             {
                 JsonRootObject->SetStringField("rankCapValue", FString::Printf(TEXT("%lld"), this->Request->GetRankCapValue().GetValue()));
             }
+            if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
+            {
+                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

@@ -24,7 +24,8 @@ namespace Gs2::Grade::Request
         GradeNameValue(TOptional<FString>()),
         VerifyTypeValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
-        GradeValueValue(TOptional<int64>())
+        GradeValueValue(TOptional<int64>()),
+        MultiplyValueSpecifyingQuantityValue(TOptional<bool>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Grade::Request
         GradeNameValue(From.GradeNameValue),
         VerifyTypeValue(From.VerifyTypeValue),
         PropertyIdValue(From.PropertyIdValue),
-        GradeValueValue(From.GradeValueValue)
+        GradeValueValue(From.GradeValueValue),
+        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue)
     {
     }
 
@@ -96,6 +98,14 @@ namespace Gs2::Grade::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyGradeRequest> FVerifyGradeRequest::WithMultiplyValueSpecifyingQuantity(
+        const TOptional<bool> MultiplyValueSpecifyingQuantity
+    )
+    {
+        this->MultiplyValueSpecifyingQuantityValue = MultiplyValueSpecifyingQuantity;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FVerifyGradeRequest> FVerifyGradeRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -146,6 +156,20 @@ namespace Gs2::Grade::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), GradeValueValue.GetValue());
+    }
+
+    TOptional<bool> FVerifyGradeRequest::GetMultiplyValueSpecifyingQuantity() const
+    {
+        return MultiplyValueSpecifyingQuantityValue;
+    }
+
+    FString FVerifyGradeRequest::GetMultiplyValueSpecifyingQuantityString() const
+    {
+        if (!MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(MultiplyValueSpecifyingQuantityValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FVerifyGradeRequest::GetDuplicationAvoider() const
@@ -214,6 +238,15 @@ namespace Gs2::Grade::Request
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
+            ->WithMultiplyValueSpecifyingQuantity(Data->HasField("multiplyValueSpecifyingQuantity") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("multiplyValueSpecifyingQuantity", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -247,6 +280,10 @@ namespace Gs2::Grade::Request
         if (GradeValueValue.IsSet())
         {
             JsonRootObject->SetStringField("gradeValue", FString::Printf(TEXT("%lld"), GradeValueValue.GetValue()));
+        }
+        if (MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

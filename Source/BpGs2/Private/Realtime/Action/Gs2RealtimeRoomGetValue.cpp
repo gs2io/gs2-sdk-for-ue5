@@ -41,8 +41,7 @@ UGs2RealtimeRoomGetValueAsyncFunction* UGs2RealtimeRoomGetValueAsyncFunction::Ro
 
 void UGs2RealtimeRoomGetValueAsyncFunction::Activate()
 {
-    auto Future = Room.Value->Model(
-    );
+    auto Future = Room.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzRoomToFGs2RealtimeRoomValue(Result);

@@ -41,8 +41,7 @@ UGs2JobQueueJobResultGetValueAsyncFunction* UGs2JobQueueJobResultGetValueAsyncFu
 
 void UGs2JobQueueJobResultGetValueAsyncFunction::Activate()
 {
-    auto Future = JobResult.Value->Model(
-    );
+    auto Future = JobResult.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzJobResultToFGs2JobQueueJobResultValue(Result);

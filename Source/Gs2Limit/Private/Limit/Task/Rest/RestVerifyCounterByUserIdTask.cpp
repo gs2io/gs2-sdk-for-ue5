@@ -108,6 +108,10 @@ namespace Gs2::Limit::Task::Rest
             {
                 JsonRootObject->SetNumberField("count", this->Request->GetCount().GetValue());
             }
+            if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
+            {
+                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

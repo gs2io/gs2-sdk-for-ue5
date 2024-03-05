@@ -568,6 +568,15 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSetFormByStampSheetTask>> FGs2FormationRestClient::SetFormByStampSheet(
+        const Request::FSetFormByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetFormByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribePropertyFormsTask>> FGs2FormationRestClient::DescribePropertyForms(
         const Request::FDescribePropertyFormsRequestPtr Request) const
     {

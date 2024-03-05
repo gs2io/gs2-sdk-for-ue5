@@ -140,6 +140,8 @@
 #include "Task/WebSocket/DeleteFormByUserIdTask.h"
 #include "Request/AcquireActionToFormPropertiesByStampSheetRequest.h"
 #include "Task/WebSocket/AcquireActionToFormPropertiesByStampSheetTask.h"
+#include "Request/SetFormByStampSheetRequest.h"
+#include "Task/WebSocket/SetFormByStampSheetTask.h"
 #include "Request/DescribePropertyFormsRequest.h"
 #include "Task/WebSocket/DescribePropertyFormsTask.h"
 #include "Request/DescribePropertyFormsByUserIdRequest.h"
@@ -418,6 +420,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAcquireActionToFormPropertiesByStampSheetTask>> AcquireActionToFormPropertiesByStampSheet(
             const Request::FAcquireActionToFormPropertiesByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetFormByStampSheetTask>> SetFormByStampSheet(
+            const Request::FSetFormByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePropertyFormsTask>> DescribePropertyForms(

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Experience/Task/Rest/VerifyRankByUserIdTask.h"
+#include "Formation/Task/Rest/SetFormByStampSheetTask.h"
 
 #include "HttpManager.h"
 #include "HttpModule.h"
@@ -23,23 +23,23 @@
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Interfaces/IHttpResponse.h"
 
-namespace Gs2::Experience::Task::Rest
+namespace Gs2::Formation::Task::Rest
 {
-    FVerifyRankByUserIdTask::FVerifyRankByUserIdTask(
+    FSetFormByStampSheetTask::FSetFormByStampSheetTask(
         const Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Request::FVerifyRankByUserIdRequestPtr Request
+        const Request::FSetFormByStampSheetRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FVerifyRankByUserIdTask::FVerifyRankByUserIdTask(
-        const FVerifyRankByUserIdTask& From
+    FSetFormByStampSheetTask::FSetFormByStampSheetTask(
+        const FSetFormByStampSheetTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FVerifyRankByUserIdTask::Action(
-        const TSharedPtr<Result::FVerifyRankByUserIdResultPtr> Result
+    Core::Model::FGs2ErrorPtr FSetFormByStampSheetTask::Action(
+        const TSharedPtr<Result::FSetFormByStampSheetResultPtr> Result
     )
     {
 
@@ -67,30 +67,9 @@ namespace Gs2::Experience::Task::Rest
                 }
             );
             auto Url = Core::FGs2Constant::EndpointHost
-                .Replace(TEXT("{service}"), TEXT("experience"))
+                .Replace(TEXT("{service}"), TEXT("formation"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/user/{userId}/status/{experienceName}/verify/rank/{verifyType}");
-
-            Url = Url.Replace(
-                TEXT("{namespaceName}"),
-                !this->Request->GetNamespaceName().IsSet() || this->Request->GetNamespaceName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetNamespaceName())
-            );
-            Url = Url.Replace(
-                TEXT("{userId}"),
-                !this->Request->GetUserId().IsSet() || this->Request->GetUserId().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetUserId())
-            );
-            Url = Url.Replace(
-                TEXT("{experienceName}"),
-                !this->Request->GetExperienceName().IsSet() || this->Request->GetExperienceName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetExperienceName())
-            );
-            Url = Url.Replace(
-                TEXT("{verifyType}"),
-                !this->Request->GetVerifyType().IsSet() || this->Request->GetVerifyType().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetVerifyType())
-            );
+                .Append("/stamp/form/set");
 
             request->SetURL(Url);
 
@@ -99,17 +78,13 @@ namespace Gs2::Experience::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetPropertyId().IsSet())
+            if (this->Request->GetStampSheet().IsSet())
             {
-                JsonRootObject->SetStringField("propertyId", this->Request->GetPropertyId().GetValue());
+                JsonRootObject->SetStringField("stampSheet", this->Request->GetStampSheet().GetValue());
             }
-            if (this->Request->GetRankValue().IsSet())
+            if (this->Request->GetKeyId().IsSet())
             {
-                JsonRootObject->SetStringField("rankValue", FString::Printf(TEXT("%lld"), this->Request->GetRankValue().GetValue()));
-            }
-            if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
-            {
-                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
@@ -117,10 +92,6 @@ namespace Gs2::Experience::Task::Rest
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
-            if (this->Request->GetDuplicationAvoider().IsSet())
-            {
-                request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());
-            }
 
             request->ProcessRequest();
             UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
@@ -147,7 +118,7 @@ namespace Gs2::Experience::Task::Rest
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Details = TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>();
-                *Result = Result::FVerifyRankByUserIdResult::FromJson(JsonRootObject);
+                *Result = Result::FSetFormByStampSheetResult::FromJson(JsonRootObject);
                 return nullptr;
             }
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();

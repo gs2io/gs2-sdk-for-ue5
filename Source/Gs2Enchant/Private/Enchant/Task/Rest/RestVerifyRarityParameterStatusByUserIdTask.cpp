@@ -112,6 +112,10 @@ namespace Gs2::Enchant::Task::Rest
             {
                 JsonRootObject->SetNumberField("parameterCount", this->Request->GetParameterCount().GetValue());
             }
+            if (this->Request->GetMultiplyValueSpecifyingQuantity().IsSet())
+            {
+                JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", this->Request->GetMultiplyValueSpecifyingQuantity().GetValue());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 

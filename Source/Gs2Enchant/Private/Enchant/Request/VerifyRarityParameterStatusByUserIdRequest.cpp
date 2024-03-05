@@ -25,7 +25,8 @@ namespace Gs2::Enchant::Request
         PropertyIdValue(TOptional<FString>()),
         VerifyTypeValue(TOptional<FString>()),
         ParameterValueNameValue(TOptional<FString>()),
-        ParameterCountValue(TOptional<int32>())
+        ParameterCountValue(TOptional<int32>()),
+        MultiplyValueSpecifyingQuantityValue(TOptional<bool>())
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::Enchant::Request
         PropertyIdValue(From.PropertyIdValue),
         VerifyTypeValue(From.VerifyTypeValue),
         ParameterValueNameValue(From.ParameterValueNameValue),
-        ParameterCountValue(From.ParameterCountValue)
+        ParameterCountValue(From.ParameterCountValue),
+        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue)
     {
     }
 
@@ -106,6 +108,14 @@ namespace Gs2::Enchant::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> FVerifyRarityParameterStatusByUserIdRequest::WithMultiplyValueSpecifyingQuantity(
+        const TOptional<bool> MultiplyValueSpecifyingQuantity
+    )
+    {
+        this->MultiplyValueSpecifyingQuantityValue = MultiplyValueSpecifyingQuantity;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> FVerifyRarityParameterStatusByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -161,6 +171,20 @@ namespace Gs2::Enchant::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), ParameterCountValue.GetValue());
+    }
+
+    TOptional<bool> FVerifyRarityParameterStatusByUserIdRequest::GetMultiplyValueSpecifyingQuantity() const
+    {
+        return MultiplyValueSpecifyingQuantityValue;
+    }
+
+    FString FVerifyRarityParameterStatusByUserIdRequest::GetMultiplyValueSpecifyingQuantityString() const
+    {
+        if (!MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(MultiplyValueSpecifyingQuantityValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FVerifyRarityParameterStatusByUserIdRequest::GetDuplicationAvoider() const
@@ -238,6 +262,15 @@ namespace Gs2::Enchant::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithMultiplyValueSpecifyingQuantity(Data->HasField("multiplyValueSpecifyingQuantity") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("multiplyValueSpecifyingQuantity", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -275,6 +308,10 @@ namespace Gs2::Enchant::Request
         if (ParameterCountValue.IsSet())
         {
             JsonRootObject->SetNumberField("parameterCount", ParameterCountValue.GetValue());
+        }
+        if (MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

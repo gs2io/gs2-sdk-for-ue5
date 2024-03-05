@@ -31,6 +31,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> VerifyTypeValue;
         TOptional<FString> PropertyIdValue;
         TOptional<int64> RankCapValueValue;
+        TOptional<bool> MultiplyValueSpecifyingQuantityValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FVerifyRankCapRequest> WithVerifyType(const TOptional<FString> VerifyType);
         TSharedPtr<FVerifyRankCapRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FVerifyRankCapRequest> WithRankCapValue(const TOptional<int64> RankCapValue);
+        TSharedPtr<FVerifyRankCapRequest> WithMultiplyValueSpecifyingQuantity(const TOptional<bool> MultiplyValueSpecifyingQuantity);
         TSharedPtr<FVerifyRankCapRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,8 @@ namespace Gs2::Experience::Request
         TOptional<FString> GetPropertyId() const;
         TOptional<int64> GetRankCapValue() const;
         FString GetRankCapValueString() const;
+        TOptional<bool> GetMultiplyValueSpecifyingQuantity() const;
+        FString GetMultiplyValueSpecifyingQuantityString() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyRankCapRequest> FromJson(const TSharedPtr<FJsonObject> Data);

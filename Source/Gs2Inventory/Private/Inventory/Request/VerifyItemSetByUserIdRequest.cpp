@@ -25,7 +25,8 @@ namespace Gs2::Inventory::Request
         ItemNameValue(TOptional<FString>()),
         VerifyTypeValue(TOptional<FString>()),
         ItemSetNameValue(TOptional<FString>()),
-        CountValue(TOptional<int64>())
+        CountValue(TOptional<int64>()),
+        MultiplyValueSpecifyingQuantityValue(TOptional<bool>())
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::Inventory::Request
         ItemNameValue(From.ItemNameValue),
         VerifyTypeValue(From.VerifyTypeValue),
         ItemSetNameValue(From.ItemSetNameValue),
-        CountValue(From.CountValue)
+        CountValue(From.CountValue),
+        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue)
     {
     }
 
@@ -106,6 +108,14 @@ namespace Gs2::Inventory::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyItemSetByUserIdRequest> FVerifyItemSetByUserIdRequest::WithMultiplyValueSpecifyingQuantity(
+        const TOptional<bool> MultiplyValueSpecifyingQuantity
+    )
+    {
+        this->MultiplyValueSpecifyingQuantityValue = MultiplyValueSpecifyingQuantity;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FVerifyItemSetByUserIdRequest> FVerifyItemSetByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -161,6 +171,20 @@ namespace Gs2::Inventory::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CountValue.GetValue());
+    }
+
+    TOptional<bool> FVerifyItemSetByUserIdRequest::GetMultiplyValueSpecifyingQuantity() const
+    {
+        return MultiplyValueSpecifyingQuantityValue;
+    }
+
+    FString FVerifyItemSetByUserIdRequest::GetMultiplyValueSpecifyingQuantityString() const
+    {
+        if (!MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(MultiplyValueSpecifyingQuantityValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FVerifyItemSetByUserIdRequest::GetDuplicationAvoider() const
@@ -238,6 +262,15 @@ namespace Gs2::Inventory::Request
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
+            ->WithMultiplyValueSpecifyingQuantity(Data->HasField("multiplyValueSpecifyingQuantity") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("multiplyValueSpecifyingQuantity", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -275,6 +308,10 @@ namespace Gs2::Inventory::Request
         if (CountValue.IsSet())
         {
             JsonRootObject->SetStringField("count", FString::Printf(TEXT("%lld"), CountValue.GetValue()));
+        }
+        if (MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

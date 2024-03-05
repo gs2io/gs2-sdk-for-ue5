@@ -41,8 +41,7 @@ UGs2AccountTakeOverGetValueAsyncFunction* UGs2AccountTakeOverGetValueAsyncFuncti
 
 void UGs2AccountTakeOverGetValueAsyncFunction::Activate()
 {
-    auto Future = TakeOver.Value->Model(
-    );
+    auto Future = TakeOver.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzTakeOverToFGs2AccountTakeOverValue(Result);

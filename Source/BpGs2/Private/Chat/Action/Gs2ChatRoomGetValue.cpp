@@ -41,8 +41,7 @@ UGs2ChatRoomGetValueAsyncFunction* UGs2ChatRoomGetValueAsyncFunction::RoomGetVal
 
 void UGs2ChatRoomGetValueAsyncFunction::Activate()
 {
-    auto Future = Room.Value->Model(
-    );
+    auto Future = Room.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzRoomToFGs2ChatRoomValue(Result);

@@ -654,6 +654,94 @@ namespace Gs2::Formation::Domain
                 );
             }
         }
+        if (Method == "SetFormByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Formation::Request::FSetFormByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Formation::Result::FSetFormByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetMoldModelName(),
+                    "Form"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Formation::Model::FForm::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetMold() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Mold"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
+                    ResultModel->GetMold()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetMold(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetMoldModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "MoldModel"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
+                    ResultModel->GetMoldModel()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetMoldModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetFormModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetMoldModelName(),
+                    "FormModel"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
+                );
+                Gs2->Cache->Put(
+                    Gs2::Formation::Model::FFormModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetFormModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
         if (Method == "AcquireActionsToPropertyFormProperties") {
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
@@ -934,6 +1022,102 @@ namespace Gs2::Formation::Domain
                     ParentKey,
                     Key,
                     ResultModel->GetMold(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "set_form_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Formation::Request::FSetFormByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Formation::Result::FSetFormByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetMoldModelName(),
+                    "Form"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FFormDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetIndex().IsSet() ? FString::FromInt(*ResultModel->GetItem()->GetIndex()) : TOptional<FString>()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Formation::Model::FForm::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetMold() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Mold"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
+                    ResultModel->GetMold()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Formation::Model::FMold::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetMold(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetMoldModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    "MoldModel"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheKey(
+                    ResultModel->GetMoldModel()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Formation::Model::FMoldModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetMoldModel(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+            if (ResultModel->GetFormModel() != nullptr)
+            {
+                const auto ParentKey = Gs2::Formation::Domain::Model::FMoldModelDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetMoldModelName(),
+                    "FormModel"
+                );
+                const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
+                );
+                Gs2->Cache->Put(
+                    Gs2::Formation::Model::FFormModel::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetFormModel(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }

@@ -41,8 +41,7 @@ UGs2MoneyWalletGetValueAsyncFunction* UGs2MoneyWalletGetValueAsyncFunction::Wall
 
 void UGs2MoneyWalletGetValueAsyncFunction::Activate()
 {
-    auto Future = Wallet.Value->Model(
-    );
+    auto Future = Wallet.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
         auto ReturnValue = EzWalletToFGs2MoneyWalletValue(Result);

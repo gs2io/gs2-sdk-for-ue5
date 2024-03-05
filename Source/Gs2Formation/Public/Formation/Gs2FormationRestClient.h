@@ -140,6 +140,8 @@
 #include "Task/Rest/DeleteFormByUserIdTask.h"
 #include "Request/AcquireActionToFormPropertiesByStampSheetRequest.h"
 #include "Task/Rest/AcquireActionToFormPropertiesByStampSheetTask.h"
+#include "Request/SetFormByStampSheetRequest.h"
+#include "Task/Rest/SetFormByStampSheetTask.h"
 #include "Request/DescribePropertyFormsRequest.h"
 #include "Task/Rest/DescribePropertyFormsTask.h"
 #include "Request/DescribePropertyFormsByUserIdRequest.h"
@@ -418,6 +420,10 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::Rest::FAcquireActionToFormPropertiesByStampSheetTask>> AcquireActionToFormPropertiesByStampSheet(
             const Request::FAcquireActionToFormPropertiesByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetFormByStampSheetTask>> SetFormByStampSheet(
+            const Request::FSetFormByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribePropertyFormsTask>> DescribePropertyForms(

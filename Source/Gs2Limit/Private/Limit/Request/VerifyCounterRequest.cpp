@@ -24,7 +24,8 @@ namespace Gs2::Limit::Request
         LimitNameValue(TOptional<FString>()),
         CounterNameValue(TOptional<FString>()),
         VerifyTypeValue(TOptional<FString>()),
-        CountValue(TOptional<int32>())
+        CountValue(TOptional<int32>()),
+        MultiplyValueSpecifyingQuantityValue(TOptional<bool>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Limit::Request
         LimitNameValue(From.LimitNameValue),
         CounterNameValue(From.CounterNameValue),
         VerifyTypeValue(From.VerifyTypeValue),
-        CountValue(From.CountValue)
+        CountValue(From.CountValue),
+        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue)
     {
     }
 
@@ -96,6 +98,14 @@ namespace Gs2::Limit::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyCounterRequest> FVerifyCounterRequest::WithMultiplyValueSpecifyingQuantity(
+        const TOptional<bool> MultiplyValueSpecifyingQuantity
+    )
+    {
+        this->MultiplyValueSpecifyingQuantityValue = MultiplyValueSpecifyingQuantity;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FVerifyCounterRequest> FVerifyCounterRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -146,6 +156,20 @@ namespace Gs2::Limit::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), CountValue.GetValue());
+    }
+
+    TOptional<bool> FVerifyCounterRequest::GetMultiplyValueSpecifyingQuantity() const
+    {
+        return MultiplyValueSpecifyingQuantityValue;
+    }
+
+    FString FVerifyCounterRequest::GetMultiplyValueSpecifyingQuantityString() const
+    {
+        if (!MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(MultiplyValueSpecifyingQuantityValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FVerifyCounterRequest::GetDuplicationAvoider() const
@@ -214,6 +238,15 @@ namespace Gs2::Limit::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithMultiplyValueSpecifyingQuantity(Data->HasField("multiplyValueSpecifyingQuantity") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("multiplyValueSpecifyingQuantity", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -247,6 +280,10 @@ namespace Gs2::Limit::Request
         if (CountValue.IsSet())
         {
             JsonRootObject->SetNumberField("count", CountValue.GetValue());
+        }
+        if (MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

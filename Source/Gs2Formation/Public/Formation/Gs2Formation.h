@@ -404,6 +404,12 @@
 #include "Task/Rest/AcquireActionToFormPropertiesByStampSheetTask.h"
 #include "Task/WebSocket/AcquireActionToFormPropertiesByStampSheetTask.h"
 
+// SetFormByStampSheet
+#include "Request/SetFormByStampSheetRequest.h"
+#include "Result/SetFormByStampSheetResult.h"
+#include "Task/Rest/SetFormByStampSheetTask.h"
+#include "Task/WebSocket/SetFormByStampSheetTask.h"
+
 // DescribePropertyForms
 #include "Request/DescribePropertyFormsRequest.h"
 #include "Result/DescribePropertyFormsResult.h"

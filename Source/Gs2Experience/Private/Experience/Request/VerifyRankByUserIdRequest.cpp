@@ -24,7 +24,8 @@ namespace Gs2::Experience::Request
         ExperienceNameValue(TOptional<FString>()),
         VerifyTypeValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
-        RankValueValue(TOptional<int64>())
+        RankValueValue(TOptional<int64>()),
+        MultiplyValueSpecifyingQuantityValue(TOptional<bool>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Experience::Request
         ExperienceNameValue(From.ExperienceNameValue),
         VerifyTypeValue(From.VerifyTypeValue),
         PropertyIdValue(From.PropertyIdValue),
-        RankValueValue(From.RankValueValue)
+        RankValueValue(From.RankValueValue),
+        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue)
     {
     }
 
@@ -96,6 +98,14 @@ namespace Gs2::Experience::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyRankByUserIdRequest> FVerifyRankByUserIdRequest::WithMultiplyValueSpecifyingQuantity(
+        const TOptional<bool> MultiplyValueSpecifyingQuantity
+    )
+    {
+        this->MultiplyValueSpecifyingQuantityValue = MultiplyValueSpecifyingQuantity;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FVerifyRankByUserIdRequest> FVerifyRankByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -146,6 +156,20 @@ namespace Gs2::Experience::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), RankValueValue.GetValue());
+    }
+
+    TOptional<bool> FVerifyRankByUserIdRequest::GetMultiplyValueSpecifyingQuantity() const
+    {
+        return MultiplyValueSpecifyingQuantityValue;
+    }
+
+    FString FVerifyRankByUserIdRequest::GetMultiplyValueSpecifyingQuantityString() const
+    {
+        if (!MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(MultiplyValueSpecifyingQuantityValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FVerifyRankByUserIdRequest::GetDuplicationAvoider() const
@@ -214,6 +238,15 @@ namespace Gs2::Experience::Request
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
+            ->WithMultiplyValueSpecifyingQuantity(Data->HasField("multiplyValueSpecifyingQuantity") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("multiplyValueSpecifyingQuantity", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -247,6 +280,10 @@ namespace Gs2::Experience::Request
         if (RankValueValue.IsSet())
         {
             JsonRootObject->SetStringField("rankValue", FString::Printf(TEXT("%lld"), RankValueValue.GetValue()));
+        }
+        if (MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

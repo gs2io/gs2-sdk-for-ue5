@@ -26,6 +26,7 @@
 #include "Formation/Domain/SpeculativeExecutor/Acquire/AddMoldCapacityByUserIdSpeculativeExecutor.h"
 #include "Formation/Domain/SpeculativeExecutor/Acquire/SetMoldCapacityByUserIdSpeculativeExecutor.h"
 #include "Formation/Domain/SpeculativeExecutor/Acquire/AcquireActionsToFormPropertiesSpeculativeExecutor.h"
+#include "Formation/Domain/SpeculativeExecutor/Acquire/SetFormByUserIdSpeculativeExecutor.h"
 #include "Formation/Domain/SpeculativeExecutor/Acquire/AcquireActionsToPropertyFormPropertiesSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
@@ -121,6 +122,28 @@ namespace Gs2::Formation::Domain::SpeculativeExecutor
             auto Request = Request::FAcquireActionsToFormPropertiesRequest::FromJson(RequestModelJson);
             Request = FAcquireActionsToFormPropertiesSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FAcquireActionsToFormPropertiesSpeculativeExecutor::Execute(
+                Domain,
+                Service,
+                AccessToken,
+                Request
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            *Result = Future->GetTask().Result();
+        }
+        if (FSetFormByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return nullptr;
+            }
+            auto Request = Request::FSetFormByUserIdRequest::FromJson(RequestModelJson);
+            Request = FSetFormByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            auto Future = FSetFormByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,

@@ -23,7 +23,8 @@ namespace Gs2::Inventory::Request
         UserIdValue(TOptional<FString>()),
         InventoryNameValue(TOptional<FString>()),
         VerifyTypeValue(TOptional<FString>()),
-        CurrentInventoryMaxCapacityValue(TOptional<int32>())
+        CurrentInventoryMaxCapacityValue(TOptional<int32>()),
+        MultiplyValueSpecifyingQuantityValue(TOptional<bool>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Inventory::Request
         UserIdValue(From.UserIdValue),
         InventoryNameValue(From.InventoryNameValue),
         VerifyTypeValue(From.VerifyTypeValue),
-        CurrentInventoryMaxCapacityValue(From.CurrentInventoryMaxCapacityValue)
+        CurrentInventoryMaxCapacityValue(From.CurrentInventoryMaxCapacityValue),
+        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Inventory::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyInventoryCurrentMaxCapacityByUserIdRequest> FVerifyInventoryCurrentMaxCapacityByUserIdRequest::WithMultiplyValueSpecifyingQuantity(
+        const TOptional<bool> MultiplyValueSpecifyingQuantity
+    )
+    {
+        this->MultiplyValueSpecifyingQuantityValue = MultiplyValueSpecifyingQuantity;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FVerifyInventoryCurrentMaxCapacityByUserIdRequest> FVerifyInventoryCurrentMaxCapacityByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -131,6 +141,20 @@ namespace Gs2::Inventory::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), CurrentInventoryMaxCapacityValue.GetValue());
+    }
+
+    TOptional<bool> FVerifyInventoryCurrentMaxCapacityByUserIdRequest::GetMultiplyValueSpecifyingQuantity() const
+    {
+        return MultiplyValueSpecifyingQuantityValue;
+    }
+
+    FString FVerifyInventoryCurrentMaxCapacityByUserIdRequest::GetMultiplyValueSpecifyingQuantityString() const
+    {
+        if (!MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(MultiplyValueSpecifyingQuantityValue.GetValue() ? "true" : "false");
     }
 
     TOptional<FString> FVerifyInventoryCurrentMaxCapacityByUserIdRequest::GetDuplicationAvoider() const
@@ -190,6 +214,15 @@ namespace Gs2::Inventory::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithMultiplyValueSpecifyingQuantity(Data->HasField("multiplyValueSpecifyingQuantity") ? [Data]() -> TOptional<bool>
+              {
+                  bool v;
+                    if (Data->TryGetBoolField("multiplyValueSpecifyingQuantity", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<bool>();
+              }() : TOptional<bool>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -219,6 +252,10 @@ namespace Gs2::Inventory::Request
         if (CurrentInventoryMaxCapacityValue.IsSet())
         {
             JsonRootObject->SetNumberField("currentInventoryMaxCapacity", CurrentInventoryMaxCapacityValue.GetValue());
+        }
+        if (MultiplyValueSpecifyingQuantityValue.IsSet())
+        {
+            JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

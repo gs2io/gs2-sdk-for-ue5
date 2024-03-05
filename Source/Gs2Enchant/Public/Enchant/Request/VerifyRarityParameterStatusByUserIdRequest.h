@@ -32,6 +32,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> VerifyTypeValue;
         TOptional<FString> ParameterValueNameValue;
         TOptional<int32> ParameterCountValue;
+        TOptional<bool> MultiplyValueSpecifyingQuantityValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::Enchant::Request
         TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> WithVerifyType(const TOptional<FString> VerifyType);
         TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> WithParameterValueName(const TOptional<FString> ParameterValueName);
         TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> WithParameterCount(const TOptional<int32> ParameterCount);
+        TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> WithMultiplyValueSpecifyingQuantity(const TOptional<bool> MultiplyValueSpecifyingQuantity);
         TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -61,6 +63,8 @@ namespace Gs2::Enchant::Request
         TOptional<FString> GetParameterValueName() const;
         TOptional<int32> GetParameterCount() const;
         FString GetParameterCountString() const;
+        TOptional<bool> GetMultiplyValueSpecifyingQuantity() const;
+        FString GetMultiplyValueSpecifyingQuantityString() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
