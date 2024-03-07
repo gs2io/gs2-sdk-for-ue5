@@ -34,15 +34,15 @@ class BPGS2_API UGs2MissionUserFunctionLibrary : public UBlueprintFunctionLibrar
 {
     GENERATED_BODY()
 
-    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Mission::OwnCounter", Category="Game Server Services|GS2-Mission|Namespace|User|Counter", meta=(WorldContext="WorldContextObject"))
-    static UPARAM(DisplayName="Counter") FGs2MissionOwnCounter OwnCounter(
-        FGs2MissionOwnUser User,
-        FString CounterName
-    );
-
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Mission::OwnComplete", Category="Game Server Services|GS2-Mission|Namespace|User|Complete", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="Complete") FGs2MissionOwnComplete OwnComplete(
         FGs2MissionOwnUser User,
         FString MissionGroupName
+    );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Mission::OwnCounter", Category="Game Server Services|GS2-Mission|Namespace|User|Counter", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="Counter") FGs2MissionOwnCounter OwnCounter(
+        FGs2MissionOwnUser User,
+        FString CounterName
     );
 };

@@ -19,6 +19,21 @@
 namespace Gs2::UE5::Mission::Domain::Model
 {
 
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzComplete>>> FEzUserDomain::ChangedCompletes() const
+    {
+        return [&]{
+            auto Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzComplete>>>();
+            for (auto Value : *Domain->ChangedCompletes) {
+                Result->Add(
+                    Gs2::UE5::Mission::Model::FEzComplete::FromModel(
+                        Value
+                    )
+                );
+            }
+            return Result;
+        }();
+    }
+
     TOptional<FString> FEzUserDomain::NextPageToken() const
     {
         return Domain->NextPageToken;
@@ -44,18 +59,6 @@ namespace Gs2::UE5::Mission::Domain::Model
 
     }
 
-    Gs2::UE5::Mission::Domain::Model::FEzCounterDomainPtr FEzUserDomain::Counter(
-        const FString CounterName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCounterDomain>(
-            Domain->Counter(
-                CounterName
-            ),
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Mission::Domain::Model::FEzCompleteDomainPtr FEzUserDomain::Complete(
         const FString MissionGroupName
     ) const
@@ -63,6 +66,18 @@ namespace Gs2::UE5::Mission::Domain::Model
         return MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCompleteDomain>(
             Domain->Complete(
                 MissionGroupName
+            ),
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Mission::Domain::Model::FEzCounterDomainPtr FEzUserDomain::Counter(
+        const FString CounterName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Mission::Domain::Model::FEzCounterDomain>(
+            Domain->Counter(
+                CounterName
             ),
             ConnectionValue
         );

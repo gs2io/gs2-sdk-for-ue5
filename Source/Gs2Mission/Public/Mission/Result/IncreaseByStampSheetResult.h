@@ -18,12 +18,14 @@
 
 #include "CoreMinimal.h"
 #include "../Model/Counter.h"
+#include "../Model/Complete.h"
 
 namespace Gs2::Mission::Result
 {
     class GS2MISSION_API FIncreaseByStampSheetResult final : public TSharedFromThis<FIncreaseByStampSheetResult>
     {
         TSharedPtr<Model::FCounter> ItemValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> ChangedCompletesValue;
         
     public:
         
@@ -34,8 +36,10 @@ namespace Gs2::Mission::Result
         ~FIncreaseByStampSheetResult() = default;
 
         TSharedPtr<FIncreaseByStampSheetResult> WithItem(const TSharedPtr<Model::FCounter> Item);
+        TSharedPtr<FIncreaseByStampSheetResult> WithChangedCompletes(const TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> ChangedCompletes);
 
         TSharedPtr<Model::FCounter> GetItem() const;
+        TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> GetChangedCompletes() const;
 
         static TSharedPtr<FIncreaseByStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -27,10 +27,10 @@
 #include "Mission/Model/Gs2MissionEzMissionGroupModel.h"
 #include "Mission/Model/Gs2MissionEzMissionTaskModel.h"
 #include "Mission/Model/Gs2MissionEzScopedValue.h"
-#include "Gs2MissionEzCounterGameSessionDomain.h"
-#include "Mission/Domain/Iterator/Gs2MissionEzDescribeCountersIterator.h"
 #include "Gs2MissionEzCompleteGameSessionDomain.h"
 #include "Mission/Domain/Iterator/Gs2MissionEzDescribeCompletesIterator.h"
+#include "Gs2MissionEzCounterGameSessionDomain.h"
+#include "Mission/Domain/Iterator/Gs2MissionEzDescribeCountersIterator.h"
 #include "Gs2MissionEzUserGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -46,6 +46,7 @@ namespace Gs2::UE5::Mission::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzComplete>>> ChangedCompletes() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
@@ -56,17 +57,6 @@ namespace Gs2::UE5::Mission::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCountersIteratorPtr Counters(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeCounters(TFunction<void()> Callback);
-
-        void UnsubscribeCounters(Gs2::Core::Domain::CallbackID CallbackId);
-
-        Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomainPtr Counter(
-            const FString CounterName
-        ) const;
-
         Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCompletesIteratorPtr Completes(
         ) const;
 
@@ -76,6 +66,17 @@ namespace Gs2::UE5::Mission::Domain::Model
 
         Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomainPtr Complete(
             const FString MissionGroupName
+        ) const;
+
+        Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCountersIteratorPtr Counters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCounters(TFunction<void()> Callback);
+
+        void UnsubscribeCounters(Gs2::Core::Domain::CallbackID CallbackId);
+
+        Gs2::UE5::Mission::Domain::Model::FEzCounterGameSessionDomainPtr Counter(
+            const FString CounterName
         ) const;
 
     };

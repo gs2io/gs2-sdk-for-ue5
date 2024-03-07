@@ -27,8 +27,8 @@
 #include "Mission/Model/Gs2MissionEzMissionGroupModel.h"
 #include "Mission/Model/Gs2MissionEzMissionTaskModel.h"
 #include "Mission/Model/Gs2MissionEzScopedValue.h"
-#include "Gs2MissionEzCounterDomain.h"
 #include "Gs2MissionEzCompleteDomain.h"
+#include "Gs2MissionEzCounterDomain.h"
 #include "Gs2MissionEzUserDomain.h"
 #include "Gs2MissionEzUserDomain.h"
 #include "Gs2MissionEzUserGameSessionDomain.h"
@@ -45,6 +45,7 @@ namespace Gs2::UE5::Mission::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzComplete>>> ChangedCompletes() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
@@ -54,12 +55,12 @@ namespace Gs2::UE5::Mission::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Mission::Domain::Model::FEzCounterDomainPtr Counter(
-            const FString CounterName
-        ) const;
-
         Gs2::UE5::Mission::Domain::Model::FEzCompleteDomainPtr Complete(
             const FString MissionGroupName
+        ) const;
+
+        Gs2::UE5::Mission::Domain::Model::FEzCounterDomainPtr Counter(
+            const FString CounterName
         ) const;
 
     };

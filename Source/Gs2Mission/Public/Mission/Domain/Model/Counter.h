@@ -69,6 +69,11 @@ namespace Gs2::Mission::Domain::Model
         const Gs2::Mission::FGs2MissionRestClientPtr Client;
 
         public:
+        TSharedPtr<TArray<TSharedPtr<Gs2::Mission::Model::FComplete>>> ChangedCompletes;
+        TSharedPtr<TArray<TSharedPtr<Gs2::Mission::Model::FComplete>>> GetChangedCompletes() const
+        {
+            return ChangedCompletes;
+        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> CounterName;

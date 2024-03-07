@@ -15,32 +15,12 @@
  */
 
 #include "Mission/Model/Gs2MissionUser.h"
-#include "Mission/Model/Gs2MissionCounter.h"
 #include "Mission/Model/Gs2MissionComplete.h"
+#include "Mission/Model/Gs2MissionCounter.h"
 #include "Core/Model/Gs2AccessToken.h"
-#include "Mission/Model/Gs2MissionCounter.h"
 #include "Mission/Model/Gs2MissionComplete.h"
+#include "Mission/Model/Gs2MissionCounter.h"
 #include "Core/BpGs2Constant.h"
-
-FGs2MissionOwnCounter UGs2MissionUserFunctionLibrary::OwnCounter(
-    FGs2MissionOwnUser User,
-    FString CounterName
-)
-{
-    FGs2MissionOwnCounter Return;
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionUserFunctionLibrary::OwnCounter] User parameter specification is missing."))
-        return Return;
-    }
-    if (CounterName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionUserFunctionLibrary::OwnCounter] CounterName parameter specification is missing."))
-        return Return;
-    }
-    Return.Value = User.Value->Counter(
-        CounterName
-    );
-    return Return;
-}
 
 FGs2MissionOwnComplete UGs2MissionUserFunctionLibrary::OwnComplete(
     FGs2MissionOwnUser User,
@@ -58,6 +38,26 @@ FGs2MissionOwnComplete UGs2MissionUserFunctionLibrary::OwnComplete(
     }
     Return.Value = User.Value->Complete(
         MissionGroupName
+    );
+    return Return;
+}
+
+FGs2MissionOwnCounter UGs2MissionUserFunctionLibrary::OwnCounter(
+    FGs2MissionOwnUser User,
+    FString CounterName
+)
+{
+    FGs2MissionOwnCounter Return;
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionUserFunctionLibrary::OwnCounter] User parameter specification is missing."))
+        return Return;
+    }
+    if (CounterName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionUserFunctionLibrary::OwnCounter] CounterName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = User.Value->Counter(
+        CounterName
     );
     return Return;
 }

@@ -70,7 +70,12 @@ namespace Gs2::Mission::Domain::Model
         const Gs2::Mission::FGs2MissionRestClientPtr Client;
 
         public:
+        TSharedPtr<TArray<TSharedPtr<Gs2::Mission::Model::FComplete>>> ChangedCompletes;
         TOptional<FString> NextPageToken;
+        TSharedPtr<TArray<TSharedPtr<Gs2::Mission::Model::FComplete>>> GetChangedCompletes() const
+        {
+            return ChangedCompletes;
+        }
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;
@@ -96,21 +101,6 @@ namespace Gs2::Mission::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
-        Gs2::Mission::Domain::Iterator::FDescribeCountersIteratorPtr Counters(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeCounters(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeCounters(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain> Counter(
-            const FString CounterName
-        );
-
         Gs2::Mission::Domain::Iterator::FDescribeCompletesIteratorPtr Completes(
         ) const;
 
@@ -124,6 +114,21 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain> Complete(
             const FString MissionGroupName
+        );
+
+        Gs2::Mission::Domain::Iterator::FDescribeCountersIteratorPtr Counters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCounters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeCounters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain> Counter(
+            const FString CounterName
         );
 
         static FString CreateCacheParentKey(

@@ -567,6 +567,18 @@ namespace Gs2::Mission::Domain
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
                 );
+            }{
+                for (auto Item : *ResultModel->GetChangedCompletes())
+                {
+                    const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        "Complete"
+                    );
+                    const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                        Item->GetMissionGroupName()
+                    );
+                }
             }
         }
     }
@@ -741,6 +753,18 @@ namespace Gs2::Mission::Domain
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
                 );
+            }{
+                for (auto Item : *ResultModel->GetChangedCompletes())
+                {
+                    const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        "Complete"
+                    );
+                    const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                        Item->GetMissionGroupName()
+                    );
+                }
             }
         }
     }

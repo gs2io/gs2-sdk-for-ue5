@@ -138,6 +138,18 @@ namespace Gs2::Mission::Domain::Model
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
                 );
+            }{
+                for (auto Item : *ResultModel->GetChangedCompletes())
+                {
+                    const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->UserId,
+                        "Complete"
+                    );
+                    const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                        Item->GetMissionGroupName()
+                    );
+                }
             }
         }
         auto Domain = Self;

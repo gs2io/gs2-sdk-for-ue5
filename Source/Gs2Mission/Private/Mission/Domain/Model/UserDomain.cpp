@@ -78,60 +78,6 @@ namespace Gs2::Mission::Domain::Model
 
     }
 
-    Gs2::Mission::Domain::Iterator::FDescribeCountersByUserIdIteratorPtr FUserDomain::Counters(
-    ) const
-    {
-        return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeCountersByUserIdIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            UserId
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeCounters(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Mission::Model::FCounter::TypeName,
-            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "Counter"
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribeCounters(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Mission::Model::FCounter::TypeName,
-            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "Counter"
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::Mission::Domain::Model::FCounterDomain> FUserDomain::Counter(
-        const FString CounterName
-    )
-    {
-        return MakeShared<Gs2::Mission::Domain::Model::FCounterDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId,
-            CounterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CounterName)
-        );
-    }
-
     Gs2::Mission::Domain::Iterator::FDescribeCompletesByUserIdIteratorPtr FUserDomain::Completes(
     ) const
     {
@@ -183,6 +129,60 @@ namespace Gs2::Mission::Domain::Model
             NamespaceName,
             UserId,
             MissionGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MissionGroupName)
+        );
+    }
+
+    Gs2::Mission::Domain::Iterator::FDescribeCountersByUserIdIteratorPtr FUserDomain::Counters(
+    ) const
+    {
+        return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeCountersByUserIdIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName,
+            UserId
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeCounters(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Mission::Model::FCounter::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Counter"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeCounters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Mission::Model::FCounter::TypeName,
+            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Counter"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Mission::Domain::Model::FCounterDomain> FUserDomain::Counter(
+        const FString CounterName
+    )
+    {
+        return MakeShared<Gs2::Mission::Domain::Model::FCounterDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId,
+            CounterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CounterName)
         );
     }
 

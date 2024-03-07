@@ -19,6 +19,21 @@
 namespace Gs2::UE5::Mission::Domain::Model
 {
 
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzComplete>>> FEzCounterDomain::ChangedCompletes() const
+    {
+        return [&]{
+            auto Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Mission::Model::FEzComplete>>>();
+            for (auto Value : *Domain->ChangedCompletes) {
+                Result->Add(
+                    Gs2::UE5::Mission::Model::FEzComplete::FromModel(
+                        Value
+                    )
+                );
+            }
+            return Result;
+        }();
+    }
+
     TOptional<FString> FEzCounterDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
