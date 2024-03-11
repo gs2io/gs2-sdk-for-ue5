@@ -189,6 +189,7 @@ namespace Gs2::Chat::Domain::Model
         );
 
         Gs2::Chat::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr Messages(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMessages(

@@ -33,6 +33,7 @@ namespace Gs2::Friend::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
         const TOptional<bool> WithProfile;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeFriendsByUserIdIterator(
@@ -40,7 +41,8 @@ namespace Gs2::Friend::Domain::Iterator
             const Gs2::Friend::FGs2FriendRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<bool> WithProfile
+            const TOptional<bool> WithProfile = TOptional<bool>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

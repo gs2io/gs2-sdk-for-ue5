@@ -31,6 +31,7 @@ namespace Gs2::LoginReward::Request
         TOptional<FString> UserIdValue;
         TOptional<int32> StepNumberValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::LoginReward::Request
         TSharedPtr<FMissedReceiveByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FMissedReceiveByUserIdRequest> WithStepNumber(const TOptional<int32> StepNumber);
         TSharedPtr<FMissedReceiveByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FMissedReceiveByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FMissedReceiveByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::LoginReward::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetStepNumber() const;
         FString GetStepNumberString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FMissedReceiveByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

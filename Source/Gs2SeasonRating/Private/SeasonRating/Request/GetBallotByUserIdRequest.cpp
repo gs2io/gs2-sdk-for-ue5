@@ -24,7 +24,8 @@ namespace Gs2::SeasonRating::Request
         SessionNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         NumberOfPlayerValue(TOptional<int32>()),
-        KeyIdValue(TOptional<FString>())
+        KeyIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::SeasonRating::Request
         SessionNameValue(From.SessionNameValue),
         UserIdValue(From.UserIdValue),
         NumberOfPlayerValue(From.NumberOfPlayerValue),
-        KeyIdValue(From.KeyIdValue)
+        KeyIdValue(From.KeyIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -96,6 +98,14 @@ namespace Gs2::SeasonRating::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetBallotByUserIdRequest> FGetBallotByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetBallotByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -138,6 +148,11 @@ namespace Gs2::SeasonRating::Request
     TOptional<FString> FGetBallotByUserIdRequest::GetKeyId() const
     {
         return KeyIdValue;
+    }
+
+    TOptional<FString> FGetBallotByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetBallotByUserIdRequest> FGetBallotByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -200,6 +215,15 @@ namespace Gs2::SeasonRating::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -233,6 +257,10 @@ namespace Gs2::SeasonRating::Request
         if (KeyIdValue.IsSet())
         {
             JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

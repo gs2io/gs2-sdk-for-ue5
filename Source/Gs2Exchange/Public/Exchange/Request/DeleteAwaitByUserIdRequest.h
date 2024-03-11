@@ -28,6 +28,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> AwaitNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FDeleteAwaitByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteAwaitByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteAwaitByUserIdRequest> WithAwaitName(const TOptional<FString> AwaitName);
+        TSharedPtr<FDeleteAwaitByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteAwaitByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetAwaitName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteAwaitByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

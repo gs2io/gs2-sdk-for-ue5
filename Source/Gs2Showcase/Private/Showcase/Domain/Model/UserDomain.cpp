@@ -109,13 +109,15 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     Gs2::Showcase::Domain::Iterator::FDescribeShowcasesByUserIdIteratorPtr FUserDomain::Showcases(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeShowcasesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

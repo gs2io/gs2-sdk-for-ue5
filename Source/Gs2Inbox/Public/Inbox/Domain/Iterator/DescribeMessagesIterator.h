@@ -41,7 +41,7 @@ namespace Gs2::Inbox::Domain::Iterator
             const Gs2::Inbox::FGs2InboxRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<bool> IsRead
+            const TOptional<bool> IsRead = TOptional<bool>()
         );
 
         class FIterator;

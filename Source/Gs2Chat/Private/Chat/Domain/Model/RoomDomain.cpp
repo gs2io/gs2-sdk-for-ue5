@@ -347,6 +347,7 @@ namespace Gs2::Chat::Domain::Model
     }
 
     Gs2::Chat::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr FRoomDomain::Messages(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeMessagesByUserIdIterator>(
@@ -355,7 +356,8 @@ namespace Gs2::Chat::Domain::Model
             NamespaceName,
             RoomName,
             Password,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

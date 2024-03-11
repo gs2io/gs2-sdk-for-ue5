@@ -29,6 +29,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> MoldModelNameValue;
         TOptional<int32> CapacityValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FAddMoldCapacityByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FAddMoldCapacityByUserIdRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FAddMoldCapacityByUserIdRequest> WithCapacity(const TOptional<int32> Capacity);
+        TSharedPtr<FAddMoldCapacityByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAddMoldCapacityByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetMoldModelName() const;
         TOptional<int32> GetCapacity() const;
         FString GetCapacityString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAddMoldCapacityByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -21,7 +21,8 @@ namespace Gs2::Exchange::Request
     FGetAwaitByUserIdRequest::FGetAwaitByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        AwaitNameValue(TOptional<FString>())
+        AwaitNameValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Exchange::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        AwaitNameValue(From.AwaitNameValue)
+        AwaitNameValue(From.AwaitNameValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Exchange::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetAwaitByUserIdRequest> FGetAwaitByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetAwaitByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -84,6 +94,11 @@ namespace Gs2::Exchange::Request
     TOptional<FString> FGetAwaitByUserIdRequest::GetAwaitName() const
     {
         return AwaitNameValue;
+    }
+
+    TOptional<FString> FGetAwaitByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetAwaitByUserIdRequest> FGetAwaitByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -119,6 +134,15 @@ namespace Gs2::Exchange::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -140,6 +164,10 @@ namespace Gs2::Exchange::Request
         if (AwaitNameValue.IsSet())
         {
             JsonRootObject->SetStringField("awaitName", AwaitNameValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

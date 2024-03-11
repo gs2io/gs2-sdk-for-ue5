@@ -23,7 +23,8 @@ namespace Gs2::Datastore::Request
         DataObjectNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         ScopeValue(TOptional<FString>()),
-        AllowUserIdsValue(nullptr)
+        AllowUserIdsValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Datastore::Request
         DataObjectNameValue(From.DataObjectNameValue),
         UserIdValue(From.UserIdValue),
         ScopeValue(From.ScopeValue),
-        AllowUserIdsValue(From.AllowUserIdsValue)
+        AllowUserIdsValue(From.AllowUserIdsValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Datastore::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateDataObjectByUserIdRequest> FUpdateDataObjectByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateDataObjectByUserIdRequest> FUpdateDataObjectByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -126,6 +136,11 @@ namespace Gs2::Datastore::Request
             return nullptr;
         }
         return AllowUserIdsValue;
+    }
+
+    TOptional<FString> FUpdateDataObjectByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FUpdateDataObjectByUserIdRequest::GetDuplicationAvoider() const
@@ -188,6 +203,15 @@ namespace Gs2::Datastore::Request
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -222,6 +246,10 @@ namespace Gs2::Datastore::Request
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("allowUserIds", v);
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

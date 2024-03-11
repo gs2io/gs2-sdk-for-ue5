@@ -30,6 +30,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> PublicProfileValue;
         TOptional<FString> FollowerProfileValue;
         TOptional<FString> FriendProfileValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Friend::Request
         TSharedPtr<FUpdateProfileByUserIdRequest> WithPublicProfile(const TOptional<FString> PublicProfile);
         TSharedPtr<FUpdateProfileByUserIdRequest> WithFollowerProfile(const TOptional<FString> FollowerProfile);
         TSharedPtr<FUpdateProfileByUserIdRequest> WithFriendProfile(const TOptional<FString> FriendProfile);
+        TSharedPtr<FUpdateProfileByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUpdateProfileByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> GetPublicProfile() const;
         TOptional<FString> GetFollowerProfile() const;
         TOptional<FString> GetFriendProfile() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUpdateProfileByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

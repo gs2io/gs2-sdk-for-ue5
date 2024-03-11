@@ -23,7 +23,8 @@ namespace Gs2::Quest::Request
         UserIdValue(TOptional<FString>()),
         RewardsValue(nullptr),
         IsCompleteValue(TOptional<bool>()),
-        ConfigValue(nullptr)
+        ConfigValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Quest::Request
         UserIdValue(From.UserIdValue),
         RewardsValue(From.RewardsValue),
         IsCompleteValue(From.IsCompleteValue),
-        ConfigValue(From.ConfigValue)
+        ConfigValue(From.ConfigValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -83,6 +85,14 @@ namespace Gs2::Quest::Request
     )
     {
         this->ConfigValue = Config;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEndByUserIdRequest> FEndByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -139,6 +149,11 @@ namespace Gs2::Quest::Request
             return nullptr;
         }
         return ConfigValue;
+    }
+
+    TOptional<FString> FEndByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FEndByUserIdRequest::GetDuplicationAvoider() const
@@ -204,6 +219,15 @@ namespace Gs2::Quest::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FConfigPtr>>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -243,6 +267,10 @@ namespace Gs2::Quest::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("config", v);
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

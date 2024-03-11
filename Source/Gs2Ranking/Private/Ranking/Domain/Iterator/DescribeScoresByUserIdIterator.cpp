@@ -37,7 +37,8 @@ namespace Gs2::Ranking::Domain::Iterator
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CategoryName,
         const TOptional<FString> UserId,
-        const TOptional<FString> ScorerUserId
+        const TOptional<FString> ScorerUserId,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -45,7 +46,8 @@ namespace Gs2::Ranking::Domain::Iterator
         NamespaceName(NamespaceName),
         CategoryName(CategoryName),
         UserId(UserId),
-        ScorerUserId(ScorerUserId)
+        ScorerUserId(ScorerUserId),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

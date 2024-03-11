@@ -36,14 +36,16 @@ namespace Gs2::Limit::Domain::Iterator
         const Gs2::Limit::FGs2LimitRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> LimitName
+        const TOptional<FString> LimitName,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        LimitName(LimitName)
+        LimitName(LimitName),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

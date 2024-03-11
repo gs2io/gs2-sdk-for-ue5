@@ -22,7 +22,8 @@ namespace Gs2::SkillTree::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
-        NodeModelNamesValue(nullptr)
+        NodeModelNamesValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::SkillTree::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         PropertyIdValue(From.PropertyIdValue),
-        NodeModelNamesValue(From.NodeModelNamesValue)
+        NodeModelNamesValue(From.NodeModelNamesValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::SkillTree::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FMarkRestrainByUserIdRequest> FMarkRestrainByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FMarkRestrainByUserIdRequest> FMarkRestrainByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -111,6 +121,11 @@ namespace Gs2::SkillTree::Request
             return nullptr;
         }
         return NodeModelNamesValue;
+    }
+
+    TOptional<FString> FMarkRestrainByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FMarkRestrainByUserIdRequest::GetDuplicationAvoider() const
@@ -164,6 +179,15 @@ namespace Gs2::SkillTree::Request
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -194,6 +218,10 @@ namespace Gs2::SkillTree::Request
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("nodeModelNames", v);
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

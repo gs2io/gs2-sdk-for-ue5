@@ -30,6 +30,7 @@ namespace Gs2::Idle::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> CategoryNameValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,12 +46,14 @@ namespace Gs2::Idle::Request
         TSharedPtr<FReceiveByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FReceiveByUserIdRequest> WithCategoryName(const TOptional<FString> CategoryName);
         TSharedPtr<FReceiveByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FReceiveByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FReceiveByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetCategoryName() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FReceiveByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

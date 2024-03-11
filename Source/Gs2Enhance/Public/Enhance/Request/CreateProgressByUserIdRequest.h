@@ -32,6 +32,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> TargetItemSetIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FMaterial>>> MaterialsValue;
         TOptional<bool> ForceValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -49,6 +50,7 @@ namespace Gs2::Enhance::Request
         TSharedPtr<FCreateProgressByUserIdRequest> WithTargetItemSetId(const TOptional<FString> TargetItemSetId);
         TSharedPtr<FCreateProgressByUserIdRequest> WithMaterials(const TSharedPtr<TArray<TSharedPtr<Model::FMaterial>>> Materials);
         TSharedPtr<FCreateProgressByUserIdRequest> WithForce(const TOptional<bool> Force);
+        TSharedPtr<FCreateProgressByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCreateProgressByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> GetTargetItemSetId() const;TSharedPtr<TArray<TSharedPtr<Model::FMaterial>>> GetMaterials() const;
         TOptional<bool> GetForce() const;
         FString GetForceString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCreateProgressByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

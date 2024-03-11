@@ -87,6 +87,7 @@ namespace Gs2::Showcase::Domain::Model
     }
 
     Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsByUserIdIteratorPtr FRandomShowcaseDomain::RandomDisplayItems(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsByUserIdIterator>(
@@ -94,7 +95,8 @@ namespace Gs2::Showcase::Domain::Model
             Client,
             NamespaceName,
             ShowcaseName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

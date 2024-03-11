@@ -20,7 +20,8 @@ namespace Gs2::News::Request
 {
     FWantGrantByUserIdRequest::FWantGrantByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
-        UserIdValue(TOptional<FString>())
+        UserIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::News::Request
         const FWantGrantByUserIdRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        UserIdValue(From.UserIdValue)
+        UserIdValue(From.UserIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -56,6 +58,14 @@ namespace Gs2::News::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FWantGrantByUserIdRequest> FWantGrantByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FWantGrantByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -69,6 +79,11 @@ namespace Gs2::News::Request
     TOptional<FString> FWantGrantByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FWantGrantByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FWantGrantByUserIdRequest> FWantGrantByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -95,6 +110,15 @@ namespace Gs2::News::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -112,6 +136,10 @@ namespace Gs2::News::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

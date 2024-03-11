@@ -70,13 +70,15 @@ namespace Gs2::Lock::Domain::Model
     }
 
     Gs2::Lock::Domain::Iterator::FDescribeMutexesByUserIdIteratorPtr FUserDomain::Mutexes(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Lock::Domain::Iterator::FDescribeMutexesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

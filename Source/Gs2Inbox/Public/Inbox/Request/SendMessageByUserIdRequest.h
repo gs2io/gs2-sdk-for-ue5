@@ -33,6 +33,7 @@ namespace Gs2::Inbox::Request
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> ReadAcquireActionsValue;
         TOptional<int64> ExpiresAtValue;
         TSharedPtr<Model::FTimeSpan> ExpiresTimeSpanValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::Inbox::Request
         TSharedPtr<FSendMessageByUserIdRequest> WithReadAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> ReadAcquireActions);
         TSharedPtr<FSendMessageByUserIdRequest> WithExpiresAt(const TOptional<int64> ExpiresAt);
         TSharedPtr<FSendMessageByUserIdRequest> WithExpiresTimeSpan(const TSharedPtr<Model::FTimeSpan> ExpiresTimeSpan);
+        TSharedPtr<FSendMessageByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSendMessageByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -59,6 +61,7 @@ namespace Gs2::Inbox::Request
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
         TSharedPtr<Model::FTimeSpan> GetExpiresTimeSpan() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSendMessageByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

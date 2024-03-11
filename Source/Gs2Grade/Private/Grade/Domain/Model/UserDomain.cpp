@@ -73,15 +73,17 @@ namespace Gs2::Grade::Domain::Model
     }
 
     Gs2::Grade::Domain::Iterator::FDescribeStatusesByUserIdIteratorPtr FUserDomain::Statuses(
-        const TOptional<FString> GradeName
+        const TOptional<FString> GradeName,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Grade::Domain::Iterator::FDescribeStatusesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
+            UserId,
             GradeName,
-            UserId
+            TimeOffsetToken
         );
     }
 

@@ -27,6 +27,7 @@ namespace Gs2::Lottery::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> UploadTokenValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -40,11 +41,13 @@ namespace Gs2::Lottery::Request
         TSharedPtr<FCheckImportUserDataByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FCheckImportUserDataByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FCheckImportUserDataByUserIdRequest> WithUploadToken(const TOptional<FString> UploadToken);
+        TSharedPtr<FCheckImportUserDataByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCheckImportUserDataByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetUploadToken() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCheckImportUserDataByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

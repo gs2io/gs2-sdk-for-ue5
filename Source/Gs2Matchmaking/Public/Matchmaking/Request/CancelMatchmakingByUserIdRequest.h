@@ -28,6 +28,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> GatheringNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FCancelMatchmakingByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FCancelMatchmakingByUserIdRequest> WithGatheringName(const TOptional<FString> GatheringName);
         TSharedPtr<FCancelMatchmakingByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FCancelMatchmakingByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCancelMatchmakingByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetGatheringName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCancelMatchmakingByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

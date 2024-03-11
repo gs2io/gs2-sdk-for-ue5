@@ -142,7 +142,7 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::SerialKey::Domain::Iterator::FDescribeSerialKeysIteratorPtr SerialKeys(
             const FString CampaignModelName,
-            const TOptional<FString> IssueJobName
+            const TOptional<FString> IssueJobName = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSerialKeys(

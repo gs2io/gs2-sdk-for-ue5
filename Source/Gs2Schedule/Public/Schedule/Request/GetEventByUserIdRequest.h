@@ -29,6 +29,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> EventNameValue;
         TOptional<FString> UserIdValue;
         TOptional<bool> IsInScheduleValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,6 +44,7 @@ namespace Gs2::Schedule::Request
         TSharedPtr<FGetEventByUserIdRequest> WithEventName(const TOptional<FString> EventName);
         TSharedPtr<FGetEventByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetEventByUserIdRequest> WithIsInSchedule(const TOptional<bool> IsInSchedule);
+        TSharedPtr<FGetEventByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -50,6 +52,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> GetUserId() const;
         TOptional<bool> GetIsInSchedule() const;
         FString GetIsInScheduleString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetEventByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

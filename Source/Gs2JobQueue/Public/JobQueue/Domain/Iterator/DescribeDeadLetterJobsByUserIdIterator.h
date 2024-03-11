@@ -32,13 +32,15 @@ namespace Gs2::JobQueue::Domain::Iterator
         const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeDeadLetterJobsByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

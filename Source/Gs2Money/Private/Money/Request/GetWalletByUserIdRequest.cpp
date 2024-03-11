@@ -21,7 +21,8 @@ namespace Gs2::Money::Request
     FGetWalletByUserIdRequest::FGetWalletByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        SlotValue(TOptional<int32>())
+        SlotValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Money::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        SlotValue(From.SlotValue)
+        SlotValue(From.SlotValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Money::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetWalletByUserIdRequest> FGetWalletByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetWalletByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -93,6 +103,11 @@ namespace Gs2::Money::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), SlotValue.GetValue());
+    }
+
+    TOptional<FString> FGetWalletByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetWalletByUserIdRequest> FGetWalletByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -128,7 +143,16 @@ namespace Gs2::Money::Request
                         return TOptional(v);
                   }
                   return TOptional<int32>();
-              }() : TOptional<int32>());
+              }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FGetWalletByUserIdRequest::ToJson() const
@@ -149,6 +173,10 @@ namespace Gs2::Money::Request
         if (SlotValue.IsSet())
         {
             JsonRootObject->SetNumberField("slot", SlotValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

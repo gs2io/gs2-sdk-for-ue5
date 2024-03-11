@@ -27,6 +27,7 @@ namespace Gs2::Auth::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> TimeOffsetValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -39,11 +40,13 @@ namespace Gs2::Auth::Request
         TSharedPtr<FLoginRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FLoginRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FLoginRequest> WithTimeOffset(const TOptional<int32> TimeOffset);
+        TSharedPtr<FLoginRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetTimeOffset() const;
         FString GetTimeOffsetString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FLoginRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

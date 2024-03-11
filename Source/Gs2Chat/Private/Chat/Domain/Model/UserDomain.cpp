@@ -129,13 +129,15 @@ namespace Gs2::Chat::Domain::Model
     }
 
     Gs2::Chat::Domain::Iterator::FDescribeSubscribesByUserIdIteratorPtr FUserDomain::Subscribes(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeSubscribesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

@@ -30,6 +30,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> InventoryNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FHeldCount>>> CountsValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,12 +46,14 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FSetSimpleItemsByUserIdRequest> WithInventoryName(const TOptional<FString> InventoryName);
         TSharedPtr<FSetSimpleItemsByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSetSimpleItemsByUserIdRequest> WithCounts(const TSharedPtr<TArray<TSharedPtr<Model::FHeldCount>>> Counts);
+        TSharedPtr<FSetSimpleItemsByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSetSimpleItemsByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetInventoryName() const;
         TOptional<FString> GetUserId() const;TSharedPtr<TArray<TSharedPtr<Model::FHeldCount>>> GetCounts() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetSimpleItemsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

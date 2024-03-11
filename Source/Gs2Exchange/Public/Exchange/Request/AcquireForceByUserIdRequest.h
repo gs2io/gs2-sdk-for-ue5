@@ -30,6 +30,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> AwaitNameValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,12 +46,14 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FAcquireForceByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FAcquireForceByUserIdRequest> WithAwaitName(const TOptional<FString> AwaitName);
         TSharedPtr<FAcquireForceByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FAcquireForceByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAcquireForceByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetAwaitName() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAcquireForceByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

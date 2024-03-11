@@ -29,6 +29,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ParameterNameValue;
         TOptional<FString> PropertyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Enchant::Request
         TSharedPtr<FDeleteBalanceParameterStatusByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteBalanceParameterStatusByUserIdRequest> WithParameterName(const TOptional<FString> ParameterName);
         TSharedPtr<FDeleteBalanceParameterStatusByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
+        TSharedPtr<FDeleteBalanceParameterStatusByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteBalanceParameterStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetParameterName() const;
         TOptional<FString> GetPropertyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteBalanceParameterStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

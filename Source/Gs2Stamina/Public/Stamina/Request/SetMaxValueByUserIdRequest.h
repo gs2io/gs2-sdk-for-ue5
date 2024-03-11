@@ -29,6 +29,7 @@ namespace Gs2::Stamina::Request
         TOptional<FString> StaminaNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> MaxValueValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Stamina::Request
         TSharedPtr<FSetMaxValueByUserIdRequest> WithStaminaName(const TOptional<FString> StaminaName);
         TSharedPtr<FSetMaxValueByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSetMaxValueByUserIdRequest> WithMaxValue(const TOptional<int32> MaxValue);
+        TSharedPtr<FSetMaxValueByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSetMaxValueByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::Stamina::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetMaxValue() const;
         FString GetMaxValueString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetMaxValueByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

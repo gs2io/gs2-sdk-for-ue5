@@ -28,6 +28,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> RoomNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Chat::Request
         TSharedPtr<FDeleteRoomFromBackendRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteRoomFromBackendRequest> WithRoomName(const TOptional<FString> RoomName);
         TSharedPtr<FDeleteRoomFromBackendRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDeleteRoomFromBackendRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteRoomFromBackendRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetRoomName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteRoomFromBackendRequest> FromJson(const TSharedPtr<FJsonObject> Data);

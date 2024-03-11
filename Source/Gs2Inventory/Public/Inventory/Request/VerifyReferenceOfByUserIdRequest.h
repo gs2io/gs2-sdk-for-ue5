@@ -32,6 +32,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> ItemSetNameValue;
         TOptional<FString> ReferenceOfValue;
         TOptional<FString> VerifyTypeValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FVerifyReferenceOfByUserIdRequest> WithItemSetName(const TOptional<FString> ItemSetName);
         TSharedPtr<FVerifyReferenceOfByUserIdRequest> WithReferenceOf(const TOptional<FString> ReferenceOf);
         TSharedPtr<FVerifyReferenceOfByUserIdRequest> WithVerifyType(const TOptional<FString> VerifyType);
+        TSharedPtr<FVerifyReferenceOfByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FVerifyReferenceOfByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -60,6 +62,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> GetItemSetName() const;
         TOptional<FString> GetReferenceOf() const;
         TOptional<FString> GetVerifyType() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyReferenceOfByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

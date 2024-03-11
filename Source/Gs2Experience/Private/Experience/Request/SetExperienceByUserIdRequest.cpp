@@ -23,7 +23,8 @@ namespace Gs2::Experience::Request
         UserIdValue(TOptional<FString>()),
         ExperienceNameValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
-        ExperienceValueValue(TOptional<int64>())
+        ExperienceValueValue(TOptional<int64>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Experience::Request
         UserIdValue(From.UserIdValue),
         ExperienceNameValue(From.ExperienceNameValue),
         PropertyIdValue(From.PropertyIdValue),
-        ExperienceValueValue(From.ExperienceValueValue)
+        ExperienceValueValue(From.ExperienceValueValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Experience::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSetExperienceByUserIdRequest> FSetExperienceByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSetExperienceByUserIdRequest> FSetExperienceByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -131,6 +141,11 @@ namespace Gs2::Experience::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), ExperienceValueValue.GetValue());
+    }
+
+    TOptional<FString> FSetExperienceByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FSetExperienceByUserIdRequest::GetDuplicationAvoider() const
@@ -190,6 +205,15 @@ namespace Gs2::Experience::Request
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -219,6 +243,10 @@ namespace Gs2::Experience::Request
         if (ExperienceValueValue.IsSet())
         {
             JsonRootObject->SetStringField("experienceValue", FString::Printf(TEXT("%lld"), ExperienceValueValue.GetValue()));
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -36,14 +36,16 @@ namespace Gs2::Friend::Domain::Iterator
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<bool> WithProfile
+        const TOptional<bool> WithProfile,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        WithProfile(WithProfile)
+        WithProfile(WithProfile),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

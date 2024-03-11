@@ -32,6 +32,7 @@ namespace Gs2::Ranking::Request
         TOptional<int64> StartIndexValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -49,6 +50,7 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FDescribeRankingssByUserIdRequest> WithStartIndex(const TOptional<int64> StartIndex);
         TSharedPtr<FDescribeRankingssByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeRankingssByUserIdRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribeRankingssByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -60,6 +62,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeRankingssByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -93,13 +93,15 @@ namespace Gs2::Lottery::Domain::Model
     }
 
     Gs2::Lottery::Domain::Iterator::FDescribeBoxesByUserIdIteratorPtr FUserDomain::Boxes(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeBoxesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

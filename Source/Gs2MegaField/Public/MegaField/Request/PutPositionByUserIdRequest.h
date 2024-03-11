@@ -34,6 +34,7 @@ namespace Gs2::MegaField::Request
         TSharedPtr<Model::FPosition> PositionValue;
         TSharedPtr<Model::FVector> VectorValue;
         TOptional<float> RValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -52,6 +53,7 @@ namespace Gs2::MegaField::Request
         TSharedPtr<FPutPositionByUserIdRequest> WithPosition(const TSharedPtr<Model::FPosition> Position);
         TSharedPtr<FPutPositionByUserIdRequest> WithVector(const TSharedPtr<Model::FVector> Vector);
         TSharedPtr<FPutPositionByUserIdRequest> WithR(const TOptional<float> R);
+        TSharedPtr<FPutPositionByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FPutPositionByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -63,6 +65,7 @@ namespace Gs2::MegaField::Request
         TSharedPtr<Model::FVector> GetVector() const;
         TOptional<float> GetR() const;
         FString GetRString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FPutPositionByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

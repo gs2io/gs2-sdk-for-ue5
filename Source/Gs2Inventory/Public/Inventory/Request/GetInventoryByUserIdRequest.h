@@ -28,6 +28,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> InventoryNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FGetInventoryByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetInventoryByUserIdRequest> WithInventoryName(const TOptional<FString> InventoryName);
         TSharedPtr<FGetInventoryByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetInventoryByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetInventoryName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetInventoryByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

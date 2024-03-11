@@ -21,7 +21,8 @@ namespace Gs2::Formation::Request
     FDeleteMoldByUserIdRequest::FDeleteMoldByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        MoldModelNameValue(TOptional<FString>())
+        MoldModelNameValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Formation::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        MoldModelNameValue(From.MoldModelNameValue)
+        MoldModelNameValue(From.MoldModelNameValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Formation::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDeleteMoldByUserIdRequest> FDeleteMoldByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FDeleteMoldByUserIdRequest> FDeleteMoldByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -92,6 +102,11 @@ namespace Gs2::Formation::Request
     TOptional<FString> FDeleteMoldByUserIdRequest::GetMoldModelName() const
     {
         return MoldModelNameValue;
+    }
+
+    TOptional<FString> FDeleteMoldByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FDeleteMoldByUserIdRequest::GetDuplicationAvoider() const
@@ -133,6 +148,15 @@ namespace Gs2::Formation::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -154,6 +178,10 @@ namespace Gs2::Formation::Request
         if (MoldModelNameValue.IsSet())
         {
             JsonRootObject->SetStringField("moldModelName", MoldModelNameValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

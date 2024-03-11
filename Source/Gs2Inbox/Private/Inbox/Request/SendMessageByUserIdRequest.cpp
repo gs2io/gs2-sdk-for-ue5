@@ -24,7 +24,8 @@ namespace Gs2::Inbox::Request
         MetadataValue(TOptional<FString>()),
         ReadAcquireActionsValue(nullptr),
         ExpiresAtValue(TOptional<int64>()),
-        ExpiresTimeSpanValue(nullptr)
+        ExpiresTimeSpanValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Inbox::Request
         MetadataValue(From.MetadataValue),
         ReadAcquireActionsValue(From.ReadAcquireActionsValue),
         ExpiresAtValue(From.ExpiresAtValue),
-        ExpiresTimeSpanValue(From.ExpiresTimeSpanValue)
+        ExpiresTimeSpanValue(From.ExpiresTimeSpanValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -93,6 +95,14 @@ namespace Gs2::Inbox::Request
     )
     {
         this->ExpiresTimeSpanValue = ExpiresTimeSpan;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSendMessageByUserIdRequest> FSendMessageByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -154,6 +164,11 @@ namespace Gs2::Inbox::Request
             return nullptr;
         }
         return ExpiresTimeSpanValue;
+    }
+
+    TOptional<FString> FSendMessageByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FSendMessageByUserIdRequest::GetDuplicationAvoider() const
@@ -224,6 +239,15 @@ namespace Gs2::Inbox::Request
                   }
                   return Model::FTimeSpan::FromJson(Data->GetObjectField("expiresTimeSpan"));
               }() : nullptr)
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -262,6 +286,10 @@ namespace Gs2::Inbox::Request
         if (ExpiresTimeSpanValue != nullptr && ExpiresTimeSpanValue.IsValid())
         {
             JsonRootObject->SetObjectField("expiresTimeSpan", ExpiresTimeSpanValue->ToJson());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

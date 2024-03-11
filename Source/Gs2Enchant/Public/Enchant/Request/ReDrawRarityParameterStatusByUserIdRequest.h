@@ -30,6 +30,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> ParameterNameValue;
         TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<FString>> FixedParameterNamesValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Enchant::Request
         TSharedPtr<FReDrawRarityParameterStatusByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FReDrawRarityParameterStatusByUserIdRequest> WithFixedParameterNames(
             const TSharedPtr<TArray<FString>> FixedParameterNames);
+        TSharedPtr<FReDrawRarityParameterStatusByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FReDrawRarityParameterStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> GetParameterName() const;
         TOptional<FString> GetPropertyId() const;
         TSharedPtr<TArray<FString>> GetFixedParameterNames() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FReDrawRarityParameterStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

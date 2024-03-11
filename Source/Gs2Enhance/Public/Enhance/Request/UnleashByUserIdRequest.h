@@ -32,6 +32,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> TargetItemSetIdValue;
         TSharedPtr<TArray<FString>> MaterialsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::Enhance::Request
         TSharedPtr<FUnleashByUserIdRequest> WithMaterials(
             const TSharedPtr<TArray<FString>> Materials);
         TSharedPtr<FUnleashByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FUnleashByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUnleashByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTargetItemSetId() const;
         TSharedPtr<TArray<FString>> GetMaterials() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUnleashByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

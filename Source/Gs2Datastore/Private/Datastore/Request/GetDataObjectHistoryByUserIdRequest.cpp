@@ -22,7 +22,8 @@ namespace Gs2::Datastore::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         DataObjectNameValue(TOptional<FString>()),
-        GenerationValue(TOptional<FString>())
+        GenerationValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Datastore::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         DataObjectNameValue(From.DataObjectNameValue),
-        GenerationValue(From.GenerationValue)
+        GenerationValue(From.GenerationValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Datastore::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetDataObjectHistoryByUserIdRequest> FGetDataObjectHistoryByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetDataObjectHistoryByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -99,6 +109,11 @@ namespace Gs2::Datastore::Request
     TOptional<FString> FGetDataObjectHistoryByUserIdRequest::GetGeneration() const
     {
         return GenerationValue;
+    }
+
+    TOptional<FString> FGetDataObjectHistoryByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetDataObjectHistoryByUserIdRequest> FGetDataObjectHistoryByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -143,6 +158,15 @@ namespace Gs2::Datastore::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -168,6 +192,10 @@ namespace Gs2::Datastore::Request
         if (GenerationValue.IsSet())
         {
             JsonRootObject->SetStringField("generation", GenerationValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

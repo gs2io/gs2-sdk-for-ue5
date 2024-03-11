@@ -28,6 +28,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> RatingNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FGetRatingByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetRatingByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetRatingByUserIdRequest> WithRatingName(const TOptional<FString> RatingName);
+        TSharedPtr<FGetRatingByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetRatingName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetRatingByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -152,6 +152,7 @@ namespace Gs2::Quest::Domain::Model
         );
 
         Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIteratorPtr Progresses(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeProgresses(
@@ -166,6 +167,7 @@ namespace Gs2::Quest::Domain::Model
         );
 
         Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsByUserIdIteratorPtr CompletedQuestLists(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeCompletedQuestLists(

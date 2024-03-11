@@ -30,6 +30,7 @@ namespace Gs2::Money::Request
         TOptional<int32> SlotValue;
         TOptional<int32> CountValue;
         TOptional<bool> PaidOnlyValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Money::Request
         TSharedPtr<FWithdrawByUserIdRequest> WithSlot(const TOptional<int32> Slot);
         TSharedPtr<FWithdrawByUserIdRequest> WithCount(const TOptional<int32> Count);
         TSharedPtr<FWithdrawByUserIdRequest> WithPaidOnly(const TOptional<bool> PaidOnly);
+        TSharedPtr<FWithdrawByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FWithdrawByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -57,6 +59,7 @@ namespace Gs2::Money::Request
         FString GetCountString() const;
         TOptional<bool> GetPaidOnly() const;
         FString GetPaidOnlyString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FWithdrawByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

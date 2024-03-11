@@ -28,6 +28,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<Model::FDistributeResource> DistributeResourceValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -40,10 +41,12 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FDistributeWithoutOverflowProcessRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDistributeWithoutOverflowProcessRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDistributeWithoutOverflowProcessRequest> WithDistributeResource(const TSharedPtr<Model::FDistributeResource> DistributeResource);
+        TSharedPtr<FDistributeWithoutOverflowProcessRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetUserId() const;
         TSharedPtr<Model::FDistributeResource> GetDistributeResource() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDistributeWithoutOverflowProcessRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

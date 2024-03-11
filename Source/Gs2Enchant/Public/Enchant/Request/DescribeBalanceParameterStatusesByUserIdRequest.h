@@ -30,6 +30,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> ParameterNameValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -45,6 +46,7 @@ namespace Gs2::Enchant::Request
         TSharedPtr<FDescribeBalanceParameterStatusesByUserIdRequest> WithParameterName(const TOptional<FString> ParameterName);
         TSharedPtr<FDescribeBalanceParameterStatusesByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeBalanceParameterStatusesByUserIdRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribeBalanceParameterStatusesByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -53,6 +55,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeBalanceParameterStatusesByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -29,6 +29,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> CategoryNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetUserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FUnsubscribeByUserIdRequest> WithCategoryName(const TOptional<FString> CategoryName);
         TSharedPtr<FUnsubscribeByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FUnsubscribeByUserIdRequest> WithTargetUserId(const TOptional<FString> TargetUserId);
+        TSharedPtr<FUnsubscribeByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUnsubscribeByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> GetCategoryName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTargetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUnsubscribeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

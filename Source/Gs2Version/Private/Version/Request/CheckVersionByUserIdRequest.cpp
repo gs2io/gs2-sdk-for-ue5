@@ -21,7 +21,8 @@ namespace Gs2::Version::Request
     FCheckVersionByUserIdRequest::FCheckVersionByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        TargetVersionsValue(nullptr)
+        TargetVersionsValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Version::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        TargetVersionsValue(From.TargetVersionsValue)
+        TargetVersionsValue(From.TargetVersionsValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Version::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCheckVersionByUserIdRequest> FCheckVersionByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCheckVersionByUserIdRequest> FCheckVersionByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -96,6 +106,11 @@ namespace Gs2::Version::Request
             return nullptr;
         }
         return TargetVersionsValue;
+    }
+
+    TOptional<FString> FCheckVersionByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FCheckVersionByUserIdRequest::GetDuplicationAvoider() const
@@ -140,6 +155,15 @@ namespace Gs2::Version::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FTargetVersionPtr>>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -166,6 +190,10 @@ namespace Gs2::Version::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("targetVersions", v);
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

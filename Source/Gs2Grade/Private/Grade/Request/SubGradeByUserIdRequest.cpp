@@ -23,7 +23,8 @@ namespace Gs2::Grade::Request
         UserIdValue(TOptional<FString>()),
         GradeNameValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
-        GradeValueValue(TOptional<int64>())
+        GradeValueValue(TOptional<int64>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Grade::Request
         UserIdValue(From.UserIdValue),
         GradeNameValue(From.GradeNameValue),
         PropertyIdValue(From.PropertyIdValue),
-        GradeValueValue(From.GradeValueValue)
+        GradeValueValue(From.GradeValueValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Grade::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSubGradeByUserIdRequest> FSubGradeByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSubGradeByUserIdRequest> FSubGradeByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -131,6 +141,11 @@ namespace Gs2::Grade::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), GradeValueValue.GetValue());
+    }
+
+    TOptional<FString> FSubGradeByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FSubGradeByUserIdRequest::GetDuplicationAvoider() const
@@ -190,6 +205,15 @@ namespace Gs2::Grade::Request
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -219,6 +243,10 @@ namespace Gs2::Grade::Request
         if (GradeValueValue.IsSet())
         {
             JsonRootObject->SetStringField("gradeValue", FString::Printf(TEXT("%lld"), GradeValueValue.GetValue()));
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -82,8 +82,8 @@ namespace Gs2::Experience::Domain::Model
             Gs2->Cache,
             Client,
             NamespaceName,
-            ExperienceName,
-            AccessToken
+            AccessToken,
+            ExperienceName
         );
     }
 

@@ -29,6 +29,7 @@ namespace Gs2::Dictionary::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> EntryModelNameValue;
         TOptional<FString> VerifyTypeValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Dictionary::Request
         TSharedPtr<FVerifyEntryByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FVerifyEntryByUserIdRequest> WithEntryModelName(const TOptional<FString> EntryModelName);
         TSharedPtr<FVerifyEntryByUserIdRequest> WithVerifyType(const TOptional<FString> VerifyType);
+        TSharedPtr<FVerifyEntryByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FVerifyEntryByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Dictionary::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetEntryModelName() const;
         TOptional<FString> GetVerifyType() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyEntryByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

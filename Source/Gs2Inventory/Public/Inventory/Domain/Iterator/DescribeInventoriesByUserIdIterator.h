@@ -32,13 +32,15 @@ namespace Gs2::Inventory::Domain::Iterator
         const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeInventoriesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Inventory::FGs2InventoryRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

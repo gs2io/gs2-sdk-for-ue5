@@ -28,6 +28,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TransactionIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FGetStampSheetResultByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetStampSheetResultByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetStampSheetResultByUserIdRequest> WithTransactionId(const TOptional<FString> TransactionId);
+        TSharedPtr<FGetStampSheetResultByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTransactionId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetStampSheetResultByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -23,7 +23,8 @@ namespace Gs2::Account::Request
         UserIdValue(TOptional<FString>()),
         TypeValue(TOptional<int32>()),
         UserIdentifierValue(TOptional<FString>()),
-        PasswordValue(TOptional<FString>())
+        PasswordValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Account::Request
         UserIdValue(From.UserIdValue),
         TypeValue(From.TypeValue),
         UserIdentifierValue(From.UserIdentifierValue),
-        PasswordValue(From.PasswordValue)
+        PasswordValue(From.PasswordValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Account::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateTakeOverByUserIdRequest> FCreateTakeOverByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateTakeOverByUserIdRequest> FCreateTakeOverByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -131,6 +141,11 @@ namespace Gs2::Account::Request
     TOptional<FString> FCreateTakeOverByUserIdRequest::GetPassword() const
     {
         return PasswordValue;
+    }
+
+    TOptional<FString> FCreateTakeOverByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FCreateTakeOverByUserIdRequest::GetDuplicationAvoider() const
@@ -190,6 +205,15 @@ namespace Gs2::Account::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -219,6 +243,10 @@ namespace Gs2::Account::Request
         if (PasswordValue.IsSet())
         {
             JsonRootObject->SetStringField("password", PasswordValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -31,6 +31,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> SlotsValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithSlots(const TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> Slots);
+        TSharedPtr<FSetPropertyFormByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSetPropertyFormByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> GetSlots() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetPropertyFormByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

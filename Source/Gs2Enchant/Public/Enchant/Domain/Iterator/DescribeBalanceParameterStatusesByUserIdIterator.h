@@ -33,6 +33,7 @@ namespace Gs2::Enchant::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
         const TOptional<FString> ParameterName;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeBalanceParameterStatusesByUserIdIterator(
@@ -40,7 +41,8 @@ namespace Gs2::Enchant::Domain::Iterator
             const Gs2::Enchant::FGs2EnchantRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> ParameterName
+            const TOptional<FString> ParameterName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

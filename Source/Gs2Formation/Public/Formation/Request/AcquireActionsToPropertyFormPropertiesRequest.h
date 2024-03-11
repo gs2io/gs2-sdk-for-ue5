@@ -33,6 +33,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> PropertyIdValue;
         TSharedPtr<Model::FAcquireAction> AcquireActionValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithAcquireAction(const TSharedPtr<Model::FAcquireAction> AcquireAction);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;
         TSharedPtr<Model::FAcquireAction> GetAcquireAction() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAcquireActionsToPropertyFormPropertiesRequest> FromJson(const TSharedPtr<FJsonObject> Data);

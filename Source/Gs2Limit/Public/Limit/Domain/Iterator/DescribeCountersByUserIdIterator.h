@@ -33,6 +33,7 @@ namespace Gs2::Limit::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
         const TOptional<FString> LimitName;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeCountersByUserIdIterator(
@@ -40,7 +41,8 @@ namespace Gs2::Limit::Domain::Iterator
             const Gs2::Limit::FGs2LimitRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> LimitName
+            const TOptional<FString> LimitName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

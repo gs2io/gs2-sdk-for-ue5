@@ -133,7 +133,8 @@ namespace Gs2::Exchange::Domain::Model
         );
 
         Gs2::Exchange::Domain::Iterator::FDescribeAwaitsByUserIdIteratorPtr Awaits(
-            const TOptional<FString> RateName
+            const TOptional<FString> RateName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeAwaits(

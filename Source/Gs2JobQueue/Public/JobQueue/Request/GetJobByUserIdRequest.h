@@ -28,6 +28,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> JobNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::JobQueue::Request
         TSharedPtr<FGetJobByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetJobByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetJobByUserIdRequest> WithJobName(const TOptional<FString> JobName);
+        TSharedPtr<FGetJobByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetJobName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetJobByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

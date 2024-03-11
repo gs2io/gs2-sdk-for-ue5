@@ -28,6 +28,7 @@ namespace Gs2::LoginReward::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> BonusModelNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::LoginReward::Request
         TSharedPtr<FDeleteReceiveStatusByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteReceiveStatusByUserIdRequest> WithBonusModelName(const TOptional<FString> BonusModelName);
         TSharedPtr<FDeleteReceiveStatusByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDeleteReceiveStatusByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteReceiveStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetBonusModelName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteReceiveStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -28,6 +28,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> MissionGroupNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Mission::Request
         TSharedPtr<FDeleteCompleteByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteCompleteByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteCompleteByUserIdRequest> WithMissionGroupName(const TOptional<FString> MissionGroupName);
+        TSharedPtr<FDeleteCompleteByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteCompleteByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetMissionGroupName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteCompleteByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

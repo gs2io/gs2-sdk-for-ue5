@@ -31,6 +31,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> GradeModelIdValue;
         TOptional<int64> GradeValueValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FAcquireItemSetWithGradeByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FAcquireItemSetWithGradeByUserIdRequest> WithGradeModelId(const TOptional<FString> GradeModelId);
         TSharedPtr<FAcquireItemSetWithGradeByUserIdRequest> WithGradeValue(const TOptional<int64> GradeValue);
+        TSharedPtr<FAcquireItemSetWithGradeByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAcquireItemSetWithGradeByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> GetGradeModelId() const;
         TOptional<int64> GetGradeValue() const;
         FString GetGradeValueString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAcquireItemSetWithGradeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -28,6 +28,7 @@ namespace Gs2::Account::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> TypeValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,6 +43,7 @@ namespace Gs2::Account::Request
         TSharedPtr<FDeleteTakeOverByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteTakeOverByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteTakeOverByUserIdRequest> WithType(const TOptional<int32> Type);
+        TSharedPtr<FDeleteTakeOverByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteTakeOverByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -49,6 +51,7 @@ namespace Gs2::Account::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetType() const;
         FString GetTypeString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteTakeOverByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

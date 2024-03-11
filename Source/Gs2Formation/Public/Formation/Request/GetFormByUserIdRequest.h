@@ -29,6 +29,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> MoldModelNameValue;
         TOptional<int32> IndexValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,6 +44,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FGetFormByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetFormByUserIdRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FGetFormByUserIdRequest> WithIndex(const TOptional<int32> Index);
+        TSharedPtr<FGetFormByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -50,6 +52,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetMoldModelName() const;
         TOptional<int32> GetIndex() const;
         FString GetIndexString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetFormByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

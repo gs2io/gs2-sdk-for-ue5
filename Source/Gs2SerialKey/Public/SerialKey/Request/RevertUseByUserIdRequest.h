@@ -28,6 +28,7 @@ namespace Gs2::SerialKey::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> CodeValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::SerialKey::Request
         TSharedPtr<FRevertUseByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FRevertUseByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FRevertUseByUserIdRequest> WithCode(const TOptional<FString> Code);
+        TSharedPtr<FRevertUseByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FRevertUseByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetCode() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FRevertUseByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -85,7 +85,7 @@ namespace Gs2::Limit::Domain::Model
         );
 
         Gs2::Limit::Domain::Iterator::FDescribeCountersIteratorPtr Counters(
-            const TOptional<FString> LimitName
+            const TOptional<FString> LimitName = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeCounters(

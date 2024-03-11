@@ -137,7 +137,8 @@ namespace Gs2::Inbox::Domain::Model
         );
 
         Gs2::Inbox::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr Messages(
-            const TOptional<bool> IsRead
+            const TOptional<bool> IsRead = TOptional<bool>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMessages(

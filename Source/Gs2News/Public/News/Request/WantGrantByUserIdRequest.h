@@ -27,6 +27,7 @@ namespace Gs2::News::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -39,10 +40,12 @@ namespace Gs2::News::Request
         TSharedPtr<FWantGrantByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FWantGrantByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FWantGrantByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FWantGrantByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FWantGrantByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

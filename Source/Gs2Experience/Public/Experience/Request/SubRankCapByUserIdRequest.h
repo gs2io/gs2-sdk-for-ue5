@@ -30,6 +30,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> ExperienceNameValue;
         TOptional<FString> PropertyIdValue;
         TOptional<int64> RankCapValueValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FSubRankCapByUserIdRequest> WithExperienceName(const TOptional<FString> ExperienceName);
         TSharedPtr<FSubRankCapByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FSubRankCapByUserIdRequest> WithRankCapValue(const TOptional<int64> RankCapValue);
+        TSharedPtr<FSubRankCapByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSubRankCapByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> GetPropertyId() const;
         TOptional<int64> GetRankCapValue() const;
         FString GetRankCapValueString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSubRankCapByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -31,6 +31,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<FString>> NodeModelNamesValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::SkillTree::Request
         TSharedPtr<FRestrainByUserIdRequest> WithNodeModelNames(
             const TSharedPtr<TArray<FString>> NodeModelNames);
         TSharedPtr<FRestrainByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FRestrainByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FRestrainByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetPropertyId() const;
         TSharedPtr<TArray<FString>> GetNodeModelNames() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FRestrainByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

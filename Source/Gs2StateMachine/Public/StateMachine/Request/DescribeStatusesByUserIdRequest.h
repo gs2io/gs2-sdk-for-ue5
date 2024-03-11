@@ -30,6 +30,7 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> StatusValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -45,6 +46,7 @@ namespace Gs2::StateMachine::Request
         TSharedPtr<FDescribeStatusesByUserIdRequest> WithStatus(const TOptional<FString> Status);
         TSharedPtr<FDescribeStatusesByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeStatusesByUserIdRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribeStatusesByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -53,6 +55,7 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeStatusesByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

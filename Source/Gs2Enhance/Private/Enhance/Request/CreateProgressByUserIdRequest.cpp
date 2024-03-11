@@ -24,7 +24,8 @@ namespace Gs2::Enhance::Request
         RateNameValue(TOptional<FString>()),
         TargetItemSetIdValue(TOptional<FString>()),
         MaterialsValue(nullptr),
-        ForceValue(TOptional<bool>())
+        ForceValue(TOptional<bool>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Enhance::Request
         RateNameValue(From.RateNameValue),
         TargetItemSetIdValue(From.TargetItemSetIdValue),
         MaterialsValue(From.MaterialsValue),
-        ForceValue(From.ForceValue)
+        ForceValue(From.ForceValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -96,6 +98,14 @@ namespace Gs2::Enhance::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateProgressByUserIdRequest> FCreateProgressByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateProgressByUserIdRequest> FCreateProgressByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -150,6 +160,11 @@ namespace Gs2::Enhance::Request
             return FString("null");
         }
         return FString(ForceValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<FString> FCreateProgressByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FCreateProgressByUserIdRequest::GetDuplicationAvoider() const
@@ -221,6 +236,15 @@ namespace Gs2::Enhance::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -259,6 +283,10 @@ namespace Gs2::Enhance::Request
         if (ForceValue.IsSet())
         {
             JsonRootObject->SetBoolField("force", ForceValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

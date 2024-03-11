@@ -23,7 +23,8 @@ namespace Gs2::Gateway::Request
         UserIdValue(TOptional<FString>()),
         SubjectValue(TOptional<FString>()),
         PayloadValue(TOptional<FString>()),
-        SoundValue(TOptional<FString>())
+        SoundValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Gateway::Request
         UserIdValue(From.UserIdValue),
         SubjectValue(From.SubjectValue),
         PayloadValue(From.PayloadValue),
-        SoundValue(From.SoundValue)
+        SoundValue(From.SoundValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Gateway::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSendMobileNotificationByUserIdRequest> FSendMobileNotificationByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSendMobileNotificationByUserIdRequest> FSendMobileNotificationByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -122,6 +132,11 @@ namespace Gs2::Gateway::Request
     TOptional<FString> FSendMobileNotificationByUserIdRequest::GetSound() const
     {
         return SoundValue;
+    }
+
+    TOptional<FString> FSendMobileNotificationByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FSendMobileNotificationByUserIdRequest::GetDuplicationAvoider() const
@@ -181,6 +196,15 @@ namespace Gs2::Gateway::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -210,6 +234,10 @@ namespace Gs2::Gateway::Request
         if (SoundValue.IsSet())
         {
             JsonRootObject->SetStringField("sound", SoundValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

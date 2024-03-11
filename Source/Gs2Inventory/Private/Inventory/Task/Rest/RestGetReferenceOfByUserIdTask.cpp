@@ -115,6 +115,10 @@ namespace Gs2::Inventory::Task::Rest
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
+            if (this->Request->GetTimeOffsetToken().IsSet())
+            {
+                request->SetHeader("X-GS2-TIME-OFFSET-TOKEN", this->Request->GetTimeOffsetToken().GetValue());
+            }
 
             request->ProcessRequest();
             UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s"), TEXT("GET"), ToCStr(Url));

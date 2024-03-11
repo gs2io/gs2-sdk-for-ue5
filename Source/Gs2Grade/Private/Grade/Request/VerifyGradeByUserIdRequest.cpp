@@ -25,7 +25,8 @@ namespace Gs2::Grade::Request
         VerifyTypeValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
         GradeValueValue(TOptional<int64>()),
-        MultiplyValueSpecifyingQuantityValue(TOptional<bool>())
+        MultiplyValueSpecifyingQuantityValue(TOptional<bool>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::Grade::Request
         VerifyTypeValue(From.VerifyTypeValue),
         PropertyIdValue(From.PropertyIdValue),
         GradeValueValue(From.GradeValueValue),
-        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue)
+        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -106,6 +108,14 @@ namespace Gs2::Grade::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyGradeByUserIdRequest> FVerifyGradeByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FVerifyGradeByUserIdRequest> FVerifyGradeByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -170,6 +180,11 @@ namespace Gs2::Grade::Request
             return FString("null");
         }
         return FString(MultiplyValueSpecifyingQuantityValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<FString> FVerifyGradeByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FVerifyGradeByUserIdRequest::GetDuplicationAvoider() const
@@ -247,6 +262,15 @@ namespace Gs2::Grade::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -284,6 +308,10 @@ namespace Gs2::Grade::Request
         if (MultiplyValueSpecifyingQuantityValue.IsSet())
         {
             JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

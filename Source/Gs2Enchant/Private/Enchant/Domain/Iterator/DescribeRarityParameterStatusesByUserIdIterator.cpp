@@ -36,14 +36,16 @@ namespace Gs2::Enchant::Domain::Iterator
         const Gs2::Enchant::FGs2EnchantRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> ParameterName
+        const TOptional<FString> ParameterName,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        ParameterName(ParameterName)
+        ParameterName(ParameterName),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

@@ -28,6 +28,7 @@ namespace Gs2::Stamina::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> StaminaNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Stamina::Request
         TSharedPtr<FGetStaminaByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetStaminaByUserIdRequest> WithStaminaName(const TOptional<FString> StaminaName);
         TSharedPtr<FGetStaminaByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetStaminaByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetStaminaName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetStaminaByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

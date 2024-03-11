@@ -20,7 +20,8 @@ namespace Gs2::AdReward::Request
 {
     FDeletePointByUserIdRequest::FDeletePointByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
-        UserIdValue(TOptional<FString>())
+        UserIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::AdReward::Request
         const FDeletePointByUserIdRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        UserIdValue(From.UserIdValue)
+        UserIdValue(From.UserIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -56,6 +58,14 @@ namespace Gs2::AdReward::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDeletePointByUserIdRequest> FDeletePointByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FDeletePointByUserIdRequest> FDeletePointByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -77,6 +87,11 @@ namespace Gs2::AdReward::Request
     TOptional<FString> FDeletePointByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FDeletePointByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FDeletePointByUserIdRequest::GetDuplicationAvoider() const
@@ -109,6 +124,15 @@ namespace Gs2::AdReward::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -126,6 +150,10 @@ namespace Gs2::AdReward::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -31,6 +31,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> ParameterNameValue;
         TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FRarityParameterValue>>> ParameterValuesValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Enchant::Request
         TSharedPtr<FSetRarityParameterStatusByUserIdRequest> WithParameterName(const TOptional<FString> ParameterName);
         TSharedPtr<FSetRarityParameterStatusByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FSetRarityParameterStatusByUserIdRequest> WithParameterValues(const TSharedPtr<TArray<TSharedPtr<Model::FRarityParameterValue>>> ParameterValues);
+        TSharedPtr<FSetRarityParameterStatusByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSetRarityParameterStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetParameterName() const;
         TOptional<FString> GetPropertyId() const;TSharedPtr<TArray<TSharedPtr<Model::FRarityParameterValue>>> GetParameterValues() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetRarityParameterStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

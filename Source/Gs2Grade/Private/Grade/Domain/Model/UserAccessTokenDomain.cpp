@@ -81,8 +81,8 @@ namespace Gs2::Grade::Domain::Model
             Gs2->Cache,
             Client,
             NamespaceName,
-            GradeName,
-            AccessToken
+            AccessToken,
+            GradeName
         );
     }
 

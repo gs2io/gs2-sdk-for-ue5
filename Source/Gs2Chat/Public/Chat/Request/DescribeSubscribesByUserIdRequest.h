@@ -29,6 +29,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,6 +44,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FDescribeSubscribesByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDescribeSubscribesByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeSubscribesByUserIdRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribeSubscribesByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -50,6 +52,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeSubscribesByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

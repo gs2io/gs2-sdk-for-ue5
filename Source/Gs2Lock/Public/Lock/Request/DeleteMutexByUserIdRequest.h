@@ -28,6 +28,7 @@ namespace Gs2::Lock::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> PropertyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Lock::Request
         TSharedPtr<FDeleteMutexByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteMutexByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteMutexByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
+        TSharedPtr<FDeleteMutexByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteMutexByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetPropertyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteMutexByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

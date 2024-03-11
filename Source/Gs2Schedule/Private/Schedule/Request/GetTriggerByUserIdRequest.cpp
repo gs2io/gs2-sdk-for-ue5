@@ -21,7 +21,8 @@ namespace Gs2::Schedule::Request
     FGetTriggerByUserIdRequest::FGetTriggerByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        TriggerNameValue(TOptional<FString>())
+        TriggerNameValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Schedule::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        TriggerNameValue(From.TriggerNameValue)
+        TriggerNameValue(From.TriggerNameValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Schedule::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetTriggerByUserIdRequest> FGetTriggerByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetTriggerByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -84,6 +94,11 @@ namespace Gs2::Schedule::Request
     TOptional<FString> FGetTriggerByUserIdRequest::GetTriggerName() const
     {
         return TriggerNameValue;
+    }
+
+    TOptional<FString> FGetTriggerByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetTriggerByUserIdRequest> FGetTriggerByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -119,6 +134,15 @@ namespace Gs2::Schedule::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -140,6 +164,10 @@ namespace Gs2::Schedule::Request
         if (TriggerNameValue.IsSet())
         {
             JsonRootObject->SetStringField("triggerName", TriggerNameValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

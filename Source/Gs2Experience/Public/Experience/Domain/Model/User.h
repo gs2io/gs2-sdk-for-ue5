@@ -95,7 +95,8 @@ namespace Gs2::Experience::Domain::Model
         );
 
         Gs2::Experience::Domain::Iterator::FDescribeStatusesByUserIdIteratorPtr Statuses(
-            const TOptional<FString> ExperienceName
+            const TOptional<FString> ExperienceName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(

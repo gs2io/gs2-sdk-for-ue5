@@ -22,7 +22,8 @@ namespace Gs2::Inventory::Request
         NamespaceNameValue(TOptional<FString>()),
         InventoryNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        NewCapacityValueValue(TOptional<int32>())
+        NewCapacityValueValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Inventory::Request
         NamespaceNameValue(From.NamespaceNameValue),
         InventoryNameValue(From.InventoryNameValue),
         UserIdValue(From.UserIdValue),
-        NewCapacityValueValue(From.NewCapacityValueValue)
+        NewCapacityValueValue(From.NewCapacityValueValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Inventory::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSetCapacityByUserIdRequest> FSetCapacityByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSetCapacityByUserIdRequest> FSetCapacityByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -116,6 +126,11 @@ namespace Gs2::Inventory::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), NewCapacityValueValue.GetValue());
+    }
+
+    TOptional<FString> FSetCapacityByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FSetCapacityByUserIdRequest::GetDuplicationAvoider() const
@@ -166,6 +181,15 @@ namespace Gs2::Inventory::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -191,6 +215,10 @@ namespace Gs2::Inventory::Request
         if (NewCapacityValueValue.IsSet())
         {
             JsonRootObject->SetNumberField("newCapacityValue", NewCapacityValueValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

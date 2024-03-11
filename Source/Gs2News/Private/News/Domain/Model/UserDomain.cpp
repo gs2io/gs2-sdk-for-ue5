@@ -75,13 +75,15 @@ namespace Gs2::News::Domain::Model
     }
 
     Gs2::News::Domain::Iterator::FDescribeNewsByUserIdIteratorPtr FUserDomain::Newses(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::News::Domain::Iterator::FDescribeNewsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

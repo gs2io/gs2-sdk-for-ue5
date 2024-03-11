@@ -33,6 +33,7 @@ namespace Gs2::Exchange::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
         const TOptional<FString> RateName;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeAwaitsByUserIdIterator(
@@ -40,7 +41,8 @@ namespace Gs2::Exchange::Domain::Iterator
             const Gs2::Exchange::FGs2ExchangeRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> RateName
+            const TOptional<FString> RateName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

@@ -144,6 +144,7 @@ namespace Gs2::JobQueue::Domain::Model
         );
 
         Gs2::JobQueue::Domain::Iterator::FDescribeJobsByUserIdIteratorPtr Jobs(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeJobs(
@@ -159,6 +160,7 @@ namespace Gs2::JobQueue::Domain::Model
         );
 
         Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIteratorPtr DeadLetterJobs(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeDeadLetterJobs(

@@ -32,6 +32,7 @@ namespace Gs2::Money::Request
         TOptional<int64> EndValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -49,6 +50,7 @@ namespace Gs2::Money::Request
         TSharedPtr<FDescribeReceiptsRequest> WithEnd(const TOptional<int64> End);
         TSharedPtr<FDescribeReceiptsRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeReceiptsRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribeReceiptsRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -62,6 +64,7 @@ namespace Gs2::Money::Request
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeReceiptsRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

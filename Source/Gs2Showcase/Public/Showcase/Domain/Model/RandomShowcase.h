@@ -94,6 +94,7 @@ namespace Gs2::Showcase::Domain::Model
         );
 
         Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsByUserIdIteratorPtr RandomDisplayItems(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRandomDisplayItems(

@@ -30,6 +30,7 @@ namespace Gs2::Money::Request
         TOptional<int32> SlotValue;
         TOptional<float> PriceValue;
         TOptional<int32> CountValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Money::Request
         TSharedPtr<FDepositByUserIdRequest> WithSlot(const TOptional<int32> Slot);
         TSharedPtr<FDepositByUserIdRequest> WithPrice(const TOptional<float> Price);
         TSharedPtr<FDepositByUserIdRequest> WithCount(const TOptional<int32> Count);
+        TSharedPtr<FDepositByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDepositByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -57,6 +59,7 @@ namespace Gs2::Money::Request
         FString GetPriceString() const;
         TOptional<int32> GetCount() const;
         FString GetCountString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDepositByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

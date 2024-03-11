@@ -28,6 +28,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> FromUserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Friend::Request
         TSharedPtr<FGetReceiveRequestByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetReceiveRequestByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetReceiveRequestByUserIdRequest> WithFromUserId(const TOptional<FString> FromUserId);
+        TSharedPtr<FGetReceiveRequestByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetFromUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetReceiveRequestByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

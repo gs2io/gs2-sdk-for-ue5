@@ -213,13 +213,15 @@ namespace Gs2::Quest::Domain::Model
     }
 
     Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIteratorPtr FUserDomain::Progresses(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 
@@ -265,13 +267,15 @@ namespace Gs2::Quest::Domain::Model
     }
 
     Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsByUserIdIteratorPtr FUserDomain::CompletedQuestLists(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

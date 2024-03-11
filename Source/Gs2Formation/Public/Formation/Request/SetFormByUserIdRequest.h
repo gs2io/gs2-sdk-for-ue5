@@ -31,6 +31,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> MoldModelNameValue;
         TOptional<int32> IndexValue;
         TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> SlotsValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FSetFormByUserIdRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FSetFormByUserIdRequest> WithIndex(const TOptional<int32> Index);
         TSharedPtr<FSetFormByUserIdRequest> WithSlots(const TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> Slots);
+        TSharedPtr<FSetFormByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSetFormByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetMoldModelName() const;
         TOptional<int32> GetIndex() const;
         FString GetIndexString() const;TSharedPtr<TArray<TSharedPtr<Model::FSlot>>> GetSlots() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetFormByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -30,6 +30,7 @@ namespace Gs2::Inbox::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> MessageNameValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,12 +46,14 @@ namespace Gs2::Inbox::Request
         TSharedPtr<FReadMessageByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FReadMessageByUserIdRequest> WithMessageName(const TOptional<FString> MessageName);
         TSharedPtr<FReadMessageByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FReadMessageByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FReadMessageByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetMessageName() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FReadMessageByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

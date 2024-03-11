@@ -40,7 +40,7 @@ namespace Gs2::SerialKey::Domain::Iterator
             const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CampaignModelName,
-            const TOptional<FString> IssueJobName
+            const TOptional<FString> IssueJobName = TOptional<FString>()
         );
 
         class FIterator;

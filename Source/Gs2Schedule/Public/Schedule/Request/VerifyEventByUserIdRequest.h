@@ -29,6 +29,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> EventNameValue;
         TOptional<FString> VerifyTypeValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Schedule::Request
         TSharedPtr<FVerifyEventByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FVerifyEventByUserIdRequest> WithEventName(const TOptional<FString> EventName);
         TSharedPtr<FVerifyEventByUserIdRequest> WithVerifyType(const TOptional<FString> VerifyType);
+        TSharedPtr<FVerifyEventByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FVerifyEventByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetEventName() const;
         TOptional<FString> GetVerifyType() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyEventByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -34,6 +34,7 @@ namespace Gs2::Ranking::Domain::Iterator
         const TOptional<FString> CategoryName;
         const TOptional<FString> UserId;
         const TOptional<FString> ScorerUserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeScoresByUserIdIterator(
@@ -42,7 +43,8 @@ namespace Gs2::Ranking::Domain::Iterator
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CategoryName,
             const TOptional<FString> UserId,
-            const TOptional<FString> ScorerUserId
+            const TOptional<FString> ScorerUserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

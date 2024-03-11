@@ -32,6 +32,7 @@ namespace Gs2::Quest::Request
         TSharedPtr<TArray<TSharedPtr<Model::FReward>>> RewardsValue;
         TOptional<bool> IsCompleteValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::Quest::Request
         TSharedPtr<FEndByUserIdRequest> WithRewards(const TSharedPtr<TArray<TSharedPtr<Model::FReward>>> Rewards);
         TSharedPtr<FEndByUserIdRequest> WithIsComplete(const TOptional<bool> IsComplete);
         TSharedPtr<FEndByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FEndByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FEndByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Quest::Request
         TOptional<FString> GetUserId() const;TSharedPtr<TArray<TSharedPtr<Model::FReward>>> GetRewards() const;
         TOptional<bool> GetIsComplete() const;
         FString GetIsCompleteString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FEndByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

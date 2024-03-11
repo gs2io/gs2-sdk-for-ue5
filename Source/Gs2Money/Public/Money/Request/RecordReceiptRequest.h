@@ -29,6 +29,7 @@ namespace Gs2::Money::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ContentsIdValue;
         TOptional<FString> ReceiptValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Money::Request
         TSharedPtr<FRecordReceiptRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FRecordReceiptRequest> WithContentsId(const TOptional<FString> ContentsId);
         TSharedPtr<FRecordReceiptRequest> WithReceipt(const TOptional<FString> Receipt);
+        TSharedPtr<FRecordReceiptRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FRecordReceiptRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Money::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetContentsId() const;
         TOptional<FString> GetReceipt() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FRecordReceiptRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -30,6 +30,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> RoomNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FNotificationType>>> NotificationTypesValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,12 +46,14 @@ namespace Gs2::Chat::Request
         TSharedPtr<FUpdateNotificationTypeByUserIdRequest> WithRoomName(const TOptional<FString> RoomName);
         TSharedPtr<FUpdateNotificationTypeByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FUpdateNotificationTypeByUserIdRequest> WithNotificationTypes(const TSharedPtr<TArray<TSharedPtr<Model::FNotificationType>>> NotificationTypes);
+        TSharedPtr<FUpdateNotificationTypeByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUpdateNotificationTypeByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetRoomName() const;
         TOptional<FString> GetUserId() const;TSharedPtr<TArray<TSharedPtr<Model::FNotificationType>>> GetNotificationTypes() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUpdateNotificationTypeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

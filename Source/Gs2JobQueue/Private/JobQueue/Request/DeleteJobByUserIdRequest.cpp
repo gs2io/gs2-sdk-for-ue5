@@ -21,7 +21,8 @@ namespace Gs2::JobQueue::Request
     FDeleteJobByUserIdRequest::FDeleteJobByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        JobNameValue(TOptional<FString>())
+        JobNameValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::JobQueue::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        JobNameValue(From.JobNameValue)
+        JobNameValue(From.JobNameValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::JobQueue::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDeleteJobByUserIdRequest> FDeleteJobByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FDeleteJobByUserIdRequest> FDeleteJobByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -92,6 +102,11 @@ namespace Gs2::JobQueue::Request
     TOptional<FString> FDeleteJobByUserIdRequest::GetJobName() const
     {
         return JobNameValue;
+    }
+
+    TOptional<FString> FDeleteJobByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FDeleteJobByUserIdRequest::GetDuplicationAvoider() const
@@ -133,6 +148,15 @@ namespace Gs2::JobQueue::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -154,6 +178,10 @@ namespace Gs2::JobQueue::Request
         if (JobNameValue.IsSet())
         {
             JsonRootObject->SetStringField("jobName", JobNameValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

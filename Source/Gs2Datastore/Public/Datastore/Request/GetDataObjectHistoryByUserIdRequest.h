@@ -29,6 +29,7 @@ namespace Gs2::Datastore::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> DataObjectNameValue;
         TOptional<FString> GenerationValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,12 +44,14 @@ namespace Gs2::Datastore::Request
         TSharedPtr<FGetDataObjectHistoryByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetDataObjectHistoryByUserIdRequest> WithDataObjectName(const TOptional<FString> DataObjectName);
         TSharedPtr<FGetDataObjectHistoryByUserIdRequest> WithGeneration(const TOptional<FString> Generation);
+        TSharedPtr<FGetDataObjectHistoryByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetDataObjectName() const;
         TOptional<FString> GetGeneration() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetDataObjectHistoryByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

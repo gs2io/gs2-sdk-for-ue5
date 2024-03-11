@@ -31,6 +31,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> ParameterNameValue;
         TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FBalanceParameterValue>>> ParameterValuesValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Enchant::Request
         TSharedPtr<FSetBalanceParameterStatusByUserIdRequest> WithParameterName(const TOptional<FString> ParameterName);
         TSharedPtr<FSetBalanceParameterStatusByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FSetBalanceParameterStatusByUserIdRequest> WithParameterValues(const TSharedPtr<TArray<TSharedPtr<Model::FBalanceParameterValue>>> ParameterValues);
+        TSharedPtr<FSetBalanceParameterStatusByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSetBalanceParameterStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetParameterName() const;
         TOptional<FString> GetPropertyId() const;TSharedPtr<TArray<TSharedPtr<Model::FBalanceParameterValue>>> GetParameterValues() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetBalanceParameterStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

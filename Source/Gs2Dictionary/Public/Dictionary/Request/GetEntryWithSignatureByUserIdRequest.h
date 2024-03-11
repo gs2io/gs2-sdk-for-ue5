@@ -29,6 +29,7 @@ namespace Gs2::Dictionary::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> EntryModelNameValue;
         TOptional<FString> KeyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,12 +44,14 @@ namespace Gs2::Dictionary::Request
         TSharedPtr<FGetEntryWithSignatureByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetEntryWithSignatureByUserIdRequest> WithEntryModelName(const TOptional<FString> EntryModelName);
         TSharedPtr<FGetEntryWithSignatureByUserIdRequest> WithKeyId(const TOptional<FString> KeyId);
+        TSharedPtr<FGetEntryWithSignatureByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetEntryModelName() const;
         TOptional<FString> GetKeyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetEntryWithSignatureByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

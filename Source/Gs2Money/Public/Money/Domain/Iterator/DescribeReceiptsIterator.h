@@ -35,6 +35,7 @@ namespace Gs2::Money::Domain::Iterator
         const TOptional<int32> Slot;
         const TOptional<int64> Begin;
         const TOptional<int64> End;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeReceiptsIterator(
@@ -42,9 +43,10 @@ namespace Gs2::Money::Domain::Iterator
             const Gs2::Money::FGs2MoneyRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<int32> Slot,
-            const TOptional<int64> Begin,
-            const TOptional<int64> End
+            const TOptional<int32> Slot = TOptional<int32>(),
+            const TOptional<int64> Begin = TOptional<int64>(),
+            const TOptional<int64> End = TOptional<int64>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

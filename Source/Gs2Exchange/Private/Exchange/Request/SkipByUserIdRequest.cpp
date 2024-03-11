@@ -22,7 +22,8 @@ namespace Gs2::Exchange::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         AwaitNameValue(TOptional<FString>()),
-        ConfigValue(nullptr)
+        ConfigValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Exchange::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         AwaitNameValue(From.AwaitNameValue),
-        ConfigValue(From.ConfigValue)
+        ConfigValue(From.ConfigValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Exchange::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSkipByUserIdRequest> FSkipByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSkipByUserIdRequest> FSkipByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -111,6 +121,11 @@ namespace Gs2::Exchange::Request
             return nullptr;
         }
         return ConfigValue;
+    }
+
+    TOptional<FString> FSkipByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FSkipByUserIdRequest::GetDuplicationAvoider() const
@@ -164,6 +179,15 @@ namespace Gs2::Exchange::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FConfigPtr>>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -194,6 +218,10 @@ namespace Gs2::Exchange::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("config", v);
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

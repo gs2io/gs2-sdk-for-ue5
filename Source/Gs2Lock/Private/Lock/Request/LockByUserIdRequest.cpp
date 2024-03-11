@@ -23,7 +23,8 @@ namespace Gs2::Lock::Request
         PropertyIdValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         TransactionIdValue(TOptional<FString>()),
-        TtlValue(TOptional<int64>())
+        TtlValue(TOptional<int64>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Lock::Request
         PropertyIdValue(From.PropertyIdValue),
         UserIdValue(From.UserIdValue),
         TransactionIdValue(From.TransactionIdValue),
-        TtlValue(From.TtlValue)
+        TtlValue(From.TtlValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Lock::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FLockByUserIdRequest> FLockByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FLockByUserIdRequest> FLockByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -131,6 +141,11 @@ namespace Gs2::Lock::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), TtlValue.GetValue());
+    }
+
+    TOptional<FString> FLockByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FLockByUserIdRequest::GetDuplicationAvoider() const
@@ -190,6 +205,15 @@ namespace Gs2::Lock::Request
                   }
                   return TOptional<int64>();
               }() : TOptional<int64>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -219,6 +243,10 @@ namespace Gs2::Lock::Request
         if (TtlValue.IsSet())
         {
             JsonRootObject->SetStringField("ttl", FString::Printf(TEXT("%lld"), TtlValue.GetValue()));
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -26,7 +26,8 @@ namespace Gs2::Enchant::Request
         VerifyTypeValue(TOptional<FString>()),
         ParameterValueNameValue(TOptional<FString>()),
         ParameterCountValue(TOptional<int32>()),
-        MultiplyValueSpecifyingQuantityValue(TOptional<bool>())
+        MultiplyValueSpecifyingQuantityValue(TOptional<bool>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -40,7 +41,8 @@ namespace Gs2::Enchant::Request
         VerifyTypeValue(From.VerifyTypeValue),
         ParameterValueNameValue(From.ParameterValueNameValue),
         ParameterCountValue(From.ParameterCountValue),
-        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue)
+        MultiplyValueSpecifyingQuantityValue(From.MultiplyValueSpecifyingQuantityValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -116,6 +118,14 @@ namespace Gs2::Enchant::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> FVerifyRarityParameterStatusByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FVerifyRarityParameterStatusByUserIdRequest> FVerifyRarityParameterStatusByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -185,6 +195,11 @@ namespace Gs2::Enchant::Request
             return FString("null");
         }
         return FString(MultiplyValueSpecifyingQuantityValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<FString> FVerifyRarityParameterStatusByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FVerifyRarityParameterStatusByUserIdRequest::GetDuplicationAvoider() const
@@ -271,6 +286,15 @@ namespace Gs2::Enchant::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -312,6 +336,10 @@ namespace Gs2::Enchant::Request
         if (MultiplyValueSpecifyingQuantityValue.IsSet())
         {
             JsonRootObject->SetBoolField("multiplyValueSpecifyingQuantity", MultiplyValueSpecifyingQuantityValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

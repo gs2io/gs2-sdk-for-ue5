@@ -31,6 +31,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> RateNameValue;
         TOptional<int32> CountValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FCreateAwaitByUserIdRequest> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FCreateAwaitByUserIdRequest> WithCount(const TOptional<int32> Count);
         TSharedPtr<FCreateAwaitByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FCreateAwaitByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCreateAwaitByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> GetRateName() const;
         TOptional<int32> GetCount() const;
         FString GetCountString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCreateAwaitByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

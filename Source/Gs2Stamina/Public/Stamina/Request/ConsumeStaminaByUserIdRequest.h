@@ -29,6 +29,7 @@ namespace Gs2::Stamina::Request
         TOptional<FString> StaminaNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> ConsumeValueValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Stamina::Request
         TSharedPtr<FConsumeStaminaByUserIdRequest> WithStaminaName(const TOptional<FString> StaminaName);
         TSharedPtr<FConsumeStaminaByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FConsumeStaminaByUserIdRequest> WithConsumeValue(const TOptional<int32> ConsumeValue);
+        TSharedPtr<FConsumeStaminaByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FConsumeStaminaByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::Stamina::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetConsumeValue() const;
         FString GetConsumeValueString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FConsumeStaminaByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

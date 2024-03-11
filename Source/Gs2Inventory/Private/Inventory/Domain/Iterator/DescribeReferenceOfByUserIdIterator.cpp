@@ -38,7 +38,8 @@ namespace Gs2::Inventory::Domain::Iterator
         const TOptional<FString> InventoryName,
         const TOptional<FString> UserId,
         const TOptional<FString> ItemName,
-        const TOptional<FString> ItemSetName
+        const TOptional<FString> ItemSetName,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -47,7 +48,8 @@ namespace Gs2::Inventory::Domain::Iterator
         InventoryName(InventoryName),
         UserId(UserId),
         ItemName(ItemName),
-        ItemSetName(ItemSetName)
+        ItemSetName(ItemSetName),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

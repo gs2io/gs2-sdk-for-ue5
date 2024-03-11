@@ -30,6 +30,7 @@ namespace Gs2::Grade::Request
         TOptional<FString> GradeNameValue;
         TOptional<FString> PropertyIdValue;
         TOptional<int64> GradeValueValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Grade::Request
         TSharedPtr<FSubGradeByUserIdRequest> WithGradeName(const TOptional<FString> GradeName);
         TSharedPtr<FSubGradeByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FSubGradeByUserIdRequest> WithGradeValue(const TOptional<int64> GradeValue);
+        TSharedPtr<FSubGradeByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSubGradeByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Grade::Request
         TOptional<FString> GetPropertyId() const;
         TOptional<int64> GetGradeValue() const;
         FString GetGradeValueString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSubGradeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

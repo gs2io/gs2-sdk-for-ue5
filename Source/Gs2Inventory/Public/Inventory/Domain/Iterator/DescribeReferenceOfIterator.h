@@ -46,7 +46,7 @@ namespace Gs2::Inventory::Domain::Iterator
             const TOptional<FString> InventoryName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
             const TOptional<FString> ItemName,
-            const TOptional<FString> ItemSetName
+            const TOptional<FString> ItemSetName = TOptional<FString>()
         );
 
         class FIterator;

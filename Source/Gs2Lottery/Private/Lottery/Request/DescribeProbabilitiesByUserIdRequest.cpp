@@ -21,7 +21,8 @@ namespace Gs2::Lottery::Request
     FDescribeProbabilitiesByUserIdRequest::FDescribeProbabilitiesByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         LotteryNameValue(TOptional<FString>()),
-        UserIdValue(TOptional<FString>())
+        UserIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Lottery::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         LotteryNameValue(From.LotteryNameValue),
-        UserIdValue(From.UserIdValue)
+        UserIdValue(From.UserIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Lottery::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDescribeProbabilitiesByUserIdRequest> FDescribeProbabilitiesByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FDescribeProbabilitiesByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -84,6 +94,11 @@ namespace Gs2::Lottery::Request
     TOptional<FString> FDescribeProbabilitiesByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FDescribeProbabilitiesByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FDescribeProbabilitiesByUserIdRequest> FDescribeProbabilitiesByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -119,6 +134,15 @@ namespace Gs2::Lottery::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -140,6 +164,10 @@ namespace Gs2::Lottery::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

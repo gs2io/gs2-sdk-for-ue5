@@ -21,7 +21,8 @@ namespace Gs2::Inbox::Request
     FGetMessageByUserIdRequest::FGetMessageByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        MessageNameValue(TOptional<FString>())
+        MessageNameValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Inbox::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        MessageNameValue(From.MessageNameValue)
+        MessageNameValue(From.MessageNameValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Inbox::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetMessageByUserIdRequest> FGetMessageByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetMessageByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -84,6 +94,11 @@ namespace Gs2::Inbox::Request
     TOptional<FString> FGetMessageByUserIdRequest::GetMessageName() const
     {
         return MessageNameValue;
+    }
+
+    TOptional<FString> FGetMessageByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetMessageByUserIdRequest> FGetMessageByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -119,6 +134,15 @@ namespace Gs2::Inbox::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -140,6 +164,10 @@ namespace Gs2::Inbox::Request
         if (MessageNameValue.IsSet())
         {
             JsonRootObject->SetStringField("messageName", MessageNameValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

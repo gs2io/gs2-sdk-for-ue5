@@ -38,14 +38,16 @@ namespace Gs2::Lottery::Domain::Iterator
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> LotteryName,
-        const TOptional<FString> UserId
+        const TOptional<FString> UserId,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         LotteryName(LotteryName),
-        UserId(UserId)
+        UserId(UserId),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

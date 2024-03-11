@@ -38,8 +38,8 @@ namespace Gs2::Ranking::Domain::Iterator
         const Gs2::Ranking::FGs2RankingRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CategoryName,
-        const TOptional<FString> AdditionalScopeName,
-        const TOptional<int64> Score
+        const TOptional<int64> Score,
+        const TOptional<FString> AdditionalScopeName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),

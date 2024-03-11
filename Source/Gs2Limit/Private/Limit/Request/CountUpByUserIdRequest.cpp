@@ -24,7 +24,8 @@ namespace Gs2::Limit::Request
         CounterNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         CountUpValueValue(TOptional<int32>()),
-        MaxValueValue(TOptional<int32>())
+        MaxValueValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Limit::Request
         CounterNameValue(From.CounterNameValue),
         UserIdValue(From.UserIdValue),
         CountUpValueValue(From.CountUpValueValue),
-        MaxValueValue(From.MaxValueValue)
+        MaxValueValue(From.MaxValueValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -93,6 +95,14 @@ namespace Gs2::Limit::Request
     )
     {
         this->MaxValueValue = MaxValue;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCountUpByUserIdRequest> FCountUpByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -155,6 +165,11 @@ namespace Gs2::Limit::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), MaxValueValue.GetValue());
+    }
+
+    TOptional<FString> FCountUpByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FCountUpByUserIdRequest::GetDuplicationAvoider() const
@@ -223,6 +238,15 @@ namespace Gs2::Limit::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -256,6 +280,10 @@ namespace Gs2::Limit::Request
         if (MaxValueValue.IsSet())
         {
             JsonRootObject->SetNumberField("maxValue", MaxValueValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

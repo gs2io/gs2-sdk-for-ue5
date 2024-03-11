@@ -23,7 +23,8 @@ namespace Gs2::StateMachine::Request
         UserIdValue(TOptional<FString>()),
         StatusNameValue(TOptional<FString>()),
         EventNameValue(TOptional<FString>()),
-        ArgsValue(TOptional<FString>())
+        ArgsValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::StateMachine::Request
         UserIdValue(From.UserIdValue),
         StatusNameValue(From.StatusNameValue),
         EventNameValue(From.EventNameValue),
-        ArgsValue(From.ArgsValue)
+        ArgsValue(From.ArgsValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::StateMachine::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FEmitByUserIdRequest> FEmitByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEmitByUserIdRequest> FEmitByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -122,6 +132,11 @@ namespace Gs2::StateMachine::Request
     TOptional<FString> FEmitByUserIdRequest::GetArgs() const
     {
         return ArgsValue;
+    }
+
+    TOptional<FString> FEmitByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FEmitByUserIdRequest::GetDuplicationAvoider() const
@@ -181,6 +196,15 @@ namespace Gs2::StateMachine::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -210,6 +234,10 @@ namespace Gs2::StateMachine::Request
         if (ArgsValue.IsSet())
         {
             JsonRootObject->SetStringField("args", ArgsValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

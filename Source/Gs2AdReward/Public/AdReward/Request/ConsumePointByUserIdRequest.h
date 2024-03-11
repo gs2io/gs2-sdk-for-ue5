@@ -28,6 +28,7 @@ namespace Gs2::AdReward::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int64> PointValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,6 +43,7 @@ namespace Gs2::AdReward::Request
         TSharedPtr<FConsumePointByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FConsumePointByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FConsumePointByUserIdRequest> WithPoint(const TOptional<int64> Point);
+        TSharedPtr<FConsumePointByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FConsumePointByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -49,6 +51,7 @@ namespace Gs2::AdReward::Request
         TOptional<FString> GetUserId() const;
         TOptional<int64> GetPoint() const;
         FString GetPointString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FConsumePointByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

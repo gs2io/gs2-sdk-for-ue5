@@ -32,6 +32,7 @@ namespace Gs2::Lottery::Request
         TOptional<int64> RandomSeedValue;
         TOptional<int32> CountValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -49,6 +50,7 @@ namespace Gs2::Lottery::Request
         TSharedPtr<FDrawWithRandomSeedByUserIdRequest> WithRandomSeed(const TOptional<int64> RandomSeed);
         TSharedPtr<FDrawWithRandomSeedByUserIdRequest> WithCount(const TOptional<int32> Count);
         TSharedPtr<FDrawWithRandomSeedByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FDrawWithRandomSeedByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDrawWithRandomSeedByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -59,6 +61,7 @@ namespace Gs2::Lottery::Request
         FString GetRandomSeedString() const;
         TOptional<int32> GetCount() const;
         FString GetCountString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDrawWithRandomSeedByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

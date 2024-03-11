@@ -29,6 +29,7 @@ namespace Gs2::Datastore::Request
         TOptional<FString> DataObjectNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> ContentTypeValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Datastore::Request
         TSharedPtr<FPrepareReUploadByUserIdRequest> WithDataObjectName(const TOptional<FString> DataObjectName);
         TSharedPtr<FPrepareReUploadByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FPrepareReUploadByUserIdRequest> WithContentType(const TOptional<FString> ContentType);
+        TSharedPtr<FPrepareReUploadByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FPrepareReUploadByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Datastore::Request
         TOptional<FString> GetDataObjectName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetContentType() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FPrepareReUploadByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

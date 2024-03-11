@@ -36,14 +36,16 @@ namespace Gs2::Showcase::Domain::Iterator
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> ShowcaseName,
-        const TOptional<FString> UserId
+        const TOptional<FString> UserId,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         ShowcaseName(ShowcaseName),
-        UserId(UserId)
+        UserId(UserId),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

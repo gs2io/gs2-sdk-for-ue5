@@ -30,6 +30,7 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> StatusNameValue;
         TSharedPtr<TArray<TSharedPtr<Model::FEvent>>> EventsValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,12 +46,14 @@ namespace Gs2::StateMachine::Request
         TSharedPtr<FReportByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FReportByUserIdRequest> WithStatusName(const TOptional<FString> StatusName);
         TSharedPtr<FReportByUserIdRequest> WithEvents(const TSharedPtr<TArray<TSharedPtr<Model::FEvent>>> Events);
+        TSharedPtr<FReportByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FReportByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetStatusName() const;TSharedPtr<TArray<TSharedPtr<Model::FEvent>>> GetEvents() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FReportByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

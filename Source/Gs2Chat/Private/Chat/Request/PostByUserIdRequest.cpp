@@ -24,7 +24,8 @@ namespace Gs2::Chat::Request
         UserIdValue(TOptional<FString>()),
         CategoryValue(TOptional<int32>()),
         MetadataValue(TOptional<FString>()),
-        PasswordValue(TOptional<FString>())
+        PasswordValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Chat::Request
         UserIdValue(From.UserIdValue),
         CategoryValue(From.CategoryValue),
         MetadataValue(From.MetadataValue),
-        PasswordValue(From.PasswordValue)
+        PasswordValue(From.PasswordValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -96,6 +98,14 @@ namespace Gs2::Chat::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FPostByUserIdRequest> FPostByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FPostByUserIdRequest> FPostByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -146,6 +156,11 @@ namespace Gs2::Chat::Request
     TOptional<FString> FPostByUserIdRequest::GetPassword() const
     {
         return PasswordValue;
+    }
+
+    TOptional<FString> FPostByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FPostByUserIdRequest::GetDuplicationAvoider() const
@@ -214,6 +229,15 @@ namespace Gs2::Chat::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -247,6 +271,10 @@ namespace Gs2::Chat::Request
         if (PasswordValue.IsSet())
         {
             JsonRootObject->SetStringField("password", PasswordValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

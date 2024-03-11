@@ -21,7 +21,8 @@ namespace Gs2::Idle::Request
     FPredictionByUserIdRequest::FPredictionByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        CategoryNameValue(TOptional<FString>())
+        CategoryNameValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Idle::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        CategoryNameValue(From.CategoryNameValue)
+        CategoryNameValue(From.CategoryNameValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Idle::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FPredictionByUserIdRequest> FPredictionByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FPredictionByUserIdRequest> FPredictionByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -92,6 +102,11 @@ namespace Gs2::Idle::Request
     TOptional<FString> FPredictionByUserIdRequest::GetCategoryName() const
     {
         return CategoryNameValue;
+    }
+
+    TOptional<FString> FPredictionByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FPredictionByUserIdRequest::GetDuplicationAvoider() const
@@ -133,6 +148,15 @@ namespace Gs2::Idle::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -154,6 +178,10 @@ namespace Gs2::Idle::Request
         if (CategoryNameValue.IsSet())
         {
             JsonRootObject->SetStringField("categoryName", CategoryNameValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -255,6 +255,7 @@ namespace Gs2::Datastore::Domain::Model
         );
 
         Gs2::Datastore::Domain::Iterator::FDescribeDataObjectHistoriesByUserIdIteratorPtr DataObjectHistories(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeDataObjectHistories(

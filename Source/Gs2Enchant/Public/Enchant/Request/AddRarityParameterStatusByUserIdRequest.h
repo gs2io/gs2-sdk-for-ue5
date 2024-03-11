@@ -30,6 +30,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> ParameterNameValue;
         TOptional<FString> PropertyIdValue;
         TOptional<int32> CountValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Enchant::Request
         TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithParameterName(const TOptional<FString> ParameterName);
         TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithCount(const TOptional<int32> Count);
+        TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAddRarityParameterStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> GetPropertyId() const;
         TOptional<int32> GetCount() const;
         FString GetCountString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAddRarityParameterStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

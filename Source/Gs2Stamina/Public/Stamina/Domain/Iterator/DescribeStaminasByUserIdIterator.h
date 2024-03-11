@@ -32,13 +32,15 @@ namespace Gs2::Stamina::Domain::Iterator
         const Gs2::Stamina::FGs2StaminaRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeStaminasByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Stamina::FGs2StaminaRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

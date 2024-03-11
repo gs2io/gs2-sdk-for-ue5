@@ -28,6 +28,7 @@ namespace Gs2::Account::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> TypeValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,12 +42,14 @@ namespace Gs2::Account::Request
         TSharedPtr<FGetTakeOverByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetTakeOverByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetTakeOverByUserIdRequest> WithType(const TOptional<int32> Type);
+        TSharedPtr<FGetTakeOverByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetType() const;
         FString GetTypeString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetTakeOverByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

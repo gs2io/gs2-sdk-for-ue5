@@ -41,7 +41,7 @@ namespace Gs2::Limit::Domain::Iterator
             const Gs2::Limit::FGs2LimitRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<FString> LimitName
+            const TOptional<FString> LimitName = TOptional<FString>()
         );
 
         class FIterator;

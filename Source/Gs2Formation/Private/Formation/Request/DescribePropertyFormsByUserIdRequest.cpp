@@ -23,7 +23,8 @@ namespace Gs2::Formation::Request
         UserIdValue(TOptional<FString>()),
         PropertyFormModelNameValue(TOptional<FString>()),
         PageTokenValue(TOptional<FString>()),
-        LimitValue(TOptional<int32>())
+        LimitValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Formation::Request
         UserIdValue(From.UserIdValue),
         PropertyFormModelNameValue(From.PropertyFormModelNameValue),
         PageTokenValue(From.PageTokenValue),
-        LimitValue(From.LimitValue)
+        LimitValue(From.LimitValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Formation::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDescribePropertyFormsByUserIdRequest> FDescribePropertyFormsByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FDescribePropertyFormsByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -123,6 +133,11 @@ namespace Gs2::Formation::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), LimitValue.GetValue());
+    }
+
+    TOptional<FString> FDescribePropertyFormsByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FDescribePropertyFormsByUserIdRequest> FDescribePropertyFormsByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -176,7 +191,16 @@ namespace Gs2::Formation::Request
                         return TOptional(v);
                   }
                   return TOptional<int32>();
-              }() : TOptional<int32>());
+              }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FDescribePropertyFormsByUserIdRequest::ToJson() const
@@ -205,6 +229,10 @@ namespace Gs2::Formation::Request
         if (LimitValue.IsSet())
         {
             JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -248,7 +248,8 @@ namespace Gs2::Inbox::Domain::Model
     }
 
     Gs2::Inbox::Domain::Iterator::FDescribeMessagesByUserIdIteratorPtr FUserDomain::Messages(
-        const TOptional<bool> IsRead
+        const TOptional<bool> IsRead,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Iterator::FDescribeMessagesByUserIdIterator>(
@@ -256,7 +257,8 @@ namespace Gs2::Inbox::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            IsRead
+            IsRead,
+            TimeOffsetToken
         );
     }
 

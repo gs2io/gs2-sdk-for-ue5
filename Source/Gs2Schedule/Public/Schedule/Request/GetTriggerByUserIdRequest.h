@@ -28,6 +28,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TriggerNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Schedule::Request
         TSharedPtr<FGetTriggerByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetTriggerByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetTriggerByUserIdRequest> WithTriggerName(const TOptional<FString> TriggerName);
+        TSharedPtr<FGetTriggerByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTriggerName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetTriggerByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

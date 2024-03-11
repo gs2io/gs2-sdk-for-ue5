@@ -26,6 +26,7 @@ namespace Gs2::Inbox::Request
     {
         TOptional<FString> ContextStackValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -38,10 +39,12 @@ namespace Gs2::Inbox::Request
 
         TSharedPtr<FDumpUserDataByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDumpUserDataByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDumpUserDataByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDumpUserDataByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDumpUserDataByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

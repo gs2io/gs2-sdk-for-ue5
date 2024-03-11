@@ -33,6 +33,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> TargetItemSetIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FMaterial>>> MaterialsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::Enhance::Request
         TSharedPtr<FDirectEnhanceByUserIdRequest> WithTargetItemSetId(const TOptional<FString> TargetItemSetId);
         TSharedPtr<FDirectEnhanceByUserIdRequest> WithMaterials(const TSharedPtr<TArray<TSharedPtr<Model::FMaterial>>> Materials);
         TSharedPtr<FDirectEnhanceByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FDirectEnhanceByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDirectEnhanceByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -57,6 +59,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> GetRateName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTargetItemSetId() const;TSharedPtr<TArray<TSharedPtr<Model::FMaterial>>> GetMaterials() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDirectEnhanceByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -21,7 +21,8 @@ namespace Gs2::Matchmaking::Request
     FDeleteRatingRequest::FDeleteRatingRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        RatingNameValue(TOptional<FString>())
+        RatingNameValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Matchmaking::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        RatingNameValue(From.RatingNameValue)
+        RatingNameValue(From.RatingNameValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Matchmaking::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDeleteRatingRequest> FDeleteRatingRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FDeleteRatingRequest> FDeleteRatingRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -92,6 +102,11 @@ namespace Gs2::Matchmaking::Request
     TOptional<FString> FDeleteRatingRequest::GetRatingName() const
     {
         return RatingNameValue;
+    }
+
+    TOptional<FString> FDeleteRatingRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FDeleteRatingRequest::GetDuplicationAvoider() const
@@ -133,6 +148,15 @@ namespace Gs2::Matchmaking::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -154,6 +178,10 @@ namespace Gs2::Matchmaking::Request
         if (RatingNameValue.IsSet())
         {
             JsonRootObject->SetStringField("ratingName", RatingNameValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

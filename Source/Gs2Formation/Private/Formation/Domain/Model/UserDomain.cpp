@@ -81,13 +81,15 @@ namespace Gs2::Formation::Domain::Model
     }
 
     Gs2::Formation::Domain::Iterator::FDescribeMoldsByUserIdIteratorPtr FUserDomain::Molds(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeMoldsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 
@@ -135,7 +137,8 @@ namespace Gs2::Formation::Domain::Model
     }
 
     Gs2::Formation::Domain::Iterator::FDescribePropertyFormsByUserIdIteratorPtr FUserDomain::PropertyForms(
-        const FString PropertyFormModelName
+        const FString PropertyFormModelName,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormsByUserIdIterator>(
@@ -143,7 +146,8 @@ namespace Gs2::Formation::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            PropertyFormModelName
+            PropertyFormModelName,
+            TimeOffsetToken
         );
     }
 

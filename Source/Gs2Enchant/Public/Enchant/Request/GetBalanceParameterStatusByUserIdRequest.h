@@ -29,6 +29,7 @@ namespace Gs2::Enchant::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ParameterNameValue;
         TOptional<FString> PropertyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,12 +44,14 @@ namespace Gs2::Enchant::Request
         TSharedPtr<FGetBalanceParameterStatusByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetBalanceParameterStatusByUserIdRequest> WithParameterName(const TOptional<FString> ParameterName);
         TSharedPtr<FGetBalanceParameterStatusByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
+        TSharedPtr<FGetBalanceParameterStatusByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetParameterName() const;
         TOptional<FString> GetPropertyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetBalanceParameterStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

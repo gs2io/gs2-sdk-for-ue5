@@ -22,7 +22,8 @@ namespace Gs2::Grade::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         GradeNameValue(TOptional<FString>()),
-        PropertyIdValue(TOptional<FString>())
+        PropertyIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Grade::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         GradeNameValue(From.GradeNameValue),
-        PropertyIdValue(From.PropertyIdValue)
+        PropertyIdValue(From.PropertyIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Grade::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetStatusByUserIdRequest> FGetStatusByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetStatusByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -99,6 +109,11 @@ namespace Gs2::Grade::Request
     TOptional<FString> FGetStatusByUserIdRequest::GetPropertyId() const
     {
         return PropertyIdValue;
+    }
+
+    TOptional<FString> FGetStatusByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetStatusByUserIdRequest> FGetStatusByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -143,6 +158,15 @@ namespace Gs2::Grade::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -168,6 +192,10 @@ namespace Gs2::Grade::Request
         if (PropertyIdValue.IsSet())
         {
             JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

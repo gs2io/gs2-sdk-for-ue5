@@ -79,13 +79,15 @@ namespace Gs2::Mission::Domain::Model
     }
 
     Gs2::Mission::Domain::Iterator::FDescribeCompletesByUserIdIteratorPtr FUserDomain::Completes(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeCompletesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 
@@ -133,13 +135,15 @@ namespace Gs2::Mission::Domain::Model
     }
 
     Gs2::Mission::Domain::Iterator::FDescribeCountersByUserIdIteratorPtr FUserDomain::Counters(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeCountersByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

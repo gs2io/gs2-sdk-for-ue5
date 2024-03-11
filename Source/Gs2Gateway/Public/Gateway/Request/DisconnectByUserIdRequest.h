@@ -27,6 +27,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -40,11 +41,13 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FDisconnectByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDisconnectByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDisconnectByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDisconnectByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDisconnectByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDisconnectByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

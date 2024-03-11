@@ -23,7 +23,8 @@ namespace Gs2::Ranking::Request
         CategoryNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         ScoreValue(TOptional<int64>()),
-        MetadataValue(TOptional<FString>())
+        MetadataValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Ranking::Request
         CategoryNameValue(From.CategoryNameValue),
         UserIdValue(From.UserIdValue),
         ScoreValue(From.ScoreValue),
-        MetadataValue(From.MetadataValue)
+        MetadataValue(From.MetadataValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Ranking::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FPutScoreByUserIdRequest> FPutScoreByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FPutScoreByUserIdRequest> FPutScoreByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -131,6 +141,11 @@ namespace Gs2::Ranking::Request
     TOptional<FString> FPutScoreByUserIdRequest::GetMetadata() const
     {
         return MetadataValue;
+    }
+
+    TOptional<FString> FPutScoreByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FPutScoreByUserIdRequest::GetDuplicationAvoider() const
@@ -190,6 +205,15 @@ namespace Gs2::Ranking::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -219,6 +243,10 @@ namespace Gs2::Ranking::Request
         if (MetadataValue.IsSet())
         {
             JsonRootObject->SetStringField("metadata", MetadataValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

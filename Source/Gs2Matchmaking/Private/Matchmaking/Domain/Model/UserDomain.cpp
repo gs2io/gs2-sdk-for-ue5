@@ -341,7 +341,8 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingByUserIdIteratorPtr FUserDomain::DoMatchmaking(
-        const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player
+        const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingByUserIdIterator>(
@@ -349,7 +350,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            Player
+            Player,
+            TimeOffsetToken
         );
     }
 
@@ -386,13 +388,15 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsByUserIdIteratorPtr FUserDomain::Ratings(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

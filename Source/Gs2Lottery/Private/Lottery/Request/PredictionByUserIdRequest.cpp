@@ -23,7 +23,8 @@ namespace Gs2::Lottery::Request
         LotteryNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         RandomSeedValue(TOptional<int64>()),
-        CountValue(TOptional<int32>())
+        CountValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Lottery::Request
         LotteryNameValue(From.LotteryNameValue),
         UserIdValue(From.UserIdValue),
         RandomSeedValue(From.RandomSeedValue),
-        CountValue(From.CountValue)
+        CountValue(From.CountValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -83,6 +85,14 @@ namespace Gs2::Lottery::Request
     )
     {
         this->CountValue = Count;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FPredictionByUserIdRequest> FPredictionByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -142,6 +152,11 @@ namespace Gs2::Lottery::Request
         return FString::Printf(TEXT("%d"), CountValue.GetValue());
     }
 
+    TOptional<FString> FPredictionByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
+    }
+
     TOptional<FString> FPredictionByUserIdRequest::GetDuplicationAvoider() const
     {
         return DuplicationAvoiderValue;
@@ -199,6 +214,15 @@ namespace Gs2::Lottery::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -228,6 +252,10 @@ namespace Gs2::Lottery::Request
         if (CountValue.IsSet())
         {
             JsonRootObject->SetNumberField("count", CountValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

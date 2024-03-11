@@ -190,7 +190,8 @@ namespace Gs2::Matchmaking::Domain::Model
         ) const;
 
         Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingByUserIdIteratorPtr DoMatchmaking(
-            const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player
+            const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringDomain> Gathering(
@@ -205,6 +206,7 @@ namespace Gs2::Matchmaking::Domain::Model
         );
 
         Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsByUserIdIteratorPtr Ratings(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRatings(

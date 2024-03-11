@@ -22,7 +22,8 @@ namespace Gs2::Script::Request
         ScriptIdValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         ArgsValue(TOptional<FString>()),
-        RandomStatusValue(nullptr)
+        RandomStatusValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Script::Request
         ScriptIdValue(From.ScriptIdValue),
         UserIdValue(From.UserIdValue),
         ArgsValue(From.ArgsValue),
-        RandomStatusValue(From.RandomStatusValue)
+        RandomStatusValue(From.RandomStatusValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Script::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FInvokeScriptRequest> FInvokeScriptRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FInvokeScriptRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -103,6 +113,11 @@ namespace Gs2::Script::Request
             return nullptr;
         }
         return RandomStatusValue;
+    }
+
+    TOptional<FString> FInvokeScriptRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FInvokeScriptRequest> FInvokeScriptRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -146,7 +161,16 @@ namespace Gs2::Script::Request
                       return nullptr;
                   }
                   return Model::FRandomStatus::FromJson(Data->GetObjectField("randomStatus"));
-              }() : nullptr);
+              }() : nullptr)
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FInvokeScriptRequest::ToJson() const
@@ -171,6 +195,10 @@ namespace Gs2::Script::Request
         if (RandomStatusValue != nullptr && RandomStatusValue.IsValid())
         {
             JsonRootObject->SetObjectField("randomStatus", RandomStatusValue->ToJson());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

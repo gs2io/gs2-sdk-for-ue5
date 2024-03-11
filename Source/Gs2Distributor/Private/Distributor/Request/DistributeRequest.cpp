@@ -22,7 +22,8 @@ namespace Gs2::Distributor::Request
         NamespaceNameValue(TOptional<FString>()),
         DistributorNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        DistributeResourceValue(nullptr)
+        DistributeResourceValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Distributor::Request
         NamespaceNameValue(From.NamespaceNameValue),
         DistributorNameValue(From.DistributorNameValue),
         UserIdValue(From.UserIdValue),
-        DistributeResourceValue(From.DistributeResourceValue)
+        DistributeResourceValue(From.DistributeResourceValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Distributor::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDistributeRequest> FDistributeRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FDistributeRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -103,6 +113,11 @@ namespace Gs2::Distributor::Request
             return nullptr;
         }
         return DistributeResourceValue;
+    }
+
+    TOptional<FString> FDistributeRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FDistributeRequest> FDistributeRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -146,7 +161,16 @@ namespace Gs2::Distributor::Request
                       return nullptr;
                   }
                   return Model::FDistributeResource::FromJson(Data->GetObjectField("distributeResource"));
-              }() : nullptr);
+              }() : nullptr)
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FDistributeRequest::ToJson() const
@@ -171,6 +195,10 @@ namespace Gs2::Distributor::Request
         if (DistributeResourceValue != nullptr && DistributeResourceValue.IsValid())
         {
             JsonRootObject->SetObjectField("distributeResource", DistributeResourceValue->ToJson());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

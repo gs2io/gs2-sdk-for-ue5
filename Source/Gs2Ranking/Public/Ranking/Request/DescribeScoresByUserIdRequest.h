@@ -31,6 +31,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> ScorerUserIdValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -47,6 +48,7 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FDescribeScoresByUserIdRequest> WithScorerUserId(const TOptional<FString> ScorerUserId);
         TSharedPtr<FDescribeScoresByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeScoresByUserIdRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribeScoresByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -56,6 +58,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeScoresByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

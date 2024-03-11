@@ -77,7 +77,8 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesByUserIdIteratorPtr FUserDomain::BalanceParameterStatuses(
-        const TOptional<FString> ParameterName
+        const TOptional<FString> ParameterName,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesByUserIdIterator>(
@@ -85,7 +86,8 @@ namespace Gs2::Enchant::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            ParameterName
+            ParameterName,
+            TimeOffsetToken
         );
     }
 
@@ -135,7 +137,8 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterStatusesByUserIdIteratorPtr FUserDomain::RarityParameterStatuses(
-        const TOptional<FString> ParameterName
+        const TOptional<FString> ParameterName,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterStatusesByUserIdIterator>(
@@ -143,7 +146,8 @@ namespace Gs2::Enchant::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            ParameterName
+            ParameterName,
+            TimeOffsetToken
         );
     }
 

@@ -42,8 +42,8 @@ namespace Gs2::Ranking::Domain::Iterator
             const Gs2::Ranking::FGs2RankingRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CategoryName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<FString> AdditionalScopeName
+            const Gs2::Auth::Model::FAccessTokenPtr AccessToken = nullptr,
+            const TOptional<FString> AdditionalScopeName = TOptional<FString>()
         );
 
         class FIterator;

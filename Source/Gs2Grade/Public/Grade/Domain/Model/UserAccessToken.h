@@ -100,7 +100,7 @@ namespace Gs2::Grade::Domain::Model
         );
 
         Gs2::Grade::Domain::Iterator::FDescribeStatusesIteratorPtr Statuses(
-            const TOptional<FString> GradeName
+            const TOptional<FString> GradeName = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(

@@ -28,6 +28,7 @@ namespace Gs2::Account::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> TimeOffsetValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,6 +43,7 @@ namespace Gs2::Account::Request
         TSharedPtr<FUpdateTimeOffsetRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateTimeOffsetRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FUpdateTimeOffsetRequest> WithTimeOffset(const TOptional<int32> TimeOffset);
+        TSharedPtr<FUpdateTimeOffsetRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUpdateTimeOffsetRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -49,6 +51,7 @@ namespace Gs2::Account::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetTimeOffset() const;
         FString GetTimeOffsetString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUpdateTimeOffsetRequest> FromJson(const TSharedPtr<FJsonObject> Data);

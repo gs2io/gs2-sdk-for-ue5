@@ -22,7 +22,8 @@ namespace Gs2::Dictionary::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         EntryModelNameValue(TOptional<FString>()),
-        VerifyTypeValue(TOptional<FString>())
+        VerifyTypeValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Dictionary::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         EntryModelNameValue(From.EntryModelNameValue),
-        VerifyTypeValue(From.VerifyTypeValue)
+        VerifyTypeValue(From.VerifyTypeValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Dictionary::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FVerifyEntryByUserIdRequest> FVerifyEntryByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FVerifyEntryByUserIdRequest> FVerifyEntryByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -107,6 +117,11 @@ namespace Gs2::Dictionary::Request
     TOptional<FString> FVerifyEntryByUserIdRequest::GetVerifyType() const
     {
         return VerifyTypeValue;
+    }
+
+    TOptional<FString> FVerifyEntryByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FVerifyEntryByUserIdRequest::GetDuplicationAvoider() const
@@ -157,6 +172,15 @@ namespace Gs2::Dictionary::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -182,6 +206,10 @@ namespace Gs2::Dictionary::Request
         if (VerifyTypeValue.IsSet())
         {
             JsonRootObject->SetStringField("verifyType", VerifyTypeValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

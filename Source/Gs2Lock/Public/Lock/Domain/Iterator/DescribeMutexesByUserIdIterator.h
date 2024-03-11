@@ -32,13 +32,15 @@ namespace Gs2::Lock::Domain::Iterator
         const Gs2::Lock::FGs2LockRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeMutexesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Lock::FGs2LockRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

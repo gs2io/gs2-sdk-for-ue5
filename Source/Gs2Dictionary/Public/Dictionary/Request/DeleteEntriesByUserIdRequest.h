@@ -28,6 +28,7 @@ namespace Gs2::Dictionary::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<FString>> EntryModelNamesValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -43,12 +44,14 @@ namespace Gs2::Dictionary::Request
         TSharedPtr<FDeleteEntriesByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteEntriesByUserIdRequest> WithEntryModelNames(
             const TSharedPtr<TArray<FString>> EntryModelNames);
+        TSharedPtr<FDeleteEntriesByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteEntriesByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TSharedPtr<TArray<FString>> GetEntryModelNames() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteEntriesByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

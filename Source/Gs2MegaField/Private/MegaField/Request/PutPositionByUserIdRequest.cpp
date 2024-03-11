@@ -25,7 +25,8 @@ namespace Gs2::MegaField::Request
         LayerModelNameValue(TOptional<FString>()),
         PositionValue(nullptr),
         VectorValue(nullptr),
-        RValue(TOptional<float>())
+        RValue(TOptional<float>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::MegaField::Request
         LayerModelNameValue(From.LayerModelNameValue),
         PositionValue(From.PositionValue),
         VectorValue(From.VectorValue),
-        RValue(From.RValue)
+        RValue(From.RValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -106,6 +108,14 @@ namespace Gs2::MegaField::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FPutPositionByUserIdRequest> FPutPositionByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FPutPositionByUserIdRequest> FPutPositionByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -169,6 +179,11 @@ namespace Gs2::MegaField::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%f"), RValue.GetValue());
+    }
+
+    TOptional<FString> FPutPositionByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FPutPositionByUserIdRequest::GetDuplicationAvoider() const
@@ -244,6 +259,15 @@ namespace Gs2::MegaField::Request
                   }
                   return TOptional<float>();
               }() : TOptional<float>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -281,6 +305,10 @@ namespace Gs2::MegaField::Request
         if (RValue.IsSet())
         {
             JsonRootObject->SetNumberField("r", RValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -21,7 +21,8 @@ namespace Gs2::Dictionary::Request
     FAddEntriesByUserIdRequest::FAddEntriesByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        EntryModelNamesValue(nullptr)
+        EntryModelNamesValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Dictionary::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        EntryModelNamesValue(From.EntryModelNamesValue)
+        EntryModelNamesValue(From.EntryModelNamesValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Dictionary::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FAddEntriesByUserIdRequest> FAddEntriesByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FAddEntriesByUserIdRequest> FAddEntriesByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -96,6 +106,11 @@ namespace Gs2::Dictionary::Request
             return nullptr;
         }
         return EntryModelNamesValue;
+    }
+
+    TOptional<FString> FAddEntriesByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FAddEntriesByUserIdRequest::GetDuplicationAvoider() const
@@ -140,6 +155,15 @@ namespace Gs2::Dictionary::Request
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -166,6 +190,10 @@ namespace Gs2::Dictionary::Request
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("entryModelNames", v);
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

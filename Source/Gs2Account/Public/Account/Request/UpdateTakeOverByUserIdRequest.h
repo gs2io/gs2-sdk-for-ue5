@@ -30,6 +30,7 @@ namespace Gs2::Account::Request
         TOptional<int32> TypeValue;
         TOptional<FString> OldPasswordValue;
         TOptional<FString> PasswordValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Account::Request
         TSharedPtr<FUpdateTakeOverByUserIdRequest> WithType(const TOptional<int32> Type);
         TSharedPtr<FUpdateTakeOverByUserIdRequest> WithOldPassword(const TOptional<FString> OldPassword);
         TSharedPtr<FUpdateTakeOverByUserIdRequest> WithPassword(const TOptional<FString> Password);
+        TSharedPtr<FUpdateTakeOverByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUpdateTakeOverByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Account::Request
         FString GetTypeString() const;
         TOptional<FString> GetOldPassword() const;
         TOptional<FString> GetPassword() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUpdateTakeOverByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

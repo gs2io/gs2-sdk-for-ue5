@@ -22,7 +22,8 @@ namespace Gs2::Limit::Request
         NamespaceNameValue(TOptional<FString>()),
         LimitNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        CounterNameValue(TOptional<FString>())
+        CounterNameValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Limit::Request
         NamespaceNameValue(From.NamespaceNameValue),
         LimitNameValue(From.LimitNameValue),
         UserIdValue(From.UserIdValue),
-        CounterNameValue(From.CounterNameValue)
+        CounterNameValue(From.CounterNameValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Limit::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetCounterByUserIdRequest> FGetCounterByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetCounterByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -99,6 +109,11 @@ namespace Gs2::Limit::Request
     TOptional<FString> FGetCounterByUserIdRequest::GetCounterName() const
     {
         return CounterNameValue;
+    }
+
+    TOptional<FString> FGetCounterByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetCounterByUserIdRequest> FGetCounterByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -143,6 +158,15 @@ namespace Gs2::Limit::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -168,6 +192,10 @@ namespace Gs2::Limit::Request
         if (CounterNameValue.IsSet())
         {
             JsonRootObject->SetStringField("counterName", CounterNameValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

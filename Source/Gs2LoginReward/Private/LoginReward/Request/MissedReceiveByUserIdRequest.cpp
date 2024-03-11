@@ -23,7 +23,8 @@ namespace Gs2::LoginReward::Request
         BonusModelNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         StepNumberValue(TOptional<int32>()),
-        ConfigValue(nullptr)
+        ConfigValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::LoginReward::Request
         BonusModelNameValue(From.BonusModelNameValue),
         UserIdValue(From.UserIdValue),
         StepNumberValue(From.StepNumberValue),
-        ConfigValue(From.ConfigValue)
+        ConfigValue(From.ConfigValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -83,6 +85,14 @@ namespace Gs2::LoginReward::Request
     )
     {
         this->ConfigValue = Config;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FMissedReceiveByUserIdRequest> FMissedReceiveByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -135,6 +145,11 @@ namespace Gs2::LoginReward::Request
             return nullptr;
         }
         return ConfigValue;
+    }
+
+    TOptional<FString> FMissedReceiveByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FMissedReceiveByUserIdRequest::GetDuplicationAvoider() const
@@ -197,6 +212,15 @@ namespace Gs2::LoginReward::Request
                   }
                   return v;
               }() : MakeShared<TArray<Model::FConfigPtr>>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -231,6 +255,10 @@ namespace Gs2::LoginReward::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("config", v);
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -35,8 +35,8 @@ namespace Gs2::Experience::Domain::Iterator
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Experience::FGs2ExperienceRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> ExperienceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const TOptional<FString> ExperienceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),

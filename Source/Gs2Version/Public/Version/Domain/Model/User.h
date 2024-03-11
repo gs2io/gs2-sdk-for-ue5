@@ -121,6 +121,7 @@ namespace Gs2::Version::Domain::Model
         );
 
         Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsByUserIdIteratorPtr AcceptVersions(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeAcceptVersions(

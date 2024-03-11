@@ -33,6 +33,7 @@ namespace Gs2::Inventory::Request
         TOptional<int64> ExpiresAtValue;
         TOptional<bool> CreateNewItemSetValue;
         TOptional<FString> ItemSetNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -52,6 +53,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FAcquireItemSetByUserIdRequest> WithExpiresAt(const TOptional<int64> ExpiresAt);
         TSharedPtr<FAcquireItemSetByUserIdRequest> WithCreateNewItemSet(const TOptional<bool> CreateNewItemSet);
         TSharedPtr<FAcquireItemSetByUserIdRequest> WithItemSetName(const TOptional<FString> ItemSetName);
+        TSharedPtr<FAcquireItemSetByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAcquireItemSetByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -66,6 +68,7 @@ namespace Gs2::Inventory::Request
         TOptional<bool> GetCreateNewItemSet() const;
         FString GetCreateNewItemSetString() const;
         TOptional<FString> GetItemSetName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAcquireItemSetByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

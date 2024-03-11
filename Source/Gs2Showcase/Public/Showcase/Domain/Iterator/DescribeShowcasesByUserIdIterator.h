@@ -32,13 +32,15 @@ namespace Gs2::Showcase::Domain::Iterator
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeShowcasesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

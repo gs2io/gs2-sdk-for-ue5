@@ -28,6 +28,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> RoomNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Chat::Request
         TSharedPtr<FUnsubscribeByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUnsubscribeByUserIdRequest> WithRoomName(const TOptional<FString> RoomName);
         TSharedPtr<FUnsubscribeByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FUnsubscribeByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUnsubscribeByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetRoomName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUnsubscribeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

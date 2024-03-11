@@ -22,7 +22,8 @@ namespace Gs2::JobQueue::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         JobNameValue(TOptional<FString>()),
-        TryNumberValue(TOptional<int32>())
+        TryNumberValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::JobQueue::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         JobNameValue(From.JobNameValue),
-        TryNumberValue(From.TryNumberValue)
+        TryNumberValue(From.TryNumberValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::JobQueue::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetJobResultByUserIdRequest> FGetJobResultByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetJobResultByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -108,6 +118,11 @@ namespace Gs2::JobQueue::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), TryNumberValue.GetValue());
+    }
+
+    TOptional<FString> FGetJobResultByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetJobResultByUserIdRequest> FGetJobResultByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -152,7 +167,16 @@ namespace Gs2::JobQueue::Request
                         return TOptional(v);
                   }
                   return TOptional<int32>();
-              }() : TOptional<int32>());
+              }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FGetJobResultByUserIdRequest::ToJson() const
@@ -177,6 +201,10 @@ namespace Gs2::JobQueue::Request
         if (TryNumberValue.IsSet())
         {
             JsonRootObject->SetNumberField("tryNumber", TryNumberValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

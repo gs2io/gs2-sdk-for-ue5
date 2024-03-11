@@ -133,6 +133,32 @@ namespace Gs2::Auth::Domain::Model
             Request::FLoginBySignatureRequestPtr Request
         );
 
+        class GS2AUTH_API FIssueTimeOffsetTokenTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Auth::Domain::Model::FAccessTokenDomain>,
+            public TSharedFromThis<FIssueTimeOffsetTokenTask>
+        {
+            const TSharedPtr<FAccessTokenDomain> Self;
+            const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request;
+        public:
+            explicit FIssueTimeOffsetTokenTask(
+                const TSharedPtr<FAccessTokenDomain>& Self,
+                const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request
+            );
+
+            FIssueTimeOffsetTokenTask(
+                const FIssueTimeOffsetTokenTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Auth::Domain::Model::FAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FIssueTimeOffsetTokenTask;
+
+        TSharedPtr<FAsyncTask<FIssueTimeOffsetTokenTask>> IssueTimeOffsetToken(
+            Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             FString ChildType
         );

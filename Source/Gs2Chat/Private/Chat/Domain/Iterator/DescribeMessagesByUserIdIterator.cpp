@@ -40,7 +40,8 @@ namespace Gs2::Chat::Domain::Iterator
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RoomName,
         const TOptional<FString> Password,
-        const TOptional<FString> UserId
+        const TOptional<FString> UserId,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -48,7 +49,8 @@ namespace Gs2::Chat::Domain::Iterator
         NamespaceName(NamespaceName),
         RoomName(RoomName),
         Password(Password),
-        UserId(UserId)
+        UserId(UserId),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

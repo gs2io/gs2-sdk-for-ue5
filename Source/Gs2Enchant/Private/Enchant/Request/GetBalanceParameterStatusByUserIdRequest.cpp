@@ -22,7 +22,8 @@ namespace Gs2::Enchant::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         ParameterNameValue(TOptional<FString>()),
-        PropertyIdValue(TOptional<FString>())
+        PropertyIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Enchant::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         ParameterNameValue(From.ParameterNameValue),
-        PropertyIdValue(From.PropertyIdValue)
+        PropertyIdValue(From.PropertyIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Enchant::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetBalanceParameterStatusByUserIdRequest> FGetBalanceParameterStatusByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetBalanceParameterStatusByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -99,6 +109,11 @@ namespace Gs2::Enchant::Request
     TOptional<FString> FGetBalanceParameterStatusByUserIdRequest::GetPropertyId() const
     {
         return PropertyIdValue;
+    }
+
+    TOptional<FString> FGetBalanceParameterStatusByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetBalanceParameterStatusByUserIdRequest> FGetBalanceParameterStatusByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -143,6 +158,15 @@ namespace Gs2::Enchant::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -168,6 +192,10 @@ namespace Gs2::Enchant::Request
         if (PropertyIdValue.IsSet())
         {
             JsonRootObject->SetStringField("propertyId", PropertyIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

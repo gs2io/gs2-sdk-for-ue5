@@ -29,6 +29,7 @@ namespace Gs2::Limit::Request
         TOptional<FString> LimitNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> CounterNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,12 +44,14 @@ namespace Gs2::Limit::Request
         TSharedPtr<FGetCounterByUserIdRequest> WithLimitName(const TOptional<FString> LimitName);
         TSharedPtr<FGetCounterByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetCounterByUserIdRequest> WithCounterName(const TOptional<FString> CounterName);
+        TSharedPtr<FGetCounterByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetLimitName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetCounterName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetCounterByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

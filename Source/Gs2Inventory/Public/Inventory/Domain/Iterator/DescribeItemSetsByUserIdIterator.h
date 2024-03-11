@@ -33,6 +33,7 @@ namespace Gs2::Inventory::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> InventoryName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeItemSetsByUserIdIterator(
@@ -40,7 +41,8 @@ namespace Gs2::Inventory::Domain::Iterator
             const Gs2::Inventory::FGs2InventoryRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> InventoryName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

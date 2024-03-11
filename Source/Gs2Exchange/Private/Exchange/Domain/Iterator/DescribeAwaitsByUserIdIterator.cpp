@@ -36,14 +36,16 @@ namespace Gs2::Exchange::Domain::Iterator
         const Gs2::Exchange::FGs2ExchangeRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> RateName
+        const TOptional<FString> RateName,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        RateName(RateName)
+        RateName(RateName),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

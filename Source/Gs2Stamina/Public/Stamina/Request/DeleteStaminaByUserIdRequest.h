@@ -28,6 +28,7 @@ namespace Gs2::Stamina::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> StaminaNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Stamina::Request
         TSharedPtr<FDeleteStaminaByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteStaminaByUserIdRequest> WithStaminaName(const TOptional<FString> StaminaName);
         TSharedPtr<FDeleteStaminaByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDeleteStaminaByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteStaminaByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetStaminaName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteStaminaByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -109,6 +109,10 @@ namespace Gs2::Limit::Task::Rest
             {
                 request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());
             }
+            if (this->Request->GetTimeOffsetToken().IsSet())
+            {
+                request->SetHeader("X-GS2-TIME-OFFSET-TOKEN", this->Request->GetTimeOffsetToken().GetValue());
+            }
 
             request->ProcessRequest();
             UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s"), TEXT("DELETE"), ToCStr(Url));

@@ -30,6 +30,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
         TOptional<FString> KeyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -45,6 +46,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FGetPropertyFormWithSignatureByUserIdRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FGetPropertyFormWithSignatureByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FGetPropertyFormWithSignatureByUserIdRequest> WithKeyId(const TOptional<FString> KeyId);
+        TSharedPtr<FGetPropertyFormWithSignatureByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -52,6 +54,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;
         TOptional<FString> GetKeyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetPropertyFormWithSignatureByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

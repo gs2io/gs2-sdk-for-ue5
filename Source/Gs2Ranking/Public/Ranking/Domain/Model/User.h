@@ -102,7 +102,8 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Ranking::Domain::Iterator::FDescribeScoresByUserIdIteratorPtr Scores(
             const FString CategoryName,
-            const FString ScorerUserId
+            const FString ScorerUserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeScores(

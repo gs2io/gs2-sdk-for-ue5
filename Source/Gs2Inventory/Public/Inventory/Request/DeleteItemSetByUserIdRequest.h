@@ -30,6 +30,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ItemNameValue;
         TOptional<FString> ItemSetNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FDeleteItemSetByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteItemSetByUserIdRequest> WithItemName(const TOptional<FString> ItemName);
         TSharedPtr<FDeleteItemSetByUserIdRequest> WithItemSetName(const TOptional<FString> ItemSetName);
+        TSharedPtr<FDeleteItemSetByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteItemSetByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetItemName() const;
         TOptional<FString> GetItemSetName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteItemSetByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

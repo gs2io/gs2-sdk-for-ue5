@@ -38,14 +38,16 @@ namespace Gs2::Matchmaking::Domain::Iterator
         const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const Gs2::Matchmaking::Model::FPlayerPtr Player
+        const Gs2::Matchmaking::Model::FPlayerPtr Player,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        Player(Player)
+        Player(Player),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

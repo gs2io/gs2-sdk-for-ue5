@@ -74,15 +74,17 @@ namespace Gs2::Experience::Domain::Model
     }
 
     Gs2::Experience::Domain::Iterator::FDescribeStatusesByUserIdIteratorPtr FUserDomain::Statuses(
-        const TOptional<FString> ExperienceName
+        const TOptional<FString> ExperienceName,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Experience::Domain::Iterator::FDescribeStatusesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
+            UserId,
             ExperienceName,
-            UserId
+            TimeOffsetToken
         );
     }
 

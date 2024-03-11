@@ -34,6 +34,7 @@ namespace Gs2::Ranking::Domain::Iterator
         const TOptional<FString> CategoryName;
         const TOptional<FString> UserId;
         const TOptional<FString> AdditionalScopeName;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeRankingsByUserIdIterator(
@@ -41,8 +42,9 @@ namespace Gs2::Ranking::Domain::Iterator
             const Gs2::Ranking::FGs2RankingRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CategoryName,
-            const TOptional<FString> UserId,
-            const TOptional<FString> AdditionalScopeName
+            const TOptional<FString> UserId = TOptional<FString>(),
+            const TOptional<FString> AdditionalScopeName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

@@ -88,6 +88,7 @@ namespace Gs2::LoginReward::Domain::Model
         );
 
         Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesByUserIdIteratorPtr ReceiveStatuses(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeReceiveStatuses(

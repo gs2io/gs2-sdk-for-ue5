@@ -33,14 +33,16 @@ namespace Gs2::Experience::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> ExperienceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeStatusesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Experience::FGs2ExperienceRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> ExperienceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> ExperienceName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

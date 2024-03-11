@@ -299,7 +299,8 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsByUserIdIteratorPtr FUserDomain::DataObjects(
-        const TOptional<FString> Status
+        const TOptional<FString> Status,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsByUserIdIterator>(
@@ -307,7 +308,8 @@ namespace Gs2::Datastore::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            Status
+            Status,
+            TimeOffsetToken
         );
     }
 

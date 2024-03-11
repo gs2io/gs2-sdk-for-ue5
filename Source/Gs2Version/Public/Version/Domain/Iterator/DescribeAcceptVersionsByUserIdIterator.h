@@ -32,13 +32,15 @@ namespace Gs2::Version::Domain::Iterator
         const Gs2::Version::FGs2VersionRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeAcceptVersionsByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Version::FGs2VersionRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

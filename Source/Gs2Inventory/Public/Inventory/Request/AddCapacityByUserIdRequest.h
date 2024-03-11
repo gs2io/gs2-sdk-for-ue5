@@ -29,6 +29,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> InventoryNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> AddCapacityValueValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FAddCapacityByUserIdRequest> WithInventoryName(const TOptional<FString> InventoryName);
         TSharedPtr<FAddCapacityByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FAddCapacityByUserIdRequest> WithAddCapacityValue(const TOptional<int32> AddCapacityValue);
+        TSharedPtr<FAddCapacityByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAddCapacityByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetAddCapacityValue() const;
         FString GetAddCapacityValueString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAddCapacityByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

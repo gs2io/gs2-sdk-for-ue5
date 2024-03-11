@@ -41,7 +41,7 @@ namespace Gs2::Enchant::Domain::Iterator
             const Gs2::Enchant::FGs2EnchantRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<FString> ParameterName
+            const TOptional<FString> ParameterName = TOptional<FString>()
         );
 
         class FIterator;

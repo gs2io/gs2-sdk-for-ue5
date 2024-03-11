@@ -240,6 +240,7 @@ namespace Gs2::Formation::Domain::Model
         );
 
         Gs2::Formation::Domain::Iterator::FDescribeFormsByUserIdIteratorPtr Forms(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeForms(

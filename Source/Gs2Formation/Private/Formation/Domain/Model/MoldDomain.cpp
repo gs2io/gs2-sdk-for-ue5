@@ -475,6 +475,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     Gs2::Formation::Domain::Iterator::FDescribeFormsByUserIdIteratorPtr FMoldDomain::Forms(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeFormsByUserIdIterator>(
@@ -482,7 +483,8 @@ namespace Gs2::Formation::Domain::Model
             Client,
             NamespaceName,
             MoldModelName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

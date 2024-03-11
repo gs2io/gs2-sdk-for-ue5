@@ -27,6 +27,7 @@ namespace Gs2::Dictionary::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -40,11 +41,13 @@ namespace Gs2::Dictionary::Request
         TSharedPtr<FResetByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FResetByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FResetByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FResetByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FResetByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FResetByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

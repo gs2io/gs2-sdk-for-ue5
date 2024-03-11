@@ -29,6 +29,7 @@ namespace Gs2::Version::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,6 +44,7 @@ namespace Gs2::Version::Request
         TSharedPtr<FDescribeAcceptVersionsByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDescribeAcceptVersionsByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeAcceptVersionsByUserIdRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribeAcceptVersionsByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -50,6 +52,7 @@ namespace Gs2::Version::Request
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeAcceptVersionsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

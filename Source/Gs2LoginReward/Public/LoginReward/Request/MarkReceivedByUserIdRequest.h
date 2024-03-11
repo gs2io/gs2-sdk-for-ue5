@@ -29,6 +29,7 @@ namespace Gs2::LoginReward::Request
         TOptional<FString> BonusModelNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> StepNumberValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::LoginReward::Request
         TSharedPtr<FMarkReceivedByUserIdRequest> WithBonusModelName(const TOptional<FString> BonusModelName);
         TSharedPtr<FMarkReceivedByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FMarkReceivedByUserIdRequest> WithStepNumber(const TOptional<int32> StepNumber);
+        TSharedPtr<FMarkReceivedByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FMarkReceivedByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::LoginReward::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetStepNumber() const;
         FString GetStepNumberString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FMarkReceivedByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

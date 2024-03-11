@@ -31,6 +31,7 @@ namespace Gs2::Quest::Request
         TOptional<FString> QuestModelIdValue;
         TOptional<bool> ForceValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Quest::Request
         TSharedPtr<FCreateProgressByUserIdRequest> WithQuestModelId(const TOptional<FString> QuestModelId);
         TSharedPtr<FCreateProgressByUserIdRequest> WithForce(const TOptional<bool> Force);
         TSharedPtr<FCreateProgressByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FCreateProgressByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCreateProgressByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Quest::Request
         TOptional<FString> GetQuestModelId() const;
         TOptional<bool> GetForce() const;
         FString GetForceString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCreateProgressByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

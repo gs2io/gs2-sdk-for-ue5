@@ -20,7 +20,8 @@ namespace Gs2::Friend::Request
 {
     FGetPublicProfileRequest::FGetPublicProfileRequest():
         NamespaceNameValue(TOptional<FString>()),
-        UserIdValue(TOptional<FString>())
+        UserIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::Friend::Request
         const FGetPublicProfileRequest& From
     ):
         NamespaceNameValue(From.NamespaceNameValue),
-        UserIdValue(From.UserIdValue)
+        UserIdValue(From.UserIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -56,6 +58,14 @@ namespace Gs2::Friend::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetPublicProfileRequest> FGetPublicProfileRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetPublicProfileRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -69,6 +79,11 @@ namespace Gs2::Friend::Request
     TOptional<FString> FGetPublicProfileRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FGetPublicProfileRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetPublicProfileRequest> FGetPublicProfileRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -95,6 +110,15 @@ namespace Gs2::Friend::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -112,6 +136,10 @@ namespace Gs2::Friend::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -32,6 +32,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> VerifyTypeValue;
         TOptional<FString> CountValue;
         TOptional<bool> MultiplyValueSpecifyingQuantityValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FVerifyBigItemByUserIdRequest> WithVerifyType(const TOptional<FString> VerifyType);
         TSharedPtr<FVerifyBigItemByUserIdRequest> WithCount(const TOptional<FString> Count);
         TSharedPtr<FVerifyBigItemByUserIdRequest> WithMultiplyValueSpecifyingQuantity(const TOptional<bool> MultiplyValueSpecifyingQuantity);
+        TSharedPtr<FVerifyBigItemByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FVerifyBigItemByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -61,6 +63,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> GetCount() const;
         TOptional<bool> GetMultiplyValueSpecifyingQuantity() const;
         FString GetMultiplyValueSpecifyingQuantityString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyBigItemByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

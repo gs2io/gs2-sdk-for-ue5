@@ -22,7 +22,8 @@ namespace Gs2::Idle::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         CategoryNameValue(TOptional<FString>()),
-        IncreaseMinutesValue(TOptional<int32>())
+        IncreaseMinutesValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Idle::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         CategoryNameValue(From.CategoryNameValue),
-        IncreaseMinutesValue(From.IncreaseMinutesValue)
+        IncreaseMinutesValue(From.IncreaseMinutesValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Idle::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FIncreaseMaximumIdleMinutesByUserIdRequest> FIncreaseMaximumIdleMinutesByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FIncreaseMaximumIdleMinutesByUserIdRequest> FIncreaseMaximumIdleMinutesByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -116,6 +126,11 @@ namespace Gs2::Idle::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), IncreaseMinutesValue.GetValue());
+    }
+
+    TOptional<FString> FIncreaseMaximumIdleMinutesByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FIncreaseMaximumIdleMinutesByUserIdRequest::GetDuplicationAvoider() const
@@ -166,6 +181,15 @@ namespace Gs2::Idle::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -191,6 +215,10 @@ namespace Gs2::Idle::Request
         if (IncreaseMinutesValue.IsSet())
         {
             JsonRootObject->SetNumberField("increaseMinutes", IncreaseMinutesValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

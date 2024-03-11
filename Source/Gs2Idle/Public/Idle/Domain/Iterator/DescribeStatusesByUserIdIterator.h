@@ -32,13 +32,15 @@ namespace Gs2::Idle::Domain::Iterator
         const Gs2::Idle::FGs2IdleRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeStatusesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Idle::FGs2IdleRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

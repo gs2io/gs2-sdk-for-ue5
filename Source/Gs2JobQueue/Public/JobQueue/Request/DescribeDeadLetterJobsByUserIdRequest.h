@@ -29,6 +29,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,6 +44,7 @@ namespace Gs2::JobQueue::Request
         TSharedPtr<FDescribeDeadLetterJobsByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDescribeDeadLetterJobsByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribeDeadLetterJobsByUserIdRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribeDeadLetterJobsByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -50,6 +52,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeDeadLetterJobsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

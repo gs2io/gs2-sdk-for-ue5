@@ -22,7 +22,8 @@ namespace Gs2::Schedule::Request
         NamespaceNameValue(TOptional<FString>()),
         EventNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        IsInScheduleValue(TOptional<bool>())
+        IsInScheduleValue(TOptional<bool>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Schedule::Request
         NamespaceNameValue(From.NamespaceNameValue),
         EventNameValue(From.EventNameValue),
         UserIdValue(From.UserIdValue),
-        IsInScheduleValue(From.IsInScheduleValue)
+        IsInScheduleValue(From.IsInScheduleValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Schedule::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetEventByUserIdRequest> FGetEventByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetEventByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -108,6 +118,11 @@ namespace Gs2::Schedule::Request
             return FString("null");
         }
         return FString(IsInScheduleValue.GetValue() ? "true" : "false");
+    }
+
+    TOptional<FString> FGetEventByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetEventByUserIdRequest> FGetEventByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -152,7 +167,16 @@ namespace Gs2::Schedule::Request
                         return TOptional(v);
                   }
                   return TOptional<bool>();
-              }() : TOptional<bool>());
+              }() : TOptional<bool>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FGetEventByUserIdRequest::ToJson() const
@@ -177,6 +201,10 @@ namespace Gs2::Schedule::Request
         if (IsInScheduleValue.IsSet())
         {
             JsonRootObject->SetBoolField("isInSchedule", IsInScheduleValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

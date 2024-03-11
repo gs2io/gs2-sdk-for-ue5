@@ -230,6 +230,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         Gs2::Inventory::Domain::Iterator::FDescribeSimpleItemsByUserIdIteratorPtr SimpleItems(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSimpleItems(

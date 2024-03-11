@@ -30,6 +30,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> ExperienceNameValue;
         TOptional<FString> PropertyIdValue;
         TOptional<FString> KeyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -45,6 +46,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FGetStatusWithSignatureByUserIdRequest> WithExperienceName(const TOptional<FString> ExperienceName);
         TSharedPtr<FGetStatusWithSignatureByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FGetStatusWithSignatureByUserIdRequest> WithKeyId(const TOptional<FString> KeyId);
+        TSharedPtr<FGetStatusWithSignatureByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -52,6 +54,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> GetExperienceName() const;
         TOptional<FString> GetPropertyId() const;
         TOptional<FString> GetKeyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetStatusWithSignatureByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

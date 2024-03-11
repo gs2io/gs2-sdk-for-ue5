@@ -40,8 +40,8 @@ namespace Gs2::Grade::Domain::Iterator
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Grade::FGs2GradeRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> GradeName,
-            const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+            const TOptional<FString> GradeName = TOptional<FString>()
         );
 
         class FIterator;

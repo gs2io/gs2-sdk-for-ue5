@@ -23,7 +23,8 @@ namespace Gs2::Chat::Request
         RoomNameValue(TOptional<FString>()),
         MessageNameValue(TOptional<FString>()),
         PasswordValue(TOptional<FString>()),
-        UserIdValue(TOptional<FString>())
+        UserIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Chat::Request
         RoomNameValue(From.RoomNameValue),
         MessageNameValue(From.MessageNameValue),
         PasswordValue(From.PasswordValue),
-        UserIdValue(From.UserIdValue)
+        UserIdValue(From.UserIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Chat::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetMessageByUserIdRequest> FGetMessageByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetMessageByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -114,6 +124,11 @@ namespace Gs2::Chat::Request
     TOptional<FString> FGetMessageByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TOptional<FString> FGetMessageByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetMessageByUserIdRequest> FGetMessageByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -167,6 +182,15 @@ namespace Gs2::Chat::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -196,6 +220,10 @@ namespace Gs2::Chat::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

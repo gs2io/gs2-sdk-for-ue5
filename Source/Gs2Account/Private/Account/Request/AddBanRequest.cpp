@@ -21,7 +21,8 @@ namespace Gs2::Account::Request
     FAddBanRequest::FAddBanRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        BanStatusValue(nullptr)
+        BanStatusValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Account::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        BanStatusValue(From.BanStatusValue)
+        BanStatusValue(From.BanStatusValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Account::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FAddBanRequest> FAddBanRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FAddBanRequest> FAddBanRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -96,6 +106,11 @@ namespace Gs2::Account::Request
             return nullptr;
         }
         return BanStatusValue;
+    }
+
+    TOptional<FString> FAddBanRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FAddBanRequest::GetDuplicationAvoider() const
@@ -136,6 +151,15 @@ namespace Gs2::Account::Request
                   }
                   return Model::FBanStatus::FromJson(Data->GetObjectField("banStatus"));
               }() : nullptr)
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -157,6 +181,10 @@ namespace Gs2::Account::Request
         if (BanStatusValue != nullptr && BanStatusValue.IsValid())
         {
             JsonRootObject->SetObjectField("banStatus", BanStatusValue->ToJson());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

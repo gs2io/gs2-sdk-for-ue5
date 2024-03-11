@@ -29,6 +29,7 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ArgsValue;
         TOptional<int32> TtlValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::StateMachine::Request
         TSharedPtr<FStartStateMachineByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FStartStateMachineByUserIdRequest> WithArgs(const TOptional<FString> Args);
         TSharedPtr<FStartStateMachineByUserIdRequest> WithTtl(const TOptional<int32> Ttl);
+        TSharedPtr<FStartStateMachineByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FStartStateMachineByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> GetArgs() const;
         TOptional<int32> GetTtl() const;
         FString GetTtlString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FStartStateMachineByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

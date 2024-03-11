@@ -28,6 +28,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<bool> AllowConcurrentAccessValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,6 +43,7 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FSetUserIdByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSetUserIdByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSetUserIdByUserIdRequest> WithAllowConcurrentAccess(const TOptional<bool> AllowConcurrentAccess);
+        TSharedPtr<FSetUserIdByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSetUserIdByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -49,6 +51,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> GetUserId() const;
         TOptional<bool> GetAllowConcurrentAccess() const;
         FString GetAllowConcurrentAccessString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetUserIdByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

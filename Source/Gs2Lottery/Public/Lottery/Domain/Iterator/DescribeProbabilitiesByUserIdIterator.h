@@ -33,6 +33,7 @@ namespace Gs2::Lottery::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> LotteryName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeProbabilitiesByUserIdIterator(
@@ -40,7 +41,8 @@ namespace Gs2::Lottery::Domain::Iterator
             const Gs2::Lottery::FGs2LotteryRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> LotteryName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

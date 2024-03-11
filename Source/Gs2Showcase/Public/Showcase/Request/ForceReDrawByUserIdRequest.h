@@ -28,6 +28,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> ShowcaseNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Showcase::Request
         TSharedPtr<FForceReDrawByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FForceReDrawByUserIdRequest> WithShowcaseName(const TOptional<FString> ShowcaseName);
         TSharedPtr<FForceReDrawByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FForceReDrawByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FForceReDrawByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetShowcaseName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FForceReDrawByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

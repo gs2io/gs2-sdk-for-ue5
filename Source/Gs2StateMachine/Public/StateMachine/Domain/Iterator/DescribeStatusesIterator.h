@@ -41,7 +41,7 @@ namespace Gs2::StateMachine::Domain::Iterator
             const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<FString> Status
+            const TOptional<FString> Status = TOptional<FString>()
         );
 
         class FIterator;

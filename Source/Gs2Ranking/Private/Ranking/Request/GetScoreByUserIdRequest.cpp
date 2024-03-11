@@ -23,7 +23,8 @@ namespace Gs2::Ranking::Request
         CategoryNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         ScorerUserIdValue(TOptional<FString>()),
-        UniqueIdValue(TOptional<FString>())
+        UniqueIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Ranking::Request
         CategoryNameValue(From.CategoryNameValue),
         UserIdValue(From.UserIdValue),
         ScorerUserIdValue(From.ScorerUserIdValue),
-        UniqueIdValue(From.UniqueIdValue)
+        UniqueIdValue(From.UniqueIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Ranking::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetScoreByUserIdRequest> FGetScoreByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetScoreByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -114,6 +124,11 @@ namespace Gs2::Ranking::Request
     TOptional<FString> FGetScoreByUserIdRequest::GetUniqueId() const
     {
         return UniqueIdValue;
+    }
+
+    TOptional<FString> FGetScoreByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetScoreByUserIdRequest> FGetScoreByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -167,6 +182,15 @@ namespace Gs2::Ranking::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -196,6 +220,10 @@ namespace Gs2::Ranking::Request
         if (UniqueIdValue.IsSet())
         {
             JsonRootObject->SetStringField("uniqueId", UniqueIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -538,6 +538,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Inventory::Domain::Iterator::FDescribeItemSetsByUserIdIteratorPtr FInventoryDomain::ItemSets(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeItemSetsByUserIdIterator>(
@@ -545,7 +546,8 @@ namespace Gs2::Inventory::Domain::Model
             Client,
             NamespaceName,
             InventoryName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

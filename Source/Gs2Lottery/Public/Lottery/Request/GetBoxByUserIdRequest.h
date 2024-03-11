@@ -28,6 +28,7 @@ namespace Gs2::Lottery::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> PrizeTableNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Lottery::Request
         TSharedPtr<FGetBoxByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetBoxByUserIdRequest> WithPrizeTableName(const TOptional<FString> PrizeTableName);
         TSharedPtr<FGetBoxByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetBoxByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetPrizeTableName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetBoxByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

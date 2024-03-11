@@ -28,6 +28,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> RatingNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FDeleteRatingRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteRatingRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteRatingRequest> WithRatingName(const TOptional<FString> RatingName);
+        TSharedPtr<FDeleteRatingRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteRatingRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetRatingName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteRatingRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -28,6 +28,7 @@ namespace Gs2::StateMachine::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> StatusNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::StateMachine::Request
         TSharedPtr<FExitStateMachineByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FExitStateMachineByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FExitStateMachineByUserIdRequest> WithStatusName(const TOptional<FString> StatusName);
+        TSharedPtr<FExitStateMachineByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FExitStateMachineByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetStatusName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FExitStateMachineByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -495,6 +495,7 @@ namespace Gs2::Datastore::Domain::Model
     }
 
     Gs2::Datastore::Domain::Iterator::FDescribeDataObjectHistoriesByUserIdIteratorPtr FDataObjectDomain::DataObjectHistories(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Datastore::Domain::Iterator::FDescribeDataObjectHistoriesByUserIdIterator>(
@@ -502,7 +503,8 @@ namespace Gs2::Datastore::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            DataObjectName
+            DataObjectName,
+            TimeOffsetToken
         );
     }
 

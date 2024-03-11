@@ -25,7 +25,8 @@ namespace Gs2::Money::Request
         BeginValue(TOptional<int64>()),
         EndValue(TOptional<int64>()),
         PageTokenValue(TOptional<FString>()),
-        LimitValue(TOptional<int32>())
+        LimitValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::Money::Request
         BeginValue(From.BeginValue),
         EndValue(From.EndValue),
         PageTokenValue(From.PageTokenValue),
-        LimitValue(From.LimitValue)
+        LimitValue(From.LimitValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -103,6 +105,14 @@ namespace Gs2::Money::Request
     )
     {
         this->LimitValue = Limit;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeReceiptsRequest> FDescribeReceiptsRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -182,6 +192,11 @@ namespace Gs2::Money::Request
         return FString::Printf(TEXT("%d"), LimitValue.GetValue());
     }
 
+    TOptional<FString> FDescribeReceiptsRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
+    }
+
     TSharedPtr<FDescribeReceiptsRequest> FDescribeReceiptsRequest::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
@@ -251,7 +266,16 @@ namespace Gs2::Money::Request
                         return TOptional(v);
                   }
                   return TOptional<int32>();
-              }() : TOptional<int32>());
+              }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FDescribeReceiptsRequest::ToJson() const
@@ -288,6 +312,10 @@ namespace Gs2::Money::Request
         if (LimitValue.IsSet())
         {
             JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

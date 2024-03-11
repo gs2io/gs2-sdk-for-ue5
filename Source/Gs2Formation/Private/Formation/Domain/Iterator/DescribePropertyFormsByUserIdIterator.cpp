@@ -36,14 +36,16 @@ namespace Gs2::Formation::Domain::Iterator
         const Gs2::Formation::FGs2FormationRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> PropertyFormModelName
+        const TOptional<FString> PropertyFormModelName,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        PropertyFormModelName(PropertyFormModelName)
+        PropertyFormModelName(PropertyFormModelName),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

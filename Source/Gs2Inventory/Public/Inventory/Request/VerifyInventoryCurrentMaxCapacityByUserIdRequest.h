@@ -31,6 +31,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> VerifyTypeValue;
         TOptional<int32> CurrentInventoryMaxCapacityValue;
         TOptional<bool> MultiplyValueSpecifyingQuantityValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FVerifyInventoryCurrentMaxCapacityByUserIdRequest> WithVerifyType(const TOptional<FString> VerifyType);
         TSharedPtr<FVerifyInventoryCurrentMaxCapacityByUserIdRequest> WithCurrentInventoryMaxCapacity(const TOptional<int32> CurrentInventoryMaxCapacity);
         TSharedPtr<FVerifyInventoryCurrentMaxCapacityByUserIdRequest> WithMultiplyValueSpecifyingQuantity(const TOptional<bool> MultiplyValueSpecifyingQuantity);
+        TSharedPtr<FVerifyInventoryCurrentMaxCapacityByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FVerifyInventoryCurrentMaxCapacityByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -59,6 +61,7 @@ namespace Gs2::Inventory::Request
         FString GetCurrentInventoryMaxCapacityString() const;
         TOptional<bool> GetMultiplyValueSpecifyingQuantity() const;
         FString GetMultiplyValueSpecifyingQuantityString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyInventoryCurrentMaxCapacityByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

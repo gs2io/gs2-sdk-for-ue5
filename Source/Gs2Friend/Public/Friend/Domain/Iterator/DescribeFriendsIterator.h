@@ -41,7 +41,7 @@ namespace Gs2::Friend::Domain::Iterator
             const Gs2::Friend::FGs2FriendRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-            const TOptional<bool> WithProfile
+            const TOptional<bool> WithProfile = TOptional<bool>()
         );
 
         class FIterator;

@@ -28,6 +28,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TriggerNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Schedule::Request
         TSharedPtr<FDeleteTriggerByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteTriggerByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteTriggerByUserIdRequest> WithTriggerName(const TOptional<FString> TriggerName);
+        TSharedPtr<FDeleteTriggerByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteTriggerByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTriggerName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteTriggerByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

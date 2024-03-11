@@ -105,6 +105,7 @@ namespace Gs2::Friend::Domain::Model
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeFollowsByUserIdIteratorPtr Follows(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeFollows(

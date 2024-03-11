@@ -21,7 +21,8 @@ namespace Gs2::Inbox::Request
     FUpdateReceivedByUserIdRequest::FUpdateReceivedByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        ReceivedGlobalMessageNamesValue(nullptr)
+        ReceivedGlobalMessageNamesValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Inbox::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        ReceivedGlobalMessageNamesValue(From.ReceivedGlobalMessageNamesValue)
+        ReceivedGlobalMessageNamesValue(From.ReceivedGlobalMessageNamesValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Inbox::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateReceivedByUserIdRequest> FUpdateReceivedByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateReceivedByUserIdRequest> FUpdateReceivedByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -96,6 +106,11 @@ namespace Gs2::Inbox::Request
             return nullptr;
         }
         return ReceivedGlobalMessageNamesValue;
+    }
+
+    TOptional<FString> FUpdateReceivedByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FUpdateReceivedByUserIdRequest::GetDuplicationAvoider() const
@@ -140,6 +155,15 @@ namespace Gs2::Inbox::Request
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -166,6 +190,10 @@ namespace Gs2::Inbox::Request
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("receivedGlobalMessageNames", v);
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

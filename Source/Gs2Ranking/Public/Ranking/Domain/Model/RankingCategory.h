@@ -157,6 +157,7 @@ namespace Gs2::Ranking::Domain::Model
         );
 
         Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameAndUserIdIteratorPtr SubscribesByCategoryName(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribesByCategoryName(
@@ -172,6 +173,7 @@ namespace Gs2::Ranking::Domain::Model
         );
 
         Gs2::Ranking::Domain::Iterator::FDescribeRankingsByUserIdIteratorPtr Rankings(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRankings(

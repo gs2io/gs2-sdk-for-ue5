@@ -85,6 +85,7 @@ namespace Gs2::Schedule::Domain::Model
         );
 
         Gs2::Schedule::Domain::Iterator::FDescribeTriggersByUserIdIteratorPtr Triggers(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeTriggers(
@@ -100,6 +101,7 @@ namespace Gs2::Schedule::Domain::Model
         );
 
         Gs2::Schedule::Domain::Iterator::FDescribeEventsByUserIdIteratorPtr Events(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeEvents(

@@ -29,6 +29,7 @@ namespace Gs2::Version::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FTargetVersion>>> TargetVersionsValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -43,11 +44,13 @@ namespace Gs2::Version::Request
         TSharedPtr<FCheckVersionByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FCheckVersionByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FCheckVersionByUserIdRequest> WithTargetVersions(const TSharedPtr<TArray<TSharedPtr<Model::FTargetVersion>>> TargetVersions);
+        TSharedPtr<FCheckVersionByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCheckVersionByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;TSharedPtr<TArray<TSharedPtr<Model::FTargetVersion>>> GetTargetVersions() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCheckVersionByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

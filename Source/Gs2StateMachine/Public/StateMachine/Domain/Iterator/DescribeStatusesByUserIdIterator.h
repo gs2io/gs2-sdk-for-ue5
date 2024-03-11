@@ -33,6 +33,7 @@ namespace Gs2::StateMachine::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
         const TOptional<FString> Status;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeStatusesByUserIdIterator(
@@ -40,7 +41,8 @@ namespace Gs2::StateMachine::Domain::Iterator
             const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> Status
+            const TOptional<FString> Status = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

@@ -29,6 +29,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> JobNameValue;
         TOptional<int32> TryNumberValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,6 +44,7 @@ namespace Gs2::JobQueue::Request
         TSharedPtr<FGetJobResultByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetJobResultByUserIdRequest> WithJobName(const TOptional<FString> JobName);
         TSharedPtr<FGetJobResultByUserIdRequest> WithTryNumber(const TOptional<int32> TryNumber);
+        TSharedPtr<FGetJobResultByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -50,6 +52,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> GetJobName() const;
         TOptional<int32> GetTryNumber() const;
         FString GetTryNumberString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetJobResultByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

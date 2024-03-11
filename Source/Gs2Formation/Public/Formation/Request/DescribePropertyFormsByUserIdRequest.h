@@ -30,6 +30,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PageTokenValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -45,6 +46,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FDescribePropertyFormsByUserIdRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FDescribePropertyFormsByUserIdRequest> WithPageToken(const TOptional<FString> PageToken);
         TSharedPtr<FDescribePropertyFormsByUserIdRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribePropertyFormsByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -53,6 +55,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetPageToken() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribePropertyFormsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

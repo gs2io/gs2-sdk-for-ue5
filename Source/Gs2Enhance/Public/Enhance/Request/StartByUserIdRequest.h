@@ -34,6 +34,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> UserIdValue;
         TOptional<bool> ForceValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -52,6 +53,7 @@ namespace Gs2::Enhance::Request
         TSharedPtr<FStartByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FStartByUserIdRequest> WithForce(const TOptional<bool> Force);
         TSharedPtr<FStartByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FStartByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FStartByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -61,6 +63,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> GetUserId() const;
         TOptional<bool> GetForce() const;
         FString GetForceString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FStartByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

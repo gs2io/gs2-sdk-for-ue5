@@ -30,6 +30,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> InventoryNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeCount>>> ConsumeCountsValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,12 +46,14 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FConsumeSimpleItemsByUserIdRequest> WithInventoryName(const TOptional<FString> InventoryName);
         TSharedPtr<FConsumeSimpleItemsByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FConsumeSimpleItemsByUserIdRequest> WithConsumeCounts(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeCount>>> ConsumeCounts);
+        TSharedPtr<FConsumeSimpleItemsByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FConsumeSimpleItemsByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetInventoryName() const;
         TOptional<FString> GetUserId() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeCount>>> GetConsumeCounts() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FConsumeSimpleItemsByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

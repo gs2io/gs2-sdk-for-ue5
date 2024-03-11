@@ -32,13 +32,15 @@ namespace Gs2::Money::Domain::Iterator
         const Gs2::Money::FGs2MoneyRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeWalletsByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Money::FGs2MoneyRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

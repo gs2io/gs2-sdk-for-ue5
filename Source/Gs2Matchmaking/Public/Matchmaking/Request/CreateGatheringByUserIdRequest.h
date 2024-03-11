@@ -37,6 +37,7 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<TArray<FString>> AllowUserIdsValue;
         TOptional<int64> ExpiresAtValue;
         TSharedPtr<Model::FTimeSpan> ExpiresAtTimeSpanValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -57,6 +58,7 @@ namespace Gs2::Matchmaking::Request
             const TSharedPtr<TArray<FString>> AllowUserIds);
         TSharedPtr<FCreateGatheringByUserIdRequest> WithExpiresAt(const TOptional<int64> ExpiresAt);
         TSharedPtr<FCreateGatheringByUserIdRequest> WithExpiresAtTimeSpan(const TSharedPtr<Model::FTimeSpan> ExpiresAtTimeSpan);
+        TSharedPtr<FCreateGatheringByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCreateGatheringByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -67,6 +69,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
         TSharedPtr<Model::FTimeSpan> GetExpiresAtTimeSpan() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCreateGatheringByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

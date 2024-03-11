@@ -23,7 +23,8 @@ namespace Gs2::Limit::Request
         LimitNameValue(TOptional<FString>()),
         CounterNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        CountDownValueValue(TOptional<int32>())
+        CountDownValueValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Limit::Request
         LimitNameValue(From.LimitNameValue),
         CounterNameValue(From.CounterNameValue),
         UserIdValue(From.UserIdValue),
-        CountDownValueValue(From.CountDownValueValue)
+        CountDownValueValue(From.CountDownValueValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Limit::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCountDownByUserIdRequest> FCountDownByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCountDownByUserIdRequest> FCountDownByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -131,6 +141,11 @@ namespace Gs2::Limit::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), CountDownValueValue.GetValue());
+    }
+
+    TOptional<FString> FCountDownByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FCountDownByUserIdRequest::GetDuplicationAvoider() const
@@ -190,6 +205,15 @@ namespace Gs2::Limit::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -219,6 +243,10 @@ namespace Gs2::Limit::Request
         if (CountDownValueValue.IsSet())
         {
             JsonRootObject->SetNumberField("countDownValue", CountDownValueValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

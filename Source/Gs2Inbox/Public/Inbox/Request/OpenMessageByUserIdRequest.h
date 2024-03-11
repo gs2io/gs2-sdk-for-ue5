@@ -28,6 +28,7 @@ namespace Gs2::Inbox::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> MessageNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Inbox::Request
         TSharedPtr<FOpenMessageByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FOpenMessageByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FOpenMessageByUserIdRequest> WithMessageName(const TOptional<FString> MessageName);
+        TSharedPtr<FOpenMessageByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FOpenMessageByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetMessageName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FOpenMessageByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

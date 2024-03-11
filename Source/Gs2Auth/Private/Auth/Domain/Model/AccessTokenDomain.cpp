@@ -192,6 +192,64 @@ namespace Gs2::Auth::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FLoginBySignatureTask>>(this->AsShared(), Request);
     }
 
+    FAccessTokenDomain::FIssueTimeOffsetTokenTask::FIssueTimeOffsetTokenTask(
+        const TSharedPtr<FAccessTokenDomain>& Self,
+        const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccessTokenDomain::FIssueTimeOffsetTokenTask::FIssueTimeOffsetTokenTask(
+        const FIssueTimeOffsetTokenTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccessTokenDomain::FIssueTimeOffsetTokenTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Auth::Domain::Model::FAccessTokenDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->IssueTimeOffsetTokenByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetToken().IsSet())
+            {
+                Self->Token = Domain->Token = ResultModel->GetToken();
+            }
+            if (ResultModel->GetUserId().IsSet())
+            {
+                Self->UserId = Domain->UserId = ResultModel->GetUserId();
+            }
+            if (ResultModel->GetExpire().IsSet())
+            {
+                Self->Expire = Domain->Expire = ResultModel->GetExpire();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccessTokenDomain::FIssueTimeOffsetTokenTask>> FAccessTokenDomain::IssueTimeOffsetToken(
+        Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FIssueTimeOffsetTokenTask>>(this->AsShared(), Request);
+    }
+
     FString FAccessTokenDomain::CreateCacheParentKey(
         FString ChildType
     )

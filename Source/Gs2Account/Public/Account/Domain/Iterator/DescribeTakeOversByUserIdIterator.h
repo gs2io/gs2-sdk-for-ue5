@@ -32,13 +32,15 @@ namespace Gs2::Account::Domain::Iterator
         const Gs2::Account::FGs2AccountRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeTakeOversByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Account::FGs2AccountRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

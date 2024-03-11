@@ -29,6 +29,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FJobEntry>>> JobsValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -43,11 +44,13 @@ namespace Gs2::JobQueue::Request
         TSharedPtr<FPushByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FPushByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FPushByUserIdRequest> WithJobs(const TSharedPtr<TArray<TSharedPtr<Model::FJobEntry>>> Jobs);
+        TSharedPtr<FPushByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FPushByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;TSharedPtr<TArray<TSharedPtr<Model::FJobEntry>>> GetJobs() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FPushByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

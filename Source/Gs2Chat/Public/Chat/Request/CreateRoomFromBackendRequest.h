@@ -31,6 +31,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> MetadataValue;
         TOptional<FString> PasswordValue;
         TSharedPtr<TArray<FString>> WhiteListUserIdsValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -49,6 +50,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FCreateRoomFromBackendRequest> WithPassword(const TOptional<FString> Password);
         TSharedPtr<FCreateRoomFromBackendRequest> WithWhiteListUserIds(
             const TSharedPtr<TArray<FString>> WhiteListUserIds);
+        TSharedPtr<FCreateRoomFromBackendRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCreateRoomFromBackendRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetPassword() const;
         TSharedPtr<TArray<FString>> GetWhiteListUserIds() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCreateRoomFromBackendRequest> FromJson(const TSharedPtr<FJsonObject> Data);

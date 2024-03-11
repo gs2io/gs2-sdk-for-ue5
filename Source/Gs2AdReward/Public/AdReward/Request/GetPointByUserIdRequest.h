@@ -27,6 +27,7 @@ namespace Gs2::AdReward::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -39,10 +40,12 @@ namespace Gs2::AdReward::Request
         TSharedPtr<FGetPointByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FGetPointByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetPointByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetPointByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetPointByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

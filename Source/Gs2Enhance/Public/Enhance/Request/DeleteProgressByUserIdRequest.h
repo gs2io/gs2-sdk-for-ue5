@@ -27,6 +27,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -40,11 +41,13 @@ namespace Gs2::Enhance::Request
         TSharedPtr<FDeleteProgressByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDeleteProgressByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteProgressByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDeleteProgressByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteProgressByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteProgressByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

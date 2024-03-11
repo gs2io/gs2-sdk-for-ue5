@@ -27,6 +27,7 @@ namespace Gs2::Friend::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -39,10 +40,12 @@ namespace Gs2::Friend::Request
         TSharedPtr<FGetProfileByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FGetProfileByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetProfileByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetProfileByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetProfileByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

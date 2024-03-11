@@ -29,6 +29,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> MoldModelNameValue;
         TOptional<int32> IndexValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FDeleteFormByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteFormByUserIdRequest> WithMoldModelName(const TOptional<FString> MoldModelName);
         TSharedPtr<FDeleteFormByUserIdRequest> WithIndex(const TOptional<int32> Index);
+        TSharedPtr<FDeleteFormByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteFormByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetMoldModelName() const;
         TOptional<int32> GetIndex() const;
         FString GetIndexString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteFormByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

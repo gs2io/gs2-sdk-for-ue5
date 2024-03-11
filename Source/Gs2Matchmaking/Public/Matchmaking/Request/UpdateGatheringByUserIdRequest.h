@@ -30,6 +30,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> GatheringNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAttributeRange>>> AttributeRangesValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,12 +46,14 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FUpdateGatheringByUserIdRequest> WithGatheringName(const TOptional<FString> GatheringName);
         TSharedPtr<FUpdateGatheringByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FUpdateGatheringByUserIdRequest> WithAttributeRanges(const TSharedPtr<TArray<TSharedPtr<Model::FAttributeRange>>> AttributeRanges);
+        TSharedPtr<FUpdateGatheringByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUpdateGatheringByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetGatheringName() const;
         TOptional<FString> GetUserId() const;TSharedPtr<TArray<TSharedPtr<Model::FAttributeRange>>> GetAttributeRanges() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUpdateGatheringByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

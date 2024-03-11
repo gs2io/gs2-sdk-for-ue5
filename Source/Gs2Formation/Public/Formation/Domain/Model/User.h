@@ -108,6 +108,7 @@ namespace Gs2::Formation::Domain::Model
         );
 
         Gs2::Formation::Domain::Iterator::FDescribeMoldsByUserIdIteratorPtr Molds(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMolds(
@@ -123,7 +124,8 @@ namespace Gs2::Formation::Domain::Model
         );
 
         Gs2::Formation::Domain::Iterator::FDescribePropertyFormsByUserIdIteratorPtr PropertyForms(
-            const FString PropertyFormModelName
+            const FString PropertyFormModelName,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribePropertyForms(

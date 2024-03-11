@@ -30,6 +30,7 @@ namespace Gs2::Datastore::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ScopeValue;
         TSharedPtr<TArray<FString>> AllowUserIdsValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Datastore::Request
         TSharedPtr<FUpdateDataObjectByUserIdRequest> WithScope(const TOptional<FString> Scope);
         TSharedPtr<FUpdateDataObjectByUserIdRequest> WithAllowUserIds(
             const TSharedPtr<TArray<FString>> AllowUserIds);
+        TSharedPtr<FUpdateDataObjectByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUpdateDataObjectByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Datastore::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetScope() const;
         TSharedPtr<TArray<FString>> GetAllowUserIds() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUpdateDataObjectByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

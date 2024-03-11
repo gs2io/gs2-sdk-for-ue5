@@ -36,14 +36,16 @@ namespace Gs2::Datastore::Domain::Iterator
         const Gs2::Datastore::FGs2DatastoreRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> DataObjectName
+        const TOptional<FString> DataObjectName,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        DataObjectName(DataObjectName)
+        DataObjectName(DataObjectName),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

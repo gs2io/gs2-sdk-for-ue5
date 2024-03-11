@@ -31,6 +31,7 @@ namespace Gs2::Grade::Request
         TOptional<FString> VerifyTypeValue;
         TOptional<FString> PropertyIdValue;
         TOptional<FString> MaterialPropertyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::Grade::Request
         TSharedPtr<FVerifyGradeUpMaterialByUserIdRequest> WithVerifyType(const TOptional<FString> VerifyType);
         TSharedPtr<FVerifyGradeUpMaterialByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FVerifyGradeUpMaterialByUserIdRequest> WithMaterialPropertyId(const TOptional<FString> MaterialPropertyId);
+        TSharedPtr<FVerifyGradeUpMaterialByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FVerifyGradeUpMaterialByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -57,6 +59,7 @@ namespace Gs2::Grade::Request
         TOptional<FString> GetVerifyType() const;
         TOptional<FString> GetPropertyId() const;
         TOptional<FString> GetMaterialPropertyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyGradeUpMaterialByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

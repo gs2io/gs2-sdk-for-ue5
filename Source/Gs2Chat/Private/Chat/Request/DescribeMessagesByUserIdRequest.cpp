@@ -24,7 +24,8 @@ namespace Gs2::Chat::Request
         PasswordValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         StartAtValue(TOptional<int64>()),
-        LimitValue(TOptional<int32>())
+        LimitValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Chat::Request
         PasswordValue(From.PasswordValue),
         UserIdValue(From.UserIdValue),
         StartAtValue(From.StartAtValue),
-        LimitValue(From.LimitValue)
+        LimitValue(From.LimitValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -96,6 +98,14 @@ namespace Gs2::Chat::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FDescribeMessagesByUserIdRequest> FDescribeMessagesByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FDescribeMessagesByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -147,6 +157,11 @@ namespace Gs2::Chat::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), LimitValue.GetValue());
+    }
+
+    TOptional<FString> FDescribeMessagesByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FDescribeMessagesByUserIdRequest> FDescribeMessagesByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -209,7 +224,16 @@ namespace Gs2::Chat::Request
                         return TOptional(v);
                   }
                   return TOptional<int32>();
-              }() : TOptional<int32>());
+              }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FDescribeMessagesByUserIdRequest::ToJson() const
@@ -242,6 +266,10 @@ namespace Gs2::Chat::Request
         if (LimitValue.IsSet())
         {
             JsonRootObject->SetNumberField("limit", LimitValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

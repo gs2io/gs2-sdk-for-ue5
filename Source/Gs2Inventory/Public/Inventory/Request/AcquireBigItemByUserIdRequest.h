@@ -30,6 +30,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ItemNameValue;
         TOptional<FString> AcquireCountValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FAcquireBigItemByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FAcquireBigItemByUserIdRequest> WithItemName(const TOptional<FString> ItemName);
         TSharedPtr<FAcquireBigItemByUserIdRequest> WithAcquireCount(const TOptional<FString> AcquireCount);
+        TSharedPtr<FAcquireBigItemByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAcquireBigItemByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetItemName() const;
         TOptional<FString> GetAcquireCount() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAcquireBigItemByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

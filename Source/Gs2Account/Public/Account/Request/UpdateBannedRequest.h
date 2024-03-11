@@ -28,6 +28,7 @@ namespace Gs2::Account::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<bool> BannedValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,6 +43,7 @@ namespace Gs2::Account::Request
         TSharedPtr<FUpdateBannedRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateBannedRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FUpdateBannedRequest> WithBanned(const TOptional<bool> Banned);
+        TSharedPtr<FUpdateBannedRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUpdateBannedRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -49,6 +51,7 @@ namespace Gs2::Account::Request
         TOptional<FString> GetUserId() const;
         TOptional<bool> GetBanned() const;
         FString GetBannedString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUpdateBannedRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -27,6 +27,7 @@ namespace Gs2::Account::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -40,11 +41,13 @@ namespace Gs2::Account::Request
         TSharedPtr<FDeleteDataOwnerByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDeleteDataOwnerByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteDataOwnerByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDeleteDataOwnerByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteDataOwnerByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteDataOwnerByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

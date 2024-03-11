@@ -73,13 +73,15 @@ namespace Gs2::Idle::Domain::Model
     }
 
     Gs2::Idle::Domain::Iterator::FDescribeStatusesByUserIdIteratorPtr FUserDomain::Statuses(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Idle::Domain::Iterator::FDescribeStatusesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

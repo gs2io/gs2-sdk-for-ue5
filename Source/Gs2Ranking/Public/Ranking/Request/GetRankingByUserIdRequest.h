@@ -31,6 +31,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> ScorerUserIdValue;
         TOptional<FString> UniqueIdValue;
         TOptional<FString> AdditionalScopeNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -47,6 +48,7 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FGetRankingByUserIdRequest> WithScorerUserId(const TOptional<FString> ScorerUserId);
         TSharedPtr<FGetRankingByUserIdRequest> WithUniqueId(const TOptional<FString> UniqueId);
         TSharedPtr<FGetRankingByUserIdRequest> WithAdditionalScopeName(const TOptional<FString> AdditionalScopeName);
+        TSharedPtr<FGetRankingByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -55,6 +57,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> GetScorerUserId() const;
         TOptional<FString> GetUniqueId() const;
         TOptional<FString> GetAdditionalScopeName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetRankingByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -109,6 +109,7 @@ namespace Gs2::Lottery::Domain::Model
         );
 
         Gs2::Lottery::Domain::Iterator::FDescribeBoxesByUserIdIteratorPtr Boxes(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeBoxes(

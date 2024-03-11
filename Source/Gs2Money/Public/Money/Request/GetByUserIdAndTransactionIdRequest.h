@@ -28,6 +28,7 @@ namespace Gs2::Money::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TransactionIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Money::Request
         TSharedPtr<FGetByUserIdAndTransactionIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetByUserIdAndTransactionIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetByUserIdAndTransactionIdRequest> WithTransactionId(const TOptional<FString> TransactionId);
+        TSharedPtr<FGetByUserIdAndTransactionIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTransactionId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetByUserIdAndTransactionIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

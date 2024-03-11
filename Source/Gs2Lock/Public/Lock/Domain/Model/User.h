@@ -78,6 +78,7 @@ namespace Gs2::Lock::Domain::Model
         );
 
         Gs2::Lock::Domain::Iterator::FDescribeMutexesByUserIdIteratorPtr Mutexes(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMutexes(

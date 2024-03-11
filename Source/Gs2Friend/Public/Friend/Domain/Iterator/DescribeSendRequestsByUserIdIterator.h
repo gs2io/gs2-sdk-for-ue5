@@ -32,13 +32,15 @@ namespace Gs2::Friend::Domain::Iterator
         const Gs2::Friend::FGs2FriendRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeSendRequestsByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Friend::FGs2FriendRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

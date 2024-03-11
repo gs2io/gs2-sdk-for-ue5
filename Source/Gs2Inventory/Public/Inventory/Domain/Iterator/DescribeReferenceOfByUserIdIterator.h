@@ -36,6 +36,7 @@ namespace Gs2::Inventory::Domain::Iterator
         const TOptional<FString> UserId;
         const TOptional<FString> ItemName;
         const TOptional<FString> ItemSetName;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeReferenceOfByUserIdIterator(
@@ -45,7 +46,8 @@ namespace Gs2::Inventory::Domain::Iterator
             const TOptional<FString> InventoryName,
             const TOptional<FString> UserId,
             const TOptional<FString> ItemName,
-            const TOptional<FString> ItemSetName
+            const TOptional<FString> ItemSetName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

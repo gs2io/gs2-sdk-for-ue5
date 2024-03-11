@@ -32,13 +32,15 @@ namespace Gs2::Schedule::Domain::Iterator
         const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeEventsByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Schedule::FGs2ScheduleRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

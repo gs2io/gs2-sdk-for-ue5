@@ -29,6 +29,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> PropertyFormModelNameValue;
         TOptional<FString> PropertyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FDeletePropertyFormByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeletePropertyFormByUserIdRequest> WithPropertyFormModelName(const TOptional<FString> PropertyFormModelName);
         TSharedPtr<FDeletePropertyFormByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
+        TSharedPtr<FDeletePropertyFormByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeletePropertyFormByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Formation::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetPropertyFormModelName() const;
         TOptional<FString> GetPropertyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeletePropertyFormByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

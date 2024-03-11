@@ -22,6 +22,8 @@
 #include "Task/WebSocket/LoginTask.h"
 #include "Request/LoginBySignatureRequest.h"
 #include "Task/WebSocket/LoginBySignatureTask.h"
+#include "Request/IssueTimeOffsetTokenByUserIdRequest.h"
+#include "Task/WebSocket/IssueTimeOffsetTokenByUserIdTask.h"
 
 namespace Gs2::Auth
 {
@@ -40,6 +42,10 @@ namespace Gs2::Auth
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FLoginBySignatureTask>> LoginBySignature(
             const Request::FLoginBySignatureRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIssueTimeOffsetTokenByUserIdTask>> IssueTimeOffsetTokenByUserId(
+            const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2AuthWebSocketClient, ESPMode::ThreadSafe> FGs2AuthWebSocketClientPtr;

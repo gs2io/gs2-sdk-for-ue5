@@ -28,6 +28,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> CounterNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Mission::Request
         TSharedPtr<FGetCounterByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetCounterByUserIdRequest> WithCounterName(const TOptional<FString> CounterName);
         TSharedPtr<FGetCounterByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetCounterByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetCounterName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetCounterByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

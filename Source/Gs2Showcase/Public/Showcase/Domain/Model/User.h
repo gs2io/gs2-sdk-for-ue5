@@ -100,6 +100,7 @@ namespace Gs2::Showcase::Domain::Model
         );
 
         Gs2::Showcase::Domain::Iterator::FDescribeShowcasesByUserIdIteratorPtr Showcases(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeShowcases(

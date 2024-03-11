@@ -27,6 +27,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -39,10 +40,12 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FGetFirebaseTokenByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FGetFirebaseTokenByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetFirebaseTokenByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetFirebaseTokenByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetFirebaseTokenByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

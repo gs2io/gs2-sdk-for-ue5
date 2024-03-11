@@ -89,6 +89,7 @@ namespace Gs2::News::Domain::Model
         );
 
         Gs2::News::Domain::Iterator::FDescribeNewsByUserIdIteratorPtr Newses(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeNewses(

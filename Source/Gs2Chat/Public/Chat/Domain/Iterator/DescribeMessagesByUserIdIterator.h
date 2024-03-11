@@ -34,6 +34,7 @@ namespace Gs2::Chat::Domain::Iterator
         const TOptional<FString> RoomName;
         const TOptional<FString> Password;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeMessagesByUserIdIterator(
@@ -41,8 +42,9 @@ namespace Gs2::Chat::Domain::Iterator
             const Gs2::Chat::FGs2ChatRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> RoomName,
-            const TOptional<FString> Password,
-            const TOptional<FString> UserId
+            const TOptional<FString> Password = TOptional<FString>(),
+            const TOptional<FString> UserId = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

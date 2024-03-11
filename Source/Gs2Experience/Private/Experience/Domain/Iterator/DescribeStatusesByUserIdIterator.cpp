@@ -35,15 +35,17 @@ namespace Gs2::Experience::Domain::Iterator
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Experience::FGs2ExperienceRestClientPtr Client,
         const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
         const TOptional<FString> ExperienceName,
-        const TOptional<FString> UserId
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         ExperienceName(ExperienceName),
-        UserId(UserId)
+        UserId(UserId),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

@@ -31,6 +31,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> ItemNameValue;
         TOptional<FString> ItemSetNameValue;
         TOptional<FString> KeyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -47,6 +48,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FGetItemWithSignatureByUserIdRequest> WithItemName(const TOptional<FString> ItemName);
         TSharedPtr<FGetItemWithSignatureByUserIdRequest> WithItemSetName(const TOptional<FString> ItemSetName);
         TSharedPtr<FGetItemWithSignatureByUserIdRequest> WithKeyId(const TOptional<FString> KeyId);
+        TSharedPtr<FGetItemWithSignatureByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -55,6 +57,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> GetItemName() const;
         TOptional<FString> GetItemSetName() const;
         TOptional<FString> GetKeyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetItemWithSignatureByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

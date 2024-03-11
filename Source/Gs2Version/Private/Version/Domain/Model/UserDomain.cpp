@@ -131,13 +131,15 @@ namespace Gs2::Version::Domain::Model
     }
 
     Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsByUserIdIteratorPtr FUserDomain::AcceptVersions(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

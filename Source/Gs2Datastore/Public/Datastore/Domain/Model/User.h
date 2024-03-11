@@ -175,7 +175,8 @@ namespace Gs2::Datastore::Domain::Model
         );
 
         Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsByUserIdIteratorPtr DataObjects(
-            const TOptional<FString> Status
+            const TOptional<FString> Status = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeDataObjects(

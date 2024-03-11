@@ -96,13 +96,15 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Inventory::Domain::Iterator::FDescribeInventoriesByUserIdIteratorPtr FUserDomain::Inventories(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeInventoriesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

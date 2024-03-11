@@ -29,6 +29,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ExperienceNameValue;
         TOptional<FString> PropertyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FDeleteStatusByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteStatusByUserIdRequest> WithExperienceName(const TOptional<FString> ExperienceName);
         TSharedPtr<FDeleteStatusByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
+        TSharedPtr<FDeleteStatusByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteStatusByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetExperienceName() const;
         TOptional<FString> GetPropertyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteStatusByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

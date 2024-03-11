@@ -33,6 +33,7 @@ namespace Gs2::Formation::Request
         TOptional<int32> IndexValue;
         TSharedPtr<Model::FAcquireAction> AcquireActionValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::Formation::Request
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithIndex(const TOptional<int32> Index);
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithAcquireAction(const TSharedPtr<Model::FAcquireAction> AcquireAction);
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAcquireActionsToFormPropertiesRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -59,6 +61,7 @@ namespace Gs2::Formation::Request
         TOptional<int32> GetIndex() const;
         FString GetIndexString() const;
         TSharedPtr<Model::FAcquireAction> GetAcquireAction() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAcquireActionsToFormPropertiesRequest> FromJson(const TSharedPtr<FJsonObject> Data);

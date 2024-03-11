@@ -30,6 +30,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> MessageNameValue;
         TOptional<FString> PasswordValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -45,6 +46,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FGetMessageByUserIdRequest> WithMessageName(const TOptional<FString> MessageName);
         TSharedPtr<FGetMessageByUserIdRequest> WithPassword(const TOptional<FString> Password);
         TSharedPtr<FGetMessageByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetMessageByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -52,6 +54,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> GetMessageName() const;
         TOptional<FString> GetPassword() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetMessageByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

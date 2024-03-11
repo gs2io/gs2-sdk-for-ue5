@@ -28,6 +28,7 @@ namespace Gs2::Quest::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> QuestGroupNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Quest::Request
         TSharedPtr<FGetCompletedQuestListByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetCompletedQuestListByUserIdRequest> WithQuestGroupName(const TOptional<FString> QuestGroupName);
         TSharedPtr<FGetCompletedQuestListByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetCompletedQuestListByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetQuestGroupName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetCompletedQuestListByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

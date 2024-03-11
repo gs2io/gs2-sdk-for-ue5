@@ -142,7 +142,8 @@ namespace Gs2::StateMachine::Domain::Model
     }
 
     Gs2::StateMachine::Domain::Iterator::FDescribeStatusesByUserIdIteratorPtr FUserDomain::Statuses(
-        const TOptional<FString> Status
+        const TOptional<FString> Status,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::StateMachine::Domain::Iterator::FDescribeStatusesByUserIdIterator>(
@@ -150,7 +151,8 @@ namespace Gs2::StateMachine::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            Status
+            Status,
+            TimeOffsetToken
         );
     }
 

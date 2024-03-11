@@ -23,7 +23,8 @@ namespace Gs2::Money::Request
         UserIdValue(TOptional<FString>()),
         SlotValue(TOptional<int32>()),
         CountValue(TOptional<int32>()),
-        PaidOnlyValue(TOptional<bool>())
+        PaidOnlyValue(TOptional<bool>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Money::Request
         UserIdValue(From.UserIdValue),
         SlotValue(From.SlotValue),
         CountValue(From.CountValue),
-        PaidOnlyValue(From.PaidOnlyValue)
+        PaidOnlyValue(From.PaidOnlyValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -83,6 +85,14 @@ namespace Gs2::Money::Request
     )
     {
         this->PaidOnlyValue = PaidOnly;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FWithdrawByUserIdRequest> FWithdrawByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -151,6 +161,11 @@ namespace Gs2::Money::Request
         return FString(PaidOnlyValue.GetValue() ? "true" : "false");
     }
 
+    TOptional<FString> FWithdrawByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
+    }
+
     TOptional<FString> FWithdrawByUserIdRequest::GetDuplicationAvoider() const
     {
         return DuplicationAvoiderValue;
@@ -208,6 +223,15 @@ namespace Gs2::Money::Request
                   }
                   return TOptional<bool>();
               }() : TOptional<bool>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -237,6 +261,10 @@ namespace Gs2::Money::Request
         if (PaidOnlyValue.IsSet())
         {
             JsonRootObject->SetBoolField("paidOnly", PaidOnlyValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

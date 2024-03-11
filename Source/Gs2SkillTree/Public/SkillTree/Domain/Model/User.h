@@ -83,6 +83,7 @@ namespace Gs2::SkillTree::Domain::Model
         );
 
         Gs2::SkillTree::Domain::Iterator::FDescribeStatusesByUserIdIteratorPtr Statuses(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(

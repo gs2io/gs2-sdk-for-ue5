@@ -163,7 +163,8 @@ namespace Gs2::Exchange::Domain::Model
     }
 
     Gs2::Exchange::Domain::Iterator::FDescribeAwaitsByUserIdIteratorPtr FUserDomain::Awaits(
-        const TOptional<FString> RateName
+        const TOptional<FString> RateName,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Exchange::Domain::Iterator::FDescribeAwaitsByUserIdIterator>(
@@ -171,7 +172,8 @@ namespace Gs2::Exchange::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            RateName
+            RateName,
+            TimeOffsetToken
         );
     }
 

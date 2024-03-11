@@ -36,14 +36,16 @@ namespace Gs2::StateMachine::Domain::Iterator
         const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> Status
+        const TOptional<FString> Status,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        Status(Status)
+        Status(Status),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

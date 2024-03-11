@@ -32,13 +32,15 @@ namespace Gs2::Gateway::Domain::Iterator
         const Gs2::Gateway::FGs2GatewayRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeWebSocketSessionsByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Gateway::FGs2GatewayRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

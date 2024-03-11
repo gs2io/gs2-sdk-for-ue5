@@ -86,13 +86,15 @@ namespace Gs2::LoginReward::Domain::Model
     }
 
     Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesByUserIdIteratorPtr FUserDomain::ReceiveStatuses(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

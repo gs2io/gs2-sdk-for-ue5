@@ -27,6 +27,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -39,10 +40,12 @@ namespace Gs2::Showcase::Request
         TSharedPtr<FDescribeShowcasesByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDescribeShowcasesByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDescribeShowcasesByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDescribeShowcasesByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeShowcasesByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

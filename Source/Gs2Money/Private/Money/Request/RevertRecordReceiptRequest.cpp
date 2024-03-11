@@ -21,7 +21,8 @@ namespace Gs2::Money::Request
     FRevertRecordReceiptRequest::FRevertRecordReceiptRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        ReceiptValue(TOptional<FString>())
+        ReceiptValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Money::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        ReceiptValue(From.ReceiptValue)
+        ReceiptValue(From.ReceiptValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Money::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FRevertRecordReceiptRequest> FRevertRecordReceiptRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FRevertRecordReceiptRequest> FRevertRecordReceiptRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -92,6 +102,11 @@ namespace Gs2::Money::Request
     TOptional<FString> FRevertRecordReceiptRequest::GetReceipt() const
     {
         return ReceiptValue;
+    }
+
+    TOptional<FString> FRevertRecordReceiptRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FRevertRecordReceiptRequest::GetDuplicationAvoider() const
@@ -133,6 +148,15 @@ namespace Gs2::Money::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -154,6 +178,10 @@ namespace Gs2::Money::Request
         if (ReceiptValue.IsSet())
         {
             JsonRootObject->SetStringField("receipt", ReceiptValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

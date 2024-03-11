@@ -287,6 +287,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         Gs2::Inventory::Domain::Iterator::FDescribeItemSetsByUserIdIteratorPtr ItemSets(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeItemSets(

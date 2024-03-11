@@ -36,14 +36,16 @@ namespace Gs2::Inbox::Domain::Iterator
         const Gs2::Inbox::FGs2InboxRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<bool> IsRead
+        const TOptional<bool> IsRead,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
-        IsRead(IsRead)
+        IsRead(IsRead),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

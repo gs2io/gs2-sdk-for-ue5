@@ -21,7 +21,8 @@ namespace Gs2::Account::Request
     FDeleteTakeOverByUserIdRequest::FDeleteTakeOverByUserIdRequest():
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        TypeValue(TOptional<int32>())
+        TypeValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Account::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
-        TypeValue(From.TypeValue)
+        TypeValue(From.TypeValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -63,6 +65,14 @@ namespace Gs2::Account::Request
     )
     {
         this->TypeValue = Type;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDeleteTakeOverByUserIdRequest> FDeleteTakeOverByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -101,6 +111,11 @@ namespace Gs2::Account::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), TypeValue.GetValue());
+    }
+
+    TOptional<FString> FDeleteTakeOverByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FDeleteTakeOverByUserIdRequest::GetDuplicationAvoider() const
@@ -142,6 +157,15 @@ namespace Gs2::Account::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -163,6 +187,10 @@ namespace Gs2::Account::Request
         if (TypeValue.IsSet())
         {
             JsonRootObject->SetNumberField("type", TypeValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

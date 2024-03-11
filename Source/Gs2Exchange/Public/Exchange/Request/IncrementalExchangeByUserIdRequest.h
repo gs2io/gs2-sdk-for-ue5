@@ -31,6 +31,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> UserIdValue;
         TOptional<int32> CountValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FIncrementalExchangeByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FIncrementalExchangeByUserIdRequest> WithCount(const TOptional<int32> Count);
         TSharedPtr<FIncrementalExchangeByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FIncrementalExchangeByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FIncrementalExchangeByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetCount() const;
         FString GetCountString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FIncrementalExchangeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

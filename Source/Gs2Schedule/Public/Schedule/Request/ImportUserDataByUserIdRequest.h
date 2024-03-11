@@ -27,6 +27,7 @@ namespace Gs2::Schedule::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> UploadTokenValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -40,11 +41,13 @@ namespace Gs2::Schedule::Request
         TSharedPtr<FImportUserDataByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FImportUserDataByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FImportUserDataByUserIdRequest> WithUploadToken(const TOptional<FString> UploadToken);
+        TSharedPtr<FImportUserDataByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FImportUserDataByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetUploadToken() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FImportUserDataByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

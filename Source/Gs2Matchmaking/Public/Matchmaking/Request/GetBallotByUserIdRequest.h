@@ -31,6 +31,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> UserIdValue;
         TOptional<int32> NumberOfPlayerValue;
         TOptional<FString> KeyIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -47,6 +48,7 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FGetBallotByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetBallotByUserIdRequest> WithNumberOfPlayer(const TOptional<int32> NumberOfPlayer);
         TSharedPtr<FGetBallotByUserIdRequest> WithKeyId(const TOptional<FString> KeyId);
+        TSharedPtr<FGetBallotByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -56,6 +58,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<int32> GetNumberOfPlayer() const;
         FString GetNumberOfPlayerString() const;
         TOptional<FString> GetKeyId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetBallotByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

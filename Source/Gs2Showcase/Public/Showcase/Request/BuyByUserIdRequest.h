@@ -32,6 +32,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> UserIdValue;
         TOptional<int32> QuantityValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -49,6 +50,7 @@ namespace Gs2::Showcase::Request
         TSharedPtr<FBuyByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FBuyByUserIdRequest> WithQuantity(const TOptional<int32> Quantity);
         TSharedPtr<FBuyByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FBuyByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FBuyByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetQuantity() const;
         FString GetQuantityString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FBuyByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

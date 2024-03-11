@@ -29,6 +29,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> CounterNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int64> ValueValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Mission::Request
         TSharedPtr<FDecreaseCounterByUserIdRequest> WithCounterName(const TOptional<FString> CounterName);
         TSharedPtr<FDecreaseCounterByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDecreaseCounterByUserIdRequest> WithValue(const TOptional<int64> Value);
+        TSharedPtr<FDecreaseCounterByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDecreaseCounterByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> GetUserId() const;
         TOptional<int64> GetValue() const;
         FString GetValueString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDecreaseCounterByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

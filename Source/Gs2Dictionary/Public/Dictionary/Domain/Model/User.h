@@ -187,6 +187,7 @@ namespace Gs2::Dictionary::Domain::Model
         );
 
         Gs2::Dictionary::Domain::Iterator::FDescribeEntriesByUserIdIteratorPtr Entries(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeEntries(

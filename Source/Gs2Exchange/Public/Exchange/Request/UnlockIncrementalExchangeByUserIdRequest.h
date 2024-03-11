@@ -29,6 +29,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> RateNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> LockTransactionIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FUnlockIncrementalExchangeByUserIdRequest> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FUnlockIncrementalExchangeByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FUnlockIncrementalExchangeByUserIdRequest> WithLockTransactionId(const TOptional<FString> LockTransactionId);
+        TSharedPtr<FUnlockIncrementalExchangeByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUnlockIncrementalExchangeByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> GetRateName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetLockTransactionId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUnlockIncrementalExchangeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -30,6 +30,7 @@ namespace Gs2::Lock::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> TransactionIdValue;
         TOptional<int64> TtlValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Lock::Request
         TSharedPtr<FLockByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FLockByUserIdRequest> WithTransactionId(const TOptional<FString> TransactionId);
         TSharedPtr<FLockByUserIdRequest> WithTtl(const TOptional<int64> Ttl);
+        TSharedPtr<FLockByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FLockByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Lock::Request
         TOptional<FString> GetTransactionId() const;
         TOptional<int64> GetTtl() const;
         FString GetTtlString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FLockByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

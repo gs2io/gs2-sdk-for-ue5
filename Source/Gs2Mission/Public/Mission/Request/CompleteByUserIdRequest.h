@@ -31,6 +31,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> MissionTaskNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -47,6 +48,7 @@ namespace Gs2::Mission::Request
         TSharedPtr<FCompleteByUserIdRequest> WithMissionTaskName(const TOptional<FString> MissionTaskName);
         TSharedPtr<FCompleteByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FCompleteByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FCompleteByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCompleteByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> GetMissionGroupName() const;
         TOptional<FString> GetMissionTaskName() const;
         TOptional<FString> GetUserId() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCompleteByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

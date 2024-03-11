@@ -22,6 +22,8 @@
 #include "Task/Rest/LoginTask.h"
 #include "Request/LoginBySignatureRequest.h"
 #include "Task/Rest/LoginBySignatureTask.h"
+#include "Request/IssueTimeOffsetTokenByUserIdRequest.h"
+#include "Task/Rest/IssueTimeOffsetTokenByUserIdTask.h"
 
 namespace Gs2::Auth
 {
@@ -40,6 +42,10 @@ namespace Gs2::Auth
 
         TSharedPtr<FAsyncTask<Task::Rest::FLoginBySignatureTask>> LoginBySignature(
             const Request::FLoginBySignatureRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIssueTimeOffsetTokenByUserIdTask>> IssueTimeOffsetTokenByUserId(
+            const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request
         ) const;
     };
     typedef TSharedPtr<FGs2AuthRestClient, ESPMode::ThreadSafe> FGs2AuthRestClientPtr;

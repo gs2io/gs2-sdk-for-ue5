@@ -261,13 +261,15 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsByUserIdIteratorPtr FUserDomain::WebSocketSessions(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

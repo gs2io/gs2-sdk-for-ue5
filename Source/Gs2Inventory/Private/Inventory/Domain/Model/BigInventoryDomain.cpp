@@ -100,6 +100,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Inventory::Domain::Iterator::FDescribeBigItemsByUserIdIteratorPtr FBigInventoryDomain::BigItems(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigItemsByUserIdIterator>(
@@ -107,7 +108,8 @@ namespace Gs2::Inventory::Domain::Model
             Client,
             NamespaceName,
             InventoryName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

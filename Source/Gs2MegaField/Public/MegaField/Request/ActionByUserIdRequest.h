@@ -33,6 +33,7 @@ namespace Gs2::MegaField::Request
         TOptional<FString> LayerModelNameValue;
         TSharedPtr<Model::FMyPosition> PositionValue;
         TSharedPtr<TArray<TSharedPtr<Model::FScope>>> ScopesValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::MegaField::Request
         TSharedPtr<FActionByUserIdRequest> WithLayerModelName(const TOptional<FString> LayerModelName);
         TSharedPtr<FActionByUserIdRequest> WithPosition(const TSharedPtr<Model::FMyPosition> Position);
         TSharedPtr<FActionByUserIdRequest> WithScopes(const TSharedPtr<TArray<TSharedPtr<Model::FScope>>> Scopes);
+        TSharedPtr<FActionByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FActionByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,7 @@ namespace Gs2::MegaField::Request
         TOptional<FString> GetAreaModelName() const;
         TOptional<FString> GetLayerModelName() const;
         TSharedPtr<Model::FMyPosition> GetPosition() const;TSharedPtr<TArray<TSharedPtr<Model::FScope>>> GetScopes() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FActionByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

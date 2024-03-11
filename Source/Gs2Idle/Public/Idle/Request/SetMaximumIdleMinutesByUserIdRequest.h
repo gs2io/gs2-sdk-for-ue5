@@ -29,6 +29,7 @@ namespace Gs2::Idle::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> CategoryNameValue;
         TOptional<int32> MaximumIdleMinutesValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Idle::Request
         TSharedPtr<FSetMaximumIdleMinutesByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSetMaximumIdleMinutesByUserIdRequest> WithCategoryName(const TOptional<FString> CategoryName);
         TSharedPtr<FSetMaximumIdleMinutesByUserIdRequest> WithMaximumIdleMinutes(const TOptional<int32> MaximumIdleMinutes);
+        TSharedPtr<FSetMaximumIdleMinutesByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSetMaximumIdleMinutesByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::Idle::Request
         TOptional<FString> GetCategoryName() const;
         TOptional<int32> GetMaximumIdleMinutes() const;
         FString GetMaximumIdleMinutesString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetMaximumIdleMinutesByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

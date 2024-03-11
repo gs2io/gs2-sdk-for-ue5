@@ -165,6 +165,7 @@ namespace Gs2::Gateway::Domain::Model
         );
 
         Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsByUserIdIteratorPtr WebSocketSessions(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeWebSocketSessions(

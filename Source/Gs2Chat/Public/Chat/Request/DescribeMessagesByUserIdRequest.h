@@ -31,6 +31,7 @@ namespace Gs2::Chat::Request
         TOptional<FString> UserIdValue;
         TOptional<int64> StartAtValue;
         TOptional<int32> LimitValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -47,6 +48,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FDescribeMessagesByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDescribeMessagesByUserIdRequest> WithStartAt(const TOptional<int64> StartAt);
         TSharedPtr<FDescribeMessagesByUserIdRequest> WithLimit(const TOptional<int32> Limit);
+        TSharedPtr<FDescribeMessagesByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -57,6 +59,7 @@ namespace Gs2::Chat::Request
         FString GetStartAtString() const;
         TOptional<int32> GetLimit() const;
         FString GetLimitString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FDescribeMessagesByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

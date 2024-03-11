@@ -22,7 +22,8 @@ namespace Gs2::Datastore::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         DataObjectNameValue(TOptional<FString>()),
-        GenerationValue(TOptional<FString>())
+        GenerationValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Datastore::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         DataObjectNameValue(From.DataObjectNameValue),
-        GenerationValue(From.GenerationValue)
+        GenerationValue(From.GenerationValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Datastore::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest> FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest> FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -107,6 +117,11 @@ namespace Gs2::Datastore::Request
     TOptional<FString> FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest::GetGeneration() const
     {
         return GenerationValue;
+    }
+
+    TOptional<FString> FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FPrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest::GetDuplicationAvoider() const
@@ -157,6 +172,15 @@ namespace Gs2::Datastore::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -182,6 +206,10 @@ namespace Gs2::Datastore::Request
         if (GenerationValue.IsSet())
         {
             JsonRootObject->SetStringField("generation", GenerationValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

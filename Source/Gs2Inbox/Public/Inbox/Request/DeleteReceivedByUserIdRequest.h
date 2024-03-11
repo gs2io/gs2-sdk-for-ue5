@@ -27,6 +27,7 @@ namespace Gs2::Inbox::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -40,11 +41,13 @@ namespace Gs2::Inbox::Request
         TSharedPtr<FDeleteReceivedByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FDeleteReceivedByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteReceivedByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDeleteReceivedByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteReceivedByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteReceivedByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

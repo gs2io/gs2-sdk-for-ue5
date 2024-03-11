@@ -28,6 +28,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> CounterNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Mission::Request
         TSharedPtr<FDeleteCounterByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteCounterByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDeleteCounterByUserIdRequest> WithCounterName(const TOptional<FString> CounterName);
+        TSharedPtr<FDeleteCounterByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteCounterByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetCounterName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteCounterByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

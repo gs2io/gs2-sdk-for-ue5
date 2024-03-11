@@ -32,13 +32,15 @@ namespace Gs2::Dictionary::Domain::Iterator
         const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeEntriesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

@@ -98,7 +98,8 @@ namespace Gs2::Grade::Domain::Model
         );
 
         Gs2::Grade::Domain::Iterator::FDescribeStatusesByUserIdIteratorPtr Statuses(
-            const TOptional<FString> GradeName
+            const TOptional<FString> GradeName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(

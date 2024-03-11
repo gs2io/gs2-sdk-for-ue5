@@ -28,6 +28,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> AwaitNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FGetAwaitByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetAwaitByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetAwaitByUserIdRequest> WithAwaitName(const TOptional<FString> AwaitName);
+        TSharedPtr<FGetAwaitByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetAwaitName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetAwaitByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

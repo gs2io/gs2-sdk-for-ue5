@@ -31,6 +31,7 @@ namespace Gs2::Inventory::Request
         TOptional<FString> ItemNameValue;
         TOptional<int64> ConsumeCountValue;
         TOptional<FString> ItemSetNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FConsumeItemSetByUserIdRequest> WithItemName(const TOptional<FString> ItemName);
         TSharedPtr<FConsumeItemSetByUserIdRequest> WithConsumeCount(const TOptional<int64> ConsumeCount);
         TSharedPtr<FConsumeItemSetByUserIdRequest> WithItemSetName(const TOptional<FString> ItemSetName);
+        TSharedPtr<FConsumeItemSetByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FConsumeItemSetByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,7 @@ namespace Gs2::Inventory::Request
         TOptional<int64> GetConsumeCount() const;
         FString GetConsumeCountString() const;
         TOptional<FString> GetItemSetName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FConsumeItemSetByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

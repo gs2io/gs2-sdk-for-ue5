@@ -74,13 +74,15 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     Gs2::Schedule::Domain::Iterator::FDescribeTriggersByUserIdIteratorPtr FUserDomain::Triggers(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Schedule::Domain::Iterator::FDescribeTriggersByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 
@@ -128,13 +130,15 @@ namespace Gs2::Schedule::Domain::Model
     }
 
     Gs2::Schedule::Domain::Iterator::FDescribeEventsByUserIdIteratorPtr FUserDomain::Events(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Schedule::Domain::Iterator::FDescribeEventsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

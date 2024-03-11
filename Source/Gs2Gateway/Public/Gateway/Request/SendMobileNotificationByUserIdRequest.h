@@ -30,6 +30,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> SubjectValue;
         TOptional<FString> PayloadValue;
         TOptional<FString> SoundValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FSendMobileNotificationByUserIdRequest> WithSubject(const TOptional<FString> Subject);
         TSharedPtr<FSendMobileNotificationByUserIdRequest> WithPayload(const TOptional<FString> Payload);
         TSharedPtr<FSendMobileNotificationByUserIdRequest> WithSound(const TOptional<FString> Sound);
+        TSharedPtr<FSendMobileNotificationByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSendMobileNotificationByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -54,6 +56,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> GetSubject() const;
         TOptional<FString> GetPayload() const;
         TOptional<FString> GetSound() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSendMobileNotificationByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -23,7 +23,8 @@ namespace Gs2::Enchant::Request
         UserIdValue(TOptional<FString>()),
         ParameterNameValue(TOptional<FString>()),
         PropertyIdValue(TOptional<FString>()),
-        FixedParameterNamesValue(nullptr)
+        FixedParameterNamesValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Enchant::Request
         UserIdValue(From.UserIdValue),
         ParameterNameValue(From.ParameterNameValue),
         PropertyIdValue(From.PropertyIdValue),
-        FixedParameterNamesValue(From.FixedParameterNamesValue)
+        FixedParameterNamesValue(From.FixedParameterNamesValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Enchant::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FReDrawBalanceParameterStatusByUserIdRequest> FReDrawBalanceParameterStatusByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FReDrawBalanceParameterStatusByUserIdRequest> FReDrawBalanceParameterStatusByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -126,6 +136,11 @@ namespace Gs2::Enchant::Request
             return nullptr;
         }
         return FixedParameterNamesValue;
+    }
+
+    TOptional<FString> FReDrawBalanceParameterStatusByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FReDrawBalanceParameterStatusByUserIdRequest::GetDuplicationAvoider() const
@@ -188,6 +203,15 @@ namespace Gs2::Enchant::Request
                   }
                   return v;
               }() : MakeShared<TArray<FString>>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -222,6 +246,10 @@ namespace Gs2::Enchant::Request
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField("fixedParameterNames", v);
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

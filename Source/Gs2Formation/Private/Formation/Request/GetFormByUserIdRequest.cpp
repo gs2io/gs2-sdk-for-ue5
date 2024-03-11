@@ -22,7 +22,8 @@ namespace Gs2::Formation::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         MoldModelNameValue(TOptional<FString>()),
-        IndexValue(TOptional<int32>())
+        IndexValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -32,7 +33,8 @@ namespace Gs2::Formation::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         MoldModelNameValue(From.MoldModelNameValue),
-        IndexValue(From.IndexValue)
+        IndexValue(From.IndexValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -76,6 +78,14 @@ namespace Gs2::Formation::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetFormByUserIdRequest> FGetFormByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetFormByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -108,6 +118,11 @@ namespace Gs2::Formation::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), IndexValue.GetValue());
+    }
+
+    TOptional<FString> FGetFormByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetFormByUserIdRequest> FGetFormByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -152,7 +167,16 @@ namespace Gs2::Formation::Request
                         return TOptional(v);
                   }
                   return TOptional<int32>();
-              }() : TOptional<int32>());
+              }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FGetFormByUserIdRequest::ToJson() const
@@ -177,6 +201,10 @@ namespace Gs2::Formation::Request
         if (IndexValue.IsSet())
         {
             JsonRootObject->SetNumberField("index", IndexValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

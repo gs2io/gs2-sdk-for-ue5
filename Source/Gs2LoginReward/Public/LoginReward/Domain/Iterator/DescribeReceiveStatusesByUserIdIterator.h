@@ -32,13 +32,15 @@ namespace Gs2::LoginReward::Domain::Iterator
         const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeReceiveStatusesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

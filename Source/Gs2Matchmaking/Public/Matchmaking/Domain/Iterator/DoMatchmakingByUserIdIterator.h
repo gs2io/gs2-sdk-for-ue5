@@ -33,6 +33,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
         const Gs2::Matchmaking::Model::FPlayerPtr Player;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDoMatchmakingByUserIdIterator(
@@ -40,7 +41,8 @@ namespace Gs2::Matchmaking::Domain::Iterator
             const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const Gs2::Matchmaking::Model::FPlayerPtr Player
+            const Gs2::Matchmaking::Model::FPlayerPtr Player,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

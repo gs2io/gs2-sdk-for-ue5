@@ -31,6 +31,7 @@ namespace Gs2::Chat::Request
         TOptional<int32> CategoryValue;
         TOptional<FString> MetadataValue;
         TOptional<FString> PasswordValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::Chat::Request
         TSharedPtr<FPostByUserIdRequest> WithCategory(const TOptional<int32> Category);
         TSharedPtr<FPostByUserIdRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FPostByUserIdRequest> WithPassword(const TOptional<FString> Password);
+        TSharedPtr<FPostByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FPostByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -58,6 +60,7 @@ namespace Gs2::Chat::Request
         FString GetCategoryString() const;
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetPassword() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FPostByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

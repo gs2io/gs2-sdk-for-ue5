@@ -91,7 +91,8 @@ namespace Gs2::Enchant::Domain::Model
         );
 
         Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesByUserIdIteratorPtr BalanceParameterStatuses(
-            const TOptional<FString> ParameterName
+            const TOptional<FString> ParameterName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeBalanceParameterStatuses(
@@ -108,7 +109,8 @@ namespace Gs2::Enchant::Domain::Model
         );
 
         Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterStatusesByUserIdIteratorPtr RarityParameterStatuses(
-            const TOptional<FString> ParameterName
+            const TOptional<FString> ParameterName = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRarityParameterStatuses(

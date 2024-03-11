@@ -20,7 +20,8 @@ namespace Gs2::Friend::Request
 {
     FImportUserDataByUserIdRequest::FImportUserDataByUserIdRequest():
         UserIdValue(TOptional<FString>()),
-        UploadTokenValue(TOptional<FString>())
+        UploadTokenValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::Friend::Request
         const FImportUserDataByUserIdRequest& From
     ):
         UserIdValue(From.UserIdValue),
-        UploadTokenValue(From.UploadTokenValue)
+        UploadTokenValue(From.UploadTokenValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -56,6 +58,14 @@ namespace Gs2::Friend::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FImportUserDataByUserIdRequest> FImportUserDataByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FImportUserDataByUserIdRequest> FImportUserDataByUserIdRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -77,6 +87,11 @@ namespace Gs2::Friend::Request
     TOptional<FString> FImportUserDataByUserIdRequest::GetUploadToken() const
     {
         return UploadTokenValue;
+    }
+
+    TOptional<FString> FImportUserDataByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FImportUserDataByUserIdRequest::GetDuplicationAvoider() const
@@ -109,6 +124,15 @@ namespace Gs2::Friend::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -126,6 +150,10 @@ namespace Gs2::Friend::Request
         if (UploadTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("uploadToken", UploadTokenValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

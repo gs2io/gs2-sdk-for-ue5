@@ -25,7 +25,8 @@ namespace Gs2::Stamina::Request
         ValueValue(TOptional<int32>()),
         MaxValueValue(TOptional<int32>()),
         RecoverIntervalMinutesValue(TOptional<int32>()),
-        RecoverValueValue(TOptional<int32>())
+        RecoverValueValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::Stamina::Request
         ValueValue(From.ValueValue),
         MaxValueValue(From.MaxValueValue),
         RecoverIntervalMinutesValue(From.RecoverIntervalMinutesValue),
-        RecoverValueValue(From.RecoverValueValue)
+        RecoverValueValue(From.RecoverValueValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -103,6 +105,14 @@ namespace Gs2::Stamina::Request
     )
     {
         this->RecoverValueValue = RecoverValue;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateStaminaByUserIdRequest> FUpdateStaminaByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -190,6 +200,11 @@ namespace Gs2::Stamina::Request
         return FString::Printf(TEXT("%d"), RecoverValueValue.GetValue());
     }
 
+    TOptional<FString> FUpdateStaminaByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
+    }
+
     TOptional<FString> FUpdateStaminaByUserIdRequest::GetDuplicationAvoider() const
     {
         return DuplicationAvoiderValue;
@@ -265,6 +280,15 @@ namespace Gs2::Stamina::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -302,6 +326,10 @@ namespace Gs2::Stamina::Request
         if (RecoverValueValue.IsSet())
         {
             JsonRootObject->SetNumberField("recoverValue", RecoverValueValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

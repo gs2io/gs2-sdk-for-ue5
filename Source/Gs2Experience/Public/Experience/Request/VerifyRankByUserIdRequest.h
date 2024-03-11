@@ -32,6 +32,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> PropertyIdValue;
         TOptional<int64> RankValueValue;
         TOptional<bool> MultiplyValueSpecifyingQuantityValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -50,6 +51,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FVerifyRankByUserIdRequest> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FVerifyRankByUserIdRequest> WithRankValue(const TOptional<int64> RankValue);
         TSharedPtr<FVerifyRankByUserIdRequest> WithMultiplyValueSpecifyingQuantity(const TOptional<bool> MultiplyValueSpecifyingQuantity);
+        TSharedPtr<FVerifyRankByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FVerifyRankByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -62,6 +64,7 @@ namespace Gs2::Experience::Request
         FString GetRankValueString() const;
         TOptional<bool> GetMultiplyValueSpecifyingQuantity() const;
         FString GetMultiplyValueSpecifyingQuantityString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FVerifyRankByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

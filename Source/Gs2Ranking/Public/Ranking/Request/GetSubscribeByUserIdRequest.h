@@ -29,6 +29,7 @@ namespace Gs2::Ranking::Request
         TOptional<FString> CategoryNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetUserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,12 +44,14 @@ namespace Gs2::Ranking::Request
         TSharedPtr<FGetSubscribeByUserIdRequest> WithCategoryName(const TOptional<FString> CategoryName);
         TSharedPtr<FGetSubscribeByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FGetSubscribeByUserIdRequest> WithTargetUserId(const TOptional<FString> TargetUserId);
+        TSharedPtr<FGetSubscribeByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetCategoryName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTargetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetSubscribeByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

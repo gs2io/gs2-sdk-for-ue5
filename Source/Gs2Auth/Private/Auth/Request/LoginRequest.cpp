@@ -20,7 +20,8 @@ namespace Gs2::Auth::Request
 {
     FLoginRequest::FLoginRequest():
         UserIdValue(TOptional<FString>()),
-        TimeOffsetValue(TOptional<int32>())
+        TimeOffsetValue(TOptional<int32>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -28,7 +29,8 @@ namespace Gs2::Auth::Request
         const FLoginRequest& From
     ):
         UserIdValue(From.UserIdValue),
-        TimeOffsetValue(From.TimeOffsetValue)
+        TimeOffsetValue(From.TimeOffsetValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -56,6 +58,14 @@ namespace Gs2::Auth::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FLoginRequest> FLoginRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FLoginRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -78,6 +88,11 @@ namespace Gs2::Auth::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), TimeOffsetValue.GetValue());
+    }
+
+    TOptional<FString> FLoginRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FLoginRequest> FLoginRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -104,7 +119,16 @@ namespace Gs2::Auth::Request
                         return TOptional(v);
                   }
                   return TOptional<int32>();
-              }() : TOptional<int32>());
+              }() : TOptional<int32>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>());
     }
 
     TSharedPtr<FJsonObject> FLoginRequest::ToJson() const
@@ -121,6 +145,10 @@ namespace Gs2::Auth::Request
         if (TimeOffsetValue.IsSet())
         {
             JsonRootObject->SetNumberField("timeOffset", TimeOffsetValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

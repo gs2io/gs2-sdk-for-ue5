@@ -76,13 +76,15 @@ namespace Gs2::Stamina::Domain::Model
     }
 
     Gs2::Stamina::Domain::Iterator::FDescribeStaminasByUserIdIteratorPtr FUserDomain::Staminas(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeStaminasByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

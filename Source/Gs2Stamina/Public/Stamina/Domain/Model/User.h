@@ -94,6 +94,7 @@ namespace Gs2::Stamina::Domain::Model
         );
 
         Gs2::Stamina::Domain::Iterator::FDescribeStaminasByUserIdIteratorPtr Staminas(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStaminas(

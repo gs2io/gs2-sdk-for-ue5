@@ -240,6 +240,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameAndUserIdIteratorPtr FRankingCategoryDomain::SubscribesByCategoryName(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameAndUserIdIterator>(
@@ -247,7 +248,8 @@ namespace Gs2::Ranking::Domain::Model
             Client,
             NamespaceName,
             CategoryName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 
@@ -301,6 +303,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     Gs2::Ranking::Domain::Iterator::FDescribeRankingsByUserIdIteratorPtr FRankingCategoryDomain::Rankings(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeRankingsByUserIdIterator>(
@@ -309,7 +312,8 @@ namespace Gs2::Ranking::Domain::Model
             NamespaceName,
             CategoryName,
             UserId,
-            AdditionalScopeName
+            AdditionalScopeName,
+            TimeOffsetToken
         );
     }
 
@@ -356,8 +360,8 @@ namespace Gs2::Ranking::Domain::Model
             Client,
             NamespaceName,
             CategoryName,
-            AdditionalScopeName,
-            Score
+            Score,
+            AdditionalScopeName
         );
     }
 

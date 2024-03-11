@@ -30,6 +30,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> UserIdValue;
         TSharedPtr<Model::FPlayer> PlayerValue;
         TOptional<FString> MatchmakingContextTokenValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -45,6 +46,7 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FDoMatchmakingByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDoMatchmakingByUserIdRequest> WithPlayer(const TSharedPtr<Model::FPlayer> Player);
         TSharedPtr<FDoMatchmakingByUserIdRequest> WithMatchmakingContextToken(const TOptional<FString> MatchmakingContextToken);
+        TSharedPtr<FDoMatchmakingByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDoMatchmakingByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -52,6 +54,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> GetUserId() const;
         TSharedPtr<Model::FPlayer> GetPlayer() const;
         TOptional<FString> GetMatchmakingContextToken() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDoMatchmakingByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

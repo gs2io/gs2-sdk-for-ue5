@@ -29,6 +29,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> MissionGroupNameValue;
         TOptional<FString> MissionTaskNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -44,6 +45,7 @@ namespace Gs2::Mission::Request
         TSharedPtr<FRevertReceiveByUserIdRequest> WithMissionGroupName(const TOptional<FString> MissionGroupName);
         TSharedPtr<FRevertReceiveByUserIdRequest> WithMissionTaskName(const TOptional<FString> MissionTaskName);
         TSharedPtr<FRevertReceiveByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FRevertReceiveByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FRevertReceiveByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -51,6 +53,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> GetMissionGroupName() const;
         TOptional<FString> GetMissionTaskName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FRevertReceiveByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

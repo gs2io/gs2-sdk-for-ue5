@@ -73,7 +73,8 @@ namespace Gs2::Limit::Domain::Model
     }
 
     Gs2::Limit::Domain::Iterator::FDescribeCountersByUserIdIteratorPtr FUserDomain::Counters(
-        const TOptional<FString> LimitName
+        const TOptional<FString> LimitName,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Limit::Domain::Iterator::FDescribeCountersByUserIdIterator>(
@@ -81,7 +82,8 @@ namespace Gs2::Limit::Domain::Model
             Client,
             NamespaceName,
             UserId,
-            LimitName
+            LimitName,
+            TimeOffsetToken
         );
     }
 

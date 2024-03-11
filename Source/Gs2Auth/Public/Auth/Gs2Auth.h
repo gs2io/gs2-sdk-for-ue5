@@ -31,6 +31,12 @@
 #include "Task/Rest/LoginBySignatureTask.h"
 #include "Task/WebSocket/LoginBySignatureTask.h"
 
+// IssueTimeOffsetTokenByUserId
+#include "Request/IssueTimeOffsetTokenByUserIdRequest.h"
+#include "Result/IssueTimeOffsetTokenByUserIdResult.h"
+#include "Task/Rest/IssueTimeOffsetTokenByUserIdTask.h"
+#include "Task/WebSocket/IssueTimeOffsetTokenByUserIdTask.h"
+
 // Client
 #include "Gs2AuthRestClient.h"
 #include "Gs2AuthWebSocketClient.h"

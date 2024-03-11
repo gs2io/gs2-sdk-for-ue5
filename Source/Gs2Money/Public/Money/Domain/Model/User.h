@@ -138,6 +138,7 @@ namespace Gs2::Money::Domain::Model
         );
 
         Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIteratorPtr Wallets(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeWallets(
@@ -153,9 +154,10 @@ namespace Gs2::Money::Domain::Model
         );
 
         Gs2::Money::Domain::Iterator::FDescribeReceiptsIteratorPtr Receipts(
-            const TOptional<int32> Slot,
-            const TOptional<int64> Begin,
-            const TOptional<int64> End
+            const TOptional<int32> Slot = TOptional<int32>(),
+            const TOptional<int64> Begin = TOptional<int64>(),
+            const TOptional<int64> End = TOptional<int64>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeReceipts(

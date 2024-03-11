@@ -97,7 +97,8 @@ namespace Gs2::Ranking::Domain::Model
 
     Gs2::Ranking::Domain::Iterator::FDescribeScoresByUserIdIteratorPtr FUserDomain::Scores(
         const FString CategoryName,
-        const FString ScorerUserId
+        const FString ScorerUserId,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeScoresByUserIdIterator>(
@@ -106,7 +107,8 @@ namespace Gs2::Ranking::Domain::Model
             NamespaceName,
             CategoryName,
             UserId,
-            ScorerUserId
+            ScorerUserId,
+            TimeOffsetToken
         );
     }
 

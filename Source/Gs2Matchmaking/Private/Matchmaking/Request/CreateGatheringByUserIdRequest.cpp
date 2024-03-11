@@ -26,7 +26,8 @@ namespace Gs2::Matchmaking::Request
         CapacityOfRolesValue(nullptr),
         AllowUserIdsValue(nullptr),
         ExpiresAtValue(TOptional<int64>()),
-        ExpiresAtTimeSpanValue(nullptr)
+        ExpiresAtTimeSpanValue(nullptr),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -40,7 +41,8 @@ namespace Gs2::Matchmaking::Request
         CapacityOfRolesValue(From.CapacityOfRolesValue),
         AllowUserIdsValue(From.AllowUserIdsValue),
         ExpiresAtValue(From.ExpiresAtValue),
-        ExpiresAtTimeSpanValue(From.ExpiresAtTimeSpanValue)
+        ExpiresAtTimeSpanValue(From.ExpiresAtTimeSpanValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -113,6 +115,14 @@ namespace Gs2::Matchmaking::Request
     )
     {
         this->ExpiresAtTimeSpanValue = ExpiresAtTimeSpan;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateGatheringByUserIdRequest> FCreateGatheringByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
         return SharedThis(this);
     }
 
@@ -196,6 +206,11 @@ namespace Gs2::Matchmaking::Request
             return nullptr;
         }
         return ExpiresAtTimeSpanValue;
+    }
+
+    TOptional<FString> FCreateGatheringByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TOptional<FString> FCreateGatheringByUserIdRequest::GetDuplicationAvoider() const
@@ -289,6 +304,15 @@ namespace Gs2::Matchmaking::Request
                   }
                   return Model::FTimeSpan::FromJson(Data->GetObjectField("expiresAtTimeSpan"));
               }() : nullptr)
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -345,6 +369,10 @@ namespace Gs2::Matchmaking::Request
         if (ExpiresAtTimeSpanValue != nullptr && ExpiresAtTimeSpanValue.IsValid())
         {
             JsonRootObject->SetObjectField("expiresAtTimeSpan", ExpiresAtTimeSpanValue->ToJson());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -31,6 +31,7 @@ namespace Gs2::Limit::Request
         TOptional<FString> UserIdValue;
         TOptional<int32> CountUpValueValue;
         TOptional<int32> MaxValueValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -48,6 +49,7 @@ namespace Gs2::Limit::Request
         TSharedPtr<FCountUpByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FCountUpByUserIdRequest> WithCountUpValue(const TOptional<int32> CountUpValue);
         TSharedPtr<FCountUpByUserIdRequest> WithMaxValue(const TOptional<int32> MaxValue);
+        TSharedPtr<FCountUpByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FCountUpByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -59,6 +61,7 @@ namespace Gs2::Limit::Request
         FString GetCountUpValueString() const;
         TOptional<int32> GetMaxValue() const;
         FString GetMaxValueString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FCountUpByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

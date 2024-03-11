@@ -214,13 +214,15 @@ namespace Gs2::Money::Domain::Model
     }
 
     Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIteratorPtr FUserDomain::Wallets(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 
@@ -270,7 +272,8 @@ namespace Gs2::Money::Domain::Model
     Gs2::Money::Domain::Iterator::FDescribeReceiptsIteratorPtr FUserDomain::Receipts(
         const TOptional<int32> Slot,
         const TOptional<int64> Begin,
-        const TOptional<int64> End
+        const TOptional<int64> End,
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Iterator::FDescribeReceiptsIterator>(
@@ -280,7 +283,8 @@ namespace Gs2::Money::Domain::Model
             UserId,
             Slot,
             Begin,
-            End
+            End,
+            TimeOffsetToken
         );
     }
 

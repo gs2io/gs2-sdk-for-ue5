@@ -32,13 +32,15 @@ namespace Gs2::Quest::Domain::Iterator
         const Gs2::Quest::FGs2QuestRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
+        const TOptional<FString> TimeOffsetToken;
 
     public:
         FDescribeProgressesByUserIdIterator(
             const Core::Domain::FCacheDatabasePtr Cache,
             const Gs2::Quest::FGs2QuestRestClientPtr Client,
             const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId
+            const TOptional<FString> UserId,
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         class FIterator;

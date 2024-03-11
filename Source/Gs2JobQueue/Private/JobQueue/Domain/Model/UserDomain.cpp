@@ -36,6 +36,9 @@
 #include "JobQueue/Domain/Model/UserAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::JobQueue::Domain::Model
 {
@@ -209,8 +212,8 @@ namespace Gs2::JobQueue::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr)
-        {
+        if (ResultModel != nullptr) {
+            
             if (ResultModel->GetItem() != nullptr)
             {
                 const auto ParentKey = Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
@@ -265,13 +268,15 @@ namespace Gs2::JobQueue::Domain::Model
     }
 
     Gs2::JobQueue::Domain::Iterator::FDescribeJobsByUserIdIteratorPtr FUserDomain::Jobs(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::JobQueue::Domain::Iterator::FDescribeJobsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 
@@ -319,13 +324,15 @@ namespace Gs2::JobQueue::Domain::Model
     }
 
     Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIteratorPtr FUserDomain::DeadLetterJobs(
+        const TOptional<FString> TimeOffsetToken
     ) const
     {
         return MakeShared<Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIterator>(
             Gs2->Cache,
             Client,
             NamespaceName,
-            UserId
+            UserId,
+            TimeOffsetToken
         );
     }
 

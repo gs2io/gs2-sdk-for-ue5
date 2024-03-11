@@ -35,13 +35,15 @@ namespace Gs2::Mission::Domain::Iterator
         const Core::Domain::FCacheDatabasePtr Cache,
         const Gs2::Mission::FGs2MissionRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const TOptional<FString> UserId
+        const TOptional<FString> UserId,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
         Client(Client),
         NamespaceName(NamespaceName),
-        UserId(UserId)
+        UserId(UserId),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

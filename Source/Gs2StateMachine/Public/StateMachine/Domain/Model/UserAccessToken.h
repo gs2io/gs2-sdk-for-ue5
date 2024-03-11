@@ -82,7 +82,7 @@ namespace Gs2::StateMachine::Domain::Model
         );
 
         Gs2::StateMachine::Domain::Iterator::FDescribeStatusesIteratorPtr Statuses(
-            const TOptional<FString> Status
+            const TOptional<FString> Status = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(

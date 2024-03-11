@@ -30,6 +30,7 @@ namespace Gs2::Script::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> ArgsValue;
         TSharedPtr<Model::FRandomStatus> RandomStatusValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -44,12 +45,14 @@ namespace Gs2::Script::Request
         TSharedPtr<FInvokeScriptRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FInvokeScriptRequest> WithArgs(const TOptional<FString> Args);
         TSharedPtr<FInvokeScriptRequest> WithRandomStatus(const TSharedPtr<Model::FRandomStatus> RandomStatus);
+        TSharedPtr<FInvokeScriptRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetScriptId() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetArgs() const;
         TSharedPtr<Model::FRandomStatus> GetRandomStatus() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FInvokeScriptRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

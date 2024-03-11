@@ -30,6 +30,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> DisplayItemNameValue;
         TOptional<FString> UserIdValue;
         TOptional<int32> CountValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -46,6 +47,7 @@ namespace Gs2::Showcase::Request
         TSharedPtr<FDecrementPurchaseCountByUserIdRequest> WithDisplayItemName(const TOptional<FString> DisplayItemName);
         TSharedPtr<FDecrementPurchaseCountByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FDecrementPurchaseCountByUserIdRequest> WithCount(const TOptional<int32> Count);
+        TSharedPtr<FDecrementPurchaseCountByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDecrementPurchaseCountByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
@@ -55,6 +57,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetCount() const;
         FString GetCountString() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDecrementPurchaseCountByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

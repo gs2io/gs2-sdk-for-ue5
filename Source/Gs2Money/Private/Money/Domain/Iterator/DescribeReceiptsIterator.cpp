@@ -38,7 +38,8 @@ namespace Gs2::Money::Domain::Iterator
         const TOptional<FString> UserId,
         const TOptional<int32> Slot,
         const TOptional<int64> Begin,
-        const TOptional<int64> End
+        const TOptional<int64> End,
+        const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Cache(Cache),
@@ -47,7 +48,8 @@ namespace Gs2::Money::Domain::Iterator
         UserId(UserId),
         Slot(Slot),
         Begin(Begin),
-        End(End)
+        End(End),
+        TimeOffsetToken(TimeOffsetToken)
     {
     }
 

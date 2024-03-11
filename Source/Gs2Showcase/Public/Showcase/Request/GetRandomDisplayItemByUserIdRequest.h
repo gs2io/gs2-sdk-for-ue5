@@ -29,6 +29,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> ShowcaseNameValue;
         TOptional<FString> DisplayItemNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -43,12 +44,14 @@ namespace Gs2::Showcase::Request
         TSharedPtr<FGetRandomDisplayItemByUserIdRequest> WithShowcaseName(const TOptional<FString> ShowcaseName);
         TSharedPtr<FGetRandomDisplayItemByUserIdRequest> WithDisplayItemName(const TOptional<FString> DisplayItemName);
         TSharedPtr<FGetRandomDisplayItemByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetRandomDisplayItemByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetShowcaseName() const;
         TOptional<FString> GetDisplayItemName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetRandomDisplayItemByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

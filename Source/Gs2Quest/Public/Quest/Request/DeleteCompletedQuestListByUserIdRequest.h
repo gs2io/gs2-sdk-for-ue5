@@ -28,6 +28,7 @@ namespace Gs2::Quest::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> QuestGroupNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Quest::Request
         TSharedPtr<FDeleteCompletedQuestListByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FDeleteCompletedQuestListByUserIdRequest> WithQuestGroupName(const TOptional<FString> QuestGroupName);
         TSharedPtr<FDeleteCompletedQuestListByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FDeleteCompletedQuestListByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FDeleteCompletedQuestListByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetQuestGroupName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FDeleteCompletedQuestListByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

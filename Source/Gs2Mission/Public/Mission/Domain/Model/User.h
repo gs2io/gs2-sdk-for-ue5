@@ -100,6 +100,7 @@ namespace Gs2::Mission::Domain::Model
         );
 
         Gs2::Mission::Domain::Iterator::FDescribeCompletesByUserIdIteratorPtr Completes(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeCompletes(
@@ -115,6 +116,7 @@ namespace Gs2::Mission::Domain::Model
         );
 
         Gs2::Mission::Domain::Iterator::FDescribeCountersByUserIdIteratorPtr Counters(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeCounters(

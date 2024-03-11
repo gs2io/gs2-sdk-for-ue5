@@ -27,6 +27,7 @@ namespace Gs2::JobQueue::Request
         TOptional<FString> ContextStackValue;
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -40,11 +41,13 @@ namespace Gs2::JobQueue::Request
         TSharedPtr<FRunByUserIdRequest> WithContextStack(const TOptional<FString> ContextStack);
         TSharedPtr<FRunByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FRunByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FRunByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FRunByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FRunByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);

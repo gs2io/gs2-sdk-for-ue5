@@ -23,7 +23,8 @@ namespace Gs2::Inventory::Request
         InventoryNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         ItemNameValue(TOptional<FString>()),
-        KeyIdValue(TOptional<FString>())
+        KeyIdValue(TOptional<FString>()),
+        TimeOffsetTokenValue(TOptional<FString>())
     {
     }
 
@@ -34,7 +35,8 @@ namespace Gs2::Inventory::Request
         InventoryNameValue(From.InventoryNameValue),
         UserIdValue(From.UserIdValue),
         ItemNameValue(From.ItemNameValue),
-        KeyIdValue(From.KeyIdValue)
+        KeyIdValue(From.KeyIdValue),
+        TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
 
@@ -86,6 +88,14 @@ namespace Gs2::Inventory::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FGetSimpleItemWithSignatureByUserIdRequest> FGetSimpleItemWithSignatureByUserIdRequest::WithTimeOffsetToken(
+        const TOptional<FString> TimeOffsetToken
+    )
+    {
+        this->TimeOffsetTokenValue = TimeOffsetToken;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FGetSimpleItemWithSignatureByUserIdRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -114,6 +124,11 @@ namespace Gs2::Inventory::Request
     TOptional<FString> FGetSimpleItemWithSignatureByUserIdRequest::GetKeyId() const
     {
         return KeyIdValue;
+    }
+
+    TOptional<FString> FGetSimpleItemWithSignatureByUserIdRequest::GetTimeOffsetToken() const
+    {
+        return TimeOffsetTokenValue;
     }
 
     TSharedPtr<FGetSimpleItemWithSignatureByUserIdRequest> FGetSimpleItemWithSignatureByUserIdRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -167,6 +182,15 @@ namespace Gs2::Inventory::Request
                         return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
                   return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField("timeOffsetToken", v))
+                  {
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
+                  }
+                  return TOptional<FString>();
               }() : TOptional<FString>());
     }
 
@@ -196,6 +220,10 @@ namespace Gs2::Inventory::Request
         if (KeyIdValue.IsSet())
         {
             JsonRootObject->SetStringField("keyId", KeyIdValue.GetValue());
+        }
+        if (TimeOffsetTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField("timeOffsetToken", TimeOffsetTokenValue.GetValue());
         }
         return JsonRootObject;
     }

@@ -28,6 +28,7 @@ namespace Gs2::Datastore::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> DataObjectNameValue;
+        TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +43,14 @@ namespace Gs2::Datastore::Request
         TSharedPtr<FPrepareDownloadByUserIdAndDataObjectNameRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FPrepareDownloadByUserIdAndDataObjectNameRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FPrepareDownloadByUserIdAndDataObjectNameRequest> WithDataObjectName(const TOptional<FString> DataObjectName);
+        TSharedPtr<FPrepareDownloadByUserIdAndDataObjectNameRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FPrepareDownloadByUserIdAndDataObjectNameRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetDataObjectName() const;
+        TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FPrepareDownloadByUserIdAndDataObjectNameRequest> FromJson(const TSharedPtr<FJsonObject> Data);

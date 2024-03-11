@@ -28,6 +28,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> MissionGroupNameValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> TimeOffsetTokenValue;
         
     public:
         
@@ -41,11 +42,13 @@ namespace Gs2::Mission::Request
         TSharedPtr<FGetCompleteByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FGetCompleteByUserIdRequest> WithMissionGroupName(const TOptional<FString> MissionGroupName);
         TSharedPtr<FGetCompleteByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FGetCompleteByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetMissionGroupName() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetTimeOffsetToken() const;
 
         static TSharedPtr<FGetCompleteByUserIdRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
