@@ -34,6 +34,7 @@ namespace Gs2::Exchange::Request
         TOptional<bool> EnableDirectExchangeValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
         TSharedPtr<Model::FScriptSetting> ExchangeScriptValue;
+        TSharedPtr<Model::FScriptSetting> IncrementalExchangeScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         TOptional<FString> QueueNamespaceIdValue;
         TOptional<FString> KeyIdValue;
@@ -53,6 +54,7 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FCreateNamespaceRequest> WithEnableDirectExchange(const TOptional<bool> EnableDirectExchange);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
         TSharedPtr<FCreateNamespaceRequest> WithExchangeScript(const TSharedPtr<Model::FScriptSetting> ExchangeScript);
+        TSharedPtr<FCreateNamespaceRequest> WithIncrementalExchangeScript(const TSharedPtr<Model::FScriptSetting> IncrementalExchangeScript);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
         TSharedPtr<FCreateNamespaceRequest> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
         TSharedPtr<FCreateNamespaceRequest> WithKeyId(const TOptional<FString> KeyId);
@@ -66,6 +68,7 @@ namespace Gs2::Exchange::Request
         FString GetEnableDirectExchangeString() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<Model::FScriptSetting> GetExchangeScript() const;
+        TSharedPtr<Model::FScriptSetting> GetIncrementalExchangeScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
         TOptional<FString> GetQueueNamespaceId() const;
         TOptional<FString> GetKeyId() const;

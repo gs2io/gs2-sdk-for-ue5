@@ -141,10 +141,6 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
         const double Rate
     )
     {
-        if (Request->GetMaximumIdleMinutes().IsSet())
-        {
-            Request->WithMaximumIdleMinutes(*Request->GetMaximumIdleMinutes() * Rate);
-        }
         return Request;
     }
 
@@ -153,11 +149,6 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
-        if (Request->GetMaximumIdleMinutes().IsSet())
-        {
-            Rate.Multiply(*Request->GetMaximumIdleMinutes());
-            Request->WithMaximumIdleMinutes(Rate.ToInt());
-        }
         return Request;
     }
 }

@@ -33,6 +33,7 @@ namespace Gs2::Exchange::Model
         TOptional<bool> EnableAwaitExchangeValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
         TSharedPtr<FScriptSetting> ExchangeScriptValue;
+        TSharedPtr<FScriptSetting> IncrementalExchangeScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -54,6 +55,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FNamespace> WithEnableAwaitExchange(const TOptional<bool> EnableAwaitExchange);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
         TSharedPtr<FNamespace> WithExchangeScript(const TSharedPtr<FScriptSetting> ExchangeScript);
+        TSharedPtr<FNamespace> WithIncrementalExchangeScript(const TSharedPtr<FScriptSetting> IncrementalExchangeScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -70,6 +72,7 @@ namespace Gs2::Exchange::Model
         FString GetEnableAwaitExchangeString() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
         TSharedPtr<FScriptSetting> GetExchangeScript() const;
+        TSharedPtr<FScriptSetting> GetIncrementalExchangeScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

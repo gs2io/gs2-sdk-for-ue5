@@ -25,6 +25,7 @@ namespace Gs2::Exchange::Request
         EnableDirectExchangeValue(TOptional<bool>()),
         TransactionSettingValue(nullptr),
         ExchangeScriptValue(nullptr),
+        IncrementalExchangeScriptValue(nullptr),
         LogSettingValue(nullptr),
         QueueNamespaceIdValue(TOptional<FString>()),
         KeyIdValue(TOptional<FString>())
@@ -40,6 +41,7 @@ namespace Gs2::Exchange::Request
         EnableDirectExchangeValue(From.EnableDirectExchangeValue),
         TransactionSettingValue(From.TransactionSettingValue),
         ExchangeScriptValue(From.ExchangeScriptValue),
+        IncrementalExchangeScriptValue(From.IncrementalExchangeScriptValue),
         LogSettingValue(From.LogSettingValue),
         QueueNamespaceIdValue(From.QueueNamespaceIdValue),
         KeyIdValue(From.KeyIdValue)
@@ -99,6 +101,14 @@ namespace Gs2::Exchange::Request
     )
     {
         this->ExchangeScriptValue = ExchangeScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithIncrementalExchangeScript(
+        const TSharedPtr<Model::FScriptSetting> IncrementalExchangeScript
+    )
+    {
+        this->IncrementalExchangeScriptValue = IncrementalExchangeScript;
         return SharedThis(this);
     }
 
@@ -187,6 +197,15 @@ namespace Gs2::Exchange::Request
         return ExchangeScriptValue;
     }
 
+    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetIncrementalExchangeScript() const
+    {
+        if (!IncrementalExchangeScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return IncrementalExchangeScriptValue;
+    }
+
     TSharedPtr<Model::FLogSetting> FCreateNamespaceRequest::GetLogSetting() const
     {
         if (!LogSettingValue.IsValid())
@@ -265,6 +284,14 @@ namespace Gs2::Exchange::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("exchangeScript"));
               }() : nullptr)
+          ->WithIncrementalExchangeScript(Data->HasField("incrementalExchangeScript") ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>("incrementalExchangeScript"))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField("incrementalExchangeScript"));
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -323,6 +350,10 @@ namespace Gs2::Exchange::Request
         if (ExchangeScriptValue != nullptr && ExchangeScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("exchangeScript", ExchangeScriptValue->ToJson());
+        }
+        if (IncrementalExchangeScriptValue != nullptr && IncrementalExchangeScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("incrementalExchangeScript", IncrementalExchangeScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

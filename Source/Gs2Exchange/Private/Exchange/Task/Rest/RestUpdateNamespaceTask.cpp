@@ -104,6 +104,10 @@ namespace Gs2::Exchange::Task::Rest
             {
                 JsonRootObject->SetObjectField("exchangeScript", this->Request->GetExchangeScript()->ToJson());
             }
+            if (this->Request->GetIncrementalExchangeScript() != nullptr && this->Request->GetIncrementalExchangeScript().IsValid())
+            {
+                JsonRootObject->SetObjectField("incrementalExchangeScript", this->Request->GetIncrementalExchangeScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField("logSetting", this->Request->GetLogSetting()->ToJson());
