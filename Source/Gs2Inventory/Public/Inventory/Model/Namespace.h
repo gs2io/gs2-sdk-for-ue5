@@ -33,6 +33,8 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FScriptSetting> ConsumeScriptValue;
         TSharedPtr<FScriptSetting> SimpleItemAcquireScriptValue;
         TSharedPtr<FScriptSetting> SimpleItemConsumeScriptValue;
+        TSharedPtr<FScriptSetting> BigItemAcquireScriptValue;
+        TSharedPtr<FScriptSetting> BigItemConsumeScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -53,6 +55,8 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FNamespace> WithConsumeScript(const TSharedPtr<FScriptSetting> ConsumeScript);
         TSharedPtr<FNamespace> WithSimpleItemAcquireScript(const TSharedPtr<FScriptSetting> SimpleItemAcquireScript);
         TSharedPtr<FNamespace> WithSimpleItemConsumeScript(const TSharedPtr<FScriptSetting> SimpleItemConsumeScript);
+        TSharedPtr<FNamespace> WithBigItemAcquireScript(const TSharedPtr<FScriptSetting> BigItemAcquireScript);
+        TSharedPtr<FNamespace> WithBigItemConsumeScript(const TSharedPtr<FScriptSetting> BigItemConsumeScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -66,6 +70,8 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FScriptSetting> GetConsumeScript() const;
         TSharedPtr<FScriptSetting> GetSimpleItemAcquireScript() const;
         TSharedPtr<FScriptSetting> GetSimpleItemConsumeScript() const;
+        TSharedPtr<FScriptSetting> GetBigItemAcquireScript() const;
+        TSharedPtr<FScriptSetting> GetBigItemConsumeScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

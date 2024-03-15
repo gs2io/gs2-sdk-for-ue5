@@ -34,6 +34,8 @@ namespace Gs2::Inventory::Request
         TSharedPtr<Model::FScriptSetting> ConsumeScriptValue;
         TSharedPtr<Model::FScriptSetting> SimpleItemAcquireScriptValue;
         TSharedPtr<Model::FScriptSetting> SimpleItemConsumeScriptValue;
+        TSharedPtr<Model::FScriptSetting> BigItemAcquireScriptValue;
+        TSharedPtr<Model::FScriptSetting> BigItemConsumeScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -52,6 +54,8 @@ namespace Gs2::Inventory::Request
         TSharedPtr<FUpdateNamespaceRequest> WithConsumeScript(const TSharedPtr<Model::FScriptSetting> ConsumeScript);
         TSharedPtr<FUpdateNamespaceRequest> WithSimpleItemAcquireScript(const TSharedPtr<Model::FScriptSetting> SimpleItemAcquireScript);
         TSharedPtr<FUpdateNamespaceRequest> WithSimpleItemConsumeScript(const TSharedPtr<Model::FScriptSetting> SimpleItemConsumeScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithBigItemAcquireScript(const TSharedPtr<Model::FScriptSetting> BigItemAcquireScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithBigItemConsumeScript(const TSharedPtr<Model::FScriptSetting> BigItemConsumeScript);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -62,6 +66,8 @@ namespace Gs2::Inventory::Request
         TSharedPtr<Model::FScriptSetting> GetConsumeScript() const;
         TSharedPtr<Model::FScriptSetting> GetSimpleItemAcquireScript() const;
         TSharedPtr<Model::FScriptSetting> GetSimpleItemConsumeScript() const;
+        TSharedPtr<Model::FScriptSetting> GetBigItemAcquireScript() const;
+        TSharedPtr<Model::FScriptSetting> GetBigItemConsumeScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

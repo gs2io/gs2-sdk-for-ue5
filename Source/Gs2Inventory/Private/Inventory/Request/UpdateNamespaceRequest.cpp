@@ -26,6 +26,8 @@ namespace Gs2::Inventory::Request
         ConsumeScriptValue(nullptr),
         SimpleItemAcquireScriptValue(nullptr),
         SimpleItemConsumeScriptValue(nullptr),
+        BigItemAcquireScriptValue(nullptr),
+        BigItemConsumeScriptValue(nullptr),
         LogSettingValue(nullptr)
     {
     }
@@ -40,6 +42,8 @@ namespace Gs2::Inventory::Request
         ConsumeScriptValue(From.ConsumeScriptValue),
         SimpleItemAcquireScriptValue(From.SimpleItemAcquireScriptValue),
         SimpleItemConsumeScriptValue(From.SimpleItemConsumeScriptValue),
+        BigItemAcquireScriptValue(From.BigItemAcquireScriptValue),
+        BigItemConsumeScriptValue(From.BigItemConsumeScriptValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -105,6 +109,22 @@ namespace Gs2::Inventory::Request
     )
     {
         this->SimpleItemConsumeScriptValue = SimpleItemConsumeScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithBigItemAcquireScript(
+        const TSharedPtr<Model::FScriptSetting> BigItemAcquireScript
+    )
+    {
+        this->BigItemAcquireScriptValue = BigItemAcquireScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithBigItemConsumeScript(
+        const TSharedPtr<Model::FScriptSetting> BigItemConsumeScript
+    )
+    {
+        this->BigItemConsumeScriptValue = BigItemConsumeScript;
         return SharedThis(this);
     }
 
@@ -174,6 +194,24 @@ namespace Gs2::Inventory::Request
             return nullptr;
         }
         return SimpleItemConsumeScriptValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetBigItemAcquireScript() const
+    {
+        if (!BigItemAcquireScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return BigItemAcquireScriptValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetBigItemConsumeScript() const
+    {
+        if (!BigItemConsumeScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return BigItemConsumeScriptValue;
     }
 
     TSharedPtr<Model::FLogSetting> FUpdateNamespaceRequest::GetLogSetting() const
@@ -250,6 +288,22 @@ namespace Gs2::Inventory::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField("simpleItemConsumeScript"));
               }() : nullptr)
+          ->WithBigItemAcquireScript(Data->HasField("bigItemAcquireScript") ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>("bigItemAcquireScript"))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField("bigItemAcquireScript"));
+              }() : nullptr)
+          ->WithBigItemConsumeScript(Data->HasField("bigItemConsumeScript") ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>("bigItemConsumeScript"))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField("bigItemConsumeScript"));
+              }() : nullptr)
           ->WithLogSetting(Data->HasField("logSetting") ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>("logSetting"))
@@ -294,6 +348,14 @@ namespace Gs2::Inventory::Request
         if (SimpleItemConsumeScriptValue != nullptr && SimpleItemConsumeScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField("simpleItemConsumeScript", SimpleItemConsumeScriptValue->ToJson());
+        }
+        if (BigItemAcquireScriptValue != nullptr && BigItemAcquireScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("bigItemAcquireScript", BigItemAcquireScriptValue->ToJson());
+        }
+        if (BigItemConsumeScriptValue != nullptr && BigItemConsumeScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("bigItemConsumeScript", BigItemConsumeScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {
