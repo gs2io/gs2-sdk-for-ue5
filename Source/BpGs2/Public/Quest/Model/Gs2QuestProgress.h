@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Quest/Domain/Model/Gs2QuestEzProgressGameSessionDomain.h"
 #include "Quest/Model/Gs2QuestReward.h"
+#include "Quest/Model/Gs2QuestReward.h"
 #include "Core/BpGs2Constant.h"
 #include "Gs2QuestProgress.generated.h"
 
@@ -45,6 +46,8 @@ struct FGs2QuestProgressValue
     int64 RandomSeed = 0;
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2QuestReward> Rewards = TArray<FGs2QuestReward>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FGs2QuestReward> FailedRewards = TArray<FGs2QuestReward>();
 };
 
 inline FGs2QuestProgressValue EzProgressToFGs2QuestProgressValue(
@@ -69,6 +72,15 @@ inline FGs2QuestProgressValue EzProgressToFGs2QuestProgressValue(
         }
         return r;
     }() : TArray<FGs2QuestReward>();
+    Value.FailedRewards = Model->GetFailedRewards() ? [&]
+    {
+        TArray<FGs2QuestReward> r;
+        for (auto v : *Model->GetFailedRewards())
+        {
+            r.Add(EzRewardToFGs2QuestReward(v));
+        }
+        return r;
+    }() : TArray<FGs2QuestReward>();
     return Value;
 }
 
@@ -84,6 +96,13 @@ inline Gs2::UE5::Quest::Model::FEzProgressPtr FGs2QuestProgressValueToEzProgress
         ->WithRewards([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Quest::Model::FEzRewardPtr>>();
             for (auto v : Model.Rewards) {
+                r->Add(FGs2QuestRewardToEzReward(v));
+            }
+            return r;
+        }())
+        ->WithFailedRewards([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Quest::Model::FEzRewardPtr>>();
+            for (auto v : Model.FailedRewards) {
                 r->Add(FGs2QuestRewardToEzReward(v));
             }
             return r;

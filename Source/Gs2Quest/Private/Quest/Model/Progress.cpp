@@ -25,6 +25,7 @@ namespace Gs2::Quest::Model
         QuestModelIdValue(TOptional<FString>()),
         RandomSeedValue(TOptional<int64>()),
         RewardsValue(nullptr),
+        FailedRewardsValue(nullptr),
         MetadataValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
@@ -41,6 +42,7 @@ namespace Gs2::Quest::Model
         QuestModelIdValue(From.QuestModelIdValue),
         RandomSeedValue(From.RandomSeedValue),
         RewardsValue(From.RewardsValue),
+        FailedRewardsValue(From.FailedRewardsValue),
         MetadataValue(From.MetadataValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
@@ -93,6 +95,14 @@ namespace Gs2::Quest::Model
     )
     {
         this->RewardsValue = Rewards;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FProgress> FProgress::WithFailedRewards(
+        const TSharedPtr<TArray<TSharedPtr<Model::FReward>>> FailedRewards
+    )
+    {
+        this->FailedRewardsValue = FailedRewards;
         return SharedThis(this);
     }
 
@@ -159,6 +169,10 @@ namespace Gs2::Quest::Model
     TSharedPtr<TArray<TSharedPtr<Model::FReward>>> FProgress::GetRewards() const
     {
         return RewardsValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FReward>>> FProgress::GetFailedRewards() const
+    {
+        return FailedRewardsValue;
     }
     TOptional<FString> FProgress::GetMetadata() const
     {
@@ -311,6 +325,18 @@ namespace Gs2::Quest::Model
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FRewardPtr>>())
+            ->WithFailedRewards(Data->HasField("failedRewards") ? [Data]() -> TSharedPtr<TArray<Model::FRewardPtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FRewardPtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("failedRewards") && Data->HasTypedField<EJson::Array>("failedRewards"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("failedRewards"))
+                        {
+                            v->Add(Model::FReward::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FRewardPtr>>())
             ->WithMetadata(Data->HasField("metadata") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -380,6 +406,15 @@ namespace Gs2::Quest::Model
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("rewards", v);
+        }
+        if (FailedRewardsValue != nullptr && FailedRewardsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *FailedRewardsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("failedRewards", v);
         }
         if (MetadataValue.IsSet())
         {

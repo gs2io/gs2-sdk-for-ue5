@@ -58,6 +58,14 @@ namespace Gs2::UE5::Quest::Model
         this->RewardsValue = Rewards;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzProgress> FEzProgress::WithFailedRewards(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> FailedRewards
+    )
+    {
+        this->FailedRewardsValue = FailedRewards;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzProgress::GetProgressId() const
     {
         return ProgressIdValue;
@@ -87,6 +95,10 @@ namespace Gs2::UE5::Quest::Model
     {
         return RewardsValue;
     }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> FEzProgress::GetFailedRewards() const
+    {
+        return FailedRewardsValue;
+    }
 
     Gs2::Quest::Model::FProgressPtr FEzProgress::ToModel() const
     {
@@ -103,6 +115,20 @@ namespace Gs2::UE5::Quest::Model
                         return v;
                     }
                     for (auto v2 : *RewardsValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            )
+            ->WithFailedRewards([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Quest::Model::FReward>>>();
+                    if (FailedRewardsValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *FailedRewardsValue)
                     {
                         v->Add(v2->ToModel());
                     }
@@ -130,6 +156,20 @@ namespace Gs2::UE5::Quest::Model
                         return v;
                     }
                     for (auto v2 : *Model->GetRewards())
+                    {
+                        v->Add(FEzReward::FromModel(v2));
+                    }
+                    return v;
+                }()
+            )
+            ->WithFailedRewards([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzReward>>>();
+                    if (Model->GetFailedRewards() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetFailedRewards())
                     {
                         v->Add(FEzReward::FromModel(v2));
                     }

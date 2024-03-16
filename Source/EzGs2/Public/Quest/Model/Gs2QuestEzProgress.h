@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Quest/Model/Progress.h"
 #include "Gs2QuestEzReward.h"
+#include "Gs2QuestEzReward.h"
 
 namespace Gs2::UE5::Quest::Model
 {
@@ -29,6 +30,7 @@ namespace Gs2::UE5::Quest::Model
         TOptional<FString> QuestModelIdValue;
         TOptional<int64> RandomSeedValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> RewardsValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> FailedRewardsValue;
 
 	public:
         TSharedPtr<FEzProgress> WithProgressId(const TOptional<FString> ProgressId);
@@ -36,6 +38,7 @@ namespace Gs2::UE5::Quest::Model
         TSharedPtr<FEzProgress> WithQuestModelId(const TOptional<FString> QuestModelId);
         TSharedPtr<FEzProgress> WithRandomSeed(const TOptional<int64> RandomSeed);
         TSharedPtr<FEzProgress> WithRewards(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> Rewards);
+        TSharedPtr<FEzProgress> WithFailedRewards(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> FailedRewards);
 
         TOptional<FString> GetProgressId() const;
 
@@ -47,6 +50,8 @@ namespace Gs2::UE5::Quest::Model
         FString GetRandomSeedString() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> GetRewards() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzReward>>> GetFailedRewards() const;
 
         Gs2::Quest::Model::FProgressPtr ToModel() const;
         static TSharedPtr<FEzProgress> FromModel(Gs2::Quest::Model::FProgressPtr Model);

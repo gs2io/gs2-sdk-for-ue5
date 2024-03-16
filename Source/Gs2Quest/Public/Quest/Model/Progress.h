@@ -30,6 +30,7 @@ namespace Gs2::Quest::Model
         TOptional<FString> QuestModelIdValue;
         TOptional<int64> RandomSeedValue;
         TSharedPtr<TArray<TSharedPtr<FReward>>> RewardsValue;
+        TSharedPtr<TArray<TSharedPtr<FReward>>> FailedRewardsValue;
         TOptional<FString> MetadataValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -48,6 +49,7 @@ namespace Gs2::Quest::Model
         TSharedPtr<FProgress> WithQuestModelId(const TOptional<FString> QuestModelId);
         TSharedPtr<FProgress> WithRandomSeed(const TOptional<int64> RandomSeed);
         TSharedPtr<FProgress> WithRewards(const TSharedPtr<TArray<TSharedPtr<FReward>>> Rewards);
+        TSharedPtr<FProgress> WithFailedRewards(const TSharedPtr<TArray<TSharedPtr<FReward>>> FailedRewards);
         TSharedPtr<FProgress> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FProgress> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FProgress> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -60,6 +62,7 @@ namespace Gs2::Quest::Model
         TOptional<int64> GetRandomSeed() const;
         FString GetRandomSeedString() const;
         TSharedPtr<TArray<TSharedPtr<FReward>>> GetRewards() const;
+        TSharedPtr<TArray<TSharedPtr<FReward>>> GetFailedRewards() const;
         TOptional<FString> GetMetadata() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
