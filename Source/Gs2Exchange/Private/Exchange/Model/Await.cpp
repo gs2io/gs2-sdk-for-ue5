@@ -24,7 +24,9 @@ namespace Gs2::Exchange::Model
         RateNameValue(TOptional<FString>()),
         NameValue(TOptional<FString>()),
         CountValue(TOptional<int32>()),
+        SkipSecondsValue(TOptional<int32>()),
         ConfigValue(nullptr),
+        AcquirableAtValue(TOptional<int64>()),
         ExchangedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -38,7 +40,9 @@ namespace Gs2::Exchange::Model
         RateNameValue(From.RateNameValue),
         NameValue(From.NameValue),
         CountValue(From.CountValue),
+        SkipSecondsValue(From.SkipSecondsValue),
         ConfigValue(From.ConfigValue),
+        AcquirableAtValue(From.AcquirableAtValue),
         ExchangedAtValue(From.ExchangedAtValue),
         RevisionValue(From.RevisionValue)
     {
@@ -84,11 +88,27 @@ namespace Gs2::Exchange::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FAwait> FAwait::WithSkipSeconds(
+        const TOptional<int32> SkipSeconds
+    )
+    {
+        this->SkipSecondsValue = SkipSeconds;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FAwait> FAwait::WithConfig(
         const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config
     )
     {
         this->ConfigValue = Config;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAwait> FAwait::WithAcquirableAt(
+        const TOptional<int64> AcquirableAt
+    )
+    {
+        this->AcquirableAtValue = AcquirableAt;
         return SharedThis(this);
     }
 
@@ -136,9 +156,35 @@ namespace Gs2::Exchange::Model
         }
         return FString::Printf(TEXT("%d"), CountValue.GetValue());
     }
+    TOptional<int32> FAwait::GetSkipSeconds() const
+    {
+        return SkipSecondsValue;
+    }
+
+    FString FAwait::GetSkipSecondsString() const
+    {
+        if (!SkipSecondsValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), SkipSecondsValue.GetValue());
+    }
     TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> FAwait::GetConfig() const
     {
         return ConfigValue;
+    }
+    TOptional<int64> FAwait::GetAcquirableAt() const
+    {
+        return AcquirableAtValue;
+    }
+
+    FString FAwait::GetAcquirableAtString() const
+    {
+        if (!AcquirableAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), AcquirableAtValue.GetValue());
     }
     TOptional<int64> FAwait::GetExchangedAt() const
     {
@@ -273,6 +319,15 @@ namespace Gs2::Exchange::Model
                     }
                     return TOptional<int32>();
                 }() : TOptional<int32>())
+            ->WithSkipSeconds(Data->HasField("skipSeconds") ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField("skipSeconds", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
                 {
                     auto v = MakeShared<TArray<Model::FConfigPtr>>();
@@ -285,6 +340,15 @@ namespace Gs2::Exchange::Model
                     }
                     return v;
                  }() : MakeShared<TArray<Model::FConfigPtr>>())
+            ->WithAcquirableAt(Data->HasField("acquirableAt") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("acquirableAt", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithExchangedAt(Data->HasField("exchangedAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -328,6 +392,10 @@ namespace Gs2::Exchange::Model
         {
             JsonRootObject->SetNumberField("count", CountValue.GetValue());
         }
+        if (SkipSecondsValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("skipSeconds", SkipSecondsValue.GetValue());
+        }
         if (ConfigValue != nullptr && ConfigValue.IsValid())
         {
             TArray<TSharedPtr<FJsonValue>> v;
@@ -336,6 +404,10 @@ namespace Gs2::Exchange::Model
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("config", v);
+        }
+        if (AcquirableAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("acquirableAt", FString::Printf(TEXT("%lld"), AcquirableAtValue.GetValue()));
         }
         if (ExchangedAtValue.IsSet())
         {

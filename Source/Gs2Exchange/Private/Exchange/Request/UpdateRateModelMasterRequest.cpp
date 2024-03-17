@@ -25,8 +25,6 @@ namespace Gs2::Exchange::Request
         MetadataValue(TOptional<FString>()),
         TimingTypeValue(TOptional<FString>()),
         LockTimeValue(TOptional<int32>()),
-        EnableSkipValue(TOptional<bool>()),
-        SkipConsumeActionsValue(nullptr),
         AcquireActionsValue(nullptr),
         ConsumeActionsValue(nullptr)
     {
@@ -41,8 +39,6 @@ namespace Gs2::Exchange::Request
         MetadataValue(From.MetadataValue),
         TimingTypeValue(From.TimingTypeValue),
         LockTimeValue(From.LockTimeValue),
-        EnableSkipValue(From.EnableSkipValue),
-        SkipConsumeActionsValue(From.SkipConsumeActionsValue),
         AcquireActionsValue(From.AcquireActionsValue),
         ConsumeActionsValue(From.ConsumeActionsValue)
     {
@@ -104,22 +100,6 @@ namespace Gs2::Exchange::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FUpdateRateModelMasterRequest> FUpdateRateModelMasterRequest::WithEnableSkip(
-        const TOptional<bool> EnableSkip
-    )
-    {
-        this->EnableSkipValue = EnableSkip;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FUpdateRateModelMasterRequest> FUpdateRateModelMasterRequest::WithSkipConsumeActions(
-        const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> SkipConsumeActions
-    )
-    {
-        this->SkipConsumeActionsValue = SkipConsumeActions;
-        return SharedThis(this);
-    }
-
     TSharedPtr<FUpdateRateModelMasterRequest> FUpdateRateModelMasterRequest::WithAcquireActions(
         const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActions
     )
@@ -178,29 +158,6 @@ namespace Gs2::Exchange::Request
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), LockTimeValue.GetValue());
-    }
-
-    TOptional<bool> FUpdateRateModelMasterRequest::GetEnableSkip() const
-    {
-        return EnableSkipValue;
-    }
-
-    FString FUpdateRateModelMasterRequest::GetEnableSkipString() const
-    {
-        if (!EnableSkipValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString(EnableSkipValue.GetValue() ? "true" : "false");
-    }
-
-    TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> FUpdateRateModelMasterRequest::GetSkipConsumeActions() const
-    {
-        if (!SkipConsumeActionsValue.IsValid())
-        {
-            return nullptr;
-        }
-        return SkipConsumeActionsValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FUpdateRateModelMasterRequest::GetAcquireActions() const
@@ -282,27 +239,6 @@ namespace Gs2::Exchange::Request
                   }
                   return TOptional<int32>();
               }() : TOptional<int32>())
-            ->WithEnableSkip(Data->HasField("enableSkip") ? [Data]() -> TOptional<bool>
-              {
-                  bool v;
-                    if (Data->TryGetBoolField("enableSkip", v))
-                  {
-                        return TOptional(v);
-                  }
-                  return TOptional<bool>();
-              }() : TOptional<bool>())
-          ->WithSkipConsumeActions(Data->HasField("skipConsumeActions") ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
-              {
-                  auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("skipConsumeActions") && Data->HasTypedField<EJson::Array>("skipConsumeActions"))
-                  {
-                      for (auto JsonObjectValue : Data->GetArrayField("skipConsumeActions"))
-                      {
-                          v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
-                      }
-                  }
-                  return v;
-              }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
           ->WithAcquireActions(Data->HasField("acquireActions") ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
               {
                   auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
@@ -359,19 +295,6 @@ namespace Gs2::Exchange::Request
         if (LockTimeValue.IsSet())
         {
             JsonRootObject->SetNumberField("lockTime", LockTimeValue.GetValue());
-        }
-        if (EnableSkipValue.IsSet())
-        {
-            JsonRootObject->SetBoolField("enableSkip", EnableSkipValue.GetValue());
-        }
-        if (SkipConsumeActionsValue != nullptr && SkipConsumeActionsValue.IsValid())
-        {
-            TArray<TSharedPtr<FJsonValue>> v;
-            for (auto JsonObjectValue : *SkipConsumeActionsValue)
-            {
-                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
-            }
-            JsonRootObject->SetArrayField("skipConsumeActions", v);
         }
         if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
         {

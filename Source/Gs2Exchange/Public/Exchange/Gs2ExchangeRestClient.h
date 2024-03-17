@@ -112,8 +112,6 @@
 #include "Task/Rest/AcquireByUserIdTask.h"
 #include "Request/AcquireForceByUserIdRequest.h"
 #include "Task/Rest/AcquireForceByUserIdTask.h"
-#include "Request/SkipRequest.h"
-#include "Task/Rest/SkipTask.h"
 #include "Request/SkipByUserIdRequest.h"
 #include "Task/Rest/SkipByUserIdTask.h"
 #include "Request/DeleteAwaitRequest.h"
@@ -122,6 +120,8 @@
 #include "Task/Rest/DeleteAwaitByUserIdTask.h"
 #include "Request/CreateAwaitByStampSheetRequest.h"
 #include "Task/Rest/CreateAwaitByStampSheetTask.h"
+#include "Request/SkipByStampSheetRequest.h"
+#include "Task/Rest/SkipByStampSheetTask.h"
 #include "Request/DeleteAwaitByStampTaskRequest.h"
 #include "Task/Rest/DeleteAwaitByStampTaskTask.h"
 
@@ -324,10 +324,6 @@ namespace Gs2::Exchange
             const Request::FAcquireForceByUserIdRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FSkipTask>> Skip(
-            const Request::FSkipRequestPtr Request
-        ) const;
-
         TSharedPtr<FAsyncTask<Task::Rest::FSkipByUserIdTask>> SkipByUserId(
             const Request::FSkipByUserIdRequestPtr Request
         ) const;
@@ -342,6 +338,10 @@ namespace Gs2::Exchange
 
         TSharedPtr<FAsyncTask<Task::Rest::FCreateAwaitByStampSheetTask>> CreateAwaitByStampSheet(
             const Request::FCreateAwaitByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSkipByStampSheetTask>> SkipByStampSheet(
+            const Request::FSkipByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteAwaitByStampTaskTask>> DeleteAwaitByStampTask(

@@ -21,7 +21,7 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
-#include "Exchange/Domain/Gs2Exchange.h"
+#include "Exchange/Model/Await.h"
 #include "Exchange/Request/SkipByUserIdRequest.h"
 #include "Math/BigInt.h"
 
@@ -37,11 +37,20 @@ namespace Gs2::Exchange::Domain
     typedef TSharedPtr<FGs2ExchangeDomain> FGs2ExchangeDomainPtr;
 }
 
-namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
+namespace Gs2::Exchange::Domain::SpeculativeExecutor
 {
+
     class GS2EXCHANGE_API FSkipByUserIdSpeculativeExecutor
     {
+        static Gs2::Core::Model::FGs2ErrorPtr Transform(
+            const Gs2::Core::Domain::FGs2Ptr& Domain,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const Gs2::Exchange::Request::FSkipByUserIdRequestPtr& Request,
+            Gs2::Exchange::Model::FAwaitPtr Item
+        );
+
     public:
+
         static FString Action();
 
         class FCommitTask final :
@@ -71,11 +80,21 @@ namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
         };
         friend FCommitTask;
 
-        static TSharedPtr<FAsyncTask<FSkipByUserIdSpeculativeExecutor::FCommitTask>> Execute(
+        static TSharedPtr<FAsyncTask<FCommitTask>> Execute(
             const Gs2::Core::Domain::FGs2Ptr& Domain,
             const Gs2::Exchange::Domain::FGs2ExchangeDomainPtr& Service,
             const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const Gs2::Exchange::Request::FSkipByUserIdRequestPtr& Request
+        );
+
+        static Gs2::Exchange::Request::FSkipByUserIdRequestPtr Rate(
+            const Gs2::Exchange::Request::FSkipByUserIdRequestPtr& Request,
+            const double Rate
+        );
+
+        static Gs2::Exchange::Request::FSkipByUserIdRequestPtr Rate(
+            const Gs2::Exchange::Request::FSkipByUserIdRequestPtr& Request,
+            TBigInt<1024, false> Rate
         );
     };
 }

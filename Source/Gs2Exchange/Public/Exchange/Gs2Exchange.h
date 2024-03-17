@@ -314,12 +314,6 @@
 #include "Task/Rest/AcquireForceByUserIdTask.h"
 #include "Task/WebSocket/AcquireForceByUserIdTask.h"
 
-// Skip
-#include "Request/SkipRequest.h"
-#include "Result/SkipResult.h"
-#include "Task/Rest/SkipTask.h"
-#include "Task/WebSocket/SkipTask.h"
-
 // SkipByUserId
 #include "Request/SkipByUserIdRequest.h"
 #include "Result/SkipByUserIdResult.h"
@@ -343,6 +337,12 @@
 #include "Result/CreateAwaitByStampSheetResult.h"
 #include "Task/Rest/CreateAwaitByStampSheetTask.h"
 #include "Task/WebSocket/CreateAwaitByStampSheetTask.h"
+
+// SkipByStampSheet
+#include "Request/SkipByStampSheetRequest.h"
+#include "Result/SkipByStampSheetResult.h"
+#include "Task/Rest/SkipByStampSheetTask.h"
+#include "Task/WebSocket/SkipByStampSheetTask.h"
 
 // DeleteAwaitByStampTask
 #include "Request/DeleteAwaitByStampTaskRequest.h"

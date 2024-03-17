@@ -19,11 +19,6 @@
 namespace Gs2::UE5::Exchange::Domain::Model
 {
 
-    TOptional<int64> FEzAwaitDomain::UnlockAt() const
-    {
-        return Domain->UnlockAt;
-    }
-
     TOptional<FString> FEzAwaitDomain::TransactionId() const
     {
         return Domain->TransactionId;

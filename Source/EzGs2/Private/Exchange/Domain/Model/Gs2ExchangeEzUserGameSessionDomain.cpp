@@ -29,11 +29,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
         return Domain->AutoRunStampSheet;
     }
 
-    TOptional<int64> FEzUserGameSessionDomain::UnlockAt() const
-    {
-        return Domain->UnlockAt;
-    }
-
     TOptional<FString> FEzUserGameSessionDomain::NextPageToken() const
     {
         return Domain->NextPageToken;

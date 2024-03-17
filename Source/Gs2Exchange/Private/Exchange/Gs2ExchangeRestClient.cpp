@@ -442,15 +442,6 @@ namespace Gs2::Exchange
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::Rest::FSkipTask>> FGs2ExchangeRestClient::Skip(
-        const Request::FSkipRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSkipTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::Rest::FSkipByUserIdTask>> FGs2ExchangeRestClient::SkipByUserId(
         const Request::FSkipByUserIdRequestPtr Request) const
     {
@@ -482,6 +473,15 @@ namespace Gs2::Exchange
         const Request::FCreateAwaitByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCreateAwaitByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSkipByStampSheetTask>> FGs2ExchangeRestClient::SkipByStampSheet(
+        const Request::FSkipByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSkipByStampSheetTask>>(
             Session,
             Request
         );

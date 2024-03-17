@@ -24,7 +24,6 @@ namespace Gs2::Exchange::Result
     class GS2EXCHANGE_API FCreateAwaitByStampSheetResult final : public TSharedFromThis<FCreateAwaitByStampSheetResult>
     {
         TSharedPtr<Model::FAwait> ItemValue;
-        TOptional<int64> UnlockAtValue;
         
     public:
         
@@ -35,11 +34,8 @@ namespace Gs2::Exchange::Result
         ~FCreateAwaitByStampSheetResult() = default;
 
         TSharedPtr<FCreateAwaitByStampSheetResult> WithItem(const TSharedPtr<Model::FAwait> Item);
-        TSharedPtr<FCreateAwaitByStampSheetResult> WithUnlockAt(const TOptional<int64> UnlockAt);
 
         TSharedPtr<Model::FAwait> GetItem() const;
-        TOptional<int64> GetUnlockAt() const;
-        FString GetUnlockAtString() const;
 
         static TSharedPtr<FCreateAwaitByStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

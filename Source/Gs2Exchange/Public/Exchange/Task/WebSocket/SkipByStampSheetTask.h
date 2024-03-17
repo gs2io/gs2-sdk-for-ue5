@@ -19,26 +19,26 @@
 #include "CoreMinimal.h"
 
 #include "Core/Gs2Core.h"
-#include "Exchange/Request/SkipRequest.h"
-#include "Exchange/Result/SkipResult.h"
+#include "Exchange/Request/SkipByStampSheetRequest.h"
+#include "Exchange/Result/SkipByStampSheetResult.h"
 
 namespace Gs2::Exchange::Task::WebSocket
 {
-    class GS2EXCHANGE_API FSkipTask final : public Gs2::Core::Util::TGs2Future<Result::FSkipResult>
+    class GS2EXCHANGE_API FSkipByStampSheetTask final : public Gs2::Core::Util::TGs2Future<Result::FSkipByStampSheetResult>
     {
         Core::Net::WebSocket::FGs2WebSocketSessionPtr Session;
-        Request::FSkipRequestPtr Request;
+        Request::FSkipByStampSheetRequestPtr Request;
     public:
-        explicit FSkipTask(
+        explicit FSkipByStampSheetTask(
             const Core::Net::WebSocket::FGs2WebSocketSessionPtr Session,
-            const Request::FSkipRequestPtr Request
+            const Request::FSkipByStampSheetRequestPtr Request
         );
-        FSkipTask(
-            const FSkipTask& From
+        FSkipByStampSheetTask(
+            const FSkipByStampSheetTask& From
         );
-        virtual ~FSkipTask() override = default;
+        virtual ~FSkipByStampSheetTask() override = default;
 
-        virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FSkipResultPtr> Result) override;
+        virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FSkipByStampSheetResultPtr> Result) override;
     };
-    typedef TSharedPtr<FSkipTask, ESPMode::ThreadSafe> FSkipTaskPtr;
+    typedef TSharedPtr<FSkipByStampSheetTask, ESPMode::ThreadSafe> FSkipByStampSheetTaskPtr;
 }

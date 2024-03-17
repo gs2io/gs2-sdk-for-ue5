@@ -17,8 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Model/ConsumeAction.h"
 #include "../Model/AcquireAction.h"
+#include "../Model/ConsumeAction.h"
 
 namespace Gs2::Exchange::Request
 {
@@ -33,8 +33,6 @@ namespace Gs2::Exchange::Request
         TOptional<FString> MetadataValue;
         TOptional<FString> TimingTypeValue;
         TOptional<int32> LockTimeValue;
-        TOptional<bool> EnableSkipValue;
-        TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> SkipConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActionsValue;
         
@@ -53,8 +51,6 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FUpdateRateModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FUpdateRateModelMasterRequest> WithTimingType(const TOptional<FString> TimingType);
         TSharedPtr<FUpdateRateModelMasterRequest> WithLockTime(const TOptional<int32> LockTime);
-        TSharedPtr<FUpdateRateModelMasterRequest> WithEnableSkip(const TOptional<bool> EnableSkip);
-        TSharedPtr<FUpdateRateModelMasterRequest> WithSkipConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> SkipConsumeActions);
         TSharedPtr<FUpdateRateModelMasterRequest> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActions);
         TSharedPtr<FUpdateRateModelMasterRequest> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActions);
 
@@ -65,9 +61,7 @@ namespace Gs2::Exchange::Request
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetTimingType() const;
         TOptional<int32> GetLockTime() const;
-        FString GetLockTimeString() const;
-        TOptional<bool> GetEnableSkip() const;
-        FString GetEnableSkipString() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetSkipConsumeActions() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;
+        FString GetLockTimeString() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;
 
         static TSharedPtr<FUpdateRateModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

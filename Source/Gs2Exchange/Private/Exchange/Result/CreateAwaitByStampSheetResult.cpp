@@ -19,16 +19,14 @@
 namespace Gs2::Exchange::Result
 {
     FCreateAwaitByStampSheetResult::FCreateAwaitByStampSheetResult():
-        ItemValue(nullptr),
-        UnlockAtValue(TOptional<int64>())
+        ItemValue(nullptr)
     {
     }
 
     FCreateAwaitByStampSheetResult::FCreateAwaitByStampSheetResult(
         const FCreateAwaitByStampSheetResult& From
     ):
-        ItemValue(From.ItemValue),
-        UnlockAtValue(From.UnlockAtValue)
+        ItemValue(From.ItemValue)
     {
     }
 
@@ -40,14 +38,6 @@ namespace Gs2::Exchange::Result
         return SharedThis(this);
     }
 
-    TSharedPtr<FCreateAwaitByStampSheetResult> FCreateAwaitByStampSheetResult::WithUnlockAt(
-        const TOptional<int64> UnlockAt
-    )
-    {
-        this->UnlockAtValue = UnlockAt;
-        return SharedThis(this);
-    }
-
     TSharedPtr<Model::FAwait> FCreateAwaitByStampSheetResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -55,20 +45,6 @@ namespace Gs2::Exchange::Result
             return nullptr;
         }
         return ItemValue;
-    }
-
-    TOptional<int64> FCreateAwaitByStampSheetResult::GetUnlockAt() const
-    {
-        return UnlockAtValue;
-    }
-
-    FString FCreateAwaitByStampSheetResult::GetUnlockAtString() const
-    {
-        if (!UnlockAtValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString::Printf(TEXT("%lld"), UnlockAtValue.GetValue());
     }
 
     TSharedPtr<FCreateAwaitByStampSheetResult> FCreateAwaitByStampSheetResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -84,16 +60,7 @@ namespace Gs2::Exchange::Result
                         return nullptr;
                     }
                     return Model::FAwait::FromJson(Data->GetObjectField("item"));
-                 }() : nullptr)
-            ->WithUnlockAt(Data->HasField("unlockAt") ? [Data]() -> TOptional<int64>
-                {
-                    int64 v;
-                    if (Data->TryGetNumberField("unlockAt", v))
-                    {
-                        return TOptional(v);
-                    }
-                    return TOptional<int64>();
-                }() : TOptional<int64>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateAwaitByStampSheetResult::ToJson() const
@@ -102,10 +69,6 @@ namespace Gs2::Exchange::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
-        }
-        if (UnlockAtValue.IsSet())
-        {
-            JsonRootObject->SetStringField("unlockAt", FString::Printf(TEXT("%lld"), UnlockAtValue.GetValue()));
         }
         return JsonRootObject;
     }

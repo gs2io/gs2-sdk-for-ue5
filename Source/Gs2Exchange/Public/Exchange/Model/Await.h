@@ -29,7 +29,9 @@ namespace Gs2::Exchange::Model
         TOptional<FString> RateNameValue;
         TOptional<FString> NameValue;
         TOptional<int32> CountValue;
+        TOptional<int32> SkipSecondsValue;
         TSharedPtr<TArray<TSharedPtr<FConfig>>> ConfigValue;
+        TOptional<int64> AcquirableAtValue;
         TOptional<int64> ExchangedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -45,7 +47,9 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FAwait> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FAwait> WithName(const TOptional<FString> Name);
         TSharedPtr<FAwait> WithCount(const TOptional<int32> Count);
+        TSharedPtr<FAwait> WithSkipSeconds(const TOptional<int32> SkipSeconds);
         TSharedPtr<FAwait> WithConfig(const TSharedPtr<TArray<TSharedPtr<FConfig>>> Config);
+        TSharedPtr<FAwait> WithAcquirableAt(const TOptional<int64> AcquirableAt);
         TSharedPtr<FAwait> WithExchangedAt(const TOptional<int64> ExchangedAt);
         TSharedPtr<FAwait> WithRevision(const TOptional<int64> Revision);
 
@@ -55,7 +59,11 @@ namespace Gs2::Exchange::Model
         TOptional<FString> GetName() const;
         TOptional<int32> GetCount() const;
         FString GetCountString() const;
+        TOptional<int32> GetSkipSeconds() const;
+        FString GetSkipSecondsString() const;
         TSharedPtr<TArray<TSharedPtr<FConfig>>> GetConfig() const;
+        TOptional<int64> GetAcquirableAt() const;
+        FString GetAcquirableAtString() const;
         TOptional<int64> GetExchangedAt() const;
         FString GetExchangedAtString() const;
         TOptional<int64> GetRevision() const;

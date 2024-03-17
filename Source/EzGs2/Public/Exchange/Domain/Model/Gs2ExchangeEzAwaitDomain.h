@@ -38,7 +38,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<int64> UnlockAt() const;
         TOptional<FString> TransactionId() const;
         TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;

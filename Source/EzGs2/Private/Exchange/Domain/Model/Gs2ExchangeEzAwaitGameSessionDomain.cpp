@@ -19,11 +19,6 @@
 namespace Gs2::UE5::Exchange::Domain::Model
 {
 
-    TOptional<int64> FEzAwaitGameSessionDomain::UnlockAt() const
-    {
-        return Domain->UnlockAt;
-    }
-
     TOptional<FString> FEzAwaitGameSessionDomain::TransactionId() const
     {
         return Domain->TransactionId;
@@ -107,56 +102,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FAcquireTask>>(
-            this->AsShared()
-        );
-    }
-
-    FEzAwaitGameSessionDomain::FSkipTask::FSkipTask(
-        TSharedPtr<FEzAwaitGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzAwaitGameSessionDomain::FSkipTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>> Result
-    )
-    {
-        const auto Future = Self->ConnectionValue->Run(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Skip(
-                    MakeShared<Gs2::Exchange::Request::FSkipRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>(
-                    Task->GetTask().Result(),
-                    Self->GameSession,
-                    Self->ConnectionValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzAwaitGameSessionDomain::FSkipTask>> FEzAwaitGameSessionDomain::Skip(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FSkipTask>>(
             this->AsShared()
         );
     }

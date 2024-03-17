@@ -43,7 +43,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
         public:
         TOptional<FString> TransactionId() const;
         TOptional<bool> AutoRunStampSheet() const;
-        TOptional<int64> UnlockAt() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;

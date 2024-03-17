@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -24,14 +22,28 @@
 #pragma clang diagnostic ignored "-Wshadow" // declaration shadows a field of
 #endif
 
-#include "Exchange/Domain/SpeculativeExecutor/Transaction/SkipByUserIdSpeculativeExecutor.h"
+#include "Exchange/Domain/SpeculativeExecutor/Acquire/SkipByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 
-namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
+namespace Gs2::Exchange::Domain::SpeculativeExecutor
 {
-    FString FSkipByUserIdSpeculativeExecutor::Action() {
-        return "Gs2Exchange:SkipByUserId";
+
+    FString FSkipByUserIdSpeculativeExecutor::Action()
+    {
+        return FString("Gs2Exchange:SkipByUserId");
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSkipByUserIdSpeculativeExecutor::Transform(
+        const Gs2::Core::Domain::FGs2Ptr& Domain,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Exchange::Request::FSkipByUserIdRequestPtr& Request,
+        Gs2::Exchange::Model::FAwaitPtr Item
+    )
+    {
+        // TODO: Speculative execution not supported
+        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
+        return nullptr;
     }
 
     FSkipByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
@@ -45,6 +57,7 @@ namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
         AccessToken(AccessToken),
         Request(Request)
     {
+
     }
 
     FSkipByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
@@ -55,58 +68,61 @@ namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
         AccessToken(From.AccessToken),
         Request(From.Request)
     {
+
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FSkipByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+    )
     {
         const auto Future = Domain->Exchange->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : ""
+                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
             )->AccessToken(
                 AccessToken
             )->Await(
-                Request->GetAwaitName().IsSet() ? *Request->GetAwaitName() : ""
+                Request->GetAwaitName().IsSet() ? *Request->GetAwaitName() : FString("")
             )->Model();
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
             return Future->GetTask().Error();
         }
-        const auto Item = Future->GetTask().Result();
+        auto Item = Future->GetTask().Result();
 
         if (!Item.IsValid())
         {
-            *Result = MakeShared<TFunction<void()>>([]{});
+            *Result = MakeShared<TFunction<void()>>([&]()
+            {
+                return nullptr;
+            });
             return nullptr;
         }
-
-        const auto Future2 = Domain->Exchange->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : ""
-            )->RateModel(
-                Item->GetRateName().IsSet() ? *Item->GetRateName() : ""
-            )->Model();
-        Future2->StartSynchronousTask();
-        if (Future2->GetTask().IsError())
+        auto Err = Transform(Domain, AccessToken, Request, Item);
+        if (Err != nullptr)
         {
-            return Future2->GetTask().Error();
-        }
-        const auto Model = Future2->GetTask().Result();
-
-        if (!Model.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([]{});
-            return nullptr;
+            return Err;
         }
 
-        Service->OnIssueTransaction.Broadcast(
-            MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
-                AccessToken,
-                Model->GetSkipConsumeActions(),
-                Model->GetAcquireActions(),
-                Item->GetCount().IsSet() ? *Item->GetCount() : 1.0
-            )
+        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
+            Request->GetNamespaceName(),
+            AccessToken->GetUserId(),
+            FString("Await")
+        );
+        const auto Key = Model::FAwaitDomain::CreateCacheKey(
+            Request->GetAwaitName()
         );
 
+        *Result = MakeShared<TFunction<void()>>([&]()
+        {
+            Domain->Cache->Put(
+                Exchange::Model::FAwait::TypeName,
+                ParentKey,
+                Key,
+                Item,
+                FDateTime::Now() + FTimespan::FromSeconds(10)
+            );
+            return nullptr;
+        });
         return nullptr;
     }
 
@@ -115,7 +131,24 @@ namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
         const Gs2::Exchange::Domain::FGs2ExchangeDomainPtr& Service,
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const Gs2::Exchange::Request::FSkipByUserIdRequestPtr& Request
-    ) {
+    )
+    {
         return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
+    }
+
+    Gs2::Exchange::Request::FSkipByUserIdRequestPtr FSkipByUserIdSpeculativeExecutor::Rate(
+        const Gs2::Exchange::Request::FSkipByUserIdRequestPtr& Request,
+        const double Rate
+    )
+    {
+        return Request;
+    }
+
+    Gs2::Exchange::Request::FSkipByUserIdRequestPtr FSkipByUserIdSpeculativeExecutor::Rate(
+        const Gs2::Exchange::Request::FSkipByUserIdRequestPtr& Request,
+        TBigInt<1024, false> Rate
+    )
+    {
+        return Request;
     }
 }

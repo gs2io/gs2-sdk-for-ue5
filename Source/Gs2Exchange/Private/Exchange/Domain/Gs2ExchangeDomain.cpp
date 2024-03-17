@@ -630,6 +630,41 @@ namespace Gs2::Exchange::Domain
                 );
             }
         }
+        if (Method == "SkipByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Exchange::Request::FSkipByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Exchange::Result::FSkipByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Await"
+                );
+                const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Exchange::Model::FAwait::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
     }
 
     void FGs2ExchangeDomain::UpdateCacheFromStampTask(
@@ -822,6 +857,49 @@ namespace Gs2::Exchange::Domain
             }
             const auto RequestModel = Gs2::Exchange::Request::FCreateAwaitByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Exchange::Result::FCreateAwaitByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Await"
+                );
+                const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Exchange::Model::FAwait::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        if (Method == "skip_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Exchange::Request::FSkipByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Exchange::Result::FSkipByUserIdResult::FromJson(ResultModelJson);
             
             if (ResultModel->GetItem() != nullptr)
             {

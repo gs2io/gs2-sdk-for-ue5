@@ -17,7 +17,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Model/Config.h"
 
 namespace Gs2::Exchange::Request
 {
@@ -29,7 +28,9 @@ namespace Gs2::Exchange::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> AwaitNameValue;
-        TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> SkipTypeValue;
+        TOptional<int32> MinutesValue;
+        TOptional<float> RateValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -45,14 +46,21 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FSkipByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSkipByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSkipByUserIdRequest> WithAwaitName(const TOptional<FString> AwaitName);
-        TSharedPtr<FSkipByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FSkipByUserIdRequest> WithSkipType(const TOptional<FString> SkipType);
+        TSharedPtr<FSkipByUserIdRequest> WithMinutes(const TOptional<int32> Minutes);
+        TSharedPtr<FSkipByUserIdRequest> WithRate(const TOptional<float> Rate);
         TSharedPtr<FSkipByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSkipByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
-        TOptional<FString> GetAwaitName() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetAwaitName() const;
+        TOptional<FString> GetSkipType() const;
+        TOptional<int32> GetMinutes() const;
+        FString GetMinutesString() const;
+        TOptional<float> GetRate() const;
+        FString GetRateString() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

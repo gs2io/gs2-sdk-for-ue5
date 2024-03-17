@@ -43,6 +43,14 @@ namespace Gs2::UE5::Exchange::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzAwait> FEzAwait::WithSkipSeconds(
+        const TOptional<int32> SkipSeconds
+    )
+    {
+        this->SkipSecondsValue = SkipSeconds;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzAwait> FEzAwait::WithConfig(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> Config
     )
@@ -58,6 +66,14 @@ namespace Gs2::UE5::Exchange::Model
         this->ExchangedAtValue = ExchangedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzAwait> FEzAwait::WithAcquirableAt(
+        const TOptional<int64> AcquirableAt
+    )
+    {
+        this->AcquirableAtValue = AcquirableAt;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzAwait::GetUserId() const
     {
         return UserIdValue;
@@ -69,6 +85,19 @@ namespace Gs2::UE5::Exchange::Model
     TOptional<FString> FEzAwait::GetName() const
     {
         return NameValue;
+    }
+    TOptional<int32> FEzAwait::GetSkipSeconds() const
+    {
+        return SkipSecondsValue;
+    }
+
+    FString FEzAwait::GetSkipSecondsString() const
+    {
+        if (!SkipSecondsValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), SkipSecondsValue.GetValue());
     }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> FEzAwait::GetConfig() const
     {
@@ -87,6 +116,19 @@ namespace Gs2::UE5::Exchange::Model
         }
         return FString::Printf(TEXT("%lld"), ExchangedAtValue.GetValue());
     }
+    TOptional<int64> FEzAwait::GetAcquirableAt() const
+    {
+        return AcquirableAtValue;
+    }
+
+    FString FEzAwait::GetAcquirableAtString() const
+    {
+        if (!AcquirableAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), AcquirableAtValue.GetValue());
+    }
 
     Gs2::Exchange::Model::FAwaitPtr FEzAwait::ToModel() const
     {
@@ -94,6 +136,7 @@ namespace Gs2::UE5::Exchange::Model
             ->WithUserId(UserIdValue)
             ->WithRateName(RateNameValue)
             ->WithName(NameValue)
+            ->WithSkipSeconds(SkipSecondsValue)
             ->WithConfig([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::Exchange::Model::FConfig>>>();
@@ -108,7 +151,8 @@ namespace Gs2::UE5::Exchange::Model
                     return v;
                 }()
             )
-            ->WithExchangedAt(ExchangedAtValue);
+            ->WithExchangedAt(ExchangedAtValue)
+            ->WithAcquirableAt(AcquirableAtValue);
     }
 
     TSharedPtr<FEzAwait> FEzAwait::FromModel(const Gs2::Exchange::Model::FAwaitPtr Model)
@@ -121,6 +165,7 @@ namespace Gs2::UE5::Exchange::Model
             ->WithUserId(Model->GetUserId())
             ->WithRateName(Model->GetRateName())
             ->WithName(Model->GetName())
+            ->WithSkipSeconds(Model->GetSkipSeconds())
             ->WithConfig([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzConfig>>>();
@@ -135,6 +180,7 @@ namespace Gs2::UE5::Exchange::Model
                     return v;
                 }()
             )
-            ->WithExchangedAt(Model->GetExchangedAt());
+            ->WithExchangedAt(Model->GetExchangedAt())
+            ->WithAcquirableAt(Model->GetAcquirableAt());
     }
 }

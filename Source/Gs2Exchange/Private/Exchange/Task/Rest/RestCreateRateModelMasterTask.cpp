@@ -104,19 +104,6 @@ namespace Gs2::Exchange::Task::Rest
             {
                 JsonRootObject->SetNumberField("lockTime", this->Request->GetLockTime().GetValue());
             }
-            if (this->Request->GetEnableSkip().IsSet())
-            {
-                JsonRootObject->SetBoolField("enableSkip", this->Request->GetEnableSkip().GetValue());
-            }
-            if (this->Request->GetSkipConsumeActions() != nullptr && this->Request->GetSkipConsumeActions().IsValid())
-            {
-                TArray<TSharedPtr<FJsonValue>> v;
-                for (auto JsonObjectValue : *this->Request->GetSkipConsumeActions())
-                {
-                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
-                }
-                JsonRootObject->SetArrayField("skipConsumeActions", v);
-            }
             if (this->Request->GetAcquireActions() != nullptr && this->Request->GetAcquireActions().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

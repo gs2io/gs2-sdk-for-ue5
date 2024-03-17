@@ -42,9 +42,13 @@ struct FGs2ExchangeAwaitValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int32 SkipSeconds = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2ExchangeConfig> Config = TArray<FGs2ExchangeConfig>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 ExchangedAt = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int64 AcquirableAt = 0;
 };
 
 inline FGs2ExchangeAwaitValue EzAwaitToFGs2ExchangeAwaitValue(
@@ -59,6 +63,7 @@ inline FGs2ExchangeAwaitValue EzAwaitToFGs2ExchangeAwaitValue(
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.RateName = Model->GetRateName() ? *Model->GetRateName() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
+    Value.SkipSeconds = Model->GetSkipSeconds() ? *Model->GetSkipSeconds() : 0;
     Value.Config = Model->GetConfig() ? [&]
     {
         TArray<FGs2ExchangeConfig> r;
@@ -69,6 +74,7 @@ inline FGs2ExchangeAwaitValue EzAwaitToFGs2ExchangeAwaitValue(
         return r;
     }() : TArray<FGs2ExchangeConfig>();
     Value.ExchangedAt = Model->GetExchangedAt() ? *Model->GetExchangedAt() : 0;
+    Value.AcquirableAt = Model->GetAcquirableAt() ? *Model->GetAcquirableAt() : 0;
     return Value;
 }
 
@@ -80,6 +86,7 @@ inline Gs2::UE5::Exchange::Model::FEzAwaitPtr FGs2ExchangeAwaitValueToEzAwait(
         ->WithUserId(Model.UserId)
         ->WithRateName(Model.RateName)
         ->WithName(Model.Name)
+        ->WithSkipSeconds(Model.SkipSeconds)
         ->WithConfig([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Exchange::Model::FEzConfigPtr>>();
             for (auto v : Model.Config) {
@@ -87,7 +94,8 @@ inline Gs2::UE5::Exchange::Model::FEzAwaitPtr FGs2ExchangeAwaitValueToEzAwait(
             }
             return r;
         }())
-        ->WithExchangedAt(Model.ExchangedAt);
+        ->WithExchangedAt(Model.ExchangedAt)
+        ->WithAcquirableAt(Model.AcquirableAt);
 }
 
 UCLASS()

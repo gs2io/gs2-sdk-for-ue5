@@ -63,13 +63,8 @@ namespace Gs2::Exchange::Domain::Model
         const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
-        TOptional<int64> UnlockAt;
         TOptional<FString> TransactionId;
         TOptional<bool> AutoRunStampSheet;
-        TOptional<int64> GetUnlockAt() const
-        {
-            return UnlockAt;
-        }
         TOptional<FString> GetTransactionId() const
         {
             return TransactionId;

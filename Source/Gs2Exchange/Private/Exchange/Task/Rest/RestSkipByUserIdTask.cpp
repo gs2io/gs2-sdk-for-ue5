@@ -94,14 +94,17 @@ namespace Gs2::Exchange::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetConfig() != nullptr && this->Request->GetConfig().IsValid())
+            if (this->Request->GetSkipType().IsSet())
             {
-                TArray<TSharedPtr<FJsonValue>> v;
-                for (auto JsonObjectValue : *this->Request->GetConfig())
-                {
-                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
-                }
-                JsonRootObject->SetArrayField("config", v);
+                JsonRootObject->SetStringField("skipType", this->Request->GetSkipType().GetValue());
+            }
+            if (this->Request->GetMinutes().IsSet())
+            {
+                JsonRootObject->SetNumberField("minutes", this->Request->GetMinutes().GetValue());
+            }
+            if (this->Request->GetRate().IsSet())
+            {
+                JsonRootObject->SetNumberField("rate", this->Request->GetRate().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);

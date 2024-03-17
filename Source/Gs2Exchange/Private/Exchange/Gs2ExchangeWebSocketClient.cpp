@@ -442,15 +442,6 @@ namespace Gs2::Exchange
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FSkipTask>> FGs2ExchangeWebSocketClient::Skip(
-        const Request::FSkipRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSkipTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::WebSocket::FSkipByUserIdTask>> FGs2ExchangeWebSocketClient::SkipByUserId(
         const Request::FSkipByUserIdRequestPtr Request) const
     {
@@ -482,6 +473,15 @@ namespace Gs2::Exchange
         const Request::FCreateAwaitByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCreateAwaitByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSkipByStampSheetTask>> FGs2ExchangeWebSocketClient::SkipByStampSheet(
+        const Request::FSkipByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSkipByStampSheetTask>>(
             Session,
             Request
         );

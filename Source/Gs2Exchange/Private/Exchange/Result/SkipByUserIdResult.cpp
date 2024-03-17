@@ -19,22 +19,14 @@
 namespace Gs2::Exchange::Result
 {
     FSkipByUserIdResult::FSkipByUserIdResult():
-        ItemValue(nullptr),
-        TransactionIdValue(TOptional<FString>()),
-        StampSheetValue(TOptional<FString>()),
-        StampSheetEncryptionKeyIdValue(TOptional<FString>()),
-        AutoRunStampSheetValue(TOptional<bool>())
+        ItemValue(nullptr)
     {
     }
 
     FSkipByUserIdResult::FSkipByUserIdResult(
         const FSkipByUserIdResult& From
     ):
-        ItemValue(From.ItemValue),
-        TransactionIdValue(From.TransactionIdValue),
-        StampSheetValue(From.StampSheetValue),
-        StampSheetEncryptionKeyIdValue(From.StampSheetEncryptionKeyIdValue),
-        AutoRunStampSheetValue(From.AutoRunStampSheetValue)
+        ItemValue(From.ItemValue)
     {
     }
 
@@ -46,38 +38,6 @@ namespace Gs2::Exchange::Result
         return SharedThis(this);
     }
 
-    TSharedPtr<FSkipByUserIdResult> FSkipByUserIdResult::WithTransactionId(
-        const TOptional<FString> TransactionId
-    )
-    {
-        this->TransactionIdValue = TransactionId;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FSkipByUserIdResult> FSkipByUserIdResult::WithStampSheet(
-        const TOptional<FString> StampSheet
-    )
-    {
-        this->StampSheetValue = StampSheet;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FSkipByUserIdResult> FSkipByUserIdResult::WithStampSheetEncryptionKeyId(
-        const TOptional<FString> StampSheetEncryptionKeyId
-    )
-    {
-        this->StampSheetEncryptionKeyIdValue = StampSheetEncryptionKeyId;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FSkipByUserIdResult> FSkipByUserIdResult::WithAutoRunStampSheet(
-        const TOptional<bool> AutoRunStampSheet
-    )
-    {
-        this->AutoRunStampSheetValue = AutoRunStampSheet;
-        return SharedThis(this);
-    }
-
     TSharedPtr<Model::FAwait> FSkipByUserIdResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -85,35 +45,6 @@ namespace Gs2::Exchange::Result
             return nullptr;
         }
         return ItemValue;
-    }
-
-    TOptional<FString> FSkipByUserIdResult::GetTransactionId() const
-    {
-        return TransactionIdValue;
-    }
-
-    TOptional<FString> FSkipByUserIdResult::GetStampSheet() const
-    {
-        return StampSheetValue;
-    }
-
-    TOptional<FString> FSkipByUserIdResult::GetStampSheetEncryptionKeyId() const
-    {
-        return StampSheetEncryptionKeyIdValue;
-    }
-
-    TOptional<bool> FSkipByUserIdResult::GetAutoRunStampSheet() const
-    {
-        return AutoRunStampSheetValue;
-    }
-
-    FString FSkipByUserIdResult::GetAutoRunStampSheetString() const
-    {
-        if (!AutoRunStampSheetValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString(AutoRunStampSheetValue.GetValue() ? "true" : "false");
     }
 
     TSharedPtr<FSkipByUserIdResult> FSkipByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -129,43 +60,7 @@ namespace Gs2::Exchange::Result
                         return nullptr;
                     }
                     return Model::FAwait::FromJson(Data->GetObjectField("item"));
-                 }() : nullptr)
-            ->WithTransactionId(Data->HasField("transactionId") ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField("transactionId", v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
-            ->WithStampSheet(Data->HasField("stampSheet") ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField("stampSheet", v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
-            ->WithStampSheetEncryptionKeyId(Data->HasField("stampSheetEncryptionKeyId") ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField("stampSheetEncryptionKeyId", v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
-            ->WithAutoRunStampSheet(Data->HasField("autoRunStampSheet") ? [Data]() -> TOptional<bool>
-                {
-                    bool v;
-                    if (Data->TryGetBoolField("autoRunStampSheet", v))
-                    {
-                        return TOptional(v);
-                    }
-                    return TOptional<bool>();
-                }() : TOptional<bool>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FSkipByUserIdResult::ToJson() const
@@ -174,22 +69,6 @@ namespace Gs2::Exchange::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
-        }
-        if (TransactionIdValue.IsSet())
-        {
-            JsonRootObject->SetStringField("transactionId", TransactionIdValue.GetValue());
-        }
-        if (StampSheetValue.IsSet())
-        {
-            JsonRootObject->SetStringField("stampSheet", StampSheetValue.GetValue());
-        }
-        if (StampSheetEncryptionKeyIdValue.IsSet())
-        {
-            JsonRootObject->SetStringField("stampSheetEncryptionKeyId", StampSheetEncryptionKeyIdValue.GetValue());
-        }
-        if (AutoRunStampSheetValue.IsSet())
-        {
-            JsonRootObject->SetBoolField("autoRunStampSheet", AutoRunStampSheetValue.GetValue());
         }
         return JsonRootObject;
     }

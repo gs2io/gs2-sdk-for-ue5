@@ -22,7 +22,9 @@ namespace Gs2::Exchange::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         AwaitNameValue(TOptional<FString>()),
-        ConfigValue(nullptr),
+        SkipTypeValue(TOptional<FString>()),
+        MinutesValue(TOptional<int32>()),
+        RateValue(TOptional<float>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -33,7 +35,9 @@ namespace Gs2::Exchange::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         AwaitNameValue(From.AwaitNameValue),
-        ConfigValue(From.ConfigValue),
+        SkipTypeValue(From.SkipTypeValue),
+        MinutesValue(From.MinutesValue),
+        RateValue(From.RateValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -70,11 +74,27 @@ namespace Gs2::Exchange::Request
         return SharedThis(this);
     }
 
-    TSharedPtr<FSkipByUserIdRequest> FSkipByUserIdRequest::WithConfig(
-        const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config
+    TSharedPtr<FSkipByUserIdRequest> FSkipByUserIdRequest::WithSkipType(
+        const TOptional<FString> SkipType
     )
     {
-        this->ConfigValue = Config;
+        this->SkipTypeValue = SkipType;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSkipByUserIdRequest> FSkipByUserIdRequest::WithMinutes(
+        const TOptional<int32> Minutes
+    )
+    {
+        this->MinutesValue = Minutes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSkipByUserIdRequest> FSkipByUserIdRequest::WithRate(
+        const TOptional<float> Rate
+    )
+    {
+        this->RateValue = Rate;
         return SharedThis(this);
     }
 
@@ -114,13 +134,37 @@ namespace Gs2::Exchange::Request
         return AwaitNameValue;
     }
 
-    TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> FSkipByUserIdRequest::GetConfig() const
+    TOptional<FString> FSkipByUserIdRequest::GetSkipType() const
     {
-        if (!ConfigValue.IsValid())
+        return SkipTypeValue;
+    }
+
+    TOptional<int32> FSkipByUserIdRequest::GetMinutes() const
+    {
+        return MinutesValue;
+    }
+
+    FString FSkipByUserIdRequest::GetMinutesString() const
+    {
+        if (!MinutesValue.IsSet())
         {
-            return nullptr;
+            return FString("null");
         }
-        return ConfigValue;
+        return FString::Printf(TEXT("%d"), MinutesValue.GetValue());
+    }
+
+    TOptional<float> FSkipByUserIdRequest::GetRate() const
+    {
+        return RateValue;
+    }
+
+    FString FSkipByUserIdRequest::GetRateString() const
+    {
+        if (!RateValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%f"), RateValue.GetValue());
     }
 
     TOptional<FString> FSkipByUserIdRequest::GetTimeOffsetToken() const
@@ -167,18 +211,33 @@ namespace Gs2::Exchange::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
-          ->WithConfig(Data->HasField("config") ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
+            ->WithSkipType(Data->HasField("skipType") ? [Data]() -> TOptional<FString>
               {
-                  auto v = MakeShared<TArray<Model::FConfigPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>("config") && Data->HasTypedField<EJson::Array>("config"))
+                  FString v("");
+                    if (Data->TryGetStringField("skipType", v))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField("config"))
-                      {
-                          v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
-                      }
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
                   }
-                  return v;
-              }() : MakeShared<TArray<Model::FConfigPtr>>())
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithMinutes(Data->HasField("minutes") ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField("minutes", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>())
+            ->WithRate(Data->HasField("rate") ? [Data]() -> TOptional<float>
+              {
+                  float v;
+                    if (Data->TryGetNumberField("rate", v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<float>();
+              }() : TOptional<float>())
             ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -210,14 +269,17 @@ namespace Gs2::Exchange::Request
         {
             JsonRootObject->SetStringField("awaitName", AwaitNameValue.GetValue());
         }
-        if (ConfigValue != nullptr && ConfigValue.IsValid())
+        if (SkipTypeValue.IsSet())
         {
-            TArray<TSharedPtr<FJsonValue>> v;
-            for (auto JsonObjectValue : *ConfigValue)
-            {
-                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
-            }
-            JsonRootObject->SetArrayField("config", v);
+            JsonRootObject->SetStringField("skipType", SkipTypeValue.GetValue());
+        }
+        if (MinutesValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("minutes", MinutesValue.GetValue());
+        }
+        if (RateValue.IsSet())
+        {
+            JsonRootObject->SetNumberField("rate", RateValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

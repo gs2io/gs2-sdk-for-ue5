@@ -65,7 +65,6 @@ namespace Gs2::Exchange::Domain::Model
         public:
         TOptional<FString> TransactionId;
         TOptional<bool> AutoRunStampSheet;
-        TOptional<int64> UnlockAt;
         TOptional<FString> NextPageToken;
         TOptional<FString> GetTransactionId() const
         {
@@ -74,10 +73,6 @@ namespace Gs2::Exchange::Domain::Model
         TOptional<bool> GetAutoRunStampSheet() const
         {
             return AutoRunStampSheet;
-        }
-        TOptional<int64> GetUnlockAt() const
-        {
-            return UnlockAt;
         }
         TOptional<FString> GetNextPageToken() const
         {

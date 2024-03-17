@@ -32,8 +32,6 @@ namespace Gs2::Exchange::Model
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActionsValue;
         TOptional<FString> TimingTypeValue;
         TOptional<int32> LockTimeValue;
-        TOptional<bool> EnableSkipValue;
-        TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> SkipConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -53,8 +51,6 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FRateModelMaster> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActions);
         TSharedPtr<FRateModelMaster> WithTimingType(const TOptional<FString> TimingType);
         TSharedPtr<FRateModelMaster> WithLockTime(const TOptional<int32> LockTime);
-        TSharedPtr<FRateModelMaster> WithEnableSkip(const TOptional<bool> EnableSkip);
-        TSharedPtr<FRateModelMaster> WithSkipConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> SkipConsumeActions);
         TSharedPtr<FRateModelMaster> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
         TSharedPtr<FRateModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FRateModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -68,9 +64,6 @@ namespace Gs2::Exchange::Model
         TOptional<FString> GetTimingType() const;
         TOptional<int32> GetLockTime() const;
         FString GetLockTimeString() const;
-        TOptional<bool> GetEnableSkip() const;
-        FString GetEnableSkipString() const;
-        TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetSkipConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

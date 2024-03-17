@@ -21,24 +21,24 @@
 
 namespace Gs2::Exchange::Result
 {
-    class GS2EXCHANGE_API FCreateAwaitByUserIdResult final : public TSharedFromThis<FCreateAwaitByUserIdResult>
+    class GS2EXCHANGE_API FSkipByStampSheetResult final : public TSharedFromThis<FSkipByStampSheetResult>
     {
         TSharedPtr<Model::FAwait> ItemValue;
         
     public:
         
-        FCreateAwaitByUserIdResult();
-        FCreateAwaitByUserIdResult(
-            const FCreateAwaitByUserIdResult& From
+        FSkipByStampSheetResult();
+        FSkipByStampSheetResult(
+            const FSkipByStampSheetResult& From
         );
-        ~FCreateAwaitByUserIdResult() = default;
+        ~FSkipByStampSheetResult() = default;
 
-        TSharedPtr<FCreateAwaitByUserIdResult> WithItem(const TSharedPtr<Model::FAwait> Item);
+        TSharedPtr<FSkipByStampSheetResult> WithItem(const TSharedPtr<Model::FAwait> Item);
 
         TSharedPtr<Model::FAwait> GetItem() const;
 
-        static TSharedPtr<FCreateAwaitByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
+        static TSharedPtr<FSkipByStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FCreateAwaitByUserIdResult, ESPMode::ThreadSafe> FCreateAwaitByUserIdResultPtr;
+    typedef TSharedPtr<FSkipByStampSheetResult, ESPMode::ThreadSafe> FSkipByStampSheetResultPtr;
 }

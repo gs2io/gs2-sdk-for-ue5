@@ -136,10 +136,6 @@ namespace Gs2::Exchange::Domain::Model
             ResultModel->GetItem()->GetUserId(),
             ResultModel->GetItem()->GetName()
         );
-        if (ResultModel != nullptr)
-        {
-            Domain->UnlockAt = *ResultModel->GetUnlockAt();
-        }
 
         *Result = Domain;
         return nullptr;

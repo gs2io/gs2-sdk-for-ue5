@@ -24,10 +24,6 @@ namespace Gs2::Exchange::Result
     class GS2EXCHANGE_API FSkipByUserIdResult final : public TSharedFromThis<FSkipByUserIdResult>
     {
         TSharedPtr<Model::FAwait> ItemValue;
-        TOptional<FString> TransactionIdValue;
-        TOptional<FString> StampSheetValue;
-        TOptional<FString> StampSheetEncryptionKeyIdValue;
-        TOptional<bool> AutoRunStampSheetValue;
         
     public:
         
@@ -38,17 +34,8 @@ namespace Gs2::Exchange::Result
         ~FSkipByUserIdResult() = default;
 
         TSharedPtr<FSkipByUserIdResult> WithItem(const TSharedPtr<Model::FAwait> Item);
-        TSharedPtr<FSkipByUserIdResult> WithTransactionId(const TOptional<FString> TransactionId);
-        TSharedPtr<FSkipByUserIdResult> WithStampSheet(const TOptional<FString> StampSheet);
-        TSharedPtr<FSkipByUserIdResult> WithStampSheetEncryptionKeyId(const TOptional<FString> StampSheetEncryptionKeyId);
-        TSharedPtr<FSkipByUserIdResult> WithAutoRunStampSheet(const TOptional<bool> AutoRunStampSheet);
 
         TSharedPtr<Model::FAwait> GetItem() const;
-        TOptional<FString> GetTransactionId() const;
-        TOptional<FString> GetStampSheet() const;
-        TOptional<FString> GetStampSheetEncryptionKeyId() const;
-        TOptional<bool> GetAutoRunStampSheet() const;
-        FString GetAutoRunStampSheetString() const;
 
         static TSharedPtr<FSkipByUserIdResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

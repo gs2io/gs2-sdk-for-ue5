@@ -14,23 +14,23 @@
  * permissions and limitations under the License.
  */
 
-#include "Exchange/Result/CreateAwaitByUserIdResult.h"
+#include "Exchange/Result/SkipByStampSheetResult.h"
 
 namespace Gs2::Exchange::Result
 {
-    FCreateAwaitByUserIdResult::FCreateAwaitByUserIdResult():
+    FSkipByStampSheetResult::FSkipByStampSheetResult():
         ItemValue(nullptr)
     {
     }
 
-    FCreateAwaitByUserIdResult::FCreateAwaitByUserIdResult(
-        const FCreateAwaitByUserIdResult& From
+    FSkipByStampSheetResult::FSkipByStampSheetResult(
+        const FSkipByStampSheetResult& From
     ):
         ItemValue(From.ItemValue)
     {
     }
 
-    TSharedPtr<FCreateAwaitByUserIdResult> FCreateAwaitByUserIdResult::WithItem(
+    TSharedPtr<FSkipByStampSheetResult> FSkipByStampSheetResult::WithItem(
         const TSharedPtr<Model::FAwait> Item
     )
     {
@@ -38,7 +38,7 @@ namespace Gs2::Exchange::Result
         return SharedThis(this);
     }
 
-    TSharedPtr<Model::FAwait> FCreateAwaitByUserIdResult::GetItem() const
+    TSharedPtr<Model::FAwait> FSkipByStampSheetResult::GetItem() const
     {
         if (!ItemValue.IsValid())
         {
@@ -47,12 +47,12 @@ namespace Gs2::Exchange::Result
         return ItemValue;
     }
 
-    TSharedPtr<FCreateAwaitByUserIdResult> FCreateAwaitByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
+    TSharedPtr<FSkipByStampSheetResult> FSkipByStampSheetResult::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FCreateAwaitByUserIdResult>()
+        return MakeShared<FSkipByStampSheetResult>()
             ->WithItem(Data->HasField("item") ? [Data]() -> Model::FAwaitPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("item"))
@@ -63,7 +63,7 @@ namespace Gs2::Exchange::Result
                  }() : nullptr);
     }
 
-    TSharedPtr<FJsonObject> FCreateAwaitByUserIdResult::ToJson() const
+    TSharedPtr<FJsonObject> FSkipByStampSheetResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())

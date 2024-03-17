@@ -40,7 +40,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<int64> UnlockAt() const;
         TOptional<FString> TransactionId() const;
         TOptional<bool> AutoRunStampSheet() const;
         TOptional<FString> NamespaceName() const;
@@ -71,26 +70,6 @@ namespace Gs2::UE5::Exchange::Domain::Model
         friend FAcquireTask;
 
         TSharedPtr<FAsyncTask<FAcquireTask>> Acquire(
-        );
-
-        class FSkipTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>,
-            public TSharedFromThis<FSkipTask>
-        {
-            TSharedPtr<FEzAwaitGameSessionDomain> Self;
-
-        public:
-            explicit FSkipTask(
-                TSharedPtr<FEzAwaitGameSessionDomain> Self
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::UE5::Exchange::Domain::Model::FEzAwaitGameSessionDomain>> Result
-            ) override;
-        };
-        friend FSkipTask;
-
-        TSharedPtr<FAsyncTask<FSkipTask>> Skip(
         );
 
         class FDeleteAwaitTask :

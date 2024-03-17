@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Exchange/Task/Rest/SkipTask.h"
+#include "Exchange/Task/Rest/SkipByStampSheetTask.h"
 
 #include "HttpManager.h"
 #include "HttpModule.h"
@@ -25,21 +25,21 @@
 
 namespace Gs2::Exchange::Task::Rest
 {
-    FSkipTask::FSkipTask(
+    FSkipByStampSheetTask::FSkipByStampSheetTask(
         const Core::Net::Rest::FGs2RestSessionPtr Session,
-        const Request::FSkipRequestPtr Request
+        const Request::FSkipByStampSheetRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FSkipTask::FSkipTask(
-        const FSkipTask& From
+    FSkipByStampSheetTask::FSkipByStampSheetTask(
+        const FSkipByStampSheetTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FSkipTask::Action(
-        const TSharedPtr<Result::FSkipResultPtr> Result
+    Core::Model::FGs2ErrorPtr FSkipByStampSheetTask::Action(
+        const TSharedPtr<Result::FSkipByStampSheetResultPtr> Result
     )
     {
 
@@ -69,18 +69,7 @@ namespace Gs2::Exchange::Task::Rest
             auto Url = Core::FGs2Constant::EndpointHost
                 .Replace(TEXT("{service}"), TEXT("exchange"))
                 .Replace(TEXT("{region}"), *this->Session->RegionName())
-                .Append("/{namespaceName}/user/me/exchange/await/{awaitName}/skip");
-
-            Url = Url.Replace(
-                TEXT("{namespaceName}"),
-                !this->Request->GetNamespaceName().IsSet() || this->Request->GetNamespaceName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetNamespaceName())
-            );
-            Url = Url.Replace(
-                TEXT("{awaitName}"),
-                !this->Request->GetAwaitName().IsSet() || this->Request->GetAwaitName().GetValue().Len() == 0 ?
-                    TEXT("null") : ToCStr(*this->Request->GetAwaitName())
-            );
+                .Append("/stamp/await/skip");
 
             request->SetURL(Url);
 
@@ -89,14 +78,13 @@ namespace Gs2::Exchange::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (this->Request->GetConfig() != nullptr && this->Request->GetConfig().IsValid())
+            if (this->Request->GetStampSheet().IsSet())
             {
-                TArray<TSharedPtr<FJsonValue>> v;
-                for (auto JsonObjectValue : *this->Request->GetConfig())
-                {
-                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
-                }
-                JsonRootObject->SetArrayField("config", v);
+                JsonRootObject->SetStringField("stampSheet", this->Request->GetStampSheet().GetValue());
+            }
+            if (this->Request->GetKeyId().IsSet())
+            {
+                JsonRootObject->SetStringField("keyId", this->Request->GetKeyId().GetValue());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
@@ -104,14 +92,6 @@ namespace Gs2::Exchange::Task::Rest
             request->SetHeader("X-GS2-CLIENT-ID", this->Session->Credential()->ClientId());
             request->SetHeader("Authorization", "Bearer " + this->Session->Credential()->ProjectToken());
             request->SetHeader("Content-Type", "application/json");
-            if (this->Request->GetAccessToken().IsSet())
-            {
-                request->SetHeader("X-GS2-ACCESS-TOKEN", this->Request->GetAccessToken().GetValue());
-            }
-            if (this->Request->GetDuplicationAvoider().IsSet())
-            {
-                request->SetHeader("X-GS2-DUPLICATION-AVOIDER", this->Request->GetDuplicationAvoider().GetValue());
-            }
 
             request->ProcessRequest();
             UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
@@ -138,7 +118,7 @@ namespace Gs2::Exchange::Task::Rest
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Details = TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>();
-                *Result = Result::FSkipResult::FromJson(JsonRootObject);
+                *Result = Result::FSkipByStampSheetResult::FromJson(JsonRootObject);
                 return nullptr;
             }
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "Exchange/Task/WebSocket/SkipTask.h"
+#include "Exchange/Task/WebSocket/SkipByStampSheetTask.h"
 
 #include "Containers/BackgroundableTicker.h"
 #include "Core/Gs2Constant.h"
@@ -23,21 +23,21 @@
 
 namespace Gs2::Exchange::Task::WebSocket
 {
-    FSkipTask::FSkipTask(
+    FSkipByStampSheetTask::FSkipByStampSheetTask(
         const Core::Net::WebSocket::FGs2WebSocketSessionPtr Session,
-        const Request::FSkipRequestPtr Request
+        const Request::FSkipByStampSheetRequestPtr Request
     ): Session(Session), Request(Request)
     {
     }
 
-    FSkipTask::FSkipTask(
-        const FSkipTask& From
+    FSkipByStampSheetTask::FSkipByStampSheetTask(
+        const FSkipByStampSheetTask& From
     ): TGs2Future(From), Session(From.Session), Request(From.Request)
     {
     }
 
-    Core::Model::FGs2ErrorPtr FSkipTask::Action(
-        const TSharedPtr<Result::FSkipResultPtr> Result
+    Core::Model::FGs2ErrorPtr FSkipByStampSheetTask::Action(
+        const TSharedPtr<Result::FSkipByStampSheetResultPtr> Result
     )
     {
         if (this->Session->Credential()->ProjectToken().Len() == 0)
@@ -52,11 +52,11 @@ namespace Gs2::Exchange::Task::WebSocket
             Session->Credential()->ProjectToken(),
             "exchange",
             "await",
-            "skip"
+            "skipByStampSheet"
         );
         Session->Send(RequestPayload);
 
-        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("exchange"), TEXT("await"), TEXT("skip"), ToCStr(RequestPayload->Payload()));
+        UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s:%s:%s] %s"), TEXT("exchange"), TEXT("await"), TEXT("skipByStampSheet"), ToCStr(RequestPayload->Payload()));
 
         while (!Session->IsConnected() || !Session->IsComplete(RequestPayload->TaskId()))
         {
@@ -70,7 +70,7 @@ namespace Gs2::Exchange::Task::WebSocket
             return WebSocketResult->Error();
         }
 
-        *Result = Result::FSkipResult::FromJson(WebSocketResult->Body());
+        *Result = Result::FSkipByStampSheetResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
     }

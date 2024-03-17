@@ -27,15 +27,19 @@ namespace Gs2::UE5::Exchange::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> RateNameValue;
         TOptional<FString> NameValue;
+        TOptional<int32> SkipSecondsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> ConfigValue;
         TOptional<int64> ExchangedAtValue;
+        TOptional<int64> AcquirableAtValue;
 
 	public:
         TSharedPtr<FEzAwait> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FEzAwait> WithRateName(const TOptional<FString> RateName);
         TSharedPtr<FEzAwait> WithName(const TOptional<FString> Name);
+        TSharedPtr<FEzAwait> WithSkipSeconds(const TOptional<int32> SkipSeconds);
         TSharedPtr<FEzAwait> WithConfig(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> Config);
         TSharedPtr<FEzAwait> WithExchangedAt(const TOptional<int64> ExchangedAt);
+        TSharedPtr<FEzAwait> WithAcquirableAt(const TOptional<int64> AcquirableAt);
 
         TOptional<FString> GetUserId() const;
 
@@ -43,10 +47,16 @@ namespace Gs2::UE5::Exchange::Model
 
         TOptional<FString> GetName() const;
 
+        TOptional<int32> GetSkipSeconds() const;
+        FString GetSkipSecondsString() const;
+
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Exchange::Model::FEzConfig>>> GetConfig() const;
 
         TOptional<int64> GetExchangedAt() const;
         FString GetExchangedAtString() const;
+
+        TOptional<int64> GetAcquirableAt() const;
+        FString GetAcquirableAtString() const;
 
         Gs2::Exchange::Model::FAwaitPtr ToModel() const;
         static TSharedPtr<FEzAwait> FromModel(Gs2::Exchange::Model::FAwaitPtr Model);

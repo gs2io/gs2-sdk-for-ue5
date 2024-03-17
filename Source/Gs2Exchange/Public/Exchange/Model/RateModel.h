@@ -31,8 +31,6 @@ namespace Gs2::Exchange::Model
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActionsValue;
         TOptional<FString> TimingTypeValue;
         TOptional<int32> LockTimeValue;
-        TOptional<bool> EnableSkipValue;
-        TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> SkipConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
 
     public:
@@ -48,8 +46,6 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FRateModel> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActions);
         TSharedPtr<FRateModel> WithTimingType(const TOptional<FString> TimingType);
         TSharedPtr<FRateModel> WithLockTime(const TOptional<int32> LockTime);
-        TSharedPtr<FRateModel> WithEnableSkip(const TOptional<bool> EnableSkip);
-        TSharedPtr<FRateModel> WithSkipConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> SkipConsumeActions);
         TSharedPtr<FRateModel> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
 
         TOptional<FString> GetRateModelId() const;
@@ -59,9 +55,6 @@ namespace Gs2::Exchange::Model
         TOptional<FString> GetTimingType() const;
         TOptional<int32> GetLockTime() const;
         FString GetLockTimeString() const;
-        TOptional<bool> GetEnableSkip() const;
-        FString GetEnableSkipString() const;
-        TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetSkipConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);

@@ -64,13 +64,8 @@ namespace Gs2::Exchange::Domain::Model
         const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
 
         public:
-        TOptional<int64> UnlockAt;
         TOptional<FString> TransactionId;
         TOptional<bool> AutoRunStampSheet;
-        TOptional<int64> GetUnlockAt() const
-        {
-            return UnlockAt;
-        }
         TOptional<FString> GetTransactionId() const
         {
             return TransactionId;
@@ -154,35 +149,6 @@ namespace Gs2::Exchange::Domain::Model
 
         TSharedPtr<FAsyncTask<FAcquireTask>> Acquire(
             Request::FAcquireRequestPtr Request,
-            bool SpeculativeExecute = true
-        );
-
-        class GS2EXCHANGE_API FSkipTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomain>,
-            public TSharedFromThis<FSkipTask>
-        {
-            const TSharedPtr<FAwaitAccessTokenDomain> Self;
-            const Request::FSkipRequestPtr Request;
-            bool SpeculativeExecute;
-        public:
-            explicit FSkipTask(
-                const TSharedPtr<FAwaitAccessTokenDomain>& Self,
-                const Request::FSkipRequestPtr Request,
-                bool SpeculativeExecute
-            );
-
-            FSkipTask(
-                const FSkipTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FSkipTask;
-
-        TSharedPtr<FAsyncTask<FSkipTask>> Skip(
-            Request::FSkipRequestPtr Request,
             bool SpeculativeExecute = true
         );
 

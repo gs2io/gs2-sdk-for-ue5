@@ -38,7 +38,6 @@
 #include "Exchange/Domain/Model/UserAccessToken.h"
 #include "Exchange/Domain/SpeculativeExecutor/Transaction/AcquireByUserIdSpeculativeExecutor.h"
 #include "Exchange/Domain/SpeculativeExecutor/Transaction/AcquireForceByUserIdSpeculativeExecutor.h"
-#include "Exchange/Domain/SpeculativeExecutor/Transaction/SkipByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -254,114 +253,6 @@ namespace Gs2::Exchange::Domain::Model
         bool SpeculativeExecute
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FAcquireTask>>(this->AsShared(), Request, SpeculativeExecute);
-    }
-
-    FAwaitAccessTokenDomain::FSkipTask::FSkipTask(
-        const TSharedPtr<FAwaitAccessTokenDomain>& Self,
-        const Request::FSkipRequestPtr Request,
-        bool SpeculativeExecute
-    ): Self(Self), Request(Request), SpeculativeExecute(SpeculativeExecute)
-    {
-
-    }
-
-    FAwaitAccessTokenDomain::FSkipTask::FSkipTask(
-        const FSkipTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request), SpeculativeExecute(From.SpeculativeExecute)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FAwaitAccessTokenDomain::FSkipTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomain>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
-            ->WithAwaitName(Self->AwaitName);
-
-        if (SpeculativeExecute) {
-            const auto SpeculativeExecuteFuture = Transaction::SpeculativeExecutor::FSkipByUserIdSpeculativeExecutor::Execute(
-                Self->Gs2,
-                Self->Service,
-                Self->AccessToken,
-                Request::FSkipByUserIdRequest::FromJson(Request->ToJson())
-            );
-            SpeculativeExecuteFuture->StartSynchronousTask();
-            if (SpeculativeExecuteFuture->GetTask().IsError())
-            {
-                return SpeculativeExecuteFuture->GetTask().Error();
-            }
-            const auto Commit = SpeculativeExecuteFuture->GetTask().Result();
-            SpeculativeExecuteFuture->EnsureCompletion();
-
-            if (Commit.IsValid()) {
-                (*Commit)();
-            }
-        }
-        const auto Future = Self->Client->Skip(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Await"
-                );
-                const auto Key = Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Exchange::Model::FAwait::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
-        {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                Self->AccessToken,
-                false,
-                *ResultModel->GetTransactionId(),
-                *ResultModel->GetStampSheet(),
-                *ResultModel->GetStampSheetEncryptionKeyId()
-            );
-            const auto Future3 = Transaction->Wait(true);
-            Future3->StartSynchronousTask();
-            if (Future3->GetTask().IsError())
-            {
-                return Future3->GetTask().Error();
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FAwaitAccessTokenDomain::FSkipTask>> FAwaitAccessTokenDomain::Skip(
-        Request::FSkipRequestPtr Request,
-        bool SpeculativeExecute
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FSkipTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
     FAwaitAccessTokenDomain::FDeleteTask::FDeleteTask(
