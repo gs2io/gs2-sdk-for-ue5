@@ -235,6 +235,24 @@ namespace Gs2::Matchmaking
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FEarlyCompleteTask>> FGs2MatchmakingWebSocketClient::EarlyComplete(
+        const Request::FEarlyCompleteRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FEarlyCompleteTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FEarlyCompleteByUserIdTask>> FGs2MatchmakingWebSocketClient::EarlyCompleteByUserId(
+        const Request::FEarlyCompleteByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FEarlyCompleteByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteGatheringTask>> FGs2MatchmakingWebSocketClient::DeleteGathering(
         const Request::FDeleteGatheringRequestPtr Request) const
     {

@@ -66,6 +66,10 @@
 #include "Task/Rest/CancelMatchmakingTask.h"
 #include "Request/CancelMatchmakingByUserIdRequest.h"
 #include "Task/Rest/CancelMatchmakingByUserIdTask.h"
+#include "Request/EarlyCompleteRequest.h"
+#include "Task/Rest/EarlyCompleteTask.h"
+#include "Request/EarlyCompleteByUserIdRequest.h"
+#include "Task/Rest/EarlyCompleteByUserIdTask.h"
 #include "Request/DeleteGatheringRequest.h"
 #include "Task/Rest/DeleteGatheringTask.h"
 #include "Request/DescribeRatingModelMastersRequest.h"
@@ -218,6 +222,14 @@ namespace Gs2::Matchmaking
 
         TSharedPtr<FAsyncTask<Task::Rest::FCancelMatchmakingByUserIdTask>> CancelMatchmakingByUserId(
             const Request::FCancelMatchmakingByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FEarlyCompleteTask>> EarlyComplete(
+            const Request::FEarlyCompleteRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FEarlyCompleteByUserIdTask>> EarlyCompleteByUserId(
+            const Request::FEarlyCompleteByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteGatheringTask>> DeleteGathering(

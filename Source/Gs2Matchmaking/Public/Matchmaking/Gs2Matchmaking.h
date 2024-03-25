@@ -182,6 +182,18 @@
 #include "Task/Rest/CancelMatchmakingByUserIdTask.h"
 #include "Task/WebSocket/CancelMatchmakingByUserIdTask.h"
 
+// EarlyComplete
+#include "Request/EarlyCompleteRequest.h"
+#include "Result/EarlyCompleteResult.h"
+#include "Task/Rest/EarlyCompleteTask.h"
+#include "Task/WebSocket/EarlyCompleteTask.h"
+
+// EarlyCompleteByUserId
+#include "Request/EarlyCompleteByUserIdRequest.h"
+#include "Result/EarlyCompleteByUserIdResult.h"
+#include "Task/Rest/EarlyCompleteByUserIdTask.h"
+#include "Task/WebSocket/EarlyCompleteByUserIdTask.h"
+
 // DeleteGathering
 #include "Request/DeleteGatheringRequest.h"
 #include "Result/DeleteGatheringResult.h"

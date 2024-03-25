@@ -166,6 +166,32 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FCancelMatchmakingByUserIdRequestPtr Request
         );
 
+        class GS2MATCHMAKING_API FEarlyCompleteTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FGatheringDomain>,
+            public TSharedFromThis<FEarlyCompleteTask>
+        {
+            const TSharedPtr<FGatheringDomain> Self;
+            const Request::FEarlyCompleteByUserIdRequestPtr Request;
+        public:
+            explicit FEarlyCompleteTask(
+                const TSharedPtr<FGatheringDomain>& Self,
+                const Request::FEarlyCompleteByUserIdRequestPtr Request
+            );
+
+            FEarlyCompleteTask(
+                const FEarlyCompleteTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringDomain>> Result
+            ) override;
+        };
+        friend FEarlyCompleteTask;
+
+        TSharedPtr<FAsyncTask<FEarlyCompleteTask>> EarlyComplete(
+            Request::FEarlyCompleteByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

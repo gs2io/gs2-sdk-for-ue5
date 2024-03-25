@@ -142,6 +142,32 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FCancelMatchmakingRequestPtr Request
         );
 
+        class GS2MATCHMAKING_API FEarlyCompleteTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain>,
+            public TSharedFromThis<FEarlyCompleteTask>
+        {
+            const TSharedPtr<FGatheringAccessTokenDomain> Self;
+            const Request::FEarlyCompleteRequestPtr Request;
+        public:
+            explicit FEarlyCompleteTask(
+                const TSharedPtr<FGatheringAccessTokenDomain>& Self,
+                const Request::FEarlyCompleteRequestPtr Request
+            );
+
+            FEarlyCompleteTask(
+                const FEarlyCompleteTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FEarlyCompleteTask;
+
+        TSharedPtr<FAsyncTask<FEarlyCompleteTask>> EarlyComplete(
+            Request::FEarlyCompleteRequestPtr Request
+        );
+
         class GS2MATCHMAKING_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Model::FGathering>,
             public TSharedFromThis<FGetTask>

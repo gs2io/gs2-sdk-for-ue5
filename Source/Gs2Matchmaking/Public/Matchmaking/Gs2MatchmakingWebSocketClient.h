@@ -66,6 +66,10 @@
 #include "Task/WebSocket/CancelMatchmakingTask.h"
 #include "Request/CancelMatchmakingByUserIdRequest.h"
 #include "Task/WebSocket/CancelMatchmakingByUserIdTask.h"
+#include "Request/EarlyCompleteRequest.h"
+#include "Task/WebSocket/EarlyCompleteTask.h"
+#include "Request/EarlyCompleteByUserIdRequest.h"
+#include "Task/WebSocket/EarlyCompleteByUserIdTask.h"
 #include "Request/DeleteGatheringRequest.h"
 #include "Task/WebSocket/DeleteGatheringTask.h"
 #include "Request/DescribeRatingModelMastersRequest.h"
@@ -218,6 +222,14 @@ namespace Gs2::Matchmaking
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FCancelMatchmakingByUserIdTask>> CancelMatchmakingByUserId(
             const Request::FCancelMatchmakingByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FEarlyCompleteTask>> EarlyComplete(
+            const Request::FEarlyCompleteRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FEarlyCompleteByUserIdTask>> EarlyCompleteByUserId(
+            const Request::FEarlyCompleteByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteGatheringTask>> DeleteGathering(

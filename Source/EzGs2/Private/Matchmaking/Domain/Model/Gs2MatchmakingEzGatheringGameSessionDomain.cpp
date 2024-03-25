@@ -159,6 +159,56 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
+    FEzGatheringGameSessionDomain::FEarlyCompleteMatchmakingTask::FEarlyCompleteMatchmakingTask(
+        TSharedPtr<FEzGatheringGameSessionDomain> Self
+    ): Self(Self)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzGatheringGameSessionDomain::FEarlyCompleteMatchmakingTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->EarlyComplete(
+                    MakeShared<Gs2::Matchmaking::Request::FEarlyCompleteRequest>()
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzGatheringGameSessionDomain::FEarlyCompleteMatchmakingTask>> FEzGatheringGameSessionDomain::EarlyCompleteMatchmaking(
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FEarlyCompleteMatchmakingTask>>(
+            this->AsShared()
+        );
+    }
+
     FEzGatheringGameSessionDomain::FModelTask::FModelTask(
         TSharedPtr<FEzGatheringGameSessionDomain> Self
     ): Self(Self)

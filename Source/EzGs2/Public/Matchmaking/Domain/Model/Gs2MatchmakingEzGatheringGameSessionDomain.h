@@ -98,6 +98,26 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FCancelMatchmakingTask>> CancelMatchmaking(
         );
 
+        class FEarlyCompleteMatchmakingTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>,
+            public TSharedFromThis<FEarlyCompleteMatchmakingTask>
+        {
+            TSharedPtr<FEzGatheringGameSessionDomain> Self;
+
+        public:
+            explicit FEarlyCompleteMatchmakingTask(
+                TSharedPtr<FEzGatheringGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomain>> Result
+            ) override;
+        };
+        friend FEarlyCompleteMatchmakingTask;
+
+        TSharedPtr<FAsyncTask<FEarlyCompleteMatchmakingTask>> EarlyCompleteMatchmaking(
+        );
+
         class FModelTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Matchmaking::Model::FEzGathering>,
             public TSharedFromThis<FModelTask>

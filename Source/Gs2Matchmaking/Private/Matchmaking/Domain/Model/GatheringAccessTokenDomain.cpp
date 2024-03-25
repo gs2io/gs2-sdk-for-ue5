@@ -208,6 +208,72 @@ namespace Gs2::Matchmaking::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCancelMatchmakingTask>>(this->AsShared(), Request);
     }
 
+    FGatheringAccessTokenDomain::FEarlyCompleteTask::FEarlyCompleteTask(
+        const TSharedPtr<FGatheringAccessTokenDomain>& Self,
+        const Request::FEarlyCompleteRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FGatheringAccessTokenDomain::FEarlyCompleteTask::FEarlyCompleteTask(
+        const FEarlyCompleteTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGatheringAccessTokenDomain::FEarlyCompleteTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithGatheringName(Self->GatheringName);
+        const auto Future = Self->Client->EarlyComplete(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    TOptional<FString>("Singleton"),
+                    "Gathering"
+                );
+                const auto Key = Gs2::Matchmaking::Domain::Model::FGatheringDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Matchmaking::Model::FGathering::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGatheringAccessTokenDomain::FEarlyCompleteTask>> FGatheringAccessTokenDomain::EarlyComplete(
+        Request::FEarlyCompleteRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FEarlyCompleteTask>>(this->AsShared(), Request);
+    }
+
     FGatheringAccessTokenDomain::FGetTask::FGetTask(
         const TSharedPtr<FGatheringAccessTokenDomain>& Self,
         const Request::FGetGatheringRequestPtr Request
