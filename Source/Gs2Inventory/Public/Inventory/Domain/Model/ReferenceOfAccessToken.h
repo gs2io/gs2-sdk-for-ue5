@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -129,7 +131,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         class GS2INVENTORY_API FGetTask final :
-            public Gs2::Core::Util::TGs2Future<TArray<FString>>,
+            public Gs2::Core::Util::TGs2Future<Inventory::Model::FReferenceOf>,
             public TSharedFromThis<FGetTask>
         {
             const TSharedPtr<FReferenceOfAccessTokenDomain> Self;
@@ -145,7 +147,7 @@ namespace Gs2::Inventory::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<TArray<FString>>> Result
+                TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
             ) override;
         };
         friend FGetTask;
@@ -155,7 +157,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         class GS2INVENTORY_API FVerifyTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<FReferenceOfAccessTokenDomain>,
             public TSharedFromThis<FVerifyTask>
         {
             const TSharedPtr<FReferenceOfAccessTokenDomain> Self;
@@ -171,7 +173,7 @@ namespace Gs2::Inventory::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<FReferenceOfAccessTokenDomain>> Result
             ) override;
         };
         friend FVerifyTask;
@@ -181,7 +183,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         class GS2INVENTORY_API FDeleteTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain>,
+            public Gs2::Core::Util::TGs2Future<FReferenceOfAccessTokenDomain>,
             public TSharedFromThis<FDeleteTask>
         {
             const TSharedPtr<FReferenceOfAccessTokenDomain> Self;
@@ -197,7 +199,7 @@ namespace Gs2::Inventory::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain>> Result
+                TSharedPtr<TSharedPtr<FReferenceOfAccessTokenDomain>> Result
             ) override;
         };
         friend FDeleteTask;
@@ -221,7 +223,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         class GS2INVENTORY_API FModelTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Model::FItemSet>,
+            public Gs2::Core::Util::TGs2Future<Inventory::Model::FReferenceOf>,
             public TSharedFromThis<FModelTask>
         {
             const TSharedPtr<FReferenceOfAccessTokenDomain> Self;
@@ -235,21 +237,12 @@ namespace Gs2::Inventory::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Inventory::Model::FItemSet>> Result
+                TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
             ) override;
         };
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
-            TFunction<void(Gs2::Inventory::Model::FReferenceOfPtr)> Callback
-        );
-
-        void Unsubscribe(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
     };
 
     typedef TSharedPtr<FReferenceOfAccessTokenDomain> FReferenceOfAccessTokenDomainPtr;

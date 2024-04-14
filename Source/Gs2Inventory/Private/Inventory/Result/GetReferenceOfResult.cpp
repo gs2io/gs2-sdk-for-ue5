@@ -19,7 +19,7 @@
 namespace Gs2::Inventory::Result
 {
     FGetReferenceOfResult::FGetReferenceOfResult():
-        ItemValue(nullptr),
+        ItemValue(TOptional<FString>()),
         ItemSetValue(nullptr),
         ItemModelValue(nullptr),
         InventoryValue(nullptr)
@@ -37,7 +37,7 @@ namespace Gs2::Inventory::Result
     }
 
     TSharedPtr<FGetReferenceOfResult> FGetReferenceOfResult::WithItem(
-        const TSharedPtr<TArray<FString>> Item
+        const TOptional<FString> Item
     )
     {
         this->ItemValue = Item;
@@ -68,12 +68,8 @@ namespace Gs2::Inventory::Result
         return SharedThis(this);
     }
 
-    TSharedPtr<TArray<FString>> FGetReferenceOfResult::GetItem() const
+    TOptional<FString> FGetReferenceOfResult::GetItem() const
     {
-        if (!ItemValue.IsValid())
-        {
-            return nullptr;
-        }
         return ItemValue;
     }
 
@@ -110,18 +106,15 @@ namespace Gs2::Inventory::Result
             return nullptr;
         }
         return MakeShared<FGetReferenceOfResult>()
-            ->WithItem(Data->HasField("item") ? [Data]() -> TSharedPtr<TArray<FString>>
-                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>("item") && Data->HasTypedField<EJson::Array>("item"))
+            ->WithItem(Data->HasField("item") ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField("item", v))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField("item"))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
                     }
-                    return v;
-                 }() : MakeShared<TArray<FString>>())
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithItemSet(Data->HasField("itemSet") ? [Data]() -> Model::FItemSetPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("itemSet"))
@@ -151,14 +144,9 @@ namespace Gs2::Inventory::Result
     TSharedPtr<FJsonObject> FGetReferenceOfResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-        if (ItemValue != nullptr && ItemValue.IsValid())
+        if (ItemValue.IsSet())
         {
-            TArray<TSharedPtr<FJsonValue>> v;
-            for (auto JsonObjectValue : *ItemValue)
-            {
-                v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
-            }
-            JsonRootObject->SetArrayField("item", v);
+            JsonRootObject->SetStringField("item", ItemValue.GetValue());
         }
         if (ItemSetValue != nullptr && ItemSetValue.IsValid())
         {

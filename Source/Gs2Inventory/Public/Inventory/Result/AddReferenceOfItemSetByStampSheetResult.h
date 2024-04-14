@@ -25,7 +25,7 @@ namespace Gs2::Inventory::Result
 {
     class GS2INVENTORY_API FAddReferenceOfItemSetByStampSheetResult final : public TSharedFromThis<FAddReferenceOfItemSetByStampSheetResult>
     {
-        TSharedPtr<TArray<FString>> ItemValue;
+        TOptional<FString> ItemValue;
         TSharedPtr<Model::FItemSet> ItemSetValue;
         TSharedPtr<Model::FItemModel> ItemModelValue;
         TSharedPtr<Model::FInventory> InventoryValue;
@@ -38,12 +38,12 @@ namespace Gs2::Inventory::Result
         );
         ~FAddReferenceOfItemSetByStampSheetResult() = default;
 
-        TSharedPtr<FAddReferenceOfItemSetByStampSheetResult> WithItem(const TSharedPtr<TArray<FString>> Item);
+        TSharedPtr<FAddReferenceOfItemSetByStampSheetResult> WithItem(const TOptional<FString> Item);
         TSharedPtr<FAddReferenceOfItemSetByStampSheetResult> WithItemSet(const TSharedPtr<Model::FItemSet> ItemSet);
         TSharedPtr<FAddReferenceOfItemSetByStampSheetResult> WithItemModel(const TSharedPtr<Model::FItemModel> ItemModel);
         TSharedPtr<FAddReferenceOfItemSetByStampSheetResult> WithInventory(const TSharedPtr<Model::FInventory> Inventory);
 
-        TSharedPtr<TArray<FString>> GetItem() const;
+        TOptional<FString> GetItem() const;
         TSharedPtr<Model::FItemSet> GetItemSet() const;
         TSharedPtr<Model::FItemModel> GetItemModel() const;
         TSharedPtr<Model::FInventory> GetInventory() const;

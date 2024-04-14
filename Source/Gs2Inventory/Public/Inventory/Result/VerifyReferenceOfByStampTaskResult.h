@@ -25,7 +25,7 @@ namespace Gs2::Inventory::Result
 {
     class GS2INVENTORY_API FVerifyReferenceOfByStampTaskResult final : public TSharedFromThis<FVerifyReferenceOfByStampTaskResult>
     {
-        TSharedPtr<TArray<FString>> ItemValue;
+        TOptional<FString> ItemValue;
         TSharedPtr<Model::FItemSet> ItemSetValue;
         TSharedPtr<Model::FItemModel> ItemModelValue;
         TSharedPtr<Model::FInventory> InventoryValue;
@@ -39,13 +39,13 @@ namespace Gs2::Inventory::Result
         );
         ~FVerifyReferenceOfByStampTaskResult() = default;
 
-        TSharedPtr<FVerifyReferenceOfByStampTaskResult> WithItem(const TSharedPtr<TArray<FString>> Item);
+        TSharedPtr<FVerifyReferenceOfByStampTaskResult> WithItem(const TOptional<FString> Item);
         TSharedPtr<FVerifyReferenceOfByStampTaskResult> WithItemSet(const TSharedPtr<Model::FItemSet> ItemSet);
         TSharedPtr<FVerifyReferenceOfByStampTaskResult> WithItemModel(const TSharedPtr<Model::FItemModel> ItemModel);
         TSharedPtr<FVerifyReferenceOfByStampTaskResult> WithInventory(const TSharedPtr<Model::FInventory> Inventory);
         TSharedPtr<FVerifyReferenceOfByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
 
-        TSharedPtr<TArray<FString>> GetItem() const;
+        TOptional<FString> GetItem() const;
         TSharedPtr<Model::FItemSet> GetItemSet() const;
         TSharedPtr<Model::FItemModel> GetItemModel() const;
         TSharedPtr<Model::FInventory> GetInventory() const;

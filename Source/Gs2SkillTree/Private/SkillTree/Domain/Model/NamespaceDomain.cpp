@@ -415,30 +415,6 @@ namespace Gs2::SkillTree::Domain::Model
         );
     }
 
-    TSharedPtr<Gs2::SkillTree::Domain::Model::FUserDomain> FNamespaceDomain::User(
-        const FString UserId
-    )
-    {
-        return MakeShared<Gs2::SkillTree::Domain::Model::FUserDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
-        );
-    }
-
-    TSharedPtr<Gs2::SkillTree::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
-        Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    )
-    {
-        return MakeShared<Gs2::SkillTree::Domain::Model::FUserAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken
-        );
-    }
-
     Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelMastersIteratorPtr FNamespaceDomain::NodeModelMasters(
     ) const
     {
@@ -486,6 +462,30 @@ namespace Gs2::SkillTree::Domain::Model
             Service,
             NamespaceName,
             NodeModelName == TEXT("") ? TOptional<FString>() : TOptional<FString>(NodeModelName)
+        );
+    }
+
+    TSharedPtr<Gs2::SkillTree::Domain::Model::FUserDomain> FNamespaceDomain::User(
+        const FString UserId
+    )
+    {
+        return MakeShared<Gs2::SkillTree::Domain::Model::FUserDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
+        );
+    }
+
+    TSharedPtr<Gs2::SkillTree::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
+        Gs2::Auth::Model::FAccessTokenPtr AccessToken
+    )
+    {
+        return MakeShared<Gs2::SkillTree::Domain::Model::FUserAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken
         );
     }
 

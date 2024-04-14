@@ -167,17 +167,6 @@ namespace Gs2::Quest::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FStartTask>>(this->AsShared(), Request, SpeculativeExecute);
     }
 
-    TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain> FUserAccessTokenDomain::Progress(
-    )
-    {
-        return MakeShared<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken
-        );
-    }
-
     Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIteratorPtr FUserAccessTokenDomain::CompletedQuestLists(
     ) const
     {
@@ -229,6 +218,17 @@ namespace Gs2::Quest::Domain::Model
             NamespaceName,
             AccessToken,
             QuestGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestGroupName)
+        );
+    }
+
+    TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain> FUserAccessTokenDomain::Progress(
+    )
+    {
+        return MakeShared<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken
         );
     }
 

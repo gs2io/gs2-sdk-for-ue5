@@ -41,12 +41,12 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
     }
 
-    Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseGameSessionDomainPtr FEzUserGameSessionDomain::RandomShowcase(
+    Gs2::UE5::Showcase::Domain::Model::FEzShowcaseGameSessionDomainPtr FEzUserGameSessionDomain::Showcase(
         const FString ShowcaseName
     ) const
     {
-        return MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseGameSessionDomain>(
-            Domain->RandomShowcase(
+        return MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzShowcaseGameSessionDomain>(
+            Domain->Showcase(
                 ShowcaseName
             ),
             GameSession,
@@ -54,12 +54,12 @@ namespace Gs2::UE5::Showcase::Domain::Model
         );
     }
 
-    Gs2::UE5::Showcase::Domain::Model::FEzShowcaseGameSessionDomainPtr FEzUserGameSessionDomain::Showcase(
+    Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseGameSessionDomainPtr FEzUserGameSessionDomain::RandomShowcase(
         const FString ShowcaseName
     ) const
     {
-        return MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzShowcaseGameSessionDomain>(
-            Domain->Showcase(
+        return MakeShared<Gs2::UE5::Showcase::Domain::Model::FEzRandomShowcaseGameSessionDomain>(
+            Domain->RandomShowcase(
                 ShowcaseName
             ),
             GameSession,

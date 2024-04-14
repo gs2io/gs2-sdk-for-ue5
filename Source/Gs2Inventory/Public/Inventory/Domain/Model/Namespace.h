@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -379,21 +381,6 @@ namespace Gs2::Inventory::Domain::Model
             const FString InventoryName
         );
 
-        Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIteratorPtr BigInventoryModelMasters(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeBigInventoryModelMasters(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeBigInventoryModelMasters(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain> BigInventoryModelMaster(
-            const FString InventoryName
-        );
-
         Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelsIteratorPtr BigInventoryModels(
         ) const;
 
@@ -406,6 +393,21 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelDomain> BigInventoryModel(
+            const FString InventoryName
+        );
+
+        Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIteratorPtr BigInventoryModelMasters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeBigInventoryModelMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeBigInventoryModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain> BigInventoryModelMaster(
             const FString InventoryName
         );
 

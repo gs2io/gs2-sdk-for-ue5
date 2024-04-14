@@ -27,8 +27,8 @@
 #include "Quest/Model/Gs2QuestEzCompletedQuestList.h"
 #include "Quest/Model/Gs2QuestEzQuestGroupModel.h"
 #include "Quest/Model/Gs2QuestEzQuestModel.h"
-#include "Gs2QuestEzProgressDomain.h"
 #include "Gs2QuestEzCompletedQuestListDomain.h"
+#include "Gs2QuestEzProgressDomain.h"
 #include "Gs2QuestEzUserDomain.h"
 #include "Gs2QuestEzUserDomain.h"
 #include "Gs2QuestEzUserGameSessionDomain.h"
@@ -56,11 +56,11 @@ namespace Gs2::UE5::Quest::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Quest::Domain::Model::FEzProgressDomainPtr Progress(
-        ) const;
-
         Gs2::UE5::Quest::Domain::Model::FEzCompletedQuestListDomainPtr CompletedQuestList(
             const FString QuestGroupName
+        ) const;
+
+        Gs2::UE5::Quest::Domain::Model::FEzProgressDomainPtr Progress(
         ) const;
 
     };

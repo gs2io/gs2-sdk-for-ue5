@@ -212,60 +212,6 @@ namespace Gs2::Quest::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FStartTask>>(this->AsShared(), Request);
     }
 
-    Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIteratorPtr FUserDomain::Progresses(
-        const TOptional<FString> TimeOffsetToken
-    ) const
-    {
-        return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName,
-            UserId,
-            TimeOffsetToken
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeProgresses(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Quest::Model::FProgress::TypeName,
-            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "Progress"
-            ),
-            Callback
-        );
-    }
-
-    void FUserDomain::UnsubscribeProgresses(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Quest::Model::FProgress::TypeName,
-            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId,
-                "Progress"
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain> FUserDomain::Progress(
-    )
-    {
-        return MakeShared<Gs2::Quest::Domain::Model::FProgressDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId
-        );
-    }
-
     Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsByUserIdIteratorPtr FUserDomain::CompletedQuestLists(
         const TOptional<FString> TimeOffsetToken
     ) const
@@ -319,6 +265,60 @@ namespace Gs2::Quest::Domain::Model
             NamespaceName,
             UserId,
             QuestGroupName == TEXT("") ? TOptional<FString>() : TOptional<FString>(QuestGroupName)
+        );
+    }
+
+    Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIteratorPtr FUserDomain::Progresses(
+        const TOptional<FString> TimeOffsetToken
+    ) const
+    {
+        return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName,
+            UserId,
+            TimeOffsetToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeProgresses(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Quest::Model::FProgress::TypeName,
+            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Progress"
+            ),
+            Callback
+        );
+    }
+
+    void FUserDomain::UnsubscribeProgresses(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Quest::Model::FProgress::TypeName,
+            Gs2::Quest::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "Progress"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain> FUserDomain::Progress(
+    )
+    {
+        return MakeShared<Gs2::Quest::Domain::Model::FProgressDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId
         );
     }
 

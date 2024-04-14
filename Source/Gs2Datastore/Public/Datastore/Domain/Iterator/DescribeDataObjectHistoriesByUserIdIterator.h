@@ -41,7 +41,7 @@ namespace Gs2::Datastore::Domain::Iterator
             const Gs2::Datastore::FGs2DatastoreRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> DataObjectName,
+            const TOptional<FString> DataObjectName = TOptional<FString>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 

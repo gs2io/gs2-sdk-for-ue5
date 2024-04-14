@@ -218,32 +218,6 @@ namespace Gs2::Showcase::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
-        class GS2SHOWCASE_API FCreateRandomShowcaseMasterTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>,
-            public TSharedFromThis<FCreateRandomShowcaseMasterTask>
-        {
-            const TSharedPtr<FNamespaceDomain> Self;
-            const Request::FCreateRandomShowcaseMasterRequestPtr Request;
-        public:
-            explicit FCreateRandomShowcaseMasterTask(
-                const TSharedPtr<FNamespaceDomain>& Self,
-                const Request::FCreateRandomShowcaseMasterRequestPtr Request
-            );
-
-            FCreateRandomShowcaseMasterTask(
-                const FCreateRandomShowcaseMasterTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>> Result
-            ) override;
-        };
-        friend FCreateRandomShowcaseMasterTask;
-
-        TSharedPtr<FAsyncTask<FCreateRandomShowcaseMasterTask>> CreateRandomShowcaseMaster(
-            Request::FCreateRandomShowcaseMasterRequestPtr Request
-        );
-
         class GS2SHOWCASE_API FCreateSalesItemMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FSalesItemMasterDomain>,
             public TSharedFromThis<FCreateSalesItemMasterTask>
@@ -322,19 +296,33 @@ namespace Gs2::Showcase::Domain::Model
             Request::FCreateShowcaseMasterRequestPtr Request
         );
 
-        Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIteratorPtr RandomShowcaseMasters(
-        ) const;
+        class GS2SHOWCASE_API FCreateRandomShowcaseMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>,
+            public TSharedFromThis<FCreateRandomShowcaseMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateRandomShowcaseMasterRequestPtr Request;
+        public:
+            explicit FCreateRandomShowcaseMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FCreateRandomShowcaseMasterRequestPtr Request
+            );
 
-        Gs2::Core::Domain::CallbackID SubscribeRandomShowcaseMasters(
-            TFunction<void()> Callback
+            FCreateRandomShowcaseMasterTask(
+                const FCreateRandomShowcaseMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateRandomShowcaseMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateRandomShowcaseMasterTask>> CreateRandomShowcaseMaster(
+            Request::FCreateRandomShowcaseMasterRequestPtr Request
         );
 
-        void UnsubscribeRandomShowcaseMasters(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain> RandomShowcaseMaster(
-            const FString ShowcaseName
+        TSharedPtr<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain> CurrentShowcaseMaster(
         );
 
         Gs2::Showcase::Domain::Iterator::FDescribeSalesItemMastersIteratorPtr SalesItemMasters(
@@ -367,9 +355,6 @@ namespace Gs2::Showcase::Domain::Model
             const FString SalesItemGroupName
         );
 
-        TSharedPtr<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain> CurrentShowcaseMaster(
-        );
-
         TSharedPtr<Gs2::Showcase::Domain::Model::FUserDomain> User(
             const FString UserId
         );
@@ -390,6 +375,21 @@ namespace Gs2::Showcase::Domain::Model
         );
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FShowcaseMasterDomain> ShowcaseMaster(
+            const FString ShowcaseName
+        );
+
+        Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIteratorPtr RandomShowcaseMasters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeRandomShowcaseMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeRandomShowcaseMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain> RandomShowcaseMaster(
             const FString ShowcaseName
         );
 

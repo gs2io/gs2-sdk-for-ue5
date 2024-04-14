@@ -248,14 +248,6 @@ namespace Gs2::SkillTree::Domain::Model
             const FString NodeModelName
         );
 
-        TSharedPtr<Gs2::SkillTree::Domain::Model::FUserDomain> User(
-            const FString UserId
-        );
-
-        TSharedPtr<Gs2::SkillTree::Domain::Model::FUserAccessTokenDomain> AccessToken(
-            Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        );
-
         Gs2::SkillTree::Domain::Iterator::FDescribeNodeModelMastersIteratorPtr NodeModelMasters(
         ) const;
 
@@ -269,6 +261,14 @@ namespace Gs2::SkillTree::Domain::Model
 
         TSharedPtr<Gs2::SkillTree::Domain::Model::FNodeModelMasterDomain> NodeModelMaster(
             const FString NodeModelName
+        );
+
+        TSharedPtr<Gs2::SkillTree::Domain::Model::FUserDomain> User(
+            const FString UserId
+        );
+
+        TSharedPtr<Gs2::SkillTree::Domain::Model::FUserAccessTokenDomain> AccessToken(
+            Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
         static FString CreateCacheParentKey(

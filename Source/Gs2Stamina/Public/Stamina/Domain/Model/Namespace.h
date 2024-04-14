@@ -210,32 +210,6 @@ namespace Gs2::Stamina::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
-        class GS2STAMINA_API FCreateRecoverIntervalTableMasterTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>,
-            public TSharedFromThis<FCreateRecoverIntervalTableMasterTask>
-        {
-            const TSharedPtr<FNamespaceDomain> Self;
-            const Request::FCreateRecoverIntervalTableMasterRequestPtr Request;
-        public:
-            explicit FCreateRecoverIntervalTableMasterTask(
-                const TSharedPtr<FNamespaceDomain>& Self,
-                const Request::FCreateRecoverIntervalTableMasterRequestPtr Request
-            );
-
-            FCreateRecoverIntervalTableMasterTask(
-                const FCreateRecoverIntervalTableMasterTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>> Result
-            ) override;
-        };
-        friend FCreateRecoverIntervalTableMasterTask;
-
-        TSharedPtr<FAsyncTask<FCreateRecoverIntervalTableMasterTask>> CreateRecoverIntervalTableMaster(
-            Request::FCreateRecoverIntervalTableMasterRequestPtr Request
-        );
-
         class GS2STAMINA_API FCreateMaxStaminaTableMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain>,
             public TSharedFromThis<FCreateMaxStaminaTableMasterTask>
@@ -260,6 +234,32 @@ namespace Gs2::Stamina::Domain::Model
 
         TSharedPtr<FAsyncTask<FCreateMaxStaminaTableMasterTask>> CreateMaxStaminaTableMaster(
             Request::FCreateMaxStaminaTableMasterRequestPtr Request
+        );
+
+        class GS2STAMINA_API FCreateRecoverIntervalTableMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>,
+            public TSharedFromThis<FCreateRecoverIntervalTableMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateRecoverIntervalTableMasterRequestPtr Request;
+        public:
+            explicit FCreateRecoverIntervalTableMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FCreateRecoverIntervalTableMasterRequestPtr Request
+            );
+
+            FCreateRecoverIntervalTableMasterTask(
+                const FCreateRecoverIntervalTableMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateRecoverIntervalTableMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateRecoverIntervalTableMasterTask>> CreateRecoverIntervalTableMaster(
+            Request::FCreateRecoverIntervalTableMasterRequestPtr Request
         );
 
         class GS2STAMINA_API FCreateRecoverValueTableMasterTask final :
@@ -317,6 +317,21 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain> CurrentStaminaMaster(
         );
 
+        Gs2::Stamina::Domain::Iterator::FDescribeMaxStaminaTableMastersIteratorPtr MaxStaminaTableMasters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeMaxStaminaTableMasters(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeMaxStaminaTableMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain> MaxStaminaTableMaster(
+            const FString MaxStaminaTableName
+        );
+
         Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIteratorPtr StaminaModels(
         ) const;
 
@@ -353,21 +368,6 @@ namespace Gs2::Stamina::Domain::Model
 
         TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain> RecoverIntervalTableMaster(
             const FString RecoverIntervalTableName
-        );
-
-        Gs2::Stamina::Domain::Iterator::FDescribeMaxStaminaTableMastersIteratorPtr MaxStaminaTableMasters(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeMaxStaminaTableMasters(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeMaxStaminaTableMasters(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain> MaxStaminaTableMaster(
-            const FString MaxStaminaTableName
         );
 
         Gs2::Stamina::Domain::Iterator::FDescribeRecoverValueTableMastersIteratorPtr RecoverValueTableMasters(

@@ -27,9 +27,9 @@
 #include "Quest/Model/Gs2QuestEzCompletedQuestList.h"
 #include "Quest/Model/Gs2QuestEzQuestGroupModel.h"
 #include "Quest/Model/Gs2QuestEzQuestModel.h"
-#include "Gs2QuestEzProgressGameSessionDomain.h"
 #include "Gs2QuestEzCompletedQuestListGameSessionDomain.h"
 #include "Quest/Domain/Iterator/Gs2QuestEzDescribeCompletedQuestListsIterator.h"
+#include "Gs2QuestEzProgressGameSessionDomain.h"
 #include "Gs2QuestEzUserGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -89,9 +89,6 @@ namespace Gs2::UE5::Quest::Domain::Model
             TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Quest::Model::FEzConfig>>>()
         );
 
-        Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomainPtr Progress(
-        ) const;
-
         Gs2::UE5::Quest::Domain::Iterator::FEzDescribeCompletedQuestListsIteratorPtr CompletedQuestLists(
         ) const;
 
@@ -101,6 +98,9 @@ namespace Gs2::UE5::Quest::Domain::Model
 
         Gs2::UE5::Quest::Domain::Model::FEzCompletedQuestListGameSessionDomainPtr CompletedQuestList(
             const FString QuestGroupName
+        ) const;
+
+        Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomainPtr Progress(
         ) const;
 
     };

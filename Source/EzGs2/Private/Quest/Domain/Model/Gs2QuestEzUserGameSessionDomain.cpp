@@ -131,17 +131,6 @@ namespace Gs2::UE5::Quest::Domain::Model
         );
     }
 
-    Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomainPtr FEzUserGameSessionDomain::Progress(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>(
-            Domain->Progress(
-            ),
-            GameSession,
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Quest::Domain::Iterator::FEzDescribeCompletedQuestListsIteratorPtr FEzUserGameSessionDomain::CompletedQuestLists(
     ) const
     {
@@ -173,6 +162,17 @@ namespace Gs2::UE5::Quest::Domain::Model
         return MakeShared<Gs2::UE5::Quest::Domain::Model::FEzCompletedQuestListGameSessionDomain>(
             Domain->CompletedQuestList(
                 QuestGroupName
+            ),
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomainPtr FEzUserGameSessionDomain::Progress(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Quest::Domain::Model::FEzProgressGameSessionDomain>(
+            Domain->Progress(
             ),
             GameSession,
             ConnectionValue

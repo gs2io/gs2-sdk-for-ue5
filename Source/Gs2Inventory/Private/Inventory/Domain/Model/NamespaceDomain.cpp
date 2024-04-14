@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -582,7 +584,7 @@ namespace Gs2::Inventory::Domain::Model
             Gs2,
             Service,
             NamespaceName,
-            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
+            UserId
         );
     }
 
@@ -698,56 +700,6 @@ namespace Gs2::Inventory::Domain::Model
         );
     }
 
-    Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIteratorPtr FNamespaceDomain::BigInventoryModelMasters(
-    ) const
-    {
-        return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBigInventoryModelMasters(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Inventory::Model::FBigInventoryModelMaster::TypeName,
-            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                NamespaceName,
-                "BigInventoryModelMaster"
-            ),
-            Callback
-        );
-    }
-
-    void FNamespaceDomain::UnsubscribeBigInventoryModelMasters(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Inventory::Model::FBigInventoryModelMaster::TypeName,
-            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                NamespaceName,
-                "BigInventoryModelMaster"
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain> FNamespaceDomain::BigInventoryModelMaster(
-        const FString InventoryName
-    )
-    {
-        return MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
-        );
-    }
-
     Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelsIteratorPtr FNamespaceDomain::BigInventoryModels(
     ) const
     {
@@ -791,6 +743,56 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         return MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            InventoryName == TEXT("") ? TOptional<FString>() : TOptional<FString>(InventoryName)
+        );
+    }
+
+    Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIteratorPtr FNamespaceDomain::BigInventoryModelMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBigInventoryModelMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Inventory::Model::FBigInventoryModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BigInventoryModelMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeBigInventoryModelMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Inventory::Model::FBigInventoryModelMaster::TypeName,
+            Gs2::Inventory::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "BigInventoryModelMaster"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain> FNamespaceDomain::BigInventoryModelMaster(
+        const FString InventoryName
+    )
+    {
+        return MakeShared<Gs2::Inventory::Domain::Model::FBigInventoryModelMasterDomain>(
             Gs2,
             Service,
             NamespaceName,

@@ -25,7 +25,7 @@ namespace Gs2::Inventory::Result
 {
     class GS2INVENTORY_API FDeleteReferenceOfByUserIdResult final : public TSharedFromThis<FDeleteReferenceOfByUserIdResult>
     {
-        TSharedPtr<TArray<FString>> ItemValue;
+        TOptional<FString> ItemValue;
         TSharedPtr<Model::FItemSet> ItemSetValue;
         TSharedPtr<Model::FItemModel> ItemModelValue;
         TSharedPtr<Model::FInventory> InventoryValue;
@@ -38,12 +38,12 @@ namespace Gs2::Inventory::Result
         );
         ~FDeleteReferenceOfByUserIdResult() = default;
 
-        TSharedPtr<FDeleteReferenceOfByUserIdResult> WithItem(const TSharedPtr<TArray<FString>> Item);
+        TSharedPtr<FDeleteReferenceOfByUserIdResult> WithItem(const TOptional<FString> Item);
         TSharedPtr<FDeleteReferenceOfByUserIdResult> WithItemSet(const TSharedPtr<Model::FItemSet> ItemSet);
         TSharedPtr<FDeleteReferenceOfByUserIdResult> WithItemModel(const TSharedPtr<Model::FItemModel> ItemModel);
         TSharedPtr<FDeleteReferenceOfByUserIdResult> WithInventory(const TSharedPtr<Model::FInventory> Inventory);
 
-        TSharedPtr<TArray<FString>> GetItem() const;
+        TOptional<FString> GetItem() const;
         TSharedPtr<Model::FItemSet> GetItemSet() const;
         TSharedPtr<Model::FItemModel> GetItemModel() const;
         TSharedPtr<Model::FInventory> GetInventory() const;

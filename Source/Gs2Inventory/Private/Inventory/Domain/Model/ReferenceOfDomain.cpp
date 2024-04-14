@@ -58,6 +58,9 @@
 #include "Inventory/Domain/Model/ItemSetEntry.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionDomain.h"
 
 namespace Gs2::Inventory::Domain::Model
 {
@@ -125,7 +128,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<TArray<FString>>> Result
+        TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
     )
     {
         Request
@@ -196,9 +199,18 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
+                Self->Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FInventory::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetInventory(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
             }
         }
-        *Result = ResultModel->GetItem();
+        *Result = MakeShared<Inventory::Model::FReferenceOf>()->WithName(
+            ResultModel->GetItem()
+        );
         return nullptr;
     }
 
@@ -223,7 +235,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfDomain::FVerifyTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FReferenceOfDomain>> Result
+        TSharedPtr<TSharedPtr<FReferenceOfDomain>> Result
     )
     {
         Request
@@ -294,18 +306,26 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
+                Self->Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FInventory::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetInventory(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
             }
         }
-        const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfDomain>(
+        auto Domain = MakeShared<FReferenceOfDomain>(
             Self->Gs2,
             Self->Service,
-            Request->GetNamespaceName(),
-            Request->GetUserId(),
-            Request->GetInventoryName(),
-            Request->GetItemName(),
-            Request->GetItemSetName(),
-            Request->GetReferenceOf()
+            Self->NamespaceName,
+            Self->UserId,
+            Self->InventoryName,
+            Self->ItemName,
+            Self->ItemSetName,
+            ResultModel->GetItem()
         );
+
         *Result = Domain;
         return nullptr;
     }
@@ -331,7 +351,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfDomain::FDeleteTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Inventory::Domain::Model::FReferenceOfDomain>> Result
+        TSharedPtr<TSharedPtr<FReferenceOfDomain>> Result
     )
     {
         Request
@@ -393,16 +413,17 @@ namespace Gs2::Inventory::Domain::Model
                 Self->Gs2->Cache->Delete(Gs2::Inventory::Model::FInventory::TypeName, ParentKey, Key);
             }
         }
-        const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfDomain>(
+        auto Domain = MakeShared<FReferenceOfDomain>(
             Self->Gs2,
             Self->Service,
-            Request->GetNamespaceName(),
-            Request->GetUserId(),
-            Request->GetInventoryName(),
-            Request->GetItemName(),
-            Request->GetItemSetName(),
-            Request->GetReferenceOf()
+            Self->NamespaceName,
+            Self->UserId,
+            Self->InventoryName,
+            Self->ItemName,
+            Self->ItemSetName,
+            ResultModel->GetItem()
         );
+
         *Result = Domain;
         return nullptr;
     }
@@ -456,22 +477,16 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfDomain::FModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Inventory::Model::FItemSet>> Result
+        TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
     )
     {
-        const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
-            Self->NamespaceName,
-            Self->UserId,
-            Self->InventoryName,
-            "ItemSet"
-        );
+        const auto ParentKey = "inventory:String";
         // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::Inventory::Model::FItemSetPtr Value;
-        const auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSet>(
-            Self->ParentKey,
-            Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                Self->ItemName,
-                Self->ItemSetName
+        TSharedPtr<Inventory::Model::FReferenceOf> Value;
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Inventory::Model::FReferenceOf>(
+            ParentKey,
+            Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
+                Self->ReferenceOf
             ),
             &Value
         );
@@ -487,34 +502,34 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
 
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    Self->ItemName,
-                    Self->ItemSetName
+                const auto Key = Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
+                    Self->ReferenceOf
                 );
                 Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FReferenceOf::TypeName,
-                    Self->ParentKey,
+                    Inventory::Model::FReferenceOf::TypeName,
+                    ParentKey,
                     Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "referenceOf")
+                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "string")
                 {
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSet>(
-                Self->ParentKey,
-                Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    Self->ItemName,
-                    Self->ItemSetName
+            Self->Gs2->Cache->TryGet<Inventory::Model::FReferenceOf>(
+                ParentKey,
+                Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
+                    Self->ReferenceOf
                 ),
                 &Value
             );
             Future->EnsureCompletion();
         }
-        *Result = Value;
+        *Result = MakeShared<Inventory::Model::FReferenceOf>()->WithName(
+            Self->ReferenceOf
+        );
 
         return nullptr;
     }

@@ -151,21 +151,6 @@ namespace Gs2::Quest::Domain::Model
             Request::FStartByUserIdRequestPtr Request
         );
 
-        Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIteratorPtr Progresses(
-            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeProgresses(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeProgresses(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain> Progress(
-        );
-
         Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsByUserIdIteratorPtr CompletedQuestLists(
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
@@ -180,6 +165,21 @@ namespace Gs2::Quest::Domain::Model
 
         TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListDomain> CompletedQuestList(
             const FString QuestGroupName
+        );
+
+        Gs2::Quest::Domain::Iterator::FDescribeProgressesByUserIdIteratorPtr Progresses(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeProgresses(
+            TFunction<void()> Callback
+        );
+
+        void UnsubscribeProgresses(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Quest::Domain::Model::FProgressDomain> Progress(
         );
 
         static FString CreateCacheParentKey(

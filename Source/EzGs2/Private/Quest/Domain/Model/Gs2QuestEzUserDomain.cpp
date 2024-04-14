@@ -54,16 +54,6 @@ namespace Gs2::UE5::Quest::Domain::Model
 
     }
 
-    Gs2::UE5::Quest::Domain::Model::FEzProgressDomainPtr FEzUserDomain::Progress(
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Quest::Domain::Model::FEzProgressDomain>(
-            Domain->Progress(
-            ),
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Quest::Domain::Model::FEzCompletedQuestListDomainPtr FEzUserDomain::CompletedQuestList(
         const FString QuestGroupName
     ) const
@@ -71,6 +61,16 @@ namespace Gs2::UE5::Quest::Domain::Model
         return MakeShared<Gs2::UE5::Quest::Domain::Model::FEzCompletedQuestListDomain>(
             Domain->CompletedQuestList(
                 QuestGroupName
+            ),
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Quest::Domain::Model::FEzProgressDomainPtr FEzUserDomain::Progress(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Quest::Domain::Model::FEzProgressDomain>(
+            Domain->Progress(
             ),
             ConnectionValue
         );

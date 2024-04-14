@@ -290,74 +290,6 @@ namespace Gs2::Stamina::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
-    FNamespaceDomain::FCreateRecoverIntervalTableMasterTask::FCreateRecoverIntervalTableMasterTask(
-        const TSharedPtr<FNamespaceDomain>& Self,
-        const Request::FCreateRecoverIntervalTableMasterRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FNamespaceDomain::FCreateRecoverIntervalTableMasterTask::FCreateRecoverIntervalTableMasterTask(
-        const FCreateRecoverIntervalTableMasterTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateRecoverIntervalTableMasterTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName);
-        const auto Future = Self->Client->CreateRecoverIntervalTableMaster(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    "RecoverIntervalTableMaster"
-                );
-                const auto Key = Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
-        auto Domain = MakeShared<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>(
-            Self->Gs2,
-            Self->Service,
-            Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetName()
-        );
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateRecoverIntervalTableMasterTask>> FNamespaceDomain::CreateRecoverIntervalTableMaster(
-        Request::FCreateRecoverIntervalTableMasterRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FCreateRecoverIntervalTableMasterTask>>(this->AsShared(), Request);
-    }
-
     FNamespaceDomain::FCreateMaxStaminaTableMasterTask::FCreateMaxStaminaTableMasterTask(
         const TSharedPtr<FNamespaceDomain>& Self,
         const Request::FCreateMaxStaminaTableMasterRequestPtr Request
@@ -424,6 +356,74 @@ namespace Gs2::Stamina::Domain::Model
         Request::FCreateMaxStaminaTableMasterRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FCreateMaxStaminaTableMasterTask>>(this->AsShared(), Request);
+    }
+
+    FNamespaceDomain::FCreateRecoverIntervalTableMasterTask::FCreateRecoverIntervalTableMasterTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FCreateRecoverIntervalTableMasterRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FCreateRecoverIntervalTableMasterTask::FCreateRecoverIntervalTableMasterTask(
+        const FCreateRecoverIntervalTableMasterTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FCreateRecoverIntervalTableMasterTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>> Result
+    )
+    {
+        Request
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->CreateRecoverIntervalTableMaster(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    "RecoverIntervalTableMaster"
+                );
+                const auto Key = Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Stamina::Model::FRecoverIntervalTableMaster::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FCreateRecoverIntervalTableMasterTask>> FNamespaceDomain::CreateRecoverIntervalTableMaster(
+        Request::FCreateRecoverIntervalTableMasterRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FCreateRecoverIntervalTableMasterTask>>(this->AsShared(), Request);
     }
 
     FNamespaceDomain::FCreateRecoverValueTableMasterTask::FCreateRecoverValueTableMasterTask(
@@ -572,6 +572,56 @@ namespace Gs2::Stamina::Domain::Model
         );
     }
 
+    Gs2::Stamina::Domain::Iterator::FDescribeMaxStaminaTableMastersIteratorPtr FNamespaceDomain::MaxStaminaTableMasters(
+    ) const
+    {
+        return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeMaxStaminaTableMastersIterator>(
+            Gs2->Cache,
+            Client,
+            NamespaceName
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMaxStaminaTableMasters(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MaxStaminaTableMaster"
+            ),
+            Callback
+        );
+    }
+
+    void FNamespaceDomain::UnsubscribeMaxStaminaTableMasters(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
+            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                NamespaceName,
+                "MaxStaminaTableMaster"
+            ),
+            CallbackID
+        );
+    }
+
+    TSharedPtr<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain> FNamespaceDomain::MaxStaminaTableMaster(
+        const FString MaxStaminaTableName
+    )
+    {
+        return MakeShared<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            MaxStaminaTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MaxStaminaTableName)
+        );
+    }
+
     Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIteratorPtr FNamespaceDomain::StaminaModels(
     ) const
     {
@@ -693,56 +743,6 @@ namespace Gs2::Stamina::Domain::Model
             Service,
             NamespaceName,
             RecoverIntervalTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(RecoverIntervalTableName)
-        );
-    }
-
-    Gs2::Stamina::Domain::Iterator::FDescribeMaxStaminaTableMastersIteratorPtr FNamespaceDomain::MaxStaminaTableMasters(
-    ) const
-    {
-        return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeMaxStaminaTableMastersIterator>(
-            Gs2->Cache,
-            Client,
-            NamespaceName
-        );
-    }
-
-    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMaxStaminaTableMasters(
-    TFunction<void()> Callback
-    )
-    {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
-            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                NamespaceName,
-                "MaxStaminaTableMaster"
-            ),
-            Callback
-        );
-    }
-
-    void FNamespaceDomain::UnsubscribeMaxStaminaTableMasters(
-        Gs2::Core::Domain::CallbackID CallbackID
-    )
-    {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName,
-            Gs2::Stamina::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
-                NamespaceName,
-                "MaxStaminaTableMaster"
-            ),
-            CallbackID
-        );
-    }
-
-    TSharedPtr<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain> FNamespaceDomain::MaxStaminaTableMaster(
-        const FString MaxStaminaTableName
-    )
-    {
-        return MakeShared<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            MaxStaminaTableName == TEXT("") ? TOptional<FString>() : TOptional<FString>(MaxStaminaTableName)
         );
     }
 

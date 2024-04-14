@@ -25,7 +25,7 @@ namespace Gs2::Inventory::Result
 {
     class GS2INVENTORY_API FVerifyReferenceOfByUserIdResult final : public TSharedFromThis<FVerifyReferenceOfByUserIdResult>
     {
-        TSharedPtr<TArray<FString>> ItemValue;
+        TOptional<FString> ItemValue;
         TSharedPtr<Model::FItemSet> ItemSetValue;
         TSharedPtr<Model::FItemModel> ItemModelValue;
         TSharedPtr<Model::FInventory> InventoryValue;
@@ -38,12 +38,12 @@ namespace Gs2::Inventory::Result
         );
         ~FVerifyReferenceOfByUserIdResult() = default;
 
-        TSharedPtr<FVerifyReferenceOfByUserIdResult> WithItem(const TSharedPtr<TArray<FString>> Item);
+        TSharedPtr<FVerifyReferenceOfByUserIdResult> WithItem(const TOptional<FString> Item);
         TSharedPtr<FVerifyReferenceOfByUserIdResult> WithItemSet(const TSharedPtr<Model::FItemSet> ItemSet);
         TSharedPtr<FVerifyReferenceOfByUserIdResult> WithItemModel(const TSharedPtr<Model::FItemModel> ItemModel);
         TSharedPtr<FVerifyReferenceOfByUserIdResult> WithInventory(const TSharedPtr<Model::FInventory> Inventory);
 
-        TSharedPtr<TArray<FString>> GetItem() const;
+        TOptional<FString> GetItem() const;
         TSharedPtr<Model::FItemSet> GetItemSet() const;
         TSharedPtr<Model::FItemModel> GetItemModel() const;
         TSharedPtr<Model::FInventory> GetInventory() const;

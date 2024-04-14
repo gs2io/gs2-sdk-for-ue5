@@ -83,32 +83,6 @@ namespace Gs2::Showcase::Domain::Model
 
     }
 
-    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomain> FUserAccessTokenDomain::RandomShowcase(
-        const FString ShowcaseName
-    )
-    {
-        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken,
-            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
-        );
-    }
-
-    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusAccessTokenDomain> FUserAccessTokenDomain::RandomShowcaseStatus(
-        const FString ShowcaseName
-    )
-    {
-        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken,
-            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
-        );
-    }
-
     Gs2::Showcase::Domain::Iterator::FDescribeShowcasesIteratorPtr FUserAccessTokenDomain::Showcases(
     ) const
     {
@@ -155,6 +129,32 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FShowcaseAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken,
+            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomain> FUserAccessTokenDomain::RandomShowcase(
+        const FString ShowcaseName
+    )
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken,
+            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusAccessTokenDomain> FUserAccessTokenDomain::RandomShowcaseStatus(
+        const FString ShowcaseName
+    )
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,

@@ -130,9 +130,6 @@ namespace Gs2::Quest::Domain::Model
             bool SpeculativeExecute = true
         );
 
-        TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain> Progress(
-        );
-
         Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIteratorPtr CompletedQuestLists(
         ) const;
 
@@ -146,6 +143,9 @@ namespace Gs2::Quest::Domain::Model
 
         TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListAccessTokenDomain> CompletedQuestList(
             const FString QuestGroupName
+        );
+
+        TSharedPtr<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain> Progress(
         );
 
         static FString CreateCacheParentKey(

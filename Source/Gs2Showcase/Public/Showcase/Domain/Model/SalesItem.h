@@ -71,10 +71,6 @@ namespace Gs2::Showcase::Domain::Model
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
 
         public:
-        TOptional<FString> NamespaceName;
-        TOptional<FString> UserId;
-        TOptional<FString> ShowcaseName;
-        TOptional<FString> DisplayItemId;
     private:
 
         FString ParentKey;
@@ -83,11 +79,7 @@ namespace Gs2::Showcase::Domain::Model
 
         FSalesItemDomain(
             const Core::Domain::FGs2Ptr& Gs2,
-            const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
-            const TOptional<FString> NamespaceName,
-            const TOptional<FString> UserId,
-            const TOptional<FString> ShowcaseName,
-            const TOptional<FString> DisplayItemId
+            const Showcase::Domain::FGs2ShowcaseDomainPtr& Service
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -96,10 +88,6 @@ namespace Gs2::Showcase::Domain::Model
         );
 
         static FString CreateCacheParentKey(
-            TOptional<FString> NamespaceName,
-            TOptional<FString> UserId,
-            TOptional<FString> ShowcaseName,
-            TOptional<FString> DisplayItemId,
             FString ChildType
         );
 

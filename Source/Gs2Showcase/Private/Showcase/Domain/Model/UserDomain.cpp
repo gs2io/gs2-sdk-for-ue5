@@ -82,32 +82,6 @@ namespace Gs2::Showcase::Domain::Model
 
     }
 
-    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain> FUserDomain::RandomShowcase(
-        const FString ShowcaseName
-    )
-    {
-        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId,
-            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
-        );
-    }
-
-    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusDomain> FUserDomain::RandomShowcaseStatus(
-        const FString ShowcaseName
-    )
-    {
-        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId,
-            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
-        );
-    }
-
     Gs2::Showcase::Domain::Iterator::FDescribeShowcasesByUserIdIteratorPtr FUserDomain::Showcases(
         const TOptional<FString> TimeOffsetToken
     ) const
@@ -156,6 +130,32 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         return MakeShared<Gs2::Showcase::Domain::Model::FShowcaseDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId,
+            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain> FUserDomain::RandomShowcase(
+        const FString ShowcaseName
+    )
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId,
+            ShowcaseName == TEXT("") ? TOptional<FString>() : TOptional<FString>(ShowcaseName)
+        );
+    }
+
+    TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusDomain> FUserDomain::RandomShowcaseStatus(
+        const FString ShowcaseName
+    )
+    {
+        return MakeShared<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusDomain>(
             Gs2,
             Service,
             NamespaceName,

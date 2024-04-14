@@ -126,7 +126,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfAccessTokenDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<TArray<FString>>> Result
+        TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
     )
     {
         Request
@@ -199,7 +199,9 @@ namespace Gs2::Inventory::Domain::Model
                 );
             }
         }
-        *Result = ResultModel->GetItem();
+        *Result = MakeShared<Inventory::Model::FReferenceOf>()->WithName(
+            ResultModel->GetItem()
+        );
         return nullptr;
     }
 
@@ -457,7 +459,7 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfAccessTokenDomain::FModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Inventory::Model::FItemSet>> Result
+        TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
     )
     {
         const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
@@ -515,7 +517,9 @@ namespace Gs2::Inventory::Domain::Model
             );
             Future->EnsureCompletion();
         }
-        *Result = Value;
+        *Result = MakeShared<Inventory::Model::FReferenceOf>()->WithName(
+            Self->ReferenceOf
+        );
 
         return nullptr;
     }

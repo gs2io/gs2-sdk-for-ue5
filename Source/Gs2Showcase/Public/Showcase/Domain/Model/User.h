@@ -91,14 +91,6 @@ namespace Gs2::Showcase::Domain::Model
             const FUserDomain& From
         );
 
-        TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain> RandomShowcase(
-            const FString ShowcaseName
-        );
-
-        TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusDomain> RandomShowcaseStatus(
-            const FString ShowcaseName
-        );
-
         Gs2::Showcase::Domain::Iterator::FDescribeShowcasesByUserIdIteratorPtr Showcases(
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
@@ -112,6 +104,14 @@ namespace Gs2::Showcase::Domain::Model
         );
 
         TSharedPtr<Gs2::Showcase::Domain::Model::FShowcaseDomain> Showcase(
+            const FString ShowcaseName
+        );
+
+        TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseDomain> RandomShowcase(
+            const FString ShowcaseName
+        );
+
+        TSharedPtr<Gs2::Showcase::Domain::Model::FRandomShowcaseStatusDomain> RandomShowcaseStatus(
             const FString ShowcaseName
         );
 

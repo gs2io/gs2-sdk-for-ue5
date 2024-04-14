@@ -17,29 +17,9 @@
 #include "Showcase/Model/Gs2ShowcaseUser.h"
 #include "Showcase/Model/Gs2ShowcaseShowcase.h"
 #include "Core/Model/Gs2AccessToken.h"
-#include "Showcase/Model/Gs2ShowcaseRandomShowcase.h"
 #include "Showcase/Model/Gs2ShowcaseShowcase.h"
+#include "Showcase/Model/Gs2ShowcaseRandomShowcase.h"
 #include "Core/BpGs2Constant.h"
-
-FGs2ShowcaseOwnRandomShowcase UGs2ShowcaseUserFunctionLibrary::OwnRandomShowcase(
-    FGs2ShowcaseOwnUser User,
-    FString ShowcaseName
-)
-{
-    FGs2ShowcaseOwnRandomShowcase Return;
-    if (User.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseUserFunctionLibrary::OwnRandomShowcase] User parameter specification is missing."))
-        return Return;
-    }
-    if (ShowcaseName == "") {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseUserFunctionLibrary::OwnRandomShowcase] ShowcaseName parameter specification is missing."))
-        return Return;
-    }
-    Return.Value = User.Value->RandomShowcase(
-        ShowcaseName
-    );
-    return Return;
-}
 
 FGs2ShowcaseOwnShowcase UGs2ShowcaseUserFunctionLibrary::OwnShowcase(
     FGs2ShowcaseOwnUser User,
@@ -56,6 +36,26 @@ FGs2ShowcaseOwnShowcase UGs2ShowcaseUserFunctionLibrary::OwnShowcase(
         return Return;
     }
     Return.Value = User.Value->Showcase(
+        ShowcaseName
+    );
+    return Return;
+}
+
+FGs2ShowcaseOwnRandomShowcase UGs2ShowcaseUserFunctionLibrary::OwnRandomShowcase(
+    FGs2ShowcaseOwnUser User,
+    FString ShowcaseName
+)
+{
+    FGs2ShowcaseOwnRandomShowcase Return;
+    if (User.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseUserFunctionLibrary::OwnRandomShowcase] User parameter specification is missing."))
+        return Return;
+    }
+    if (ShowcaseName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2ShowcaseUserFunctionLibrary::OwnRandomShowcase] ShowcaseName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = User.Value->RandomShowcase(
         ShowcaseName
     );
     return Return;

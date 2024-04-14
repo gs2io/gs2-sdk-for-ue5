@@ -216,32 +216,6 @@ namespace Gs2::Mission::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
-        class GS2MISSION_API FCreateMissionGroupModelMasterTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain>,
-            public TSharedFromThis<FCreateMissionGroupModelMasterTask>
-        {
-            const TSharedPtr<FNamespaceDomain> Self;
-            const Request::FCreateMissionGroupModelMasterRequestPtr Request;
-        public:
-            explicit FCreateMissionGroupModelMasterTask(
-                const TSharedPtr<FNamespaceDomain>& Self,
-                const Request::FCreateMissionGroupModelMasterRequestPtr Request
-            );
-
-            FCreateMissionGroupModelMasterTask(
-                const FCreateMissionGroupModelMasterTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain>> Result
-            ) override;
-        };
-        friend FCreateMissionGroupModelMasterTask;
-
-        TSharedPtr<FAsyncTask<FCreateMissionGroupModelMasterTask>> CreateMissionGroupModelMaster(
-            Request::FCreateMissionGroupModelMasterRequestPtr Request
-        );
-
         class GS2MISSION_API FCreateCounterModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterModelMasterDomain>,
             public TSharedFromThis<FCreateCounterModelMasterTask>
@@ -268,6 +242,32 @@ namespace Gs2::Mission::Domain::Model
             Request::FCreateCounterModelMasterRequestPtr Request
         );
 
+        class GS2MISSION_API FCreateMissionGroupModelMasterTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain>,
+            public TSharedFromThis<FCreateMissionGroupModelMasterTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FCreateMissionGroupModelMasterRequestPtr Request;
+        public:
+            explicit FCreateMissionGroupModelMasterTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FCreateMissionGroupModelMasterRequestPtr Request
+            );
+
+            FCreateMissionGroupModelMasterTask(
+                const FCreateMissionGroupModelMasterTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain>> Result
+            ) override;
+        };
+        friend FCreateMissionGroupModelMasterTask;
+
+        TSharedPtr<FAsyncTask<FCreateMissionGroupModelMasterTask>> CreateMissionGroupModelMaster(
+            Request::FCreateMissionGroupModelMasterRequestPtr Request
+        );
+
         TSharedPtr<Gs2::Mission::Domain::Model::FCurrentMissionMasterDomain> CurrentMissionMaster(
         );
 
@@ -286,6 +286,14 @@ namespace Gs2::Mission::Domain::Model
             const FString MissionGroupName
         );
 
+        TSharedPtr<Gs2::Mission::Domain::Model::FUserDomain> User(
+            const FString UserId
+        );
+
+        TSharedPtr<Gs2::Mission::Domain::Model::FUserAccessTokenDomain> AccessToken(
+            Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        );
+
         Gs2::Mission::Domain::Iterator::FDescribeCounterModelsIteratorPtr CounterModels(
         ) const;
 
@@ -301,12 +309,19 @@ namespace Gs2::Mission::Domain::Model
             const FString CounterName
         );
 
-        TSharedPtr<Gs2::Mission::Domain::Model::FUserDomain> User(
-            const FString UserId
+        Gs2::Mission::Domain::Iterator::FDescribeCounterModelMastersIteratorPtr CounterModelMasters(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeCounterModelMasters(
+            TFunction<void()> Callback
         );
 
-        TSharedPtr<Gs2::Mission::Domain::Model::FUserAccessTokenDomain> AccessToken(
-            Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        void UnsubscribeCounterModelMasters(
+            Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Mission::Domain::Model::FCounterModelMasterDomain> CounterModelMaster(
+            const FString CounterName
         );
 
         Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelMastersIteratorPtr MissionGroupModelMasters(
@@ -322,21 +337,6 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain> MissionGroupModelMaster(
             const FString MissionGroupName
-        );
-
-        Gs2::Mission::Domain::Iterator::FDescribeCounterModelMastersIteratorPtr CounterModelMasters(
-        ) const;
-
-        Gs2::Core::Domain::CallbackID SubscribeCounterModelMasters(
-            TFunction<void()> Callback
-        );
-
-        void UnsubscribeCounterModelMasters(
-            Gs2::Core::Domain::CallbackID CallbackID
-        );
-
-        TSharedPtr<Gs2::Mission::Domain::Model::FCounterModelMasterDomain> CounterModelMaster(
-            const FString CounterName
         );
 
         static FString CreateCacheParentKey(

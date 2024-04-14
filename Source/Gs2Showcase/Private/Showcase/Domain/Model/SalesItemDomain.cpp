@@ -53,27 +53,13 @@ namespace Gs2::Showcase::Domain::Model
 
     FSalesItemDomain::FSalesItemDomain(
         const Core::Domain::FGs2Ptr& Gs2,
-        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service,
-        const TOptional<FString> NamespaceName,
-        const TOptional<FString> UserId,
-        const TOptional<FString> ShowcaseName,
-        const TOptional<FString> DisplayItemId
+        const Showcase::Domain::FGs2ShowcaseDomainPtr& Service
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Service(Service),
         Client(MakeShared<Gs2::Showcase::FGs2ShowcaseRestClient>(Gs2->RestSession)),
-        NamespaceName(NamespaceName),
-        UserId(UserId),
-        ShowcaseName(ShowcaseName),
-        DisplayItemId(DisplayItemId),
-        ParentKey(Gs2::Showcase::Domain::Model::FDisplayItemDomain::CreateCacheParentKey(
-            NamespaceName,
-            UserId,
-            ShowcaseName,
-            DisplayItemId,
-            "SalesItem"
-        ))
+        ParentKey("showcase:SalesItem")
     {
     }
 
@@ -83,28 +69,16 @@ namespace Gs2::Showcase::Domain::Model
         Gs2(From.Gs2),
         Service(From.Service),
         Client(From.Client),
-        NamespaceName(From.NamespaceName),
-        UserId(From.UserId),
-        ShowcaseName(From.ShowcaseName),
-        DisplayItemId(From.DisplayItemId),
         ParentKey(From.ParentKey)
     {
 
     }
 
     FString FSalesItemDomain::CreateCacheParentKey(
-        TOptional<FString> NamespaceName,
-        TOptional<FString> UserId,
-        TOptional<FString> ShowcaseName,
-        TOptional<FString> DisplayItemId,
         FString ChildType
     )
     {
         return FString("") +
-            (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
-            (UserId.IsSet() ? *UserId : "null") + ":" +
-            (ShowcaseName.IsSet() ? *ShowcaseName : "null") + ":" +
-            (DisplayItemId.IsSet() ? *DisplayItemId : "null") + ":" +
             ChildType;
     }
 
