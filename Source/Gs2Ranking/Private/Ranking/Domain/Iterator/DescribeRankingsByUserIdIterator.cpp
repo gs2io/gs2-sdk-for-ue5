@@ -34,7 +34,7 @@ namespace Gs2::Ranking::Domain::Iterator
 {
 
     FDescribeRankingsByUserIdIterator::FDescribeRankingsByUserIdIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Ranking::FGs2RankingRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CategoryName,
@@ -43,7 +43,7 @@ namespace Gs2::Ranking::Domain::Iterator
         const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         CategoryName(CategoryName),
@@ -98,7 +98,7 @@ namespace Gs2::Ranking::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Ranking::Model::FRanking>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Ranking::Model::FRanking>(ListParentKey);
 
                 if (Range)
                 {
@@ -135,7 +135,7 @@ namespace Gs2::Ranking::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Ranking::Model::FRanking::TypeName,
                     ListParentKey,
                     Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
@@ -153,7 +153,7 @@ namespace Gs2::Ranking::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Ranking::Model::FRanking::TypeName,
                     ListParentKey
                 );

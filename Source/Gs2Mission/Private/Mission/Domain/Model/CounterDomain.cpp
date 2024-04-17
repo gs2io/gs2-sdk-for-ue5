@@ -101,6 +101,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
@@ -183,6 +184,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
@@ -249,6 +251,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
@@ -313,6 +316,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);

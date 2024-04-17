@@ -96,6 +96,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->CreateGatheringByUserId(
@@ -167,6 +168,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteGathering(
             Request
@@ -231,6 +233,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->PutResult(
             Request
@@ -292,7 +295,7 @@ namespace Gs2::Matchmaking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeGatheringsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -333,7 +336,7 @@ namespace Gs2::Matchmaking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingByPlayerIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             Player
@@ -346,7 +349,7 @@ namespace Gs2::Matchmaking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,
@@ -392,7 +395,7 @@ namespace Gs2::Matchmaking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

@@ -98,6 +98,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName);
         const auto Future = Self->Client->GetPrizeTableMaster(
@@ -160,6 +161,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName);
         const auto Future = Self->Client->UpdatePrizeTableMaster(
@@ -224,6 +226,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName);
         const auto Future = Self->Client->DeletePrizeTableMaster(

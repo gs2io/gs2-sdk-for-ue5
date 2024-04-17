@@ -90,7 +90,7 @@ namespace Gs2::LoginReward::Domain::Model
     ) const
     {
         return MakeShared<Gs2::LoginReward::Domain::Iterator::FDescribeReceiveStatusesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

@@ -28,14 +28,14 @@ namespace Gs2::Matchmaking::Domain::Iterator
     class GS2MATCHMAKING_API FDoMatchmakingByPlayerIterator :
         public TSharedFromThis<FDoMatchmakingByPlayerIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Matchmaking::Model::FPlayerPtr Player;
 
     public:
         FDoMatchmakingByPlayerIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Matchmaking::Model::FPlayerPtr Player

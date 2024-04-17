@@ -95,6 +95,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithEntryModelName(Self->EntryName);
@@ -159,6 +160,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithEntryModelName(Self->EntryName);

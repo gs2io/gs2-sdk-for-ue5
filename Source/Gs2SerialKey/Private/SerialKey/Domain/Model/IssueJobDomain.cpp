@@ -96,6 +96,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCampaignModelName(Self->CampaignModelName)
             ->WithIssueJobName(Self->IssueJobName);

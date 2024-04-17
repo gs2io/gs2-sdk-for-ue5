@@ -446,7 +446,7 @@ namespace Gs2::Chat::Domain
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

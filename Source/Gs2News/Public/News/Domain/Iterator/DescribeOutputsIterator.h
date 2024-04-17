@@ -28,14 +28,14 @@ namespace Gs2::News::Domain::Iterator
     class GS2NEWS_API FDescribeOutputsIterator :
         public TSharedFromThis<FDescribeOutputsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::News::FGs2NewsRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UploadToken;
 
     public:
         FDescribeOutputsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::News::FGs2NewsRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UploadToken

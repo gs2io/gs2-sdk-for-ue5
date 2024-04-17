@@ -94,6 +94,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->ExportMaster(
             Request
@@ -156,6 +157,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetCurrentMissionMaster(
             Request
@@ -216,6 +218,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentMissionMaster(
             Request
@@ -278,6 +281,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentMissionMasterFromGitHub(
             Request

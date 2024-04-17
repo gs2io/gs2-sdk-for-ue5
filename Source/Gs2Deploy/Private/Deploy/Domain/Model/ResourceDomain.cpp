@@ -87,6 +87,7 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithStackName(Self->StackName)
             ->WithResourceName(Self->ResourceName);
         const auto Future = Self->Client->GetResource(

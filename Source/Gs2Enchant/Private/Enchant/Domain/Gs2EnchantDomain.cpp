@@ -450,7 +450,7 @@ namespace Gs2::Enchant::Domain
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

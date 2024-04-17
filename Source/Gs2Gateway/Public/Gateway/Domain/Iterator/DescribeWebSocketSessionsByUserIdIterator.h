@@ -28,7 +28,7 @@ namespace Gs2::Gateway::Domain::Iterator
     class GS2GATEWAY_API FDescribeWebSocketSessionsByUserIdIterator :
         public TSharedFromThis<FDescribeWebSocketSessionsByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Gateway::FGs2GatewayRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::Gateway::Domain::Iterator
 
     public:
         FDescribeWebSocketSessionsByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Gateway::FGs2GatewayRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

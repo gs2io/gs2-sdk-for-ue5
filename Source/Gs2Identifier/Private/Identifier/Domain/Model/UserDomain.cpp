@@ -82,6 +82,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->UpdateUser(
             Request
@@ -141,6 +142,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->GetUser(
             Request
@@ -198,6 +200,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->DeleteUser(
             Request
@@ -251,6 +254,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName);
         const auto Future = Self->Client->CreateIdentifier(
             Request
@@ -308,7 +312,7 @@ namespace Gs2::Identifier::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeIdentifiersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             UserName
         );
@@ -358,7 +362,7 @@ namespace Gs2::Identifier::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribePasswordsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             UserName
         );

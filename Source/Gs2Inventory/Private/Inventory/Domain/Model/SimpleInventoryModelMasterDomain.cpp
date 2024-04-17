@@ -114,6 +114,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->GetSimpleInventoryModelMaster(
@@ -176,6 +177,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->UpdateSimpleInventoryModelMaster(
@@ -240,6 +242,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->DeleteSimpleInventoryModelMaster(
@@ -298,6 +301,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->CreateSimpleItemModelMaster(
@@ -354,7 +358,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeSimpleItemModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             InventoryName

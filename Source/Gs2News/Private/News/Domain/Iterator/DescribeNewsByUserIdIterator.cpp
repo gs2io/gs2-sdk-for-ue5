@@ -32,14 +32,14 @@ namespace Gs2::News::Domain::Iterator
 {
 
     FDescribeNewsByUserIdIterator::FDescribeNewsByUserIdIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::News::FGs2NewsRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -89,7 +89,7 @@ namespace Gs2::News::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::News::Model::FNews>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::News::Model::FNews>(ListParentKey);
 
                 if (Range)
                 {
@@ -121,7 +121,7 @@ namespace Gs2::News::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::News::Model::FNews::TypeName,
                     ListParentKey,
                     Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
@@ -136,7 +136,7 @@ namespace Gs2::News::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::News::Model::FNews::TypeName,
                     ListParentKey
                 );

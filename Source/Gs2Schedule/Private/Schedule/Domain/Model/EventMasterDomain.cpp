@@ -92,6 +92,7 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithEventName(Self->EventName);
         const auto Future = Self->Client->GetEventMaster(
@@ -154,6 +155,7 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithEventName(Self->EventName);
         const auto Future = Self->Client->UpdateEventMaster(
@@ -218,6 +220,7 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithEventName(Self->EventName);
         const auto Future = Self->Client->DeleteEventMaster(

@@ -89,6 +89,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->ExportMaster(
             Request
@@ -151,6 +152,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetCurrentExperienceMaster(
             Request
@@ -211,6 +213,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentExperienceMaster(
             Request
@@ -273,6 +276,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentExperienceMasterFromGitHub(
             Request

@@ -32,13 +32,13 @@ namespace Gs2::Idle::Domain::Iterator
 {
 
     FDescribeStatusesIterator::FDescribeStatusesIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Idle::FGs2IdleRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken)
@@ -88,7 +88,7 @@ namespace Gs2::Idle::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Idle::Model::FStatus>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Idle::Model::FStatus>(ListParentKey);
 
                 if (Range)
                 {
@@ -123,7 +123,7 @@ namespace Gs2::Idle::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Idle::Model::FStatus::TypeName,
                     ListParentKey,
                     Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
@@ -140,7 +140,7 @@ namespace Gs2::Idle::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Idle::Model::FStatus::TypeName,
                     ListParentKey
                 );

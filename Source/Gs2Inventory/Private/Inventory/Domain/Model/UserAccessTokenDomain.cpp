@@ -100,7 +100,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeInventoriesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

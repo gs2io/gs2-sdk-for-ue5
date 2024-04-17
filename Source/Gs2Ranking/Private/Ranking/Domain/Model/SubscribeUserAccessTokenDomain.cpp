@@ -112,6 +112,7 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCategoryName(Self->CategoryName)
@@ -179,6 +180,7 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCategoryName(Self->CategoryName)

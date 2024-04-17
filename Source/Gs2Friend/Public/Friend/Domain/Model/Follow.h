@@ -104,6 +104,32 @@ namespace Gs2::Friend::Domain::Model
             const FFollowDomain& From
         );
 
+        class GS2FRIEND_API FFollowTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FFollowUserDomain>,
+            public TSharedFromThis<FFollowTask>
+        {
+            const TSharedPtr<FFollowDomain> Self;
+            const Request::FFollowByUserIdRequestPtr Request;
+        public:
+            explicit FFollowTask(
+                const TSharedPtr<FFollowDomain>& Self,
+                const Request::FFollowByUserIdRequestPtr Request
+            );
+
+            FFollowTask(
+                const FFollowTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserDomain>> Result
+            ) override;
+        };
+        friend FFollowTask;
+
+        TSharedPtr<FAsyncTask<FFollowTask>> Follow(
+            Request::FFollowByUserIdRequestPtr Request
+        );
+
         Gs2::Friend::Domain::Iterator::FDescribeFollowsByUserIdIteratorPtr Follows(
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;

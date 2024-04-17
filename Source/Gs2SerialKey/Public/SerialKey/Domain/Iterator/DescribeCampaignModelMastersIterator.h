@@ -28,13 +28,13 @@ namespace Gs2::SerialKey::Domain::Iterator
     class GS2SERIALKEY_API FDescribeCampaignModelMastersIterator :
         public TSharedFromThis<FDescribeCampaignModelMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeCampaignModelMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

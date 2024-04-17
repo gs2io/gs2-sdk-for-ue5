@@ -60,6 +60,7 @@ namespace Gs2::Core::Domain
         Account(nullptr),
         AdReward(nullptr),
         Auth(nullptr),
+        Buff(nullptr),
         Chat(nullptr),
         Datastore(nullptr),
         Deploy(nullptr),
@@ -132,6 +133,10 @@ namespace Gs2::Core::Domain
                     if (Service == "Gs2Auth")
                     {
                         Auth->HandleNotification(Method, *Message->GetPayload());
+                    }
+                    if (Service == "Gs2Buff")
+                    {
+                        Buff->HandleNotification(Method, *Message->GetPayload());
                     }
                     if (Service == "Gs2Chat")
                     {
@@ -306,6 +311,7 @@ namespace Gs2::Core::Domain
         Account(From.Account),
         AdReward(From.AdReward),
         Auth(From.Auth),
+        Buff(From.Buff),
         Chat(From.Chat),
         Datastore(From.Datastore),
         Dictionary(From.Dictionary),
@@ -359,6 +365,7 @@ namespace Gs2::Core::Domain
         Account = MakeShared<Account::Domain::FGs2AccountDomain>(SharedThis(this));
         AdReward = MakeShared<AdReward::Domain::FGs2AdRewardDomain>(SharedThis(this));
         Auth = MakeShared<Auth::Domain::FGs2AuthDomain>(SharedThis(this));
+        Buff = MakeShared<Buff::Domain::FGs2BuffDomain>(SharedThis(this));
         Chat = MakeShared<Chat::Domain::FGs2ChatDomain>(SharedThis(this));
         Datastore = MakeShared<Datastore::Domain::FGs2DatastoreDomain>(SharedThis(this));
         Deploy = MakeShared<Deploy::Domain::FGs2DeployDomain>(SharedThis(this));
@@ -411,6 +418,7 @@ namespace Gs2::Core::Domain
         };
         Account->OnIssueTransaction.AddLambda(IssueTransactionAction);
         AdReward->OnIssueTransaction.AddLambda(IssueTransactionAction);
+        Buff->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Chat->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Datastore->OnIssueTransaction.AddLambda(IssueTransactionAction);
         Deploy->OnIssueTransaction.AddLambda(IssueTransactionAction);
@@ -483,6 +491,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Auth")
             {
                 Auth->UpdateCacheFromStampSheet(Method, Request, Result);
+            }
+            if (Service == "Gs2Buff")
+            {
+                Buff->UpdateCacheFromStampSheet(Method, Request, Result);
             }
             if (Service == "Gs2Chat")
             {
@@ -672,6 +684,10 @@ namespace Gs2::Core::Domain
             if (Service == "Gs2Auth")
             {
                 Auth->UpdateCacheFromStampTask(Method, Request, Result);
+            }
+            if (Service == "Gs2Buff")
+            {
+                Buff->UpdateCacheFromStampTask(Method, Request, Result);
             }
             if (Service == "Gs2Chat")
             {
@@ -880,6 +896,10 @@ namespace Gs2::Core::Domain
             if (Service == "auth")
             {
                 Auth->UpdateCacheFromJobResult(Method, Job, Result);
+            }
+            if (Service == "buff")
+            {
+                Buff->UpdateCacheFromJobResult(Method, Job, Result);
             }
             if (Service == "chat")
             {

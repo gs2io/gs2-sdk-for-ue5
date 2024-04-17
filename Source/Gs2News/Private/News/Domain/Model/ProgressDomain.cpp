@@ -93,6 +93,7 @@ namespace Gs2::News::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUploadToken(Self->UploadToken);
         const auto Future = Self->Client->GetProgress(
@@ -140,7 +141,7 @@ namespace Gs2::News::Domain::Model
     ) const
     {
         return MakeShared<Gs2::News::Domain::Iterator::FDescribeOutputsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UploadToken

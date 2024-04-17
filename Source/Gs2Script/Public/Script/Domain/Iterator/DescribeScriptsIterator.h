@@ -28,13 +28,13 @@ namespace Gs2::Script::Domain::Iterator
     class GS2SCRIPT_API FDescribeScriptsIterator :
         public TSharedFromThis<FDescribeScriptsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Script::FGs2ScriptRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeScriptsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Script::FGs2ScriptRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

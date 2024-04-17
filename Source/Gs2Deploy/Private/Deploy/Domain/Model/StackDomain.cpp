@@ -554,7 +554,7 @@ namespace Gs2::Deploy::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeResourcesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             StackName
         );
@@ -604,7 +604,7 @@ namespace Gs2::Deploy::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeEventsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             StackName
         );
@@ -654,7 +654,7 @@ namespace Gs2::Deploy::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeOutputsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             StackName
         );

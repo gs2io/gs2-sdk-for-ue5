@@ -28,7 +28,7 @@ namespace Gs2::Money::Domain::Iterator
     class GS2MONEY_API FDescribeWalletsIterator :
         public TSharedFromThis<FDescribeWalletsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Money::FGs2MoneyRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -36,7 +36,7 @@ namespace Gs2::Money::Domain::Iterator
 
     public:
         FDescribeWalletsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Money::FGs2MoneyRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

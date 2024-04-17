@@ -28,7 +28,7 @@ namespace Gs2::Lock::Domain::Iterator
     class GS2LOCK_API FDescribeMutexesByUserIdIterator :
         public TSharedFromThis<FDescribeMutexesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Lock::FGs2LockRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::Lock::Domain::Iterator
 
     public:
         FDescribeMutexesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Lock::FGs2LockRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

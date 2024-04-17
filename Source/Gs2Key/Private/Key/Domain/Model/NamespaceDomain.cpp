@@ -80,6 +80,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -132,6 +133,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -189,6 +191,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -248,6 +251,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -301,6 +305,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateKey(
             Request
@@ -369,6 +374,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateGitHubApiKey(
             Request
@@ -422,7 +428,7 @@ namespace Gs2::Key::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Key::Domain::Iterator::FDescribeKeysIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -472,7 +478,7 @@ namespace Gs2::Key::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Key::Domain::Iterator::FDescribeGitHubApiKeysIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

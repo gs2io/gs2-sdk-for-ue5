@@ -102,6 +102,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
@@ -168,6 +169,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
@@ -230,6 +232,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
@@ -298,6 +301,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
@@ -366,6 +370,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)
@@ -434,6 +439,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithParameterName(Self->ParameterName)

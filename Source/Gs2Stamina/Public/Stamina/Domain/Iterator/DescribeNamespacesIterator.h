@@ -28,12 +28,12 @@ namespace Gs2::Stamina::Domain::Iterator
     class GS2STAMINA_API FDescribeNamespacesIterator :
         public TSharedFromThis<FDescribeNamespacesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Stamina::FGs2StaminaRestClientPtr Client;
 
     public:
         FDescribeNamespacesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Stamina::FGs2StaminaRestClientPtr Client
         );
 

@@ -28,7 +28,7 @@ namespace Gs2::Showcase::Domain::Iterator
     class GS2SHOWCASE_API FDescribeRandomDisplayItemsByUserIdIterator :
         public TSharedFromThis<FDescribeRandomDisplayItemsByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> ShowcaseName;
@@ -37,7 +37,7 @@ namespace Gs2::Showcase::Domain::Iterator
 
     public:
         FDescribeRandomDisplayItemsByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> ShowcaseName,

@@ -97,6 +97,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName);
         const auto Future = Self->Client->GetCounterModelMaster(
@@ -159,6 +160,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName);
         const auto Future = Self->Client->UpdateCounterModelMaster(
@@ -223,6 +225,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName);
         const auto Future = Self->Client->DeleteCounterModelMaster(

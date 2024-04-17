@@ -530,7 +530,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -604,7 +604,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -654,7 +654,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeSimpleInventoryModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -704,7 +704,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -754,7 +754,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigInventoryModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -804,7 +804,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeInventoryModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

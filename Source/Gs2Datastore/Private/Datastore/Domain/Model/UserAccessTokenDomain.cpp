@@ -91,6 +91,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->PrepareUpload(
@@ -166,6 +167,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->PrepareDownload(
@@ -242,6 +244,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->PrepareDownloadByGeneration(
@@ -304,7 +307,7 @@ namespace Gs2::Datastore::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Datastore::Domain::Iterator::FDescribeDataObjectsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken,

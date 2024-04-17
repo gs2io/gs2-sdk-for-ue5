@@ -99,6 +99,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);
@@ -180,6 +181,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);
@@ -263,6 +265,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);
@@ -346,6 +349,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);
@@ -429,6 +433,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithStaminaName(Self->StaminaName);

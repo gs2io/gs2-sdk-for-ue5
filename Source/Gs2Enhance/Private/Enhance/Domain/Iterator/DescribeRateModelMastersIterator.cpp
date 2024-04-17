@@ -32,12 +32,12 @@ namespace Gs2::Enhance::Domain::Iterator
 {
 
     FDescribeRateModelMastersIterator::FDescribeRateModelMastersIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Enhance::FGs2EnhanceRestClientPtr Client,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName)
     {
@@ -85,7 +85,7 @@ namespace Gs2::Enhance::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Enhance::Model::FRateModelMaster>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Enhance::Model::FRateModelMaster>(ListParentKey);
 
                 if (Range)
                 {
@@ -119,7 +119,7 @@ namespace Gs2::Enhance::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Enhance::Model::FRateModelMaster::TypeName,
                     ListParentKey,
                     Gs2::Enhance::Domain::Model::FRateModelMasterDomain::CreateCacheKey(
@@ -136,7 +136,7 @@ namespace Gs2::Enhance::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Enhance::Model::FRateModelMaster::TypeName,
                     ListParentKey
                 );

@@ -93,6 +93,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAreaModelName(Self->AreaModelName);
         const auto Future = Self->Client->GetAreaModelMaster(
@@ -155,6 +156,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAreaModelName(Self->AreaModelName);
         const auto Future = Self->Client->UpdateAreaModelMaster(
@@ -219,6 +221,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAreaModelName(Self->AreaModelName);
         const auto Future = Self->Client->DeleteAreaModelMaster(
@@ -277,6 +280,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAreaModelName(Self->AreaModelName);
         const auto Future = Self->Client->CreateLayerModelMaster(
@@ -333,7 +337,7 @@ namespace Gs2::MegaField::Domain::Model
     ) const
     {
         return MakeShared<Gs2::MegaField::Domain::Iterator::FDescribeLayerModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AreaModelName

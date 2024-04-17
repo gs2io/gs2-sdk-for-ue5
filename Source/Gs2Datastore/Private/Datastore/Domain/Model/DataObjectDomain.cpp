@@ -94,6 +94,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithDataObjectName(Self->DataObjectName);
@@ -160,6 +161,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithDataObjectName(Self->DataObjectName);
@@ -230,6 +232,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithDataObjectName(Self->DataObjectName);
@@ -305,6 +308,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithDataObjectName(Self->DataObjectName);
@@ -371,6 +375,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithDataObjectName(Self->DataObjectName);
@@ -442,6 +447,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithDataObjectName(Self->DataObjectName);
@@ -499,7 +505,7 @@ namespace Gs2::Datastore::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Datastore::Domain::Iterator::FDescribeDataObjectHistoriesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

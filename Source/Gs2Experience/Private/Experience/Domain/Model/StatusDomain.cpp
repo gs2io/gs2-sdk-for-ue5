@@ -99,6 +99,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -165,6 +166,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -238,6 +240,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -306,6 +309,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -374,6 +378,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -442,6 +447,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -510,6 +516,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -578,6 +585,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -646,6 +654,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -708,6 +717,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -756,6 +766,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)
@@ -804,6 +815,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithExperienceName(Self->ExperienceName)

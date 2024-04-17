@@ -89,6 +89,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -141,6 +142,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -198,6 +200,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -257,6 +260,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -310,6 +314,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateBalanceParameterModelMaster(
             Request
@@ -378,6 +383,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateRarityParameterModelMaster(
             Request
@@ -441,7 +447,7 @@ namespace Gs2::Enchant::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -491,7 +497,7 @@ namespace Gs2::Enchant::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -541,7 +547,7 @@ namespace Gs2::Enchant::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -591,7 +597,7 @@ namespace Gs2::Enchant::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

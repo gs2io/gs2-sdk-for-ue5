@@ -111,6 +111,7 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCategoryName(Self->CategoryName)
@@ -178,6 +179,7 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCategoryName(Self->CategoryName)

@@ -21,6 +21,7 @@
 #include "Account/Domain/Gs2Account.h"
 #include "AdReward/Domain/Gs2AdReward.h"
 #include "Auth/Domain/Gs2Auth.h"
+#include "Buff/Domain/Gs2Buff.h"
 #include "Chat/Domain/Gs2Chat.h"
 #include "Datastore/Domain/Gs2Datastore.h"
 #include "Deploy/Domain/Gs2Deploy.h"
@@ -81,6 +82,7 @@ namespace Gs2::Core::Domain
         Gs2::Account::Domain::FGs2AccountDomainPtr Account;
         Gs2::AdReward::Domain::FGs2AdRewardDomainPtr AdReward;
         Gs2::Auth::Domain::FGs2AuthDomainPtr Auth;
+        Gs2::Buff::Domain::FGs2BuffDomainPtr Buff;
         Gs2::Chat::Domain::FGs2ChatDomainPtr Chat;
         Gs2::Datastore::Domain::FGs2DatastoreDomainPtr Datastore;
         Gs2::Deploy::Domain::FGs2DeployDomainPtr Deploy;
@@ -121,6 +123,8 @@ namespace Gs2::Core::Domain
         Gs2::Stamina::Domain::FGs2StaminaDomainPtr Stamina;
         Gs2::StateMachine::Domain::FGs2StateMachineDomainPtr StateMachine;
         Gs2::Version::Domain::FGs2VersionDomainPtr Version;
+
+        TOptional<FString> DefaultContextStack;
 
         bool Disposed;
 

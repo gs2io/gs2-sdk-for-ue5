@@ -32,14 +32,14 @@ namespace Gs2::Account::Domain::Iterator
 {
 
     FDescribeTakeOversByUserIdIterator::FDescribeTakeOversByUserIdIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Account::FGs2AccountRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -90,7 +90,7 @@ namespace Gs2::Account::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Account::Model::FTakeOver>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Account::Model::FTakeOver>(ListParentKey);
 
                 if (Range)
                 {
@@ -125,7 +125,7 @@ namespace Gs2::Account::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Account::Model::FTakeOver::TypeName,
                     ListParentKey,
                     Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
@@ -142,7 +142,7 @@ namespace Gs2::Account::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Account::Model::FTakeOver::TypeName,
                     ListParentKey
                 );

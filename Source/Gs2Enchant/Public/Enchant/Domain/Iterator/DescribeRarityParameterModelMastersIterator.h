@@ -28,13 +28,13 @@ namespace Gs2::Enchant::Domain::Iterator
     class GS2ENCHANT_API FDescribeRarityParameterModelMastersIterator :
         public TSharedFromThis<FDescribeRarityParameterModelMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Enchant::FGs2EnchantRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeRarityParameterModelMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Enchant::FGs2EnchantRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

@@ -74,7 +74,7 @@ namespace Gs2::Lock::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Lock::Domain::Iterator::FDescribeMutexesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

@@ -96,6 +96,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRatingName(Self->RatingName);
         const auto Future = Self->Client->GetRatingModelMaster(
@@ -158,6 +159,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRatingName(Self->RatingName);
         const auto Future = Self->Client->UpdateRatingModelMaster(
@@ -222,6 +224,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRatingName(Self->RatingName);
         const auto Future = Self->Client->DeleteRatingModelMaster(

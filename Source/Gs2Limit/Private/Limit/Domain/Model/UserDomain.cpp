@@ -78,7 +78,7 @@ namespace Gs2::Limit::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Limit::Domain::Iterator::FDescribeCountersByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

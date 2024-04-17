@@ -88,6 +88,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->ExportMaster(
             Request
@@ -150,6 +151,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetCurrentEntryMaster(
             Request
@@ -210,6 +212,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentEntryMaster(
             Request
@@ -272,6 +275,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentEntryMasterFromGitHub(
             Request

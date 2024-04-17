@@ -31,11 +31,11 @@ namespace Gs2::Identifier::Domain::Iterator
 {
 
     FDescribeCommonSecurityPoliciesIterator::FDescribeCommonSecurityPoliciesIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Identifier::FGs2IdentifierRestClientPtr Client
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client)
     {
     }
@@ -79,7 +79,7 @@ namespace Gs2::Identifier::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Identifier::Model::FSecurityPolicy>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Identifier::Model::FSecurityPolicy>(ListParentKey);
 
                 if (Range)
                 {
@@ -112,7 +112,7 @@ namespace Gs2::Identifier::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                     ListParentKey,
                     Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
@@ -129,7 +129,7 @@ namespace Gs2::Identifier::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Identifier::Model::FSecurityPolicy::TypeName,
                     ListParentKey
                 );

@@ -94,6 +94,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->ReceiveGlobalMessage(
@@ -182,7 +183,7 @@ namespace Gs2::Inbox::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Iterator::FDescribeMessagesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken,

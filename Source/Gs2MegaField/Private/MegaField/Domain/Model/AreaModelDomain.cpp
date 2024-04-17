@@ -93,6 +93,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAreaModelName(Self->AreaModelName);
         const auto Future = Self->Client->GetAreaModel(
@@ -140,7 +141,7 @@ namespace Gs2::MegaField::Domain::Model
     ) const
     {
         return MakeShared<Gs2::MegaField::Domain::Iterator::FDescribeLayerModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AreaModelName

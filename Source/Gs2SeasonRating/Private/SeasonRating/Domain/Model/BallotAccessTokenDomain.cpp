@@ -107,6 +107,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeasonName(Self->SeasonName)

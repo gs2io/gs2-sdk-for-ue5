@@ -17,7 +17,7 @@ namespace Gs2::UE5::Util
 		FGs2Connection(
 			Gs2::Core::Model::FGs2CredentialPtr Credential,
 			Gs2::Core::Model::ERegion Region
-			);
+		);
 		FGs2Connection(
 			const FGs2Connection& From
 		);

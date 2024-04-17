@@ -98,6 +98,7 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
 
@@ -171,7 +172,7 @@ namespace Gs2::Quest::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeCompletedQuestListsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

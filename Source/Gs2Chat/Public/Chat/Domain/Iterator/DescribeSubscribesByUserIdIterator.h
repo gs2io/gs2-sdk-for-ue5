@@ -28,7 +28,7 @@ namespace Gs2::Chat::Domain::Iterator
     class GS2CHAT_API FDescribeSubscribesByUserIdIterator :
         public TSharedFromThis<FDescribeSubscribesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Chat::FGs2ChatRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::Chat::Domain::Iterator
 
     public:
         FDescribeSubscribesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Chat::FGs2ChatRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

@@ -85,6 +85,7 @@ namespace Gs2::Realtime::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName);
         const auto Future = Self->Client->GetRoom(
@@ -147,6 +148,7 @@ namespace Gs2::Realtime::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName);
         const auto Future = Self->Client->DeleteRoom(

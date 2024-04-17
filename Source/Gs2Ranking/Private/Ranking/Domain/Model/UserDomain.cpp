@@ -102,7 +102,7 @@ namespace Gs2::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeScoresByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             CategoryName,

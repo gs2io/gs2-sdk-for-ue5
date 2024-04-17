@@ -91,6 +91,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -143,6 +144,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -200,6 +202,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -259,6 +262,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -312,6 +316,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateCounterModelMaster(
             Request
@@ -380,6 +385,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateMissionGroupModelMaster(
             Request
@@ -443,7 +449,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -517,7 +523,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeCounterModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -567,7 +573,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeCounterModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -617,7 +623,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeMissionGroupModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

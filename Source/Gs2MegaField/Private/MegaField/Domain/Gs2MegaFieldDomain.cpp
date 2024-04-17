@@ -123,7 +123,7 @@ namespace Gs2::MegaField::Domain
     ) const
     {
         return MakeShared<Gs2::MegaField::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

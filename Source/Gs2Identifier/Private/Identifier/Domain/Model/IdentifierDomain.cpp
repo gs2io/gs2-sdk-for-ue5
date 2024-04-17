@@ -88,6 +88,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName)
             ->WithClientId(Self->ClientId);
         const auto Future = Self->Client->GetIdentifier(
@@ -150,6 +151,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithUserName(Self->UserName)
             ->WithClientId(Self->ClientId);
         const auto Future = Self->Client->DeleteIdentifier(

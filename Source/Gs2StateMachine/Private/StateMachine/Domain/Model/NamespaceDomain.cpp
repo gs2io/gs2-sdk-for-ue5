@@ -83,6 +83,7 @@ namespace Gs2::StateMachine::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -135,6 +136,7 @@ namespace Gs2::StateMachine::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -192,6 +194,7 @@ namespace Gs2::StateMachine::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -251,6 +254,7 @@ namespace Gs2::StateMachine::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -304,6 +308,7 @@ namespace Gs2::StateMachine::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateStateMachineMaster(
             Request
@@ -357,7 +362,7 @@ namespace Gs2::StateMachine::Domain::Model
     ) const
     {
         return MakeShared<Gs2::StateMachine::Domain::Iterator::FDescribeStateMachineMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

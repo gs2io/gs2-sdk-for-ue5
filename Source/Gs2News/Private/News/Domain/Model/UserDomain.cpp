@@ -79,7 +79,7 @@ namespace Gs2::News::Domain::Model
     ) const
     {
         return MakeShared<Gs2::News::Domain::Iterator::FDescribeNewsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

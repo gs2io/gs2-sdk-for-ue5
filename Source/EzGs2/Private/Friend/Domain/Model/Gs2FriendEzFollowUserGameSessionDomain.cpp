@@ -51,56 +51,6 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     }
 
-    FEzFollowUserGameSessionDomain::FFollowTask::FFollowTask(
-        TSharedPtr<FEzFollowUserGameSessionDomain> Self
-    ): Self(Self)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FEzFollowUserGameSessionDomain::FFollowTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>> Result
-    )
-    {
-        const auto Future = Self->ConnectionValue->Run(
-            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
-                const auto Task = Self->Domain->Follow(
-                    MakeShared<Gs2::Friend::Request::FFollowRequest>()
-                );
-                Task->StartSynchronousTask();
-                if (Task->GetTask().IsError())
-                {
-                    Task->EnsureCompletion();
-                    return Task->GetTask().Error();
-                }
-                *Result = MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>(
-                    Task->GetTask().Result(),
-                    Self->GameSession,
-                    Self->ConnectionValue
-                );
-                Task->EnsureCompletion();
-                return nullptr;
-            },
-            nullptr
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            Future->EnsureCompletion();
-            return Future->GetTask().Error();
-        }
-        Future->EnsureCompletion();
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FEzFollowUserGameSessionDomain::FFollowTask>> FEzFollowUserGameSessionDomain::Follow(
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FFollowTask>>(
-            this->AsShared()
-        );
-    }
-
     FEzFollowUserGameSessionDomain::FUnfollowTask::FUnfollowTask(
         TSharedPtr<FEzFollowUserGameSessionDomain> Self
     ): Self(Self)

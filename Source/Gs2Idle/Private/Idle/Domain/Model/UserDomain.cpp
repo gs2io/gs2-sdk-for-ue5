@@ -77,7 +77,7 @@ namespace Gs2::Idle::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Idle::Domain::Iterator::FDescribeStatusesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

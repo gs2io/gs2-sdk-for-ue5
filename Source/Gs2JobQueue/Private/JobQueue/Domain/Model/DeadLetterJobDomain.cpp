@@ -96,6 +96,7 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithDeadLetterJobName(Self->DeadLetterJobName);
@@ -160,6 +161,7 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithDeadLetterJobName(Self->DeadLetterJobName);

@@ -28,7 +28,7 @@ namespace Gs2::JobQueue::Domain::Iterator
     class GS2JOBQUEUE_API FDescribeDeadLetterJobsByUserIdIterator :
         public TSharedFromThis<FDescribeDeadLetterJobsByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::JobQueue::Domain::Iterator
 
     public:
         FDescribeDeadLetterJobsByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

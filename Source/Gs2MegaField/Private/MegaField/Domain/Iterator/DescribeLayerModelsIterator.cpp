@@ -32,13 +32,13 @@ namespace Gs2::MegaField::Domain::Iterator
 {
 
     FDescribeLayerModelsIterator::FDescribeLayerModelsIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> AreaModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         AreaModelName(AreaModelName)
@@ -87,7 +87,7 @@ namespace Gs2::MegaField::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::MegaField::Model::FLayerModel>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::MegaField::Model::FLayerModel>(ListParentKey);
 
                 if (Range)
                 {
@@ -119,7 +119,7 @@ namespace Gs2::MegaField::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::MegaField::Model::FLayerModel::TypeName,
                     ListParentKey,
                     Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
@@ -135,7 +135,7 @@ namespace Gs2::MegaField::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::MegaField::Model::FLayerModel::TypeName,
                     ListParentKey
                 );

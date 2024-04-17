@@ -114,6 +114,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->GetBigInventoryModelMaster(
@@ -176,6 +177,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->UpdateBigInventoryModelMaster(
@@ -240,6 +242,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->DeleteBigInventoryModelMaster(
@@ -298,6 +301,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithInventoryName(Self->InventoryName);
         const auto Future = Self->Client->CreateBigItemModelMaster(
@@ -354,7 +358,7 @@ namespace Gs2::Inventory::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeBigItemModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             InventoryName

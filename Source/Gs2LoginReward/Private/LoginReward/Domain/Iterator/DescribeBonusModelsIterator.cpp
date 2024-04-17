@@ -32,12 +32,12 @@ namespace Gs2::LoginReward::Domain::Iterator
 {
 
     FDescribeBonusModelsIterator::FDescribeBonusModelsIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName)
     {
@@ -84,7 +84,7 @@ namespace Gs2::LoginReward::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::LoginReward::Model::FBonusModel>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::LoginReward::Model::FBonusModel>(ListParentKey);
 
                 if (Range)
                 {
@@ -115,7 +115,7 @@ namespace Gs2::LoginReward::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::LoginReward::Model::FBonusModel::TypeName,
                     ListParentKey,
                     Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
@@ -131,7 +131,7 @@ namespace Gs2::LoginReward::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::LoginReward::Model::FBonusModel::TypeName,
                     ListParentKey
                 );

@@ -34,14 +34,14 @@ namespace Gs2::Matchmaking::Domain::Iterator
 {
 
     FDoMatchmakingIterator::FDoMatchmakingIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Matchmaking::FGs2MatchmakingRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const Gs2::Matchmaking::Model::FPlayerPtr Player
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -88,8 +88,8 @@ namespace Gs2::Matchmaking::Domain::Iterator
             const auto Future = Self->Client->DoMatchmaking(
                 MakeShared<Gs2::Matchmaking::Request::FDoMatchmakingRequest>()
                     ->WithNamespaceName(Self->NamespaceName)
-                    ->WithPlayer(Self->Player)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+                    ->WithPlayer(Self->Player)
                     ->WithMatchmakingContextToken(MatchmakingContextToken)
             );
             Future->StartSynchronousTask();
@@ -111,7 +111,7 @@ namespace Gs2::Matchmaking::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             MatchmakingContextToken = R->GetMatchmakingContextToken();
             bLast = !MatchmakingContextToken.IsSet();
-            Self->Cache->ClearListCache(
+            Self->Gs2->Cache->ClearListCache(
                 Gs2::Matchmaking::Model::FGathering::TypeName,
                 Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
                 Self->NamespaceName,

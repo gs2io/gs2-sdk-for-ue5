@@ -95,6 +95,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -147,6 +148,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -204,6 +206,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -263,6 +266,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -316,6 +320,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateSalesItemMaster(
             Request
@@ -384,6 +389,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateSalesItemGroupMaster(
             Request
@@ -452,6 +458,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateShowcaseMaster(
             Request
@@ -520,6 +527,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateRandomShowcaseMaster(
             Request
@@ -583,7 +591,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeSalesItemMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -633,7 +641,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeSalesItemGroupMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -707,7 +715,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeShowcaseMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -757,7 +765,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeRandomShowcaseMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

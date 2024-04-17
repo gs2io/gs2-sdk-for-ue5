@@ -102,6 +102,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName)
             ->WithPrizeId(Self->PrizeId);
@@ -166,6 +167,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName)
             ->WithPrizeId(Self->PrizeId);

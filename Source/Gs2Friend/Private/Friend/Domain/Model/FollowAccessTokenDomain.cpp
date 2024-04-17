@@ -91,11 +91,85 @@ namespace Gs2::Friend::Domain::Model
 
     }
 
+    FFollowAccessTokenDomain::FFollowTask::FFollowTask(
+        const TSharedPtr<FFollowAccessTokenDomain>& Self,
+        const Request::FFollowRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FFollowAccessTokenDomain::FFollowTask::FFollowTask(
+        const FFollowTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFollowAccessTokenDomain::FFollowTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->Follow(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
+                    FString("FollowUser:") + (Self->WithProfile.IsSet() ? *Self->WithProfile == true ? "True" : "False" : "False")
+                );
+                const auto Key = Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetUserId()
+                );
+                Self->Gs2->Cache->Put(
+                    Gs2::Friend::Model::FFollowUser::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
+        }
+        auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            Self->AccessToken,
+            false,
+            Request->GetTargetUserId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFollowAccessTokenDomain::FFollowTask>> FFollowAccessTokenDomain::Follow(
+        Request::FFollowRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FFollowTask>>(this->AsShared(), Request);
+    }
+
     Gs2::Friend::Domain::Iterator::FDescribeFollowsIteratorPtr FFollowAccessTokenDomain::Follows(
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeFollowsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken,

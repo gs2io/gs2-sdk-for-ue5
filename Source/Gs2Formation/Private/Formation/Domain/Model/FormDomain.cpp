@@ -107,6 +107,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)
@@ -225,6 +226,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)
@@ -350,6 +352,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)
@@ -470,6 +473,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)
@@ -576,6 +580,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName)

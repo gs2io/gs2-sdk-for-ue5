@@ -95,6 +95,7 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRateName(Self->RateName);
         const auto Future = Self->Client->GetIncrementalRateModelMaster(
@@ -157,6 +158,7 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRateName(Self->RateName);
         const auto Future = Self->Client->UpdateIncrementalRateModelMaster(
@@ -221,6 +223,7 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRateName(Self->RateName);
         const auto Future = Self->Client->DeleteIncrementalRateModelMaster(

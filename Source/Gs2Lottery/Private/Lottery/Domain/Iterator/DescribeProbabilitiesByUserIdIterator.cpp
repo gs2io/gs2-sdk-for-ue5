@@ -34,7 +34,7 @@ namespace Gs2::Lottery::Domain::Iterator
 {
 
     FDescribeProbabilitiesByUserIdIterator::FDescribeProbabilitiesByUserIdIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> LotteryName,
@@ -42,7 +42,7 @@ namespace Gs2::Lottery::Domain::Iterator
         const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         LotteryName(LotteryName),
@@ -94,7 +94,7 @@ namespace Gs2::Lottery::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Lottery::Model::FProbability>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Lottery::Model::FProbability>(ListParentKey);
 
                 if (Range)
                 {
@@ -127,7 +127,7 @@ namespace Gs2::Lottery::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Lottery::Model::FProbability::TypeName,
                     ListParentKey,
                     Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
@@ -143,7 +143,7 @@ namespace Gs2::Lottery::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Lottery::Model::FProbability::TypeName,
                     ListParentKey
                 );

@@ -28,7 +28,7 @@ namespace Gs2::Quest::Domain::Iterator
     class GS2QUEST_API FDescribeCompletedQuestListsIterator :
         public TSharedFromThis<FDescribeCompletedQuestListsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Quest::FGs2QuestRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -36,7 +36,7 @@ namespace Gs2::Quest::Domain::Iterator
 
     public:
         FDescribeCompletedQuestListsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Quest::FGs2QuestRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

@@ -113,6 +113,7 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithWithProfile(Self->WithProfile)
@@ -158,103 +159,6 @@ namespace Gs2::Friend::Domain::Model
         Request::FGetFriendByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
-    }
-
-    FFriendUserDomain::FDeleteTask::FDeleteTask(
-        const TSharedPtr<FFriendUserDomain>& Self,
-        const Request::FDeleteFriendByUserIdRequestPtr Request
-    ): Self(Self), Request(Request)
-    {
-
-    }
-
-    FFriendUserDomain::FDeleteTask::FDeleteTask(
-        const FDeleteTask& From
-    ): TGs2Future(From), Self(From.Self), Request(From.Request)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FFriendUserDomain::FDeleteTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFriendUserDomain>> Result
-    )
-    {
-        Request
-            ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithTargetUserId(Self->TargetUserId);
-        const auto Future = Self->Client->DeleteFriendByUserId(
-            Request
-        );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto RequestModel = Request;
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
-                    "FriendUser"
-                );
-                const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Friend::Model::FFriendUser::TypeName, ParentKey, Key);
-            }
-            {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
-                    "FriendUser"
-                );
-                const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Friend::Model::FFriendUser::TypeName, ParentKey, Key);
-            }
-            Self->Gs2->Cache->Delete(
-                Gs2::Friend::Model::FFriendUser::TypeName,
-                Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    ResultModel->GetItem()->GetUserId(),
-                    FString("False"),
-                    "FriendUser"
-                ),
-                Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
-                    Self->UserId
-                )
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Friend::Model::FFriendUser::TypeName,
-                Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    ResultModel->GetItem()->GetUserId(),
-                    FString("True"),
-                    "FriendUser"
-                ),
-                Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
-                    Self->UserId
-                )
-            );
-        }
-        auto Domain = Self;
-
-        *Result = Domain;
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FFriendUserDomain::FDeleteTask>> FFriendUserDomain::Delete(
-        Request::FDeleteFriendByUserIdRequestPtr Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
     FString FFriendUserDomain::CreateCacheParentKey(

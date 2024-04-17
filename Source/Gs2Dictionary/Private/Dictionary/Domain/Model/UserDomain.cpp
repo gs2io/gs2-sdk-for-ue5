@@ -91,6 +91,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->AddEntriesByUserId(
@@ -183,6 +184,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->ResetByUserId(
@@ -247,6 +249,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->VerifyEntryByUserId(
@@ -293,6 +296,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->DeleteEntriesByUserId(
@@ -369,7 +373,7 @@ namespace Gs2::Dictionary::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Dictionary::Domain::Iterator::FDescribeEntriesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

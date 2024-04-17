@@ -95,6 +95,7 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithQuestGroupName(Self->QuestGroupName);
         const auto Future = Self->Client->GetQuestGroupModel(
@@ -142,7 +143,7 @@ namespace Gs2::Quest::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeQuestModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             QuestGroupName

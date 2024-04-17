@@ -28,13 +28,13 @@ namespace Gs2::Quest::Domain::Iterator
     class GS2QUEST_API FDescribeQuestGroupModelsIterator :
         public TSharedFromThis<FDescribeQuestGroupModelsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Quest::FGs2QuestRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeQuestGroupModelsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Quest::FGs2QuestRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

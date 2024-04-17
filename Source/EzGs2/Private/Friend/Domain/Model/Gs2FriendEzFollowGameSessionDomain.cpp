@@ -51,6 +51,60 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     }
 
+    FEzFollowGameSessionDomain::FFollowTask::FFollowTask(
+        TSharedPtr<FEzFollowGameSessionDomain> Self,
+        FString TargetUserId
+    ): Self(Self), TargetUserId(TargetUserId)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzFollowGameSessionDomain::FFollowTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Follow(
+                    MakeShared<Gs2::Friend::Request::FFollowRequest>()
+                        ->WithTargetUserId(TargetUserId)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzFollowGameSessionDomain::FFollowTask>> FEzFollowGameSessionDomain::Follow(
+        FString TargetUserId
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FFollowTask>>(
+            this->AsShared(),
+            TargetUserId
+        );
+    }
+
     Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFollowsIteratorPtr FEzFollowGameSessionDomain::Follows(
     ) const
     {

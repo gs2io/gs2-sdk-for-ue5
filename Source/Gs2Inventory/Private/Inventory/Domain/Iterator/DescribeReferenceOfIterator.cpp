@@ -32,7 +32,7 @@ namespace Gs2::Inventory::Domain::Iterator
 {
 
     FDescribeReferenceOfIterator::FDescribeReferenceOfIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Inventory::FGs2InventoryRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> InventoryName,
@@ -41,7 +41,7 @@ namespace Gs2::Inventory::Domain::Iterator
         const TOptional<FString> ItemSetName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         InventoryName(InventoryName),
@@ -89,7 +89,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Inventory::Model::FReferenceOfEntry>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Inventory::Model::FReferenceOfEntry>(ListParentKey);
 
                 if (Range)
                 {
@@ -131,7 +131,7 @@ namespace Gs2::Inventory::Domain::Iterator
             }
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FReferenceOfEntry::TypeName,
                     ListParentKey,
                     Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
@@ -147,7 +147,7 @@ namespace Gs2::Inventory::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Inventory::Model::FReferenceOfEntry::TypeName,
                     ListParentKey
                 );

@@ -94,6 +94,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRecoverValueTableName(Self->RecoverValueTableName);
         const auto Future = Self->Client->GetRecoverValueTableMaster(
@@ -156,6 +157,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRecoverValueTableName(Self->RecoverValueTableName);
         const auto Future = Self->Client->UpdateRecoverValueTableMaster(
@@ -220,6 +222,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRecoverValueTableName(Self->RecoverValueTableName);
         const auto Future = Self->Client->DeleteRecoverValueTableMaster(

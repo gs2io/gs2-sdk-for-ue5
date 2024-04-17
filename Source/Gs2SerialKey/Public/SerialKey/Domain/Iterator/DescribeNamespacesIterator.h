@@ -28,12 +28,12 @@ namespace Gs2::SerialKey::Domain::Iterator
     class GS2SERIALKEY_API FDescribeNamespacesIterator :
         public TSharedFromThis<FDescribeNamespacesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client;
 
     public:
         FDescribeNamespacesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client
         );
 

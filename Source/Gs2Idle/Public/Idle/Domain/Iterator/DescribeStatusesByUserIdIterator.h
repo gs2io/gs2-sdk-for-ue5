@@ -28,7 +28,7 @@ namespace Gs2::Idle::Domain::Iterator
     class GS2IDLE_API FDescribeStatusesByUserIdIterator :
         public TSharedFromThis<FDescribeStatusesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Idle::FGs2IdleRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::Idle::Domain::Iterator
 
     public:
         FDescribeStatusesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Idle::FGs2IdleRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

@@ -221,7 +221,7 @@ namespace Gs2::Deploy::Domain
     ) const
     {
         return MakeShared<Gs2::Deploy::Domain::Iterator::FDescribeStacksIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

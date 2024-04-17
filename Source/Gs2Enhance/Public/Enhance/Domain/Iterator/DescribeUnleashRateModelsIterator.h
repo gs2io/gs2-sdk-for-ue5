@@ -28,13 +28,13 @@ namespace Gs2::Enhance::Domain::Iterator
     class GS2ENHANCE_API FDescribeUnleashRateModelsIterator :
         public TSharedFromThis<FDescribeUnleashRateModelsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Enhance::FGs2EnhanceRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeUnleashRateModelsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Enhance::FGs2EnhanceRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

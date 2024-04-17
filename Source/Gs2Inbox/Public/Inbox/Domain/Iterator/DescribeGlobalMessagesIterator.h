@@ -28,13 +28,13 @@ namespace Gs2::Inbox::Domain::Iterator
     class GS2INBOX_API FDescribeGlobalMessagesIterator :
         public TSharedFromThis<FDescribeGlobalMessagesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Inbox::FGs2InboxRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeGlobalMessagesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Inbox::FGs2InboxRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

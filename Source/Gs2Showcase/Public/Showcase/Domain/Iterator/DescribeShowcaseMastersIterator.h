@@ -28,13 +28,13 @@ namespace Gs2::Showcase::Domain::Iterator
     class GS2SHOWCASE_API FDescribeShowcaseMastersIterator :
         public TSharedFromThis<FDescribeShowcaseMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeShowcaseMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

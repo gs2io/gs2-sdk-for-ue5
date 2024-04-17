@@ -28,7 +28,7 @@ namespace Gs2::Friend::Domain::Iterator
     class GS2FRIEND_API FDescribeFriendsByUserIdIterator :
         public TSharedFromThis<FDescribeFriendsByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Friend::FGs2FriendRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -37,7 +37,7 @@ namespace Gs2::Friend::Domain::Iterator
 
     public:
         FDescribeFriendsByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Friend::FGs2FriendRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

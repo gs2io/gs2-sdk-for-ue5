@@ -76,7 +76,7 @@ namespace Gs2::StateMachine::Domain::Model
     ) const
     {
         return MakeShared<Gs2::StateMachine::Domain::Iterator::FDescribeStatusesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken,

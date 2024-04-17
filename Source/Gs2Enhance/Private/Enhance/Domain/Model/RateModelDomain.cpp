@@ -95,6 +95,7 @@ namespace Gs2::Enhance::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRateName(Self->RateName);
         const auto Future = Self->Client->GetRateModel(

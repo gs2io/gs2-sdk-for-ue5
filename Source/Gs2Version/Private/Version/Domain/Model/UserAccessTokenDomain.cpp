@@ -79,7 +79,7 @@ namespace Gs2::Version::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

@@ -100,6 +100,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithAreaModelName(Self->AreaModelName)
@@ -168,6 +169,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithAreaModelName(Self->AreaModelName)

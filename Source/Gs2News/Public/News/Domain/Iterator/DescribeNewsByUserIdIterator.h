@@ -28,7 +28,7 @@ namespace Gs2::News::Domain::Iterator
     class GS2NEWS_API FDescribeNewsByUserIdIterator :
         public TSharedFromThis<FDescribeNewsByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::News::FGs2NewsRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::News::Domain::Iterator
 
     public:
         FDescribeNewsByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::News::FGs2NewsRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

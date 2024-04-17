@@ -83,7 +83,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeCompletesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,
@@ -139,7 +139,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeCountersByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

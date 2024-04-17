@@ -99,6 +99,7 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithQuestGroupName(Self->QuestGroupName);
@@ -163,6 +164,7 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithQuestGroupName(Self->QuestGroupName);

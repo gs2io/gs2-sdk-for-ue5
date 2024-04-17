@@ -101,6 +101,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSalesItemName(Self->SalesItemName);
         const auto Future = Self->Client->GetSalesItemMaster(
@@ -163,6 +164,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSalesItemName(Self->SalesItemName);
         const auto Future = Self->Client->UpdateSalesItemMaster(
@@ -227,6 +229,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSalesItemName(Self->SalesItemName);
         const auto Future = Self->Client->DeleteSalesItemMaster(

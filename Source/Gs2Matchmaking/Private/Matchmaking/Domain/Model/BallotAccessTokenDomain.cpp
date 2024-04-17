@@ -110,6 +110,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRatingName(Self->RatingName)

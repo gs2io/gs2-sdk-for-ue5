@@ -28,13 +28,13 @@ namespace Gs2::SeasonRating::Domain::Iterator
     class GS2SEASONRATING_API FDescribeSeasonModelsIterator :
         public TSharedFromThis<FDescribeSeasonModelsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::SeasonRating::FGs2SeasonRatingRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeSeasonModelsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::SeasonRating::FGs2SeasonRatingRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

@@ -28,12 +28,12 @@ namespace Gs2::LoginReward::Domain::Iterator
     class GS2LOGINREWARD_API FDescribeNamespacesIterator :
         public TSharedFromThis<FDescribeNamespacesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
 
     public:
         FDescribeNamespacesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client
         );
 

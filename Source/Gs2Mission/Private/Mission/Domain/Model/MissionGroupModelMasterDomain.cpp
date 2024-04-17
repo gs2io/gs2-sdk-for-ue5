@@ -97,6 +97,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName);
         const auto Future = Self->Client->GetMissionGroupModelMaster(
@@ -159,6 +160,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName);
         const auto Future = Self->Client->UpdateMissionGroupModelMaster(
@@ -223,6 +225,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName);
         const auto Future = Self->Client->DeleteMissionGroupModelMaster(
@@ -281,6 +284,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName);
         const auto Future = Self->Client->CreateMissionTaskModelMaster(
@@ -337,7 +341,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeMissionTaskModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             MissionGroupName

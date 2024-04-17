@@ -78,7 +78,7 @@ namespace Gs2::Grade::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Grade::Domain::Iterator::FDescribeStatusesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

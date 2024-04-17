@@ -99,6 +99,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMoldModelName(Self->MoldModelName);
         const auto Future = Self->Client->GetMoldModelMaster(
@@ -161,6 +162,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMoldModelName(Self->MoldModelName);
         const auto Future = Self->Client->UpdateMoldModelMaster(
@@ -225,6 +227,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMoldModelName(Self->MoldModelName);
         const auto Future = Self->Client->DeleteMoldModelMaster(

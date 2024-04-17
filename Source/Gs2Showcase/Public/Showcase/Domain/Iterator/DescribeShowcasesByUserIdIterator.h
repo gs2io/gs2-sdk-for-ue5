@@ -28,7 +28,7 @@ namespace Gs2::Showcase::Domain::Iterator
     class GS2SHOWCASE_API FDescribeShowcasesByUserIdIterator :
         public TSharedFromThis<FDescribeShowcasesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::Showcase::Domain::Iterator
 
     public:
         FDescribeShowcasesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Showcase::FGs2ShowcaseRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

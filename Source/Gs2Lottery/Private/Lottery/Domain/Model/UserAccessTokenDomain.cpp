@@ -97,7 +97,7 @@ namespace Gs2::Lottery::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeBoxesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

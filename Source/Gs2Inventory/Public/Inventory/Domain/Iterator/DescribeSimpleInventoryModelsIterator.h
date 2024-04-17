@@ -28,13 +28,13 @@ namespace Gs2::Inventory::Domain::Iterator
     class GS2INVENTORY_API FDescribeSimpleInventoryModelsIterator :
         public TSharedFromThis<FDescribeSimpleInventoryModelsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeSimpleInventoryModelsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Inventory::FGs2InventoryRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

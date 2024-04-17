@@ -28,7 +28,7 @@ namespace Gs2::Stamina::Domain::Iterator
     class GS2STAMINA_API FDescribeStaminasIterator :
         public TSharedFromThis<FDescribeStaminasIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Stamina::FGs2StaminaRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -36,7 +36,7 @@ namespace Gs2::Stamina::Domain::Iterator
 
     public:
         FDescribeStaminasIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Stamina::FGs2StaminaRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

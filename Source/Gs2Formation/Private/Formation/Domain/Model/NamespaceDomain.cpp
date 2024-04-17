@@ -93,6 +93,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -145,6 +146,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -202,6 +204,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -261,6 +264,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -314,6 +318,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreatePropertyFormModelMaster(
             Request
@@ -382,6 +387,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateFormModelMaster(
             Request
@@ -450,6 +456,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateMoldModelMaster(
             Request
@@ -513,7 +520,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeMoldModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -563,7 +570,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -637,7 +644,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -687,7 +694,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeFormModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -737,7 +744,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeMoldModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

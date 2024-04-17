@@ -90,6 +90,7 @@ namespace Gs2::News::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->PrepareUpdateCurrentNewsMaster(
             Request
@@ -146,6 +147,7 @@ namespace Gs2::News::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateCurrentNewsMaster(
             Request
@@ -191,6 +193,7 @@ namespace Gs2::News::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->PrepareUpdateCurrentNewsMasterFromGitHub(
             Request

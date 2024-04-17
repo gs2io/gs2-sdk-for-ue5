@@ -447,7 +447,7 @@ namespace Gs2::Limit::Domain
     ) const
     {
         return MakeShared<Gs2::Limit::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

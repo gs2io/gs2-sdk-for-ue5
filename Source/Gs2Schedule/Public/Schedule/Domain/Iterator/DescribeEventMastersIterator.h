@@ -28,13 +28,13 @@ namespace Gs2::Schedule::Domain::Iterator
     class GS2SCHEDULE_API FDescribeEventMastersIterator :
         public TSharedFromThis<FDescribeEventMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeEventMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Schedule::FGs2ScheduleRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

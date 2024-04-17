@@ -28,7 +28,7 @@ namespace Gs2::Limit::Domain::Iterator
     class GS2LIMIT_API FDescribeCountersIterator :
         public TSharedFromThis<FDescribeCountersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Limit::FGs2LimitRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -37,7 +37,7 @@ namespace Gs2::Limit::Domain::Iterator
 
     public:
         FDescribeCountersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Limit::FGs2LimitRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,

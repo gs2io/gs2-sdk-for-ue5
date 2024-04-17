@@ -99,6 +99,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPropertyFormModelName(Self->PropertyFormModelName);
         const auto Future = Self->Client->GetPropertyFormModel(

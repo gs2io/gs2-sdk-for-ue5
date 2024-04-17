@@ -28,13 +28,13 @@ namespace Gs2::Limit::Domain::Iterator
     class GS2LIMIT_API FDescribeLimitModelMastersIterator :
         public TSharedFromThis<FDescribeLimitModelMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Limit::FGs2LimitRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeLimitModelMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Limit::FGs2LimitRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

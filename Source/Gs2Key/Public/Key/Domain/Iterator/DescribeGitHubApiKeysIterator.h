@@ -28,13 +28,13 @@ namespace Gs2::Key::Domain::Iterator
     class GS2KEY_API FDescribeGitHubApiKeysIterator :
         public TSharedFromThis<FDescribeGitHubApiKeysIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Key::FGs2KeyRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeGitHubApiKeysIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Key::FGs2KeyRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

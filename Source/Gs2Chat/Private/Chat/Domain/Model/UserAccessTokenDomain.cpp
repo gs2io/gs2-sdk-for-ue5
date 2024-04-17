@@ -93,6 +93,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->CreateRoom(
@@ -165,7 +166,7 @@ namespace Gs2::Chat::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeSubscribesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

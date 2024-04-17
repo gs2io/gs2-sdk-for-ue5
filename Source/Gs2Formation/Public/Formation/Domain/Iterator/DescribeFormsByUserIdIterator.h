@@ -28,7 +28,7 @@ namespace Gs2::Formation::Domain::Iterator
     class GS2FORMATION_API FDescribeFormsByUserIdIterator :
         public TSharedFromThis<FDescribeFormsByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Formation::FGs2FormationRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> MoldModelName;
@@ -37,7 +37,7 @@ namespace Gs2::Formation::Domain::Iterator
 
     public:
         FDescribeFormsByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Formation::FGs2FormationRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> MoldModelName,

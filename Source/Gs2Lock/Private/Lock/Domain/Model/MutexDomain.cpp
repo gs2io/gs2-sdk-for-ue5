@@ -92,6 +92,7 @@ namespace Gs2::Lock::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithPropertyId(Self->PropertyId);
@@ -158,6 +159,7 @@ namespace Gs2::Lock::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithPropertyId(Self->PropertyId);
@@ -224,6 +226,7 @@ namespace Gs2::Lock::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithPropertyId(Self->PropertyId);
@@ -288,6 +291,7 @@ namespace Gs2::Lock::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithPropertyId(Self->PropertyId);

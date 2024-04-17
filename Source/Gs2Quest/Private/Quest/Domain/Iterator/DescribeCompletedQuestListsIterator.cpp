@@ -32,13 +32,13 @@ namespace Gs2::Quest::Domain::Iterator
 {
 
     FDescribeCompletedQuestListsIterator::FDescribeCompletedQuestListsIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Quest::FGs2QuestRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken)
@@ -88,7 +88,7 @@ namespace Gs2::Quest::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Quest::Model::FCompletedQuestList>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Quest::Model::FCompletedQuestList>(ListParentKey);
 
                 if (Range)
                 {
@@ -123,7 +123,7 @@ namespace Gs2::Quest::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Quest::Model::FCompletedQuestList::TypeName,
                     ListParentKey,
                     Gs2::Quest::Domain::Model::FCompletedQuestListDomain::CreateCacheKey(
@@ -140,7 +140,7 @@ namespace Gs2::Quest::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Quest::Model::FCompletedQuestList::TypeName,
                     ListParentKey
                 );

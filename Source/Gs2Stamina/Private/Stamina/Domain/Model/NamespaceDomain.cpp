@@ -88,6 +88,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -140,6 +141,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -197,6 +199,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -256,6 +259,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -309,6 +313,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateMaxStaminaTableMaster(
             Request
@@ -377,6 +382,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateRecoverIntervalTableMaster(
             Request
@@ -445,6 +451,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateRecoverValueTableMaster(
             Request
@@ -513,6 +520,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateStaminaModelMaster(
             Request
@@ -576,7 +584,7 @@ namespace Gs2::Stamina::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeMaxStaminaTableMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -626,7 +634,7 @@ namespace Gs2::Stamina::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -700,7 +708,7 @@ namespace Gs2::Stamina::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeRecoverIntervalTableMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -750,7 +758,7 @@ namespace Gs2::Stamina::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeRecoverValueTableMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -800,7 +808,7 @@ namespace Gs2::Stamina::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeStaminaModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

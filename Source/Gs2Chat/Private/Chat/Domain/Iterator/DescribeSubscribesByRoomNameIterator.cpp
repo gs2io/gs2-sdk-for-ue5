@@ -32,13 +32,13 @@ namespace Gs2::Chat::Domain::Iterator
 {
 
     FDescribeSubscribesByRoomNameIterator::FDescribeSubscribesByRoomNameIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Chat::FGs2ChatRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> RoomName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         RoomName(RoomName)

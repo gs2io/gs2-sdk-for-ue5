@@ -76,7 +76,7 @@ namespace Gs2::Money::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Iterator::FDescribeWalletsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

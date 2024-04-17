@@ -82,7 +82,7 @@ namespace Gs2::Enchant::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeBalanceParameterStatusesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken,
@@ -140,7 +140,7 @@ namespace Gs2::Enchant::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Enchant::Domain::Iterator::FDescribeRarityParameterStatusesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken,

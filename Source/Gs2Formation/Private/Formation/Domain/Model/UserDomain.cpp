@@ -85,7 +85,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeMoldsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,
@@ -142,7 +142,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribePropertyFormsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

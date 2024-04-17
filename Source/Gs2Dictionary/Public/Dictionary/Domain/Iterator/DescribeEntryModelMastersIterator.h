@@ -28,13 +28,13 @@ namespace Gs2::Dictionary::Domain::Iterator
     class GS2DICTIONARY_API FDescribeEntryModelMastersIterator :
         public TSharedFromThis<FDescribeEntryModelMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeEntryModelMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

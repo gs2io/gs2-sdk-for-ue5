@@ -51,6 +51,29 @@ namespace Gs2::UE5::Friend::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
+        class FDeleteFriendTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Domain::Model::FEzFriendUserGameSessionDomain>,
+            public TSharedFromThis<FDeleteFriendTask>
+        {
+            TSharedPtr<FEzFriendGameSessionDomain> Self;
+            FString TargetUserId;
+
+        public:
+            explicit FDeleteFriendTask(
+                TSharedPtr<FEzFriendGameSessionDomain> Self,
+                FString TargetUserId
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzFriendUserGameSessionDomain>> Result
+            ) override;
+        };
+        friend FDeleteFriendTask;
+
+        TSharedPtr<FAsyncTask<FDeleteFriendTask>> DeleteFriend(
+            FString TargetUserId
+        );
+
         Gs2::UE5::Friend::Domain::Model::FEzFriendUserGameSessionDomainPtr FriendUser(
             const FString TargetUserId
         ) const;

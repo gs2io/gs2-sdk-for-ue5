@@ -28,7 +28,7 @@ namespace Gs2::StateMachine::Domain::Iterator
     class GS2STATEMACHINE_API FDescribeStatusesByUserIdIterator :
         public TSharedFromThis<FDescribeStatusesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -37,7 +37,7 @@ namespace Gs2::StateMachine::Domain::Iterator
 
     public:
         FDescribeStatusesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

@@ -92,6 +92,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithDistributorName(Self->DistributorName);
         const auto Future = Self->Client->GetDistributorModel(

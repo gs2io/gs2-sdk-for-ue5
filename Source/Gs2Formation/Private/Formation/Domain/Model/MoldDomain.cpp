@@ -103,6 +103,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName);
@@ -184,6 +185,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName);
@@ -267,6 +269,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName);
@@ -350,6 +353,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName);
@@ -433,6 +437,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMoldModelName(Self->MoldModelName);
@@ -479,7 +484,7 @@ namespace Gs2::Formation::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeFormsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             MoldModelName,

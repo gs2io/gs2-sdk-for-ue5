@@ -98,6 +98,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithPrizeTableName(Self->PrizeTableName);
         const auto Future = Self->Client->GetPrizeTable(
@@ -145,7 +146,7 @@ namespace Gs2::Lottery::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribePrizeLimitsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             PrizeTableName

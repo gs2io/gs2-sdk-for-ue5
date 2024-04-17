@@ -28,7 +28,7 @@ namespace Gs2::Inbox::Domain::Iterator
     class GS2INBOX_API FDescribeMessagesByUserIdIterator :
         public TSharedFromThis<FDescribeMessagesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Inbox::FGs2InboxRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -37,7 +37,7 @@ namespace Gs2::Inbox::Domain::Iterator
 
     public:
         FDescribeMessagesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Inbox::FGs2InboxRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

@@ -28,13 +28,13 @@ namespace Gs2::Exchange::Domain::Iterator
     class GS2EXCHANGE_API FDescribeRateModelMastersIterator :
         public TSharedFromThis<FDescribeRateModelMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Exchange::FGs2ExchangeRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeRateModelMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Exchange::FGs2ExchangeRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

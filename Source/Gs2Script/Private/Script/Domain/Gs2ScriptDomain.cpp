@@ -116,7 +116,7 @@ namespace Gs2::Script::Domain
     ) const
     {
         return MakeShared<Gs2::Script::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

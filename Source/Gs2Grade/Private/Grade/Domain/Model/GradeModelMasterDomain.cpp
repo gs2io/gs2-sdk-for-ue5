@@ -91,6 +91,7 @@ namespace Gs2::Grade::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGradeName(Self->GradeName);
         const auto Future = Self->Client->GetGradeModelMaster(
@@ -153,6 +154,7 @@ namespace Gs2::Grade::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGradeName(Self->GradeName);
         const auto Future = Self->Client->UpdateGradeModelMaster(
@@ -217,6 +219,7 @@ namespace Gs2::Grade::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGradeName(Self->GradeName);
         const auto Future = Self->Client->DeleteGradeModelMaster(

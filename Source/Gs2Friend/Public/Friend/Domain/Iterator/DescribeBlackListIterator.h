@@ -29,7 +29,7 @@ namespace Gs2::Friend::Domain::Iterator
     class GS2FRIEND_API FDescribeBlackListIterator :
         public TSharedFromThis<FDescribeBlackListIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Friend::FGs2FriendRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -37,7 +37,7 @@ namespace Gs2::Friend::Domain::Iterator
 
     public:
         FDescribeBlackListIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Friend::FGs2FriendRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

@@ -20,6 +20,7 @@
 #include "Account/Domain/EzGs2Account.h"
 #include "AdReward/Domain/EzGs2AdReward.h"
 #include "Auth/Domain/EzGs2Auth.h"
+#include "Buff/Domain/EzGs2Buff.h"
 #include "Chat/Domain/EzGs2Chat.h"
 #include "Core/Domain/Gs2.h"
 #include "Datastore/Domain/EzGs2Datastore.h"
@@ -69,6 +70,8 @@ namespace Gs2::UE5::Core::Domain
     class EZGS2_API FGs2Domain :
         public TSharedFromThis<FGs2Domain>
     {
+        void Initialize();
+        
     public:
         Util::FGs2ConnectionPtr Connection;
         Gs2::Core::Domain::FGs2Ptr Super;
@@ -76,6 +79,7 @@ namespace Gs2::UE5::Core::Domain
         Gs2::UE5::Account::Domain::FEzGs2AccountPtr Account;
         Gs2::UE5::AdReward::Domain::FEzGs2AdRewardPtr AdReward;
         Gs2::UE5::Auth::Domain::FEzGs2AuthPtr Auth;
+        Gs2::UE5::Buff::Domain::FEzGs2BuffPtr Buff;
         Gs2::UE5::Chat::Domain::FEzGs2ChatPtr Chat;
         Gs2::UE5::Datastore::Domain::FEzGs2DatastorePtr Datastore;
         Gs2::UE5::Dictionary::Domain::FEzGs2DictionaryPtr Dictionary;
@@ -115,6 +119,9 @@ namespace Gs2::UE5::Core::Domain
         explicit FGs2Domain(
             Util::FGs2ConnectionPtr Connection,
             FString DistributorNamespaceName = "default"
+            );
+        explicit FGs2Domain(
+            Gs2::Core::Domain::FGs2Ptr Gs2
         );
         ~FGs2Domain() = default;
         

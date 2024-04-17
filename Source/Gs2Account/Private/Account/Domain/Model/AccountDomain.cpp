@@ -592,7 +592,7 @@ namespace Gs2::Account::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Account::Domain::Iterator::FDescribeTakeOversByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId

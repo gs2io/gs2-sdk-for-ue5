@@ -138,7 +138,7 @@ namespace Gs2::Lottery::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeProbabilitiesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             LotteryName,

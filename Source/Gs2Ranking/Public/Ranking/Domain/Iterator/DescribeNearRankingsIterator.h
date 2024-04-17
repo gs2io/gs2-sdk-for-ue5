@@ -28,7 +28,7 @@ namespace Gs2::Ranking::Domain::Iterator
     class GS2RANKING_API FDescribeNearRankingsIterator :
         public TSharedFromThis<FDescribeNearRankingsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Ranking::FGs2RankingRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> CategoryName;
@@ -37,7 +37,7 @@ namespace Gs2::Ranking::Domain::Iterator
 
     public:
         FDescribeNearRankingsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Ranking::FGs2RankingRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> CategoryName,

@@ -28,13 +28,13 @@ namespace Gs2::Grade::Domain::Iterator
     class GS2GRADE_API FDescribeGradeModelsIterator :
         public TSharedFromThis<FDescribeGradeModelsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Grade::FGs2GradeRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeGradeModelsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Grade::FGs2GradeRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

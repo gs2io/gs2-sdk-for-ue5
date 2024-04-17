@@ -452,7 +452,7 @@ namespace Gs2::Friend::Domain
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

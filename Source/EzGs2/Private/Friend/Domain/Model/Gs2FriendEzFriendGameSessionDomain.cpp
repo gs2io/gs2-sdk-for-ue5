@@ -46,6 +46,60 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     }
 
+    FEzFriendGameSessionDomain::FDeleteFriendTask::FDeleteFriendTask(
+        TSharedPtr<FEzFriendGameSessionDomain> Self,
+        FString TargetUserId
+    ): Self(Self), TargetUserId(TargetUserId)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzFriendGameSessionDomain::FDeleteFriendTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzFriendUserGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->DeleteFriend(
+                    MakeShared<Gs2::Friend::Request::FDeleteFriendRequest>()
+                        ->WithTargetUserId(TargetUserId)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Friend::Domain::Model::FEzFriendUserGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzFriendGameSessionDomain::FDeleteFriendTask>> FEzFriendGameSessionDomain::DeleteFriend(
+        FString TargetUserId
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteFriendTask>>(
+            this->AsShared(),
+            TargetUserId
+        );
+    }
+
     Gs2::UE5::Friend::Domain::Model::FEzFriendUserGameSessionDomainPtr FEzFriendGameSessionDomain::FriendUser(
         const FString TargetUserId
     ) const

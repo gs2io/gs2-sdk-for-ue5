@@ -35,6 +35,9 @@
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::Account::Domain::Model
 {
@@ -75,7 +78,7 @@ namespace Gs2::Account::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Account::Domain::Iterator::FDescribeTakeOversIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

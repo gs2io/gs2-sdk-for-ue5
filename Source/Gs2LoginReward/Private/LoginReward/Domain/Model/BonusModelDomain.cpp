@@ -93,6 +93,7 @@ namespace Gs2::LoginReward::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithBonusModelName(Self->BonusModelName);
         const auto Future = Self->Client->GetBonusModel(

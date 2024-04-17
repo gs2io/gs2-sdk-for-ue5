@@ -32,14 +32,14 @@ namespace Gs2::Friend::Domain::Iterator
 {
 
     FDescribeSendRequestsByUserIdIterator::FDescribeSendRequestsByUserIdIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
         const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
@@ -90,7 +90,7 @@ namespace Gs2::Friend::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Friend::Model::FFriendRequest>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Friend::Model::FFriendRequest>(ListParentKey);
 
                 if (Range)
                 {
@@ -125,7 +125,7 @@ namespace Gs2::Friend::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Friend::Model::FFriendRequest::TypeName,
                     ListParentKey,
                     Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
@@ -142,7 +142,7 @@ namespace Gs2::Friend::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Friend::Model::FFriendRequest::TypeName,
                     ListParentKey
                 );

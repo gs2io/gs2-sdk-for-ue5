@@ -89,6 +89,7 @@ namespace Gs2::StateMachine::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->StartStateMachineByUserId(
@@ -147,7 +148,7 @@ namespace Gs2::StateMachine::Domain::Model
     ) const
     {
         return MakeShared<Gs2::StateMachine::Domain::Iterator::FDescribeStatusesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

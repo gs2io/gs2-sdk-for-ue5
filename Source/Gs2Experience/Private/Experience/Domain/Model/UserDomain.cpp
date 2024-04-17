@@ -79,7 +79,7 @@ namespace Gs2::Experience::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Experience::Domain::Iterator::FDescribeStatusesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

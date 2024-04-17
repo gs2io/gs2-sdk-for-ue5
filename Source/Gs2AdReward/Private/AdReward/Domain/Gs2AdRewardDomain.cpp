@@ -444,7 +444,7 @@ namespace Gs2::AdReward::Domain
     ) const
     {
         return MakeShared<Gs2::AdReward::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

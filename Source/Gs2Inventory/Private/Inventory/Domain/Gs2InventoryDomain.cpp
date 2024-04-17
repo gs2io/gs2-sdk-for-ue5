@@ -464,7 +464,7 @@ namespace Gs2::Inventory::Domain
     ) const
     {
         return MakeShared<Gs2::Inventory::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

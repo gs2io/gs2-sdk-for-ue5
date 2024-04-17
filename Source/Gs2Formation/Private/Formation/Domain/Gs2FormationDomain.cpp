@@ -453,7 +453,7 @@ namespace Gs2::Formation::Domain
     ) const
     {
         return MakeShared<Gs2::Formation::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

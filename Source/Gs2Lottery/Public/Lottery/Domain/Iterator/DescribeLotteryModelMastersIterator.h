@@ -28,13 +28,13 @@ namespace Gs2::Lottery::Domain::Iterator
     class GS2LOTTERY_API FDescribeLotteryModelMastersIterator :
         public TSharedFromThis<FDescribeLotteryModelMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeLotteryModelMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Lottery::FGs2LotteryRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

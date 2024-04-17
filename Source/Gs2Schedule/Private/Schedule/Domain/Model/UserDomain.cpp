@@ -78,7 +78,7 @@ namespace Gs2::Schedule::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Schedule::Domain::Iterator::FDescribeTriggersByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,
@@ -134,7 +134,7 @@ namespace Gs2::Schedule::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Schedule::Domain::Iterator::FDescribeEventsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

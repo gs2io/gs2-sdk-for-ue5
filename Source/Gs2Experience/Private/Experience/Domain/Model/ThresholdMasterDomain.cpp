@@ -92,6 +92,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithThresholdName(Self->ThresholdName);
         const auto Future = Self->Client->GetThresholdMaster(
@@ -154,6 +155,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithThresholdName(Self->ThresholdName);
         const auto Future = Self->Client->UpdateThresholdMaster(
@@ -218,6 +220,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithThresholdName(Self->ThresholdName);
         const auto Future = Self->Client->DeleteThresholdMaster(

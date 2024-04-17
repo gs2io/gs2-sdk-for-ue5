@@ -20,6 +20,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2Account",
 			"Gs2AdReward",
 			"Gs2Auth",
+			"Gs2Buff",
 			"Gs2Chat",
 			"Gs2Datastore",
 			"Gs2Deploy",

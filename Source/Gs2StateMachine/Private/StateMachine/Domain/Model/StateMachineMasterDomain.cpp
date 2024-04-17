@@ -89,6 +89,7 @@ namespace Gs2::StateMachine::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersion(Self->Version);
         const auto Future = Self->Client->GetStateMachineMaster(
@@ -151,6 +152,7 @@ namespace Gs2::StateMachine::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersion(Self->Version);
         const auto Future = Self->Client->DeleteStateMachineMaster(

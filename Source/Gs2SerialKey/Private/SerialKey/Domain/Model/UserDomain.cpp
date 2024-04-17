@@ -92,6 +92,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DownloadSerialCodes(
             Request
@@ -144,6 +145,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->RevertUseByUserId(
@@ -219,7 +221,7 @@ namespace Gs2::SerialKey::Domain::Model
     ) const
     {
         return MakeShared<Gs2::SerialKey::Domain::Iterator::FDescribeSerialKeysIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             CampaignModelName,

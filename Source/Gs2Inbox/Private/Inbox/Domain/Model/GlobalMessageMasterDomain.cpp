@@ -93,6 +93,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGlobalMessageName(Self->GlobalMessageName);
         const auto Future = Self->Client->GetGlobalMessageMaster(
@@ -155,6 +156,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGlobalMessageName(Self->GlobalMessageName);
         const auto Future = Self->Client->UpdateGlobalMessageMaster(
@@ -219,6 +221,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithGlobalMessageName(Self->GlobalMessageName);
         const auto Future = Self->Client->DeleteGlobalMessageMaster(

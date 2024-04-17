@@ -28,13 +28,13 @@ namespace Gs2::Enchant::Domain::Iterator
     class GS2ENCHANT_API FDescribeBalanceParameterModelsIterator :
         public TSharedFromThis<FDescribeBalanceParameterModelsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Enchant::FGs2EnchantRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeBalanceParameterModelsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Enchant::FGs2EnchantRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

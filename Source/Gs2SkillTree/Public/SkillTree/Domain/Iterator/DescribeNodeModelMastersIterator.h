@@ -28,13 +28,13 @@ namespace Gs2::SkillTree::Domain::Iterator
     class GS2SKILLTREE_API FDescribeNodeModelMastersIterator :
         public TSharedFromThis<FDescribeNodeModelMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeNodeModelMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

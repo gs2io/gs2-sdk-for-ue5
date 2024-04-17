@@ -107,6 +107,7 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCategoryName(Self->CategoryName);
@@ -183,6 +184,7 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCategoryName(Self->CategoryName);
@@ -244,7 +246,7 @@ namespace Gs2::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeSubscribesByCategoryNameIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             CategoryName,
@@ -305,7 +307,7 @@ namespace Gs2::Ranking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeRankingsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             CategoryName,

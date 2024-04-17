@@ -95,6 +95,7 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithQuestGroupName(Self->QuestGroupName);
         const auto Future = Self->Client->GetQuestGroupModelMaster(
@@ -157,6 +158,7 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithQuestGroupName(Self->QuestGroupName);
         const auto Future = Self->Client->UpdateQuestGroupModelMaster(
@@ -221,6 +223,7 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithQuestGroupName(Self->QuestGroupName);
         const auto Future = Self->Client->DeleteQuestGroupModelMaster(
@@ -279,6 +282,7 @@ namespace Gs2::Quest::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithQuestGroupName(Self->QuestGroupName);
         const auto Future = Self->Client->CreateQuestModelMaster(
@@ -335,7 +339,7 @@ namespace Gs2::Quest::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeQuestModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             QuestGroupName

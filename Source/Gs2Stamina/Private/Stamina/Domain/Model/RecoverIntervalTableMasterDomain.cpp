@@ -94,6 +94,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRecoverIntervalTableName(Self->RecoverIntervalTableName);
         const auto Future = Self->Client->GetRecoverIntervalTableMaster(
@@ -156,6 +157,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRecoverIntervalTableName(Self->RecoverIntervalTableName);
         const auto Future = Self->Client->UpdateRecoverIntervalTableMaster(
@@ -220,6 +222,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRecoverIntervalTableName(Self->RecoverIntervalTableName);
         const auto Future = Self->Client->DeleteRecoverIntervalTableMaster(

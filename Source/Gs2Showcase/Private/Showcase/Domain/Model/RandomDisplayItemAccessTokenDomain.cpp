@@ -111,6 +111,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithShowcaseName(Self->ShowcaseName)
@@ -178,6 +179,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithShowcaseName(Self->ShowcaseName)

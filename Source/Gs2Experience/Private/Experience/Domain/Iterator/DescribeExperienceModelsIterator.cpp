@@ -32,12 +32,12 @@ namespace Gs2::Experience::Domain::Iterator
 {
 
     FDescribeExperienceModelsIterator::FDescribeExperienceModelsIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Experience::FGs2ExperienceRestClientPtr Client,
         const TOptional<FString> NamespaceName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName)
     {
@@ -84,7 +84,7 @@ namespace Gs2::Experience::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Experience::Model::FExperienceModel>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Experience::Model::FExperienceModel>(ListParentKey);
 
                 if (Range)
                 {
@@ -115,7 +115,7 @@ namespace Gs2::Experience::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Experience::Model::FExperienceModel::TypeName,
                     ListParentKey,
                     Gs2::Experience::Domain::Model::FExperienceModelDomain::CreateCacheKey(
@@ -131,7 +131,7 @@ namespace Gs2::Experience::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             bLast = true;
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Experience::Model::FExperienceModel::TypeName,
                     ListParentKey
                 );

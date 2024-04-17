@@ -97,6 +97,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMissionGroupName(Self->MissionGroupName);
         const auto Future = Self->Client->GetMissionGroupModel(
@@ -144,7 +145,7 @@ namespace Gs2::Mission::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Mission::Domain::Iterator::FDescribeMissionTaskModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             MissionGroupName

@@ -93,6 +93,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSeasonName(Self->SeasonName);
         const auto Future = Self->Client->GetSeasonModelMaster(
@@ -155,6 +156,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSeasonName(Self->SeasonName);
         const auto Future = Self->Client->UpdateSeasonModelMaster(
@@ -219,6 +221,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSeasonName(Self->SeasonName);
         const auto Future = Self->Client->DeleteSeasonModelMaster(

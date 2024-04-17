@@ -91,7 +91,7 @@ namespace Gs2::Showcase::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Showcase::Domain::Iterator::FDescribeRandomDisplayItemsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             ShowcaseName,

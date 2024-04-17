@@ -85,6 +85,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -137,6 +138,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -194,6 +196,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -253,6 +256,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -306,6 +310,7 @@ namespace Gs2::Idle::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateCategoryModelMaster(
             Request
@@ -369,7 +374,7 @@ namespace Gs2::Idle::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Idle::Domain::Iterator::FDescribeCategoryModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -443,7 +448,7 @@ namespace Gs2::Idle::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Idle::Domain::Iterator::FDescribeCategoryModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

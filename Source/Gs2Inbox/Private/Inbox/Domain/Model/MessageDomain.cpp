@@ -97,6 +97,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
@@ -161,6 +162,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
@@ -225,6 +227,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
@@ -311,6 +314,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);

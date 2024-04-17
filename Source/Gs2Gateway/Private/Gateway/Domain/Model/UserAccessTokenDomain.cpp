@@ -78,7 +78,7 @@ namespace Gs2::Gateway::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

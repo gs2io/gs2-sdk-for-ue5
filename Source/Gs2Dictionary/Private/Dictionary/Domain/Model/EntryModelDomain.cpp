@@ -91,6 +91,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithEntryName(Self->EntryName);
         const auto Future = Self->Client->GetEntryModel(

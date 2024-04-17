@@ -96,6 +96,7 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithTriggerName(Self->TriggerName);
@@ -160,6 +161,7 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithTriggerName(Self->TriggerName);
@@ -230,6 +232,7 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithTriggerName(Self->TriggerName);

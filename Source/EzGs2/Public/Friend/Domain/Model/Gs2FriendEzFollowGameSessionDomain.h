@@ -52,6 +52,29 @@ namespace Gs2::UE5::Friend::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
+        class FFollowTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>,
+            public TSharedFromThis<FFollowTask>
+        {
+            TSharedPtr<FEzFollowGameSessionDomain> Self;
+            FString TargetUserId;
+
+        public:
+            explicit FFollowTask(
+                TSharedPtr<FEzFollowGameSessionDomain> Self,
+                FString TargetUserId
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomain>> Result
+            ) override;
+        };
+        friend FFollowTask;
+
+        TSharedPtr<FAsyncTask<FFollowTask>> Follow(
+            FString TargetUserId
+        );
+
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFollowsIteratorPtr Follows(
         ) const;
 

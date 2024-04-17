@@ -28,7 +28,7 @@ namespace Gs2::Grade::Domain::Iterator
     class GS2GRADE_API FDescribeStatusesByUserIdIterator :
         public TSharedFromThis<FDescribeStatusesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Grade::FGs2GradeRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> GradeName;
@@ -37,7 +37,7 @@ namespace Gs2::Grade::Domain::Iterator
 
     public:
         FDescribeStatusesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Grade::FGs2GradeRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

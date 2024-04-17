@@ -129,32 +129,6 @@ namespace Gs2::Friend::Domain::Model
             Request::FGetFollowRequestPtr Request
         );
 
-        class GS2FRIEND_API FFollowTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain>,
-            public TSharedFromThis<FFollowTask>
-        {
-            const TSharedPtr<FFollowUserAccessTokenDomain> Self;
-            const Request::FFollowRequestPtr Request;
-        public:
-            explicit FFollowTask(
-                const TSharedPtr<FFollowUserAccessTokenDomain>& Self,
-                const Request::FFollowRequestPtr Request
-            );
-
-            FFollowTask(
-                const FFollowTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain>> Result
-            ) override;
-        };
-        friend FFollowTask;
-
-        TSharedPtr<FAsyncTask<FFollowTask>> Follow(
-            Request::FFollowRequestPtr Request
-        );
-
         class GS2FRIEND_API FUnfollowTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain>,
             public TSharedFromThis<FUnfollowTask>

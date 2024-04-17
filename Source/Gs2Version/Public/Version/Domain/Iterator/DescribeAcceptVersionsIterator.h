@@ -28,7 +28,7 @@ namespace Gs2::Version::Domain::Iterator
     class GS2VERSION_API FDescribeAcceptVersionsIterator :
         public TSharedFromThis<FDescribeAcceptVersionsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Version::FGs2VersionRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -36,7 +36,7 @@ namespace Gs2::Version::Domain::Iterator
 
     public:
         FDescribeAcceptVersionsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Version::FGs2VersionRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

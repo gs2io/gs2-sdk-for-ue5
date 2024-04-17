@@ -92,6 +92,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithDistributorName(Self->DistributorName);
         const auto Future = Self->Client->GetDistributorModelMaster(
@@ -154,6 +155,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithDistributorName(Self->DistributorName);
         const auto Future = Self->Client->UpdateDistributorModelMaster(
@@ -218,6 +220,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithDistributorName(Self->DistributorName);
         const auto Future = Self->Client->DeleteDistributorModelMaster(

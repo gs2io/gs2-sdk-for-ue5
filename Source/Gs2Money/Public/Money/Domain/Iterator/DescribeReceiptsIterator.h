@@ -28,7 +28,7 @@ namespace Gs2::Money::Domain::Iterator
     class GS2MONEY_API FDescribeReceiptsIterator :
         public TSharedFromThis<FDescribeReceiptsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Money::FGs2MoneyRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -39,7 +39,7 @@ namespace Gs2::Money::Domain::Iterator
 
     public:
         FDescribeReceiptsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Money::FGs2MoneyRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

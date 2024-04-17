@@ -28,7 +28,7 @@ namespace Gs2::Datastore::Domain::Iterator
     class GS2DATASTORE_API FDescribeDataObjectHistoriesIterator :
         public TSharedFromThis<FDescribeDataObjectHistoriesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Datastore::FGs2DatastoreRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -37,7 +37,7 @@ namespace Gs2::Datastore::Domain::Iterator
 
     public:
         FDescribeDataObjectHistoriesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Datastore::FGs2DatastoreRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken,

@@ -448,7 +448,7 @@ namespace Gs2::Inbox::Domain
     ) const
     {
         return MakeShared<Gs2::Inbox::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

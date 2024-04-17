@@ -101,6 +101,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithShowcaseName(Self->ShowcaseName);
         const auto Future = Self->Client->GetRandomShowcaseMaster(
@@ -163,6 +164,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithShowcaseName(Self->ShowcaseName);
         const auto Future = Self->Client->UpdateRandomShowcaseMaster(
@@ -227,6 +229,7 @@ namespace Gs2::Showcase::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithShowcaseName(Self->ShowcaseName);
         const auto Future = Self->Client->DeleteRandomShowcaseMaster(

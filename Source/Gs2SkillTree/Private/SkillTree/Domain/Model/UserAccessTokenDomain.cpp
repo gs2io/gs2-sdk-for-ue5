@@ -77,7 +77,7 @@ namespace Gs2::SkillTree::Domain::Model
     ) const
     {
         return MakeShared<Gs2::SkillTree::Domain::Iterator::FDescribeStatusesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

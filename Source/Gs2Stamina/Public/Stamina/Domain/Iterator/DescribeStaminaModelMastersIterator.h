@@ -28,13 +28,13 @@ namespace Gs2::Stamina::Domain::Iterator
     class GS2STAMINA_API FDescribeStaminaModelMastersIterator :
         public TSharedFromThis<FDescribeStaminaModelMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Stamina::FGs2StaminaRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeStaminaModelMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Stamina::FGs2StaminaRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

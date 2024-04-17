@@ -28,7 +28,7 @@ namespace Gs2::Account::Domain::Iterator
     class GS2ACCOUNT_API FDescribeTakeOversByUserIdIterator :
         public TSharedFromThis<FDescribeTakeOversByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Account::FGs2AccountRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::Account::Domain::Iterator
 
     public:
         FDescribeTakeOversByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Account::FGs2AccountRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

@@ -98,6 +98,7 @@ namespace Gs2::Lottery::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithLotteryName(Self->LotteryName);
         const auto Future = Self->Client->GetLotteryModel(

@@ -28,13 +28,13 @@ namespace Gs2::Identifier::Domain::Iterator
     class GS2IDENTIFIER_API FDescribeIdentifiersIterator :
         public TSharedFromThis<FDescribeIdentifiersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Identifier::FGs2IdentifierRestClientPtr Client;
         const TOptional<FString> UserName;
 
     public:
         FDescribeIdentifiersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Identifier::FGs2IdentifierRestClientPtr Client,
             const TOptional<FString> UserName
         );

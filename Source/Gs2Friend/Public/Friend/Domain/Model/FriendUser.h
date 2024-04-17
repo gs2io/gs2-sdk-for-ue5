@@ -127,32 +127,6 @@ namespace Gs2::Friend::Domain::Model
             Request::FGetFriendByUserIdRequestPtr Request
         );
 
-        class GS2FRIEND_API FDeleteTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FFriendUserDomain>,
-            public TSharedFromThis<FDeleteTask>
-        {
-            const TSharedPtr<FFriendUserDomain> Self;
-            const Request::FDeleteFriendByUserIdRequestPtr Request;
-        public:
-            explicit FDeleteTask(
-                const TSharedPtr<FFriendUserDomain>& Self,
-                const Request::FDeleteFriendByUserIdRequestPtr Request
-            );
-
-            FDeleteTask(
-                const FDeleteTask& From
-            );
-
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFriendUserDomain>> Result
-            ) override;
-        };
-        friend FDeleteTask;
-
-        TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
-            Request::FDeleteFriendByUserIdRequestPtr Request
-        );
-
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

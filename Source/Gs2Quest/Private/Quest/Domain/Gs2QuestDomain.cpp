@@ -450,7 +450,7 @@ namespace Gs2::Quest::Domain
     ) const
     {
         return MakeShared<Gs2::Quest::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

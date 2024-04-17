@@ -95,6 +95,7 @@ namespace Gs2::Enchant::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithParameterName(Self->ParameterName);
         const auto Future = Self->Client->GetBalanceParameterModel(

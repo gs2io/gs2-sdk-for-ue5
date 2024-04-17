@@ -97,6 +97,7 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->CreateGathering(
@@ -154,7 +155,7 @@ namespace Gs2::Matchmaking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDoMatchmakingIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken,
@@ -198,7 +199,7 @@ namespace Gs2::Matchmaking::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Matchmaking::Domain::Iterator::FDescribeRatingsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

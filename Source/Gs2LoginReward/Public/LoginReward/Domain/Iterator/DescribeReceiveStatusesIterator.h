@@ -28,7 +28,7 @@ namespace Gs2::LoginReward::Domain::Iterator
     class GS2LOGINREWARD_API FDescribeReceiveStatusesIterator :
         public TSharedFromThis<FDescribeReceiveStatusesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -36,7 +36,7 @@ namespace Gs2::LoginReward::Domain::Iterator
 
     public:
         FDescribeReceiveStatusesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::LoginReward::FGs2LoginRewardRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

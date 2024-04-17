@@ -448,7 +448,7 @@ namespace Gs2::SerialKey::Domain
     ) const
     {
         return MakeShared<Gs2::SerialKey::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

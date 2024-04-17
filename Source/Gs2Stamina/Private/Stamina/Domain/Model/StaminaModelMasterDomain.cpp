@@ -94,6 +94,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName);
         const auto Future = Self->Client->GetStaminaModelMaster(
@@ -156,6 +157,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName);
         const auto Future = Self->Client->UpdateStaminaModelMaster(
@@ -220,6 +222,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithStaminaName(Self->StaminaName);
         const auto Future = Self->Client->DeleteStaminaModelMaster(

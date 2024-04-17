@@ -93,6 +93,7 @@ namespace Gs2::Version::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CalculateSignature(
             Request
@@ -135,7 +136,7 @@ namespace Gs2::Version::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Version::Domain::Iterator::FDescribeAcceptVersionsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

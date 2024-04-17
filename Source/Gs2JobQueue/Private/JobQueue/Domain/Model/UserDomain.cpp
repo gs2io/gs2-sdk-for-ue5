@@ -94,6 +94,7 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->PushByUserId(
@@ -199,6 +200,7 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->RunByUserId(
@@ -272,7 +274,7 @@ namespace Gs2::JobQueue::Domain::Model
     ) const
     {
         return MakeShared<Gs2::JobQueue::Domain::Iterator::FDescribeJobsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,
@@ -328,7 +330,7 @@ namespace Gs2::JobQueue::Domain::Model
     ) const
     {
         return MakeShared<Gs2::JobQueue::Domain::Iterator::FDescribeDeadLetterJobsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

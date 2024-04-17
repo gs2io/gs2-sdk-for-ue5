@@ -93,7 +93,7 @@ namespace Gs2::Exchange::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Exchange::Domain::Iterator::FDescribeAwaitsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken,

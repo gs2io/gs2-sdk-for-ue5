@@ -28,13 +28,13 @@ namespace Gs2::Chat::Domain::Iterator
     class GS2CHAT_API FDescribeRoomsIterator :
         public TSharedFromThis<FDescribeRoomsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Chat::FGs2ChatRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeRoomsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Chat::FGs2ChatRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

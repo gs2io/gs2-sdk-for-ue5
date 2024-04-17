@@ -28,12 +28,12 @@ namespace Gs2::Distributor::Domain::Iterator
     class GS2DISTRIBUTOR_API FDescribeNamespacesIterator :
         public TSharedFromThis<FDescribeNamespacesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
     public:
         FDescribeNamespacesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Distributor::FGs2DistributorRestClientPtr Client
         );
 

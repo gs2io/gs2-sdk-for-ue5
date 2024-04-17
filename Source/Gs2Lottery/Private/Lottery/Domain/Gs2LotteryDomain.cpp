@@ -454,7 +454,7 @@ namespace Gs2::Lottery::Domain
     ) const
     {
         return MakeShared<Gs2::Lottery::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

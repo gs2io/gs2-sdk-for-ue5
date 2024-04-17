@@ -99,6 +99,7 @@ namespace Gs2::Datastore::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithDataObjectName(Self->DataObjectName)

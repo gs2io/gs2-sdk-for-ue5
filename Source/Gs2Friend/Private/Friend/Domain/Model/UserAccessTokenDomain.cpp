@@ -186,7 +186,7 @@ namespace Gs2::Friend::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeBlackListIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken
@@ -222,7 +222,7 @@ namespace Gs2::Friend::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeFriendsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken,
@@ -281,7 +281,7 @@ namespace Gs2::Friend::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken
@@ -335,7 +335,7 @@ namespace Gs2::Friend::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

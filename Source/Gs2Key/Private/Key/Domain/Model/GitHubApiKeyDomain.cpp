@@ -86,6 +86,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithApiKeyName(Self->ApiKeyName);
         const auto Future = Self->Client->UpdateGitHubApiKey(
@@ -150,6 +151,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithApiKeyName(Self->ApiKeyName);
         const auto Future = Self->Client->GetGitHubApiKey(
@@ -212,6 +214,7 @@ namespace Gs2::Key::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithApiKeyName(Self->ApiKeyName);
         const auto Future = Self->Client->DeleteGitHubApiKey(

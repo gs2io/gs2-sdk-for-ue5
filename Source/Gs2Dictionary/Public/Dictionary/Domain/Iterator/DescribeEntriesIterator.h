@@ -28,7 +28,7 @@ namespace Gs2::Dictionary::Domain::Iterator
     class GS2DICTIONARY_API FDescribeEntriesIterator :
         public TSharedFromThis<FDescribeEntriesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -36,7 +36,7 @@ namespace Gs2::Dictionary::Domain::Iterator
 
     public:
         FDescribeEntriesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

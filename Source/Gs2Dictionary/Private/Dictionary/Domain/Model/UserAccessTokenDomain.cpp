@@ -92,6 +92,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
         const auto Future = Self->Client->VerifyEntry(
@@ -123,7 +124,7 @@ namespace Gs2::Dictionary::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Dictionary::Domain::Iterator::FDescribeEntriesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             AccessToken

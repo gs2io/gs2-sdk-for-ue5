@@ -86,6 +86,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -138,6 +139,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -195,6 +197,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -254,6 +257,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -307,6 +311,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateDistributorModelMaster(
             Request
@@ -370,7 +375,7 @@ namespace Gs2::Distributor::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -430,7 +435,7 @@ namespace Gs2::Distributor::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Distributor::Domain::Iterator::FDescribeDistributorModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

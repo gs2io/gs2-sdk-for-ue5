@@ -79,6 +79,7 @@ namespace Gs2::Script::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -131,6 +132,7 @@ namespace Gs2::Script::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -188,6 +190,7 @@ namespace Gs2::Script::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -247,6 +250,7 @@ namespace Gs2::Script::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -300,6 +304,7 @@ namespace Gs2::Script::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateScript(
             Request
@@ -368,6 +373,7 @@ namespace Gs2::Script::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateScriptFromGitHub(
             Request
@@ -547,7 +553,7 @@ namespace Gs2::Script::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Script::Domain::Iterator::FDescribeScriptsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

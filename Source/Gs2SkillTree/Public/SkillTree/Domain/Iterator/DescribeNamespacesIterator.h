@@ -28,12 +28,12 @@ namespace Gs2::SkillTree::Domain::Iterator
     class GS2SKILLTREE_API FDescribeNamespacesIterator :
         public TSharedFromThis<FDescribeNamespacesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
 
     public:
         FDescribeNamespacesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client
         );
 

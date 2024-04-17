@@ -447,7 +447,7 @@ namespace Gs2::Grade::Domain
     ) const
     {
         return MakeShared<Gs2::Grade::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

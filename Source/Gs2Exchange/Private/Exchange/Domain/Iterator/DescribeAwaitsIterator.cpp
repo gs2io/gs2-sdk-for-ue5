@@ -32,14 +32,14 @@ namespace Gs2::Exchange::Domain::Iterator
 {
 
     FDescribeAwaitsIterator::FDescribeAwaitsIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Exchange::FGs2ExchangeRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
         const TOptional<FString> RateName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
@@ -90,7 +90,7 @@ namespace Gs2::Exchange::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Exchange::Model::FAwait>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Exchange::Model::FAwait>(ListParentKey);
 
                 if (Range)
                 {
@@ -126,7 +126,7 @@ namespace Gs2::Exchange::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Exchange::Model::FAwait::TypeName,
                     ListParentKey,
                     Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
@@ -144,7 +144,7 @@ namespace Gs2::Exchange::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Exchange::Model::FAwait::TypeName,
                     ListParentKey
                 );

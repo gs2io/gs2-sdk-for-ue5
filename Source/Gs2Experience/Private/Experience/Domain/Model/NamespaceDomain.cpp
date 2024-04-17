@@ -86,6 +86,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -138,6 +139,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -195,6 +197,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -254,6 +257,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -307,6 +311,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateThresholdMaster(
             Request
@@ -375,6 +380,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateExperienceModelMaster(
             Request
@@ -438,7 +444,7 @@ namespace Gs2::Experience::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Experience::Domain::Iterator::FDescribeExperienceModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -512,7 +518,7 @@ namespace Gs2::Experience::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Experience::Domain::Iterator::FDescribeThresholdMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -562,7 +568,7 @@ namespace Gs2::Experience::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Experience::Domain::Iterator::FDescribeExperienceModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

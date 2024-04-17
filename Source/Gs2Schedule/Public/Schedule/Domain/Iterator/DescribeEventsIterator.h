@@ -28,7 +28,7 @@ namespace Gs2::Schedule::Domain::Iterator
     class GS2SCHEDULE_API FDescribeEventsIterator :
         public TSharedFromThis<FDescribeEventsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Schedule::FGs2ScheduleRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -36,7 +36,7 @@ namespace Gs2::Schedule::Domain::Iterator
 
     public:
         FDescribeEventsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Schedule::FGs2ScheduleRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

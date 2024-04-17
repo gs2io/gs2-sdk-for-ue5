@@ -121,7 +121,7 @@ namespace Gs2::News::Domain
     ) const
     {
         return MakeShared<Gs2::News::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

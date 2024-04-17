@@ -82,6 +82,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithSecurityPolicyName(Self->SecurityPolicyName);
         const auto Future = Self->Client->UpdateSecurityPolicy(
             Request
@@ -141,6 +142,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithSecurityPolicyName(Self->SecurityPolicyName);
         const auto Future = Self->Client->GetSecurityPolicy(
             Request
@@ -198,6 +200,7 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithSecurityPolicyName(Self->SecurityPolicyName);
         const auto Future = Self->Client->DeleteSecurityPolicy(
             Request

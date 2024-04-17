@@ -28,13 +28,13 @@ namespace Gs2::Version::Domain::Iterator
     class GS2VERSION_API FDescribeVersionModelsIterator :
         public TSharedFromThis<FDescribeVersionModelsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Version::FGs2VersionRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeVersionModelsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Version::FGs2VersionRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

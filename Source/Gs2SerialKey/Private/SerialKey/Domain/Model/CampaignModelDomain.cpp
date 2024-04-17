@@ -92,6 +92,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCampaignModelName(Self->CampaignModelName);
         const auto Future = Self->Client->GetCampaignModel(
@@ -154,6 +155,7 @@ namespace Gs2::SerialKey::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCampaignModelName(Self->CampaignModelName);
         const auto Future = Self->Client->Issue(
@@ -210,7 +212,7 @@ namespace Gs2::SerialKey::Domain::Model
     ) const
     {
         return MakeShared<Gs2::SerialKey::Domain::Iterator::FDescribeIssueJobsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             CampaignModelName

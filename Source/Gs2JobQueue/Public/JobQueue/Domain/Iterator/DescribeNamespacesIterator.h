@@ -28,12 +28,12 @@ namespace Gs2::JobQueue::Domain::Iterator
     class GS2JOBQUEUE_API FDescribeNamespacesIterator :
         public TSharedFromThis<FDescribeNamespacesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client;
 
     public:
         FDescribeNamespacesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::JobQueue::FGs2JobQueueRestClientPtr Client
         );
 

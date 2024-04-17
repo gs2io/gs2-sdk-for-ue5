@@ -32,12 +32,12 @@ namespace Gs2::Deploy::Domain::Iterator
 {
 
     FDescribeEventsIterator::FDescribeEventsIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Deploy::FGs2DeployRestClientPtr Client,
         const TOptional<FString> StackName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         StackName(StackName)
     {
@@ -85,7 +85,7 @@ namespace Gs2::Deploy::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Deploy::Model::FEvent>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Deploy::Model::FEvent>(ListParentKey);
 
                 if (Range)
                 {
@@ -119,7 +119,7 @@ namespace Gs2::Deploy::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Deploy::Model::FEvent::TypeName,
                     ListParentKey,
                     Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
@@ -136,7 +136,7 @@ namespace Gs2::Deploy::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Deploy::Model::FEvent::TypeName,
                     ListParentKey
                 );

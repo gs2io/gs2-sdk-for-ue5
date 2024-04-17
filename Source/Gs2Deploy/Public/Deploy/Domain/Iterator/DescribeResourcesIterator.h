@@ -28,13 +28,13 @@ namespace Gs2::Deploy::Domain::Iterator
     class GS2DEPLOY_API FDescribeResourcesIterator :
         public TSharedFromThis<FDescribeResourcesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Deploy::FGs2DeployRestClientPtr Client;
         const TOptional<FString> StackName;
 
     public:
         FDescribeResourcesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Deploy::FGs2DeployRestClientPtr Client,
             const TOptional<FString> StackName
         );

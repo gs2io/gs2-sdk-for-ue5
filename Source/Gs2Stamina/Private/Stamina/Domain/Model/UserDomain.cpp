@@ -80,7 +80,7 @@ namespace Gs2::Stamina::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Stamina::Domain::Iterator::FDescribeStaminasByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

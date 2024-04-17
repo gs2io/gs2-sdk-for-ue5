@@ -87,6 +87,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespaceStatus(
             Request
@@ -139,6 +140,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->GetNamespace(
             Request
@@ -196,6 +198,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->UpdateNamespace(
             Request
@@ -255,6 +258,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->DeleteNamespace(
             Request
@@ -308,6 +312,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateSeasonModelMaster(
             Request
@@ -376,6 +381,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->CreateMatchSession(
             Request
@@ -444,6 +450,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->Vote(
             Request
@@ -520,6 +527,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName);
         const auto Future = Self->Client->VoteMultiple(
             Request
@@ -591,7 +599,7 @@ namespace Gs2::SeasonRating::Domain::Model
     ) const
     {
         return MakeShared<Gs2::SeasonRating::Domain::Iterator::FDescribeSeasonModelsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -641,7 +649,7 @@ namespace Gs2::SeasonRating::Domain::Model
     ) const
     {
         return MakeShared<Gs2::SeasonRating::Domain::Iterator::FDescribeSeasonModelMastersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -715,7 +723,7 @@ namespace Gs2::SeasonRating::Domain::Model
     ) const
     {
         return MakeShared<Gs2::SeasonRating::Domain::Iterator::FDescribeMatchSessionsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );

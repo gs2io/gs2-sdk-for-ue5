@@ -179,7 +179,7 @@ namespace Gs2::Identifier::Domain
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeUsersIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }
@@ -221,7 +221,7 @@ namespace Gs2::Identifier::Domain
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeSecurityPoliciesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }
@@ -252,7 +252,7 @@ namespace Gs2::Identifier::Domain
     ) const
     {
         return MakeShared<Gs2::Identifier::Domain::Iterator::FDescribeCommonSecurityPoliciesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

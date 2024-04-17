@@ -28,14 +28,14 @@ namespace Gs2::MegaField::Domain::Iterator
     class GS2MEGAFIELD_API FDescribeLayerModelsIterator :
         public TSharedFromThis<FDescribeLayerModelsIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> AreaModelName;
 
     public:
         FDescribeLayerModelsIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::MegaField::FGs2MegaFieldRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> AreaModelName

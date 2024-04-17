@@ -462,7 +462,7 @@ namespace Gs2::JobQueue::Domain
     ) const
     {
         return MakeShared<Gs2::JobQueue::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

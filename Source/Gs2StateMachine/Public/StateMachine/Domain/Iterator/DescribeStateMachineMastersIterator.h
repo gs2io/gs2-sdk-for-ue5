@@ -28,13 +28,13 @@ namespace Gs2::StateMachine::Domain::Iterator
     class GS2STATEMACHINE_API FDescribeStateMachineMastersIterator :
         public TSharedFromThis<FDescribeStateMachineMastersIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client;
         const TOptional<FString> NamespaceName;
 
     public:
         FDescribeStateMachineMastersIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::StateMachine::FGs2StateMachineRestClientPtr Client,
             const TOptional<FString> NamespaceName
         );

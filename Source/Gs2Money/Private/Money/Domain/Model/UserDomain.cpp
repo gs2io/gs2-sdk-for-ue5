@@ -90,6 +90,7 @@ namespace Gs2::Money::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->RecordReceipt(
@@ -161,6 +162,7 @@ namespace Gs2::Money::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->RevertRecordReceipt(
@@ -218,7 +220,7 @@ namespace Gs2::Money::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Iterator::FDescribeWalletsByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,
@@ -277,7 +279,7 @@ namespace Gs2::Money::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Iterator::FDescribeReceiptsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,

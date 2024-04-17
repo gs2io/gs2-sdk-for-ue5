@@ -91,6 +91,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithEntryName(Self->EntryName);
         const auto Future = Self->Client->GetEntryModelMaster(
@@ -153,6 +154,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithEntryName(Self->EntryName);
         const auto Future = Self->Client->UpdateEntryModelMaster(
@@ -217,6 +219,7 @@ namespace Gs2::Dictionary::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithEntryName(Self->EntryName);
         const auto Future = Self->Client->DeleteEntryModelMaster(

@@ -31,11 +31,11 @@ namespace Gs2::Version::Domain::Iterator
 {
 
     FDescribeNamespacesIterator::FDescribeNamespacesIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Version::FGs2VersionRestClientPtr Client
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client)
     {
     }
@@ -79,7 +79,7 @@ namespace Gs2::Version::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Version::Model::FNamespace>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Version::Model::FNamespace>(ListParentKey);
 
                 if (Range)
                 {
@@ -112,7 +112,7 @@ namespace Gs2::Version::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Version::Model::FNamespace::TypeName,
                     ListParentKey,
                     Gs2::Version::Domain::Model::FNamespaceDomain::CreateCacheKey(
@@ -129,7 +129,7 @@ namespace Gs2::Version::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Version::Model::FNamespace::TypeName,
                     ListParentKey
                 );

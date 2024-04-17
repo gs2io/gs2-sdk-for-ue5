@@ -94,6 +94,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMaxStaminaTableName(Self->MaxStaminaTableName);
         const auto Future = Self->Client->GetMaxStaminaTableMaster(
@@ -156,6 +157,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMaxStaminaTableName(Self->MaxStaminaTableName);
         const auto Future = Self->Client->UpdateMaxStaminaTableMaster(
@@ -220,6 +222,7 @@ namespace Gs2::Stamina::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithMaxStaminaTableName(Self->MaxStaminaTableName);
         const auto Future = Self->Client->DeleteMaxStaminaTableMaster(

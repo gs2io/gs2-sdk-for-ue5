@@ -447,7 +447,7 @@ namespace Gs2::SkillTree::Domain
     ) const
     {
         return MakeShared<Gs2::SkillTree::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

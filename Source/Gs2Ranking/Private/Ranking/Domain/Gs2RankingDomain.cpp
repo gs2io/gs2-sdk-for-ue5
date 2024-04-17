@@ -451,7 +451,7 @@ namespace Gs2::Ranking::Domain
     ) const
     {
         return MakeShared<Gs2::Ranking::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

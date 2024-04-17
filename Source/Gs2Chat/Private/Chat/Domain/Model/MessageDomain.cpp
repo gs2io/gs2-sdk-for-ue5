@@ -103,6 +103,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithRoomName(Self->RoomName)
@@ -170,6 +171,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithRoomName(Self->RoomName)

@@ -28,7 +28,7 @@ namespace Gs2::Mission::Domain::Iterator
     class GS2MISSION_API FDescribeCompletesByUserIdIterator :
         public TSharedFromThis<FDescribeCompletesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Mission::FGs2MissionRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::Mission::Domain::Iterator
 
     public:
         FDescribeCompletesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Mission::FGs2MissionRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

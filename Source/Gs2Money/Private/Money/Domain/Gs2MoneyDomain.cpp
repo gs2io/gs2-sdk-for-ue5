@@ -445,7 +445,7 @@ namespace Gs2::Money::Domain
     ) const
     {
         return MakeShared<Gs2::Money::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

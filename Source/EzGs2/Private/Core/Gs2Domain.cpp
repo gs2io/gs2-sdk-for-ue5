@@ -18,20 +18,11 @@
 
 namespace Gs2::UE5::Core::Domain
 {
-    FGs2Domain::FGs2Domain(
-        Util::FGs2ConnectionPtr Connection,
-        FString DistributorNamespaceName
-    ): Connection(Connection)
+    void FGs2Domain::Initialize()
     {
-        Super = MakeShared<Gs2::Core::Domain::FGs2>(
-            Connection->RestSession(),
-            Connection->WebSocketSession(),
-            DistributorNamespaceName
-        );
-        Super->Initialize();
-
         Account = MakeShared<Gs2::UE5::Account::Domain::FEzGs2Account>(Super->Account, Connection);
         Auth = MakeShared<Gs2::UE5::Auth::Domain::FEzGs2Auth>(Super->Auth, Connection);
+        Buff = MakeShared<Gs2::UE5::Buff::Domain::FEzGs2Buff>(Super->Buff, Connection);
         Chat = MakeShared<Gs2::UE5::Chat::Domain::FEzGs2Chat>(Super->Chat, Connection);
         Datastore = MakeShared<Gs2::UE5::Datastore::Domain::FEzGs2Datastore>(Super->Datastore, Connection);
         Dictionary = MakeShared<Gs2::UE5::Dictionary::Domain::FEzGs2Dictionary>(Super->Dictionary, Connection);
@@ -66,6 +57,28 @@ namespace Gs2::UE5::Core::Domain
         Stamina = MakeShared<Gs2::UE5::Stamina::Domain::FEzGs2Stamina>(Super->Stamina, Connection);
         StateMachine = MakeShared<Gs2::UE5::StateMachine::Domain::FEzGs2StateMachine>(Super->StateMachine, Connection);
         Version = MakeShared<Gs2::UE5::Version::Domain::FEzGs2Version>(Super->Version, Connection);
+    }
+
+    FGs2Domain::FGs2Domain(
+        Util::FGs2ConnectionPtr Connection,
+        FString DistributorNamespaceName
+    ): Connection(Connection)
+    {
+        Super = MakeShared<Gs2::Core::Domain::FGs2>(
+            Connection->RestSession(),
+            Connection->WebSocketSession(),
+            DistributorNamespaceName
+        );
+        Super->Initialize();
+
+        this->Initialize();
+    }
+
+    FGs2Domain::FGs2Domain(Gs2::Core::Domain::FGs2Ptr Gs2)
+    {
+        Super = Gs2;
+
+        this->Initialize();
     }
 
     FGs2Domain::FLoginTask::FLoginTask(

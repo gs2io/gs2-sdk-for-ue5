@@ -98,6 +98,7 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithLimitName(Self->LimitName)
@@ -164,6 +165,7 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithLimitName(Self->LimitName)
@@ -232,6 +234,7 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithLimitName(Self->LimitName)
@@ -300,6 +303,7 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithLimitName(Self->LimitName)
@@ -362,6 +366,7 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithLimitName(Self->LimitName)

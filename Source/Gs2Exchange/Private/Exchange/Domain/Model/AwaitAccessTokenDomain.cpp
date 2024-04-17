@@ -102,6 +102,7 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAwaitName(Self->AwaitName);
@@ -167,6 +168,7 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAwaitName(Self->AwaitName);
@@ -274,6 +276,7 @@ namespace Gs2::Exchange::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithAwaitName(Self->AwaitName);

@@ -28,7 +28,7 @@ namespace Gs2::SkillTree::Domain::Iterator
     class GS2SKILLTREE_API FDescribeStatusesIterator :
         public TSharedFromThis<FDescribeStatusesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -36,7 +36,7 @@ namespace Gs2::SkillTree::Domain::Iterator
 
     public:
         FDescribeStatusesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::SkillTree::FGs2SkillTreeRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

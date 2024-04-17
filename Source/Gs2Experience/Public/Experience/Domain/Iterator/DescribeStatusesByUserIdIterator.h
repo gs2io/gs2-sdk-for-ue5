@@ -28,7 +28,7 @@ namespace Gs2::Experience::Domain::Iterator
     class GS2EXPERIENCE_API FDescribeStatusesByUserIdIterator :
         public TSharedFromThis<FDescribeStatusesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Experience::FGs2ExperienceRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> ExperienceName;
@@ -37,7 +37,7 @@ namespace Gs2::Experience::Domain::Iterator
 
     public:
         FDescribeStatusesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Experience::FGs2ExperienceRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

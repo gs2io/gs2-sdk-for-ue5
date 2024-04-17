@@ -91,6 +91,7 @@ namespace Gs2::SkillTree::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithNodeModelName(Self->NodeModelName);
         const auto Future = Self->Client->GetNodeModel(

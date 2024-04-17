@@ -92,6 +92,7 @@ namespace Gs2::Experience::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithExperienceName(Self->ExperienceName);
         const auto Future = Self->Client->GetExperienceModel(

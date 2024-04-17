@@ -77,7 +77,7 @@ namespace Gs2::Chat::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeRoomsIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName
         );
@@ -133,7 +133,7 @@ namespace Gs2::Chat::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeSubscribesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             UserId,
@@ -176,7 +176,7 @@ namespace Gs2::Chat::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeSubscribesByRoomNameIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             RoomName

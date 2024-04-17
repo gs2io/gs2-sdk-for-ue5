@@ -28,7 +28,7 @@ namespace Gs2::Dictionary::Domain::Iterator
     class GS2DICTIONARY_API FDescribeEntriesByUserIdIterator :
         public TSharedFromThis<FDescribeEntriesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::Dictionary::Domain::Iterator
 
     public:
         FDescribeEntriesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Dictionary::FGs2DictionaryRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

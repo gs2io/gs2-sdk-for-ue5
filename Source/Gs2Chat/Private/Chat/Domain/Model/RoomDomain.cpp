@@ -99,6 +99,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRoomName(Self->RoomName);
         const auto Future = Self->Client->GetRoom(
@@ -162,6 +163,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithRoomName(Self->RoomName)
@@ -229,6 +231,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithRoomName(Self->RoomName);
@@ -289,6 +292,7 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithRoomName(Self->RoomName)
@@ -351,7 +355,7 @@ namespace Gs2::Chat::Domain::Model
     ) const
     {
         return MakeShared<Gs2::Chat::Domain::Iterator::FDescribeMessagesByUserIdIterator>(
-            Gs2->Cache,
+            Gs2,
             Client,
             NamespaceName,
             RoomName,

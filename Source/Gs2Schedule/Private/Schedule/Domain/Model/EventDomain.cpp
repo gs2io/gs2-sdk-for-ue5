@@ -96,6 +96,7 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithEventName(Self->EventName);
@@ -160,6 +161,7 @@ namespace Gs2::Schedule::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithEventName(Self->EventName);

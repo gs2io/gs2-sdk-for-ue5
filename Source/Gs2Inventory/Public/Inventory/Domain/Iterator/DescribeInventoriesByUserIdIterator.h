@@ -28,7 +28,7 @@ namespace Gs2::Inventory::Domain::Iterator
     class GS2INVENTORY_API FDescribeInventoriesByUserIdIterator :
         public TSharedFromThis<FDescribeInventoriesByUserIdIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Inventory::FGs2InventoryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
@@ -36,7 +36,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
     public:
         FDescribeInventoriesByUserIdIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Inventory::FGs2InventoryRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,

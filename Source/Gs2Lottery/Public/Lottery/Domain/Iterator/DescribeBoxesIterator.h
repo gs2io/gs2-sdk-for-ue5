@@ -28,7 +28,7 @@ namespace Gs2::Lottery::Domain::Iterator
     class GS2LOTTERY_API FDescribeBoxesIterator :
         public TSharedFromThis<FDescribeBoxesIterator>
     {
-        const Core::Domain::FCacheDatabasePtr Cache;
+        const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Lottery::FGs2LotteryRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
@@ -36,7 +36,7 @@ namespace Gs2::Lottery::Domain::Iterator
 
     public:
         FDescribeBoxesIterator(
-            const Core::Domain::FCacheDatabasePtr Cache,
+            const TSharedPtr<Core::Domain::FGs2> Gs2,
             const Gs2::Lottery::FGs2LotteryRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken

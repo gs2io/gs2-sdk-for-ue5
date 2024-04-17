@@ -91,6 +91,110 @@ namespace Gs2::Friend::Domain::Model
 
     }
 
+    FFriendAccessTokenDomain::FDeleteFriendTask::FDeleteFriendTask(
+        const TSharedPtr<FFriendAccessTokenDomain>& Self,
+        const Request::FDeleteFriendRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FFriendAccessTokenDomain::FDeleteFriendTask::FDeleteFriendTask(
+        const FDeleteFriendTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFriendAccessTokenDomain::FDeleteFriendTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->DeleteFriend(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
+                    "FriendUser"
+                );
+                const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetUserId()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Friend::Model::FFriendUser::TypeName, ParentKey, Key);
+            }
+            {
+                const auto ParentKey = Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId(),
+                    Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
+                    "FriendUser"
+                );
+                const auto Key = Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetUserId()
+                );
+                Self->Gs2->Cache->Delete(Gs2::Friend::Model::FFriendUser::TypeName, ParentKey, Key);
+            }
+            Self->Gs2->Cache->Delete(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    ResultModel->GetItem()->GetUserId(),
+                    FString("False"),
+                    "FriendUser"
+                ),
+                Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
+                    Self->UserId()
+                )
+            );
+            Self->Gs2->Cache->Delete(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Domain::Model::FFriendDomain::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    ResultModel->GetItem()->GetUserId(),
+                    FString("True"),
+                    "FriendUser"
+                ),
+                Gs2::Friend::Domain::Model::FFriendUserDomain::CreateCacheKey(
+                    Self->UserId()
+                )
+            );
+        }
+        auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            Self->AccessToken,
+            false,
+            Request->GetTargetUserId()
+        );
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFriendAccessTokenDomain::FDeleteFriendTask>> FFriendAccessTokenDomain::DeleteFriend(
+        Request::FDeleteFriendRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FDeleteFriendTask>>(this->AsShared(), Request);
+    }
+
     TSharedPtr<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain> FFriendAccessTokenDomain::FriendUser(
         const FString TargetUserId
     )

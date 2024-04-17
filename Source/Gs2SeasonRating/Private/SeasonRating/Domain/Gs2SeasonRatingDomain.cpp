@@ -449,7 +449,7 @@ namespace Gs2::SeasonRating::Domain
     ) const
     {
         return MakeShared<Gs2::SeasonRating::Domain::Iterator::FDescribeNamespacesIterator>(
-            Gs2->Cache,
+            Gs2,
             Client
         );
     }

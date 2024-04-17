@@ -32,13 +32,13 @@ namespace Gs2::SerialKey::Domain::Iterator
 {
 
     FDescribeIssueJobsIterator::FDescribeIssueJobsIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::SerialKey::FGs2SerialKeyRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> CampaignModelName
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         CampaignModelName(CampaignModelName)
@@ -88,7 +88,7 @@ namespace Gs2::SerialKey::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::SerialKey::Model::FIssueJob>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::SerialKey::Model::FIssueJob>(ListParentKey);
 
                 if (Range)
                 {
@@ -123,7 +123,7 @@ namespace Gs2::SerialKey::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::SerialKey::Model::FIssueJob::TypeName,
                     ListParentKey,
                     Gs2::SerialKey::Domain::Model::FIssueJobDomain::CreateCacheKey(
@@ -140,7 +140,7 @@ namespace Gs2::SerialKey::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::SerialKey::Model::FIssueJob::TypeName,
                     ListParentKey
                 );

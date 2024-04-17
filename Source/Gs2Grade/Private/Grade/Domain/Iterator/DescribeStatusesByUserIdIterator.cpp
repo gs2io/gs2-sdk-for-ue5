@@ -32,7 +32,7 @@ namespace Gs2::Grade::Domain::Iterator
 {
 
     FDescribeStatusesByUserIdIterator::FDescribeStatusesByUserIdIterator(
-        const Core::Domain::FCacheDatabasePtr Cache,
+        const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Grade::FGs2GradeRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
@@ -40,7 +40,7 @@ namespace Gs2::Grade::Domain::Iterator
         const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
-        Cache(Cache),
+        Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
         GradeName(GradeName),
@@ -92,7 +92,7 @@ namespace Gs2::Grade::Domain::Iterator
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->Cache->TryGetList<Gs2::Grade::Model::FStatus>(ListParentKey);
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Grade::Model::FStatus>(ListParentKey);
 
                 if (Range)
                 {
@@ -128,7 +128,7 @@ namespace Gs2::Grade::Domain::Iterator
             Range = R->GetItems();
             for (auto Item : *R->GetItems())
             {
-                Self->Cache->Put(
+                Self->Gs2->Cache->Put(
                     Gs2::Grade::Model::FStatus::TypeName,
                     ListParentKey,
                     Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
@@ -147,7 +147,7 @@ namespace Gs2::Grade::Domain::Iterator
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
             if (bLast) {
-                Self->Cache->SetListCached(
+                Self->Gs2->Cache->SetListCached(
                     Gs2::Grade::Model::FStatus::TypeName,
                     ListParentKey
                 );

@@ -93,6 +93,7 @@ namespace Gs2::Version::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName);
         const auto Future = Self->Client->GetVersionModelMaster(
@@ -155,6 +156,7 @@ namespace Gs2::Version::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName);
         const auto Future = Self->Client->UpdateVersionModelMaster(
@@ -219,6 +221,7 @@ namespace Gs2::Version::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName);
         const auto Future = Self->Client->DeleteVersionModelMaster(
