@@ -25,6 +25,7 @@ namespace Gs2::Account::Model
         TimeOffsetValue(TOptional<int32>()),
         BanStatusesValue(nullptr),
         BannedValue(TOptional<bool>()),
+        LastAuthenticatedAtValue(TOptional<int64>()),
         CreatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -39,6 +40,7 @@ namespace Gs2::Account::Model
         TimeOffsetValue(From.TimeOffsetValue),
         BanStatusesValue(From.BanStatusesValue),
         BannedValue(From.BannedValue),
+        LastAuthenticatedAtValue(From.LastAuthenticatedAtValue),
         CreatedAtValue(From.CreatedAtValue),
         RevisionValue(From.RevisionValue)
     {
@@ -89,6 +91,14 @@ namespace Gs2::Account::Model
     )
     {
         this->BannedValue = Banned;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAccount> FAccount::WithLastAuthenticatedAt(
+        const TOptional<int64> LastAuthenticatedAt
+    )
+    {
+        this->LastAuthenticatedAtValue = LastAuthenticatedAt;
         return SharedThis(this);
     }
 
@@ -148,6 +158,19 @@ namespace Gs2::Account::Model
             return FString("null");
         }
         return FString(BannedValue.GetValue() ? "true" : "false");
+    }
+    TOptional<int64> FAccount::GetLastAuthenticatedAt() const
+    {
+        return LastAuthenticatedAtValue;
+    }
+
+    FString FAccount::GetLastAuthenticatedAtString() const
+    {
+        if (!LastAuthenticatedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), LastAuthenticatedAtValue.GetValue());
     }
     TOptional<int64> FAccount::GetCreatedAt() const
     {
@@ -283,6 +306,15 @@ namespace Gs2::Account::Model
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
+            ->WithLastAuthenticatedAt(Data->HasField("lastAuthenticatedAt") ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField("lastAuthenticatedAt", v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithCreatedAt(Data->HasField("createdAt") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -334,6 +366,10 @@ namespace Gs2::Account::Model
         if (BannedValue.IsSet())
         {
             JsonRootObject->SetBoolField("banned", BannedValue.GetValue());
+        }
+        if (LastAuthenticatedAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField("lastAuthenticatedAt", FString::Printf(TEXT("%lld"), LastAuthenticatedAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {

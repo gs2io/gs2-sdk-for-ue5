@@ -30,6 +30,7 @@ namespace Gs2::Account::Model
         TOptional<int32> TimeOffsetValue;
         TSharedPtr<TArray<TSharedPtr<FBanStatus>>> BanStatusesValue;
         TOptional<bool> BannedValue;
+        TOptional<int64> LastAuthenticatedAtValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -46,6 +47,7 @@ namespace Gs2::Account::Model
         TSharedPtr<FAccount> WithTimeOffset(const TOptional<int32> TimeOffset);
         TSharedPtr<FAccount> WithBanStatuses(const TSharedPtr<TArray<TSharedPtr<FBanStatus>>> BanStatuses);
         TSharedPtr<FAccount> WithBanned(const TOptional<bool> Banned);
+        TSharedPtr<FAccount> WithLastAuthenticatedAt(const TOptional<int64> LastAuthenticatedAt);
         TSharedPtr<FAccount> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FAccount> WithRevision(const TOptional<int64> Revision);
 
@@ -57,6 +59,8 @@ namespace Gs2::Account::Model
         TSharedPtr<TArray<TSharedPtr<FBanStatus>>> GetBanStatuses() const;
         TOptional<bool> GetBanned() const;
         FString GetBannedString() const;
+        TOptional<int64> GetLastAuthenticatedAt() const;
+        FString GetLastAuthenticatedAtString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetRevision() const;
