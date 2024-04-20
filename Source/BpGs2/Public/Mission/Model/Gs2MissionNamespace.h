@@ -39,15 +39,15 @@ class BPGS2_API UGs2MissionNamespaceFunctionLibrary : public UBlueprintFunctionL
         FGs2MissionNamespace Namespace,
         FString MissionGroupName
     );
-    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Mission::Me", Category="Game Server Services|GS2-Mission|Namespace|User", meta=(WorldContext="WorldContextObject"))
-    static UPARAM(DisplayName="User") FGs2MissionOwnUser Me(
-        FGs2MissionNamespace Namespace,
-        FGs2AccessToken AccessToken
-    );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Mission::CounterModel", Category="Game Server Services|GS2-Mission|Namespace|CounterModel", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="CounterModel") FGs2MissionCounterModel CounterModel(
         FGs2MissionNamespace Namespace,
         FString CounterName
+    );
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Mission::Me", Category="Game Server Services|GS2-Mission|Namespace|User", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="User") FGs2MissionOwnUser Me(
+        FGs2MissionNamespace Namespace,
+        FGs2AccessToken AccessToken
     );
 };

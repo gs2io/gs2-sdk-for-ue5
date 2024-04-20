@@ -581,6 +581,53 @@ namespace Gs2::Mission::Domain
                 }
             }
         }
+        if (Method == "SetCounterByUserId") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Mission::Request::FSetCounterByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Mission::Result::FSetCounterByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Counter"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Mission::Model::FCounter::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }{
+                for (auto Item : *ResultModel->GetChangedCompletes())
+                {
+                    const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        "Complete"
+                    );
+                    const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                        Item->GetMissionGroupName()
+                    );
+                }
+            }
+        }
     }
 
     void FGs2MissionDomain::UpdateCacheFromStampTask(
@@ -656,6 +703,18 @@ namespace Gs2::Mission::Domain
                     ResultModel->GetItem(),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
+            }{
+                for (auto Item : *ResultModel->GetChangedCompletes())
+                {
+                    const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        "Complete"
+                    );
+                    const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                        Item->GetMissionGroupName()
+                    );
+                }
             }
         }
     }
@@ -752,6 +811,61 @@ namespace Gs2::Mission::Domain
                 Gs2->Cache->ClearListCache(
                     Gs2::Mission::Model::FComplete::TypeName,
                     ParentKey.Replace(TEXT("Counter"), TEXT("Complete"))
+                );
+            }{
+                for (auto Item : *ResultModel->GetChangedCompletes())
+                {
+                    const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        "Complete"
+                    );
+                    const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
+                        Item->GetMissionGroupName()
+                    );
+                }
+            }
+        }
+        if (Method == "set_counter_by_user_id") {
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (!Job->GetArgs().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (!Result->GetResult().IsSet())
+            {
+                return;
+            }
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Mission::Request::FSetCounterByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Mission::Result::FSetCounterByUserIdResult::FromJson(ResultModelJson);
+            
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "Counter"
+                );
+                const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Mission::Model::FCounter::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }{
                 for (auto Item : *ResultModel->GetChangedCompletes())

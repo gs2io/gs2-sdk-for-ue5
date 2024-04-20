@@ -19,14 +19,16 @@
 namespace Gs2::Mission::Result
 {
     FDecreaseCounterByUserIdResult::FDecreaseCounterByUserIdResult():
-        ItemValue(nullptr)
+        ItemValue(nullptr),
+        ChangedCompletesValue(nullptr)
     {
     }
 
     FDecreaseCounterByUserIdResult::FDecreaseCounterByUserIdResult(
         const FDecreaseCounterByUserIdResult& From
     ):
-        ItemValue(From.ItemValue)
+        ItemValue(From.ItemValue),
+        ChangedCompletesValue(From.ChangedCompletesValue)
     {
     }
 
@@ -38,6 +40,14 @@ namespace Gs2::Mission::Result
         return SharedThis(this);
     }
 
+    TSharedPtr<FDecreaseCounterByUserIdResult> FDecreaseCounterByUserIdResult::WithChangedCompletes(
+        const TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> ChangedCompletes
+    )
+    {
+        this->ChangedCompletesValue = ChangedCompletes;
+        return SharedThis(this);
+    }
+
     TSharedPtr<Model::FCounter> FDecreaseCounterByUserIdResult::GetItem() const
     {
         if (!ItemValue.IsValid())
@@ -45,6 +55,15 @@ namespace Gs2::Mission::Result
             return nullptr;
         }
         return ItemValue;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> FDecreaseCounterByUserIdResult::GetChangedCompletes() const
+    {
+        if (!ChangedCompletesValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ChangedCompletesValue;
     }
 
     TSharedPtr<FDecreaseCounterByUserIdResult> FDecreaseCounterByUserIdResult::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -60,7 +79,19 @@ namespace Gs2::Mission::Result
                         return nullptr;
                     }
                     return Model::FCounter::FromJson(Data->GetObjectField("item"));
-                 }() : nullptr);
+                 }() : nullptr)
+            ->WithChangedCompletes(Data->HasField("changedCompletes") ? [Data]() -> TSharedPtr<TArray<Model::FCompletePtr>>
+                 {
+                    auto v = MakeShared<TArray<Model::FCompletePtr>>();
+                    if (!Data->HasTypedField<EJson::Null>("changedCompletes") && Data->HasTypedField<EJson::Array>("changedCompletes"))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField("changedCompletes"))
+                        {
+                            v->Add(Model::FComplete::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FCompletePtr>>());
     }
 
     TSharedPtr<FJsonObject> FDecreaseCounterByUserIdResult::ToJson() const
@@ -69,6 +100,15 @@ namespace Gs2::Mission::Result
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (ChangedCompletesValue != nullptr && ChangedCompletesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *ChangedCompletesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField("changedCompletes", v);
         }
         return JsonRootObject;
     }

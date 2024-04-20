@@ -286,14 +286,6 @@ namespace Gs2::Mission::Domain::Model
             const FString MissionGroupName
         );
 
-        TSharedPtr<Gs2::Mission::Domain::Model::FUserDomain> User(
-            const FString UserId
-        );
-
-        TSharedPtr<Gs2::Mission::Domain::Model::FUserAccessTokenDomain> AccessToken(
-            Gs2::Auth::Model::FAccessTokenPtr AccessToken
-        );
-
         Gs2::Mission::Domain::Iterator::FDescribeCounterModelsIteratorPtr CounterModels(
         ) const;
 
@@ -307,6 +299,14 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<Gs2::Mission::Domain::Model::FCounterModelDomain> CounterModel(
             const FString CounterName
+        );
+
+        TSharedPtr<Gs2::Mission::Domain::Model::FUserDomain> User(
+            const FString UserId
+        );
+
+        TSharedPtr<Gs2::Mission::Domain::Model::FUserAccessTokenDomain> AccessToken(
+            Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
         Gs2::Mission::Domain::Iterator::FDescribeCounterModelMastersIteratorPtr CounterModelMasters(

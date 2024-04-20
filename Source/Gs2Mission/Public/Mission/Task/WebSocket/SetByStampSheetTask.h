@@ -1,0 +1,44 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#pragma once
+
+#include "CoreMinimal.h"
+
+#include "Core/Gs2Core.h"
+#include "Mission/Request/SetByStampSheetRequest.h"
+#include "Mission/Result/SetByStampSheetResult.h"
+
+namespace Gs2::Mission::Task::WebSocket
+{
+    class GS2MISSION_API FSetByStampSheetTask final : public Gs2::Core::Util::TGs2Future<Result::FSetByStampSheetResult>
+    {
+        Core::Net::WebSocket::FGs2WebSocketSessionPtr Session;
+        Request::FSetByStampSheetRequestPtr Request;
+    public:
+        explicit FSetByStampSheetTask(
+            const Core::Net::WebSocket::FGs2WebSocketSessionPtr Session,
+            const Request::FSetByStampSheetRequestPtr Request
+        );
+        FSetByStampSheetTask(
+            const FSetByStampSheetTask& From
+        );
+        virtual ~FSetByStampSheetTask() override = default;
+
+        virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FSetByStampSheetResultPtr> Result) override;
+    };
+    typedef TSharedPtr<FSetByStampSheetTask, ESPMode::ThreadSafe> FSetByStampSheetTaskPtr;
+}

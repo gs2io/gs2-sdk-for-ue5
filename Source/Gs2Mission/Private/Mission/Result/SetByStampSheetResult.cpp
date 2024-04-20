@@ -14,27 +14,27 @@
  * permissions and limitations under the License.
  */
 
-#include "Mission/Result/DecreaseByStampTaskResult.h"
+#include "Mission/Result/SetByStampSheetResult.h"
 
 namespace Gs2::Mission::Result
 {
-    FDecreaseByStampTaskResult::FDecreaseByStampTaskResult():
+    FSetByStampSheetResult::FSetByStampSheetResult():
         ItemValue(nullptr),
-        ChangedCompletesValue(nullptr),
-        NewContextStackValue(TOptional<FString>())
+        OldValue(nullptr),
+        ChangedCompletesValue(nullptr)
     {
     }
 
-    FDecreaseByStampTaskResult::FDecreaseByStampTaskResult(
-        const FDecreaseByStampTaskResult& From
+    FSetByStampSheetResult::FSetByStampSheetResult(
+        const FSetByStampSheetResult& From
     ):
         ItemValue(From.ItemValue),
-        ChangedCompletesValue(From.ChangedCompletesValue),
-        NewContextStackValue(From.NewContextStackValue)
+        OldValue(From.OldValue),
+        ChangedCompletesValue(From.ChangedCompletesValue)
     {
     }
 
-    TSharedPtr<FDecreaseByStampTaskResult> FDecreaseByStampTaskResult::WithItem(
+    TSharedPtr<FSetByStampSheetResult> FSetByStampSheetResult::WithItem(
         const TSharedPtr<Model::FCounter> Item
     )
     {
@@ -42,7 +42,15 @@ namespace Gs2::Mission::Result
         return SharedThis(this);
     }
 
-    TSharedPtr<FDecreaseByStampTaskResult> FDecreaseByStampTaskResult::WithChangedCompletes(
+    TSharedPtr<FSetByStampSheetResult> FSetByStampSheetResult::WithOld(
+        const TSharedPtr<Model::FCounter> Old
+    )
+    {
+        this->OldValue = Old;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSetByStampSheetResult> FSetByStampSheetResult::WithChangedCompletes(
         const TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> ChangedCompletes
     )
     {
@@ -50,15 +58,7 @@ namespace Gs2::Mission::Result
         return SharedThis(this);
     }
 
-    TSharedPtr<FDecreaseByStampTaskResult> FDecreaseByStampTaskResult::WithNewContextStack(
-        const TOptional<FString> NewContextStack
-    )
-    {
-        this->NewContextStackValue = NewContextStack;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<Model::FCounter> FDecreaseByStampTaskResult::GetItem() const
+    TSharedPtr<Model::FCounter> FSetByStampSheetResult::GetItem() const
     {
         if (!ItemValue.IsValid())
         {
@@ -67,7 +67,16 @@ namespace Gs2::Mission::Result
         return ItemValue;
     }
 
-    TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> FDecreaseByStampTaskResult::GetChangedCompletes() const
+    TSharedPtr<Model::FCounter> FSetByStampSheetResult::GetOld() const
+    {
+        if (!OldValue.IsValid())
+        {
+            return nullptr;
+        }
+        return OldValue;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> FSetByStampSheetResult::GetChangedCompletes() const
     {
         if (!ChangedCompletesValue.IsValid())
         {
@@ -76,17 +85,12 @@ namespace Gs2::Mission::Result
         return ChangedCompletesValue;
     }
 
-    TOptional<FString> FDecreaseByStampTaskResult::GetNewContextStack() const
-    {
-        return NewContextStackValue;
-    }
-
-    TSharedPtr<FDecreaseByStampTaskResult> FDecreaseByStampTaskResult::FromJson(const TSharedPtr<FJsonObject> Data)
+    TSharedPtr<FSetByStampSheetResult> FSetByStampSheetResult::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FDecreaseByStampTaskResult>()
+        return MakeShared<FSetByStampSheetResult>()
             ->WithItem(Data->HasField("item") ? [Data]() -> Model::FCounterPtr
                  {
                     if (Data->HasTypedField<EJson::Null>("item"))
@@ -94,6 +98,14 @@ namespace Gs2::Mission::Result
                         return nullptr;
                     }
                     return Model::FCounter::FromJson(Data->GetObjectField("item"));
+                 }() : nullptr)
+            ->WithOld(Data->HasField("old") ? [Data]() -> Model::FCounterPtr
+                 {
+                    if (Data->HasTypedField<EJson::Null>("old"))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FCounter::FromJson(Data->GetObjectField("old"));
                  }() : nullptr)
             ->WithChangedCompletes(Data->HasField("changedCompletes") ? [Data]() -> TSharedPtr<TArray<Model::FCompletePtr>>
                  {
@@ -106,24 +118,19 @@ namespace Gs2::Mission::Result
                         }
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FCompletePtr>>())
-            ->WithNewContextStack(Data->HasField("newContextStack") ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField("newContextStack", v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>());
+                 }() : MakeShared<TArray<Model::FCompletePtr>>());
     }
 
-    TSharedPtr<FJsonObject> FDecreaseByStampTaskResult::ToJson() const
+    TSharedPtr<FJsonObject> FSetByStampSheetResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (ItemValue != nullptr && ItemValue.IsValid())
         {
             JsonRootObject->SetObjectField("item", ItemValue->ToJson());
+        }
+        if (OldValue != nullptr && OldValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("old", OldValue->ToJson());
         }
         if (ChangedCompletesValue != nullptr && ChangedCompletesValue.IsValid())
         {
@@ -133,10 +140,6 @@ namespace Gs2::Mission::Result
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField("changedCompletes", v);
-        }
-        if (NewContextStackValue.IsSet())
-        {
-            JsonRootObject->SetStringField("newContextStack", NewContextStackValue.GetValue());
         }
         return JsonRootObject;
     }

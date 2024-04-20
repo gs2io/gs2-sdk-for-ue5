@@ -22,30 +22,30 @@
 
 namespace Gs2::Mission::Result
 {
-    class GS2MISSION_API FDecreaseByStampTaskResult final : public TSharedFromThis<FDecreaseByStampTaskResult>
+    class GS2MISSION_API FSetByStampSheetResult final : public TSharedFromThis<FSetByStampSheetResult>
     {
         TSharedPtr<Model::FCounter> ItemValue;
+        TSharedPtr<Model::FCounter> OldValue;
         TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> ChangedCompletesValue;
-        TOptional<FString> NewContextStackValue;
         
     public:
         
-        FDecreaseByStampTaskResult();
-        FDecreaseByStampTaskResult(
-            const FDecreaseByStampTaskResult& From
+        FSetByStampSheetResult();
+        FSetByStampSheetResult(
+            const FSetByStampSheetResult& From
         );
-        ~FDecreaseByStampTaskResult() = default;
+        ~FSetByStampSheetResult() = default;
 
-        TSharedPtr<FDecreaseByStampTaskResult> WithItem(const TSharedPtr<Model::FCounter> Item);
-        TSharedPtr<FDecreaseByStampTaskResult> WithChangedCompletes(const TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> ChangedCompletes);
-        TSharedPtr<FDecreaseByStampTaskResult> WithNewContextStack(const TOptional<FString> NewContextStack);
+        TSharedPtr<FSetByStampSheetResult> WithItem(const TSharedPtr<Model::FCounter> Item);
+        TSharedPtr<FSetByStampSheetResult> WithOld(const TSharedPtr<Model::FCounter> Old);
+        TSharedPtr<FSetByStampSheetResult> WithChangedCompletes(const TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> ChangedCompletes);
 
         TSharedPtr<Model::FCounter> GetItem() const;
+        TSharedPtr<Model::FCounter> GetOld() const;
         TSharedPtr<TArray<TSharedPtr<Model::FComplete>>> GetChangedCompletes() const;
-        TOptional<FString> GetNewContextStack() const;
 
-        static TSharedPtr<FDecreaseByStampTaskResult> FromJson(const TSharedPtr<FJsonObject> Data);
+        static TSharedPtr<FSetByStampSheetResult> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
     };
-    typedef TSharedPtr<FDecreaseByStampTaskResult, ESPMode::ThreadSafe> FDecreaseByStampTaskResultPtr;
+    typedef TSharedPtr<FSetByStampSheetResult, ESPMode::ThreadSafe> FSetByStampSheetResultPtr;
 }

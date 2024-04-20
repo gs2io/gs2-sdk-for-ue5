@@ -29,11 +29,11 @@
 #include "Mission/Model/Gs2MissionEzScopedValue.h"
 #include "Gs2MissionEzMissionGroupModelDomain.h"
 #include "Mission/Domain/Iterator/Gs2MissionEzDescribeMissionGroupModelsIterator.h"
+#include "Gs2MissionEzCounterModelDomain.h"
+#include "Mission/Domain/Iterator/Gs2MissionEzDescribeCounterModelsIterator.h"
 #include "Gs2MissionEzUserDomain.h"
 #include "Gs2MissionEzUserDomain.h"
 #include "Gs2MissionEzUserGameSessionDomain.h"
-#include "Gs2MissionEzCounterModelDomain.h"
-#include "Mission/Domain/Iterator/Gs2MissionEzDescribeCounterModelsIterator.h"
 #include "Gs2MissionEzNamespaceDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -71,14 +71,6 @@ namespace Gs2::UE5::Mission::Domain::Model
             const FString MissionGroupName
         ) const;
 
-        Gs2::UE5::Mission::Domain::Model::FEzUserDomainPtr User(
-            const FString UserId
-        ) const;
-
-        Gs2::UE5::Mission::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Util::FGameSessionPtr GameSession
-        ) const;
-
         Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCounterModelsIteratorPtr CounterModels(
         ) const;
 
@@ -88,6 +80,14 @@ namespace Gs2::UE5::Mission::Domain::Model
 
         Gs2::UE5::Mission::Domain::Model::FEzCounterModelDomainPtr CounterModel(
             const FString CounterName
+        ) const;
+
+        Gs2::UE5::Mission::Domain::Model::FEzUserDomainPtr User(
+            const FString UserId
+        ) const;
+
+        Gs2::UE5::Mission::Domain::Model::FEzUserGameSessionDomainPtr Me(
+            Gs2::UE5::Util::FGameSessionPtr GameSession
         ) const;
 
     };

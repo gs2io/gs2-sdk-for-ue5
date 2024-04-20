@@ -259,6 +259,12 @@
 #include "Task/Rest/IncreaseCounterByUserIdTask.h"
 #include "Task/WebSocket/IncreaseCounterByUserIdTask.h"
 
+// SetCounterByUserId
+#include "Request/SetCounterByUserIdRequest.h"
+#include "Result/SetCounterByUserIdResult.h"
+#include "Task/Rest/SetCounterByUserIdTask.h"
+#include "Task/WebSocket/SetCounterByUserIdTask.h"
+
 // DecreaseCounterByUserId
 #include "Request/DecreaseCounterByUserIdRequest.h"
 #include "Result/DecreaseCounterByUserIdResult.h"
@@ -288,6 +294,12 @@
 #include "Result/IncreaseByStampSheetResult.h"
 #include "Task/Rest/IncreaseByStampSheetTask.h"
 #include "Task/WebSocket/IncreaseByStampSheetTask.h"
+
+// SetByStampSheet
+#include "Request/SetByStampSheetRequest.h"
+#include "Result/SetByStampSheetResult.h"
+#include "Task/Rest/SetByStampSheetTask.h"
+#include "Task/WebSocket/SetByStampSheetTask.h"
 
 // DecreaseByStampTask
 #include "Request/DecreaseByStampTaskRequest.h"

@@ -352,6 +352,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FSetCounterByUserIdTask>> FGs2MissionRestClient::SetCounterByUserId(
+        const Request::FSetCounterByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDecreaseCounterByUserIdTask>> FGs2MissionRestClient::DecreaseCounterByUserId(
         const Request::FDecreaseCounterByUserIdRequestPtr Request) const
     {
@@ -392,6 +401,15 @@ namespace Gs2::Mission
         const Request::FIncreaseByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FIncreaseByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FSetByStampSheetTask>> FGs2MissionRestClient::SetByStampSheet(
+        const Request::FSetByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetByStampSheetTask>>(
             Session,
             Request
         );

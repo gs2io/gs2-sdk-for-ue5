@@ -92,6 +92,8 @@
 #include "Task/WebSocket/DescribeCountersByUserIdTask.h"
 #include "Request/IncreaseCounterByUserIdRequest.h"
 #include "Task/WebSocket/IncreaseCounterByUserIdTask.h"
+#include "Request/SetCounterByUserIdRequest.h"
+#include "Task/WebSocket/SetCounterByUserIdTask.h"
 #include "Request/DecreaseCounterByUserIdRequest.h"
 #include "Task/WebSocket/DecreaseCounterByUserIdTask.h"
 #include "Request/GetCounterRequest.h"
@@ -102,6 +104,8 @@
 #include "Task/WebSocket/DeleteCounterByUserIdTask.h"
 #include "Request/IncreaseByStampSheetRequest.h"
 #include "Task/WebSocket/IncreaseByStampSheetTask.h"
+#include "Request/SetByStampSheetRequest.h"
+#include "Task/WebSocket/SetByStampSheetTask.h"
 #include "Request/DecreaseByStampTaskRequest.h"
 #include "Task/WebSocket/DecreaseByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
@@ -294,6 +298,10 @@ namespace Gs2::Mission
             const Request::FIncreaseCounterByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetCounterByUserIdTask>> SetCounterByUserId(
+            const Request::FSetCounterByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseCounterByUserIdTask>> DecreaseCounterByUserId(
             const Request::FDecreaseCounterByUserIdRequestPtr Request
         ) const;
@@ -312,6 +320,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FIncreaseByStampSheetTask>> IncreaseByStampSheet(
             const Request::FIncreaseByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FSetByStampSheetTask>> SetByStampSheet(
+            const Request::FSetByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseByStampTaskTask>> DecreaseByStampTask(

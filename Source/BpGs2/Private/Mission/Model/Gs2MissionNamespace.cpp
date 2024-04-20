@@ -19,8 +19,8 @@
 #include "Mission/Model/Gs2MissionCounterModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Mission/Model/Gs2MissionMissionGroupModel.h"
-#include "Mission/Model/Gs2MissionUser.h"
 #include "Mission/Model/Gs2MissionCounterModel.h"
+#include "Mission/Model/Gs2MissionUser.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2MissionMissionGroupModel UGs2MissionNamespaceFunctionLibrary::MissionGroupModel(
@@ -43,24 +43,6 @@ FGs2MissionMissionGroupModel UGs2MissionNamespaceFunctionLibrary::MissionGroupMo
     return Return;
 }
 
-FGs2MissionOwnUser UGs2MissionNamespaceFunctionLibrary::Me(
-    FGs2MissionNamespace Namespace,
-    FGs2AccessToken AccessToken
-)
-{
-    FGs2MissionOwnUser Return;
-    if (Namespace.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionNamespaceFunctionLibrary::Me] Namespace parameter specification is missing."))
-        return Return;
-    }
-    if (AccessToken.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionNamespaceFunctionLibrary::Me] AccessToken parameter specification is missing."))
-        return Return;
-    }
-    Return.Value = Namespace.Value->Me(AccessToken.Value);
-    return Return;
-}
-
 FGs2MissionCounterModel UGs2MissionNamespaceFunctionLibrary::CounterModel(
     FGs2MissionNamespace Namespace,
     FString CounterName
@@ -78,5 +60,23 @@ FGs2MissionCounterModel UGs2MissionNamespaceFunctionLibrary::CounterModel(
     Return.Value = Namespace.Value->CounterModel(
         CounterName
     );
+    return Return;
+}
+
+FGs2MissionOwnUser UGs2MissionNamespaceFunctionLibrary::Me(
+    FGs2MissionNamespace Namespace,
+    FGs2AccessToken AccessToken
+)
+{
+    FGs2MissionOwnUser Return;
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionNamespaceFunctionLibrary::Me] Namespace parameter specification is missing."))
+        return Return;
+    }
+    if (AccessToken.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2MissionNamespaceFunctionLibrary::Me] AccessToken parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = Namespace.Value->Me(AccessToken.Value);
     return Return;
 }

@@ -352,6 +352,15 @@ namespace Gs2::Mission
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetCounterByUserIdTask>> FGs2MissionWebSocketClient::SetCounterByUserId(
+        const Request::FSetCounterByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetCounterByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDecreaseCounterByUserIdTask>> FGs2MissionWebSocketClient::DecreaseCounterByUserId(
         const Request::FDecreaseCounterByUserIdRequestPtr Request) const
     {
@@ -392,6 +401,15 @@ namespace Gs2::Mission
         const Request::FIncreaseByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIncreaseByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FSetByStampSheetTask>> FGs2MissionWebSocketClient::SetByStampSheet(
+        const Request::FSetByStampSheetRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetByStampSheetTask>>(
             Session,
             Request
         );

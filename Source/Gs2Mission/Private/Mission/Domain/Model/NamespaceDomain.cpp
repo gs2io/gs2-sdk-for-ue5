@@ -495,30 +495,6 @@ namespace Gs2::Mission::Domain::Model
         );
     }
 
-    TSharedPtr<Gs2::Mission::Domain::Model::FUserDomain> FNamespaceDomain::User(
-        const FString UserId
-    )
-    {
-        return MakeShared<Gs2::Mission::Domain::Model::FUserDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
-        );
-    }
-
-    TSharedPtr<Gs2::Mission::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
-        Gs2::Auth::Model::FAccessTokenPtr AccessToken
-    )
-    {
-        return MakeShared<Gs2::Mission::Domain::Model::FUserAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken
-        );
-    }
-
     Gs2::Mission::Domain::Iterator::FDescribeCounterModelsIteratorPtr FNamespaceDomain::CounterModels(
     ) const
     {
@@ -566,6 +542,30 @@ namespace Gs2::Mission::Domain::Model
             Service,
             NamespaceName,
             CounterName == TEXT("") ? TOptional<FString>() : TOptional<FString>(CounterName)
+        );
+    }
+
+    TSharedPtr<Gs2::Mission::Domain::Model::FUserDomain> FNamespaceDomain::User(
+        const FString UserId
+    )
+    {
+        return MakeShared<Gs2::Mission::Domain::Model::FUserDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId == TEXT("") ? TOptional<FString>() : TOptional<FString>(UserId)
+        );
+    }
+
+    TSharedPtr<Gs2::Mission::Domain::Model::FUserAccessTokenDomain> FNamespaceDomain::AccessToken(
+        Gs2::Auth::Model::FAccessTokenPtr AccessToken
+    )
+    {
+        return MakeShared<Gs2::Mission::Domain::Model::FUserAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken
         );
     }
 

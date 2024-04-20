@@ -92,6 +92,8 @@
 #include "Task/Rest/DescribeCountersByUserIdTask.h"
 #include "Request/IncreaseCounterByUserIdRequest.h"
 #include "Task/Rest/IncreaseCounterByUserIdTask.h"
+#include "Request/SetCounterByUserIdRequest.h"
+#include "Task/Rest/SetCounterByUserIdTask.h"
 #include "Request/DecreaseCounterByUserIdRequest.h"
 #include "Task/Rest/DecreaseCounterByUserIdTask.h"
 #include "Request/GetCounterRequest.h"
@@ -102,6 +104,8 @@
 #include "Task/Rest/DeleteCounterByUserIdTask.h"
 #include "Request/IncreaseByStampSheetRequest.h"
 #include "Task/Rest/IncreaseByStampSheetTask.h"
+#include "Request/SetByStampSheetRequest.h"
+#include "Task/Rest/SetByStampSheetTask.h"
 #include "Request/DecreaseByStampTaskRequest.h"
 #include "Task/Rest/DecreaseByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
@@ -294,6 +298,10 @@ namespace Gs2::Mission
             const Request::FIncreaseCounterByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FSetCounterByUserIdTask>> SetCounterByUserId(
+            const Request::FSetCounterByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDecreaseCounterByUserIdTask>> DecreaseCounterByUserId(
             const Request::FDecreaseCounterByUserIdRequestPtr Request
         ) const;
@@ -312,6 +320,10 @@ namespace Gs2::Mission
 
         TSharedPtr<FAsyncTask<Task::Rest::FIncreaseByStampSheetTask>> IncreaseByStampSheet(
             const Request::FIncreaseByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FSetByStampSheetTask>> SetByStampSheet(
+            const Request::FSetByStampSheetRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDecreaseByStampTaskTask>> DecreaseByStampTask(
