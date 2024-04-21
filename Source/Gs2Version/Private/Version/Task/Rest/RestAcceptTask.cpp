@@ -21,6 +21,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Version/Error/AcceptVersionInvalidError.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Version::Task::Rest
@@ -88,6 +89,10 @@ namespace Gs2::Version::Task::Rest
             {
                 JsonRootObject->SetStringField("versionName", this->Request->GetVersionName().GetValue());
             }
+            if (this->Request->GetVersion() != nullptr && this->Request->GetVersion().IsValid())
+            {
+                JsonRootObject->SetObjectField("version", this->Request->GetVersion()->ToJson());
+            }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
             request->SetContentAsString(Body);
 
@@ -135,5 +140,15 @@ namespace Gs2::Version::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FAcceptTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "version.accept.version.invalid") {
+            TGs2Future<Result::FAcceptResult>::OnError(MakeShared<Version::Error::FAcceptVersionInvalidError>(Error));
+        }
+        else {
+            TGs2Future<Result::FAcceptResult>::OnError(Error);
+        }
     }
 }

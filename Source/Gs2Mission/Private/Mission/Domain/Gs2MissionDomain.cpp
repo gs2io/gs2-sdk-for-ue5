@@ -578,6 +578,13 @@ namespace Gs2::Mission::Domain
                     const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                         Item->GetMissionGroupName()
                     );
+                    Gs2->Cache->Put(
+                        Gs2::Mission::Model::FComplete::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        Item->GetNextResetAt().IsSet() ? FDateTime::FromUnixTimestamp(*Item->GetNextResetAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
                 }
             }
         }
@@ -624,6 +631,13 @@ namespace Gs2::Mission::Domain
                     );
                     const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                         Item->GetMissionGroupName()
+                    );
+                    Gs2->Cache->Put(
+                        Gs2::Mission::Model::FComplete::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        Item->GetNextResetAt().IsSet() ? FDateTime::FromUnixTimestamp(*Item->GetNextResetAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                     );
                 }
             }
@@ -713,6 +727,13 @@ namespace Gs2::Mission::Domain
                     );
                     const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                         Item->GetMissionGroupName()
+                    );
+                    Gs2->Cache->Put(
+                        Gs2::Mission::Model::FComplete::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        Item->GetNextResetAt().IsSet() ? FDateTime::FromUnixTimestamp(*Item->GetNextResetAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                     );
                 }
             }
@@ -823,6 +844,13 @@ namespace Gs2::Mission::Domain
                     const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                         Item->GetMissionGroupName()
                     );
+                    Gs2->Cache->Put(
+                        Gs2::Mission::Model::FComplete::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        Item->GetNextResetAt().IsSet() ? FDateTime::FromUnixTimestamp(*Item->GetNextResetAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    );
                 }
             }
         }
@@ -877,6 +905,13 @@ namespace Gs2::Mission::Domain
                     );
                     const auto Key = Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
                         Item->GetMissionGroupName()
+                    );
+                    Gs2->Cache->Put(
+                        Gs2::Mission::Model::FComplete::TypeName,
+                        ParentKey,
+                        Key,
+                        Item,
+                        Item->GetNextResetAt().IsSet() ? FDateTime::FromUnixTimestamp(*Item->GetNextResetAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                     );
                 }
             }

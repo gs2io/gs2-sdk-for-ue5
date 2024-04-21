@@ -22,6 +22,7 @@ namespace Gs2::Version::Request
         NamespaceNameValue(TOptional<FString>()),
         VersionNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
+        VersionValue(nullptr),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -32,6 +33,7 @@ namespace Gs2::Version::Request
         NamespaceNameValue(From.NamespaceNameValue),
         VersionNameValue(From.VersionNameValue),
         UserIdValue(From.UserIdValue),
+        VersionValue(From.VersionValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -65,6 +67,14 @@ namespace Gs2::Version::Request
     )
     {
         this->UserIdValue = UserId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAcceptByUserIdRequest> FAcceptByUserIdRequest::WithVersion(
+        const TSharedPtr<Model::FVersion> Version
+    )
+    {
+        this->VersionValue = Version;
         return SharedThis(this);
     }
 
@@ -102,6 +112,15 @@ namespace Gs2::Version::Request
     TOptional<FString> FAcceptByUserIdRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+
+    TSharedPtr<Model::FVersion> FAcceptByUserIdRequest::GetVersion() const
+    {
+        if (!VersionValue.IsValid())
+        {
+            return nullptr;
+        }
+        return VersionValue;
     }
 
     TOptional<FString> FAcceptByUserIdRequest::GetTimeOffsetToken() const
@@ -148,6 +167,14 @@ namespace Gs2::Version::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithVersion(Data->HasField("version") ? [Data]() -> Model::FVersionPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>("version"))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FVersion::FromJson(Data->GetObjectField("version"));
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField("timeOffsetToken") ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -178,6 +205,10 @@ namespace Gs2::Version::Request
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
+        }
+        if (VersionValue != nullptr && VersionValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("version", VersionValue->ToJson());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

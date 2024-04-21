@@ -21,7 +21,8 @@ namespace Gs2::Version::Request
     FAcceptRequest::FAcceptRequest():
         NamespaceNameValue(TOptional<FString>()),
         VersionNameValue(TOptional<FString>()),
-        AccessTokenValue(TOptional<FString>())
+        AccessTokenValue(TOptional<FString>()),
+        VersionValue(nullptr)
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Version::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         VersionNameValue(From.VersionNameValue),
-        AccessTokenValue(From.AccessTokenValue)
+        AccessTokenValue(From.AccessTokenValue),
+        VersionValue(From.VersionValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Version::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FAcceptRequest> FAcceptRequest::WithVersion(
+        const TSharedPtr<Model::FVersion> Version
+    )
+    {
+        this->VersionValue = Version;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FAcceptRequest> FAcceptRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -92,6 +102,15 @@ namespace Gs2::Version::Request
     TOptional<FString> FAcceptRequest::GetAccessToken() const
     {
         return AccessTokenValue;
+    }
+
+    TSharedPtr<Model::FVersion> FAcceptRequest::GetVersion() const
+    {
+        if (!VersionValue.IsValid())
+        {
+            return nullptr;
+        }
+        return VersionValue;
     }
 
     TOptional<FString> FAcceptRequest::GetDuplicationAvoider() const
@@ -133,6 +152,14 @@ namespace Gs2::Version::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithVersion(Data->HasField("version") ? [Data]() -> Model::FVersionPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>("version"))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FVersion::FromJson(Data->GetObjectField("version"));
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField("duplicationAvoider") ? TOptional<FString>(Data->GetStringField("duplicationAvoider")) : TOptional<FString>());
     }
 
@@ -154,6 +181,10 @@ namespace Gs2::Version::Request
         if (AccessTokenValue.IsSet())
         {
             JsonRootObject->SetStringField("xGs2AccessToken", AccessTokenValue.GetValue());
+        }
+        if (VersionValue != nullptr && VersionValue.IsValid())
+        {
+            JsonRootObject->SetObjectField("version", VersionValue->ToJson());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

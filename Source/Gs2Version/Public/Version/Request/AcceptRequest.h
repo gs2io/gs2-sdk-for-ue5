@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Version.h"
 
 namespace Gs2::Version::Request
 {
@@ -28,6 +29,7 @@ namespace Gs2::Version::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> VersionNameValue;
         TOptional<FString> AccessTokenValue;
+        TSharedPtr<Model::FVersion> VersionValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -42,12 +44,14 @@ namespace Gs2::Version::Request
         TSharedPtr<FAcceptRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FAcceptRequest> WithVersionName(const TOptional<FString> VersionName);
         TSharedPtr<FAcceptRequest> WithAccessToken(const TOptional<FString> AccessToken);
+        TSharedPtr<FAcceptRequest> WithVersion(const TSharedPtr<Model::FVersion> Version);
         TSharedPtr<FAcceptRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetVersionName() const;
         TOptional<FString> GetAccessToken() const;
+        TSharedPtr<Model::FVersion> GetVersion() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FAcceptRequest> FromJson(const TSharedPtr<FJsonObject> Data);

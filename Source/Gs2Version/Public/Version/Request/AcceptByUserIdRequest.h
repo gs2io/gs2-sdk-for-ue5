@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../Model/Version.h"
 
 namespace Gs2::Version::Request
 {
@@ -28,6 +29,7 @@ namespace Gs2::Version::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> VersionNameValue;
         TOptional<FString> UserIdValue;
+        TSharedPtr<Model::FVersion> VersionValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -43,6 +45,7 @@ namespace Gs2::Version::Request
         TSharedPtr<FAcceptByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FAcceptByUserIdRequest> WithVersionName(const TOptional<FString> VersionName);
         TSharedPtr<FAcceptByUserIdRequest> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FAcceptByUserIdRequest> WithVersion(const TSharedPtr<Model::FVersion> Version);
         TSharedPtr<FAcceptByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FAcceptByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -50,6 +53,7 @@ namespace Gs2::Version::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetVersionName() const;
         TOptional<FString> GetUserId() const;
+        TSharedPtr<Model::FVersion> GetVersion() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

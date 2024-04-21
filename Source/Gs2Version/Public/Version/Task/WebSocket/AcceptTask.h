@@ -39,6 +39,8 @@ namespace Gs2::Version::Task::WebSocket
         virtual ~FAcceptTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FAcceptResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FAcceptTask, ESPMode::ThreadSafe> FAcceptTaskPtr;
 }

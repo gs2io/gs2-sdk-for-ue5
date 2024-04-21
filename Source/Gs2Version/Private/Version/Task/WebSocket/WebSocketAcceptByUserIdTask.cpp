@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Version/Error/AcceptVersionInvalidError.h"
 
 namespace Gs2::Version::Task::WebSocket
 {
@@ -73,5 +74,15 @@ namespace Gs2::Version::Task::WebSocket
         *Result = Result::FAcceptByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FAcceptByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        if (Error->Count() > 0 && Error->Detail(0)->Code() == "version.accept.version.invalid") {
+            TGs2Future<Result::FAcceptByUserIdResult>::OnError(MakeShared<Version::Error::FAcceptVersionInvalidError>(Error));
+        }
+        else {
+            TGs2Future<Result::FAcceptByUserIdResult>::OnError(Error);
+        }
     }
 }
