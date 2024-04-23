@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Version/Model/Gs2VersionAcceptVersion.h"
+#include "Version/Model/Gs2VersionVersion.h"
 #include "Version/Model/Gs2VersionAcceptVersion.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
@@ -33,6 +34,7 @@ class BPGS2_API UGs2VersionAcceptAsyncFunction : public UBlueprintAsyncActionBas
     GENERATED_BODY()
 
     FGs2VersionOwnAcceptVersion AcceptVersion;
+    FGs2VersionVersion Version;
 
 public:
 
@@ -47,7 +49,8 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Version::AcceptVersion::Action::Accept", Category="Game Server Services|GS2-Version|Namespace|User|AcceptVersion|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2VersionAcceptAsyncFunction* Accept(
         UObject* WorldContextObject,
-        FGs2VersionOwnAcceptVersion AcceptVersion
+        FGs2VersionOwnAcceptVersion AcceptVersion,
+        FGs2VersionVersion Version
     );
 
     virtual void Activate() override;

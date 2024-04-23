@@ -54,10 +54,12 @@ namespace Gs2::UE5::Version::Domain::Model
             public TSharedFromThis<FAcceptTask>
         {
             TSharedPtr<FEzAcceptVersionGameSessionDomain> Self;
+            Gs2::UE5::Version::Model::FEzVersionPtr Version;
 
         public:
             explicit FAcceptTask(
-                TSharedPtr<FEzAcceptVersionGameSessionDomain> Self
+                TSharedPtr<FEzAcceptVersionGameSessionDomain> Self,
+                Gs2::UE5::Version::Model::FEzVersionPtr Version = nullptr
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -67,6 +69,7 @@ namespace Gs2::UE5::Version::Domain::Model
         friend FAcceptTask;
 
         TSharedPtr<FAsyncTask<FAcceptTask>> Accept(
+            Gs2::UE5::Version::Model::FEzVersionPtr Version = nullptr
         );
 
         class FDeleteTask :

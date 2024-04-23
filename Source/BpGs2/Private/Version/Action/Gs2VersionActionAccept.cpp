@@ -26,7 +26,8 @@ UGs2VersionAcceptAsyncFunction::UGs2VersionAcceptAsyncFunction(
 
 UGs2VersionAcceptAsyncFunction* UGs2VersionAcceptAsyncFunction::Accept(
     UObject* WorldContextObject,
-    FGs2VersionOwnAcceptVersion AcceptVersion
+    FGs2VersionOwnAcceptVersion AcceptVersion,
+    FGs2VersionVersion Version
 )
 {
     UGs2VersionAcceptAsyncFunction* Action = NewObject<UGs2VersionAcceptAsyncFunction>();
@@ -36,6 +37,7 @@ UGs2VersionAcceptAsyncFunction* UGs2VersionAcceptAsyncFunction::Accept(
         return Action;
     }
     Action->AcceptVersion = AcceptVersion;
+    Action->Version = Version;
     return Action;
 }
 
@@ -47,6 +49,7 @@ void UGs2VersionAcceptAsyncFunction::Activate()
     }
 
     auto Future = AcceptVersion.Value->Accept(
+        FGs2VersionVersionToEzVersion(Version)
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

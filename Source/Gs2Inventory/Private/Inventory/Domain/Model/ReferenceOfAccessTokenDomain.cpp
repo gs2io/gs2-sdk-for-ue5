@@ -59,6 +59,9 @@
 #include "Inventory/Domain/Model/ItemSetEntry.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
+#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::Inventory::Domain::Model
 {
@@ -126,10 +129,11 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfAccessTokenDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
+        TSharedPtr<TSharedPtr<FString>> Result
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithInventoryName(Self->InventoryName)
@@ -197,11 +201,16 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
+                Self->Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FInventory::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetInventory(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
             }
         }
-        *Result = MakeShared<Inventory::Model::FReferenceOf>()->WithName(
-            ResultModel->GetItem()
-        );
+        *Result = MakeShared<FString>(*ResultModel->GetItem());
         return nullptr;
     }
 
@@ -230,6 +239,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithInventoryName(Self->InventoryName)
@@ -297,6 +307,13 @@ namespace Gs2::Inventory::Domain::Model
                 const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
+                Self->Gs2->Cache->Put(
+                    Gs2::Inventory::Model::FInventory::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetInventory(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
             }
         }
         const auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FReferenceOfAccessTokenDomain>(
@@ -338,6 +355,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithInventoryName(Self->InventoryName)
@@ -459,22 +477,23 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfAccessTokenDomain::FModelTask::Action(
-        TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
+        TSharedPtr<TSharedPtr<FString>> Result
     )
     {
-        const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+        const auto ParentKey = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheParentKey(
             Self->NamespaceName,
             Self->UserId(),
             Self->InventoryName,
-            "ItemSet"
+            Self->ItemName,
+            Self->ItemSetName,
+            "ReferenceOf"
         );
         // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::Inventory::Model::FItemSetPtr Value;
-        const auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSet>(
+        Gs2::Inventory::Model::FReferenceOfPtr Value;
+        const auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FReferenceOf>(
             ParentKey,
-            Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                Self->ItemName,
-                Self->ItemSetName
+            Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
+                Self->ReferenceOf
             ),
             &Value
         );
@@ -490,13 +509,12 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
 
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    Self->ItemName,
-                    Self->ItemSetName
+                const auto Key = Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
+                    Self->ReferenceOf
                 );
                 Self->Gs2->Cache->Put(
                     Gs2::Inventory::Model::FReferenceOf::TypeName,
-                    Self->ParentKey,
+                    ParentKey,
                     Key,
                     nullptr,
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -507,19 +525,19 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSet>(
-                Self->ParentKey,
-                Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    Self->ItemName,
-                    Self->ItemSetName
+            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FReferenceOf>(
+                ParentKey,
+                Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
+                    Self->ReferenceOf
                 ),
                 &Value
             );
             Future->EnsureCompletion();
         }
-        *Result = MakeShared<Inventory::Model::FReferenceOf>()->WithName(
-            Self->ReferenceOf
-        );
+        if (Value.IsValid())
+        {
+            *Result = MakeShared<FString>(*Value->GetName());
+        }
 
         return nullptr;
     }

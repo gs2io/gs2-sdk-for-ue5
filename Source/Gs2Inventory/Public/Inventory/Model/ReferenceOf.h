@@ -46,6 +46,7 @@ namespace Gs2::Inventory::Model
         static TOptional<FString> GetInventoryNameFromGrn(const FString Grn);
         static TOptional<FString> GetItemNameFromGrn(const FString Grn);
         static TOptional<FString> GetItemSetNameFromGrn(const FString Grn);
+        static TOptional<FString> GetReferenceOfFromGrn(const FString Grn);
 
         static TSharedPtr<FReferenceOf> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

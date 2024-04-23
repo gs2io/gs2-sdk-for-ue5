@@ -129,7 +129,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         class GS2INVENTORY_API FGetTask final :
-            public Gs2::Core::Util::TGs2Future<Inventory::Model::FReferenceOf>,
+            public Gs2::Core::Util::TGs2Future<FString>,
             public TSharedFromThis<FGetTask>
         {
             const TSharedPtr<FReferenceOfDomain> Self;
@@ -145,7 +145,7 @@ namespace Gs2::Inventory::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
+                TSharedPtr<TSharedPtr<FString>> Result
             ) override;
         };
         friend FGetTask;
@@ -221,7 +221,7 @@ namespace Gs2::Inventory::Domain::Model
         );
 
         class GS2INVENTORY_API FModelTask final :
-            public Gs2::Core::Util::TGs2Future<Inventory::Model::FReferenceOf>,
+            public Gs2::Core::Util::TGs2Future<FString>,
             public TSharedFromThis<FModelTask>
         {
             const TSharedPtr<FReferenceOfDomain> Self;
@@ -235,7 +235,7 @@ namespace Gs2::Inventory::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
+                TSharedPtr<TSharedPtr<FString>> Result
             ) override;
         };
         friend FModelTask;

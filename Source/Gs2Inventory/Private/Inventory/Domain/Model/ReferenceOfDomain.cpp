@@ -128,10 +128,11 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
+        TSharedPtr<TSharedPtr<FString>> Result
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
@@ -208,9 +209,7 @@ namespace Gs2::Inventory::Domain::Model
                 );
             }
         }
-        *Result = MakeShared<Inventory::Model::FReferenceOf>()->WithName(
-            ResultModel->GetItem()
-        );
+        *Result = MakeShared<FString>(*ResultModel->GetItem());
         return nullptr;
     }
 
@@ -239,6 +238,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
@@ -355,6 +355,7 @@ namespace Gs2::Inventory::Domain::Model
     )
     {
         Request
+            ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithInventoryName(Self->InventoryName)
@@ -477,13 +478,20 @@ namespace Gs2::Inventory::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReferenceOfDomain::FModelTask::Action(
-        TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOf>> Result
+        TSharedPtr<TSharedPtr<FString>> Result
     )
     {
-        const auto ParentKey = "inventory:String";
+        const auto ParentKey = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            Self->InventoryName,
+            Self->ItemName,
+            Self->ItemSetName,
+            "ReferenceOf"
+        );
         // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Inventory::Model::FReferenceOf> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Inventory::Model::FReferenceOf>(
+        Gs2::Inventory::Model::FReferenceOfPtr Value;
+        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FReferenceOf>(
             ParentKey,
             Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
                 Self->ReferenceOf
@@ -518,7 +526,7 @@ namespace Gs2::Inventory::Domain::Model
                     return Future->GetTask().Error();
                 }
             }
-            Self->Gs2->Cache->TryGet<Inventory::Model::FReferenceOf>(
+            Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FReferenceOf>(
                 ParentKey,
                 Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
                     Self->ReferenceOf
@@ -527,9 +535,10 @@ namespace Gs2::Inventory::Domain::Model
             );
             Future->EnsureCompletion();
         }
-        *Result = MakeShared<Inventory::Model::FReferenceOf>()->WithName(
-            Self->ReferenceOf
-        );
+        if (Value.IsValid())
+        {
+            *Result = MakeShared<FString>(*Value->GetName());
+        }
 
         return nullptr;
     }

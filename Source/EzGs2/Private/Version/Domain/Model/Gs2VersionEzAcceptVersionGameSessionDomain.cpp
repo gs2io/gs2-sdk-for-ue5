@@ -47,8 +47,9 @@ namespace Gs2::UE5::Version::Domain::Model
     }
 
     FEzAcceptVersionGameSessionDomain::FAcceptTask::FAcceptTask(
-        TSharedPtr<FEzAcceptVersionGameSessionDomain> Self
-    ): Self(Self)
+        TSharedPtr<FEzAcceptVersionGameSessionDomain> Self,
+        Gs2::UE5::Version::Model::FEzVersionPtr Version
+    ): Self(Self), Version(Version)
     {
 
     }
@@ -61,6 +62,7 @@ namespace Gs2::UE5::Version::Domain::Model
             [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
                 const auto Task = Self->Domain->Accept(
                     MakeShared<Gs2::Version::Request::FAcceptRequest>()
+                        ->WithVersion(Version == nullptr ? nullptr : Version->ToModel())
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -89,10 +91,12 @@ namespace Gs2::UE5::Version::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzAcceptVersionGameSessionDomain::FAcceptTask>> FEzAcceptVersionGameSessionDomain::Accept(
+        Gs2::UE5::Version::Model::FEzVersionPtr Version
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FAcceptTask>>(
-            this->AsShared()
+            this->AsShared(),
+            Version
         );
     }
 
