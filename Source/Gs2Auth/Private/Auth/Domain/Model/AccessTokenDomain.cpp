@@ -192,6 +192,64 @@ namespace Gs2::Auth::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FLoginBySignatureTask>>(this->AsShared(), Request);
     }
 
+    FAccessTokenDomain::FFederationTask::FFederationTask(
+        const TSharedPtr<FAccessTokenDomain>& Self,
+        const Request::FFederationRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccessTokenDomain::FFederationTask::FFederationTask(
+        const FFederationTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccessTokenDomain::FFederationTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Auth::Domain::Model::FAccessTokenDomain>> Result
+    )
+    {
+        const auto Future = Self->Client->Federation(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto RequestModel = Request;
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel != nullptr) {
+            
+        }
+        const auto Domain = Self;
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetToken().IsSet())
+            {
+                Self->Token = Domain->Token = ResultModel->GetToken();
+            }
+            if (ResultModel->GetUserId().IsSet())
+            {
+                Self->UserId = Domain->UserId = ResultModel->GetUserId();
+            }
+            if (ResultModel->GetExpire().IsSet())
+            {
+                Self->Expire = Domain->Expire = ResultModel->GetExpire();
+            }
+        }
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccessTokenDomain::FFederationTask>> FAccessTokenDomain::Federation(
+        Request::FFederationRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FFederationTask>>(this->AsShared(), Request);
+    }
+
     FAccessTokenDomain::FIssueTimeOffsetTokenTask::FIssueTimeOffsetTokenTask(
         const TSharedPtr<FAccessTokenDomain>& Self,
         const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request

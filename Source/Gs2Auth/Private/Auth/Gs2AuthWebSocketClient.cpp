@@ -37,6 +37,15 @@ namespace Gs2::Auth
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FFederationTask>> FGs2AuthWebSocketClient::Federation(
+        const Request::FFederationRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FFederationTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FIssueTimeOffsetTokenByUserIdTask>> FGs2AuthWebSocketClient::IssueTimeOffsetTokenByUserId(
         const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request) const
     {

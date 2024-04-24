@@ -14,31 +14,27 @@
  * permissions and limitations under the License.
  */
 
-#include "Auth/Model/AccessToken.h"
+#include "Auth/Result/FederationResult.h"
 
-namespace Gs2::Auth::Model
+namespace Gs2::Auth::Result
 {
-    FAccessToken::FAccessToken():
+    FFederationResult::FFederationResult():
         TokenValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
-        FederationFromUserIdValue(TOptional<FString>()),
-        ExpireValue(TOptional<int64>()),
-        TimeOffsetValue(TOptional<int32>())
+        ExpireValue(TOptional<int64>())
     {
     }
 
-    FAccessToken::FAccessToken(
-        const FAccessToken& From
+    FFederationResult::FFederationResult(
+        const FFederationResult& From
     ):
         TokenValue(From.TokenValue),
         UserIdValue(From.UserIdValue),
-        FederationFromUserIdValue(From.FederationFromUserIdValue),
-        ExpireValue(From.ExpireValue),
-        TimeOffsetValue(From.TimeOffsetValue)
+        ExpireValue(From.ExpireValue)
     {
     }
 
-    TSharedPtr<FAccessToken> FAccessToken::WithToken(
+    TSharedPtr<FFederationResult> FFederationResult::WithToken(
         const TOptional<FString> Token
     )
     {
@@ -46,7 +42,7 @@ namespace Gs2::Auth::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FAccessToken> FAccessToken::WithUserId(
+    TSharedPtr<FFederationResult> FFederationResult::WithUserId(
         const TOptional<FString> UserId
     )
     {
@@ -54,15 +50,7 @@ namespace Gs2::Auth::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FAccessToken> FAccessToken::WithFederationFromUserId(
-        const TOptional<FString> FederationFromUserId
-    )
-    {
-        this->FederationFromUserIdValue = FederationFromUserId;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FAccessToken> FAccessToken::WithExpire(
+    TSharedPtr<FFederationResult> FFederationResult::WithExpire(
         const TOptional<int64> Expire
     )
     {
@@ -70,31 +58,22 @@ namespace Gs2::Auth::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FAccessToken> FAccessToken::WithTimeOffset(
-        const TOptional<int32> TimeOffset
-    )
-    {
-        this->TimeOffsetValue = TimeOffset;
-        return SharedThis(this);
-    }
-    TOptional<FString> FAccessToken::GetToken() const
+    TOptional<FString> FFederationResult::GetToken() const
     {
         return TokenValue;
     }
-    TOptional<FString> FAccessToken::GetUserId() const
+
+    TOptional<FString> FFederationResult::GetUserId() const
     {
         return UserIdValue;
     }
-    TOptional<FString> FAccessToken::GetFederationFromUserId() const
-    {
-        return FederationFromUserIdValue;
-    }
-    TOptional<int64> FAccessToken::GetExpire() const
+
+    TOptional<int64> FFederationResult::GetExpire() const
     {
         return ExpireValue;
     }
 
-    FString FAccessToken::GetExpireString() const
+    FString FFederationResult::GetExpireString() const
     {
         if (!ExpireValue.IsSet())
         {
@@ -102,26 +81,13 @@ namespace Gs2::Auth::Model
         }
         return FString::Printf(TEXT("%lld"), ExpireValue.GetValue());
     }
-    TOptional<int32> FAccessToken::GetTimeOffset() const
-    {
-        return TimeOffsetValue;
-    }
 
-    FString FAccessToken::GetTimeOffsetString() const
-    {
-        if (!TimeOffsetValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString::Printf(TEXT("%d"), TimeOffsetValue.GetValue());
-    }
-
-    TSharedPtr<FAccessToken> FAccessToken::FromJson(const TSharedPtr<FJsonObject> Data)
+    TSharedPtr<FFederationResult> FFederationResult::FromJson(const TSharedPtr<FJsonObject> Data)
     {
         if (Data == nullptr) {
             return nullptr;
         }
-        return MakeShared<FAccessToken>()
+        return MakeShared<FFederationResult>()
             ->WithToken(Data->HasField("token") ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -140,15 +106,6 @@ namespace Gs2::Auth::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithFederationFromUserId(Data->HasField("federationFromUserId") ? [Data]() -> TOptional<FString>
-                {
-                    FString v("");
-                    if (Data->TryGetStringField("federationFromUserId", v))
-                    {
-                        return TOptional(FString(TCHAR_TO_UTF8(*v)));
-                    }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
             ->WithExpire(Data->HasField("expire") ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -157,19 +114,10 @@ namespace Gs2::Auth::Model
                         return TOptional(v);
                     }
                     return TOptional<int64>();
-                }() : TOptional<int64>())
-            ->WithTimeOffset(Data->HasField("timeOffset") ? [Data]() -> TOptional<int32>
-                {
-                    int32 v;
-                    if (Data->TryGetNumberField("timeOffset", v))
-                    {
-                        return TOptional(v);
-                    }
-                    return TOptional<int32>();
-                }() : TOptional<int32>());
+                }() : TOptional<int64>());
     }
 
-    TSharedPtr<FJsonObject> FAccessToken::ToJson() const
+    TSharedPtr<FJsonObject> FFederationResult::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
         if (TokenValue.IsSet())
@@ -180,20 +128,10 @@ namespace Gs2::Auth::Model
         {
             JsonRootObject->SetStringField("userId", UserIdValue.GetValue());
         }
-        if (FederationFromUserIdValue.IsSet())
-        {
-            JsonRootObject->SetStringField("federationFromUserId", FederationFromUserIdValue.GetValue());
-        }
         if (ExpireValue.IsSet())
         {
             JsonRootObject->SetStringField("expire", FString::Printf(TEXT("%lld"), ExpireValue.GetValue()));
         }
-        if (TimeOffsetValue.IsSet())
-        {
-            JsonRootObject->SetNumberField("timeOffset", TimeOffsetValue.GetValue());
-        }
         return JsonRootObject;
     }
-
-    FString FAccessToken::TypeName = "AccessToken";
 }

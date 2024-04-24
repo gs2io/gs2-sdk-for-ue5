@@ -31,6 +31,12 @@
 #include "Task/Rest/LoginBySignatureTask.h"
 #include "Task/WebSocket/LoginBySignatureTask.h"
 
+// Federation
+#include "Request/FederationRequest.h"
+#include "Result/FederationResult.h"
+#include "Task/Rest/FederationTask.h"
+#include "Task/WebSocket/FederationTask.h"
+
 // IssueTimeOffsetTokenByUserId
 #include "Request/IssueTimeOffsetTokenByUserIdRequest.h"
 #include "Result/IssueTimeOffsetTokenByUserIdResult.h"

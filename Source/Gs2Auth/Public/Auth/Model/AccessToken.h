@@ -25,6 +25,7 @@ namespace Gs2::Auth::Model
     {
         TOptional<FString> TokenValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> FederationFromUserIdValue;
         TOptional<int64> ExpireValue;
         TOptional<int32> TimeOffsetValue;
 
@@ -37,11 +38,13 @@ namespace Gs2::Auth::Model
 
         TSharedPtr<FAccessToken> WithToken(const TOptional<FString> Token);
         TSharedPtr<FAccessToken> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FAccessToken> WithFederationFromUserId(const TOptional<FString> FederationFromUserId);
         TSharedPtr<FAccessToken> WithExpire(const TOptional<int64> Expire);
         TSharedPtr<FAccessToken> WithTimeOffset(const TOptional<int32> TimeOffset);
 
         TOptional<FString> GetToken() const;
         TOptional<FString> GetUserId() const;
+        TOptional<FString> GetFederationFromUserId() const;
         TOptional<int64> GetExpire() const;
         FString GetExpireString() const;
         TOptional<int32> GetTimeOffset() const;

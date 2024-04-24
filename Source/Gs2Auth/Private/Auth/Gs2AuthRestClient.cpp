@@ -37,6 +37,15 @@ namespace Gs2::Auth
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FFederationTask>> FGs2AuthRestClient::Federation(
+        const Request::FFederationRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FFederationTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FIssueTimeOffsetTokenByUserIdTask>> FGs2AuthRestClient::IssueTimeOffsetTokenByUserId(
         const Request::FIssueTimeOffsetTokenByUserIdRequestPtr Request) const
     {

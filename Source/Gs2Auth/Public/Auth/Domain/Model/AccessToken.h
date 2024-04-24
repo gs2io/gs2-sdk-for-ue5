@@ -133,6 +133,32 @@ namespace Gs2::Auth::Domain::Model
             Request::FLoginBySignatureRequestPtr Request
         );
 
+        class GS2AUTH_API FFederationTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Auth::Domain::Model::FAccessTokenDomain>,
+            public TSharedFromThis<FFederationTask>
+        {
+            const TSharedPtr<FAccessTokenDomain> Self;
+            const Request::FFederationRequestPtr Request;
+        public:
+            explicit FFederationTask(
+                const TSharedPtr<FAccessTokenDomain>& Self,
+                const Request::FFederationRequestPtr Request
+            );
+
+            FFederationTask(
+                const FFederationTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Auth::Domain::Model::FAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FFederationTask;
+
+        TSharedPtr<FAsyncTask<FFederationTask>> Federation(
+            Request::FFederationRequestPtr Request
+        );
+
         class GS2AUTH_API FIssueTimeOffsetTokenTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Auth::Domain::Model::FAccessTokenDomain>,
             public TSharedFromThis<FIssueTimeOffsetTokenTask>
