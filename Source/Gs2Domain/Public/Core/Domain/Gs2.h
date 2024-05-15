@@ -35,6 +35,7 @@
 #include "Friend/Domain/Gs2Friend.h"
 #include "Gateway/Domain/Gs2Gateway.h"
 #include "Grade/Domain/Gs2Grade.h"
+#include "Guild/Domain/Gs2Guild.h"
 #include "Identifier/Domain/Gs2Identifier.h"
 #include "Idle/Domain/Gs2Idle.h"
 #include "Inbox/Domain/Gs2Inbox.h"
@@ -96,6 +97,7 @@ namespace Gs2::Core::Domain
         Gs2::Friend::Domain::FGs2FriendDomainPtr Friend;
         Gs2::Gateway::Domain::FGs2GatewayDomainPtr Gateway;
         Gs2::Grade::Domain::FGs2GradeDomainPtr Grade;
+        Gs2::Guild::Domain::FGs2GuildDomainPtr Guild;
         Gs2::Identifier::Domain::FGs2IdentifierDomainPtr Identifier;
         Gs2::Idle::Domain::FGs2IdleDomainPtr Idle;
         Gs2::Inbox::Domain::FGs2InboxDomainPtr Inbox;

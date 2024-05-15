@@ -34,6 +34,7 @@ public class Gs2Domain : ModuleRules
 			"Gs2Friend",
 			"Gs2Gateway",
 			"Gs2Grade",
+			"Gs2Guild",
 			"Gs2Identifier",
 			"Gs2Idle",
 			"Gs2Inbox",
